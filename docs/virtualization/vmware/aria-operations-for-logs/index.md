@@ -1,6 +1,6 @@
-# Aria Operations For Logs
+# Aria Operations for Logs
 
-Aria Operations For Logs operational notes and deep-dive references.
+Aria Operations for Logs collects logs from vCenter, ESXi hosts, NSX, applications, and other systems.
 
 <div class="kb-grid kb-grid-5">
 
@@ -30,3 +30,13 @@ Aria Operations For Logs operational notes and deep-dive references.
   </div>
 
 </div>
+
+## Common Use Cases
+
+- Search ESXi host logs
+- Review vCenter events
+- Troubleshoot login failures
+- Investigate host disconnects
+- Track authentication events
+- Review certificate or service errors
+- Correlate events across multiple systems
