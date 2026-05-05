@@ -1,36 +1,31 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-set -e
-
-echo
-echo "Step 1 — Backup"
-echo
-
-if [ -f "./backup.sh" ]; then
-  ./backup.sh
-else
-  echo "ERROR: backup.sh not found."
-  exit 1
-fi
+MSG="${1:-Site update}"
 
 echo
-echo "Step 2 — Validate site"
-echo
-
-if [ -f "./validate-site.sh" ]; then
-  ./validate-site.sh
-else
-  echo "WARNING: validate-site.sh not found — skipping validation"
-fi
+echo "=== SAFE CHANGE START ==="
 
 echo
-echo "Step 3 — Commit changes"
-echo
+echo "Running backup..."
+./backup.sh
 
+echo
+echo "Running validation and health check..."
+./validate-site.sh
+
+echo
+echo "Checking git status..."
+git status --short
+
+echo
+echo "Staging changes..."
 git add .
 
-git commit -m "Auto commit after backup and validation" || true
+echo
+echo "Committing changes..."
+git commit -m "$MSG"
 
 echo
-echo "Done."
-echo
+echo "=== SAFE CHANGE COMPLETE ==="
+echo "Committed with message: $MSG"

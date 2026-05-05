@@ -1,1 +1,0 @@
-# Isolated Recovery Environment / IRE
