@@ -21,7 +21,7 @@
     
     
       
-        <title>Resync - Chris KB</title>
+        <title>vSAN Resync and Object Health Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#resync" class="md-skip">
+        <a href="#vsan-resync-and-object-health-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Resync
+              vSAN Resync and Object Health Troubleshooting
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#checking-resync-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Checking Resync Status
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#understanding-resync-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Understanding Resync Types
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#when-resync-is-expected" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        When Resync Is Expected
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#when-resync-is-concerning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        When Resync Is Concerning
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#checking-object-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Checking Object Health
       
     </span>
   </a>
@@ -1573,10 +1573,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#common-causes-of-degraded-objects" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Common Causes of Degraded Objects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-bundle-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Bundle Collection
       
     </span>
   </a>
@@ -1600,43 +1611,72 @@
 
 
 
-<h1 id="resync">Resync<a class="headerlink" href="#resync" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical vSAN Resync notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vsan-resync-and-object-health-troubleshooting">vSAN Resync and Object Health Troubleshooting<a class="headerlink" href="#vsan-resync-and-object-health-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="checking-resync-status">Checking Resync Status<a class="headerlink" href="#checking-resync-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From an ESXi host in the cluster
+esxcli vsan debug resync summary get
+</code></pre>
+<p>Or in vCenter: <strong>vSAN</strong> → <strong>Skyline Health</strong> → <strong>Data</strong> → <strong>vSAN Object Health</strong></p>
+<h2 id="understanding-resync-types">Understanding Resync Types<a class="headerlink" href="#understanding-resync-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repair</td>
+<td>Rebuilding a component after a failure</td>
+</tr>
+<tr>
+<td>Rebalance</td>
+<td>Redistributing data after capacity or host changes</td>
+</tr>
+<tr>
+<td>Evacuation</td>
+<td>Migrating data for maintenance mode</td>
+</tr>
+<tr>
+<td>Policy change</td>
+<td>Applying a new storage policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="when-resync-is-expected">When Resync Is Expected<a class="headerlink" href="#when-resync-is-expected" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li>Host just returned from maintenance mode</li>
+<li>Disk replacement completed</li>
+<li>Capacity added to the cluster</li>
+<li>Storage policy changed on VMs</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="when-resync-is-concerning">When Resync Is Concerning<a class="headerlink" href="#when-resync-is-concerning" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
+<li>Resync active for more than 24 hours without progress</li>
+<li>Object health showing Degraded with no active resync</li>
+<li>Resync blocked due to capacity or network issues</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="checking-object-health">Checking Object Health<a class="headerlink" href="#checking-object-health" title="Permanent link">&para;</a></h2>
+<p>In vCenter: <strong>vSAN</strong> → <strong>Virtual Objects</strong></p>
 <ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
+<li>Filter by health status — investigate Degraded, Non-compliant, or Absent objects</li>
+<li>Note the VM name, object type, and storage policy</li>
 </ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="common-causes-of-degraded-objects">Common Causes of Degraded Objects<a class="headerlink" href="#common-causes-of-degraded-objects" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Host removed from cluster without full evacuation</li>
+<li>Disk group failure</li>
+<li>Network partition between hosts</li>
+<li>Capacity too low to meet the FTT policy</li>
+</ul>
+<h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
+<p>If resync or object issues do not resolve after the expected timeframe:</p>
+<ol>
+<li>Collect a vSAN support bundle from the vCenter support bundle tool</li>
+<li>Include ESXi host logs from affected nodes</li>
+<li>Open a VMware support case with the bundle and a timeline of events</li>
+</ol>
 
 
 

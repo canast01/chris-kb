@@ -21,7 +21,7 @@
     
     
       
-        <title>ESXi Host Failure Runbook - Chris KB</title>
+        <title>vSAN Quick Reference - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#esxi-host-failure-runbook" class="md-skip">
+        <a href="#vsan-quick-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ESXi Host Failure Runbook
+              vSAN Quick Reference
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#confirm-impact" class="md-nav__link">
+  <a href="#fast-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Impact
+        Fast Health Checks
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-power-state" class="md-nav__link">
+  <a href="#common-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Power State
+        Common Commands
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-management-network" class="md-nav__link">
+  <a href="#ping-vsan-vmkernel-between-hosts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Management Network
+        Ping vSAN VMkernel Between Hosts
       
     </span>
   </a>
@@ -1551,65 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-hardware-management-interface" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Hardware Management Interface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#review-vcenter-alarms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Review vCenter Alarms
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#identify-affected-vms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identify Affected VMs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-to-collect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logs to Collect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#engage-hardware-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Engage Hardware Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-cluster-health-after-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Cluster Health After Recovery
+        Common Issues
       
     </span>
   </a>
@@ -1633,62 +1578,64 @@
 
 
 
-<h1 id="esxi-host-failure-runbook">ESXi Host Failure Runbook<a class="headerlink" href="#esxi-host-failure-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="confirm-impact">Confirm Impact<a class="headerlink" href="#confirm-impact" title="Permanent link">&para;</a></h2>
+<h1 id="vsan-quick-reference">vSAN Quick Reference<a class="headerlink" href="#vsan-quick-reference" title="Permanent link">&para;</a></h1>
+<h2 id="fast-health-checks">Fast Health Checks<a class="headerlink" href="#fast-health-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Identify the affected host</li>
-<li>Check vCenter — is the host Disconnected, Not Responding, or in Error?</li>
-<li>Identify which VMs were running on the host</li>
-<li>Confirm HA status — have VMs been restarted on other hosts?</li>
+<li>vSAN Skyline Health → vCenter → Cluster → vSAN → Skyline Health</li>
+<li>Object Health → vCenter → Cluster → vSAN → Virtual Objects</li>
+<li>Resync Status → vCenter → Cluster → vSAN → Resyncing Components</li>
 </ul>
-<h2 id="check-power-state">Check Power State<a class="headerlink" href="#check-power-state" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Log into iDRAC and confirm power state</li>
-<li>If powered off unexpectedly, check power supply health and power events in iDRAC</li>
-</ul>
-<h2 id="check-management-network">Check Management Network<a class="headerlink" href="#check-management-network" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Ping the host management IP</li>
-<li>Check DNS forward and reverse lookup for the hostname</li>
-<li>Confirm the management switch port is active</li>
-</ul>
-<h2 id="check-hardware-management-interface">Check Hardware Management Interface<a class="headerlink" href="#check-hardware-management-interface" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Log into iDRAC and review hardware health</li>
-<li>Check for disk, memory, NIC, or PSU failures</li>
-<li>Review Lifecycle Controller logs for recent hardware events</li>
-</ul>
-<h2 id="review-vcenter-alarms">Review vCenter Alarms<a class="headerlink" href="#review-vcenter-alarms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm which alarms are active on the host</li>
-<li>Check related cluster and datastore alarms</li>
-</ul>
-<h2 id="identify-affected-vms">Identify Affected VMs<a class="headerlink" href="#identify-affected-vms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm which VMs were running on the failed host</li>
-<li>Verify HA has restarted critical VMs on other hosts</li>
-<li>Check application owners for any workloads that did not restart</li>
-</ul>
-<h2 id="logs-to-collect">Logs to Collect<a class="headerlink" href="#logs-to-collect" title="Permanent link">&para;</a></h2>
-<ul>
-<li>iDRAC hardware logs and screenshots</li>
-<li>vCenter events from the time of the failure</li>
-<li>ESXi host logs if accessible via SSH or support bundle</li>
-<li>Aria Operations alerts at the time of failure</li>
-</ul>
-<h2 id="engage-hardware-support">Engage Hardware Support<a class="headerlink" href="#engage-hardware-support" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open a Dell support case if hardware failure is confirmed</li>
-<li>Provide iDRAC logs, hardware event screenshots, and host serial number</li>
-</ul>
-<h2 id="validate-cluster-health-after-recovery">Validate Cluster Health After Recovery<a class="headerlink" href="#validate-cluster-health-after-recovery" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm all remaining hosts are Connected</li>
-<li>Confirm HA and DRS are active</li>
-<li>Confirm vSAN object health is green if vSAN is used</li>
-<li>Confirm VMs are running on healthy hosts</li>
-<li>Update the change or incident ticket with findings</li>
-</ul>
+<h2 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check vSAN cluster info
+esxcli vsan cluster get
+
+# Check vSAN network configuration
+esxcli vsan network list
+
+# Check vSAN disks
+esxcli vsan storage list
+
+# Check vSAN resync summary
+esxcli vsan debug resync summary get
+</code></pre>
+<h2 id="ping-vsan-vmkernel-between-hosts">Ping vSAN VMkernel Between Hosts<a class="headerlink" href="#ping-vsan-vmkernel-between-hosts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From ESXi host, ping another host's vSAN VMkernel
+vmkping -I vmk2 &lt;target-vsan-vmk-ip&gt;
+
+# Test jumbo frames if MTU is 9000
+vmkping -I vmk2 -s 8972 -d &lt;target-vsan-vmk-ip&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Object degraded</td>
+<td>Skyline Health → check disk group and host state</td>
+</tr>
+<tr>
+<td>Resync not completing</td>
+<td>Capacity usage, network health, host maintenance state</td>
+</tr>
+<tr>
+<td>Disk group offline</td>
+<td>Physical disk health in iDRAC</td>
+</tr>
+<tr>
+<td>Network partition</td>
+<td>vSAN VMkernel reachability between hosts</td>
+</tr>
+<tr>
+<td>Capacity warning</td>
+<td>Snapshot growth, thin provisioning, stale templates</td>
+</tr>
+</tbody>
+</table>
 
 
 

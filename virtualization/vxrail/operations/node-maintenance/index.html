@@ -21,7 +21,7 @@
     
     
       
-        <title>VxRail Node Maintenance - Chris KB</title>
+        <title>VxRail Node Maintenance Procedure - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vxrail-node-maintenance" class="md-skip">
+        <a href="#vxrail-node-maintenance-procedure" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VxRail Node Maintenance
+              VxRail Node Maintenance Procedure
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#before-starting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Before Starting
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#evacuation-mode-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Evacuation Mode Selection
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#entering-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Entering Maintenance Mode
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#performing-the-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Performing the Work
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#exiting-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        Exiting Maintenance Mode
       
     </span>
   </a>
@@ -1573,32 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
+  <a href="#post-maintenance-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
+        Post-Maintenance Validation
       
     </span>
   </a>
@@ -1622,57 +1600,65 @@
 
 
 
-<h1 id="vxrail-node-maintenance">VxRail Node Maintenance<a class="headerlink" href="#vxrail-node-maintenance" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Node-level maintenance planning, evacuation, validation, and return to service.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<p>Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vxrail-node-maintenance-procedure">VxRail Node Maintenance Procedure<a class="headerlink" href="#vxrail-node-maintenance-procedure" title="Permanent link">&para;</a></h1>
+<h2 id="before-starting">Before Starting<a class="headerlink" href="#before-starting" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review VxRail Manager health.</li>
-<li>Check vCenter and ESXi host health.</li>
-<li>Review vSAN health.</li>
-<li>Confirm no active failed tasks.</li>
-<li>Review hardware alerts.</li>
-<li>Check recent lifecycle or support events.</li>
+<li>Confirm cluster health in vCenter — no critical alarms</li>
+<li>Confirm vSAN Skyline Health is green</li>
+<li>Confirm no active vSAN resyncs (or they are at an acceptable level)</li>
+<li>Confirm cluster has capacity to absorb the workload from this node</li>
 </ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add environment-specific commands here
-</code></pre>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h2 id="evacuation-mode-selection">Evacuation Mode Selection<a class="headerlink" href="#evacuation-mode-selection" title="Permanent link">&para;</a></h2>
+<p>When entering maintenance mode on a VxRail node:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ensure Accessibility</td>
+<td>Standard maintenance — keeps data accessible without full migration</td>
+</tr>
+<tr>
+<td>Full Data Migration</td>
+<td>Before disk replacement or extended maintenance</td>
+</tr>
+<tr>
+<td>No Data Migration</td>
+<td>Only with Dell support guidance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="entering-maintenance-mode">Entering Maintenance Mode<a class="headerlink" href="#entering-maintenance-mode" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In vCenter, right-click the VxRail node → <strong>Maintenance Mode</strong> → <strong>Enter Maintenance Mode</strong></li>
+<li>Select the appropriate evacuation mode</li>
+<li>Monitor vSAN resync if full migration is selected</li>
+<li>Wait for maintenance mode to complete before starting hardware or firmware work</li>
+</ol>
+<h2 id="performing-the-work">Performing the Work<a class="headerlink" href="#performing-the-work" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Lifecycle pre-check failure.</li>
-<li>Host hardware warning.</li>
-<li>vSAN health warning.</li>
-<li>Failed update bundle.</li>
-<li>VxRail Manager service issue.</li>
-<li>Version compatibility issue.</li>
-<li>Support bundle collection failure.</li>
+<li>Complete only the approved scope of work</li>
+<li>Do not extend beyond the maintenance window without notification</li>
+<li>Confirm iDRAC access throughout the maintenance if hardware is involved</li>
 </ul>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="exiting-maintenance-mode">Exiting Maintenance Mode<a class="headerlink" href="#exiting-maintenance-mode" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Right-click the host → <strong>Maintenance Mode</strong> → <strong>Exit Maintenance Mode</strong></li>
+<li>Confirm host reconnects to vCenter</li>
+<li>Monitor vSAN rebalancing — this is expected and may take time</li>
+<li>Confirm vSAN object health is green after rebalancing completes</li>
+</ol>
+<h2 id="post-maintenance-validation">Post-Maintenance Validation<a class="headerlink" href="#post-maintenance-validation" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review cluster health.</li>
-<li>Validate node status.</li>
-<li>Confirm support connectivity.</li>
-<li>Check upgrade readiness.</li>
-<li>Collect support evidence.</li>
-<li>Document changes and follow-up items.</li>
-</ul>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm upgrade path.</li>
-<li>Review Dell compatibility guidance.</li>
-<li>Confirm vCenter, ESXi, vSAN, and firmware versions.</li>
-<li>Validate backups and rollback notes.</li>
-<li>Run post-upgrade checks.</li>
-</ul>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Do not skip pre-checks.</li>
-<li>Keep Dell and VMware versions aligned.</li>
-<li>Validate hardware health before lifecycle work.</li>
-<li>Keep support bundle notes with the case.</li>
-<li>Record post-change validation.</li>
+<li>Host is Connected in vCenter</li>
+<li>No new critical alerts</li>
+<li>vSAN Skyline Health is green</li>
+<li>VxRail Manager shows the node as healthy</li>
+<li>Firmware matches the approved cluster baseline</li>
 </ul>
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Esxi Maintenance Mode - Chris KB</title>
+        <title>ESXi Host Maintenance Mode Process - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#esxi-maintenance-mode" class="md-skip">
+        <a href="#esxi-host-maintenance-mode-process" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Esxi Maintenance Mode
+              ESXi Host Maintenance Mode Process
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pre-Checks
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#entering-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Entering Maintenance Mode
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#monitoring-the-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Monitoring the Process
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#completing-approved-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Completing Approved Work
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#exiting-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        Exiting Maintenance Mode
       
     </span>
   </a>
@@ -1573,32 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
+  <a href="#post-maintenance-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
+        Post-Maintenance Validation
       
     </span>
   </a>
@@ -1622,53 +1600,47 @@
 
 
 
-<h1 id="esxi-maintenance-mode">Esxi Maintenance Mode<a class="headerlink" href="#esxi-maintenance-mode" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Host evacuation, DRS behavior, validation, and return-to-service checks.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<p>Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<h1 id="esxi-host-maintenance-mode-process">ESXi Host Maintenance Mode Process<a class="headerlink" href="#esxi-host-maintenance-mode-process" title="Permanent link">&para;</a></h1>
+<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review active alarms.</li>
-<li>Check recent failed tasks.</li>
-<li>Confirm service health.</li>
-<li>Confirm capacity and performance are normal.</li>
-<li>Check recent changes.</li>
+<li>Confirm cluster has sufficient capacity to absorb workload</li>
+<li>Confirm DRS is enabled and set to at least Partially Automated</li>
+<li>Check for VMs with DRS anti-affinity or must-run-on rules</li>
+<li>Confirm vSAN evacuation setting if vSAN is in use</li>
 </ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add environment-specific commands here
-</code></pre>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h2 id="entering-maintenance-mode">Entering Maintenance Mode<a class="headerlink" href="#entering-maintenance-mode" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In vCenter, right-click the host → <strong>Maintenance Mode</strong> → <strong>Enter Maintenance Mode</strong></li>
+<li>Select evacuation option:</li>
+<li><strong>Move powered-off and suspended VMs</strong> (standard)</li>
+<li><strong>Ensure accessibility</strong> (vSAN — leaves data accessible but does not fully evacuate)</li>
+<li><strong>Full data migration</strong> (vSAN — migrates all data off the host)</li>
+<li>Click OK and monitor the task</li>
+</ol>
+<h2 id="monitoring-the-process">Monitoring the Process<a class="headerlink" href="#monitoring-the-process" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Failed or stuck tasks.</li>
-<li>Certificate, DNS, or authentication issues.</li>
-<li>Capacity pressure.</li>
-<li>Service health warnings.</li>
-<li>Version mismatch after maintenance.</li>
-<li>Monitoring gaps.</li>
+<li>Watch DRS task progress in Recent Tasks</li>
+<li>Confirm VMs are migrating to other hosts</li>
+<li>Check vSAN resync if full migration was selected — wait for it to complete before proceeding</li>
 </ul>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="completing-approved-work">Completing Approved Work<a class="headerlink" href="#completing-approved-work" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review alarms and events.</li>
-<li>Confirm ownership and support notes.</li>
-<li>Validate dependencies.</li>
-<li>Document changes.</li>
-<li>Confirm monitoring coverage.</li>
+<li>Perform hardware, firmware, or patching work as planned</li>
+<li>Do not extend beyond the approved maintenance window without notification</li>
 </ul>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
+<h2 id="exiting-maintenance-mode">Exiting Maintenance Mode<a class="headerlink" href="#exiting-maintenance-mode" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Right-click the host → <strong>Maintenance Mode</strong> → <strong>Exit Maintenance Mode</strong></li>
+<li>Confirm the host reconnects and shows as Connected</li>
+<li>Wait for vSAN to rebalance if applicable</li>
+</ol>
+<h2 id="post-maintenance-validation">Post-Maintenance Validation<a class="headerlink" href="#post-maintenance-validation" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm compatibility.</li>
-<li>Review known issues.</li>
-<li>Confirm rollback plan.</li>
-<li>Validate health before and after the change.</li>
-</ul>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Keep naming consistent.</li>
-<li>Keep versions aligned.</li>
-<li>Avoid unsupported version combinations.</li>
-<li>Document exceptions.</li>
-<li>Validate after every change.</li>
+<li>Confirm host is Connected in vCenter</li>
+<li>Confirm no new alerts on the host</li>
+<li>Confirm vSAN health is green if vSAN is used</li>
+<li>Confirm VMs are distributed as expected by DRS</li>
+<li>Confirm host hardware health in iDRAC</li>
 </ul>
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>VxRail Manager Health Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#vxrail-manager-health-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              VxRail Manager Health Troubleshooting
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#confirm-vxrail-manager-vm-is-powered-on" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Confirm VxRail Manager VM is Powered On
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#confirm-ip-and-dns-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Confirm IP and DNS Resolution
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#confirm-vcenter-registration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Confirm vCenter Registration
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#check-vxrail-manager-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Check VxRail Manager Services
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#review-recent-activity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Review Recent Activity
       
     </span>
   </a>
@@ -1573,10 +1573,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#check-certificate-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Check Certificate Trust
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-disk-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Disk Space
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collecting-vxrail-manager-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting VxRail Manager Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation
       
     </span>
   </a>
@@ -1600,43 +1633,54 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Vxrail Manager Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vxrail-manager-health-troubleshooting">VxRail Manager Health Troubleshooting<a class="headerlink" href="#vxrail-manager-health-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="confirm-vxrail-manager-vm-is-powered-on">Confirm VxRail Manager VM is Powered On<a class="headerlink" href="#confirm-vxrail-manager-vm-is-powered-on" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li>In vCenter, locate the VxRail Manager VM</li>
+<li>Confirm it is powered on and VMware Tools is running</li>
+<li>Confirm the VM is not in a suspended or error state</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="confirm-ip-and-dns-resolution">Confirm IP and DNS Resolution<a class="headerlink" href="#confirm-ip-and-dns-resolution" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ping &lt;vxrail-manager-ip&gt;
+nslookup &lt;vxrail-manager-fqdn&gt;
+</code></pre>
+<h2 id="confirm-vcenter-registration">Confirm vCenter Registration<a class="headerlink" href="#confirm-vcenter-registration" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
+<li>Log into VxRail Manager and confirm it shows vCenter as connected</li>
+<li>If registration is lost, review the vCenter credentials and re-register</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="check-vxrail-manager-services">Check VxRail Manager Services<a class="headerlink" href="#check-vxrail-manager-services" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
+<li>Log into VxRail Manager → <strong>System</strong> → <strong>Health</strong></li>
+<li>Review all service states</li>
+<li>SSH to VxRail Manager and check service logs if accessible</li>
 </ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="review-recent-activity">Review Recent Activity<a class="headerlink" href="#review-recent-activity" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Check if an upgrade or patch was recently started</li>
+<li>Review VxRail Manager logs for the time the issue started</li>
+<li>Check vCenter tasks and events for related activity</li>
+</ul>
+<h2 id="check-certificate-trust">Check Certificate Trust<a class="headerlink" href="#check-certificate-trust" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Confirm VxRail Manager trusts the vCenter certificate</li>
+<li>If certificates were recently replaced, VxRail Manager may need re-registration</li>
+</ul>
+<h2 id="check-disk-space">Check Disk Space<a class="headerlink" href="#check-disk-space" title="Permanent link">&para;</a></h2>
+<ul>
+<li>SSH to VxRail Manager and check disk usage: <code>df -h</code></li>
+<li>Full log partitions can cause service failures</li>
+</ul>
+<h2 id="collecting-vxrail-manager-logs">Collecting VxRail Manager Logs<a class="headerlink" href="#collecting-vxrail-manager-logs" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Log into VxRail Manager → <strong>Support</strong> → <strong>Log Bundle</strong></li>
+<li>Collect the bundle and save for Dell support</li>
+</ul>
+<h2 id="escalation">Escalation<a class="headerlink" href="#escalation" title="Permanent link">&para;</a></h2>
+<ul>
+<li>If VxRail Manager cannot be recovered, open a Dell support case</li>
+<li>Provide the support bundle, vCenter events, and a description of what changed</li>
+</ul>
 
 
 

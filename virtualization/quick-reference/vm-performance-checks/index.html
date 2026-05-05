@@ -21,7 +21,7 @@
     
     
       
-        <title>ESXi Host Failure Runbook - Chris KB</title>
+        <title>VM Performance Quick Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#esxi-host-failure-runbook" class="md-skip">
+        <a href="#vm-performance-quick-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ESXi Host Failure Runbook
+              VM Performance Quick Checks
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#confirm-impact" class="md-nav__link">
+  <a href="#cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Impact
+        CPU
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-power-state" class="md-nav__link">
+  <a href="#memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Power State
+        Memory
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-management-network" class="md-nav__link">
+  <a href="#storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Management Network
+        Storage
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-hardware-management-interface" class="md-nav__link">
+  <a href="#network" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Hardware Management Interface
+        Network
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#review-vcenter-alarms" class="md-nav__link">
+  <a href="#recent-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Review vCenter Alarms
+        Recent Changes
       
     </span>
   </a>
@@ -1573,43 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#identify-affected-vms" class="md-nav__link">
+  <a href="#quick-commands-from-esxi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify Affected VMs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-to-collect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logs to Collect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#engage-hardware-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Engage Hardware Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-cluster-health-after-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Cluster Health After Recovery
+        Quick Commands from ESXi
       
     </span>
   </a>
@@ -1633,62 +1600,41 @@
 
 
 
-<h1 id="esxi-host-failure-runbook">ESXi Host Failure Runbook<a class="headerlink" href="#esxi-host-failure-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="confirm-impact">Confirm Impact<a class="headerlink" href="#confirm-impact" title="Permanent link">&para;</a></h2>
+<h1 id="vm-performance-quick-checks">VM Performance Quick Checks<a class="headerlink" href="#vm-performance-quick-checks" title="Permanent link">&para;</a></h1>
+<p>When a VM is reported as slow, check these in order:</p>
+<h2 id="cpu">CPU<a class="headerlink" href="#cpu" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Identify the affected host</li>
-<li>Check vCenter — is the host Disconnected, Not Responding, or in Error?</li>
-<li>Identify which VMs were running on the host</li>
-<li>Confirm HA status — have VMs been restarted on other hosts?</li>
+<li><strong>CPU Ready</strong> — time the VM is waiting for a physical CPU. Above 5% is worth investigating.</li>
+<li><strong>CPU Usage</strong> — high usage may indicate the VM needs more vCPUs or the guest application is busy.</li>
 </ul>
-<h2 id="check-power-state">Check Power State<a class="headerlink" href="#check-power-state" title="Permanent link">&para;</a></h2>
+<h2 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and confirm power state</li>
-<li>If powered off unexpectedly, check power supply health and power events in iDRAC</li>
+<li><strong>Memory Ballooning</strong> — VMware is reclaiming memory from this VM. Indicates memory pressure on the host.</li>
+<li><strong>Memory Swapping</strong> — severe memory pressure. The VM's memory is being swapped to disk.</li>
 </ul>
-<h2 id="check-management-network">Check Management Network<a class="headerlink" href="#check-management-network" title="Permanent link">&para;</a></h2>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ping the host management IP</li>
-<li>Check DNS forward and reverse lookup for the hostname</li>
-<li>Confirm the management switch port is active</li>
+<li><strong>Datastore Latency</strong> — above 20ms is worth investigating. Check the storage array and paths.</li>
+<li><strong>Snapshot Age</strong> — old or large snapshots degrade VM storage performance.</li>
+<li><strong>Guest Disk Usage</strong> — confirm the guest OS disk is not full.</li>
 </ul>
-<h2 id="check-hardware-management-interface">Check Hardware Management Interface<a class="headerlink" href="#check-hardware-management-interface" title="Permanent link">&para;</a></h2>
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and review hardware health</li>
-<li>Check for disk, memory, NIC, or PSU failures</li>
-<li>Review Lifecycle Controller logs for recent hardware events</li>
+<li><strong>Packet Drops</strong> — check the VM's NIC stats and the physical switch port.</li>
+<li><strong>VMware Tools</strong> — confirm Tools is installed and current; outdated Tools can cause NIC performance issues.</li>
 </ul>
-<h2 id="review-vcenter-alarms">Review vCenter Alarms<a class="headerlink" href="#review-vcenter-alarms" title="Permanent link">&para;</a></h2>
+<h2 id="recent-changes">Recent Changes<a class="headerlink" href="#recent-changes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm which alarms are active on the host</li>
-<li>Check related cluster and datastore alarms</li>
+<li>Was the VM migrated recently?</li>
+<li>Was the host patched or rebooted?</li>
+<li>Was a snapshot taken?</li>
+<li>Was a storage vMotion performed?</li>
 </ul>
-<h2 id="identify-affected-vms">Identify Affected VMs<a class="headerlink" href="#identify-affected-vms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm which VMs were running on the failed host</li>
-<li>Verify HA has restarted critical VMs on other hosts</li>
-<li>Check application owners for any workloads that did not restart</li>
-</ul>
-<h2 id="logs-to-collect">Logs to Collect<a class="headerlink" href="#logs-to-collect" title="Permanent link">&para;</a></h2>
-<ul>
-<li>iDRAC hardware logs and screenshots</li>
-<li>vCenter events from the time of the failure</li>
-<li>ESXi host logs if accessible via SSH or support bundle</li>
-<li>Aria Operations alerts at the time of failure</li>
-</ul>
-<h2 id="engage-hardware-support">Engage Hardware Support<a class="headerlink" href="#engage-hardware-support" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open a Dell support case if hardware failure is confirmed</li>
-<li>Provide iDRAC logs, hardware event screenshots, and host serial number</li>
-</ul>
-<h2 id="validate-cluster-health-after-recovery">Validate Cluster Health After Recovery<a class="headerlink" href="#validate-cluster-health-after-recovery" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm all remaining hosts are Connected</li>
-<li>Confirm HA and DRS are active</li>
-<li>Confirm vSAN object health is green if vSAN is used</li>
-<li>Confirm VMs are running on healthy hosts</li>
-<li>Update the change or incident ticket with findings</li>
-</ul>
+<h2 id="quick-commands-from-esxi">Quick Commands from ESXi<a class="headerlink" href="#quick-commands-from-esxi" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check VM disk stats (run from the ESXi host)
+esxtop
+# Press 'u' for storage view, 'd' for disk adapter view
+</code></pre>
 
 
 

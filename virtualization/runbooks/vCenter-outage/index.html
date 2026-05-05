@@ -21,7 +21,7 @@
     
     
       
-        <title>ESXi Host Failure Runbook - Chris KB</title>
+        <title>vCenter Outage Runbook - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#esxi-host-failure-runbook" class="md-skip">
+        <a href="#vcenter-outage-runbook" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ESXi Host Failure Runbook
+              vCenter Outage Runbook
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#confirm-impact" class="md-nav__link">
+  <a href="#confirm-outage-scope" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Impact
+        Confirm Outage Scope
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-power-state" class="md-nav__link">
+  <a href="#check-vcsa-vm-power-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Power State
+        Check VCSA VM Power State
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-management-network" class="md-nav__link">
+  <a href="#check-vcsa-appliance-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Management Network
+        Check VCSA Appliance Management
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-hardware-management-interface" class="md-nav__link">
+  <a href="#check-dns-and-network-reachability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Hardware Management Interface
+        Check DNS and Network Reachability
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#review-vcenter-alarms" class="md-nav__link">
+  <a href="#check-service-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Review vCenter Alarms
+        Check Service Status
       
     </span>
   </a>
@@ -1573,10 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#identify-affected-vms" class="md-nav__link">
+  <a href="#check-disk-partitions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify Affected VMs
+        Check Disk Partitions
       
     </span>
   </a>
@@ -1584,10 +1584,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#logs-to-collect" class="md-nav__link">
+  <a href="#review-recent-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logs to Collect
+        Review Recent Changes
       
     </span>
   </a>
@@ -1595,10 +1595,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#engage-hardware-support" class="md-nav__link">
+  <a href="#restore-from-backup-if-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Engage Hardware Support
+        Restore from Backup if Required
       
     </span>
   </a>
@@ -1606,10 +1606,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate-cluster-health-after-recovery" class="md-nav__link">
+  <a href="#validate-services-after-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validate Cluster Health After Recovery
+        Validate Services After Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#communicate-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Communicate Impact
       
     </span>
   </a>
@@ -1633,61 +1644,61 @@
 
 
 
-<h1 id="esxi-host-failure-runbook">ESXi Host Failure Runbook<a class="headerlink" href="#esxi-host-failure-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="confirm-impact">Confirm Impact<a class="headerlink" href="#confirm-impact" title="Permanent link">&para;</a></h2>
+<h1 id="vcenter-outage-runbook">vCenter Outage Runbook<a class="headerlink" href="#vcenter-outage-runbook" title="Permanent link">&para;</a></h1>
+<h2 id="confirm-outage-scope">Confirm Outage Scope<a class="headerlink" href="#confirm-outage-scope" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Identify the affected host</li>
-<li>Check vCenter — is the host Disconnected, Not Responding, or in Error?</li>
-<li>Identify which VMs were running on the host</li>
-<li>Confirm HA status — have VMs been restarted on other hosts?</li>
+<li>Can you access the vSphere Client?</li>
+<li>Can you ping the vCenter FQDN and IP?</li>
+<li>Are ESXi hosts still visible and running workloads independently?</li>
 </ul>
-<h2 id="check-power-state">Check Power State<a class="headerlink" href="#check-power-state" title="Permanent link">&para;</a></h2>
+<h2 id="check-vcsa-vm-power-state">Check VCSA VM Power State<a class="headerlink" href="#check-vcsa-vm-power-state" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and confirm power state</li>
-<li>If powered off unexpectedly, check power supply health and power events in iDRAC</li>
+<li>Confirm the VCSA VM is powered on in vCenter (if a secondary vCenter is available)</li>
+<li>Or verify via iDRAC/IPMI if the VCSA is running on a known host</li>
 </ul>
-<h2 id="check-management-network">Check Management Network<a class="headerlink" href="#check-management-network" title="Permanent link">&para;</a></h2>
+<h2 id="check-vcsa-appliance-management">Check VCSA Appliance Management<a class="headerlink" href="#check-vcsa-appliance-management" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ping the host management IP</li>
-<li>Check DNS forward and reverse lookup for the hostname</li>
-<li>Confirm the management switch port is active</li>
+<li>Access <code>https://&lt;vcenter&gt;:5480</code></li>
+<li>Review service health, disk partitions, and CPU/memory</li>
 </ul>
-<h2 id="check-hardware-management-interface">Check Hardware Management Interface<a class="headerlink" href="#check-hardware-management-interface" title="Permanent link">&para;</a></h2>
+<h2 id="check-dns-and-network-reachability">Check DNS and Network Reachability<a class="headerlink" href="#check-dns-and-network-reachability" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ping &lt;vcenter-ip&gt;
+nslookup &lt;vcenter-fqdn&gt;
+</code></pre>
+<h2 id="check-service-status">Check Service Status<a class="headerlink" href="#check-service-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to vCenter appliance
+service-control --status
+</code></pre>
+<h2 id="check-disk-partitions">Check Disk Partitions<a class="headerlink" href="#check-disk-partitions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">df -h
+</code></pre>
+<p>Partitions that commonly cause failures when full:
+- <code>/storage/log</code>
+- <code>/storage/db</code></p>
+<h2 id="review-recent-changes">Review Recent Changes<a class="headerlink" href="#review-recent-changes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and review hardware health</li>
-<li>Check for disk, memory, NIC, or PSU failures</li>
-<li>Review Lifecycle Controller logs for recent hardware events</li>
+<li>Was a certificate recently replaced?</li>
+<li>Was a patch or upgrade recently applied?</li>
+<li>Was a snapshot taken or deleted on the VCSA VM?</li>
 </ul>
-<h2 id="review-vcenter-alarms">Review vCenter Alarms<a class="headerlink" href="#review-vcenter-alarms" title="Permanent link">&para;</a></h2>
+<h2 id="restore-from-backup-if-required">Restore from Backup if Required<a class="headerlink" href="#restore-from-backup-if-required" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm which alarms are active on the host</li>
-<li>Check related cluster and datastore alarms</li>
+<li>Use the vCenter file-based backup (VAMI → Backup)</li>
+<li>Confirm the backup date and restore target</li>
+<li>Follow VMware restore documentation</li>
 </ul>
-<h2 id="identify-affected-vms">Identify Affected VMs<a class="headerlink" href="#identify-affected-vms" title="Permanent link">&para;</a></h2>
+<h2 id="validate-services-after-recovery">Validate Services After Recovery<a class="headerlink" href="#validate-services-after-recovery" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm which VMs were running on the failed host</li>
-<li>Verify HA has restarted critical VMs on other hosts</li>
-<li>Check application owners for any workloads that did not restart</li>
+<li>Confirm all services are running: <code>service-control --status</code></li>
+<li>Confirm vSphere Client is accessible</li>
+<li>Confirm all hosts are reconnecting</li>
+<li>Confirm Aria and other integrations are working</li>
 </ul>
-<h2 id="logs-to-collect">Logs to Collect<a class="headerlink" href="#logs-to-collect" title="Permanent link">&para;</a></h2>
+<h2 id="communicate-impact">Communicate Impact<a class="headerlink" href="#communicate-impact" title="Permanent link">&para;</a></h2>
 <ul>
-<li>iDRAC hardware logs and screenshots</li>
-<li>vCenter events from the time of the failure</li>
-<li>ESXi host logs if accessible via SSH or support bundle</li>
-<li>Aria Operations alerts at the time of failure</li>
-</ul>
-<h2 id="engage-hardware-support">Engage Hardware Support<a class="headerlink" href="#engage-hardware-support" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open a Dell support case if hardware failure is confirmed</li>
-<li>Provide iDRAC logs, hardware event screenshots, and host serial number</li>
-</ul>
-<h2 id="validate-cluster-health-after-recovery">Validate Cluster Health After Recovery<a class="headerlink" href="#validate-cluster-health-after-recovery" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm all remaining hosts are Connected</li>
-<li>Confirm HA and DRS are active</li>
-<li>Confirm vSAN object health is green if vSAN is used</li>
-<li>Confirm VMs are running on healthy hosts</li>
-<li>Update the change or incident ticket with findings</li>
+<li>Notify stakeholders of the outage and recovery status</li>
+<li>Note that ESXi hosts and VMs continue running without vCenter</li>
+<li>Update the incident ticket with timeline and resolution</li>
 </ul>
 
 

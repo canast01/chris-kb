@@ -21,7 +21,7 @@
     
     
       
-        <title>ESXi Host Failure Runbook - Chris KB</title>
+        <title>vCenter Upgrade Readiness Checklist - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#esxi-host-failure-runbook" class="md-skip">
+        <a href="#vcenter-upgrade-readiness-checklist" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ESXi Host Failure Runbook
+              vCenter Upgrade Readiness Checklist
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#confirm-impact" class="md-nav__link">
+  <a href="#current-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Impact
+        Current State
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-power-state" class="md-nav__link">
+  <a href="#target-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Power State
+        Target Version
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-management-network" class="md-nav__link">
+  <a href="#pre-upgrade-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Management Network
+        Pre-Upgrade Checks
       
     </span>
   </a>
@@ -1551,65 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-hardware-management-interface" class="md-nav__link">
+  <a href="#post-upgrade-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Check Hardware Management Interface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#review-vcenter-alarms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Review vCenter Alarms
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#identify-affected-vms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identify Affected VMs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-to-collect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logs to Collect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#engage-hardware-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Engage Hardware Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-cluster-health-after-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Cluster Health After Recovery
+        Post-Upgrade Validation
       
     </span>
   </a>
@@ -1633,61 +1578,37 @@
 
 
 
-<h1 id="esxi-host-failure-runbook">ESXi Host Failure Runbook<a class="headerlink" href="#esxi-host-failure-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="confirm-impact">Confirm Impact<a class="headerlink" href="#confirm-impact" title="Permanent link">&para;</a></h2>
+<h1 id="vcenter-upgrade-readiness-checklist">vCenter Upgrade Readiness Checklist<a class="headerlink" href="#vcenter-upgrade-readiness-checklist" title="Permanent link">&para;</a></h1>
+<h2 id="current-state">Current State<a class="headerlink" href="#current-state" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Identify the affected host</li>
-<li>Check vCenter — is the host Disconnected, Not Responding, or in Error?</li>
-<li>Identify which VMs were running on the host</li>
-<li>Confirm HA status — have VMs been restarted on other hosts?</li>
+<li>Confirm current vCenter version and build number</li>
+<li>Confirm current ESXi versions and ensure they are compatible with the target vCenter</li>
 </ul>
-<h2 id="check-power-state">Check Power State<a class="headerlink" href="#check-power-state" title="Permanent link">&para;</a></h2>
+<h2 id="target-version">Target Version<a class="headerlink" href="#target-version" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and confirm power state</li>
-<li>If powered off unexpectedly, check power supply health and power events in iDRAC</li>
+<li>Confirm target vCenter version and supported upgrade path</li>
+<li>Review VMware upgrade path tool: supported paths only</li>
 </ul>
-<h2 id="check-management-network">Check Management Network<a class="headerlink" href="#check-management-network" title="Permanent link">&para;</a></h2>
+<h2 id="pre-upgrade-checks">Pre-Upgrade Checks<a class="headerlink" href="#pre-upgrade-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ping the host management IP</li>
-<li>Check DNS forward and reverse lookup for the hostname</li>
-<li>Confirm the management switch port is active</li>
+<li>vCenter file-based backup completed</li>
+<li>SSO domain health confirmed</li>
+<li>Certificate health confirmed — no expiring certs during the window</li>
+<li>All disk partitions have sufficient free space</li>
+<li>All hosts are Connected</li>
+<li>No critical active alarms</li>
+<li>Plugin compatibility confirmed (backup, monitoring, etc.)</li>
+<li>vCenter and PSC in the same SSO domain are upgraded together</li>
 </ul>
-<h2 id="check-hardware-management-interface">Check Hardware Management Interface<a class="headerlink" href="#check-hardware-management-interface" title="Permanent link">&para;</a></h2>
+<h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Log into iDRAC and review hardware health</li>
-<li>Check for disk, memory, NIC, or PSU failures</li>
-<li>Review Lifecycle Controller logs for recent hardware events</li>
-</ul>
-<h2 id="review-vcenter-alarms">Review vCenter Alarms<a class="headerlink" href="#review-vcenter-alarms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm which alarms are active on the host</li>
-<li>Check related cluster and datastore alarms</li>
-</ul>
-<h2 id="identify-affected-vms">Identify Affected VMs<a class="headerlink" href="#identify-affected-vms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm which VMs were running on the failed host</li>
-<li>Verify HA has restarted critical VMs on other hosts</li>
-<li>Check application owners for any workloads that did not restart</li>
-</ul>
-<h2 id="logs-to-collect">Logs to Collect<a class="headerlink" href="#logs-to-collect" title="Permanent link">&para;</a></h2>
-<ul>
-<li>iDRAC hardware logs and screenshots</li>
-<li>vCenter events from the time of the failure</li>
-<li>ESXi host logs if accessible via SSH or support bundle</li>
-<li>Aria Operations alerts at the time of failure</li>
-</ul>
-<h2 id="engage-hardware-support">Engage Hardware Support<a class="headerlink" href="#engage-hardware-support" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open a Dell support case if hardware failure is confirmed</li>
-<li>Provide iDRAC logs, hardware event screenshots, and host serial number</li>
-</ul>
-<h2 id="validate-cluster-health-after-recovery">Validate Cluster Health After Recovery<a class="headerlink" href="#validate-cluster-health-after-recovery" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm all remaining hosts are Connected</li>
-<li>Confirm HA and DRS are active</li>
-<li>Confirm vSAN object health is green if vSAN is used</li>
-<li>Confirm VMs are running on healthy hosts</li>
-<li>Update the change or incident ticket with findings</li>
+<li>Confirm vSphere Client is accessible on the new version</li>
+<li>Confirm all hosts are still Connected</li>
+<li>Confirm vSAN health is green if applicable</li>
+<li>Confirm NSX is functioning if applicable</li>
+<li>Confirm Aria integrations are working</li>
+<li>Confirm backup and monitoring plugins are working</li>
+<li>Capture new version and build number for records</li>
 </ul>
 
 

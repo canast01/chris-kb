@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>vCenter Service Health - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#vcenter-service-health" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              vCenter Service Health
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#appliance-management-interface" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Appliance Management Interface
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#checking-service-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Checking Service Status
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#disk-partition-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Disk Partition Usage
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#sso-and-lookup-service-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        SSO and Lookup Service Health
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#certificate-related-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Certificate-Related Failures
       
     </span>
   </a>
@@ -1573,10 +1573,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#dns-and-ntp-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        DNS and NTP Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restarting-services-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restarting Services Safely
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-restore-from-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Restore from Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evidence-to-collect-before-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence to Collect Before Escalation
       
     </span>
   </a>
@@ -1600,43 +1633,66 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical vCenter Health Checks notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vcenter-service-health">vCenter Service Health<a class="headerlink" href="#vcenter-service-health" title="Permanent link">&para;</a></h1>
+<h2 id="appliance-management-interface">Appliance Management Interface<a class="headerlink" href="#appliance-management-interface" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li>Log into the VCSA Appliance Management Interface (VAMI) at <code>https://&lt;vcenter&gt;:5480</code></li>
+<li>Check CPU, memory, and disk usage</li>
+<li>Confirm all services are shown as healthy</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="checking-service-status">Checking Service Status<a class="headerlink" href="#checking-service-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to vCenter, then:
+service-control --status
+</code></pre>
+<h2 id="disk-partition-usage">Disk Partition Usage<a class="headerlink" href="#disk-partition-usage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">df -h
+</code></pre>
+<p>Key partitions to monitor:
+- <code>/storage/log</code> — fills quickly during issues
+- <code>/storage/db</code> — vCenter database
+- <code>/storage/core</code> — core appliance data</p>
+<h2 id="sso-and-lookup-service-health">SSO and Lookup Service Health<a class="headerlink" href="#sso-and-lookup-service-health" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
+<li>Confirm SSO is running: <code>service-control --status vmware-sts</code></li>
+<li>Confirm Lookup Service: <code>service-control --status vmware-lookupsvc</code></li>
+<li>Confirm Identity Management: <code>service-control --status vmware-eam</code></li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="certificate-related-failures">Certificate-Related Failures<a class="headerlink" href="#certificate-related-failures" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
+<li>Browser certificate warning usually means the machine SSL cert is expired</li>
+<li>Login failures with SSO errors often point to the STS certificate</li>
+<li>Check certificate expiration in VAMI → Certificate Management</li>
 </ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="dns-and-ntp-validation">DNS and NTP Validation<a class="headerlink" href="#dns-and-ntp-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check DNS from vCenter appliance shell
+nslookup &lt;vcenter-fqdn&gt;
+dig &lt;vcenter-fqdn&gt;
+
+# Check NTP status
+timedatectl
+</code></pre>
+<h2 id="restarting-services-safely">Restarting Services Safely<a class="headerlink" href="#restarting-services-safely" title="Permanent link">&para;</a></h2>
+<p>Only restart services after checking disk space and reviewing recent changes.</p>
+<pre><code class="language-bash">service-control --restart --all
+</code></pre>
+<blockquote>
+<p>Restart one service at a time where possible. A full restart causes brief vCenter unavailability.</p>
+</blockquote>
+<h2 id="when-to-restore-from-backup">When to Restore from Backup<a class="headerlink" href="#when-to-restore-from-backup" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Corrupt database</li>
+<li>STS certificate failure that cannot be resolved in place</li>
+<li>Multi-service failure with no clear root cause</li>
+<li>Disk partition full with no recovery path</li>
+</ul>
+<h2 id="evidence-to-collect-before-escalation">Evidence to Collect Before Escalation<a class="headerlink" href="#evidence-to-collect-before-escalation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>df -h</code> output</li>
+<li><code>service-control --status</code> output</li>
+<li>Screenshots of VAMI health</li>
+<li>Recent vCenter events and tasks</li>
+<li>Support bundle from VAMI</li>
+</ul>
 
 
 
