@@ -1,44 +1,36 @@
-# Upgrade Readiness
+# VxRail Pre-Upgrade Checklist
 
-## Purpose
+## Before Starting
 
-Use this page for practical VxRail Upgrade Readiness notes, checks, troubleshooting, commands, change notes, and field references.
+- Confirm current VxRail version
+- Confirm target VxRail version
+- Review release notes for target version
+- Confirm supported upgrade path
 
-## Common checks
+## Platform Health
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+- VxRail Manager is reachable and healthy
+- vCenter is reachable and all hosts are connected
+- vSAN Skyline Health is green
+- No critical hardware alerts in iDRAC
+- No active vSAN resyncs (or acceptable level)
 
-## Incident notes
+## Infrastructure Validation
 
-Capture:
+- DNS forward and reverse lookup working for all nodes
+- NTP is synchronized across vCenter and ESXi hosts
+- Certificates are valid and not expiring during the window
+- Admin access confirmed for vCenter and VxRail Manager
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## Backups and Recovery
 
-## Change notes
+- vCenter file-based backup is current
+- VxRail configuration backup completed
+- Rollback plan documented
+- Dell support contact available if needed
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Approvals
 
-## Useful commands
-
-Add tested commands here.
-
-## Known issues
-
-Add known issues here as they come up.
+- Maintenance window approved
+- Stakeholders notified
+- Change ticket approved

@@ -1,44 +1,47 @@
-# Troubleshooting
+# Aria Operations for Logs — Troubleshooting Guide
 
-## Purpose
+## Searching ESXi Host Logs
 
-Use this page for practical Aria Operations For Logs Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.
+Search for a specific host by name or IP and filter by log source:
 
-## Common checks
+- `hostd` — VM and host operations
+- `vpxa` — vCenter agent on the host
+- `vmkernel` — kernel-level events
+- `vobd` — hardware and storage events
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+## Searching vCenter Events
 
-## Incident notes
+Use the vCenter log source and filter by event type or keyword:
 
-Capture:
+- Login events: search `SessionManager`
+- Task failures: search `TaskManager` or `error`
+- Certificate events: search `certificate` or `STS`
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## Common Search Examples
 
-## Change notes
+| Use Case | Search Term |
+|---|---|
+| Login failures | `Failed to authenticate` |
+| Host disconnects | `lost connectivity` or `not responding` |
+| Certificate errors | `certificate` or `SSL` or `handshake` |
+| vMotion errors | `vmotion` and `error` |
+| NTP issues | `NTP` or `time` and `drift` |
+| Storage errors | `SCSI` or `datastore` and `error` |
+| Service restarts | `hostd restarted` or `vpxa restarted` |
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Time-Based Filtering
 
-## Useful commands
+Always set a time range before searching — searching all time is slow and returns too many results. Start with the last 1 hour during an active incident, then expand if needed.
 
-Add tested commands here.
+## Correlating Events Across Systems
 
-## Known issues
+When troubleshooting, search the same time window across multiple log sources:
 
-Add known issues here as they come up.
+1. Start with vCenter events to find the first symptom
+2. Match the timestamp to ESXi host logs for the affected host
+3. Check storage or network logs if the issue involves those layers
+4. Cross-reference with Aria Operations alerts at the same time
+
+## Exporting Evidence
+
+Use the export function to save log query results as CSV or text for change tickets, RCAs, or support cases.

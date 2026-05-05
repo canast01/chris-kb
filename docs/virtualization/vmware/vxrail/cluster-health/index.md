@@ -1,44 +1,47 @@
-# Cluster Health
+# VxRail Hardware Health Review
 
-## Purpose
+## iDRAC
 
-Use this page for practical VxRail Cluster Health notes, checks, troubleshooting, commands, change notes, and field references.
+- Log into iDRAC for each node
+- Confirm no critical hardware alerts
+- Review Lifecycle Controller logs for recent events
+- Confirm remote access is working
 
-## Common checks
+## Disk Health
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+- Confirm no failed or predictive failure disks
+- Review disk group status in vSAN Skyline Health
+- Check for any disk errors in iDRAC storage view
 
-## Incident notes
+## Memory Health
 
-Capture:
+- Confirm no memory errors in iDRAC
+- Check for correctable or uncorrectable ECC errors
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## CPU Health
 
-## Change notes
+- Confirm no CPU errors or throttling events
+- Review thermal and power state
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Power Supply
 
-## Useful commands
+- Confirm both PSUs are present and healthy
+- Confirm no power redundancy warnings
 
-Add tested commands here.
+## NIC Status
 
-## Known issues
+- Confirm all NICs are active and at expected speed
+- Review NIC errors in iDRAC and ESXi
 
-Add known issues here as they come up.
+## Firmware Baseline
+
+- Confirm all nodes are on the same approved firmware bundle
+- Review VxRail Manager for firmware compliance status
+
+## When to Open a Dell Support Case
+
+- Any failed hardware component
+- Predictive disk failure alert
+- Memory ECC uncorrectable errors
+- Firmware inconsistency that cannot be resolved by upgrade
+- iDRAC unreachable on a node

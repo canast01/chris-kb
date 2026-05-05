@@ -1,44 +1,45 @@
-# Support Bundles
+# VxRail Support Bundle Collection
 
-## Purpose
+## When to Collect
 
-Use this page for practical VxRail Support Bundles notes, checks, troubleshooting, commands, change notes, and field references.
+- Dell or VMware support requests logs for an open case
+- Upgrade pre-check or upgrade failure
+- Node hardware alert requiring investigation
+- VxRail Manager issue
+- vSAN health issue on VxRail cluster
 
-## Common checks
+## Bundle Sources
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+| Source | What It Contains |
+|---|---|
+| VxRail Manager | Cluster state, upgrade logs, VxRail service logs |
+| vCenter | Events, tasks, VC logs, SSO logs |
+| ESXi hosts | hostd, vpxa, vmkernel, vobd logs |
+| vSAN logs | Object health, disk group state, network |
+| iDRAC / hardware | Lifecycle Controller, hardware events, firmware |
 
-## Incident notes
+## Collection Process
 
-Capture:
+1. Log into VxRail Manager
+2. Navigate to **Support** → **Bundle Collection**
+3. Select the bundle type (cluster, node, or full)
+4. Wait for collection to complete
+5. Download and save the bundle
+6. For ESXi or vCenter logs, collect via the vSphere Client or SSH
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## What to Include with a Dell Support Case
 
-## Change notes
+- VxRail Manager support bundle
+- Error messages and screenshots
+- Approximate time the issue started
+- What changed before the issue
+- Current VxRail version and target version if upgrade-related
+- iDRAC IP addresses for affected nodes
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Naming Convention
 
-## Useful commands
+Use a consistent name when saving bundles:
 
-Add tested commands here.
-
-## Known issues
-
-Add known issues here as they come up.
+```
+vxrail-support-<cluster-name>-<YYYY-MM-DD>.zip
+```
