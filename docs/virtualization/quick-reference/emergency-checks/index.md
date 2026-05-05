@@ -25,6 +25,20 @@ Use these when there is a major incident.
 | Status | Open, monitoring, fixed |
 | Date Found | When it was identified |
 
+## Escalation Quick Reference
+
+| Issue | Escalate To |
+|---|---|
+| vSAN object inaccessible | VMware support |
+| vCenter SSO failure | VMware support |
+| VxRail upgrade failure | Dell support |
+| Host hardware failure | Dell / hardware support |
+| Datastore latency high | Storage team |
+| vMotion network failure | Network team |
+| Backup snapshot failure | Backup team |
+| Certificate outage | VMware / security team |
+| NSX control plane failure | VMware / NSX support |
+
 ## Fast Troubleshooting Map
 
 | Problem | First Place to Look |
