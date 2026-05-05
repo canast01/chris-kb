@@ -1,44 +1,91 @@
-# Queries
+# Aria Operations for Logs — Search Examples
 
-## Purpose
+## Host Disconnect Events
 
-Use this page for practical Aria Operations For Logs Queries notes, checks, troubleshooting, commands, change notes, and field references.
+```
+lost connectivity to the server
+not responding
+connection refused
+```
 
-## Common checks
+## vCenter Authentication Failures
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+```
+Failed to authenticate
+Login failed
+password incorrect
+SessionManager
+```
 
-## Incident notes
+## Certificate Errors
 
-Capture:
+```
+certificate
+SSL
+handshake failed
+x509
+STS
+```
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## vMotion Failures
 
-## Change notes
+```
+vmotion
+migration failed
+VMotionFailed
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## HA Events
 
-## Useful commands
+```
+HA failover
+ha.vm.restart
+failover started
+admission control
+```
 
-Add tested commands here.
+## DRS Events
 
-## Known issues
+```
+DRS
+migration recommended
+load balance
+```
 
-Add known issues here as they come up.
+## Datastore Errors
+
+```
+datastore
+SCSI error
+APD
+PDL
+NFS
+VMFS
+```
+
+## vSAN Errors
+
+```
+vsan
+disk group
+resync
+object health
+storage compliance
+```
+
+## NSX Errors
+
+```
+nsx
+transport node
+edge
+TEP
+segment
+```
+
+## Time-Based Search Tips
+
+- Always set a time range — start with the last 1 hour for active incidents
+- Expand to 24 hours or 7 days when investigating intermittent issues
+- Use the timeline view to identify event spikes
+- Cross-reference vCenter event timestamps with host log timestamps

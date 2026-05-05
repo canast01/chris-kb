@@ -1,55 +1,63 @@
-# Vsan Health Checks
+# vSAN Health and Object Compliance
 
-## Overview
+## vSAN Skyline Health
 
-vSAN Skyline health, cluster checks, object health, capacity, and policy compliance.
+Access via vCenter → **Host and Clusters** → Select cluster → **vSAN** → **Skyline Health**
 
-## Where It Fits
+Review all health categories:
+- Network
+- Physical disk
+- Data
+- Cluster
+- Hardware compatibility
 
-Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.
+## Disk Group Health
 
-## Daily Checks
+- Confirm all disk groups show as Healthy
+- Check for any degraded or absent disk groups
+- Review individual disk status — confirm no failed or at-risk disks
 
-- Review active alarms.
-- Check recent failed tasks.
-- Confirm service health.
-- Confirm capacity and performance are normal.
-- Check recent changes.
+## Object Health
 
-## Health Commands
+Access via **vSAN** → **Virtual Objects**
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- Confirm all objects show as Healthy or Compliant
+- Investigate any objects showing Degraded, Non-compliant, or Absent
 
-## Common Issues
+## Storage Policy Compliance
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+- Objects should meet their assigned storage policy
+- Non-compliant objects may indicate insufficient capacity or a disk failure
 
-## Operational Tasks
+## Resync Status
 
-- Review alarms and events.
-- Confirm ownership and support notes.
-- Validate dependencies.
-- Document changes.
-- Confirm monitoring coverage.
+- Active resyncs are normal after failures or maintenance
+- Monitor resync progress — extended resyncs can indicate capacity or performance issues
+- Avoid taking additional hosts into maintenance while resync is active
 
-## Upgrade Notes
+## Capacity Usage
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+- Recommended: keep usable vSAN capacity below 70%
+- Review thin-provisioned disk growth
+- Remove stale snapshots that consume vSAN space
 
-## Best Practices
+## Network Health
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+- Confirm vSAN VMkernel adapters are active on all hosts
+- Confirm vSAN traffic is on the correct VLAN
+- Test connectivity between hosts using vmkping if network health shows errors
+
+## Common Causes of Degraded Objects
+
+- Host placed into maintenance mode without full migration
+- Disk failure
+- Network partition
+- Insufficient capacity to meet FTT policy
+- Stretched cluster site issue
+
+## When to Open a VMware Support Case
+
+- Degraded objects that do not recover after the host returns
+- Disk group failure with no clear hardware cause
+- Skyline Health showing persistent errors after corrective actions
+- vSAN objects stuck in resync for extended periods

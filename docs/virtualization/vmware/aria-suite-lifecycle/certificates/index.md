@@ -1,44 +1,47 @@
-# Certificates
+# Aria Suite Lifecycle — Certificate Management
 
-## Purpose
+## Certificate Inventory
 
-Use this page for practical Aria Suite Lifecycle Certificates notes, checks, troubleshooting, commands, change notes, and field references.
+Track the following for each Aria product:
 
-## Common checks
+- Product name and version
+- Certificate subject and SANs
+- Expiration date
+- Issuing CA
+- Trust chain status
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+## Expiration Tracking
 
-## Incident notes
+- Review certificate expiration dates monthly
+- Flag certificates expiring within 60 days
+- Confirm renewals are planned before the 30-day mark
 
-Capture:
+## Trusted Root Chain
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+- Confirm the CA root and intermediate certs are trusted by all Aria products
+- A broken trust chain causes integration failures between products and with vCenter
 
-## Change notes
+## Replacement Process
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+1. Generate a new CSR from Aria Suite Lifecycle
+2. Submit to the CA and retrieve the signed certificate
+3. Import the certificate into Aria Suite Lifecycle
+4. Apply to the affected product endpoint
+5. Validate product health after replacement
 
-## Useful commands
+## Pre-Change Validation
 
-Add tested commands here.
+- Confirm current certificates are still valid
+- Confirm the CA is accessible
+- Confirm backup of current product configuration
 
-## Known issues
+## Post-Change Validation
 
-Add known issues here as they come up.
+- Confirm product UI is accessible
+- Confirm integrations with vCenter and other products are working
+- Confirm no certificate warnings in browser or product health views
+
+## Rollback Plan
+
+- Keep the previous certificate available for re-import if needed
+- If the product becomes unreachable, restore from Aria Suite Lifecycle backup

@@ -1,55 +1,42 @@
-# Esxi Maintenance Mode
+# ESXi Host Maintenance Mode Process
 
-## Overview
+## Pre-Checks
 
-Host evacuation, DRS behavior, validation, and return-to-service checks.
+- Confirm cluster has sufficient capacity to absorb workload
+- Confirm DRS is enabled and set to at least Partially Automated
+- Check for VMs with DRS anti-affinity or must-run-on rules
+- Confirm vSAN evacuation setting if vSAN is in use
 
-## Where It Fits
+## Entering Maintenance Mode
 
-Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.
+1. In vCenter, right-click the host → **Maintenance Mode** → **Enter Maintenance Mode**
+2. Select evacuation option:
+   - **Move powered-off and suspended VMs** (standard)
+   - **Ensure accessibility** (vSAN — leaves data accessible but does not fully evacuate)
+   - **Full data migration** (vSAN — migrates all data off the host)
+3. Click OK and monitor the task
 
-## Daily Checks
+## Monitoring the Process
 
-- Review active alarms.
-- Check recent failed tasks.
-- Confirm service health.
-- Confirm capacity and performance are normal.
-- Check recent changes.
+- Watch DRS task progress in Recent Tasks
+- Confirm VMs are migrating to other hosts
+- Check vSAN resync if full migration was selected — wait for it to complete before proceeding
 
-## Health Commands
+## Completing Approved Work
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- Perform hardware, firmware, or patching work as planned
+- Do not extend beyond the approved maintenance window without notification
 
-## Common Issues
+## Exiting Maintenance Mode
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+1. Right-click the host → **Maintenance Mode** → **Exit Maintenance Mode**
+2. Confirm the host reconnects and shows as Connected
+3. Wait for vSAN to rebalance if applicable
 
-## Operational Tasks
+## Post-Maintenance Validation
 
-- Review alarms and events.
-- Confirm ownership and support notes.
-- Validate dependencies.
-- Document changes.
-- Confirm monitoring coverage.
-
-## Upgrade Notes
-
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-## Best Practices
-
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+- Confirm host is Connected in vCenter
+- Confirm no new alerts on the host
+- Confirm vSAN health is green if vSAN is used
+- Confirm VMs are distributed as expected by DRS
+- Confirm host hardware health in iDRAC

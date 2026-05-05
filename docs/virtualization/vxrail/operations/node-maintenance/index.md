@@ -1,59 +1,46 @@
-# VxRail Node Maintenance
+# VxRail Node Maintenance Procedure
 
-## Overview
+## Before Starting
 
-Node-level maintenance planning, evacuation, validation, and return to service.
+- Confirm cluster health in vCenter — no critical alarms
+- Confirm vSAN Skyline Health is green
+- Confirm no active vSAN resyncs (or they are at an acceptable level)
+- Confirm cluster has capacity to absorb the workload from this node
 
-## Where It Fits
+## Evacuation Mode Selection
 
-Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
+When entering maintenance mode on a VxRail node:
 
-## Daily Checks
+| Option | When to Use |
+|---|---|
+| Ensure Accessibility | Standard maintenance — keeps data accessible without full migration |
+| Full Data Migration | Before disk replacement or extended maintenance |
+| No Data Migration | Only with Dell support guidance |
 
-- Review VxRail Manager health.
-- Check vCenter and ESXi host health.
-- Review vSAN health.
-- Confirm no active failed tasks.
-- Review hardware alerts.
-- Check recent lifecycle or support events.
+## Entering Maintenance Mode
 
-## Health Commands
+1. In vCenter, right-click the VxRail node → **Maintenance Mode** → **Enter Maintenance Mode**
+2. Select the appropriate evacuation mode
+3. Monitor vSAN resync if full migration is selected
+4. Wait for maintenance mode to complete before starting hardware or firmware work
 
-~~~bash
-# Add environment-specific commands here
-~~~
+## Performing the Work
 
-## Common Issues
+- Complete only the approved scope of work
+- Do not extend beyond the maintenance window without notification
+- Confirm iDRAC access throughout the maintenance if hardware is involved
 
-- Lifecycle pre-check failure.
-- Host hardware warning.
-- vSAN health warning.
-- Failed update bundle.
-- VxRail Manager service issue.
-- Version compatibility issue.
-- Support bundle collection failure.
+## Exiting Maintenance Mode
 
-## Operational Tasks
+1. Right-click the host → **Maintenance Mode** → **Exit Maintenance Mode**
+2. Confirm host reconnects to vCenter
+3. Monitor vSAN rebalancing — this is expected and may take time
+4. Confirm vSAN object health is green after rebalancing completes
 
-- Review cluster health.
-- Validate node status.
-- Confirm support connectivity.
-- Check upgrade readiness.
-- Collect support evidence.
-- Document changes and follow-up items.
+## Post-Maintenance Validation
 
-## Upgrade Notes
-
-- Confirm upgrade path.
-- Review Dell compatibility guidance.
-- Confirm vCenter, ESXi, vSAN, and firmware versions.
-- Validate backups and rollback notes.
-- Run post-upgrade checks.
-
-## Best Practices
-
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+- Host is Connected in vCenter
+- No new critical alerts
+- vSAN Skyline Health is green
+- VxRail Manager shows the node as healthy
+- Firmware matches the approved cluster baseline

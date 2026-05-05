@@ -1,44 +1,73 @@
-# Health Checks
+# vCenter Service Health
 
-## Purpose
+## Appliance Management Interface
 
-Use this page for practical vCenter Health Checks notes, checks, troubleshooting, commands, change notes, and field references.
+- Log into the VCSA Appliance Management Interface (VAMI) at `https://<vcenter>:5480`
+- Check CPU, memory, and disk usage
+- Confirm all services are shown as healthy
 
-## Common checks
+## Checking Service Status
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+```bash
+# SSH to vCenter, then:
+service-control --status
+```
 
-## Incident notes
+## Disk Partition Usage
 
-Capture:
+```bash
+df -h
+```
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+Key partitions to monitor:
+- `/storage/log` — fills quickly during issues
+- `/storage/db` — vCenter database
+- `/storage/core` — core appliance data
 
-## Change notes
+## SSO and Lookup Service Health
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+- Confirm SSO is running: `service-control --status vmware-sts`
+- Confirm Lookup Service: `service-control --status vmware-lookupsvc`
+- Confirm Identity Management: `service-control --status vmware-eam`
 
-## Useful commands
+## Certificate-Related Failures
 
-Add tested commands here.
+- Browser certificate warning usually means the machine SSL cert is expired
+- Login failures with SSO errors often point to the STS certificate
+- Check certificate expiration in VAMI → Certificate Management
 
-## Known issues
+## DNS and NTP Validation
 
-Add known issues here as they come up.
+```bash
+# Check DNS from vCenter appliance shell
+nslookup <vcenter-fqdn>
+dig <vcenter-fqdn>
+
+# Check NTP status
+timedatectl
+```
+
+## Restarting Services Safely
+
+Only restart services after checking disk space and reviewing recent changes.
+
+```bash
+service-control --restart --all
+```
+
+> Restart one service at a time where possible. A full restart causes brief vCenter unavailability.
+
+## When to Restore from Backup
+
+- Corrupt database
+- STS certificate failure that cannot be resolved in place
+- Multi-service failure with no clear root cause
+- Disk partition full with no recovery path
+
+## Evidence to Collect Before Escalation
+
+- `df -h` output
+- `service-control --status` output
+- Screenshots of VAMI health
+- Recent vCenter events and tasks
+- Support bundle from VAMI

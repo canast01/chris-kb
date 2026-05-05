@@ -1,41 +1,16 @@
-# Virtualization network-inventory/
+# VMware Network Inventory
 
-## Overview
-
-Port groups, VLANs, segments, distributed switches, and uplinks.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+| Field | Example |
+|---|---|
+| vSwitch or DVS Name | vDS-prod-01 |
+| Port Group Name | pg-prod-app-vlan100 |
+| VLAN ID | 100 |
+| MTU | 1500 or 9000 |
+| Uplink Mapping | vmnic0, vmnic1 |
+| VMkernel Adapters | vmk0 (mgmt), vmk1 (vMotion), vmk2 (vSAN) |
+| vMotion Network | VLAN 200, vmk1 |
+| Management Network | VLAN 10, vmk0 |
+| vSAN Network | VLAN 300, vmk2 |
+| NSX Segment Mapping | seg-prod-app-01 maps to VLAN 100 |
+| NIC Teaming Policy | Load-based or Active/Standby |
+| Notes | Any exceptions or non-standard config |

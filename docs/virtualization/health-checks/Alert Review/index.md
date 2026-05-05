@@ -1,41 +1,41 @@
-# Virtualization alert-review/
+# Alert Health Check
 
-## Overview
+## Active Alerts Review
 
-Review active alerts, stale alerts, ownership, and escalation needs.
+- Review all critical alerts in vCenter — confirm each has an owner or action
+- Review warning alerts — identify any that have been open longer than expected
+- Check for alerts that triggered during a recent maintenance window
 
-## Pre-Checks
+## Aria Operations Alerts
 
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
+- Review Aria Operations alert dashboard
+- Identify any critical or high-severity alerts
+- Confirm alerts are not suppressed unnecessarily outside maintenance windows
 
-## Steps
+## Hardware Alerts
 
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
+- Review iDRAC alerts for all VxRail nodes and other servers
+- Confirm no outstanding disk, memory, NIC, or PSU alerts
 
-## Validation
+## Backup Alerts
 
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
+- Review backup platform for failed or missed jobs
+- Confirm all critical VMs and systems have a successful recent backup
 
-## Rollback
+## Repeat Alerts
 
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
+- Identify alerts that fire repeatedly without resolution
+- Review repeat alerts for tuning or permanent fixes
+- Suppress intentionally only with a documented reason and expiry
 
-## Notes
+## False Positives and Stale Alerts
 
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Remove or disable alerts that no longer apply
+- Review alert thresholds — adjust if consistently firing below the meaningful threshold
+
+## Alert Owner and Next Action
+
+For each open critical alert, confirm:
+- Owner assigned
+- Next action documented
+- Escalation path clear if not resolved within SLA

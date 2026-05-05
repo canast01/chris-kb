@@ -1,44 +1,54 @@
-# Resync
+# vSAN Resync and Object Health Troubleshooting
 
-## Purpose
+## Checking Resync Status
 
-Use this page for practical vSAN Resync notes, checks, troubleshooting, commands, change notes, and field references.
+```bash
+# From an ESXi host in the cluster
+esxcli vsan debug resync summary get
+```
 
-## Common checks
+Or in vCenter: **vSAN** → **Skyline Health** → **Data** → **vSAN Object Health**
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+## Understanding Resync Types
 
-## Incident notes
+| Type | Meaning |
+|---|---|
+| Repair | Rebuilding a component after a failure |
+| Rebalance | Redistributing data after capacity or host changes |
+| Evacuation | Migrating data for maintenance mode |
+| Policy change | Applying a new storage policy |
 
-Capture:
+## When Resync Is Expected
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+- Host just returned from maintenance mode
+- Disk replacement completed
+- Capacity added to the cluster
+- Storage policy changed on VMs
 
-## Change notes
+## When Resync Is Concerning
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+- Resync active for more than 24 hours without progress
+- Object health showing Degraded with no active resync
+- Resync blocked due to capacity or network issues
 
-## Useful commands
+## Checking Object Health
 
-Add tested commands here.
+In vCenter: **vSAN** → **Virtual Objects**
 
-## Known issues
+- Filter by health status — investigate Degraded, Non-compliant, or Absent objects
+- Note the VM name, object type, and storage policy
 
-Add known issues here as they come up.
+## Common Causes of Degraded Objects
+
+- Host removed from cluster without full evacuation
+- Disk group failure
+- Network partition between hosts
+- Capacity too low to meet the FTT policy
+
+## Support Bundle Collection
+
+If resync or object issues do not resolve after the expected timeframe:
+
+1. Collect a vSAN support bundle from the vCenter support bundle tool
+2. Include ESXi host logs from affected nodes
+3. Open a VMware support case with the bundle and a timeline of events

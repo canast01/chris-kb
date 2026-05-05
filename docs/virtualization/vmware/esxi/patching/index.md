@@ -1,55 +1,37 @@
-# Esxi Patching
+# ESXi Upgrade and Patching Readiness
 
-## Overview
+## Current State
 
-Patch readiness, lifecycle checks, remediation notes, and post-patch validation.
+- Confirm current ESXi version and build on all hosts
+- Note any hosts on a different version than the cluster standard
 
-## Where It Fits
+## Target Image or Baseline
 
-Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.
+- Identify the target ESXi image or patch baseline
+- Confirm the image is compatible with the hardware (HCL)
+- Confirm driver and firmware compatibility for NIC, HBA, and storage adapters
 
-## Daily Checks
+## Cluster Capacity
 
-- Review active alarms.
-- Check recent failed tasks.
-- Confirm service health.
-- Confirm capacity and performance are normal.
-- Check recent changes.
+- Confirm the cluster has sufficient headroom to evacuate one host at a time
+- Confirm DRS is enabled and set to at least Partially Automated
 
-## Health Commands
+## Backup and Config Export
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- Confirm vCenter file-based backup is current
+- Export ESXi host configuration if required for the change record
 
-## Common Issues
+## Remediation Order
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+For clusters with multiple hosts:
+1. Patch one host at a time
+2. Wait for each host to return from maintenance mode and vSAN to stabilize before patching the next
+3. Do not patch all hosts simultaneously
 
-## Operational Tasks
+## Post-Patch Validation
 
-- Review alarms and events.
-- Confirm ownership and support notes.
-- Validate dependencies.
-- Document changes.
-- Confirm monitoring coverage.
-
-## Upgrade Notes
-
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-## Best Practices
-
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+- Confirm host is Connected in vCenter
+- Confirm ESXi version matches the target
+- Confirm no new hardware or service alerts
+- Confirm vSAN health is green if vSAN is used
+- Confirm VMs are running normally

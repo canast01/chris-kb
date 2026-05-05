@@ -1,46 +1,56 @@
-# ESXi Host Evacuation Runbook
+# ESXi Host Failure Runbook
 
-## Overview
+## Confirm Impact
 
-Use this before host maintenance, patching, hardware work, or lifecycle activity.
+- Identify the affected host
+- Check vCenter — is the host Disconnected, Not Responding, or in Error?
+- Identify which VMs were running on the host
+- Confirm HA status — have VMs been restarted on other hosts?
 
-## Pre-Checks
+## Check Power State
 
-- Confirm cluster capacity.
-- Confirm DRS status.
-- Confirm no pinned or special workload constraints.
-- Check datastore access.
-- Check vSAN resync activity if used.
-- Confirm host hardware health.
-- Confirm maintenance window.
+- Log into iDRAC and confirm power state
+- If powered off unexpectedly, check power supply health and power events in iDRAC
 
-## Steps
+## Check Management Network
 
-1. Review running VMs on the host.
-2. Check cluster capacity.
-3. Check vSAN health if used.
-4. Enter maintenance mode using the correct evacuation option.
-5. Monitor VM migrations.
-6. Resolve stuck migrations if needed.
-7. Complete maintenance.
-8. Exit maintenance mode.
-9. Confirm host health.
+- Ping the host management IP
+- Check DNS forward and reverse lookup for the hostname
+- Confirm the management switch port is active
 
-## Validation
+## Check Hardware Management Interface
 
-- Host exits maintenance mode cleanly.
-- VMs are running.
-- Cluster capacity is normal.
-- No new vSAN issues.
-- No new host alarms.
+- Log into iDRAC and review hardware health
+- Check for disk, memory, NIC, or PSU failures
+- Review Lifecycle Controller logs for recent hardware events
 
-## Rollback
+## Review vCenter Alarms
 
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
+- Confirm which alarms are active on the host
+- Check related cluster and datastore alarms
 
-## Notes
+## Identify Affected VMs
 
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+- Confirm which VMs were running on the failed host
+- Verify HA has restarted critical VMs on other hosts
+- Check application owners for any workloads that did not restart
+
+## Logs to Collect
+
+- iDRAC hardware logs and screenshots
+- vCenter events from the time of the failure
+- ESXi host logs if accessible via SSH or support bundle
+- Aria Operations alerts at the time of failure
+
+## Engage Hardware Support
+
+- Open a Dell support case if hardware failure is confirmed
+- Provide iDRAC logs, hardware event screenshots, and host serial number
+
+## Validate Cluster Health After Recovery
+
+- Confirm all remaining hosts are Connected
+- Confirm HA and DRS are active
+- Confirm vSAN object health is green if vSAN is used
+- Confirm VMs are running on healthy hosts
+- Update the change or incident ticket with findings
