@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware Certificate Renewal Runbook - Chris KB</title>
+        <title>VMware Certificate Quick Reference - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-certificate-renewal-runbook" class="md-skip">
+        <a href="#vmware-certificate-quick-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware Certificate Renewal Runbook
+              VMware Certificate Quick Reference
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identify-the-expiring-certificate" class="md-nav__link">
+  <a href="#check-expiration-quickly" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify the Expiring Certificate
+        Check Expiration Quickly
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-affected-products" class="md-nav__link">
+  <a href="#identify-certificate-type" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Affected Products
+        Identify Certificate Type
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capture-current-certificate-details" class="md-nav__link">
+  <a href="#review-trusted-root-chain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capture Current Certificate Details
+        Review Trusted Root Chain
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-backup-exists" class="md-nav__link">
+  <a href="#check-sts-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Backup Exists
+        Check STS Certificate
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schedule-maintenance-window" class="md-nav__link">
+  <a href="#validate-after-replacement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schedule Maintenance Window
+        Validate After Replacement
       
     </span>
   </a>
@@ -1573,43 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replace-the-certificate" class="md-nav__link">
+  <a href="#escalate-if" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replace the Certificate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restart-required-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restart Required Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-integrations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Integrations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-final-expiration-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Final Expiration Date
+        Escalate If
       
     </span>
   </a>
@@ -1633,53 +1600,64 @@
 
 
 
-<h1 id="vmware-certificate-renewal-runbook">VMware Certificate Renewal Runbook<a class="headerlink" href="#vmware-certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="identify-the-expiring-certificate">Identify the Expiring Certificate<a class="headerlink" href="#identify-the-expiring-certificate" title="Permanent link">&para;</a></h2>
+<h1 id="vmware-certificate-quick-reference">VMware Certificate Quick Reference<a class="headerlink" href="#vmware-certificate-quick-reference" title="Permanent link">&para;</a></h1>
+<h2 id="check-expiration-quickly">Check Expiration Quickly<a class="headerlink" href="#check-expiration-quickly" title="Permanent link">&para;</a></h2>
+<p>In vCenter Appliance Management (VAMI) at <code>https://&lt;vcenter&gt;:5480</code>:
+- Navigate to <strong>Certificate Management</strong>
+- Review all certificate expiration dates</p>
+<h2 id="identify-certificate-type">Identify Certificate Type<a class="headerlink" href="#identify-certificate-type" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Certificate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser warning on vCenter</td>
+<td>Machine SSL certificate</td>
+</tr>
+<tr>
+<td>Login fails for all users</td>
+<td>STS certificate</td>
+</tr>
+<tr>
+<td>Product integration broken</td>
+<td>Trusted root or endpoint cert</td>
+</tr>
+<tr>
+<td>NSX UI unreachable</td>
+<td>NSX Manager certificate</td>
+</tr>
+<tr>
+<td>Aria product unreachable</td>
+<td>Aria endpoint certificate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="review-trusted-root-chain">Review Trusted Root Chain<a class="headerlink" href="#review-trusted-root-chain" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review certificate inventory</li>
-<li>Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint</li>
-<li>Note the affected product and expiration date</li>
+<li>Confirm the issuing CA root certificate is trusted by vCenter</li>
+<li>If a custom CA is used, confirm both root and intermediate are imported</li>
 </ul>
-<h2 id="confirm-affected-products">Confirm Affected Products<a class="headerlink" href="#confirm-affected-products" title="Permanent link">&para;</a></h2>
-<ul>
-<li>List all products that trust or use this certificate</li>
-<li>Confirm which integrations may be disrupted during replacement</li>
-</ul>
-<h2 id="capture-current-certificate-details">Capture Current Certificate Details<a class="headerlink" href="#capture-current-certificate-details" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Subject, SAN, issuer, expiration date</li>
-<li>Screenshot from VAMI or vSphere Client as pre-change evidence</li>
-</ul>
-<h2 id="confirm-backup-exists">Confirm Backup Exists<a class="headerlink" href="#confirm-backup-exists" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm vCenter file-based backup is current</li>
-<li>Confirm product backup for Aria or NSX if their certificate is being replaced</li>
-</ul>
-<h2 id="schedule-maintenance-window">Schedule Maintenance Window<a class="headerlink" href="#schedule-maintenance-window" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Plan replacement outside peak hours</li>
-<li>Allow time for service restarts and integration validation</li>
-</ul>
-<h2 id="replace-the-certificate">Replace the Certificate<a class="headerlink" href="#replace-the-certificate" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Follow the correct replacement method for the certificate type</li>
-<li>For VMCA-issued certs: use vSphere Client or VAMI</li>
-<li>For custom CA certs: generate CSR, submit to CA, import signed cert</li>
-</ul>
-<h2 id="restart-required-services">Restart Required Services<a class="headerlink" href="#restart-required-services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">service-control --restart --all
+<h2 id="check-sts-certificate">Check STS Certificate<a class="headerlink" href="#check-sts-certificate" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to vCenter
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
 </code></pre>
-<p>Only restart services after confirming the new certificate is applied.</p>
-<h2 id="validate-integrations">Validate Integrations<a class="headerlink" href="#validate-integrations" title="Permanent link">&para;</a></h2>
+<h2 id="validate-after-replacement">Validate After Replacement<a class="headerlink" href="#validate-after-replacement" title="Permanent link">&para;</a></h2>
 <ul>
-<li>vCenter browser access — no certificate warning</li>
-<li>SSO login for local and AD accounts</li>
-<li>Aria, NSX, backup, and monitoring integrations confirmed</li>
+<li>Browser access to vCenter — no certificate warning</li>
+<li>SSO login working for local and AD accounts</li>
+<li>All hosts Connected</li>
+<li>Integrations working (Aria, NSX, backup)</li>
+<li>Document new expiration date</li>
 </ul>
-<h2 id="document-final-expiration-date">Document Final Expiration Date<a class="headerlink" href="#document-final-expiration-date" title="Permanent link">&para;</a></h2>
+<h2 id="escalate-if">Escalate If<a class="headerlink" href="#escalate-if" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Update the certificate inventory with the new expiration date</li>
-<li>Set a review reminder 60 days before the new expiration</li>
+<li>vCenter services fail after certificate replacement</li>
+<li>STS cannot be recovered in place</li>
+<li>Certificate replacement causes SSO token failures</li>
 </ul>
 
 

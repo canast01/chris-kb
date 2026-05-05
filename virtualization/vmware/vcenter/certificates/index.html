@@ -21,7 +21,7 @@
     
     
       
-        <title>Vcenter Certificates - Chris KB</title>
+        <title>VMware Certificate Expiration Tracking - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vcenter-certificates" class="md-skip">
+        <a href="#vmware-certificate-expiration-tracking" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Vcenter Certificates
+              VMware Certificate Expiration Tracking
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#certificates-to-track" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Certificates to Track
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#expiration-tracking-schedule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Expiration Tracking Schedule
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#certificate-replacement-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Certificate Replacement Process
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#validation-after-replacement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Validation After Replacement
       
     </span>
   </a>
@@ -1562,43 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#emergency-escalation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
+        Emergency Escalation
       
     </span>
   </a>
@@ -1622,54 +1589,76 @@
 
 
 
-<h1 id="vcenter-certificates">Vcenter Certificates<a class="headerlink" href="#vcenter-certificates" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Certificate inventory, expiration checks, replacement planning, and service impact notes.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<p>Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vmware-certificate-expiration-tracking">VMware Certificate Expiration Tracking<a class="headerlink" href="#vmware-certificate-expiration-tracking" title="Permanent link">&para;</a></h1>
+<h2 id="certificates-to-track">Certificates to Track<a class="headerlink" href="#certificates-to-track" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Certificate</th>
+<th>Location</th>
+<th>Risk if Expired</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter Machine SSL</td>
+<td>VAMI → Certificate Management</td>
+<td>Browser warnings, API failures</td>
+</tr>
+<tr>
+<td>VMCA Root Certificate</td>
+<td>VAMI → Certificate Management</td>
+<td>Breaks all VMCA-issued certs</td>
+</tr>
+<tr>
+<td>STS Certificate</td>
+<td>vSphere Client → SSO → Certificates</td>
+<td>Login failures platform-wide</td>
+</tr>
+<tr>
+<td>Solution User Certificates</td>
+<td>VAMI → Certificate Management</td>
+<td>Service-to-service auth failures</td>
+</tr>
+<tr>
+<td>NSX Manager Certificate</td>
+<td>NSX Manager → System</td>
+<td>NSX UI and API failures</td>
+</tr>
+<tr>
+<td>Aria Endpoint Certificates</td>
+<td>Aria Suite Lifecycle</td>
+<td>Integration and access failures</td>
+</tr>
+</tbody>
+</table>
+<h2 id="expiration-tracking-schedule">Expiration Tracking Schedule<a class="headerlink" href="#expiration-tracking-schedule" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review active alarms.</li>
-<li>Check recent failed tasks.</li>
-<li>Confirm service health.</li>
-<li>Confirm capacity and performance are normal.</li>
-<li>Check recent changes.</li>
+<li>Review all certificate expiration dates monthly</li>
+<li>Flag certificates expiring within 60 days — plan replacement</li>
+<li>Escalate certificates expiring within 30 days — urgent action required</li>
+<li>Document next renewal date after each replacement</li>
 </ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add environment-specific commands here
-</code></pre>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h2 id="certificate-replacement-process">Certificate Replacement Process<a class="headerlink" href="#certificate-replacement-process" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Identify the certificate and replacement method (VMCA, custom CA, or self-signed)</li>
+<li>Confirm backup of vCenter is current</li>
+<li>Schedule a maintenance window</li>
+<li>Replace the certificate using the appropriate method</li>
+<li>Restart affected services</li>
+<li>Validate all integrations and logins</li>
+</ol>
+<h2 id="validation-after-replacement">Validation After Replacement<a class="headerlink" href="#validation-after-replacement" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Failed or stuck tasks.</li>
-<li>Certificate, DNS, or authentication issues.</li>
-<li>Capacity pressure.</li>
-<li>Service health warnings.</li>
-<li>Version mismatch after maintenance.</li>
-<li>Monitoring gaps.</li>
+<li>Browser access to vCenter confirmed with no certificate warning</li>
+<li>All ESXi hosts Connected</li>
+<li>SSO login working for both local and AD accounts</li>
+<li>Aria, NSX, and backup integrations confirmed working</li>
 </ul>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review alarms and events.</li>
-<li>Confirm ownership and support notes.</li>
-<li>Validate dependencies.</li>
-<li>Document changes.</li>
-<li>Confirm monitoring coverage.</li>
-</ul>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm compatibility.</li>
-<li>Review known issues.</li>
-<li>Confirm rollback plan.</li>
-<li>Validate health before and after the change.</li>
-</ul>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Keep naming consistent.</li>
-<li>Keep versions aligned.</li>
-<li>Avoid unsupported version combinations.</li>
-<li>Document exceptions.</li>
-<li>Validate after every change.</li>
-</ul>
+<h2 id="emergency-escalation">Emergency Escalation<a class="headerlink" href="#emergency-escalation" title="Permanent link">&para;</a></h2>
+<p>If certificate expiry causes a login or service failure:
+- Check if the local administrator account (<code>administrator@vsphere.local</code>) still works
+- Engage VMware support if SSO or STS cannot be recovered in place</p>
 
 
 

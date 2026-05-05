@@ -21,7 +21,7 @@
     
     
       
-        <title>VM Snapshot Cleanup Runbook - Chris KB</title>
+        <title>vSAN Degraded Object Runbook - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vm-snapshot-cleanup-runbook" class="md-skip">
+        <a href="#vsan-degraded-object-runbook" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VM Snapshot Cleanup Runbook
+              vSAN Degraded Object Runbook
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#confirm-vsan-health-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Confirm vSAN Health State
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#identify-affected-objects" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Identify Affected Objects
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#check-failed-disks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Check Failed Disks
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#check-host-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Check Host Availability
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rollback" class="md-nav__link">
+  <a href="#check-resync-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rollback
+        Check Resync Status
       
     </span>
   </a>
@@ -1573,10 +1573,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#check-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Check Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-storage-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Storage Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avoid-unsafe-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid Unsafe Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engage-vmware-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engage VMware Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-object-compliance-after-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate Object Compliance After Recovery
       
     </span>
   </a>
@@ -1600,44 +1644,57 @@
 
 
 
-<h1 id="vm-snapshot-cleanup-runbook">VM Snapshot Cleanup Runbook<a class="headerlink" href="#vm-snapshot-cleanup-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Use this to find and clean up old or risky VM snapshots.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vsan-degraded-object-runbook">vSAN Degraded Object Runbook<a class="headerlink" href="#vsan-degraded-object-runbook" title="Permanent link">&para;</a></h1>
+<h2 id="confirm-vsan-health-state">Confirm vSAN Health State<a class="headerlink" href="#confirm-vsan-health-state" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm snapshot owner.</li>
-<li>Confirm snapshot age.</li>
-<li>Confirm backup status.</li>
-<li>Confirm datastore free space.</li>
-<li>Confirm no active backup or replication job.</li>
-<li>Confirm application owner approval if needed.</li>
+<li>Open vCenter → Cluster → vSAN → Skyline Health</li>
+<li>Identify which health checks are failing</li>
+<li>Open Virtual Objects view and filter by Degraded, Non-compliant, or Absent</li>
 </ul>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Identify snapshots older than the approved threshold.</li>
-<li>Confirm owner and purpose.</li>
-<li>Check datastore capacity.</li>
-<li>Remove snapshots during a safe window.</li>
-<li>Monitor consolidation tasks.</li>
-<li>Resolve consolidation warnings if needed.</li>
-<li>Document cleanup results.</li>
-</ol>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<h2 id="identify-affected-objects">Identify Affected Objects<a class="headerlink" href="#identify-affected-objects" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Snapshot removed.</li>
-<li>VM has no consolidation warning.</li>
-<li>Datastore capacity is stable.</li>
-<li>Application owner confirms no issue if required.</li>
+<li>Note the VM name, object type, and storage policy for each affected object</li>
+<li>Check if the VM is still running or if it has failed</li>
 </ul>
-<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<h2 id="check-failed-disks">Check Failed Disks<a class="headerlink" href="#check-failed-disks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Stop the change if impact increases.</li>
-<li>Return settings to the last known good state where possible.</li>
-<li>Reconnect affected systems if disconnected.</li>
-<li>Escalate with logs, timestamps, screenshots, and task IDs.</li>
+<li>Review Skyline Health → Physical Disk section</li>
+<li>Check iDRAC for disk health on all VxRail nodes</li>
 </ul>
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Keep this page updated with local commands, screenshots, system names, and known environment quirks.</p>
+<h2 id="check-host-availability">Check Host Availability<a class="headerlink" href="#check-host-availability" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Confirm all hosts are Connected in vCenter</li>
+<li>Check if any host is in maintenance mode unexpectedly</li>
+</ul>
+<h2 id="check-resync-status">Check Resync Status<a class="headerlink" href="#check-resync-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">esxcli vsan debug resync summary get
+</code></pre>
+<p>Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.</p>
+<h2 id="check-capacity">Check Capacity<a class="headerlink" href="#check-capacity" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Confirm vSAN usable capacity is within safe limits</li>
+<li>If capacity is the cause of non-compliance, expansion may be needed</li>
+</ul>
+<h2 id="review-storage-policy">Review Storage Policy<a class="headerlink" href="#review-storage-policy" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Confirm the storage policy assigned to affected objects is achievable with current cluster state</li>
+<li>If FTT=1 and only one host or disk is available, the policy cannot be met</li>
+</ul>
+<h2 id="avoid-unsafe-actions">Avoid Unsafe Actions<a class="headerlink" href="#avoid-unsafe-actions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Do not take additional hosts into maintenance mode while objects are degraded</li>
+<li>Do not delete VMs or disks without VMware support guidance</li>
+</ul>
+<h2 id="engage-vmware-support">Engage VMware Support<a class="headerlink" href="#engage-vmware-support" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Collect a vSAN support bundle if objects remain degraded after the expected recovery period</li>
+<li>Open a VMware support case and provide the bundle, timeline, and Skyline Health screenshots</li>
+</ul>
+<h2 id="validate-object-compliance-after-recovery">Validate Object Compliance After Recovery<a class="headerlink" href="#validate-object-compliance-after-recovery" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Return to Virtual Objects view and confirm all objects are Healthy</li>
+<li>Run Skyline Health and confirm no remaining failures</li>
+</ul>
 
 
 

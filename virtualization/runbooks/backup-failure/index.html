@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware Certificate Renewal Runbook - Chris KB</title>
+        <title>VMware Backup Failure Runbook - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-certificate-renewal-runbook" class="md-skip">
+        <a href="#vmware-backup-failure-runbook" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware Certificate Renewal Runbook
+              VMware Backup Failure Runbook
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identify-the-expiring-certificate" class="md-nav__link">
+  <a href="#identify-failed-vms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify the Expiring Certificate
+        Identify Failed VMs
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-affected-products" class="md-nav__link">
+  <a href="#review-the-error-message" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Affected Products
+        Review the Error Message
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capture-current-certificate-details" class="md-nav__link">
+  <a href="#check-vm-snapshot-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capture Current Certificate Details
+        Check VM Snapshot State
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-backup-exists" class="md-nav__link">
+  <a href="#check-datastore-free-space" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Backup Exists
+        Check Datastore Free Space
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schedule-maintenance-window" class="md-nav__link">
+  <a href="#check-backup-proxy-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schedule Maintenance Window
+        Check Backup Proxy Health
       
     </span>
   </a>
@@ -1573,10 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replace-the-certificate" class="md-nav__link">
+  <a href="#check-backup-repository" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replace the Certificate
+        Check Backup Repository
       
     </span>
   </a>
@@ -1584,10 +1584,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restart-required-services" class="md-nav__link">
+  <a href="#check-vcenter-permissions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restart Required Services
+        Check vCenter Permissions
       
     </span>
   </a>
@@ -1595,10 +1595,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate-integrations" class="md-nav__link">
+  <a href="#retry-the-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validate Integrations
+        Retry the Backup
       
     </span>
   </a>
@@ -1606,10 +1606,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#document-final-expiration-date" class="md-nav__link">
+  <a href="#escalate-recurring-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Document Final Expiration Date
+        Escalate Recurring Failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#document-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Resolution
       
     </span>
   </a>
@@ -1633,53 +1644,59 @@
 
 
 
-<h1 id="vmware-certificate-renewal-runbook">VMware Certificate Renewal Runbook<a class="headerlink" href="#vmware-certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="identify-the-expiring-certificate">Identify the Expiring Certificate<a class="headerlink" href="#identify-the-expiring-certificate" title="Permanent link">&para;</a></h2>
+<h1 id="vmware-backup-failure-runbook">VMware Backup Failure Runbook<a class="headerlink" href="#vmware-backup-failure-runbook" title="Permanent link">&para;</a></h1>
+<h2 id="identify-failed-vms">Identify Failed VMs<a class="headerlink" href="#identify-failed-vms" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review certificate inventory</li>
-<li>Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint</li>
-<li>Note the affected product and expiration date</li>
+<li>Review the backup platform for failed or missed backup jobs</li>
+<li>Note the VM name, backup job name, error message, and failure time</li>
 </ul>
-<h2 id="confirm-affected-products">Confirm Affected Products<a class="headerlink" href="#confirm-affected-products" title="Permanent link">&para;</a></h2>
+<h2 id="review-the-error-message">Review the Error Message<a class="headerlink" href="#review-the-error-message" title="Permanent link">&para;</a></h2>
+<p>Common backup errors:
+- Snapshot creation failure
+- Snapshot consolidation warning
+- Datastore out of space
+- Network or proxy connectivity failure
+- vCenter API error</p>
+<h2 id="check-vm-snapshot-state">Check VM Snapshot State<a class="headerlink" href="#check-vm-snapshot-state" title="Permanent link">&para;</a></h2>
 <ul>
-<li>List all products that trust or use this certificate</li>
-<li>Confirm which integrations may be disrupted during replacement</li>
+<li>In vCenter: right-click the VM → Snapshots → Manage Snapshots</li>
+<li>Confirm no stale backup snapshots are present</li>
+<li>If consolidation is needed: right-click VM → Snapshots → Consolidate</li>
 </ul>
-<h2 id="capture-current-certificate-details">Capture Current Certificate Details<a class="headerlink" href="#capture-current-certificate-details" title="Permanent link">&para;</a></h2>
+<h2 id="check-datastore-free-space">Check Datastore Free Space<a class="headerlink" href="#check-datastore-free-space" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Subject, SAN, issuer, expiration date</li>
-<li>Screenshot from VAMI or vSphere Client as pre-change evidence</li>
+<li>Confirm the datastore hosting the VM has sufficient free space</li>
+<li>Free space less than 10% can block snapshot creation</li>
 </ul>
-<h2 id="confirm-backup-exists">Confirm Backup Exists<a class="headerlink" href="#confirm-backup-exists" title="Permanent link">&para;</a></h2>
+<h2 id="check-backup-proxy-health">Check Backup Proxy Health<a class="headerlink" href="#check-backup-proxy-health" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm vCenter file-based backup is current</li>
-<li>Confirm product backup for Aria or NSX if their certificate is being replaced</li>
+<li>Confirm the backup proxy VM is powered on and reachable</li>
+<li>Review proxy logs in the backup platform</li>
 </ul>
-<h2 id="schedule-maintenance-window">Schedule Maintenance Window<a class="headerlink" href="#schedule-maintenance-window" title="Permanent link">&para;</a></h2>
+<h2 id="check-backup-repository">Check Backup Repository<a class="headerlink" href="#check-backup-repository" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Plan replacement outside peak hours</li>
-<li>Allow time for service restarts and integration validation</li>
+<li>Confirm the backup repository has sufficient free space</li>
+<li>Confirm the repository is accessible from the proxy</li>
 </ul>
-<h2 id="replace-the-certificate">Replace the Certificate<a class="headerlink" href="#replace-the-certificate" title="Permanent link">&para;</a></h2>
+<h2 id="check-vcenter-permissions">Check vCenter Permissions<a class="headerlink" href="#check-vcenter-permissions" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Follow the correct replacement method for the certificate type</li>
-<li>For VMCA-issued certs: use vSphere Client or VAMI</li>
-<li>For custom CA certs: generate CSR, submit to CA, import signed cert</li>
+<li>Confirm the backup service account has the required vCenter permissions</li>
+<li>Review vCenter roles and recent permission changes</li>
 </ul>
-<h2 id="restart-required-services">Restart Required Services<a class="headerlink" href="#restart-required-services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">service-control --restart --all
-</code></pre>
-<p>Only restart services after confirming the new certificate is applied.</p>
-<h2 id="validate-integrations">Validate Integrations<a class="headerlink" href="#validate-integrations" title="Permanent link">&para;</a></h2>
+<h2 id="retry-the-backup">Retry the Backup<a class="headerlink" href="#retry-the-backup" title="Permanent link">&para;</a></h2>
 <ul>
-<li>vCenter browser access — no certificate warning</li>
-<li>SSO login for local and AD accounts</li>
-<li>Aria, NSX, backup, and monitoring integrations confirmed</li>
+<li>If the root cause is resolved, manually retry the backup job</li>
+<li>Monitor the retry and confirm it completes successfully</li>
 </ul>
-<h2 id="document-final-expiration-date">Document Final Expiration Date<a class="headerlink" href="#document-final-expiration-date" title="Permanent link">&para;</a></h2>
+<h2 id="escalate-recurring-failures">Escalate Recurring Failures<a class="headerlink" href="#escalate-recurring-failures" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Update the certificate inventory with the new expiration date</li>
-<li>Set a review reminder 60 days before the new expiration</li>
+<li>If the same VM fails repeatedly, escalate to the backup platform team</li>
+<li>Open a support case with the backup vendor if needed</li>
+</ul>
+<h2 id="document-resolution">Document Resolution<a class="headerlink" href="#document-resolution" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Update the backup platform job notes with the root cause and fix</li>
+<li>Update the incident ticket with findings and resolution</li>
 </ul>
 
 

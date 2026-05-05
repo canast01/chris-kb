@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware Certificate Renewal Runbook - Chris KB</title>
+        <title>VMware Snapshot Quick Reference - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-certificate-renewal-runbook" class="md-skip">
+        <a href="#vmware-snapshot-quick-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware Certificate Renewal Runbook
+              VMware Snapshot Quick Reference
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identify-the-expiring-certificate" class="md-nav__link">
+  <a href="#find-all-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify the Expiring Certificate
+        Find All Snapshots
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-affected-products" class="md-nav__link">
+  <a href="#check-snapshot-age-and-size" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Affected Products
+        Check Snapshot Age and Size
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capture-current-certificate-details" class="md-nav__link">
+  <a href="#identify-snapshot-owner" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capture Current Certificate Details
+        Identify Snapshot Owner
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-backup-exists" class="md-nav__link">
+  <a href="#remove-a-snapshot-safely" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Backup Exists
+        Remove a Snapshot Safely
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schedule-maintenance-window" class="md-nav__link">
+  <a href="#consolidation-warning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schedule Maintenance Window
+        Consolidation Warning
       
     </span>
   </a>
@@ -1573,10 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replace-the-certificate" class="md-nav__link">
+  <a href="#check-datastore-free-space-after-cleanup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replace the Certificate
+        Check Datastore Free Space After Cleanup
       
     </span>
   </a>
@@ -1584,32 +1584,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restart-required-services" class="md-nav__link">
+  <a href="#escalate-locked-or-stuck-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restart Required Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-integrations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Integrations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-final-expiration-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Final Expiration Date
+        Escalate Locked or Stuck Snapshots
       
     </span>
   </a>
@@ -1633,53 +1611,40 @@
 
 
 
-<h1 id="vmware-certificate-renewal-runbook">VMware Certificate Renewal Runbook<a class="headerlink" href="#vmware-certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="identify-the-expiring-certificate">Identify the Expiring Certificate<a class="headerlink" href="#identify-the-expiring-certificate" title="Permanent link">&para;</a></h2>
+<h1 id="vmware-snapshot-quick-reference">VMware Snapshot Quick Reference<a class="headerlink" href="#vmware-snapshot-quick-reference" title="Permanent link">&para;</a></h1>
+<h2 id="find-all-snapshots">Find All Snapshots<a class="headerlink" href="#find-all-snapshots" title="Permanent link">&para;</a></h2>
+<p>In vCenter: <strong>Menu</strong> → <strong>Global Views</strong> → <strong>VMs and Templates</strong> → Filter by snapshot state</p>
+<p>Or use Aria Operations: <strong>Environment</strong> → <strong>VMs</strong> → filter by snapshot count &gt; 0</p>
+<h2 id="check-snapshot-age-and-size">Check Snapshot Age and Size<a class="headerlink" href="#check-snapshot-age-and-size" title="Permanent link">&para;</a></h2>
+<p>In vSphere Client: Right-click VM → <strong>Snapshots</strong> → <strong>Manage Snapshots</strong></p>
 <ul>
-<li>Review certificate inventory</li>
-<li>Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint</li>
-<li>Note the affected product and expiration date</li>
+<li>Review snapshot creation date</li>
+<li>Review snapshot size on disk</li>
 </ul>
-<h2 id="confirm-affected-products">Confirm Affected Products<a class="headerlink" href="#confirm-affected-products" title="Permanent link">&para;</a></h2>
+<h2 id="identify-snapshot-owner">Identify Snapshot Owner<a class="headerlink" href="#identify-snapshot-owner" title="Permanent link">&para;</a></h2>
 <ul>
-<li>List all products that trust or use this certificate</li>
-<li>Confirm which integrations may be disrupted during replacement</li>
+<li>Check if the snapshot was created by a backup product (name will include backup job name)</li>
+<li>Check if it was a manual change-related snapshot</li>
 </ul>
-<h2 id="capture-current-certificate-details">Capture Current Certificate Details<a class="headerlink" href="#capture-current-certificate-details" title="Permanent link">&para;</a></h2>
+<h2 id="remove-a-snapshot-safely">Remove a Snapshot Safely<a class="headerlink" href="#remove-a-snapshot-safely" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm the VM is healthy and the snapshot is no longer needed</li>
+<li>Right-click VM → <strong>Snapshots</strong> → <strong>Manage Snapshots</strong></li>
+<li>Select the snapshot → <strong>Delete</strong></li>
+<li>Monitor the consolidation task — it may take several minutes</li>
+</ol>
+<h2 id="consolidation-warning">Consolidation Warning<a class="headerlink" href="#consolidation-warning" title="Permanent link">&para;</a></h2>
+<p>If vCenter shows a consolidation needed warning:
+- Right-click VM → <strong>Snapshots</strong> → <strong>Consolidate</strong>
+- Monitor the task and confirm completion</p>
+<h2 id="check-datastore-free-space-after-cleanup">Check Datastore Free Space After Cleanup<a class="headerlink" href="#check-datastore-free-space-after-cleanup" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Subject, SAN, issuer, expiration date</li>
-<li>Screenshot from VAMI or vSphere Client as pre-change evidence</li>
+<li>Confirm datastore free space has recovered after snapshot removal</li>
 </ul>
-<h2 id="confirm-backup-exists">Confirm Backup Exists<a class="headerlink" href="#confirm-backup-exists" title="Permanent link">&para;</a></h2>
+<h2 id="escalate-locked-or-stuck-snapshots">Escalate Locked or Stuck Snapshots<a class="headerlink" href="#escalate-locked-or-stuck-snapshots" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm vCenter file-based backup is current</li>
-<li>Confirm product backup for Aria or NSX if their certificate is being replaced</li>
-</ul>
-<h2 id="schedule-maintenance-window">Schedule Maintenance Window<a class="headerlink" href="#schedule-maintenance-window" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Plan replacement outside peak hours</li>
-<li>Allow time for service restarts and integration validation</li>
-</ul>
-<h2 id="replace-the-certificate">Replace the Certificate<a class="headerlink" href="#replace-the-certificate" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Follow the correct replacement method for the certificate type</li>
-<li>For VMCA-issued certs: use vSphere Client or VAMI</li>
-<li>For custom CA certs: generate CSR, submit to CA, import signed cert</li>
-</ul>
-<h2 id="restart-required-services">Restart Required Services<a class="headerlink" href="#restart-required-services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">service-control --restart --all
-</code></pre>
-<p>Only restart services after confirming the new certificate is applied.</p>
-<h2 id="validate-integrations">Validate Integrations<a class="headerlink" href="#validate-integrations" title="Permanent link">&para;</a></h2>
-<ul>
-<li>vCenter browser access — no certificate warning</li>
-<li>SSO login for local and AD accounts</li>
-<li>Aria, NSX, backup, and monitoring integrations confirmed</li>
-</ul>
-<h2 id="document-final-expiration-date">Document Final Expiration Date<a class="headerlink" href="#document-final-expiration-date" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Update the certificate inventory with the new expiration date</li>
-<li>Set a review reminder 60 days before the new expiration</li>
+<li>Do not force-delete stuck snapshots without VMware support guidance</li>
+<li>Collect the snapshot delta file list and vCenter events before escalating</li>
 </ul>
 
 

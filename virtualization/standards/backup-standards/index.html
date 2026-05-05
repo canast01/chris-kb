@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware Certificate Renewal Runbook - Chris KB</title>
+        <title>VMware Backup Standards - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-certificate-renewal-runbook" class="md-skip">
+        <a href="#vmware-backup-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware Certificate Renewal Runbook
+              VMware Backup Standards
             
           </span>
         </div>
@@ -1518,10 +1518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identify-the-expiring-certificate" class="md-nav__link">
+  <a href="#critical-vm-backup-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify the Expiring Certificate
+        Critical VM Backup Policy
       
     </span>
   </a>
@@ -1529,10 +1529,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-affected-products" class="md-nav__link">
+  <a href="#standard-vm-backup-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Affected Products
+        Standard VM Backup Policy
       
     </span>
   </a>
@@ -1540,10 +1540,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capture-current-certificate-details" class="md-nav__link">
+  <a href="#vcenter-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capture Current Certificate Details
+        vCenter Backup
       
     </span>
   </a>
@@ -1551,10 +1551,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confirm-backup-exists" class="md-nav__link">
+  <a href="#snapshot-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confirm Backup Exists
+        Snapshot Handling
       
     </span>
   </a>
@@ -1562,10 +1562,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schedule-maintenance-window" class="md-nav__link">
+  <a href="#backup-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schedule Maintenance Window
+        Backup Monitoring
       
     </span>
   </a>
@@ -1573,10 +1573,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replace-the-certificate" class="md-nav__link">
+  <a href="#backup-failure-escalation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replace the Certificate
+        Backup Failure Escalation
       
     </span>
   </a>
@@ -1584,32 +1584,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restart-required-services" class="md-nav__link">
+  <a href="#backup-evidence-retention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restart Required Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validate-integrations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validate Integrations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#document-final-expiration-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Document Final Expiration Date
+        Backup Evidence Retention
       
     </span>
   </a>
@@ -1633,53 +1611,49 @@
 
 
 
-<h1 id="vmware-certificate-renewal-runbook">VMware Certificate Renewal Runbook<a class="headerlink" href="#vmware-certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="identify-the-expiring-certificate">Identify the Expiring Certificate<a class="headerlink" href="#identify-the-expiring-certificate" title="Permanent link">&para;</a></h2>
+<h1 id="vmware-backup-standards">VMware Backup Standards<a class="headerlink" href="#vmware-backup-standards" title="Permanent link">&para;</a></h1>
+<h2 id="critical-vm-backup-policy">Critical VM Backup Policy<a class="headerlink" href="#critical-vm-backup-policy" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review certificate inventory</li>
-<li>Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint</li>
-<li>Note the affected product and expiration date</li>
+<li>Daily backup minimum</li>
+<li>30-day retention minimum</li>
+<li>Application-aware backup where supported</li>
+<li>Test restore at least quarterly</li>
 </ul>
-<h2 id="confirm-affected-products">Confirm Affected Products<a class="headerlink" href="#confirm-affected-products" title="Permanent link">&para;</a></h2>
+<h2 id="standard-vm-backup-policy">Standard VM Backup Policy<a class="headerlink" href="#standard-vm-backup-policy" title="Permanent link">&para;</a></h2>
 <ul>
-<li>List all products that trust or use this certificate</li>
-<li>Confirm which integrations may be disrupted during replacement</li>
+<li>Daily or weekly backup</li>
+<li>14-day retention minimum</li>
+<li>Restore test at least annually</li>
 </ul>
-<h2 id="capture-current-certificate-details">Capture Current Certificate Details<a class="headerlink" href="#capture-current-certificate-details" title="Permanent link">&para;</a></h2>
+<h2 id="vcenter-backup">vCenter Backup<a class="headerlink" href="#vcenter-backup" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Subject, SAN, issuer, expiration date</li>
-<li>Screenshot from VAMI or vSphere Client as pre-change evidence</li>
+<li>File-based backup via VAMI daily</li>
+<li>Keep at least 3 copies</li>
+<li>Encryption password stored securely</li>
+<li>Backup target must be off the vSAN datastore</li>
 </ul>
-<h2 id="confirm-backup-exists">Confirm Backup Exists<a class="headerlink" href="#confirm-backup-exists" title="Permanent link">&para;</a></h2>
+<h2 id="snapshot-handling">Snapshot Handling<a class="headerlink" href="#snapshot-handling" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm vCenter file-based backup is current</li>
-<li>Confirm product backup for Aria or NSX if their certificate is being replaced</li>
+<li>Backup products must clean up their own snapshots after each job</li>
+<li>Alert if a backup snapshot is older than 24 hours</li>
+<li>Manual change-related snapshots must be removed within 48 hours</li>
 </ul>
-<h2 id="schedule-maintenance-window">Schedule Maintenance Window<a class="headerlink" href="#schedule-maintenance-window" title="Permanent link">&para;</a></h2>
+<h2 id="backup-monitoring">Backup Monitoring<a class="headerlink" href="#backup-monitoring" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Plan replacement outside peak hours</li>
-<li>Allow time for service restarts and integration validation</li>
+<li>Review backup job results daily</li>
+<li>Alert on any failed or missed backup</li>
+<li>Include backup status in the weekly health check</li>
 </ul>
-<h2 id="replace-the-certificate">Replace the Certificate<a class="headerlink" href="#replace-the-certificate" title="Permanent link">&para;</a></h2>
+<h2 id="backup-failure-escalation">Backup Failure Escalation<a class="headerlink" href="#backup-failure-escalation" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Follow the correct replacement method for the certificate type</li>
-<li>For VMCA-issued certs: use vSphere Client or VAMI</li>
-<li>For custom CA certs: generate CSR, submit to CA, import signed cert</li>
+<li>Retry failed backup once</li>
+<li>If retry fails, investigate and escalate within 24 hours</li>
+<li>Critical VMs with no successful backup for more than 48 hours must be escalated immediately</li>
 </ul>
-<h2 id="restart-required-services">Restart Required Services<a class="headerlink" href="#restart-required-services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">service-control --restart --all
-</code></pre>
-<p>Only restart services after confirming the new certificate is applied.</p>
-<h2 id="validate-integrations">Validate Integrations<a class="headerlink" href="#validate-integrations" title="Permanent link">&para;</a></h2>
+<h2 id="backup-evidence-retention">Backup Evidence Retention<a class="headerlink" href="#backup-evidence-retention" title="Permanent link">&para;</a></h2>
 <ul>
-<li>vCenter browser access — no certificate warning</li>
-<li>SSO login for local and AD accounts</li>
-<li>Aria, NSX, backup, and monitoring integrations confirmed</li>
-</ul>
-<h2 id="document-final-expiration-date">Document Final Expiration Date<a class="headerlink" href="#document-final-expiration-date" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Update the certificate inventory with the new expiration date</li>
-<li>Set a review reminder 60 days before the new expiration</li>
+<li>Keep backup job reports for 90 days</li>
+<li>Document restore tests with date and result</li>
 </ul>
 
 
