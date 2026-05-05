@@ -34,6 +34,11 @@ The VMware platform is the core virtualization layer used to run, manage, protec
   <span>Day-to-day VMware procedures, checks, and troubleshooting workflows.</span>
 </a>
 
+<a class="kb-card" href="topics/">
+  <strong>Topics</strong>
+  <span>Deep-dive reference articles on specific VMware behaviors and scenarios.</span>
+</a>
+
 </div>
 
 ## Key Components
