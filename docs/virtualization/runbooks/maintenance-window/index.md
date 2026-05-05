@@ -1,47 +1,34 @@
-# Virtualization Maintenance Window Runbook
+# Maintenance Window Runbook
 
-## Overview
+Use this for planned VMware work.
 
-Use this for planned work across VMware, VxRail, NSX, Aria, hosts, clusters, or related services.
+## Before Maintenance
 
-## Pre-Checks
+- Review change ticket
+- Confirm maintenance window
+- Notify stakeholders
+- Confirm backups
+- Confirm current health
+- Confirm rollback plan
+- Capture versions
+- Confirm access
+- Confirm vendor support if needed
 
-- Confirm approved change.
-- Confirm scope.
-- Confirm maintenance window.
-- Confirm rollback plan.
-- Confirm backups or recovery points.
-- Confirm stakeholders and support contacts.
-- Confirm no active high-risk alerts.
+## During Maintenance
 
-## Steps
+- Start maintenance window
+- Place host in maintenance mode if required
+- Perform approved work
+- Monitor cluster and workload health
+- Capture screenshots or logs
+- Escalate if unexpected issues occur
 
-1. Announce start of work.
-2. Capture current health.
-3. Place affected systems into maintenance state if needed.
-4. Complete planned work.
-5. Monitor tasks and alerts.
-6. Validate services.
-7. Announce completion.
-8. Update the change record.
+## After Maintenance
 
-## Validation
-
-- No new critical alerts.
-- Hosts are connected.
-- VMs are running.
-- Datastores are accessible.
-- Network connectivity is healthy.
-- Monitoring is current.
-- Change record is updated.
-
-## Rollback
-
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
-
-## Notes
-
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+- Validate cluster health
+- Confirm VMs are running
+- Confirm datastores are accessible
+- Confirm monitoring is clean
+- Confirm backups still work
+- Update ticket with results
+- Send completion notice

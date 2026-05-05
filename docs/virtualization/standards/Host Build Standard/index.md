@@ -1,41 +1,10 @@
-# Virtualization host-build-standard/
+# Host Standards
 
-## Overview
-
-ESXi host configuration, networking, storage, logging, NTP, DNS, and access.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Consistent ESXi version per cluster
+- Consistent firmware and drivers
+- Correct DNS and NTP
+- Standard VMkernel layout
+- Standard syslog configuration
+- Management access restricted
+- Lockdown mode where required
+- Hardware health monitored

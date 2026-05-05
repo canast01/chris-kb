@@ -1,47 +1,9 @@
-# Virtualization network-connectivity-issue/
+# Common Network Issues
 
-## Symptoms
-
-- VM, host, VLAN, distributed switch, and NSX connectivity checks.
-- Alerts or symptoms reported by users or monitoring.
-- Impact may be limited or broad depending on scope.
-
-## Likely Causes
-
-- Recent change.
-- DNS or certificate issue.
-- Authentication issue.
-- Storage path issue.
-- Network path issue.
-- Capacity pressure.
-- Failed management service.
-- Version mismatch.
-
-## Commands
-
-~~~bash
-# Add environment-specific commands here
-~~~
-
-## Troubleshooting Workflow
-
-1. Confirm the scope.
-2. Check recent changes.
-3. Review alerts and events.
-4. Validate management access.
-5. Check compute health.
-6. Check storage health.
-7. Check network health.
-8. Review logs.
-9. Document findings.
-
-## Resolution
-
-Document what fixed the issue and how it was validated.
-
-## Prevention
-
-- Add monitoring if missing.
-- Tune noisy alerts.
-- Update standards.
-- Capture the issue as a known pattern.
+| Symptom | What to Check |
+|---|---|
+| vMotion fails | VMkernel adapter, MTU, VLAN, routing, license |
+| VM network outage | Port group, VLAN, physical uplink, NIC teaming |
+| Host management issue | vmk0, gateway, DNS, management VLAN |
+| NSX issue | TEP status, transport nodes, edges, segments |
+| Packet loss | Physical switch, NIC, MTU, congestion |

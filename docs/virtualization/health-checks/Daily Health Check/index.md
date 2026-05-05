@@ -1,41 +1,15 @@
-# Virtualization daily-health-check/
+# Daily Health Check
 
-## Overview
+Daily checks should focus on items that can impact availability quickly.
 
-Daily checks across vCenter, ESXi, vSAN, NSX, VxRail, and Aria.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+| Area | Check |
+|---|---|
+| vCenter | Confirm vCenter is reachable and services are healthy |
+| ESXi Hosts | Confirm all hosts are connected |
+| Clusters | Check HA, DRS, and admission control |
+| Datastores | Confirm free space and latency |
+| vSAN | Review Skyline Health, disk groups, resyncs, and object health |
+| VMs | Check critical VM status, snapshots, and VMware Tools |
+| Alerts | Review active critical and warning alarms |
+| Backups | Confirm backup jobs completed |
+| Access | Confirm admin login and identity source health |

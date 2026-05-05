@@ -1,42 +1,35 @@
-# Virtualization RCA Template
+# RCA Template
 
-## Overview
+## Summary
 
-Use this after a virtualization incident or recurring problem.
+Brief description of what happened.
 
-## Pre-Checks
+## Impact
 
-- Confirm incident date and time.
-- Confirm impact.
-- Confirm affected systems.
-- Confirm timeline owner.
-- Confirm evidence location.
+Systems, users, applications, or services affected.
 
-## Steps
+## Timeline
 
-1. Summarize issue.
-2. Document impact.
-3. Build timeline.
-4. Identify root cause.
-5. Identify contributing factors.
-6. Document resolution.
-7. Add prevention steps.
-8. Assign follow-up actions.
+| Time | Event |
+|---|---|
+| HH:MM | Issue detected |
+| HH:MM | Investigation started |
+| HH:MM | Cause identified |
+| HH:MM | Fix applied |
+| HH:MM | Service restored |
 
-## Validation
+## Root Cause
 
-- Root cause is stated clearly.
-- Prevention actions are assigned.
-- Monitoring or process gaps are captured.
-- Follow-up owner and due date are documented.
+Explain the actual cause of the issue.
 
-## Rollback
+## Resolution
 
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
+Explain what was done to fix it.
 
-## Notes
+## Prevention
 
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+List steps to reduce the chance of the issue happening again.
+
+## Evidence
+
+Attach logs, screenshots, events, support case numbers, and validation results.

@@ -1,41 +1,14 @@
-# Virtualization naming-standard/
+# Naming Standards
 
-## Overview
+Clear naming makes troubleshooting easier.
 
-Cluster, host, datastore, port group, VM, and folder naming guidance.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+| Object | Example |
+|---|---|
+| vCenter | vcsa-prod-01 |
+| Cluster | cl-prod-compute-01 |
+| ESXi Host | esx-prod-01 |
+| Datastore | ds-prod-vsan-01 |
+| Port Group | pg-prod-app-vlan100 |
+| VM | appname-prod-01 |
+| Template | tmpl-win2022-standard |
+| Folder | Prod / Dev / Test / Infra |

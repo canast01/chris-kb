@@ -1,41 +1,14 @@
-# Virtualization pre-upgrade-checklist/
+# Pre-Upgrade Checklist
 
-## Overview
-
-Required checks before upgrade execution.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Confirm vCenter backup
+- Confirm configuration backup
+- Confirm no critical alerts
+- Confirm no failed vSAN objects
+- Confirm no active resyncs if avoidable
+- Confirm datastore free space
+- Confirm cluster HA and DRS health
+- Confirm DNS and NTP
+- Confirm certificates are valid
+- Confirm admin access
+- Confirm support bundle collection if required
+- Confirm rollback steps

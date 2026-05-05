@@ -1,32 +1,39 @@
-# Virtualization Emergency Checks
+# Emergency Checks
 
-## Overview
+Use these when there is a major incident.
 
-Use this during outages or high-impact alerts.
+| Area | Check |
+|---|---|
+| vCenter | Can you log in? Are services running? |
+| Hosts | Are hosts connected or not responding? |
+| VMs | Are critical VMs powered on? |
+| Storage | Are datastores mounted and not full? |
+| vSAN | Are objects healthy? Any resyncs? |
+| Network | Are management and VM networks reachable? |
+| Hardware | Any failed disks, NICs, PSU, memory? |
+| Backups | Are recent backups available? |
 
-## First Checks
+## Known Issue Tracking
 
-1. Can you reach vCenter?
-2. Are hosts connected?
-3. Are VMs running?
-4. Are datastores accessible?
-5. Is DNS working?
-6. Is authentication working?
-7. Are management networks reachable?
-8. Are there storage path issues?
-9. Is there a known maintenance or change?
-10. Is impact isolated or broad?
+| Field | Description |
+|---|---|
+| Issue | Short name of the problem |
+| Impact | What it affects |
+| Workaround | Temporary fix |
+| Permanent Fix | Final fix |
+| Owner | Team or person responsible |
+| Status | Open, monitoring, fixed |
+| Date Found | When it was identified |
 
-## Evidence to Capture
+## Fast Troubleshooting Map
 
-- Timestamp
-- Affected systems
-- Screenshot of alarms
-- Recent tasks or events
-- Recent changes
-- Error messages
-- Logs if available
-
-## Escalation Notes
-
-Escalate with scope, impact, timeline, screenshots, and what was already checked.
+| Problem | First Place to Look |
+|---|---|
+| VM slow | CPU ready, memory, datastore latency |
+| VM cannot power on | Datastore space, host resources, locks |
+| Host disconnected | Management network, DNS, hostd, vpxa |
+| vMotion fails | VMkernel, VLAN, MTU, EVC |
+| Datastore full | Snapshots, ISO files, orphaned disks |
+| Login fails | SSO, AD/LDAP, locked account, certificates |
+| vSAN warning | Skyline Health, disk groups, resyncs |
+| VxRail upgrade fails | Pre-check results, VxRail Manager, support bundle |

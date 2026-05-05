@@ -1,37 +1,82 @@
-# Virtualization Command Cheat Sheets
+# Command Cheat Sheet
 
-## ESXi
+## ESXi Host Commands
 
-~~~bash
-esxcli system version get
+```bash
+# Check ESXi version
+vmware -v
+
+# Check uptime
+uptime
+
+# Check services
+services.sh status
+
+# Restart management agents
+/etc/init.d/hostd restart
+/etc/init.d/vpxa restart
+
+# Restart all management services
+services.sh restart
+
+# List network adapters
+esxcli network nic list
+
+# List VMkernel interfaces
 esxcli network ip interface list
+
+# List storage adapters
+esxcli storage core adapter list
+
+# List paths
 esxcli storage core path list
-~~~
 
-## vCenter
+# List mounted filesystems
+esxcli storage filesystem list
+```
 
-~~~bash
-service-control --status
-vmon-cli --list
-~~~
+## vSAN Commands
 
-## vSAN
+```bash
+# Check vSAN cluster info
+esxcli vsan cluster get
 
-~~~bash
-esxcli vsan health cluster list
+# Check vSAN network
+esxcli vsan network list
+
+# Check vSAN disks
 esxcli vsan storage list
-~~~
 
-## NSX
+# Check resync summary
+esxcli vsan debug resync summary get
+```
 
-~~~bash
-get logical-switch
-get edge-cluster
-~~~
+## Network Checks
 
-## VxRail
+```bash
+# Ping from ESXi
+vmkping <target-ip>
 
-~~~bash
-vxrail cluster info
-vxrail health status
-~~~
+# Ping using a specific VMkernel adapter
+vmkping -I vmk1 <target-ip>
+
+# Test jumbo frames
+vmkping -I vmk1 -s 8972 -d <target-ip>
+
+# List physical NICs
+esxcli network nic list
+
+# List standard switches
+esxcli network vswitch standard list
+```
+
+## Log Locations
+
+```bash
+/var/log/hostd.log
+/var/log/vpxa.log
+/var/log/vmkernel.log
+/var/log/vobd.log
+/var/log/syslog.log
+/var/log/auth.log
+```

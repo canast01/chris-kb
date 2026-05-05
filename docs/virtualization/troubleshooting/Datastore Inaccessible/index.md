@@ -1,47 +1,9 @@
-# Virtualization datastore-inaccessible/
+# Common Datastore Issues
 
-## Symptoms
-
-- Troubleshooting VMFS, NFS, vSAN, and storage visibility issues.
-- Alerts or symptoms reported by users or monitoring.
-- Impact may be limited or broad depending on scope.
-
-## Likely Causes
-
-- Recent change.
-- DNS or certificate issue.
-- Authentication issue.
-- Storage path issue.
-- Network path issue.
-- Capacity pressure.
-- Failed management service.
-- Version mismatch.
-
-## Commands
-
-~~~bash
-# Add environment-specific commands here
-~~~
-
-## Troubleshooting Workflow
-
-1. Confirm the scope.
-2. Check recent changes.
-3. Review alerts and events.
-4. Validate management access.
-5. Check compute health.
-6. Check storage health.
-7. Check network health.
-8. Review logs.
-9. Document findings.
-
-## Resolution
-
-Document what fixed the issue and how it was validated.
-
-## Prevention
-
-- Add monitoring if missing.
-- Tune noisy alerts.
-- Update standards.
-- Capture the issue as a known pattern.
+| Symptom | What to Check |
+|---|---|
+| Datastore full | Snapshots, ISO files, orphaned VMDKs, old templates |
+| High latency | Array performance, queue depth, paths, congestion |
+| Datastore inaccessible | SAN zoning, LUN masking, paths, storage controller |
+| VMFS issue | Locks, resignature, extent health |
+| vSAN object warning | Storage policy, resync, disk group, capacity |

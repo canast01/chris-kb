@@ -1,41 +1,14 @@
-# Virtualization post-upgrade-validation/
+# Post-Upgrade Validation
 
-## Overview
-
-Checks after upgrades across management, hosts, storage, networking, and monitoring.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Confirm vCenter login
+- Confirm all hosts connected
+- Confirm HA and DRS health
+- Confirm vSAN health
+- Confirm NSX health if used
+- Confirm VxRail Manager health if used
+- Confirm Aria integrations
+- Confirm backups
+- Confirm monitoring
+- Confirm application validation
+- Check new alerts
+- Capture final versions

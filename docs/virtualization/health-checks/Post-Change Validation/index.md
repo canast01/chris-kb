@@ -1,41 +1,14 @@
-# Virtualization post-change-validation/
+# Post-Change Checks
 
-## Overview
+Post-change checks confirm the environment is healthy after work is complete.
 
-Validation after maintenance, upgrades, patching, or configuration changes.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Confirm all hosts are connected
+- Confirm cluster HA and DRS status
+- Confirm VMs are running as expected
+- Confirm datastores are accessible
+- Confirm vSAN health is green
+- Confirm no unexpected new alerts
+- Confirm backup jobs still run
+- Confirm monitoring is receiving data
+- Confirm application owner validation if needed
+- Update change record with evidence

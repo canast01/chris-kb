@@ -1,44 +1,32 @@
-# Virtualization Incident Response
+# Incident Response Runbook
 
-## Overview
-
-Use this during virtualization incidents where VMs, hosts, clusters, datastores, networking, or management tools are impacted.
-
-## Pre-Checks
-
-- Confirm impact and scope.
-- Identify affected applications or business services.
-- Check recent changes.
-- Confirm management access.
-- Review vCenter, ESXi, vSAN, NSX, VxRail, and Aria alerts.
-- Start a timeline.
+Use this when there is an active VMware platform issue.
 
 ## Steps
 
-1. Confirm whether impact is VM, host, cluster, storage, network, or management-plane related.
-2. Check vCenter alarms and recent tasks.
-3. Check host connection state.
-4. Check datastore and vSAN health.
-5. Check network connectivity and NSX health if used.
-6. Check VxRail Manager if the environment is VxRail.
-7. Capture screenshots and timestamps.
-8. Escalate with clear scope and evidence.
+1. Confirm the issue scope
+2. Identify impacted systems
+3. Check vCenter availability
+4. Check host and cluster health
+5. Review active alarms
+6. Check recent tasks and events
+7. Check datastore and vSAN health
+8. Check network health
+9. Check hardware alerts
+10. Review logs
+11. Escalate if needed
+12. Document findings
+13. Confirm recovery
+14. Communicate status
+15. Complete RCA if required
 
-## Validation
+## Evidence to Capture
 
-- Impact is understood.
-- Affected objects are identified.
-- Current health is documented.
-- Next action owner is clear.
-- Timeline has been started.
-
-## Rollback
-
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
-
-## Notes
-
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+- Date and time of issue
+- Impacted VMs, hosts, clusters, or datastores
+- Screenshots of alarms
+- Recent vCenter events
+- Logs from vCenter or ESXi
+- Support bundles if needed
+- Timeline of actions taken
+- Validation after recovery

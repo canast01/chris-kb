@@ -1,41 +1,10 @@
-# Virtualization access-standard/
+# Access Standards
 
-## Overview
-
-Roles, groups, permissions, break-glass access, and review cadence.
-
-## Pre-Checks
-
-- Confirm scope.
-- Confirm affected systems.
-- Check recent changes.
-- Confirm management access.
-- Review current alerts.
-- Confirm rollback or escalation path.
-
-## Steps
-
-1. Capture the current state.
-2. Review alerts and recent tasks.
-3. Validate compute, storage, network, and management health.
-4. Check product-specific health.
-5. Record findings.
-6. Escalate or remediate if needed.
-
-## Validation
-
-- No new critical alarms.
-- Management access works.
-- Workloads are healthy.
-- Monitoring is current.
-- Any known issues are documented.
-
-## Rollback
-
-- Revert changed settings if applicable.
-- Restore prior config where possible.
-- Escalate with notes, timestamps, and screenshots.
-
-## Notes
-
-Keep this page practical. Add local commands, screenshots, and links as the environment matures.
+- Use AD groups instead of direct user permissions
+- Assign least privilege access
+- Review admin access regularly
+- Remove stale accounts
+- Use service accounts for integrations
+- Document service account purpose
+- Monitor failed logins
+- Protect break-glass accounts

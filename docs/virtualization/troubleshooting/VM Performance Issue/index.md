@@ -1,47 +1,9 @@
-# Virtualization vm-performance-issue/
+# Common VM Issues
 
-## Symptoms
-
-- First-pass workflow for CPU, memory, storage, and network symptoms.
-- Alerts or symptoms reported by users or monitoring.
-- Impact may be limited or broad depending on scope.
-
-## Likely Causes
-
-- Recent change.
-- DNS or certificate issue.
-- Authentication issue.
-- Storage path issue.
-- Network path issue.
-- Capacity pressure.
-- Failed management service.
-- Version mismatch.
-
-## Commands
-
-~~~bash
-# Add environment-specific commands here
-~~~
-
-## Troubleshooting Workflow
-
-1. Confirm the scope.
-2. Check recent changes.
-3. Review alerts and events.
-4. Validate management access.
-5. Check compute health.
-6. Check storage health.
-7. Check network health.
-8. Review logs.
-9. Document findings.
-
-## Resolution
-
-Document what fixed the issue and how it was validated.
-
-## Prevention
-
-- Add monitoring if missing.
-- Tune noisy alerts.
-- Update standards.
-- Capture the issue as a known pattern.
+| Symptom | What to Check |
+|---|---|
+| VM will not power on | Host resources, datastore space, lock files, HA status |
+| VM is slow | CPU ready, memory ballooning, datastore latency, snapshots |
+| VM lost network | Port group, VLAN, VMXNET3 adapter, VMware Tools |
+| VM disk full | Guest OS disk usage, snapshots, thin disk growth |
+| VMware Tools warning | Tools version, guest OS support, pending reboot |

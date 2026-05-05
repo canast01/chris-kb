@@ -1,22 +1,12 @@
-# Virtualization Daily Workflow
+# Daily Workflow
 
-## Overview
-
-Use this as the fast daily check path for virtualization operations.
-
-## Checks
-
-1. Review vCenter alarms.
-2. Check ESXi host connection state.
-3. Check cluster capacity.
-4. Review vSAN health if used.
-5. Review NSX alarms if used.
-6. Check VxRail Manager health if used.
-7. Confirm Aria collection is current.
-8. Review failed tasks.
-9. Check backup or protection status.
-10. Record issues that need follow-up.
-
-## Notes
-
-Keep this page short. Link out to deeper pages only when needed.
+1. Log into vCenter
+2. Check active alarms
+3. Confirm all hosts are connected
+4. Check cluster HA and DRS status
+5. Check datastore capacity
+6. Check vSAN health if used
+7. Review failed tasks
+8. Check backup status
+9. Review monitoring dashboards
+10. Follow up on repeat alerts
