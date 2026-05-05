@@ -1,6 +1,6 @@
 # Aria Suite Lifecycle
 
-Aria Suite Lifecycle operational notes and deep-dive references.
+Aria Suite Lifecycle manages deployment, patching, upgrades, certificates, and configuration for Aria products.
 
 <div class="kb-grid kb-grid-5">
 
@@ -30,3 +30,12 @@ Aria Suite Lifecycle operational notes and deep-dive references.
   </div>
 
 </div>
+
+## Common Use Cases
+
+- Deploy Aria products
+- Upgrade Aria products
+- Manage certificates
+- Perform environment health checks
+- Validate interoperability
+- Centralize lifecycle operations

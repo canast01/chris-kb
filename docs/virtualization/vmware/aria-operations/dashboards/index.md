@@ -1,8 +1,15 @@
 # Dashboards
 
-## Purpose
+## Common Dashboards
 
-Use this page for practical Aria Operations Dashboards notes, checks, troubleshooting, commands, change notes, and field references.
+| Dashboard | Purpose |
+|---|---|
+| VMware Platform Health | Shows vCenter, clusters, hosts, datastores, and VM health |
+| Capacity Dashboard | Tracks CPU, memory, datastore, and vSAN capacity |
+| Alert Dashboard | Shows active alerts by severity |
+| VM Performance Dashboard | Shows CPU ready, memory pressure, disk latency, and network usage |
+| vSAN Dashboard | Shows disk group, capacity, object health, and resync status |
+| Login and Access Dashboard | Tracks authentication failures and access events |
 
 ## Common checks
 

@@ -1,8 +1,16 @@
-# Alerts
+# Alert Tuning
 
-## Purpose
+Alert tuning is important because too many low-value alerts create noise.
 
-Use this page for practical Aria Operations Alerts notes, checks, troubleshooting, commands, change notes, and field references.
+## Good Alert Tuning Should Include
+
+- Clear severity levels
+- Actionable descriptions
+- Ownership or assignment
+- Escalation path
+- Suppression rules for known maintenance windows
+- Review of repeat alerts
+- Removal of stale or low-value alerts
 
 ## Common checks
 
