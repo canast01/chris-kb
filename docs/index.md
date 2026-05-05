@@ -11,24 +11,6 @@
   </div>
 </div>
 
-<div class="kb-status">
-  <div class="kb-status-item">
-    <strong>1,100+</strong>
-    <span>Knowledge articles</span>
-  </div>
-  <div class="kb-status-item">
-    <strong>30+</strong>
-    <span>Technology domains</span>
-  </div>
-  <div class="kb-status-item">
-    <strong>VMware · Dell · Pure · NetApp</strong>
-    <span>Core platforms</span>
-  </div>
-  <div class="kb-status-item">
-    <strong>AWS · Azure</strong>
-    <span>Cloud platforms</span>
-  </div>
-</div>
 
 ## Platforms
 
