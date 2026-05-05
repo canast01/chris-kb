@@ -1,42 +1,55 @@
-# VM Snapshot Cleanup Runbook
+# vSAN Degraded Object Runbook
 
-## Overview
+## Confirm vSAN Health State
 
-Use this to find and clean up old or risky VM snapshots.
+- Open vCenter → Cluster → vSAN → Skyline Health
+- Identify which health checks are failing
+- Open Virtual Objects view and filter by Degraded, Non-compliant, or Absent
 
-## Pre-Checks
+## Identify Affected Objects
 
-- Confirm snapshot owner.
-- Confirm snapshot age.
-- Confirm backup status.
-- Confirm datastore free space.
-- Confirm no active backup or replication job.
-- Confirm application owner approval if needed.
+- Note the VM name, object type, and storage policy for each affected object
+- Check if the VM is still running or if it has failed
 
-## Steps
+## Check Failed Disks
 
-1. Identify snapshots older than the approved threshold.
-2. Confirm owner and purpose.
-3. Check datastore capacity.
-4. Remove snapshots during a safe window.
-5. Monitor consolidation tasks.
-6. Resolve consolidation warnings if needed.
-7. Document cleanup results.
+- Review Skyline Health → Physical Disk section
+- Check iDRAC for disk health on all VxRail nodes
 
-## Validation
+## Check Host Availability
 
-- Snapshot removed.
-- VM has no consolidation warning.
-- Datastore capacity is stable.
-- Application owner confirms no issue if required.
+- Confirm all hosts are Connected in vCenter
+- Check if any host is in maintenance mode unexpectedly
 
-## Rollback
+## Check Resync Status
 
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
+```bash
+esxcli vsan debug resync summary get
+```
 
-## Notes
+Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.
 
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+## Check Capacity
+
+- Confirm vSAN usable capacity is within safe limits
+- If capacity is the cause of non-compliance, expansion may be needed
+
+## Review Storage Policy
+
+- Confirm the storage policy assigned to affected objects is achievable with current cluster state
+- If FTT=1 and only one host or disk is available, the policy cannot be met
+
+## Avoid Unsafe Actions
+
+- Do not take additional hosts into maintenance mode while objects are degraded
+- Do not delete VMs or disks without VMware support guidance
+
+## Engage VMware Support
+
+- Collect a vSAN support bundle if objects remain degraded after the expected recovery period
+- Open a VMware support case and provide the bundle, timeline, and Skyline Health screenshots
+
+## Validate Object Compliance After Recovery
+
+- Return to Virtual Objects view and confirm all objects are Healthy
+- Run Skyline Health and confirm no remaining failures

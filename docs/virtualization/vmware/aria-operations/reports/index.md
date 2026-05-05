@@ -1,44 +1,35 @@
-# Reports
+# Aria Operations Reports
 
-## Purpose
+## Aria Operations Rightsizing Review
 
-Use this page for practical Aria Operations Reports notes, checks, troubleshooting, commands, change notes, and field references.
+Use Aria Operations to identify VMs that are oversized or undersized.
 
-## Common checks
+### Oversized VMs
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+- High CPU and memory allocation with consistently low demand
+- Review the CPU demand and memory demand charts over the last 30 days
+- Use Aria Operations rightsizing recommendations as a starting point
+- Validate with application owner before reducing resources
 
-## Incident notes
+### Undersized VMs
 
-Capture:
+- High CPU ready or memory ballooning under normal load
+- Indicates the VM needs more CPU or memory
+- Review trend data before increasing resources
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+### Resize Process
 
-## Change notes
+1. Identify the VM and its application owner
+2. Review Aria Operations recommendations
+3. Get change approval from the application owner
+4. Schedule a maintenance window if a reboot is required
+5. Resize the VM
+6. Monitor CPU ready, memory, and application performance after resize
+7. Document before and after metrics
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+### Monthly Review
 
-## Useful commands
-
-Add tested commands here.
-
-## Known issues
-
-Add known issues here as they come up.
+- Run the rightsizing report monthly
+- Review top 10 oversized VMs
+- Review top 10 undersized VMs
+- Track progress on recommendations from previous months

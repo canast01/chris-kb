@@ -1,55 +1,41 @@
-# Vcenter Certificates
+# VMware Certificate Expiration Tracking
 
-## Overview
+## Certificates to Track
 
-Certificate inventory, expiration checks, replacement planning, and service impact notes.
+| Certificate | Location | Risk if Expired |
+|---|---|---|
+| vCenter Machine SSL | VAMI → Certificate Management | Browser warnings, API failures |
+| VMCA Root Certificate | VAMI → Certificate Management | Breaks all VMCA-issued certs |
+| STS Certificate | vSphere Client → SSO → Certificates | Login failures platform-wide |
+| Solution User Certificates | VAMI → Certificate Management | Service-to-service auth failures |
+| NSX Manager Certificate | NSX Manager → System | NSX UI and API failures |
+| Aria Endpoint Certificates | Aria Suite Lifecycle | Integration and access failures |
 
-## Where It Fits
+## Expiration Tracking Schedule
 
-Use this page for VMware platform support, daily checks, troubleshooting, upgrade prep, and operational review.
+- Review all certificate expiration dates monthly
+- Flag certificates expiring within 60 days — plan replacement
+- Escalate certificates expiring within 30 days — urgent action required
+- Document next renewal date after each replacement
 
-## Daily Checks
+## Certificate Replacement Process
 
-- Review active alarms.
-- Check recent failed tasks.
-- Confirm service health.
-- Confirm capacity and performance are normal.
-- Check recent changes.
+1. Identify the certificate and replacement method (VMCA, custom CA, or self-signed)
+2. Confirm backup of vCenter is current
+3. Schedule a maintenance window
+4. Replace the certificate using the appropriate method
+5. Restart affected services
+6. Validate all integrations and logins
 
-## Health Commands
+## Validation After Replacement
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- Browser access to vCenter confirmed with no certificate warning
+- All ESXi hosts Connected
+- SSO login working for both local and AD accounts
+- Aria, NSX, and backup integrations confirmed working
 
-## Common Issues
+## Emergency Escalation
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
-
-## Operational Tasks
-
-- Review alarms and events.
-- Confirm ownership and support notes.
-- Validate dependencies.
-- Document changes.
-- Confirm monitoring coverage.
-
-## Upgrade Notes
-
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-## Best Practices
-
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+If certificate expiry causes a login or service failure:
+- Check if the local administrator account (`administrator@vsphere.local`) still works
+- Engage VMware support if SSO or STS cannot be recovered in place

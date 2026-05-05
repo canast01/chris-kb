@@ -1,59 +1,38 @@
-# VxRail Pre-Checks
+# VxRail Pre-Change Health Validation
 
-## Overview
+## VxRail Manager
 
-Health, compatibility, capacity, hardware, vSAN, and support pre-checks before lifecycle work.
+- VxRail Manager VM is powered on and reachable
+- VxRail Manager health shows green
+- No pending upgrade tasks or failed jobs
 
-## Where It Fits
+## vCenter Health
 
-Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
+- All ESXi hosts are Connected
+- No critical alarms in vCenter
+- Recent tasks show no unexpected failures
 
-## Daily Checks
+## vSAN Health
 
-- Review VxRail Manager health.
-- Check vCenter and ESXi host health.
-- Review vSAN health.
-- Confirm no active failed tasks.
-- Review hardware alerts.
-- Check recent lifecycle or support events.
+- vSAN Skyline Health is green — no critical issues
+- No active resync (or resync is at an acceptable level)
+- Disk groups are healthy
+- vSAN capacity is within safe limits
 
-## Health Commands
+## Hardware Health
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- No critical hardware alerts in iDRAC for any node
+- Firmware is consistent across nodes
+- No disk or memory warnings
 
-## Common Issues
+## Infrastructure
 
-- Lifecycle pre-check failure.
-- Host hardware warning.
-- vSAN health warning.
-- Failed update bundle.
-- VxRail Manager service issue.
-- Version compatibility issue.
-- Support bundle collection failure.
+- DNS forward and reverse resolution working for all nodes
+- NTP synchronized across vCenter and ESXi hosts
+- Admin access confirmed for both vCenter and VxRail Manager
 
-## Operational Tasks
+## Backup and Recovery Readiness
 
-- Review cluster health.
-- Validate node status.
-- Confirm support connectivity.
-- Check upgrade readiness.
-- Collect support evidence.
-- Document changes and follow-up items.
-
-## Upgrade Notes
-
-- Confirm upgrade path.
-- Review Dell compatibility guidance.
-- Confirm vCenter, ESXi, vSAN, and firmware versions.
-- Validate backups and rollback notes.
-- Run post-upgrade checks.
-
-## Best Practices
-
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+- vCenter file-based backup is current
+- Rollback or recovery plan documented
+- Dell support contact is available if needed

@@ -1,44 +1,52 @@
-# Virtualization Certificate Renewal Planning
+# VMware Certificate Renewal Runbook
 
-## Overview
+## Identify the Expiring Certificate
 
-Use this before vCenter, NSX, VxRail, Aria, or related certificate renewals.
+- Review certificate inventory
+- Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint
+- Note the affected product and expiration date
 
-## Pre-Checks
+## Confirm Affected Products
 
-- Identify certificate owner.
-- Confirm expiration date.
-- Confirm certificate type.
-- Confirm replacement process.
-- Confirm dependency impact.
-- Confirm backup or snapshot position.
-- Confirm maintenance window.
+- List all products that trust or use this certificate
+- Confirm which integrations may be disrupted during replacement
 
-## Steps
+## Capture Current Certificate Details
 
-1. Inventory certificates.
-2. Confirm renewal method.
-3. Confirm trust chain.
-4. Create or request replacement certificate.
-5. Apply during approved window.
-6. Restart services only if required.
-7. Validate login, API access, and integrations.
+- Subject, SAN, issuer, expiration date
+- Screenshot from VAMI or vSphere Client as pre-change evidence
 
-## Validation
+## Confirm Backup Exists
 
-- Certificate shows expected expiration.
-- UI and API access work.
-- Integrations still connect.
-- Monitoring is green.
-- No new certificate alarms.
+- Confirm vCenter file-based backup is current
+- Confirm product backup for Aria or NSX if their certificate is being replaced
 
-## Rollback
+## Schedule Maintenance Window
 
-- Stop the change if impact increases.
-- Return settings to the last known good state where possible.
-- Reconnect affected systems if disconnected.
-- Escalate with logs, timestamps, screenshots, and task IDs.
+- Plan replacement outside peak hours
+- Allow time for service restarts and integration validation
 
-## Notes
+## Replace the Certificate
 
-Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+- Follow the correct replacement method for the certificate type
+- For VMCA-issued certs: use vSphere Client or VAMI
+- For custom CA certs: generate CSR, submit to CA, import signed cert
+
+## Restart Required Services
+
+```bash
+service-control --restart --all
+```
+
+Only restart services after confirming the new certificate is applied.
+
+## Validate Integrations
+
+- vCenter browser access — no certificate warning
+- SSO login for local and AD accounts
+- Aria, NSX, backup, and monitoring integrations confirmed
+
+## Document Final Expiration Date
+
+- Update the certificate inventory with the new expiration date
+- Set a review reminder 60 days before the new expiration

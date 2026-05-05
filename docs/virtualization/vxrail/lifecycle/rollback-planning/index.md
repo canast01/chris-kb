@@ -1,59 +1,44 @@
-# VxRail Rollback Planning
+# VxRail Node Replacement Checklist
 
-## Overview
+## Confirm the Issue
 
-Rollback expectations, backup position, vendor involvement, and decision points.
+- Confirm the failed node or part with Dell support
+- Review the Dell support case for replacement guidance
+- Confirm replacement hardware part numbers
 
-## Where It Fits
+## Capture Current Node Details
 
-Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
+- Hostname and IP address
+- Serial number
+- Model
+- Current firmware version
+- Cluster assignment
 
-## Daily Checks
+## Validate Cluster Health Before Replacement
 
-- Review VxRail Manager health.
-- Check vCenter and ESXi host health.
-- Review vSAN health.
-- Confirm no active failed tasks.
-- Review hardware alerts.
-- Check recent lifecycle or support events.
+- Confirm cluster is healthy enough to tolerate node removal
+- Confirm vSAN can maintain data availability without this node (check FTT policy)
+- Confirm no active vSAN resyncs that would be disrupted
 
-## Health Commands
+## Maintenance Mode
 
-~~~bash
-# Add environment-specific commands here
-~~~
+- Place the node into maintenance mode with the correct evacuation option
+- Wait for vSAN to evacuate or ensure data accessibility before proceeding
 
-## Common Issues
+## Dell Replacement Workflow
 
-- Lifecycle pre-check failure.
-- Host hardware warning.
-- vSAN health warning.
-- Failed update bundle.
-- VxRail Manager service issue.
-- Version compatibility issue.
-- Support bundle collection failure.
+- Follow Dell's guided replacement steps from the support case
+- Confirm firmware on replacement hardware before insertion
+- Do not skip Dell iDRAC or Lifecycle Controller steps
 
-## Operational Tasks
+## Validate Node Rejoin
 
-- Review cluster health.
-- Validate node status.
-- Confirm support connectivity.
-- Check upgrade readiness.
-- Collect support evidence.
-- Document changes and follow-up items.
+- Confirm the replacement node appears in VxRail Manager
+- Confirm it joins the vSAN cluster and disk groups are healthy
+- Monitor vSAN rebalancing until complete
 
-## Upgrade Notes
+## Confirm vSAN Object Health
 
-- Confirm upgrade path.
-- Review Dell compatibility guidance.
-- Confirm vCenter, ESXi, vSAN, and firmware versions.
-- Validate backups and rollback notes.
-- Run post-upgrade checks.
-
-## Best Practices
-
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+- Run vSAN Skyline Health after rebalancing completes
+- Confirm all objects are Healthy or Compliant
+- Confirm cluster capacity is back to normal
