@@ -1,10 +1,109 @@
 # Pure1 Lifecycle
 
-Pure1 is SaaS — no version management or on-premises upgrades are required. Array Purity version compatibility with Pure1 features must be tracked, as some analytics and forecasting capabilities require minimum Purity versions. Pure1 uses a versioned REST API (`v1.latest` tracks current), and older API versions are deprecated on a published schedule. Pure1 retains array performance and capacity metrics for a rolling 90-day period by default.
+## Platform Update Model
 
-| Item | Detail |
+Pure1 is a SaaS platform managed entirely by Pure Storage. There is no customer-managed version to upgrade. Feature releases, analytics model updates, and UI changes are deployed by Pure Storage and communicated via Pure1 release notes.
+
+Customer lifecycle responsibilities:
+1. Onboarding new arrays when deployed
+2. Monitoring Purity version compatibility with Pure1 features
+3. Managing Pure1 API token lifecycle
+4. Monitoring connection status for all arrays
+5. Reviewing Pure1 release notes for API changes
+
+## Array Onboarding
+
+New FlashArray and FlashBlade systems connect to Pure1 automatically once Purity is initialised and outbound HTTPS connectivity is available. No manual registration is required — arrays authenticate to Pure1 using their factory-installed certificates and serial numbers.
+
+### Onboarding Verification
+
+```bash
+# From Purity CLI — verify Pure1 connectivity
+purearray list --connection
+# Look for "connected" status for pure1.purestorage.com
+
+# If connectivity shows "disconnected":
+purearray set --proxy https://<proxy>:<port>   # if behind a proxy
+# Or check firewall rules for outbound HTTPS to pure1.purestorage.com
+```
+
+```text
+Pure1 portal: confirm new array appears in Assets with a health score
+(allow 30–60 minutes after first power-on for initial telemetry to populate)
+```
+
+### Post-Onboarding Steps
+
+```text
+1. Apply mandatory tags to the new array in Pure1:
+   Pure1 > Fleet > [Array] > Tags
+   - Site: <dc1/dc2/dr>
+   - Environment: <prod/non-prod>
+   - Owner: <team-name>
+
+2. Add the array to any existing alert notification rules that should cover it
+
+3. Verify health score appears within 1 hour of onboarding
+```
+
+## Array Decommission
+
+```text
+1. Open a Pure Storage support case to initiate array decommission from Pure1
+   (arrays cannot be removed from Pure1 by the customer directly)
+2. Ensure all alert notification rules referencing the array are updated
+3. Update automation scripts to exclude the decommissioned array serial number
+```
+
+## Purity Version Compatibility
+
+Some Pure1 features require minimum Purity OS versions. Track Purity versions across the fleet and plan upgrades to maintain feature access.
+
+| Feature | Minimum Purity Version |
 |---|---|
-| Platform type | SaaS (Pure-managed) |
-| API versioning | v1.latest (current), versioned endpoints deprecated per schedule |
-| Metrics retention | 90 days rolling |
-| Purity compatibility | Check Pure1 release notes for feature/version matrix |
+| Pure1 Meta workload analytics | FlashArray Purity 5.2+ |
+| Pure1 Meta capacity forecasting | FlashArray Purity 5.3+ |
+| Pure1 REST API v2 | FlashArray Purity 6.0+ |
+| Pure1 anomaly detection | FlashArray Purity 6.1+ |
+
+Review the [Pure Storage Compatibility Matrix](https://support.purestorage.com) for the current version requirements.
+
+## Pure1 REST API Lifecycle
+
+The Pure1 REST API is versioned. The `v1.latest` alias tracks the current stable version. Older API versions are deprecated on a published schedule.
+
+```text
+API base URLs:
+- v1: https://api.pure1.purestorage.com/api/1.latest/
+- v2: https://api.pure1.purestorage.com/api/2.x/  (tag management, subscriptions)
+```
+
+Monitor Pure1 release notes for API deprecation notices. When a deprecation is announced:
+
+```text
+1. Identify all scripts and integrations using deprecated endpoints
+2. Update to replacement endpoints per Pure1 migration guide
+3. Test in non-prod before rolling out to production scripts
+4. Complete migration before the published deprecation date
+```
+
+## API Token Lifecycle
+
+Pure1 API tokens are long-lived keys associated with service accounts. Rotate annually.
+
+```text
+Rotation procedure:
+1. Pure1 portal > Account > API Registration > [Service Account] > Rotate Key
+2. Download the new private key (only shown once)
+3. Update the key in the team secrets manager
+4. Redeploy/restart all automation scripts using the old key
+5. Verify API calls succeed with the new key
+6. Log the rotation date and next due date in the credential register
+```
+
+## Metrics Retention Management
+
+Pure1 retains 90 days of rolling performance and capacity metrics in the API. For longer-term capacity planning data:
+
+- Run the `pure1_capacity_report.py` script weekly and archive results to a team shared drive or S3 bucket
+- Monthly capacity trend reports should be retained for 2 years for capacity planning and chargeback purposes

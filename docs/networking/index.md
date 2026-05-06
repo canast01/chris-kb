@@ -1,66 +1,18 @@
 # Networking
 
-<div class="kb-summary">
-Networking knowledge base articles, procedures, troubleshooting notes, and operational references.
-</div>
-
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="dns-troubleshooting/">DNS Troubleshooting</a></h3>
-  <p>DNS Troubleshooting KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="firewall-rule-validation/">Firewall Rule Validation</a></h3>
-  <p>Firewall Rule Validation KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="firewalls/">Firewalls</a></h3>
-  <p>Firewalls KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="load-balancer-health/">Load Balancer Health</a></h3>
-  <p>Load Balancer Health KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="load-balancers/">Load Balancers</a></h3>
-  <p>Load Balancers KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="network-connectivity/">Network Connectivity</a></h3>
-  <p>Network Connectivity KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="packet-loss-troubleshooting/">Packet Loss Troubleshooting</a></h3>
-  <p>Packet Loss Troubleshooting KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="routing/">Routing</a></h3>
-  <p>Routing KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="routing-validation/">Routing Validation</a></h3>
-  <p>Routing Validation KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="subnetting/">Subnetting</a></h3>
-  <p>Subnetting KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="tcp-ip/">TCP/IP</a></h3>
-  <p>TCP/IP KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="vlan/">VLAN</a></h3>
-  <p>VLAN KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="vlan-configuration/">VLAN Configuration</a></h3>
-  <p>VLAN Configuration KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="vpn/">VPN</a></h3>
-  <p>VPN KB articles and procedures.</p>
-</div>
+<a class="kb-card" href="routing/"><strong>Routing</strong><span>Static and dynamic routing, route tables, BGP, OSPF, and path selection.</span></a>
+<a class="kb-card" href="routing-validation/"><strong>Routing Validation</strong><span>Verifying route propagation, next-hop reachability, and path symmetry after changes.</span></a>
+<a class="kb-card" href="vlan/"><strong>VLANs</strong><span>VLAN design, trunk and access ports, inter-VLAN routing, and segmentation.</span></a>
+<a class="kb-card" href="vlan-configuration/"><strong>VLAN Configuration</strong><span>Switch VLAN provisioning, port assignment, and validation procedures.</span></a>
+<a class="kb-card" href="dns-troubleshooting/"><strong>DNS Troubleshooting</strong><span>Resolution failures, PTR records, forwarder issues, and DNS cache flushing.</span></a>
+<a class="kb-card" href="firewalls/"><strong>Firewalls</strong><span>Firewall architecture, zone design, rule management, and policy review.</span></a>
+<a class="kb-card" href="firewall-rule-validation/"><strong>Firewall Rule Validation</strong><span>Testing and verifying firewall rules before and after changes.</span></a>
+<a class="kb-card" href="load-balancers/"><strong>Load Balancers</strong><span>VIP configuration, pool members, health monitors, and persistence profiles.</span></a>
+<a class="kb-card" href="load-balancer-health/"><strong>Load Balancer Health</strong><span>Pool member status, health monitor failures, and VIP availability checks.</span></a>
+<a class="kb-card" href="network-connectivity/"><strong>Network Connectivity</strong><span>End-to-end connectivity testing, path tracing, and reachability validation.</span></a>
+<a class="kb-card" href="packet-loss-troubleshooting/"><strong>Packet Loss</strong><span>Diagnosing packet loss — interface errors, duplex mismatches, and congestion.</span></a>
+<a class="kb-card" href="subnetting/"><strong>Subnetting</strong><span>Subnet design, CIDR notation, address allocation, and IPAM references.</span></a>
+<a class="kb-card" href="tcp-ip/"><strong>TCP/IP</strong><span>Protocol fundamentals, TCP handshake, MTU, fragmentation, and flow control.</span></a>
+<a class="kb-card" href="vpn/"><strong>VPN</strong><span>Site-to-site and remote access VPN configuration, troubleshooting, and validation.</span></a>
 </div>

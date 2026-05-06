@@ -1,13 +1,84 @@
 # Superna Eyeglass Lifecycle
 
-Eyeglass version compatibility with NetApp PowerScale OneFS versions must be validated before any upgrade — refer to the Superna compatibility matrix. The upgrade procedure involves downloading the new OVA, deploying it alongside the existing appliance, migrating configuration, and registering the new license. In-place upgrades may be supported in later versions — always verify against the release notes.
+## Version Compatibility Matrix
 
-EOL for Eyeglass appliance versions is published on the Superna support portal. SyncIQ policy configuration changes on PowerScale (e.g., schedule or path changes) must be re-validated in Eyeglass after any OneFS upgrade to confirm policy detection and DR readiness scoring remains accurate.
+Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.
 
-| Stage | Action |
-|---|---|
-| Pre-upgrade | Validate Eyeglass–OneFS compatibility matrix; take config backup |
-| Upgrade | Deploy new OVA, migrate configuration, register new license |
-| Post-upgrade | Validate SyncIQ policy detection, DR readiness score, DNS sync |
-| EOL tracking | Check Superna support portal quarterly |
-| OneFS upgrade impact | Re-validate all SyncIQ policies in Eyeglass after OneFS upgrade |
+| Eyeglass Version | PowerScale OneFS | Notes |
+|---|---|---|
+| 2.9.x | OneFS 9.4, 9.5, 9.6 | Check release notes |
+| 2.8.x | OneFS 9.3, 9.4 | |
+| 2.7.x | OneFS 9.2, 9.3 | |
+
+Reference: [Superna Compatibility Matrix](https://support.superna.net) — verify before any upgrade.
+
+## Upgrade Procedure
+
+### Pre-Upgrade
+
+```bash
+# 1. Export current Eyeglass configuration backup
+# Admin UI → Admin → Configuration Backup → Download
+
+# 2. Record current version
+# Admin UI → About → version number
+
+# 3. Verify SyncIQ policies are healthy (no lagging)
+# DR → Replication Policies — confirm all show "In Sync"
+```
+
+### Upgrade Process
+
+1. Download new OVA from [Superna support portal](https://support.superna.net)
+2. Deploy new Eyeglass OVA alongside the existing appliance (do not shut down existing)
+3. Power on new appliance; set static IP (different from existing)
+4. Import configuration backup to new appliance
+5. Re-register PowerScale clusters and DNS servers
+6. Verify DR readiness score returns to 100%
+7. Shut down old appliance after 24-hour validation period
+
+In-place upgrade support varies by version — check release notes before proceeding.
+
+### Post-Upgrade Validation
+
+- [ ] SyncIQ policies detected and showing correct state
+- [ ] DR readiness score = 100%
+- [ ] SMB shares visible and correctly mapped
+- [ ] NFS exports visible and correctly mapped
+- [ ] DNS integration verified (test DNS preview)
+- [ ] SNMP/syslog notifications still reaching monitoring/SIEM
+- [ ] Failover test with test shares (if possible in maintenance window)
+
+## OneFS Upgrade Impact
+
+After any PowerScale OneFS upgrade, re-validate Eyeglass policy detection:
+
+```
+Post-OneFS upgrade checklist:
+  1. Log in to Eyeglass Admin UI
+  2. DR → Replication Policies → Rescan
+  3. Verify all SyncIQ policies are detected
+  4. DR → Readiness — confirm score returns to 100%
+  5. Check for any new Eyeglass warnings about API changes
+```
+
+If Eyeglass shows API errors after OneFS upgrade, check if an Eyeglass update is required to support the new OneFS version.
+
+## EOL Tracking
+
+| Item | Check Location | Action Threshold |
+|---|---|---|
+| Eyeglass appliance version | support.superna.net → EOL | Upgrade plan at 6 months before EOL |
+| OneFS compatibility | Superna compatibility matrix | Verify before any OneFS upgrade |
+| License expiry | Admin UI → License | Renew 60 days before expiry |
+| VM guest OS (Eyeglass appliance) | Admin UI → System Info | Align with Superna supported OS list |
+
+## License Management
+
+Eyeglass licensing is per-cluster (primary and DR) and per-node count:
+
+1. Download license file from Superna licensing portal
+2. Admin UI → License → Import License
+3. Verify license file UUID matches the appliance UUID shown in the UI
+
+If appliance shows "Unlicensed" after an upgrade, re-import the license — appliance UUID may have changed if deployed from new OVA.

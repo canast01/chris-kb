@@ -1,10 +1,112 @@
 # CloudIQ Integration
 
-CloudIQ collects telemetry from all Dell platforms via Secure Connect Gateway. External integrations extend CloudIQ data and alerts into broader operational toolsets.
+## Overview
+
+CloudIQ collects telemetry natively from all Dell platforms via the Secure Connect Gateway. External integrations extend alert delivery and data access into broader operational toolsets including ITSM, observability platforms, and notification systems.
+
+## Native Platform Integrations (Inbound via SCG)
+
+All Dell storage and server platforms are registered in the SCG and data flows automatically.
+
+| Platform | Connection Method | Key Data |
+|---|---|---|
+| PowerStore | REST API from SCG | Health score, capacity, performance, alerts |
+| PowerMax / VMAX | REST API from SCG | Health score, capacity, SRDF, performance |
+| PowerScale / Isilon | REST API from SCG | Health score, capacity, protocol throughput |
+| Unity XT | REST API from SCG | Health score, capacity, replication status |
+| Data Domain / PowerProtect | REST API from SCG | Dedup ratios, capacity, replication health |
+| PowerEdge (via iDRAC) | iDRAC REST API from SCG | Server health, firmware, hardware faults |
+
+## ServiceNow Integration
+
+CloudIQ can auto-create ServiceNow incidents on CRITICAL alerts via webhook.
+
+```text
+CloudIQ portal > Settings > Notifications > Add Notification Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook
+- URL: https://<servicenow-instance>/api/now/table/incident
+- Authentication: Basic or OAuth token
+- Payload: map alert object, description, severity to ServiceNow fields
+  {
+    "short_description": "{{alert.name}} on {{system.name}}",
+    "severity": "1",
+    "assignment_group": "storage-ops"
+  }
+```
+
+Test the webhook using the **Test Notification** action before enabling in production.
+
+## Email Alerts
+
+```text
+CloudIQ portal > Settings > Notifications > Add Notification Rule
+- Trigger: Alert Severity = WARNING
+- Action: Email
+- Recipients: storage-ops@company.com (distribution list)
+- Include: system name, health score, alert description
+```
+
+Separate notification rules for WARNING (email) and CRITICAL (PagerDuty/webhook) are recommended.
+
+## Slack / Teams Integration
+
+```text
+CloudIQ portal > Settings > Notifications > Add Notification Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook
+- URL: <Teams or Slack incoming webhook URL>
+- Payload example (Teams adaptive card format):
+  {
+    "type": "message",
+    "attachments": [{
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "content": { "body": [{"type": "TextBlock", "text": "{{alert.name}}"}] }
+    }]
+  }
+```
+
+## REST API Access for Splunk / Grafana
+
+The CloudIQ REST API is used by Splunk Heavy Forwarders or Grafana data source plugins to pull fleet health and capacity data on a scheduled basis.
+
+```python
+# Example: fetch all systems and health scores
+import requests
+
+TOKEN_URL = "https://api.cloudiq.dell.com/auth/oauth/v2/token"
+API_BASE  = "https://api.cloudiq.dell.com/cloudiq/rest/v1"
+
+def get_token(client_id, client_secret):
+    resp = requests.post(TOKEN_URL, data={
+        "grant_type": "client_credentials",
+        "client_id": client_id,
+        "client_secret": client_secret
+    })
+    return resp.json()["access_token"]
+
+def list_systems(token):
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = requests.get(f"{API_BASE}/systems", headers=headers)
+    return resp.json()["results"]
+```
+
+## Aria Operations Integration
+
+The Dell CloudIQ management pack for Aria Operations pulls health score and alert data into vROps for correlated VMware + Dell storage dashboards.
+
+```text
+Aria Operations > Admin > Solutions > Dell CloudIQ Management Pack
+- CloudIQ API URL: https://api.cloudiq.dell.com
+- Client ID / Secret: stored in Aria Operations credential store
+- Collection interval: 15 minutes
+```
+
+## Integration Summary
 
 | Integration | Method | Purpose |
 |---|---|---|
-| PowerMax, PowerStore, Unity, PowerScale, Data Domain | SCG telemetry (native) | Health, capacity, and performance data |
+| PowerMax / PowerStore / PowerScale / Unity / DD | SCG telemetry (native) | Health, capacity, and performance data |
 | ServiceNow | Webhook from CloudIQ alert rules | Auto-ticket on CRITICAL alerts |
 | Slack / Teams | Webhook notification | Real-time alert notifications to ops channel |
 | Splunk / Grafana | CloudIQ REST API poller | Fleet health and capacity dashboards |

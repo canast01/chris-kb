@@ -1,14 +1,125 @@
 # InsightIQ Operations
 
-Daily operational checks ensure all cluster connections are active and collecting data. Log into the InsightIQ web dashboard each morning, confirm all monitored clusters show a green connection status, and review latency and throughput trends for anomalies versus the previous 7-day baseline. Check disk usage on the InsightIQ appliance to ensure the PostgreSQL data volume is below 80% capacity. Weekly, generate a utilisation report per cluster for capacity planning review.
+## Daily Checklist
 
-**Daily Checklist**
-- Log into InsightIQ web dashboard
-- Confirm all cluster connections are Active (green)
-- Review latency and throughput dashboards — flag anomalies vs. 7-day baseline
-- Check appliance disk usage (alert at 80%)
+| Check | Location | Pass Criteria |
+|---|---|---|
+| Cluster connection status | Dashboard > Clusters | All clusters show Active (green) |
+| Appliance disk usage | Administration > System Status | Data volume below 80% used |
+| Latest data collection timestamp | Dashboard > [Cluster] > Overview | Last data point within last 15 minutes |
+| Active alert review | Administration > Alerts > Active Alerts | No unacknowledged Critical latency or throughput alerts |
 
-**Weekly Tasks**
-- Generate per-cluster utilisation report for capacity planning
-- Review top protocol clients for unexpected load patterns
-- Validate InsightIQ appliance backup completed successfully
+If a cluster shows as Disconnected or the last data point is stale (> 30 minutes), investigate before stand-up.
+
+## Cluster Connection Troubleshooting
+
+```text
+Symptom: Cluster shows Disconnected or Missing in InsightIQ
+
+1. Test manual API connectivity from InsightIQ appliance:
+   curl -sk https://<cluster-mgmt-ip>:8080/platform/1/statistics/summary/drive -u svc-insightiq
+
+2. Check if the svc-insightiq account is active on the cluster:
+   (on OneFS CLI) isi auth users view svc-insightiq
+
+3. Verify network connectivity (TCP 8080):
+   telnet <cluster-mgmt-ip> 8080
+
+4. If password has been rotated: update credential in InsightIQ
+   Administration > Clusters > [Cluster] > Edit > Update Password
+
+5. Restart the InsightIQ collection service if credential fix doesn't resolve:
+   sudo systemctl restart iiq
+```
+
+## Performance Review Process
+
+### Daily Review
+
+1. Log into InsightIQ web dashboard
+2. Navigate to **Dashboard > [Cluster] > Overview**
+3. Review the last 24-hour throughput chart — compare to previous 7-day baseline
+4. Flag any latency spikes exceeding the Warning threshold (5 ms for NFS/SMB)
+5. Check per-node throughput for uneven distribution (indicates possible node issues)
+
+### Protocol Throughput Analysis
+
+```text
+Dashboard > [Cluster] > Protocol Summary
+- Compare NFS vs. SMB vs. HTTP throughput
+- Flag unexpected protocol spikes (may indicate misbehaving clients)
+- Check top client IPs for unexpected load
+```
+
+### Top Clients Review (Weekly)
+
+```text
+Dashboard > [Cluster] > Top Clients
+- Review top 10 client IPs by throughput for the last 7 days
+- Investigate any new or unexpected high-traffic clients
+- Report to application team if a specific client is generating anomalous load
+```
+
+## Capacity Review (Weekly)
+
+```text
+1. Dashboard > [Cluster] > Capacity
+2. Review used capacity trend over the last 30 days
+3. Calculate growth rate: (current used - 30 days ago used) / 30 days
+4. Project capacity exhaustion: days until 85% used
+5. Flag clusters with < 60 days to 85% threshold to capacity planning queue
+6. Include in weekly capacity report email
+```
+
+## Appliance Health Checks
+
+```bash
+# Check InsightIQ service status
+sudo systemctl status iiq
+
+# Check PostgreSQL service
+sudo systemctl status postgresql
+
+# Check disk usage on data volume
+df -h /data
+
+# Review recent errors in InsightIQ logs
+sudo journalctl -u iiq --since "24 hours ago" | grep -i error
+
+# Check database size
+psql -U iiq -c "SELECT pg_size_pretty(pg_database_size('iiq'));"
+```
+
+## Alert Threshold Review (Monthly)
+
+- Review the past month's active alerts for noise patterns
+- Adjust thresholds for workloads with known high baselines (document deviations from standard)
+- Validate SNMP trap delivery to monitoring platform with a test trap
+- Confirm SMTP alert emails are being delivered (check spam/junk filters)
+
+## Report Generation
+
+### On-Demand Report
+
+```text
+InsightIQ web UI > Reports > Custom Report
+- Select: Cluster, Time Range, Metrics (throughput, latency, CPU)
+- Format: PDF or CSV
+- Download or email directly
+```
+
+### Scheduled Report Validation
+
+```text
+Administration > Reports > Scheduled Reports
+- Verify each scheduled report shows Last Run within expected window
+- If a report failed: check SMTP configuration and recipient list
+- Manually trigger to test: Actions > Run Now
+```
+
+## Monthly Tasks
+
+- Generate monthly capacity planning report for all clusters and share with management
+- Validate InsightIQ database backup is completing (check cron logs or backup target)
+- Review InsightIQ appliance OS patches and schedule maintenance window if needed
+- Review user accounts and remove stale accounts (Administration > Users)
