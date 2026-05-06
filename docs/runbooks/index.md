@@ -1,38 +1,13 @@
 # Runbooks
 
-<div class="kb-summary">
-Runbooks knowledge base articles, procedures, troubleshooting notes, and operational references.
-</div>
-
-## Articles
+Common operational procedures for infrastructure tasks.
 
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="account-unlock/">Account Unlock</a></h3>
-  <p>Account Unlock KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="certificate-renewal/">Certificate Renewal</a></h3>
-  <p>Certificate Renewal KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="disk-space-cleanup/">Disk Space Cleanup</a></h3>
-  <p>Disk Space Cleanup KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="server-reboot/">Server Reboot</a></h3>
-  <p>Server Reboot KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="service-restart/">Service Restart</a></h3>
-  <p>Service Restart KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="storage-volume-expansion/">Storage Volume Expansion</a></h3>
-  <p>Storage Volume Expansion KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="vm-snapshot/">Vm Snapshot</a></h3>
-  <p>Vm Snapshot KB articles and procedures.</p>
-</div>
+<a class="kb-card" href="account-unlock/"><strong>Account Unlock</strong><span>Unlocking locked AD accounts, resetting passwords, and checking lockout source.</span></a>
+<a class="kb-card" href="certificate-renewal/"><strong>Certificate Renewal</strong><span>Renewing SSL/TLS certificates for infrastructure components, web services, and appliances.</span></a>
+<a class="kb-card" href="disk-space-cleanup/"><strong>Disk Space Cleanup</strong><span>Identifying and clearing disk space on Windows and Linux — logs, temp files, and snapshots.</span></a>
+<a class="kb-card" href="server-reboot/"><strong>Server Reboot</strong><span>Safe server reboot procedure — pre-checks, graceful shutdown, and post-reboot validation.</span></a>
+<a class="kb-card" href="service-restart/"><strong>Service Restart</strong><span>Restarting services on Windows and Linux — safe order, dependency checks, and validation.</span></a>
+<a class="kb-card" href="storage-volume-expansion/"><strong>Storage Volume Expansion</strong><span>Expanding LUNs, file systems, and logical volumes across block and file storage platforms.</span></a>
+<a class="kb-card" href="vm-snapshot/"><strong>VM Snapshot</strong><span>Creating, managing, and deleting VM snapshots — best practices and cleanup procedures.</span></a>
 </div>

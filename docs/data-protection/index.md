@@ -1,38 +1,11 @@
 # Data Protection
 
-<div class="kb-summary">
-Data Protection knowledge base articles, procedures, troubleshooting notes, and operational references.
-</div>
-
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="backup-validation/">Backup Validation</a></h3>
-  <p>Backup Validation KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="data-classification/">Data Classification</a></h3>
-  <p>Data Classification KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="data-encryption/">Data Encryption</a></h3>
-  <p>Data Encryption KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="data-governance/">Data Governance</a></h3>
-  <p>Data Governance KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="data-retention-policy/">Data Retention Policy</a></h3>
-  <p>Data Retention Policy KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="key-management/">Key Management</a></h3>
-  <p>Key Management KB articles and procedures.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="recovery-testing/">Recovery Testing</a></h3>
-  <p>Recovery Testing KB articles and procedures.</p>
-</div>
+<a class="kb-card" href="backup-validation/"><strong>Backup Validation</strong><span>Verifying backup jobs are complete, restores are testable, and retention policies are met.</span></a>
+<a class="kb-card" href="data-classification/"><strong>Data Classification</strong><span>Data classification tiers, labelling requirements, and handling rules per classification level.</span></a>
+<a class="kb-card" href="data-encryption/"><strong>Data Encryption</strong><span>Encryption at rest and in transit — standards, key management, and compliance requirements.</span></a>
+<a class="kb-card" href="data-governance/"><strong>Data Governance</strong><span>Data ownership, access controls, audit requirements, and regulatory alignment.</span></a>
+<a class="kb-card" href="data-retention-policy/"><strong>Data Retention Policy</strong><span>Retention schedules by data type, legal hold procedures, and deletion verification.</span></a>
+<a class="kb-card" href="key-management/"><strong>Key Management</strong><span>KMS architecture, key rotation procedures, and HSM integration references.</span></a>
+<a class="kb-card" href="recovery-testing/"><strong>Recovery Testing</strong><span>Restore test procedures, DR test schedules, and test result documentation.</span></a>
 </div>
