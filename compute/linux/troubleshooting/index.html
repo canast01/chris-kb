@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>Linux Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#linux-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              Linux Troubleshooting
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#triage-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Triage Order
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#high-cpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        High CPU
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#high-memory-oom" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        High Memory / OOM
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#high-disk-io-or-latency" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        High Disk I/O or Latency
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#network-connectivity-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Network Connectivity Issues
       
     </span>
   </a>
@@ -767,10 +767,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#service-not-starting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Service Not Starting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-access-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Access Denied
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-full-emergency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Full — Emergency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-crash-reboot-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Crash / Reboot Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-one-liners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful One-Liners
       
     </span>
   </a>
@@ -796,43 +840,191 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Linux Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="linux-troubleshooting">Linux Troubleshooting<a class="headerlink" href="#linux-troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Structured approach to diagnosing common Linux server issues.</p>
+<h2 id="triage-order">Triage Order<a class="headerlink" href="#triage-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Is the host reachable?</strong> — ping, SSH, IPMI/iDRAC console</li>
+<li><strong>Is it a hardware or OS issue?</strong> — dmesg errors, IPMI SEL</li>
+<li><strong>What changed recently?</strong> — yum/dnf history, git log, cron, deployments</li>
+<li><strong>What is the resource state?</strong> — CPU, memory, disk, network</li>
+<li><strong>Which services/processes are involved?</strong> — systemctl, ps, journalctl</li>
+</ol>
+<h2 id="high-cpu">High CPU<a class="headerlink" href="#high-cpu" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Which processes are consuming CPU?
+ps aux --sort=-%cpu | head -15
+top -b -n1 | head -25
+
+# Is load from CPU-bound work or I/O wait?
+# wa% in top/iostat = I/O wait — not a CPU problem
+iostat -xz 1 3 | grep -E &quot;Device|avg-cpu&quot;
+
+# Per-thread breakdown
+ps -eLf | sort -k4 -rn | head -20
+
+# Zombie processes
+ps aux | grep Z
+
+# CPU throttling (thermal)
+dmesg | grep -i &quot;throttl\|cpu freq&quot; | tail -10
+</code></pre>
+<h2 id="high-memory-oom">High Memory / OOM<a class="headerlink" href="#high-memory-oom" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Current memory state
+free -h
+cat /proc/meminfo | grep -E &quot;MemTotal|MemFree|MemAvailable|Cached|SwapUsed&quot;
+
+# Processes using most memory
+ps aux --sort=-%mem | head -15
+
+# OOM killer activity
+dmesg | grep -i &quot;oom\|killed process&quot; | tail -20
+journalctl -k --since &quot;1 hour ago&quot; | grep -i oom
+
+# Memory leak — watch a process over time
+watch -n5 &quot;ps -o pid,vsz,rss,comm -p &lt;PID&gt;&quot;
+
+# Huge pages usage
+cat /proc/meminfo | grep -i huge
+</code></pre>
+<h2 id="high-disk-io-or-latency">High Disk I/O or Latency<a class="headerlink" href="#high-disk-io-or-latency" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Which device is busy?
+iostat -xz 1 5
+# %util &gt; 80% = saturated; await &gt; 20ms = high latency
+
+# Which process is doing the I/O?
+iotop -o -P
+
+# Filesystem fill causing ENOSPC errors
+df -h | awk '$5+0 &gt; 85'
+dmesg | grep -i &quot;ENOSPC\|no space left\|filesystem full&quot;
+
+# Large temp files
+find /tmp /var/tmp -size +100M 2&gt;/dev/null
+
+# Growing log files
+du -sh /var/log/* | sort -h | tail -10
+</code></pre>
+<h2 id="network-connectivity-issues">Network Connectivity Issues<a class="headerlink" href="#network-connectivity-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — Is the interface up?
+ip link show | grep -E &quot;state UP|state DOWN&quot;
+
+# Step 2 — Does the IP and route exist?
+ip addr show
+ip route show
+
+# Step 3 — Can we reach the gateway?
+ping -c 4 $(ip route show default | awk '{print $3}')
+
+# Step 4 — Can we reach DNS?
+dig +short google.com @8.8.8.8
+
+# Step 5 — Is the local port open?
+ss -tulnp | grep &lt;port&gt;
+
+# Step 6 — Is firewall blocking?
+firewall-cmd --list-all          # RHEL
+ufw status verbose               # Ubuntu
+iptables -L -n -v | grep DROP    # Direct iptables
+
+# Step 7 — Packet capture to confirm traffic flow
+tcpdump -i eth0 host &lt;remote-ip&gt; and port &lt;port&gt; -c 50
+</code></pre>
+<h2 id="service-not-starting">Service Not Starting<a class="headerlink" href="#service-not-starting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check the exact error
+systemctl status &lt;service&gt; -l
+journalctl -u &lt;service&gt; -n 50 --no-pager
+
+# Check dependencies
+systemctl list-dependencies &lt;service&gt; | grep failed
+
+# Validate unit file
+systemd-analyze verify /etc/systemd/system/&lt;service&gt;.service
+
+# Check if port is already in use
+ss -tulnp | grep &lt;port&gt;
+
+# Test the command manually
+sudo -u &lt;service-user&gt; &lt;ExecStart-command&gt; --dry-run
+</code></pre>
+<h2 id="ssh-access-denied">SSH Access Denied<a class="headerlink" href="#ssh-access-denied" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check sshd is running
+systemctl status sshd
+
+# Check sshd config for auth method restrictions
+grep -E &quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot; /etc/ssh/sshd_config
+
+# Check PAM for account restrictions
+journalctl _SYSTEMD_UNIT=sshd.service | grep &quot;Failed\|error\|pam&quot; | tail -20
+
+# Check if account is locked
+passwd -S &lt;username&gt;   # L = locked
+faillock --user &lt;username&gt;    # Check failed login counter
+faillock --user &lt;username&gt; --reset    # Reset counter
+
+# Check /etc/hosts.allow and hosts.deny (tcpwrappers)
+cat /etc/hosts.deny
+cat /etc/hosts.allow
+
+# SELinux blocking SSH (non-standard port)
+ausearch -m avc -c sshd --start recent | tail -10
+</code></pre>
+<h2 id="disk-full-emergency">Disk Full — Emergency<a class="headerlink" href="#disk-full-emergency" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Find the full filesystem
+df -h | awk '$5+0 &gt; 90'
+
+# Largest directories
+du -sh /* 2&gt;/dev/null | sort -h | tail -10
+du -sh /var/* 2&gt;/dev/null | sort -h | tail -10
+
+# Large log files
+find /var/log -size +100M -type f 2&gt;/dev/null
+# Truncate (don't delete — running process may hold FD open)
+&gt; /var/log/large-logfile.log
+
+# Open but deleted files still consuming space
+lsof | grep deleted | sort -k7 -rn | head -10
+# Restart the holding process to release inodes
+
+# Force journal vacuum
+journalctl --vacuum-size=500M
+</code></pre>
+<h2 id="system-crash-reboot-analysis">System Crash / Reboot Analysis<a class="headerlink" href="#system-crash-reboot-analysis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Recent reboots
+last reboot | head -10
+
+# Was it a kernel panic?
+journalctl -b -1 | tail -50   # Previous boot
+dmesg | grep -i &quot;panic\|bug:\|BUG:\|Oops:&quot;
+
+# kdump crash dump (if configured)
+ls /var/crash/
+
+# Hardware errors (memory, CPU, PCIe)
+mcelog --client 2&gt;/dev/null
+dmesg | grep -iE &quot;mce|machine check|uncorrect|hardware error&quot;
+
+# Check IPMI SEL (system event log)
+ipmitool sel list | tail -20
+</code></pre>
+<h2 id="useful-one-liners">Useful One-Liners<a class="headerlink" href="#useful-one-liners" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All errors in the last 10 minutes
+journalctl -p err --since &quot;10 minutes ago&quot;
+
+# Files recently modified in /etc
+find /etc -newer /etc/fstab -type f 2&gt;/dev/null | sort
+
+# Which process has a file open
+lsof /path/to/file
+
+# Which process is listening on a port
+ss -tlnp | grep :8080
+
+# Strace a process for syscall-level debugging
+strace -p &lt;PID&gt; -s 200 -f 2&gt;&amp;1 | head -100
+
+# Check for time skew (NTP offset &gt; 1s = problematic)
+chronyc tracking | grep &quot;System time&quot;
+</code></pre>
 
 
 

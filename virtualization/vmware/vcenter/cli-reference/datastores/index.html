@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#datastores_1" class="md-nav__link">
+  <a href="#list-datastores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Datastores
+        List Datastores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-clusters-sdrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Clusters (SDRS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-to-vm-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore to VM Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Hosts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-datastore-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Datastore Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Thresholds
       
     </span>
   </a>
@@ -745,18 +811,91 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="datastores_1">Datastores<a class="headerlink" href="#datastores_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Datastore
-Get-Datastore | Select-Object Name, CapacityGB, FreeSpaceGB, @{N=&quot;UsedPct&quot;;E={[math]::Round((1-$_.FreeSpaceGB/$_.CapacityGB)*100,1)}} | Sort-Object UsedPct -Descending
+<h2 id="list-datastores">List Datastores<a class="headerlink" href="#list-datastores" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All datastores
+Get-Datastore
 
-# Datastores below threshold
-Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 } | Select-Object Name, FreeSpaceGB
+# Datastores with capacity and free space
+Get-Datastore | Select-Object Name, CapacityGB, FreeSpaceGB,
+    @{N=&quot;UsedPct&quot;;E={[math]::Round((1 - $_.FreeSpaceGB / $_.CapacityGB) * 100, 1)}} |
+    Sort-Object UsedPct -Descending
 
-# Datastore cluster
-Get-DatastoreCluster
-Get-DatastoreCluster | Get-Datastore
+# Datastores below 20% free
+Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 } |
+    Select-Object Name, @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpaceGB,1)}}, @{N=&quot;CapGB&quot;;E={[math]::Round($_.CapacityGB,1)}}
 </code></pre>
+<h2 id="datastore-clusters-sdrs">Datastore Clusters (SDRS)<a class="headerlink" href="#datastore-clusters-sdrs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List datastore clusters
+Get-DatastoreCluster
+
+# Datastores within a cluster
+Get-DatastoreCluster -Name &quot;&lt;name&gt;&quot; | Get-Datastore
+
+# Cluster capacity summary
+Get-DatastoreCluster | Select-Object Name, CapacityGB, FreeSpaceGB,
+    @{N=&quot;UsedPct&quot;;E={[math]::Round((1 - $_.FreeSpaceGB / $_.CapacityGB) * 100, 1)}}
+</code></pre>
+<h2 id="datastore-to-vm-mapping">Datastore to VM Mapping<a class="headerlink" href="#datastore-to-vm-mapping" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># VMs on a specific datastore
+Get-Datastore -Name &quot;&lt;datastore_name&gt;&quot; | Get-VM | Select-Object Name, PowerState
+
+# Datastore per VM
+Get-VM | ForEach-Object {
+    $vm = $_
+    $vm | Get-Datastore | ForEach-Object {
+        [PSCustomObject]@{ VM = $vm.Name; Datastore = $_.Name }
+    }
+}
+</code></pre>
+<h2 id="datastore-hosts">Datastore Hosts<a class="headerlink" href="#datastore-hosts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Hosts that mount a specific datastore
+Get-Datastore -Name &quot;&lt;datastore_name&gt;&quot; | Get-VMHost | Select-Object Name, ConnectionState
+</code></pre>
+<h2 id="export-datastore-report">Export Datastore Report<a class="headerlink" href="#export-datastore-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-Datastore | Select-Object Name,
+    @{N=&quot;Type&quot;;E={$_.Type}},
+    @{N=&quot;CapacityGB&quot;;E={[math]::Round($_.CapacityGB,1)}},
+    @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpaceGB,1)}},
+    @{N=&quot;UsedPct&quot;;E={[math]::Round((1 - $_.FreeSpaceGB / $_.CapacityGB) * 100, 1)}} |
+    Sort-Object UsedPct -Descending |
+    Export-Csv -Path datastores.csv -NoTypeInformation
+</code></pre>
+<h2 id="datastore-maintenance">Datastore Maintenance<a class="headerlink" href="#datastore-maintenance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Enter maintenance mode (SDRS must be configured, or migrate VMs first)
+$ds = Get-Datastore &quot;&lt;datastore_name&gt;&quot;
+$storMgr = Get-View StorageResourceManager
+$storMgr.DatastoreEnterMaintenanceMode($ds.ExtensionData.MoRef)
+
+# Refresh datastore space info
+Get-Datastore &quot;&lt;datastore_name&gt;&quot; | Update-Datastore
+</code></pre>
+<h2 id="capacity-thresholds">Capacity Thresholds<a class="headerlink" href="#capacity-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Free Space</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 30%</td>
+<td>Healthy</td>
+</tr>
+<tr>
+<td>20–30%</td>
+<td>Monitor closely</td>
+</tr>
+<tr>
+<td>10–20%</td>
+<td>Alert — plan expansion or migration</td>
+</tr>
+<tr>
+<td>&lt; 10%</td>
+<td>Emergency — VMs may power off or suspend</td>
+</tr>
+</tbody>
+</table>
 
 
 

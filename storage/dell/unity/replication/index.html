@@ -21,7 +21,7 @@
     
     
       
-        <title>Replication - Chris KB</title>
+        <title>Dell Unity Replication - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#replication" class="md-skip">
+        <a href="#dell-unity-replication" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Replication
+              Dell Unity Replication
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#replication-sessions-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Replication Sessions Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#replication-session-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Replication Session States
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#pause-and-resume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Pause and Resume
       
     </span>
   </a>
@@ -745,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#manual-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Manual Sync
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-replication-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Replication Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check
       
     </span>
   </a>
@@ -774,31 +829,105 @@
 
 
 
-<h1 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Replication.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="dell-unity-replication">Dell Unity Replication<a class="headerlink" href="#dell-unity-replication" title="Permanent link">&para;</a></h1>
+<p>Replication session management, monitoring, and failover on Dell Unity.</p>
+<h2 id="replication-sessions-overview">Replication Sessions Overview<a class="headerlink" href="#replication-sessions-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all replication sessions
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show -detail
+
+# View a specific session
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; show -detail
+</code></pre>
+<h2 id="replication-session-states">Replication Session States<a class="headerlink" href="#replication-session-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active</td>
+<td>Replication is running normally</td>
+</tr>
+<tr>
+<td>Idle</td>
+<td>No active replication; awaiting next sync</td>
+</tr>
+<tr>
+<td>Syncing</td>
+<td>Data transfer in progress</td>
+</tr>
+<tr>
+<td>Paused</td>
+<td>Manually suspended</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>Error condition — check events</td>
+</tr>
+<tr>
+<td>Failed Over</td>
+<td>DR site is now active</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pause replication (stops sync; source continues to accept writes)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; pause
+
+# Resume replication (re-syncs changes accumulated during pause)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; resume
+</code></pre>
+<h2 id="manual-sync">Manual Sync<a class="headerlink" href="#manual-sync" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trigger an immediate synchronisation
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
+</code></pre>
+<h2 id="planned-failover">Planned Failover<a class="headerlink" href="#planned-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failover with sync — syncs data then activates DR copy
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover -keepSync
+
+# Failover without final sync (emergency — data may lag)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover
+</code></pre>
+<h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># After DR period, failback to original source
+# Step 1 — reverse the replication (DR becomes source, primary becomes destination)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; reverse
+
+# Step 2 — sync data back
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
+
+# Step 3 — fail back to original
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failback
+</code></pre>
+<h2 id="replication-connections">Replication Connections<a class="headerlink" href="#replication-connections" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List replication connections (Unity ↔ Unity or Unity ↔ PowerStore)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/connect show
+
+# Create a replication connection
+uemcli -d &lt;ip&gt; -u admin /prot/rep/connect create \
+    -destAddress &lt;destination_sp_ip&gt; \
+    -destUsername admin \
+    -destPassword &lt;password&gt;
+</code></pre>
+<h2 id="create-a-replication-session">Create a Replication Session<a class="headerlink" href="#create-a-replication-session" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Replicate a LUN to a remote Unity
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session create \
+    -srcRes &lt;lun_id&gt; \
+    -dstSys &lt;connection_id&gt; \
+    -dstResName &lt;remote_lun_name&gt; \
+    -rpo 3600   # RPO in seconds (3600 = 1 hour)
+</code></pre>
+<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check all sessions for non-healthy states
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show | grep -v &quot;Active\|Idle\|Session&quot;
+
+# Check replication events/errors
+uemcli -d &lt;ip&gt; -u admin /prac/alert show | grep -i repl
+</code></pre>
 
 
 

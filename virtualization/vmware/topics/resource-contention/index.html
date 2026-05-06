@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cpu" class="md-nav__link">
+  <a href="#cpu-contention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CPU
+        CPU Contention
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#memory" class="md-nav__link">
+  <a href="#memory-contention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Memory
+        Memory Contention
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage" class="md-nav__link">
+  <a href="#storage-latency" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage
+        Storage Latency
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#network" class="md-nav__link">
+  <a href="#network-contention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Network
+        Network Contention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contention-response-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contention Response Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drs-imbalance-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRS Imbalance Score
       
     </span>
   </a>
@@ -775,22 +797,196 @@
 
 
 <h1 id="resource-contention-modeling">Resource Contention Modeling<a class="headerlink" href="#resource-contention-modeling" title="Permanent link">&para;</a></h1>
-<h2 id="cpu">CPU<a class="headerlink" href="#cpu" title="Permanent link">&para;</a></h2>
-<p>CPU Ready should remain low</p>
-<p>&lt; 5% normal</p>
-<blockquote>
-<p>10% contention</p>
-</blockquote>
-<h2 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h2>
-<p>Ballooning or swap indicates memory pressure</p>
-<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
-<p>Latency indicates contention</p>
-<p>&lt; 10 ms normal</p>
-<blockquote>
-<p>20 ms problem</p>
-</blockquote>
-<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
-<p>Packet loss indicates congestion</p>
+<h2 id="cpu-contention">CPU Contention<a class="headerlink" href="#cpu-contention" title="Permanent link">&para;</a></h2>
+<p><strong>CPU Ready</strong> is the primary indicator: time a vCPU waited in the run queue because the physical CPU was busy.</p>
+<table>
+<thead>
+<tr>
+<th>CPU Ready %</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 5%</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>5–10%</td>
+<td>Monitor</td>
+</tr>
+<tr>
+<td>&gt; 10%</td>
+<td>Contention — investigate</td>
+</tr>
+<tr>
+<td>&gt; 20%</td>
+<td>Severe — VM performance severely impacted</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># CPU usage across all hosts
+Get-VMHost | Select-Object Name,
+    @{N=&quot;CPUUsageMHz&quot;;E={$_.CpuUsageMhz}},
+    @{N=&quot;CPUTotalMHz&quot;;E={$_.CpuTotalMhz}},
+    @{N=&quot;UsedPct&quot;;E={[math]::Round($_.CpuUsageMhz / $_.CpuTotalMhz * 100, 1)}}
+
+# Per-VM CPU ready (use esxtop or performance charts — not directly queryable via PowerCLI)
+# In esxtop: press 'c' for CPU view — %RDY column
+</code></pre>
+<pre><code class="language-bash"># esxtop CPU view — look for %RDY &gt; 10
+esxtop   # press 'c', then look at %RDY per world
+</code></pre>
+<h2 id="memory-contention">Memory Contention<a class="headerlink" href="#memory-contention" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Threshold</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Balloon (MB)</td>
+<td>&gt; 0</td>
+<td>Host reclaiming memory from VMs</td>
+</tr>
+<tr>
+<td>Swap rate (MB/s)</td>
+<td>&gt; 0</td>
+<td>Severe — swapping to disk, significant performance hit</td>
+</tr>
+<tr>
+<td>Memory usage %</td>
+<td>&gt; 90%</td>
+<td>High — ballooning imminent</td>
+</tr>
+<tr>
+<td>Overhead</td>
+<td>N/A</td>
+<td>Hypervisor overhead, not controllable</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Memory state per host
+Get-VMHost | Select-Object Name,
+    @{N=&quot;MemUsedGB&quot;;E={[math]::Round($_.MemoryUsageGB,1)}},
+    @{N=&quot;MemTotalGB&quot;;E={[math]::Round($_.MemoryTotalGB,1)}},
+    @{N=&quot;UsedPct&quot;;E={[math]::Round($_.MemoryUsageGB / $_.MemoryTotalGB * 100, 1)}}
+</code></pre>
+<pre><code class="language-bash"># esxtop memory view — look for MCTLSZ (balloon) and SWPRD/SWPWT (swap)
+esxtop   # press 'm'
+</code></pre>
+<h2 id="storage-latency">Storage Latency<a class="headerlink" href="#storage-latency" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Latency</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10 ms</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>10–20 ms</td>
+<td>Warning — monitor under load</td>
+</tr>
+<tr>
+<td>&gt; 20 ms</td>
+<td>Problem — investigate</td>
+</tr>
+<tr>
+<td>&gt; 50 ms</td>
+<td>Severe — application timeouts likely</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Datastore latency (requires performance metrics collection enabled)
+$stats = Get-Stat -Entity (Get-Datastore &quot;&lt;ds_name&gt;&quot;) -Stat &quot;datastore.totalReadLatency.average&quot;, &quot;datastore.totalWriteLatency.average&quot; -Realtime -MaxSamples 20
+$stats | Select-Object Entity, MetricId, Value, Timestamp
+</code></pre>
+<h2 id="network-contention">Network Contention<a class="headerlink" href="#network-contention" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Threshold</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dropped packets</td>
+<td>&gt; 0</td>
+<td>NIC ring buffer full or physical issue</td>
+</tr>
+<tr>
+<td>RX/TX utilisation</td>
+<td>&gt; 80%</td>
+<td>NIC saturation — add uplinks</td>
+</tr>
+<tr>
+<td>Packet loss (vmkping)</td>
+<td>&gt; 0%</td>
+<td>Physical or MTU issue</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># NIC utilisation
+esxcli network nic stats get -n vmnic0 | grep -E &quot;Bytes|Dropped&quot;
+
+# Real-time: esxtop network view
+esxtop   # press 'n'
+</code></pre>
+<h2 id="contention-response-actions">Contention Response Actions<a class="headerlink" href="#contention-response-actions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Contention</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>%RDY &gt; 10%</td>
+<td>vMotion VMs to less loaded host; review DRS settings</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Balloon &gt; 0</td>
+<td>vMotion VMs; add RAM; reduce VM memory reservations</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Swap &gt; 0</td>
+<td>Emergency — vMotion immediately; swap = disk I/O</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Latency &gt; 20ms</td>
+<td>Check array load; rebalance VMs across datastores</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Drops &gt; 0</td>
+<td>Check MTU, cable, uplink saturation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="drs-imbalance-score">DRS Imbalance Score<a class="headerlink" href="#drs-imbalance-score" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># DRS migration recommendations pending
+Get-Cluster &quot;&lt;cluster&gt;&quot; | Select-Object Name,
+    @{N=&quot;DRSScore&quot;;E={$_.ExtensionData.Summary.UsagesSummary.OverallUsage}}
+
+# Review DRS recommendations
+(Get-Cluster &quot;&lt;cluster&gt;&quot;).ExtensionData.RecommendedAction
+</code></pre>
 
 
 

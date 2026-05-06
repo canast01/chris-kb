@@ -21,7 +21,7 @@
     
     
       
-        <title>Patching - Chris KB</title>
+        <title>Windows Server Patching - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#patching" class="md-skip">
+        <a href="#windows-server-patching" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Patching
+              Windows Server Patching
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#pre-patch-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Pre-Patch Checklist
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#windows-update-via-powershell-pswindowsupdate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Windows Update via PowerShell (PSWindowsUpdate)
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#windows-update-via-com-no-module-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Windows Update via COM (No Module Required)
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#wsus-force-client-update-cycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        WSUS — Force Client Update Cycle
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#checking-installed-updates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Checking Installed Updates
       
     </span>
   </a>
@@ -767,10 +767,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#pending-reboot-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Pending Reboot Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-patch-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Patch Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-schedule-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Schedule Standards
       
     </span>
   </a>
@@ -796,43 +818,164 @@
 
 
 
-<h1 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Windows Server Patching notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="windows-server-patching">Windows Server Patching<a class="headerlink" href="#windows-server-patching" title="Permanent link">&para;</a></h1>
+<p>Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.</p>
+<h2 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># 1. Confirm system health
+Get-Service | Where-Object { $_.StartType -eq &quot;Automatic&quot; -and $_.Status -ne &quot;Running&quot; }
+Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used/($_.Used+$_.Free) -gt 0.85 }
+
+# 2. Capture current installed updates (rollback reference)
+Get-HotFix | Sort-Object InstalledOn -Descending |
+    Select-Object HotFixID, Description, InstalledOn |
+    Export-Csv C:\Logs\pre-patch-hotfixes-$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
+
+# 3. Capture OS version and build
+[System.Environment]::OSVersion.Version
+(Get-ItemProperty &quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;).CurrentBuild
+
+# 4. List pending updates without installing
+$Session = New-Object -ComObject Microsoft.Update.Session
+$Searcher = $Session.CreateUpdateSearcher()
+$Results = $Searcher.Search(&quot;IsInstalled=0&quot;)
+$Results.Updates | Select-Object Title, MsrcSeverity | Format-Table -AutoSize
+</code></pre>
+<h2 id="windows-update-via-powershell-pswindowsupdate">Windows Update via PowerShell (PSWindowsUpdate)<a class="headerlink" href="#windows-update-via-powershell-pswindowsupdate" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Install PSWindowsUpdate module (if not present)
+Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers
+
+# List available updates
+Get-WindowsUpdate
+
+# Install all updates
+Install-WindowsUpdate -AcceptAll -AutoReboot
+
+# Install security updates only
+Install-WindowsUpdate -Category &quot;Security Updates&quot; -AcceptAll -AutoReboot
+
+# Install specific KB
+Install-WindowsUpdate -KBArticleID KB5034440 -AcceptAll
+
+# Schedule update installation
+Add-WUServiceManager -ServiceID 7971f918-a847-4430-9279-4a52d1efe18d -AddServiceFlag 7
+</code></pre>
+<h2 id="windows-update-via-com-no-module-required">Windows Update via COM (No Module Required)<a class="headerlink" href="#windows-update-via-com-no-module-required" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check for and download updates
+$updateSession   = New-Object -ComObject Microsoft.Update.Session
+$updateSearcher  = $updateSession.CreateUpdateSearcher()
+$searchResult    = $updateSearcher.Search(&quot;IsInstalled=0&quot;)
+$updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+
+foreach ($update in $searchResult.Updates) {
+    $updatesToInstall.Add($update) | Out-Null
+}
+
+$downloader = $updateSession.CreateUpdateDownloader()
+$downloader.Updates = $updatesToInstall
+$downloader.Download()
+
+$installer = $updateSession.CreateUpdateInstaller()
+$installer.Updates = $updatesToInstall
+$result = $installer.Install()
+&quot;Result code: $($result.ResultCode)&quot;   # 2 = Succeeded, 3 = Succeeded with errors
+</code></pre>
+<h2 id="wsus-force-client-update-cycle">WSUS — Force Client Update Cycle<a class="headerlink" href="#wsus-force-client-update-cycle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-cmd">:: Detect and download from WSUS
+wuauclt /detectnow
+wuauclt /updatenow
+
+:: Or via UsoClient (Windows 10/2019+)
+UsoClient StartScan
+UsoClient StartDownload
+UsoClient StartInstall
+</code></pre>
+<pre><code class="language-powershell"># Check WSUS server assignment
+(New-Object -ComObject Microsoft.Update.ServiceManager).Services |
+    Select-Object Name, ServiceID, IsDefaultAUService
+
+# Confirm WSUS registry setting
+Get-ItemProperty &quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot; |
+    Select-Object WUServer, WUStatusServer
+</code></pre>
+<h2 id="checking-installed-updates">Checking Installed Updates<a class="headerlink" href="#checking-installed-updates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All installed hotfixes, newest first
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 20 HotFixID, Description, InstalledOn
+
+# Check if a specific KB is installed
+Get-HotFix -Id KB5034440
+
+# Full update history via COM
+$Session = New-Object -ComObject Microsoft.Update.Session
+$History = $Session.CreateUpdateSearcher()
+$History.QueryHistory(0, 50) | Select-Object Title, Date, ResultCode |
+    Where-Object { $_.ResultCode -eq 2 }   # 2 = Succeeded
+</code></pre>
+<h2 id="pending-reboot-detection">Pending Reboot Detection<a class="headerlink" href="#pending-reboot-detection" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">function Test-PendingReboot {
+    $pending = @()
+    if (Get-ItemProperty &quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired&quot; -EA SilentlyContinue) {
+        $pending += &quot;WindowsUpdate&quot;
+    }
+    if (Get-ItemProperty &quot;HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager&quot; -Name PendingFileRenameOperations -EA SilentlyContinue) {
+        $pending += &quot;PendingFileRename&quot;
+    }
+    if (Get-ItemProperty &quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending&quot; -EA SilentlyContinue) {
+        $pending += &quot;CBS&quot;
+    }
+    if ($pending) { &quot;Reboot pending: $($pending -join ', ')&quot; } else { &quot;No reboot pending&quot; }
+}
+Test-PendingReboot
+</code></pre>
+<h2 id="post-patch-validation">Post-Patch Validation<a class="headerlink" href="#post-patch-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm OS is on expected build after update
+(Get-ItemProperty &quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;).CurrentBuild
+
+# Confirm critical services are running
+Get-Service -Name W32tm, WinRM, EventLog, Netlogon, NTDS -ErrorAction SilentlyContinue |
+    Select-Object Name, Status
+
+# Check for any new failed services
+Get-Service | Where-Object { $_.StartType -eq &quot;Automatic&quot; -and $_.Status -ne &quot;Running&quot; }
+
+# Check system log for errors post-reboot
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'System'
+    Level     = 2
+    StartTime = (Get-Date).AddHours(-2)
+} | Select-Object -First 10 TimeCreated, Id, Message
+</code></pre>
+<h2 id="patch-schedule-standards">Patch Schedule Standards<a class="headerlink" href="#patch-schedule-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Server Tier</th>
+<th>Patch Frequency</th>
+<th>Reboot Window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-production</td>
+<td>Weekly (automated)</td>
+<td>Immediately</td>
+</tr>
+<tr>
+<td>Production non-critical</td>
+<td>Monthly (Patch Tuesday + 7 days)</td>
+<td>Saturday 02:00–06:00</td>
+</tr>
+<tr>
+<td>Production critical</td>
+<td>Monthly + emergency for CVE ≥ 9.0</td>
+<td>Agreed maintenance window</td>
+</tr>
+<tr>
+<td>Domain Controllers</td>
+<td>Monthly — stagger DCs</td>
+<td>Off-hours; verify replication after each</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#storage-group-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Group Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#director-and-port-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director and Port Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#back-end-and-cache-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back-End and Cache Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-performance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Performance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-data-collection-for-tac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Data Collection for TAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unisphere-performance-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unisphere Performance (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,28 +809,107 @@
 
 <h1 id="performance-statistics">Performance &amp; Statistics<a class="headerlink" href="#performance-statistics" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). <code>symstat</code> provides real-time and historical performance data. For richer analysis, use Unisphere for PowerMax Performance or Dell CloudIQ.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Storage group stats
+<h2 id="storage-group-statistics">Storage Group Statistics<a class="headerlink" href="#storage-group-statistics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Stats for all storage groups
 symstat -sid &lt;sid&gt; list -type sg
+
+# Stats for a specific storage group
 symstat -sid &lt;sid&gt; list -type sg -sg &lt;sg_name&gt;
 
-# Device stats
+# Continuous monitoring (refresh every 30 seconds)
+symstat -sid &lt;sid&gt; list -type sg -i 30
+</code></pre>
+<h2 id="device-statistics">Device Statistics<a class="headerlink" href="#device-statistics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All device stats
 symstat -sid &lt;sid&gt; list -type dev
 
-# Director stats
+# Specific device
+symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt;
+
+# Sort by IOPS (field 4 = Read IOPS, field 5 = Write IOPS)
+symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20
+</code></pre>
+<h2 id="director-and-port-statistics">Director and Port Statistics<a class="headerlink" href="#director-and-port-statistics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Front-end director stats (host I/O)
 symstat -sid &lt;sid&gt; list -type dir
 
-# Backend / disk stats
+# Specific director
+symstat -sid &lt;sid&gt; list -type dir -dir &lt;director_id&gt;
+
+# Port-level stats
+symstat -sid &lt;sid&gt; list -type port
+symstat -sid &lt;sid&gt; list -type port -dir &lt;director_id&gt; -p &lt;port_id&gt;
+</code></pre>
+<h2 id="back-end-and-cache-statistics">Back-End and Cache Statistics<a class="headerlink" href="#back-end-and-cache-statistics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Back-end disk stats (DA directors)
 symstat -sid &lt;sid&gt; list -type be
 
-# Cache stats
+# Cache hit ratio and usage
 symstat -sid &lt;sid&gt; list -type cache
 
-# Port stats
-symstat -sid &lt;sid&gt; list -type port
+# SRDF director stats
+symstat -sid &lt;sid&gt; list -type rdf
 </code></pre>
+<h2 id="key-performance-metrics">Key Performance Metrics<a class="headerlink" href="#key-performance-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>SYMCLI Type</th>
+<th>Healthy Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host Read IOPS</td>
+<td><code>sg</code> / <code>dev</code></td>
+<td>Application-dependent</td>
+</tr>
+<tr>
+<td>Host Write IOPS</td>
+<td><code>sg</code> / <code>dev</code></td>
+<td>Application-dependent</td>
+</tr>
+<tr>
+<td>Read Response Time</td>
+<td><code>dev</code></td>
+<td>&lt; 1 ms (all-flash)</td>
+</tr>
+<tr>
+<td>Write Response Time</td>
+<td><code>dev</code></td>
+<td>&lt; 1 ms (all-flash)</td>
+</tr>
+<tr>
+<td>Cache Write Pending %</td>
+<td><code>cache</code></td>
+<td>&lt; 31% (warning at 50%)</td>
+</tr>
+<tr>
+<td>BE Read IOPS</td>
+<td><code>be</code></td>
+<td>Proportional to FE IOPS</td>
+</tr>
+<tr>
+<td>Port Utilisation %</td>
+<td><code>port</code></td>
+<td>&lt; 70% sustained</td>
+</tr>
+</tbody>
+</table>
+<h2 id="performance-data-collection-for-tac">Performance Data Collection for TAC<a class="headerlink" href="#performance-data-collection-for-tac" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Collect 15-minute performance snapshot for Dell TAC
+symstat -sid &lt;sid&gt; list -type sg -i 60 -c 15 &gt; /tmp/sg-perf-$(date +%Y%m%d).txt &amp;
+symstat -sid &lt;sid&gt; list -type dev -i 60 -c 15 &gt; /tmp/dev-perf-$(date +%Y%m%d).txt &amp;
+symstat -sid &lt;sid&gt; list -type cache -i 60 -c 15 &gt; /tmp/cache-perf-$(date +%Y%m%d).txt &amp;
+wait
+</code></pre>
+<h2 id="unisphere-performance-gui">Unisphere Performance (GUI)<a class="headerlink" href="#unisphere-performance-gui" title="Permanent link">&para;</a></h2>
+<p>For historical trending, SLA reporting, and forecasting:
+- Unisphere → System → Performance → Storage Group / Array
+- CloudIQ → Performance dashboard (14-day retention on free tier, longer with subscription)</p>
 
 
 

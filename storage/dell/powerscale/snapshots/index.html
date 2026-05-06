@@ -21,7 +21,7 @@
     
     
       
-        <title>Snapshots - Chris KB</title>
+        <title>PowerScale Snapshots - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapshots" class="md-skip">
+        <a href="#powerscale-snapshots" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Snapshots
+              PowerScale Snapshots
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#manual-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Manual Snapshots
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#snapshot-schedules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Snapshot Schedules
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#snapshot-aliases" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Snapshot Aliases
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#accessing-snapshot-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Accessing Snapshot Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovering-files-from-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovering Files from a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshotiq-lock-and-expiration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapshotIQ Lock and Expiration
       
     </span>
   </a>
@@ -774,31 +807,98 @@
 
 
 
-<h1 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Snapshots.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-snapshots">PowerScale Snapshots<a class="headerlink" href="#powerscale-snapshots" title="Permanent link">&para;</a></h1>
+<p>Snapshot management and recovery on Dell PowerScale using SnapshotIQ.</p>
+<h2 id="manual-snapshots">Manual Snapshots<a class="headerlink" href="#manual-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a snapshot of a directory
+isi snapshot snapshots create /ifs/data/project1 --name project1-$(date +%Y%m%d)
+
+# List all snapshots
+isi snapshot snapshots list
+isi snapshot snapshots list -v
+
+# View details of a snapshot
+isi snapshot snapshots view &lt;snap_id&gt;
+
+# Delete a snapshot
+isi snapshot snapshots delete &lt;snap_id&gt;
+
+# Delete by name
+isi snapshot snapshots delete --name project1-20260101
+</code></pre>
+<h2 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all schedules
+isi snapshot schedules list
+
+# View a schedule
+isi snapshot schedules view &lt;schedule_name&gt;
+
+# Create a daily schedule retaining 14 snapshots
+isi snapshot schedules create daily-project1 \
+    /ifs/data/project1 \
+    --schedule &quot;every 1 days at 00:00&quot; \
+    --retention 2W \
+    --alias latest-project1
+
+# Modify a schedule
+isi snapshot schedules modify &lt;schedule_name&gt; --retention 1M
+
+# Delete a schedule (does not delete existing snapshots)
+isi snapshot schedules delete &lt;schedule_name&gt;
+</code></pre>
+<h2 id="snapshot-aliases">Snapshot Aliases<a class="headerlink" href="#snapshot-aliases" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List aliases
+isi snapshot aliases list
+
+# View an alias
+isi snapshot aliases view &lt;alias_name&gt;
+
+# Update alias to point to a different snapshot
+isi snapshot aliases modify &lt;alias_name&gt; --target &lt;snap_id&gt;
+</code></pre>
+<h2 id="accessing-snapshot-data">Accessing Snapshot Data<a class="headerlink" href="#accessing-snapshot-data" title="Permanent link">&para;</a></h2>
+<p>Snapshot data is accessible read-only at the <code>.snapshot</code> directory within the filesystem:</p>
+<pre><code class="language-bash"># From the cluster shell
+ls /ifs/data/project1/.snapshot/
+
+# From a Linux NFS client (if .snapshot access is enabled on the export)
+ls /mnt/project1/.snapshot/
+cp /mnt/project1/.snapshot/project1-20260101/important_file.txt /restore/
+
+# Enable .snapshot visibility on an NFS export
+isi nfs exports modify &lt;export_id&gt; --snapshot-dir yes
+</code></pre>
+<h2 id="recovering-files-from-a-snapshot">Recovering Files from a Snapshot<a class="headerlink" href="#recovering-files-from-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Copy a specific file from snapshot back to live filesystem
+cp -p /ifs/data/project1/.snapshot/project1-20260101/report.xlsx \
+      /ifs/data/project1/report.xlsx
+
+# Restore an entire directory
+rsync -av /ifs/data/project1/.snapshot/project1-20260101/ \
+          /ifs/data/project1/
+
+# Restore via SnapshotIQ revert (rolls back entire path to snapshot state)
+isi snapshot snapshots modify &lt;snap_id&gt; --set-expiration never   # Protect before reverting
+isi snapshot snapshots revert &lt;snap_id&gt;
+# WARNING: revert is destructive — all data written after the snapshot is lost
+</code></pre>
+<h2 id="snapshot-capacity">Snapshot Capacity<a class="headerlink" href="#snapshot-capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Total space consumed by snapshots
+isi snapshot snapshots list | awk 'NR&gt;1 { sum += $5 } END { print &quot;Total snapshots:&quot;, sum/1024/1024/1024, &quot;GB&quot; }'
+
+# Identify largest snapshots
+isi snapshot snapshots list -v | sort -k5 -rn | head -10
+</code></pre>
+<h2 id="snapshotiq-lock-and-expiration">SnapshotIQ Lock and Expiration<a class="headerlink" href="#snapshotiq-lock-and-expiration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List snapshot locks (prevents deletion)
+isi snapshot locks list &lt;snap_id&gt;
+
+# Set expiration date on a snapshot
+isi snapshot snapshots modify &lt;snap_id&gt; --set-expiration &quot;2026-12-31&quot;
+
+# Remove expiration (snapshot persists until manually deleted)
+isi snapshot snapshots modify &lt;snap_id&gt; --clear-expiration
+</code></pre>
 
 
 

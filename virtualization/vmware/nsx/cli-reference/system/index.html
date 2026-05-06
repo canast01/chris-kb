@@ -712,10 +712,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#nsx-manager-system_1" class="md-nav__link">
+  <a href="#cluster-and-manager-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NSX Manager — System
+        Cluster and Manager Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-and-node-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version and Node Info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-and-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP and Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
       
     </span>
   </a>
@@ -745,27 +822,121 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="nsx-manager-system_1">NSX Manager — System<a class="headerlink" href="#nsx-manager-system_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># System status
+<h2 id="cluster-and-manager-health">Cluster and Manager Health<a class="headerlink" href="#cluster-and-manager-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">nsxcli
+
+# NSX Manager cluster members and status
 get managers
 get clusters
+get cluster status
+
+# Service status on this node
 get services
+
+# Specific service status
 get service http
 get service manager
-
-# Version
+get service controller
+</code></pre>
+<h2 id="version-and-node-info">Version and Node Info<a class="headerlink" href="#version-and-node-info" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NSX version string
 get version
 
-# Nodes
+# Cluster nodes and their roles
 get nodes
-get node interfaces
-get node interface eth0
 
-# Appliance management
-set appliance gw-route &lt;prefix&gt; &lt;gw&gt;
-set appliance ui &lt;start|stop&gt;
+# Node network interfaces
+get node interfaces
+
+# A specific interface
+get node interface eth0
 </code></pre>
+<h2 id="appliance-configuration">Appliance Configuration<a class="headerlink" href="#appliance-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a static route on the appliance (out-of-band management)
+set appliance gw-route &lt;prefix&gt;/&lt;mask&gt; &lt;gateway_ip&gt;
+
+# Check current appliance routes
+get appliance routes
+
+# Start or stop the NSX Manager UI
+set appliance ui start
+set appliance ui stop
+
+# Set hostname
+set appliance hostname &lt;new_hostname&gt;
+</code></pre>
+<h2 id="ntp-and-time">NTP and Time<a class="headerlink" href="#ntp-and-time" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check NTP status
+get service ntp
+get ntp servers
+
+# Set NTP server
+set service ntp server &lt;ntp_ip&gt;
+</code></pre>
+<h2 id="certificates">Certificates<a class="headerlink" href="#certificates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List installed certificates
+get certificate api
+get certificate cluster
+
+# Thumbprint of the API cert (used for trust verification)
+get certificate api thumbprint
+</code></pre>
+<h2 id="syslog">Syslog<a class="headerlink" href="#syslog" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show configured syslog exporters
+get service syslog exporters
+
+# Add a syslog target
+set service syslog exporter &lt;name&gt; level info protocol UDP server &lt;syslog_ip&gt; port 514
+
+# Remove an exporter
+del service syslog exporter &lt;name&gt;
+</code></pre>
+<h2 id="backup-status">Backup Status<a class="headerlink" href="#backup-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View backup configuration
+get service manager backup
+
+# Trigger a manual backup (NSX Manager UI is preferred)
+# API: POST /api/v1/node/backups/create
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster health</td>
+<td><code>get cluster status</code></td>
+</tr>
+<tr>
+<td>All services up?</td>
+<td><code>get services</code></td>
+</tr>
+<tr>
+<td>NSX version</td>
+<td><code>get version</code></td>
+</tr>
+<tr>
+<td>Node IPs</td>
+<td><code>get node interfaces</code></td>
+</tr>
+<tr>
+<td>BGP peer state</td>
+<td><code>vrf &lt;id&gt;</code> → <code>get bgp neighbor summary</code></td>
+</tr>
+<tr>
+<td>Corfu DB health</td>
+<td><code>get corfu-cluster status</code></td>
+</tr>
+<tr>
+<td>Syslog targets</td>
+<td><code>get service syslog exporters</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

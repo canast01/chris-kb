@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>PowerMax Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#powermax-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              PowerMax Health Checks
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#array-connectivity-and-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Array Connectivity and Status
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#director-and-port-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Director and Port Status
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#events-and-alerts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Events and Alerts
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#storage-pool-srp-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Storage Pool (SRP) Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-replication-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Replication State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Summary
       
     </span>
   </a>
@@ -774,31 +818,117 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powermax-health-checks">PowerMax Health Checks<a class="headerlink" href="#powermax-health-checks" title="Permanent link">&para;</a></h1>
+<p>Daily and pre/post-change checks for Dell PowerMax arrays.</p>
+<h2 id="array-connectivity-and-status">Array Connectivity and Status<a class="headerlink" href="#array-connectivity-and-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify Solutions Enabler can reach the array
+symcfg list
+symcfg -sid &lt;sid&gt; show | grep -E &quot;Product|Microcode|Online&quot;
+
+# Check array health via Unisphere REST (requires curl + valid token)
+curl -sk -X GET &quot;https://&lt;unisphere-ip&gt;:8443/univmax/restapi/system/symmetrix/&lt;sid&gt;&quot; \
+    -H &quot;Authorization: Bearer &lt;token&gt;&quot; | python3 -m json.tool | grep -E &quot;model|health|microcode&quot;
+</code></pre>
+<h2 id="director-and-port-status">Director and Port Status<a class="headerlink" href="#director-and-port-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check all directors — flag any offline
+symcfg -sid &lt;sid&gt; list -dir all | grep -v Online
+
+# Check all ports — flag any not RDY
+symcfg -sid &lt;sid&gt; list -port all | grep -v RDY
+
+# FA port login count (host connectivity)
+symcfg -sid &lt;sid&gt; list -fa -online | grep -E &quot;Port|Logins&quot;
+</code></pre>
+<h2 id="events-and-alerts">Events and Alerts<a class="headerlink" href="#events-and-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active/uncleared events
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;uncleared\|Warning\|Error\|Fatal&quot; | head -20
+
+# Events in last 24 hours
+symevent list -sid &lt;sid&gt; -start_time &quot;$(date -d 'yesterday' '+%m/%d/%Y') 00:00:00&quot; -v | head -30
+</code></pre>
+<h2 id="storage-pool-srp-capacity">Storage Pool (SRP) Capacity<a class="headerlink" href="#storage-pool-srp-capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SRP subscription and free capacity
+symcfg -sid &lt;sid&gt; list -srp
+
+# Thin pool usage detail
+symcfg -sid &lt;sid&gt; show -pool -thin -demand
+
+# Flag SRP above 80% subscribed
+symcfg -sid &lt;sid&gt; list -srp | awk '$5+0 &gt; 80 {print &quot;WARNING:&quot;, $0}'
+</code></pre>
+<h2 id="srdf-replication-state">SRDF Replication State<a class="headerlink" href="#srdf-replication-state" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check all SRDF groups
+symrdf -sid &lt;sid&gt; list -rdfg all
+
+# Check for any pairs not in Synchronized state
+symrdf -sid &lt;sid&gt; query -rdfg all | grep -v &quot;Synchronized\|InSync&quot; | grep -v &quot;^$\|Group\|Pair\|---&quot;
+</code></pre>
+<h2 id="device-status">Device Status<a class="headerlink" href="#device-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failed or degraded devices
+symdev list -sid &lt;sid&gt; -failed
+
+# Devices not ready
+symdev list -sid &lt;sid&gt; -NR
+
+# Spare devices available
+symdev list -sid &lt;sid&gt; -spare
+</code></pre>
+<h2 id="cache-health">Cache Health<a class="headerlink" href="#cache-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Cache write pending percentage — alert if &gt; 50%
+symstat -sid &lt;sid&gt; list -type cache | grep -E &quot;WP\|Write Pending&quot;
+</code></pre>
+<h2 id="health-check-summary">Health Check Summary<a class="headerlink" href="#health-check-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Array reachable</td>
+<td><code>symcfg list</code></td>
+<td>Array listed, Online</td>
+</tr>
+<tr>
+<td>All directors online</td>
+<td><code>symcfg list -dir all</code></td>
+<td>All = Online</td>
+</tr>
+<tr>
+<td>All ports ready</td>
+<td><code>symcfg list -port all</code></td>
+<td>All = RDY</td>
+</tr>
+<tr>
+<td>No active events</td>
+<td><code>symevent list -v</code></td>
+<td>0 uncleared</td>
+</tr>
+<tr>
+<td>SRP &lt; 80% subscribed</td>
+<td><code>symcfg list -srp</code></td>
+<td>&lt; 80% used</td>
+</tr>
+<tr>
+<td>SRDF synchronized</td>
+<td><code>symrdf query -rdfg all</code></td>
+<td>All = Synchronized</td>
+</tr>
+<tr>
+<td>No failed devices</td>
+<td><code>symdev list -failed</code></td>
+<td>0 failed</td>
+</tr>
+<tr>
+<td>Cache WP &lt; 31%</td>
+<td><code>symstat list -type cache</code></td>
+<td>WP% &lt; 31%</td>
+</tr>
+</tbody>
+</table>
 
 
 

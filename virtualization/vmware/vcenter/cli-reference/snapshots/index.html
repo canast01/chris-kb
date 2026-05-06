@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#snapshots_1" class="md-nav__link">
+  <a href="#list-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Snapshots
+        List Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert-to-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert to Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-consolidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Consolidation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Best Practices
       
     </span>
   </a>
@@ -745,18 +800,95 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="snapshots_1">Snapshots<a class="headerlink" href="#snapshots_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Snapshot -VM &lt;name&gt;
-Get-VM | Get-Snapshot | Select-Object VM, Name, Created, @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB,2)}} | Sort-Object SizeGB -Descending
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Snapshots for a specific VM
+Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot;
 
-New-Snapshot -VM &lt;name&gt; -Name &quot;pre-patch-$(Get-Date -Format yyyy-MM-dd)&quot; -Memory:$false -Quiesce:$false
-Remove-Snapshot -Snapshot (Get-Snapshot -VM &lt;name&gt; -Name &lt;snap_name&gt;) -Confirm:$false
-Remove-Snapshot -VM &lt;name&gt; -RemoveChildren -Confirm:$false
+# All snapshots across all VMs — sorted by size
+Get-VM | Get-Snapshot |
+    Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
+    @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB, 2)}} |
+    Sort-Object SizeGB -Descending
 
-# Revert
-Set-VM -VM &lt;name&gt; -Snapshot (Get-Snapshot -VM &lt;name&gt; -Name &lt;snap_name&gt;) -Confirm:$false
+# Snapshots older than 7 days (maintenance risk)
+Get-VM | Get-Snapshot |
+    Where-Object { $_.Created -lt (Get-Date).AddDays(-7) } |
+    Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
+    @{N=&quot;AgeDays&quot;;E={[math]::Round(((Get-Date) - $_.Created).TotalDays, 0)}}
 </code></pre>
+<h2 id="create-snapshots">Create Snapshots<a class="headerlink" href="#create-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Crash-consistent snapshot (no memory, no quiesce)
+New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;pre-patch-$(Get-Date -Format yyyy-MM-dd)&quot; `
+    -Memory:$false -Quiesce:$false
+
+# Application-consistent snapshot (quiesced — requires VMware Tools)
+New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;app-consistent-$(Get-Date -Format yyyy-MM-dd)&quot; `
+    -Memory:$false -Quiesce:$true
+
+# Memory snapshot (captures RAM state — slower, larger)
+New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;memory-$(Get-Date -Format yyyy-MM-dd)&quot; `
+    -Memory:$true -Quiesce:$false
+</code></pre>
+<h2 id="remove-snapshots">Remove Snapshots<a class="headerlink" href="#remove-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Remove a named snapshot
+Remove-Snapshot `
+    -Snapshot (Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;&lt;snap_name&gt;&quot;) `
+    -Confirm:$false
+
+# Remove all snapshots for a VM (consolidates chain)
+Remove-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -RemoveChildren -Confirm:$false
+
+# Remove all old snapshots across all VMs (older than 7 days)
+Get-VM | Get-Snapshot |
+    Where-Object { $_.Created -lt (Get-Date).AddDays(-7) } |
+    Remove-Snapshot -Confirm:$false
+</code></pre>
+<h2 id="revert-to-snapshot">Revert to Snapshot<a class="headerlink" href="#revert-to-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Revert a VM to a named snapshot
+Set-VM -VM &quot;&lt;vm_name&gt;&quot; `
+    -Snapshot (Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;&lt;snap_name&gt;&quot;) `
+    -Confirm:$false
+</code></pre>
+<h2 id="snapshot-consolidation">Snapshot Consolidation<a class="headerlink" href="#snapshot-consolidation" title="Permanent link">&para;</a></h2>
+<p>Unconsolidated snapshots waste space and degrade performance:</p>
+<pre><code class="language-powershell"># Find VMs needing consolidation
+Get-VM | Where-Object { $_.ExtensionData.Runtime.ConsolidationNeeded } |
+    Select-Object Name
+
+# Consolidate a VM's snapshots
+(Get-VM &quot;&lt;vm_name&gt;&quot;).ExtensionData.ConsolidateVMDisks_Task()
+</code></pre>
+<h2 id="snapshot-best-practices">Snapshot Best Practices<a class="headerlink" href="#snapshot-best-practices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep for ≤ 72 hours</td>
+<td>Delta files grow rapidly; IOPS penalty worsens over time</td>
+</tr>
+<tr>
+<td>Never snapshot during backup</td>
+<td>Backup tools manage their own snapshots — nested chains cause corruption</td>
+</tr>
+<tr>
+<td>Use <code>-Quiesce:$true</code> for databases</td>
+<td>Ensures file-system consistency for SQL/Exchange</td>
+</tr>
+<tr>
+<td>Remove, don't just revert</td>
+<td>Reverting does not delete the chain — <code>Remove-Snapshot</code> consolidates</td>
+</tr>
+<tr>
+<td>Monitor <code>ConsolidationNeeded</code></td>
+<td>Failed consolidation = orphaned delta files consuming space</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#permissions-roles_1" class="md-nav__link">
+  <a href="#roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Permissions &amp; Roles
+        Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assign-a-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign a Role
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-and-remove-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify and Remove Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-custom-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Role
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-permission-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit: Permission Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-built-in-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Built-in Roles
       
     </span>
   </a>
@@ -745,19 +811,115 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="permissions-roles_1">Permissions &amp; Roles<a class="headerlink" href="#permissions-roles_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Roles
+<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all roles
 Get-VIRole
-Get-VIRole -Name &quot;ReadOnly&quot;
 
-# Permissions
+# Role details — privileges assigned
+Get-VIRole -Name &quot;ReadOnly&quot; | Select-Object Name, PrivilegeList
+
+# Find roles with a specific privilege
+Get-VIRole | Where-Object { $_.PrivilegeList -contains &quot;VirtualMachine.Config.Memory&quot; }
+</code></pre>
+<h2 id="permissions">Permissions<a class="headerlink" href="#permissions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All permissions in the inventory
 Get-VIPermission
+
+# Permissions for a specific user or group
 Get-VIPermission | Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; }
 
-# Assign role
-New-VIPermission -Entity (Get-Datacenter &lt;dc&gt;) -Principal &quot;&lt;domain&gt;\&lt;user&gt;&quot; -Role (Get-VIRole &quot;ReadOnly&quot;) -Propagate:$true
+# Permissions on a specific entity
+Get-VIPermission -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;)
+Get-VIPermission -Entity (Get-Datacenter &quot;&lt;dc_name&gt;&quot;)
+Get-VIPermission -Entity (Get-Cluster &quot;&lt;cluster_name&gt;&quot;)
 </code></pre>
+<h2 id="assign-a-role">Assign a Role<a class="headerlink" href="#assign-a-role" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Grant a role on a datacenter (propagates to all children)
+New-VIPermission `
+    -Entity (Get-Datacenter &quot;&lt;dc_name&gt;&quot;) `
+    -Principal &quot;&lt;domain&gt;\&lt;user&gt;&quot; `
+    -Role (Get-VIRole &quot;ReadOnly&quot;) `
+    -Propagate:$true
+
+# Grant on a specific VM (no propagation needed)
+New-VIPermission `
+    -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;) `
+    -Principal &quot;&lt;domain&gt;\&lt;group&gt;&quot; `
+    -Role (Get-VIRole &quot;Virtual Machine User&quot;) `
+    -Propagate:$false
+</code></pre>
+<h2 id="modify-and-remove-permissions">Modify and Remove Permissions<a class="headerlink" href="#modify-and-remove-permissions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Change role for an existing permission
+Set-VIPermission `
+    -Permission (Get-VIPermission -Entity (Get-Datacenter &quot;&lt;dc&gt;&quot;) | Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; }) `
+    -Role (Get-VIRole &quot;Administrator&quot;)
+
+# Remove a permission
+Get-VIPermission -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;) |
+    Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; } |
+    Remove-VIPermission -Confirm:$false
+</code></pre>
+<h2 id="create-a-custom-role">Create a Custom Role<a class="headerlink" href="#create-a-custom-role" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Create a role with specific privileges
+New-VIRole -Name &quot;VM-PowerOps&quot; -Privilege (
+    Get-VIPrivilege -Name &quot;Power On&quot;, &quot;Power Off&quot;, &quot;Reset&quot;, &quot;Suspend&quot;
+)
+
+# Assign custom role
+New-VIPermission `
+    -Entity (Get-Folder &quot;&lt;folder_name&gt;&quot;) `
+    -Principal &quot;&lt;domain&gt;\vm-operators&quot; `
+    -Role (Get-VIRole &quot;VM-PowerOps&quot;) `
+    -Propagate:$true
+</code></pre>
+<h2 id="audit-permission-report">Audit: Permission Report<a class="headerlink" href="#audit-permission-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Export all permissions to CSV
+Get-VIPermission | Select-Object Entity, Principal, Role, IsGroup, Propagate |
+    Export-Csv -Path vcenter_permissions.csv -NoTypeInformation
+
+# Identify users with Administrator role
+Get-VIPermission | Where-Object { $_.Role -eq &quot;Admin&quot; } |
+    Select-Object Entity, Principal, Propagate
+</code></pre>
+<h2 id="common-built-in-roles">Common Built-in Roles<a class="headerlink" href="#common-built-in-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Administrator</code></td>
+<td>Full control — assign sparingly</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td>Audit or monitoring accounts</td>
+</tr>
+<tr>
+<td><code>Virtual Machine Power User</code></td>
+<td>VM console, power ops, snapshots</td>
+</tr>
+<tr>
+<td><code>Virtual Machine User</code></td>
+<td>VM console and guest interaction only</td>
+</tr>
+<tr>
+<td><code>Resource Pool Administrator</code></td>
+<td>Manage resource pools within a scope</td>
+</tr>
+<tr>
+<td><code>Network Administrator</code></td>
+<td>Manage VDS/portgroups</td>
+</tr>
+<tr>
+<td><code>Datastore Consumer</code></td>
+<td>Browse and allocate datastore space</td>
+</tr>
+</tbody>
+</table>
 
 
 

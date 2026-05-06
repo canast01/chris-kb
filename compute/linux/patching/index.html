@@ -21,7 +21,7 @@
     
     
       
-        <title>Patching - Chris KB</title>
+        <title>Linux Patching - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#patching" class="md-skip">
+        <a href="#linux-patching" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Patching
+              Linux Patching
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#pre-patch-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Pre-Patch Checklist
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#rhel-dnf-patching" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        RHEL — dnf Patching
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#rhel-yum-history-rollback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        RHEL — yum history (Rollback)
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#ubuntu-apt-patching" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Ubuntu — apt Patching
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#kernel-updates-and-reboot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Kernel Updates and Reboot
       
     </span>
   </a>
@@ -767,10 +767,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#red-hat-subscription-and-repositories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Red Hat Subscription and Repositories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible-patching-at-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Patching at Scale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-patch-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Patch Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-schedule-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Schedule Standards
       
     </span>
   </a>
@@ -796,43 +829,175 @@
 
 
 
-<h1 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Linux Patching notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="linux-patching">Linux Patching<a class="headerlink" href="#linux-patching" title="Permanent link">&para;</a></h1>
+<p>Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.</p>
+<h2 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Confirm system is healthy before patching
+uptime
+systemctl --failed
+df -h | awk '$5+0 &gt; 85'
+
+# 2. Capture current package versions (rollback reference)
+rpm -qa --qf &quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot; | sort &gt; /tmp/pre-patch-packages.txt   # RHEL
+dpkg -l | awk 'NR&gt;5' &gt; /tmp/pre-patch-packages.txt   # Ubuntu
+
+# 3. Capture running kernel
+uname -r
+
+# 4. Check available updates without applying
+dnf check-update   # RHEL
+apt list --upgradable 2&gt;/dev/null   # Ubuntu
+</code></pre>
+<h2 id="rhel-dnf-patching">RHEL — dnf Patching<a class="headerlink" href="#rhel-dnf-patching" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List available updates
+dnf check-update
+
+# Apply all updates (security + bug fix + enhancement)
+dnf update -y
+
+# Apply security updates only
+dnf update --security -y
+
+# Apply a specific advisory
+dnf update --advisory=RHSA-2026:1234 -y
+
+# Apply updates excluding the kernel (maintenance without reboot risk)
+dnf update --exclude=kernel* -y
+
+# List installed security advisories
+dnf updateinfo list security installed | head -20
+</code></pre>
+<h2 id="rhel-yum-history-rollback">RHEL — yum history (Rollback)<a class="headerlink" href="#rhel-yum-history-rollback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List recent transactions
+yum history list | head -20
+
+# View what a transaction did
+yum history info &lt;transaction-id&gt;
+
+# Undo a specific transaction (rollback)
+yum history undo &lt;transaction-id&gt;
+</code></pre>
+<h2 id="ubuntu-apt-patching">Ubuntu — apt Patching<a class="headerlink" href="#ubuntu-apt-patching" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Refresh package index
+apt update
+
+# List upgradable packages
+apt list --upgradable 2&gt;/dev/null
+
+# Apply all upgrades
+apt upgrade -y
+
+# Apply security updates only (using unattended-upgrades filter)
+apt-get install --only-upgrade $(apt-get --just-print upgrade 2&gt;/dev/null | \
+  grep &quot;^Inst&quot; | grep -i security | awk '{print $2}') -y
+
+# Full upgrade (handles dependency changes)
+apt full-upgrade -y
+
+# Remove unused packages after upgrade
+apt autoremove -y
+</code></pre>
+<h2 id="kernel-updates-and-reboot">Kernel Updates and Reboot<a class="headerlink" href="#kernel-updates-and-reboot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check if a reboot is required (RHEL)
+needs-restarting -r
+# Exit code 1 = reboot required
+
+# Check if a reboot is required (Ubuntu)
+ls /var/run/reboot-required 2&gt;/dev/null &amp;&amp; echo &quot;Reboot required&quot; || echo &quot;No reboot needed&quot;
+
+# Check which processes need restart (Ubuntu)
+needs-restarting 2&gt;/dev/null || checkrestart   # Debian: apt install debian-goodies
+
+# Verify new kernel is default after update
+grub2-editenv list | grep saved_entry   # RHEL
+grep GRUB_DEFAULT /etc/default/grub     # Ubuntu
+</code></pre>
+<h2 id="red-hat-subscription-and-repositories">Red Hat Subscription and Repositories<a class="headerlink" href="#red-hat-subscription-and-repositories" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check subscription status
+subscription-manager status
+subscription-manager list --consumed
+
+# List enabled repos
+dnf repolist enabled
+
+# Enable a specific repo
+subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+
+# Check RHEL version
+cat /etc/redhat-release
+</code></pre>
+<h2 id="ansible-patching-at-scale">Ansible Patching at Scale<a class="headerlink" href="#ansible-patching-at-scale" title="Permanent link">&para;</a></h2>
+<pre><code class="language-yaml"># patch-rhel.yml — apply security patches to a group of RHEL servers
+- hosts: rhel_servers
+  become: true
+  tasks:
+    - name: Apply all security updates
+      ansible.builtin.dnf:
+        name: &quot;*&quot;
+        state: latest
+        security: true
+      register: dnf_result
+
+    - name: Check if reboot is required
+      ansible.builtin.command: needs-restarting -r
+      register: reboot_check
+      failed_when: false
+      changed_when: false
+
+    - name: Reboot if required
+      ansible.builtin.reboot:
+        reboot_timeout: 300
+      when: reboot_check.rc == 1
+</code></pre>
+<h2 id="post-patch-validation">Post-Patch Validation<a class="headerlink" href="#post-patch-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm updated kernel is running (after reboot)
+uname -r
+
+# Confirm critical services are up
+systemctl is-active sshd chronyd auditd
+
+# Check for new failed services
+systemctl --failed
+
+# Compare package list to pre-patch snapshot
+rpm -qa --qf &quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot; | sort &gt; /tmp/post-patch-packages.txt
+diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
+
+# Verify no unexpected changes in /etc
+find /etc -newer /tmp/pre-patch-packages.txt -type f 2&gt;/dev/null | head -20
+</code></pre>
+<h2 id="patch-schedule-standards">Patch Schedule Standards<a class="headerlink" href="#patch-schedule-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Server Tier</th>
+<th>Patch Frequency</th>
+<th>Reboot Window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-production</td>
+<td>Weekly (automated)</td>
+<td>Immediate on completion</td>
+</tr>
+<tr>
+<td>Production — non-critical</td>
+<td>Monthly (change-controlled)</td>
+<td>Weekend 02:00–06:00</td>
+</tr>
+<tr>
+<td>Production — critical</td>
+<td>Quarterly OR emergency (CVE ≥ 9.0)</td>
+<td>Agreed maintenance window</td>
+</tr>
+<tr>
+<td>Emergency (CVSS ≥ 9.0)</td>
+<td>Within 72 hours</td>
+<td>Emergency change process</td>
+</tr>
+</tbody>
+</table>
 
 
 

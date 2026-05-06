@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#management-domain-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Domain Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workload-domain-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workload Domain Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-ready-node-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Ready Node Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Configurations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-checks-in-sddc-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Checks in SDDC Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,20 +819,219 @@
 
 
 <h1 id="vmware-cloud-foundation-standards">VMware Cloud Foundation Standards<a class="headerlink" href="#vmware-cloud-foundation-standards" title="Permanent link">&para;</a></h1>
-<p>VCF deployments must adhere to strict naming and sizing standards to ensure SDDC Manager can successfully validate and manage all components throughout the lifecycle. Management domain hosts must meet vSAN Ready Node specifications with a minimum of 4 hosts, 10 GbE networking with separate management, vMotion, vSAN, and NSX overlay VMkernel adapters. Network pool naming follows <code>&lt;datacenter&gt;-&lt;env&gt;-pool-&lt;purpose&gt;</code> (e.g. <code>dc1-prod-pool-workload</code>), and all VCF component passwords must be 15+ characters with complexity meeting SDDC Manager's built-in policy.</p>
-<p><strong>Management domain sizing minimums:</strong>
-| Component | Minimum | Recommended |
-|---|---|---|
-| ESXi hosts (management) | 4 | 6 |
-| vSAN disk groups per host | 1 | 2 |
-| Management VM NIC speed | 10 GbE | 25 GbE |
-| SDDC Manager vCPU | 4 | 8 |
-| SDDC Manager RAM | 16 GB | 24 GB |</p>
-<p><strong>Naming convention:</strong>
-- SDDC Manager: <code>sddc-mgr-&lt;env&gt;.&lt;domain&gt;</code>
-- vCenter: <code>vc-&lt;domain-name&gt;-&lt;env&gt;.&lt;domain&gt;</code>
-- NSX Manager: <code>nsx-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;</code>
-- ESXi hosts: <code>esxi-&lt;rack&gt;-&lt;unit&gt;.&lt;domain&gt;</code></p>
+<p>VCF deployments must adhere to strict naming and sizing standards to ensure SDDC Manager can successfully validate and manage all components throughout the lifecycle.</p>
+<h2 id="management-domain-sizing">Management Domain Sizing<a class="headerlink" href="#management-domain-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Minimum</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi hosts (management domain)</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr>
+<td>vSAN disk groups per host</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Management NIC speed</td>
+<td>10 GbE</td>
+<td>25 GbE</td>
+</tr>
+<tr>
+<td>SDDC Manager vCPU</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>SDDC Manager RAM</td>
+<td>16 GB</td>
+<td>24 GB</td>
+</tr>
+<tr>
+<td>NSX Manager nodes</td>
+<td>3 (cluster)</td>
+<td>3</td>
+</tr>
+<tr>
+<td>vCenter RAM</td>
+<td>14 GB (small)</td>
+<td>24 GB (medium)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="workload-domain-sizing">Workload Domain Sizing<a class="headerlink" href="#workload-domain-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Minimum</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi hosts per cluster</td>
+<td>3</td>
+<td>vSAN stretched: 4 (2 per site + witness)</td>
+</tr>
+<tr>
+<td>Clusters per domain</td>
+<td>1</td>
+<td>Multiple clusters supported</td>
+</tr>
+<tr>
+<td>Workload domains</td>
+<td>1</td>
+<td>Up to 15 per SDDC Manager</td>
+</tr>
+</tbody>
+</table>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>All VCF components must have resolvable DNS names before deployment:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager</td>
+<td><code>sddc-mgr-&lt;env&gt;.&lt;domain&gt;</code></td>
+<td><code>sddc-mgr-prod.corp.local</code></td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td><code>vc-&lt;domain&gt;-&lt;env&gt;.&lt;domain&gt;</code></td>
+<td><code>vc-mgmt-prod.corp.local</code></td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td><code>nsx-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;</code></td>
+<td><code>nsx-prod-01.corp.local</code></td>
+</tr>
+<tr>
+<td>ESXi hosts</td>
+<td><code>esxi-&lt;rack&gt;-&lt;unit&gt;.&lt;domain&gt;</code></td>
+<td><code>esxi-r01-u01.corp.local</code></td>
+</tr>
+<tr>
+<td>Network pools</td>
+<td><code>&lt;dc&gt;-&lt;env&gt;-pool-&lt;purpose&gt;</code></td>
+<td><code>dc1-prod-pool-workload</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>VMkernel</th>
+<th>Purpose</th>
+<th>Minimum Speed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management (vmk0)</td>
+<td>Host management, vCenter comms</td>
+<td>1 GbE</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>Live migration traffic</td>
+<td>10 GbE</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>vSAN storage traffic</td>
+<td>10 GbE (25 GbE recommended)</td>
+</tr>
+<tr>
+<td>NSX overlay (TEP)</td>
+<td>Geneve encapsulation</td>
+<td>10 GbE (25 GbE recommended)</td>
+</tr>
+</tbody>
+</table>
+<p>All VMkernel adapters must be on the VCF-managed VDS — standard vSwitches are not supported.</p>
+<h2 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager enforces password complexity on all managed accounts:</p>
+<ul>
+<li>Minimum 15 characters</li>
+<li>Must include uppercase, lowercase, number, and special character</li>
+<li>Maximum 30 characters</li>
+<li>Passwords rotate on a configurable schedule via Lifecycle Management</li>
+</ul>
+<h2 id="vsan-ready-node-requirements">vSAN Ready Node Requirements<a class="headerlink" href="#vsan-ready-node-requirements" title="Permanent link">&para;</a></h2>
+<p>All hosts in VCF must be validated against the vSAN Ready Node specification:</p>
+<ul>
+<li>Listed on the VMware Hardware Compatibility List (HCL)</li>
+<li>vSAN-certified SSD for cache tier</li>
+<li>Consistent hardware configuration within a cluster (CPU generation, NIC model)</li>
+</ul>
+<pre><code class="language-bash"># Check HCL compliance from SDDC Manager
+# Lifecycle Management → Hardware Compatibility → Run HCL Check
+</code></pre>
+<h2 id="supported-configurations">Supported Configurations<a class="headerlink" href="#supported-configurations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Supported</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN ESA (Express Storage Architecture)</td>
+<td>VCF 5.1+</td>
+<td>Requires NVMe drives</td>
+</tr>
+<tr>
+<td>vSAN OSA (Original Storage Architecture)</td>
+<td>All versions</td>
+<td>Hybrid and all-flash</td>
+</tr>
+<tr>
+<td>Stretched clusters</td>
+<td>Yes</td>
+<td>Requires witness host</td>
+</tr>
+<tr>
+<td>NSX Federation</td>
+<td>VCF 4.3+</td>
+<td>Cross-site policy management</td>
+</tr>
+<tr>
+<td>Workload domains with FC storage</td>
+<td>No</td>
+<td>VCF uses vSAN only for principal storage</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compliance-checks-in-sddc-manager">Compliance Checks in SDDC Manager<a class="headerlink" href="#compliance-checks-in-sddc-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SDDC Manager UI — run before any upgrade:
+# Lifecycle Management → Precheck
+
+# Precheck validates:
+# - DNS resolution for all components
+# - NTP synchronisation
+# - Certificate expiry
+# - vSAN health
+# - Network pool capacity
+# - Password rotation status
+</code></pre>
 
 
 

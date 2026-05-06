@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>Linux Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#linux-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              Linux Health Checks
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#system-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        System Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#cpu-and-load" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        CPU and Load
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Memory
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#disk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Disk
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#network" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Network
       
     </span>
   </a>
@@ -767,10 +767,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#services-and-systemd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Services and Systemd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-logs-quick-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Logs — Quick Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-time-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP / Time Sync
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-posture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Posture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Summary Table
       
     </span>
   </a>
@@ -796,43 +840,186 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Linux Health Checks notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="linux-health-checks">Linux Health Checks<a class="headerlink" href="#linux-health-checks" title="Permanent link">&para;</a></h1>
+<p>Quick checks to confirm a Linux server is healthy before and after changes, and during incident triage.</p>
+<h2 id="system-overview">System Overview<a class="headerlink" href="#system-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Uptime, load average, logged-in users
+uptime
+w
+
+# OS version and kernel
+cat /etc/os-release
+uname -r
+
+# Last reboot
+last reboot | head -5
+</code></pre>
+<h2 id="cpu-and-load">CPU and Load<a class="headerlink" href="#cpu-and-load" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Current CPU usage snapshot
+top -b -n1 | head -20
+
+# Load average vs. CPU count — load &gt; nCPUs = saturated
+nproc
+uptime   # 1m 5m 15m averages
+
+# Per-CPU breakdown
+mpstat -P ALL 1 3
+
+# Top CPU-consuming processes
+ps aux --sort=-%cpu | head -15
+</code></pre>
+<h2 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Summary
+free -h
+
+# Detailed breakdown
+cat /proc/meminfo | grep -E &quot;MemTotal|MemFree|MemAvailable|SwapTotal|SwapFree|Cached|Buffers&quot;
+
+# Top memory-consuming processes
+ps aux --sort=-%mem | head -15
+
+# OOM kill events
+journalctl -k --since &quot;1 hour ago&quot; | grep -i &quot;oom\|killed process&quot;
+dmesg | grep -i &quot;out of memory&quot; | tail -10
+</code></pre>
+<h2 id="disk">Disk<a class="headerlink" href="#disk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Filesystem usage — flag anything above 80%
+df -h | awk 'NR==1 || $5+0 &gt; 80'
+
+# Inode usage (can fill independently of space)
+df -i | awk 'NR==1 || $5+0 &gt; 80'
+
+# I/O stats per device
+iostat -xz 1 3
+
+# Disk errors in kernel ring buffer
+dmesg | grep -iE &quot;error|failed|reset|timeout&quot; | grep -iE &quot;sd[a-z]|nvme|dm-&quot; | tail -20
+
+# Large files consuming unexpected space
+du -sh /var/log/* 2&gt;/dev/null | sort -h | tail -10
+du -sh /tmp/* 2&gt;/dev/null | sort -h | tail -10
+</code></pre>
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Interface status and IPs
+ip -br addr
+
+# Active listening ports
+ss -tulnp
+
+# Interface errors and drops
+ip -s link show | grep -A 5 &quot;errors\|dropped&quot;
+
+# Connection counts
+ss -s
+
+# Recent network-related kernel events
+dmesg | grep -iE &quot;link is down|link is up|reset adapter|carrier&quot; | tail -10
+</code></pre>
+<h2 id="services-and-systemd">Services and Systemd<a class="headerlink" href="#services-and-systemd" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failed units — should return 0
+systemctl --failed
+
+# Check a specific service
+systemctl status &lt;service-name&gt;
+
+# Service restart history
+journalctl -u &lt;service-name&gt; | grep -i &quot;start\|stop\|fail&quot; | tail -20
+
+# Services that have restarted unexpectedly
+journalctl --since &quot;24 hours ago&quot; | grep &quot;Start request repeated&quot; | tail -10
+</code></pre>
+<h2 id="system-logs-quick-errors">System Logs — Quick Errors<a class="headerlink" href="#system-logs-quick-errors" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All errors from the last hour
+journalctl -p err --since &quot;1 hour ago&quot;
+
+# Kernel warnings and errors
+dmesg --level=err,warn | tail -30
+
+# Auth failures
+journalctl _SYSTEMD_UNIT=sshd.service | grep &quot;Failed\|Invalid&quot; | tail -20
+</code></pre>
+<h2 id="ntp-time-sync">NTP / Time Sync<a class="headerlink" href="#ntp-time-sync" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check sync status
+timedatectl status
+
+# chrony detail (RHEL)
+chronyc tracking
+chronyc sources -v
+
+# Flag offset &gt; 1 second
+chronyc tracking | grep &quot;System time&quot;
+</code></pre>
+<h2 id="security-posture">Security Posture<a class="headerlink" href="#security-posture" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SELinux status (RHEL)
+getenforce
+sestatus | grep -E &quot;mode|status&quot;
+
+# AppArmor status (Ubuntu)
+aa-status 2&gt;/dev/null | head -5
+
+# Locked or expired accounts
+passwd -S -a 2&gt;/dev/null | grep -E &quot; L | P &quot; | head -20
+
+# Sudo configuration
+visudo -c   # Syntax check, no changes
+</code></pre>
+<h2 id="health-check-summary-table">Health Check Summary Table<a class="headerlink" href="#health-check-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load vs CPU count</td>
+<td><code>uptime</code> + <code>nproc</code></td>
+<td>load ≤ nCPU</td>
+</tr>
+<tr>
+<td>Memory available</td>
+<td><code>free -h</code></td>
+<td>Available &gt; 20%</td>
+</tr>
+<tr>
+<td>No FS &gt; 85%</td>
+<td><code>df -h</code></td>
+<td>All &lt; 85%</td>
+</tr>
+<tr>
+<td>No inode FS &gt; 85%</td>
+<td><code>df -i</code></td>
+<td>All &lt; 85%</td>
+</tr>
+<tr>
+<td>No failed services</td>
+<td><code>systemctl --failed</code></td>
+<td>0 failed</td>
+</tr>
+<tr>
+<td>NTP synchronised</td>
+<td><code>timedatectl</code></td>
+<td>Synchronised: yes</td>
+</tr>
+<tr>
+<td>No interface errors</td>
+<td><code>ip -s link</code></td>
+<td>TX/RX errors = 0</td>
+</tr>
+<tr>
+<td>No kernel errors</td>
+<td><code>dmesg --level=err</code></td>
+<td>None recent</td>
+</tr>
+<tr>
+<td>SELinux enforcing</td>
+<td><code>getenforce</code></td>
+<td>Enforcing</td>
+</tr>
+</tbody>
+</table>
 
 
 

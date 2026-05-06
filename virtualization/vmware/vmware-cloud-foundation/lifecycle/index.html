@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundle Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-patches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async Patches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rolling-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Back
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,13 +808,17 @@
 
 
 <h1 id="vmware-cloud-foundation-lifecycle">VMware Cloud Foundation Lifecycle<a class="headerlink" href="#vmware-cloud-foundation-lifecycle" title="Permanent link">&para;</a></h1>
-<p>VCF upgrades are orchestrated entirely through SDDC Manager, which downloads lifecycle bundles from the VMware depot (or an offline bundle depot) and applies them in a strictly enforced sequence: SDDC Manager itself is updated first, followed by vCenter Server, then ESXi hosts (via parallel remediation), then NSX-T, and finally vSAN (in-place upgrade where applicable). Async patches allow individual component updates between full VCF version releases but must be validated against the VCF compatibility matrix before application. Bundle availability is checked automatically by SDDC Manager on a configured schedule, or manually triggered under Lifecycle Management &gt; Bundle Management.</p>
-<p><strong>Upgrade sequence:</strong>
-1. SDDC Manager (always first — gates all other upgrades)
-2. vCenter Server (management domain, then VI domains)
-3. ESXi hosts (host remediation per cluster, one cluster at a time)
-4. NSX-T Manager cluster, then NSX Edge clusters
-5. vSAN (firmware/driver updates via Hardware Compatibility List check)</p>
+<p>VCF upgrades are orchestrated entirely through SDDC Manager, which downloads lifecycle bundles from the VMware depot (or an offline bundle depot) and applies them in a strictly enforced sequence.</p>
+<h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager enforces this order — you cannot skip steps:</p>
+<ol>
+<li><strong>SDDC Manager</strong> — always first; gates all other upgrades</li>
+<li><strong>vCenter Server</strong> — management domain, then VI workload domains</li>
+<li><strong>ESXi hosts</strong> — host remediation per cluster, one cluster at a time</li>
+<li><strong>NSX-T</strong> — NSX Manager cluster, then NSX Edge clusters</li>
+<li><strong>vSAN</strong> — firmware and driver updates validated against HCL</li>
+</ol>
+<h2 id="version-compatibility-matrix">Version Compatibility Matrix<a class="headerlink" href="#version-compatibility-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -738,7 +827,7 @@
 <th>vCenter</th>
 <th>NSX-T</th>
 <th>vSAN</th>
-<th>End of General Support</th>
+<th>EoGS</th>
 </tr>
 </thead>
 <tbody>
@@ -768,6 +857,68 @@
 </tr>
 </tbody>
 </table>
+<p>Always verify against the <a href="https://docs.vmware.com/en/VMware-Cloud-Foundation/">Broadcom VCF Release Notes</a> before upgrade.</p>
+<h2 id="bundle-management">Bundle Management<a class="headerlink" href="#bundle-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SDDC Manager UI: Lifecycle Management → Bundle Management
+# Check for available bundles (requires internet or depot connectivity)
+
+# Offline depot: configure custom depot in SDDC Manager
+# Administration → Depot Settings → set offline depot URL
+</code></pre>
+<p>Bundles are downloaded automatically on a configured schedule or manually triggered.</p>
+<h2 id="async-patches">Async Patches<a class="headerlink" href="#async-patches" title="Permanent link">&para;</a></h2>
+<p>Async patches allow individual component updates (e.g., ESXi security patch) between full VCF releases.</p>
+<ul>
+<li>Must be validated against the VCF compatibility matrix before application</li>
+<li>Apply via SDDC Manager: Lifecycle Management → Async Patches</li>
+<li>Test in non-production domain first</li>
+</ul>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] vSAN health: all checks GREEN</li>
+<li>[ ] No active resync operations</li>
+<li>[ ] Snapshots removed from all management VMs (SDDC Manager, vCenter, NSX)</li>
+<li>[ ] Backup of SDDC Manager completed</li>
+<li>[ ] vCenter inventory backed up (File-Based Backup)</li>
+<li>[ ] NSX-T backup completed</li>
+<li>[ ] Maintenance window approved</li>
+<li>[ ] HCL validation passed for all hosts in target clusters</li>
+<li>[ ] Check VCF compatibility matrix for all third-party integrations</li>
+</ul>
+<h2 id="sddc-manager-backup">SDDC Manager Backup<a class="headerlink" href="#sddc-manager-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SDDC Manager backup is configured under Administration → Backup
+# Trigger manual backup before any lifecycle operation:
+# Lifecycle Management → Backup and Restore → Backup Now
+</code></pre>
+<h2 id="rolling-back">Rolling Back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
+<p>VCF does not support direct rollback of component upgrades. Recovery options:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Rollback Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager</td>
+<td>Restore from backup (separate SDDC Manager appliance)</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>File-Based Restore to pre-upgrade backup</td>
+</tr>
+<tr>
+<td>ESXi</td>
+<td>Boot from previous bootbank: <code>esxcli system settings advanced set -o /UserVars.ESXiShellInteractiveTimeOut -i 0</code> then rollback VIB</td>
+</tr>
+<tr>
+<td>NSX-T</td>
+<td>Restore NSX Manager from backup</td>
+</tr>
+</tbody>
+</table>
+<p>Plan rollback paths before starting any upgrade.</p>
 
 
 

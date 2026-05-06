@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#array-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directors-and-front-end-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directors and Front-End Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-and-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache and Memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#array-software-and-licenses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Software and Licenses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#symmwin-gatekeeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SymmWin / Gatekeeper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,23 +798,107 @@
 
 <h1 id="discovery-array-info">Discovery &amp; Array Info<a class="headerlink" href="#discovery-array-info" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). Run <code>symcfg discover</code> when a new array is added to the environment or after a network change that affects Solutions Enabler connectivity.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List all known arrays
-symcfg list
+<h2 id="array-discovery">Array Discovery<a class="headerlink" href="#array-discovery" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Discover all arrays visible to this Solutions Enabler host
 symcfg discover
-symcfg -sid &lt;sid&gt; list -v
-symcfg -sid &lt;sid&gt; show
 
-# Directors and ports
+# List all known arrays
+symcfg list
+
+# List with detailed info (model, microcode, capacity)
+symcfg list -v
+
+# Show full array configuration
+symcfg -sid &lt;sid&gt; show
+symcfg -sid &lt;sid&gt; list -v
+</code></pre>
+<h2 id="directors-and-front-end-ports">Directors and Front-End Ports<a class="headerlink" href="#directors-and-front-end-ports" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all directors
 symcfg -sid &lt;sid&gt; list -dir all
+
+# List all ports on all directors
 symcfg -sid &lt;sid&gt; list -port all
 
-# Cache and memory
-symcfg -sid &lt;sid&gt; list -cache
-symcfg -sid &lt;sid&gt; list -pool -all
+# Show specific director details
+symcfg -sid &lt;sid&gt; show -dir &lt;director_id&gt;
+
+# Show FA (Fibre Channel front-end) port details
+symcfg -sid &lt;sid&gt; show -dir &lt;director_id&gt; -p &lt;port_number&gt;
+
+# List only online FA ports
+symcfg -sid &lt;sid&gt; list -fa -online
 </code></pre>
+<h2 id="cache-and-memory">Cache and Memory<a class="headerlink" href="#cache-and-memory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show cache configuration and usage
+symcfg -sid &lt;sid&gt; list -cache
+
+# Show all storage resource pools (SRP)
+symcfg -sid &lt;sid&gt; list -pool -all
+
+# Show thin pool subscription and usage
+symcfg -sid &lt;sid&gt; show -pool -thin -demand
+</code></pre>
+<h2 id="array-software-and-licenses">Array Software and Licenses<a class="headerlink" href="#array-software-and-licenses" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show HYPERMAX OS version
+symcfg -sid &lt;sid&gt; list | grep -i &quot;microcode\|Enginuity\|HYPERMAX&quot;
+
+# Show installed feature licenses
+symlmf -sid &lt;sid&gt; list
+
+# Show available capacity by SRP
+symcfg -sid &lt;sid&gt; list -srp
+</code></pre>
+<h2 id="symmwin-gatekeeper">SymmWin / Gatekeeper<a class="headerlink" href="#symmwin-gatekeeper" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check Solutions Enabler connection method to array
+syminq -symmids
+
+# Show local gatekeeper devices
+symgate list -sid &lt;sid&gt;
+
+# Verify SE version
+symcfg -V
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discover arrays</td>
+<td><code>symcfg discover</code></td>
+</tr>
+<tr>
+<td>List all arrays</td>
+<td><code>symcfg list</code></td>
+</tr>
+<tr>
+<td>Show array detail</td>
+<td><code>symcfg -sid &lt;sid&gt; show</code></td>
+</tr>
+<tr>
+<td>List directors</td>
+<td><code>symcfg -sid &lt;sid&gt; list -dir all</code></td>
+</tr>
+<tr>
+<td>List all ports</td>
+<td><code>symcfg -sid &lt;sid&gt; list -port all</code></td>
+</tr>
+<tr>
+<td>Show cache usage</td>
+<td><code>symcfg -sid &lt;sid&gt; list -cache</code></td>
+</tr>
+<tr>
+<td>Show SRP pools</td>
+<td><code>symcfg -sid &lt;sid&gt; list -pool -all</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

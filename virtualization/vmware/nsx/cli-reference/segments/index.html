@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#logical-switches-segments_1" class="md-nav__link">
+  <a href="#segments-nsx-manager-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logical Switches &amp; Segments
+        Segments (NSX Manager CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logical-ports-vms-connected-to-a-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical Ports (VMs connected to a segment)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geneve-tunnels-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geneve Tunnels (Overlay)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transport-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport Zones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#segment-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segment Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Modes
       
     </span>
   </a>
@@ -745,18 +800,90 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="logical-switches-segments_1">Logical Switches &amp; Segments<a class="headerlink" href="#logical-switches-segments_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Segments (NSX-T)
-get logical-switches
-get logical-switch &lt;id&gt;
-get logical-switch &lt;id&gt; status
-get logical-switch &lt;id&gt; stats
+<h2 id="segments-nsx-manager-cli">Segments (NSX Manager CLI)<a class="headerlink" href="#segments-nsx-manager-cli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">nsxcli
 
-# Ports
+# List all logical switches / segments
+get logical-switches
+
+# Detail for a specific segment (VNI, replication mode, transport zone)
+get logical-switch &lt;id&gt;
+
+# Operational status (UP/DOWN)
+get logical-switch &lt;id&gt; status
+
+# Traffic statistics for a segment
+get logical-switch &lt;id&gt; stats
+</code></pre>
+<h2 id="logical-ports-vms-connected-to-a-segment">Logical Ports (VMs connected to a segment)<a class="headerlink" href="#logical-ports-vms-connected-to-a-segment" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all logical ports
 get logical-ports
+
+# Detail for a specific port
 get logical-port &lt;id&gt;
+
+# Port operational state
 get logical-port &lt;id&gt; status
+
+# Traffic stats on a specific port
+get logical-port &lt;id&gt; stats
+</code></pre>
+<h2 id="geneve-tunnels-overlay">Geneve Tunnels (Overlay)<a class="headerlink" href="#geneve-tunnels-overlay" title="Permanent link">&para;</a></h2>
+<p>Segments use Geneve encapsulation over the underlay. Verify tunnel health from NSX Manager CLI:</p>
+<pre><code class="language-bash"># List tunnel endpoints (TEPs) — shows VTEP IPs and state
+get tunnel endpoints
+
+# Tunnel status between all TEP pairs
+get tunnel status
+
+# Tunnel for a specific remote TEP
+get tunnel status &lt;remote_tep_ip&gt;
+</code></pre>
+<h2 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List transport zones (overlay and VLAN)
+get transport-zone
+
+# Transport zone detail (type, associated segments)
+get transport-zone &lt;name&gt;
+</code></pre>
+<h2 id="segment-troubleshooting">Segment Troubleshooting<a class="headerlink" href="#segment-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Is the segment UP?
+get logical-switch &lt;id&gt; status
+
+# Find the VNI of a segment (needed for packet analysis)
+get logical-switch &lt;id&gt; | grep VNI
+
+# Which hosts have TEPs in this transport zone?
+get transport-nodes
+
+# Is the Geneve tunnel UP between two hosts?
+get tunnel status &lt;remote_tep_ip&gt;
+
+# On the ESXi host — confirm Geneve encap
+esxcli network ip interface ipv4 get | grep vmk   # find vmk with vSAN/TEP tag
+esxcli network ip route ipv4 list | grep &lt;tep_subnet&gt;
+</code></pre>
+<h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MTEP</code> (Head-End Replication)</td>
+<td>BUM traffic replicated by ingress TEP — simpler, higher bandwidth</td>
+</tr>
+<tr>
+<td><code>HIERARCHICAL_TWO_TIER</code></td>
+<td>Uses designated replicator — better for large environments</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Check replication mode for a segment
+get logical-switch &lt;id&gt; | grep -i replication
 </code></pre>
 
 

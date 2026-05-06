@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#networking-vsan-vmkernel_1" class="md-nav__link">
+  <a href="#vsan-vmkernel-adapters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Networking (vSAN VMkernel)
+        vSAN VMkernel Adapters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unicast-agent-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unicast Agent Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-vmkernel-tagging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying VMkernel Tagging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtu-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTU Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-configuration-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Configuration Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Reference
       
     </span>
   </a>
@@ -745,17 +811,83 @@
 <blockquote>
 <p>Part of the <a href="../">vSAN CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="networking-vsan-vmkernel_1">Networking (vSAN VMkernel)<a class="headerlink" href="#networking-vsan-vmkernel_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># vSAN network adapters
+<h2 id="vsan-vmkernel-adapters">vSAN VMkernel Adapters<a class="headerlink" href="#vsan-vmkernel-adapters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List VMkernel adapters tagged for vSAN traffic
 esxcli vsan network list
 
-# Validate unicast agent
+# Output fields: adapter name, IP, gateway, traffic type tag
+</code></pre>
+<h2 id="unicast-agent-configuration">Unicast Agent Configuration<a class="headerlink" href="#unicast-agent-configuration" title="Permanent link">&para;</a></h2>
+<p>vSAN uses unicast by default (multicast no longer required from vSAN 6.6+).</p>
+<pre><code class="language-bash"># View unicast agent config — shows peer IPs for each vSAN VMkernel
 esxcli vsan network ipconfig list
 
-# Test connectivity between hosts
-esxcli vsan debug network test
+# Per-adapter unicast peers (who this host talks to in the cluster)
+esxcli vsan network ipconfig list | grep -E &quot;Adapter|Unicast&quot;
 </code></pre>
+<h2 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test vSAN network connectivity to all cluster peers
+esxcli vsan debug network test
+
+# This sends UDP probes to all known unicast agents and reports latency / loss
+</code></pre>
+<h2 id="verifying-vmkernel-tagging">Verifying VMkernel Tagging<a class="headerlink" href="#verifying-vmkernel-tagging" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm vmk is tagged for vSAN
+esxcli network ip interface tag get -i vmk2   # replace vmk2 with actual adapter
+
+# Expected output includes: VSAN
+
+# Add vSAN tag to a VMkernel (if missing)
+esxcli network ip interface tag add -i vmk2 -t VSAN
+</code></pre>
+<h2 id="mtu-verification">MTU Verification<a class="headerlink" href="#mtu-verification" title="Permanent link">&para;</a></h2>
+<p>vSAN performs best with jumbo frames (MTU 9000) end-to-end.</p>
+<pre><code class="language-bash"># Check VMkernel MTU
+esxcli network ip interface list | grep -A5 vmk2
+
+# Test large packet through physical switches (ping with don't-fragment)
+vmkping -I vmk2 -d -s 8972 &lt;peer_vmk_ip&gt;
+
+# Expected: no packet loss. If loss occurs — switch or NIC MTU mismatch
+</code></pre>
+<h2 id="network-configuration-commands">Network Configuration Commands<a class="headerlink" href="#network-configuration-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a vSAN VMkernel (if not using vSphere UI)
+esxcli vsan network ip add -i vmk2
+
+# Remove a VMkernel from vSAN network config
+esxcli vsan network ip remove -i vmk2
+</code></pre>
+<h2 id="troubleshooting-reference">Troubleshooting Reference<a class="headerlink" href="#troubleshooting-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster health: Network issues</td>
+<td><code>esxcli vsan debug network test</code> — look for packet loss</td>
+</tr>
+<tr>
+<td>High vSAN latency</td>
+<td><code>vmkping -d -s 8972</code> — check MTU along path</td>
+</tr>
+<tr>
+<td>Host isolated from cluster</td>
+<td><code>esxcli vsan network ipconfig list</code> — unicast agents populated?</td>
+</tr>
+<tr>
+<td>vSAN VMkernel missing</td>
+<td><code>esxcli network ip interface tag get</code> — VSAN tag present?</td>
+</tr>
+<tr>
+<td>Multicast warning in health</td>
+<td>Informational from vSAN 6.6+; unicast is default and correct</td>
+</tr>
+</tbody>
+</table>
 
 
 

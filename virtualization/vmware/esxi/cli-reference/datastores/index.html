@@ -712,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#datastores-vmdk_1" class="md-nav__link">
+  <a href="#browse-datastores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Datastores &amp; VMDK
+        Browse Datastores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmkfstools-vmdk-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vmkfstools — VMDK Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-info-via-vim-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Info via vim-cmd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmfs-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMFS Troubleshooting
       
     </span>
   </a>
@@ -745,23 +789,69 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="datastores-vmdk_1">Datastores &amp; VMDK<a class="headerlink" href="#datastores-vmdk_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Browse datastores
+<h2 id="browse-datastores">Browse Datastores<a class="headerlink" href="#browse-datastores" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all datastores visible to the host
 ls /vmfs/volumes/
+esxcli storage filesystem list
+
+# List contents of a datastore
 ls /vmfs/volumes/&lt;datastore&gt;/
+ls -lah /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+
+# Disk usage per directory
 du -sh /vmfs/volumes/&lt;datastore&gt;/*
-
-# vmkfstools — disk operations
+du -sh /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+</code></pre>
+<h2 id="vmkfstools-vmdk-operations">vmkfstools — VMDK Operations<a class="headerlink" href="#vmkfstools-vmdk-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List VMDK info (size, type, chain)
 vmkfstools -l /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-vmkfstools -c 100G -d thin /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-vmkfstools -i source.vmdk dest.vmdk
-vmkfstools -X 200G /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-vmkfstools -e /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
 
-# Datastore info via vim-cmd
+# Create a new thin VMDK
+vmkfstools -c 100G -d thin /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+
+# Clone a VMDK
+vmkfstools -i source.vmdk dest.vmdk
+
+# Expand a VMDK (grows the file — guest must still expand the partition)
+vmkfstools -X 200G /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+
+# Inflate a thin VMDK to eagerzeroedthick
+vmkfstools -k /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+
+# Defragment / punch holes in a thin VMDK
+vmkfstools -p /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+
+# Check VMDK for consistency
+vmkfstools -e /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+</code></pre>
+<h2 id="datastore-info-via-vim-cmd">Datastore Info via vim-cmd<a class="headerlink" href="#datastore-info-via-vim-cmd" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all datastores and their status
 vim-cmd hostsvc/datastore/listsummary
+
+# Detailed info on a specific datastore
 vim-cmd hostsvc/datastore/info &lt;datastore_name&gt;
+
+# Rescan all storage adapters (after new LUN presented)
+esxcli storage core adapter rescan --all
+vim-cmd hostsvc/storage/refresh
+</code></pre>
+<h2 id="snapshot-files">Snapshot Files<a class="headerlink" href="#snapshot-files" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Identify snapshot delta files (-.delta.vmdk)
+find /vmfs/volumes/&lt;ds&gt;/ -name &quot;*-delta.vmdk&quot; -o -name &quot;*-0000*.vmdk&quot; 2&gt;/dev/null
+
+# Check snapshot size vs. base disk
+ls -lah /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/
+</code></pre>
+<h2 id="vmfs-troubleshooting">VMFS Troubleshooting<a class="headerlink" href="#vmfs-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check VMFS filesystem metadata
+esxcli storage vmfs extent list
+
+# Resignature a VMFS copy (after snapshot/LUN clone)
+esxcli storage vmfs snapshot list
+esxcli storage vmfs snapshot resignature -l &lt;label&gt;
+
+# Unmount a datastore from this host (does not remove from vCenter)
+esxcli storage filesystem unmount -l &lt;datastore_label&gt;
 </code></pre>
 
 

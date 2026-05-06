@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#check-running-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Running Jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#job-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-and-cancel-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start and Cancel Jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#job-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#job-impact-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Impact Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-flexprotect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring FlexProtect
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,25 +798,89 @@
 
 <h1 id="jobs-background-tasks">Jobs (Background Tasks)<a class="headerlink" href="#jobs-background-tasks" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
+<p>Part of the Dell PowerScale (Isilon) CLI Reference. OneFS uses a job engine to run background tasks — FlexProtect rebuilds, SmartPools tiering, quota accounting, deduplication, and more.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List running jobs
+<h2 id="check-running-jobs">Check Running Jobs<a class="headerlink" href="#check-running-jobs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Summary of currently running jobs
 isi job status
-isi job jobs list
-isi job jobs view &lt;job_id&gt;
 
-# Job types
+# List all active jobs
+isi job jobs list
+
+# List jobs in a specific state
+isi job jobs list --state running
+isi job jobs list --state paused
+isi job jobs list --state waiting
+isi job jobs list --state failed
+
+# View details of a specific job
+isi job jobs view &lt;job_id&gt;
+</code></pre>
+<h2 id="job-types">Job Types<a class="headerlink" href="#job-types" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all available job types
 isi job types list
+
+# View details and description of a job type
 isi job types view &lt;type_name&gt;
 
-# Start / cancel a job
-isi job jobs start &lt;type_name&gt;
+# Key job types:
+# FlexProtect      — re-protects data after a node or drive failure
+# SmartPools       — moves files between tiers based on file pool policies
+# Dedupe           — block-level deduplication (requires SmartDedupe license)
+# QuotaScan        — recalculates quota accounting
+# ShadowStoreDelete — removes shadow store data (snapshots/dedupe)
+# MultiScan        — combined integrity and protection scan
+# AutoBalance      — rebalances data across nodes
+</code></pre>
+<h2 id="start-and-cancel-jobs">Start and Cancel Jobs<a class="headerlink" href="#start-and-cancel-jobs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Start a job manually (useful after drive replacement)
+isi job jobs start FlexProtect
+isi job jobs start QuotaScan
+isi job jobs start SmartPools
+
+# Cancel a running job
 isi job jobs cancel &lt;job_id&gt;
 
-# Job history
+# Pause a job (can be resumed)
+isi job jobs pause &lt;job_id&gt;
+
+# Resume a paused job
+isi job jobs resume &lt;job_id&gt;
+</code></pre>
+<h2 id="job-history">Job History<a class="headerlink" href="#job-history" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View completed job history
 isi job history list
+
+# View history for a specific job type
+isi job history list | grep SmartPools
+
+# Job events (detailed log entries)
 isi job events list
+
+# Events for a specific job
+isi job events list --job-id &lt;job_id&gt;
+</code></pre>
+<h2 id="job-impact-policies">Job Impact Policies<a class="headerlink" href="#job-impact-policies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List impact policies (control resource usage during jobs)
+isi job policies list
+
+# View a policy
+isi job policies view &lt;policy_name&gt;
+
+# Modify a job type's impact policy (e.g., run Dedupe at low impact)
+isi job types modify Dedupe --policy LOW
+</code></pre>
+<h2 id="monitoring-flexprotect">Monitoring FlexProtect<a class="headerlink" href="#monitoring-flexprotect" title="Permanent link">&para;</a></h2>
+<p>FlexProtect is the most critical background job — runs after node/drive failures:</p>
+<pre><code class="language-bash"># Check if FlexProtect is running
+isi job jobs list | grep FlexProtect
+
+# Check overall data protection status
+isi status | grep -E &quot;SmartFail|Unhealthy|At risk&quot;
+
+# Check for unprotected files
+isi job jobs list | grep MultiScan
+isi status -n all | grep -i &quot;unprotected\|degraded&quot;
 </code></pre>
 
 

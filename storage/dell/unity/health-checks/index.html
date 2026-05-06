@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>Dell Unity Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#dell-unity-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              Dell Unity Health Checks
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#system-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        System Status
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#alerts-and-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Alerts and Events
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#hardware" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Hardware
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#storage-pool-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Storage Pool Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lun-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LUN Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Summary
       
     </span>
   </a>
@@ -774,31 +818,111 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="dell-unity-health-checks">Dell Unity Health Checks<a class="headerlink" href="#dell-unity-health-checks" title="Permanent link">&para;</a></h1>
+<p>Daily and pre/post-change health checks for Dell Unity storage systems.</p>
+<h2 id="system-status">System Status<a class="headerlink" href="#system-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># System general info and health
+uemcli -d &lt;ip&gt; -u admin /sys/general show -detail
+
+# Software version
+uemcli -d &lt;ip&gt; -u admin /sys/sw/version show
+
+# Storage processor status
+uemcli -d &lt;ip&gt; -u admin /sys/sp show
+uemcli -d &lt;ip&gt; -u admin /sys/sp show -detail | grep -E &quot;Health|State|Model&quot;
+</code></pre>
+<h2 id="alerts-and-events">Alerts and Events<a class="headerlink" href="#alerts-and-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active alerts — any critical alerts require immediate attention
+uemcli -d &lt;ip&gt; -u admin /prac/alert show
+uemcli -d &lt;ip&gt; -u admin /prac/alert show | grep -i &quot;Critical\|Error&quot;
+
+# Event log
+uemcli -d &lt;ip&gt; -u admin /event/syslog show
+</code></pre>
+<h2 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Disk health
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show | grep -v &quot;Normal&quot;   # Flag non-normal disks
+
+# Disk groups
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show -detail | grep -E &quot;Health|RAID|Disks&quot;
+
+# Storage processors
+uemcli -d &lt;ip&gt; -u admin /sys/sp show -detail | grep -E &quot;Health|Power|Temp&quot;
+</code></pre>
+<h2 id="storage-pool-capacity">Storage Pool Capacity<a class="headerlink" href="#storage-pool-capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pool list with capacity and health
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail
+
+# Flag pools above 80% used
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show | awk '
+    /Free/ { getline; if ($3 + 0 &lt; 20) print &quot;WARNING: Pool near full:&quot;, $0 }'
+</code></pre>
+<h2 id="lun-status">LUN Status<a class="headerlink" href="#lun-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All LUNs and health
+uemcli -d &lt;ip&gt; -u admin /stor/config/lun show -detail | grep -E &quot;Name|Health|Size&quot;
+
+# LUNs with non-OK health
+uemcli -d &lt;ip&gt; -u admin /stor/config/lun show | grep -v &quot;OK\|Name&quot;
+</code></pre>
+<h2 id="replication-sessions">Replication Sessions<a class="headerlink" href="#replication-sessions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All replication sessions
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show
+
+# Sessions not in OK state
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show | grep -v &quot;OK\|Session ID&quot;
+</code></pre>
+<h2 id="network-interfaces">Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Network interface status
+uemcli -d &lt;ip&gt; -u admin /net/if show | grep -E &quot;ID|Health|IP&quot;
+</code></pre>
+<h2 id="health-check-summary">Health Check Summary<a class="headerlink" href="#health-check-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System health</td>
+<td><code>/sys/general show</code></td>
+<td>Health = OK</td>
+</tr>
+<tr>
+<td>No critical alerts</td>
+<td><code>/prac/alert show</code></td>
+<td>0 critical alerts</td>
+</tr>
+<tr>
+<td>All disks normal</td>
+<td><code>/stor/config/disk show</code></td>
+<td>All = Normal</td>
+</tr>
+<tr>
+<td>Pools &lt; 80% used</td>
+<td><code>/stor/config/pool show</code></td>
+<td>Free &gt; 20%</td>
+</tr>
+<tr>
+<td>All LUNs OK</td>
+<td><code>/stor/config/lun show</code></td>
+<td>All health = OK</td>
+</tr>
+<tr>
+<td>Replication sessions OK</td>
+<td><code>/prot/rep/session show</code></td>
+<td>All OK / Synced</td>
+</tr>
+<tr>
+<td>Both SPs online</td>
+<td><code>/sys/sp show</code></td>
+<td>Both = OK</td>
+</tr>
+</tbody>
+</table>
 
 
 

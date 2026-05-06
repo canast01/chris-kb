@@ -705,6 +705,146 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#service-management-systemctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Management (systemctl)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-and-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk and Filesystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-journalctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging (journalctl)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-and-session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User and Session Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance / Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP / Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,57 +863,154 @@
 
 
 <h1 id="linux-cli-reference">Linux CLI Reference<a class="headerlink" href="#linux-cli-reference" title="Permanent link">&para;</a></h1>
-<p>This section covers the most commonly used Linux administration commands, grouped by category. Commands apply to both RHEL and Ubuntu unless otherwise noted. Package management commands differ by distribution: <code>dnf</code>/<code>yum</code> for RHEL, <code>apt</code> for Ubuntu. All other commands are standard across distributions.</p>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Commands</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Service management</td>
-<td><code>systemctl start/stop/restart/status/enable/disable</code></td>
-</tr>
-<tr>
-<td>Logging</td>
-<td><code>journalctl -u &lt;service&gt;</code>, <code>journalctl -p err</code>, <code>journalctl --since</code></td>
-</tr>
-<tr>
-<td>Package management (RHEL)</td>
-<td><code>dnf install/remove/update/list</code>, <code>yum history</code></td>
-</tr>
-<tr>
-<td>Package management (Ubuntu)</td>
-<td><code>apt install/remove/upgrade</code>, <code>apt list --installed</code></td>
-</tr>
-<tr>
-<td>Network</td>
-<td><code>ss -tulnp</code>, <code>ip addr</code>, <code>ip route</code>, <code>ip link</code></td>
-</tr>
-<tr>
-<td>Disk/storage</td>
-<td><code>lsblk</code>, <code>lvdisplay</code>, <code>vgdisplay</code>, <code>pvdisplay</code>, <code>df -h</code>, <code>du -sh</code></td>
-</tr>
-<tr>
-<td>Process/performance</td>
-<td><code>top</code>, <code>htop</code>, <code>ps aux</code>, <code>uptime</code>, <code>vmstat</code>, <code>iostat</code></td>
-</tr>
-<tr>
-<td>User/session</td>
-<td><code>last</code>, <code>lastb</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>getent passwd</code></td>
-</tr>
-<tr>
-<td>Firewall (RHEL)</td>
-<td><code>firewall-cmd --list-all</code>, <code>firewall-cmd --add-service</code>, <code>--permanent</code></td>
-</tr>
-<tr>
-<td>Firewall (Ubuntu)</td>
-<td><code>ufw status</code>, <code>ufw allow</code>, <code>ufw deny</code></td>
-</tr>
-</tbody>
-</table>
+<p>Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.</p>
+<h2 id="service-management-systemctl">Service Management (systemctl)<a class="headerlink" href="#service-management-systemctl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">systemctl start &lt;service&gt;
+systemctl stop &lt;service&gt;
+systemctl restart &lt;service&gt;
+systemctl reload &lt;service&gt;          # Reload config without full restart
+systemctl status &lt;service&gt;
+systemctl enable --now &lt;service&gt;    # Enable at boot and start immediately
+systemctl disable --now &lt;service&gt;
+systemctl --failed                  # List failed units
+systemctl list-units --type=service --state=active
+systemctl cat &lt;service&gt;             # Show unit file
+</code></pre>
+<h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RHEL (dnf)
+dnf install &lt;package&gt;
+dnf remove &lt;package&gt;
+dnf update -y
+dnf update --security -y
+dnf check-update
+dnf list installed | grep &lt;name&gt;
+dnf info &lt;package&gt;
+dnf history list
+dnf history undo &lt;id&gt;
+
+# Ubuntu (apt)
+apt update
+apt install &lt;package&gt;
+apt remove &lt;package&gt;
+apt upgrade -y
+apt full-upgrade -y
+apt list --installed 2&gt;/dev/null | grep &lt;name&gt;
+apt show &lt;package&gt;
+apt autoremove -y
+</code></pre>
+<h2 id="process-management">Process Management<a class="headerlink" href="#process-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ps aux                              # All processes
+ps aux --sort=-%cpu | head -15      # Top CPU consumers
+ps aux --sort=-%mem | head -15      # Top memory consumers
+ps -eLf | sort -k4 -rn | head -20  # Per-thread CPU
+kill -9 &lt;PID&gt;                       # Force kill
+pkill -f &lt;process-name&gt;             # Kill by name
+nohup &lt;command&gt; &amp;                   # Run detached
+jobs                                # List background jobs
+</code></pre>
+<h2 id="disk-and-filesystem">Disk and Filesystem<a class="headerlink" href="#disk-and-filesystem" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+df -h                               # Filesystem usage
+df -i                               # Inode usage
+du -sh &lt;path&gt;                       # Directory size
+du -sh /* 2&gt;/dev/null | sort -h     # Find large directories
+fdisk -l /dev/sdb                   # Partition table
+parted /dev/sdb print
+mount /dev/vg/lv /mnt/point
+umount /mnt/point
+</code></pre>
+<h2 id="lvm">LVM<a class="headerlink" href="#lvm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">pvs / pvdisplay                     # Physical volumes
+vgs / vgdisplay                     # Volume groups
+lvs / lvdisplay                     # Logical volumes
+pvcreate /dev/sdb
+vgcreate vg_name /dev/sdb
+lvcreate -L 50G -n lv_name vg_name
+lvextend -L +20G /dev/vg/lv
+xfs_growfs /dev/vg/lv               # Grow XFS online
+resize2fs /dev/vg/lv                # Grow ext4 online
+</code></pre>
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ip -br addr                         # Interface summary
+ip addr show &lt;iface&gt;
+ip route show
+ip route get &lt;destination&gt;
+ip link set &lt;iface&gt; up/down
+ss -tulnp                           # Listening ports
+ss -tnp state established           # Active connections
+ss -s                               # Connection summary
+ethtool &lt;iface&gt;                     # Physical link info
+nmcli connection show
+nmcli device status
+</code></pre>
+<h2 id="logging-journalctl">Logging (journalctl)<a class="headerlink" href="#logging-journalctl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">journalctl -p err --since &quot;1 hour ago&quot;
+journalctl -u &lt;service&gt; -f          # Follow
+journalctl -u &lt;service&gt; -n 100      # Last 100 lines
+journalctl -b                       # This boot
+journalctl -b -1                    # Previous boot
+journalctl -k                       # Kernel messages only
+journalctl --disk-usage
+journalctl --vacuum-time=7d
+</code></pre>
+<h2 id="user-and-session-management">User and Session Management<a class="headerlink" href="#user-and-session-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">last                                # Login history
+lastb                               # Failed login attempts
+who                                 # Currently logged in
+w                                   # Who and what they're doing
+id &lt;user&gt;                           # UID/GID/groups
+getent passwd &lt;user&gt;                # User entry
+useradd -m -s /bin/bash &lt;user&gt;
+usermod -aG sudo &lt;user&gt;             # Add to sudo (Ubuntu)
+usermod -aG wheel &lt;user&gt;            # Add to wheel (RHEL)
+passwd -l &lt;user&gt;                    # Lock account
+passwd -u &lt;user&gt;                    # Unlock account
+</code></pre>
+<h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RHEL — firewalld
+firewall-cmd --list-all
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --permanent --add-service=https
+firewall-cmd --reload
+firewall-cmd --query-port=443/tcp
+
+# Ubuntu — ufw
+ufw status verbose
+ufw allow 443/tcp
+ufw allow from 10.0.0.0/24 to any port 22
+ufw deny 23/tcp
+ufw enable
+</code></pre>
+<h2 id="performance-diagnostics">Performance / Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">uptime                              # Load average
+top -b -n1 | head -25               # CPU/memory snapshot
+htop                                # Interactive process viewer
+vmstat 1 5                          # VM stats (CPU, swap, I/O)
+iostat -xz 1 5                      # Disk I/O per device
+mpstat -P ALL 1 3                   # Per-CPU usage
+free -h                             # Memory summary
+iotop -o -P                         # Processes doing I/O
+strace -p &lt;PID&gt;                     # Syscall trace
+lsof -p &lt;PID&gt;                       # Open files for a process
+lsof &lt;file&gt;                         # Which process has a file open
+</code></pre>
+<h2 id="file-operations">File Operations<a class="headerlink" href="#file-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">find /path -name &quot;*.log&quot; -mtime +30         # Files older than 30 days
+find /path -size +100M -type f 2&gt;/dev/null  # Files larger than 100 MB
+find /etc -newer /etc/passwd -type f        # Recently modified in /etc
+tar -czf archive.tar.gz /path/to/dir        # Create archive
+tar -xzf archive.tar.gz -C /dest/           # Extract archive
+rsync -avz /src/ user@host:/dest/           # Sync files remotely
+chmod 750 /path
+chown user:group /path
+</code></pre>
+<h2 id="ntp-time">NTP / Time<a class="headerlink" href="#ntp-time" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">timedatectl status
+timedatectl set-timezone Europe/Athens
+chronyc tracking
+chronyc sources -v
+chronyc makestep                    # Force immediate sync
+</code></pre>
 
 
 

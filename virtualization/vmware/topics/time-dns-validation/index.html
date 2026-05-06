@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#ntp-validation-esxi-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        NTP Validation — ESXi Host
       
     </span>
   </a>
@@ -734,10 +734,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#ntp-validation-vcenter-appliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        NTP Validation — vCenter Appliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-validation-esxi-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Validation — ESXi Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-validation-powercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Validation — PowerCLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-consistency-check-across-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Consistency Check Across Cluster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues-and-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues and Fixes
       
     </span>
   </a>
@@ -765,21 +820,164 @@
 
 <h1 id="dns-and-ntp-validation">DNS and NTP Validation<a class="headerlink" href="#dns-and-ntp-validation" title="Permanent link">&para;</a></h1>
 <h2 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h2>
-<p>Time or DNS issues cause:</p>
-<p>Host disconnect<br />
-Certificate errors<br />
-Authentication failure<br />
-Cluster instability</p>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<p>Forward lookup works<br />
-Reverse lookup works<br />
-NTP synchronized<br />
-Time consistent across hosts</p>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<p>nslookup hostname
-ntpq -p
+<p>Time and DNS are foundational dependencies for the entire VMware stack. Failures cause cascading issues:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Time drift &gt; 5 minutes</td>
+<td>Kerberos authentication fails → hosts disconnect from vCenter</td>
+</tr>
+<tr>
+<td>Time drift between hosts</td>
+<td>vSAN resync corruption risk; certificate validation failures</td>
+</tr>
+<tr>
+<td>Forward DNS failure</td>
+<td>vCenter cannot resolve hostnames; hosts can't join domain</td>
+</tr>
+<tr>
+<td>Reverse DNS failure</td>
+<td>SSO authentication may fail; log correlation breaks</td>
+</tr>
+<tr>
+<td>Certificate time mismatch</td>
+<td>vCenter API TLS errors; NSX Manager unreachable</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ntp-validation-esxi-host">NTP Validation — ESXi Host<a class="headerlink" href="#ntp-validation-esxi-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NTP service status and configuration
 esxcli system ntp get
-date</p>
+
+# NTP running state
+/etc/init.d/ntpd status
+
+# Start/restart NTP daemon
+/etc/init.d/ntpd restart
+
+# Current host time
+date
+
+# Offset from NTP server (requires ntpq on shell)
+ntpq -p
+
+# Configure NTP server
+esxcli system ntp set --server=ntp.corp.local
+esxcli system ntp set --enabled=true
+</code></pre>
+<h2 id="ntp-validation-vcenter-appliance">NTP Validation — vCenter Appliance<a class="headerlink" href="#ntp-validation-vcenter-appliance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to vCenter Appliance (VCSA)
+# Check chrony (VCSA 6.7+)
+chronyc tracking
+chronyc sources
+
+# Check time synchronisation status
+timedatectl status
+
+# Key output: &quot;System clock synchronized: yes&quot; and offset &lt; 100ms
+</code></pre>
+<h2 id="dns-validation-esxi-host">DNS Validation — ESXi Host<a class="headerlink" href="#dns-validation-esxi-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># DNS server configuration
+esxcli network ip dns server list
+
+# Forward lookup
+nslookup &lt;hostname&gt;
+nslookup vcenter.corp.local
+
+# Reverse lookup (PTR record)
+nslookup &lt;ip_address&gt;
+nslookup 10.0.0.10
+
+# Verify hostname resolves to correct IP
+getent hosts &lt;hostname&gt;
+</code></pre>
+<h2 id="dns-validation-powercli">DNS Validation — PowerCLI<a class="headerlink" href="#dns-validation-powercli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># DNS settings on each host
+Get-VMHost | ForEach-Object {
+    $net = Get-VMHostNetwork -VMHost $_
+    [PSCustomObject]@{
+        Host     = $_.Name
+        DNS1     = $net.DnsAddress[0]
+        DNS2     = $net.DnsAddress[1]
+        Domain   = $net.DomainName
+        Hostname = $net.HostName
+    }
+}
+
+# Validate hostname resolves correctly
+Resolve-DnsName vcenter.corp.local
+Resolve-DnsName 10.0.0.10   # reverse lookup
+</code></pre>
+<h2 id="time-consistency-check-across-cluster">Time Consistency Check Across Cluster<a class="headerlink" href="#time-consistency-check-across-cluster" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Compare host times (requires SSH or WMI access)
+Get-VMHost | Sort-Object Name | ForEach-Object {
+    $esxi = $_
+    $hostTime = (Get-View $esxi).ConfigManager
+    # Use vCenter's view of host time (not always accurate — use SSH for precise check)
+    [PSCustomObject]@{ Host = $esxi.Name; UpTime = $esxi.ExtensionData.Summary.Runtime.BootTime }
+}
+</code></pre>
+<h2 id="pre-change-validation-checklist">Pre-Change Validation Checklist<a class="headerlink" href="#pre-change-validation-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run on each ESXi host before maintenance
+
+# 1. NTP status
+esxcli system ntp get
+
+# 2. Time offset (acceptable range: &lt; 1 second from reference)
+ntpq -p | grep -v &quot;^#\|^=&quot;
+
+# 3. Forward DNS
+nslookup $(hostname)
+
+# 4. Reverse DNS
+nslookup $(esxcfg-nics -l | grep vmnic0 | awk '{print $5}')
+
+# 5. vCenter hostname resolves
+nslookup vcenter.corp.local
+</code></pre>
+<h2 id="common-issues-and-fixes">Common Issues and Fixes<a class="headerlink" href="#common-issues-and-fixes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NTP not running</td>
+<td><code>ntpd status</code> shows stopped</td>
+<td><code>esxcli system ntp set --enabled=true</code> + restart</td>
+</tr>
+<tr>
+<td>Wrong NTP server</td>
+<td><code>ntpq -p</code> shows no sync</td>
+<td><code>esxcli system ntp set --server=&lt;correct_ntp&gt;</code></td>
+</tr>
+<tr>
+<td>Time drift &gt; 5 min</td>
+<td>Hosts disconnect from vCenter</td>
+<td>Force time sync: <code>date -s</code> (temporary), fix NTP</td>
+</tr>
+<tr>
+<td>No PTR record</td>
+<td>Reverse lookup fails</td>
+<td>Add PTR record in DNS for each host/VMk IP</td>
+</tr>
+<tr>
+<td>DNS server unreachable</td>
+<td><code>nslookup</code> times out</td>
+<td>Check network connectivity to DNS servers</td>
+</tr>
+</tbody>
+</table>
 
 
 

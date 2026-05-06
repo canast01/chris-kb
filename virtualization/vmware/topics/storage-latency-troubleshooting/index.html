@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-causes" class="md-nav__link">
+  <a href="#step-1-identify-affected-vms-and-datastores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Causes
+        Step 1: Identify Affected VMs and Datastores
       
     </span>
   </a>
@@ -734,10 +734,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#first-checks" class="md-nav__link">
+  <a href="#step-2-check-storage-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        First Checks
+        Step 2: Check Storage Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-check-for-vsan-resync-or-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Check for vSAN Resync or Rebuild
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-queue-depth-and-congestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Queue Depth and Congestion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-datastores-on-the-same-lunvolume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Datastores on the Same LUN/Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-esxtop-storage-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: esxtop Storage Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-causes-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Causes Reference
       
     </span>
   </a>
@@ -765,20 +820,150 @@
 
 <h1 id="storage-latency-troubleshooting">Storage Latency Troubleshooting<a class="headerlink" href="#storage-latency-troubleshooting" title="Permanent link">&para;</a></h1>
 <h2 id="latency-thresholds">Latency Thresholds<a class="headerlink" href="#latency-thresholds" title="Permanent link">&para;</a></h2>
-<p>&lt; 10 ms normal<br />
-10–20 ms warning  </p>
-<blockquote>
-<p>20 ms problem</p>
-</blockquote>
-<h2 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h2>
-<p>Storage contention<br />
-Disk failure<br />
-Network congestion<br />
-Queue depth saturation</p>
-<h2 id="first-checks">First Checks<a class="headerlink" href="#first-checks" title="Permanent link">&para;</a></h2>
-<p>Check datastore latency<br />
-Check storage paths<br />
-Check resync activity</p>
+<table>
+<thead>
+<tr>
+<th>Latency</th>
+<th>State</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 5 ms</td>
+<td>Excellent</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>5–10 ms</td>
+<td>Normal</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>10–20 ms</td>
+<td>Warning</td>
+<td>Monitor; identify source</td>
+</tr>
+<tr>
+<td>20–50 ms</td>
+<td>Problem</td>
+<td>Investigate immediately</td>
+</tr>
+<tr>
+<td>&gt; 50 ms</td>
+<td>Severe</td>
+<td>Application timeouts expected — escalate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-1-identify-affected-vms-and-datastores">Step 1: Identify Affected VMs and Datastores<a class="headerlink" href="#step-1-identify-affected-vms-and-datastores" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Datastores with low free space (often correlates with high latency)
+Get-Datastore | Select-Object Name,
+    @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpaceGB,1)}},
+    @{N=&quot;UsedPct&quot;;E={[math]::Round((1-$_.FreeSpaceGB/$_.CapacityGB)*100,1)}} |
+    Sort-Object UsedPct -Descending
+
+# VMs with snapshots (delta VMDKs increase read latency)
+Get-VM | Get-Snapshot | Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
+    @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB,2)}}
+</code></pre>
+<h2 id="step-2-check-storage-paths">Step 2: Check Storage Paths<a class="headerlink" href="#step-2-check-storage-paths" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Path states on the ESXi host
+esxcli storage core path list | grep -E &quot;State:|Device:|Adapter:&quot;
+
+# Dead paths (need recovery or failover)
+esxcli storage core path list | grep &quot;State: dead&quot;
+
+# Confirm active path count per device
+esxcli storage nmp path list | grep -E &quot;Active|Device&quot;
+
+# Current PSP (Path Selection Policy)
+esxcli storage nmp device list | grep -E &quot;Device:|PSP:&quot;
+</code></pre>
+<h2 id="step-3-check-for-vsan-resync-or-rebuild">Step 3: Check for vSAN Resync or Rebuild<a class="headerlink" href="#step-3-check-for-vsan-resync-or-rebuild" title="Permanent link">&para;</a></h2>
+<p>vSAN resync heavily consumes storage backend IOPS:</p>
+<pre><code class="language-bash"># Active resync (if running — latency will be elevated)
+esxcli vsan debug resync list
+
+# Resync byte count (estimate duration)
+esxcli vsan debug resync list | grep -E &quot;Total Bytes|Remaining&quot;
+
+# Check if objects are degraded
+esxcli vsan debug object list | grep -v healthy
+</code></pre>
+<h2 id="step-4-queue-depth-and-congestion">Step 4: Queue Depth and Congestion<a class="headerlink" href="#step-4-queue-depth-and-congestion" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Device queue depth
+esxcli storage core device list | grep &quot;Queue Full Threshold&quot;
+
+# Check if devices are hitting queue full
+grep -i &quot;queue full\|queue depth\|SCSI cmd abort&quot; /var/log/vmkernel.log | tail -20
+
+# Adjust queue depth for a specific device (requires reboot to persist)
+esxcli storage core device set --device &lt;naa.xxx&gt; -O MaxQueueDepth=32
+</code></pre>
+<h2 id="step-5-datastores-on-the-same-lunvolume">Step 5: Datastores on the Same LUN/Volume<a class="headerlink" href="#step-5-datastores-on-the-same-lunvolume" title="Permanent link">&para;</a></h2>
+<p>Multiple datastores sharing an underlying volume compete for IOPS:</p>
+<pre><code class="language-bash"># LUN to device mapping
+esxcli storage core device list | grep -E &quot;naa\.|Device Display&quot;
+
+# Check VAAI support (helps with copy offload and ATS locking)
+esxcli storage core device vaai status get -d &lt;naa.xxx&gt;
+</code></pre>
+<h2 id="step-6-esxtop-storage-analysis">Step 6: esxtop Storage Analysis<a class="headerlink" href="#step-6-esxtop-storage-analysis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Launch esxtop, switch to storage view
+esxtop
+# Press 'u' for device view
+# Key columns: DAVG/cmd (device latency), KAVG/cmd (kernel latency), QAVG/cmd (queue latency)
+# DAVG &gt; 10ms = storage backend issue
+# KAVG &gt; 2ms  = host-side queuing issue
+</code></pre>
+<h2 id="common-causes-reference">Common Causes Reference<a class="headerlink" href="#common-causes-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Indicator</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN resync</td>
+<td><code>resync list</code> shows bytes remaining</td>
+<td>Wait for completion; avoid additional disk removal</td>
+</tr>
+<tr>
+<td>Snapshot chain</td>
+<td>Delta VMDK in <code>ls -lah</code> is large</td>
+<td>Remove/consolidate snapshots</td>
+</tr>
+<tr>
+<td>Dead paths</td>
+<td><code>path list</code> shows dead state</td>
+<td>Rescan adapters; check physical SAN connectivity</td>
+</tr>
+<tr>
+<td>Queue depth saturation</td>
+<td>vmkernel.log "queue full"</td>
+<td>Reduce queue depth per device or balance VMs</td>
+</tr>
+<tr>
+<td>Storage array overload</td>
+<td>DAVG high on all VMs</td>
+<td>Redistribute VMs; check array CPU/cache hit rate</td>
+</tr>
+<tr>
+<td>All-Paths-Down (APD)</td>
+<td>APD in vmkernel.log</td>
+<td>Recover connectivity; check SAN zoning and HBAs</td>
+</tr>
+<tr>
+<td>Thin provisioning overcommit</td>
+<td>Datastore &gt; 90% used</td>
+<td>Add capacity immediately — thin disks can pause on overcommit</td>
+</tr>
+</tbody>
+</table>
 
 
 

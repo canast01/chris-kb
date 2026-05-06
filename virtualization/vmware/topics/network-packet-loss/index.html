@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#nic-statistics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        NIC Statistics
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#threshold" class="md-nav__link">
+  <a href="#vmkping-reachability-and-mtu-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Threshold
+        vmkping — Reachability and MTU Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powercli-network-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerCLI Network Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-causes-and-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Causes and Fixes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ongoing-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongoing Monitoring
       
     </span>
   </a>
@@ -765,14 +798,128 @@
 
 <h1 id="network-packet-loss-validation">Network Packet Loss Validation<a class="headerlink" href="#network-packet-loss-validation" title="Permanent link">&para;</a></h1>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
-<p>Dropped packets<br />
-Slow migrations<br />
-VM connectivity issues</p>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<p>vmkping
-esxcli network nic stats get</p>
-<h2 id="threshold">Threshold<a class="headerlink" href="#threshold" title="Permanent link">&para;</a></h2>
-<p>Packet loss should be zero.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dropped packets on vmnic</td>
+<td>Physical NIC, cable, or switch port issue</td>
+</tr>
+<tr>
+<td>Slow or failed vMotion</td>
+<td>vMotion VMkernel packet loss or high latency</td>
+</tr>
+<tr>
+<td>VM intermittent connectivity</td>
+<td>Port group misconfiguration or uplink saturation</td>
+</tr>
+<tr>
+<td>vSAN health: network errors</td>
+<td>vSAN VMkernel path issues</td>
+</tr>
+<tr>
+<td>NSX tunnel flapping</td>
+<td>Geneve underlay MTU mismatch</td>
+</tr>
+</tbody>
+</table>
+<h2 id="nic-statistics">NIC Statistics<a class="headerlink" href="#nic-statistics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Per-NIC stats including drops, errors, and CRC errors
+esxcli network nic stats get -n vmnic0
+esxcli network nic stats get -n vmnic1
+
+# Key counters to check
+# RX/TX dropped   — driver ring buffer overflow
+# RX/TX errors    — physical layer (cable, SFP, switch)
+# RX/TX CRC       — physical layer corruption
+
+# List all NICs and link state
+esxcli network nic list
+</code></pre>
+<h2 id="vmkping-reachability-and-mtu-testing">vmkping — Reachability and MTU Testing<a class="headerlink" href="#vmkping-reachability-and-mtu-testing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Basic ping from a VMkernel adapter
+vmkping -I vmk0 &lt;destination_ip&gt;
+
+# Large packet test (MTU validation — 8972 bytes = 9000 MTU minus headers)
+vmkping -I vmk0 -d -s 8972 &lt;destination_ip&gt;
+
+# vSAN VMkernel MTU test
+vmkping -I vmk2 -d -s 8972 &lt;peer_vsan_vmk_ip&gt;
+
+# vMotion VMkernel latency test
+vmkping -I vmk1 -c 100 &lt;target_host_vmk1_ip&gt;
+</code></pre>
+<p>Packet loss should always be <strong>zero</strong>. Any loss requires investigation before proceeding with maintenance.</p>
+<h2 id="powercli-network-checks">PowerCLI Network Checks<a class="headerlink" href="#powercli-network-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Physical NIC link state for all hosts in a cluster
+Get-Cluster &quot;&lt;cluster&gt;&quot; | Get-VMHost | ForEach-Object {
+    $h = $_
+    Get-VMHostNetworkAdapter -VMHost $h -Physical |
+        Select-Object @{N=&quot;Host&quot;;E={$h.Name}}, Name, BitRatePerSec,
+        @{N=&quot;LinkUp&quot;;E={$_.ExtensionData.LinkSpeed -ne $null}}
+}
+
+# VMkernel adapters and their tagging
+Get-VMHostNetworkAdapter -VMHost &quot;&lt;host&gt;&quot; -VMKernel |
+    Select-Object Name, IP, VMotionEnabled, ManagementTrafficEnabled, VsanTrafficEnabled
+
+# Portgroup VLAN assignments
+Get-VirtualPortGroup -VMHost &quot;&lt;host&gt;&quot; | Select-Object Name, VLanId
+</code></pre>
+<h2 id="common-causes-and-fixes">Common Causes and Fixes<a class="headerlink" href="#common-causes-and-fixes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Detection</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MTU mismatch</td>
+<td><code>vmkping -d -s 8972</code> fails</td>
+<td>Align MTU on vSwitch, physical switch, and NIC</td>
+</tr>
+<tr>
+<td>NIC queue full</td>
+<td><code>esxcli network nic stats</code> shows drops</td>
+<td>Reduce load or enable receive-side scaling (RSS)</td>
+</tr>
+<tr>
+<td>Bad cable/SFP</td>
+<td>CRC errors in NIC stats</td>
+<td>Replace cable or SFP</td>
+</tr>
+<tr>
+<td>Uplink saturation</td>
+<td>High TX/RX utilisation</td>
+<td>Add uplink or redistribute workloads</td>
+</tr>
+<tr>
+<td>Wrong VLAN on portgroup</td>
+<td>VMs in same subnet can't communicate</td>
+<td>Fix VLAN ID in portgroup config</td>
+</tr>
+<tr>
+<td>Spanning tree topology change</td>
+<td>Transient loss after switch change</td>
+<td>Enable PortFast on host-facing switch ports</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ongoing-monitoring">Ongoing Monitoring<a class="headerlink" href="#ongoing-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Watch NIC stats (refresh every 2s)
+watch -n 2 &quot;esxcli network nic stats get -n vmnic0 | grep -E 'Dropped|Error|CRC'&quot;
+
+# Or use esxtop for real-time network metrics
+esxtop   # press 'n' to switch to network view
+</code></pre>
 
 
 

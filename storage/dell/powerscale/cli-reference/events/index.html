@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#view-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolve-and-acknowledge-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve and Acknowledge Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Channels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log-in-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log in syslog
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,21 +800,77 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># View events
+<h2 id="view-events">View Events<a class="headerlink" href="#view-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All active events
 isi event events list
-isi event events list --severity critical
-isi event events list --start-time &lt;YYYY-MM-DD&gt;
 
-# Acknowledge / resolve events
+# Critical events only
+isi event events list --severity critical
+
+# Warning and above
+isi event events list --severity warning
+
+# Events since a specific date
+isi event events list --start-time 2026-05-01
+
+# Verbose output with full description
+isi event events list -v
+
+# Filter by event type
+isi event events list | grep -i &quot;disk\|node\|network\|quota&quot;
+</code></pre>
+<h2 id="resolve-and-acknowledge-events">Resolve and Acknowledge Events<a class="headerlink" href="#resolve-and-acknowledge-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Resolve an event (marks it as handled)
 isi event events resolve &lt;event_id&gt;
 
-# Alert channels
+# Resolve all events of a specific type
+isi event events list | grep &lt;event_type&gt; | awk '{print $1}' | xargs -I{} isi event events resolve {}
+</code></pre>
+<h2 id="alert-channels">Alert Channels<a class="headerlink" href="#alert-channels" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List configured alert channels (email, SNMP, etc.)
 isi event channels list
+
+# View details of a specific channel
 isi event channels view &lt;channel_name&gt;
 
-# SNMP
+# Create an email alert channel
+isi event channels create email-ops \
+    --type smtp \
+    --address ops-team@corp.local \
+    --send-test yes
+
+# Modify a channel
+isi event channels modify &lt;channel_name&gt; --address new@corp.local
+</code></pre>
+<h2 id="alert-rules">Alert Rules<a class="headerlink" href="#alert-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List alert rules (which events trigger which channels)
+isi event alerts list
+
+# View a specific alert rule
+isi event alerts view &lt;alert_name&gt;
+
+# Create an alert rule — send critical events to email channel
+isi event alerts create critical-to-email \
+    --event-category all \
+    --severity critical \
+    --channels email-ops
+</code></pre>
+<h2 id="snmp-configuration">SNMP Configuration<a class="headerlink" href="#snmp-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View SNMP settings
 isi snmp settings view
+
+# Modify SNMP community and target
+isi snmp settings modify \
+    --snmp-v3-access-enable yes \
+    --system-contact &quot;infra-team@corp.local&quot; \
+    --system-location &quot;DC1-Row3-Rack5&quot;
+</code></pre>
+<h2 id="event-log-in-syslog">Event Log in syslog<a class="headerlink" href="#event-log-in-syslog" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Events are also forwarded to syslog if configured
+isi audit settings global view | grep syslog
+
+# Modify syslog forwarding
+isi audit settings global modify --syslog-forwarding-enabled yes
 </code></pre>
 
 

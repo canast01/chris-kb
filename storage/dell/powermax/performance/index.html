@@ -21,7 +21,7 @@
     
     
       
-        <title>Performance - Chris KB</title>
+        <title>PowerMax Performance - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#performance" class="md-skip">
+        <a href="#powermax-performance" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Performance
+              PowerMax Performance
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#quick-performance-check-symcli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Quick Performance Check (SYMCLI)
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#key-metrics-and-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Key Metrics and Thresholds
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#continuous-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Continuous Monitoring
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#identify-performance-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Identify Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unisphere-for-powermax-performance-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unisphere for PowerMax Performance Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-cloudiq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell CloudIQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-data-for-tac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Data for TAC
       
     </span>
   </a>
@@ -774,31 +807,113 @@
 
 
 
-<h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Performance.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powermax-performance">PowerMax Performance<a class="headerlink" href="#powermax-performance" title="Permanent link">&para;</a></h1>
+<p>Performance monitoring, analysis, and troubleshooting on Dell PowerMax.</p>
+<h2 id="quick-performance-check-symcli">Quick Performance Check (SYMCLI)<a class="headerlink" href="#quick-performance-check-symcli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Storage Group I/O stats — snapshot
+symstat -sid &lt;sid&gt; list -type sg
+
+# Device-level stats — identify hot volumes
+symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20   # sort by read IOPS
+
+# Cache write pending — should stay below 31%
+symstat -sid &lt;sid&gt; list -type cache | grep -E &quot;WP|Write Pending&quot;
+
+# Front-end port utilisation
+symstat -sid &lt;sid&gt; list -type port | grep -v &quot;^$&quot; | sort -k5 -rn | head -10
+</code></pre>
+<h2 id="key-metrics-and-thresholds">Key Metrics and Thresholds<a class="headerlink" href="#key-metrics-and-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Normal</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read Response Time</td>
+<td>&lt; 1 ms</td>
+<td>1–3 ms</td>
+<td>&gt; 3 ms</td>
+</tr>
+<tr>
+<td>Write Response Time</td>
+<td>&lt; 1 ms</td>
+<td>1–3 ms</td>
+<td>&gt; 3 ms</td>
+</tr>
+<tr>
+<td>Cache Write Pending %</td>
+<td>&lt; 15%</td>
+<td>15–30%</td>
+<td>&gt; 31%</td>
+</tr>
+<tr>
+<td>SRP Subscription %</td>
+<td>&lt; 70%</td>
+<td>70–85%</td>
+<td>&gt; 85%</td>
+</tr>
+<tr>
+<td>FA Port Utilisation %</td>
+<td>&lt; 50%</td>
+<td>50–70%</td>
+<td>&gt; 70%</td>
+</tr>
+<tr>
+<td>BE Utilisation %</td>
+<td>&lt; 60%</td>
+<td>60–80%</td>
+<td>&gt; 80%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="continuous-monitoring">Continuous Monitoring<a class="headerlink" href="#continuous-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Monitor SG stats every 30 seconds for 10 minutes
+symstat -sid &lt;sid&gt; list -type sg -i 30 -c 20
+
+# Monitor a specific device
+symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt; -i 10 -c 30
+
+# Monitor cache in real time
+symstat -sid &lt;sid&gt; list -type cache -i 30
+</code></pre>
+<h2 id="identify-performance-issues">Identify Performance Issues<a class="headerlink" href="#identify-performance-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># High latency investigation — find the busiest SGs
+symstat -sid &lt;sid&gt; list -type sg | sort -k6 -rn | head -10   # sort by response time
+
+# Back-end busy — check disk group saturation
+symstat -sid &lt;sid&gt; list -type be | sort -k5 -rn | head -10
+
+# SRDF impact — RDF director stats
+symstat -sid &lt;sid&gt; list -type rdf
+
+# Host sending too many IOPS — check IG → SG → device mapping
+symaccess show view &lt;view_name&gt; -sid &lt;sid&gt;
+</code></pre>
+<h2 id="unisphere-for-powermax-performance-dashboard">Unisphere for PowerMax Performance Dashboard<a class="headerlink" href="#unisphere-for-powermax-performance-dashboard" title="Permanent link">&para;</a></h2>
+<p>Unisphere provides 7-day rolling performance history:
+- <strong>System → Performance → Array</strong> — overall throughput and latency
+- <strong>System → Performance → Storage Group</strong> — per-SG response time, IOPS, MB/s
+- <strong>System → Performance → Port</strong> — per-FA-port utilisation and I/O count
+- <strong>Alert Policies</strong> — set thresholds to generate email/SNMP alerts</p>
+<h2 id="dell-cloudiq">Dell CloudIQ<a class="headerlink" href="#dell-cloudiq" title="Permanent link">&para;</a></h2>
+<p>CloudIQ provides longer-term performance trending (30+ days) and anomaly detection:
+- Automatically collects metrics from connected PowerMax arrays
+- Latency forecasting and proactive alerts
+- Cross-array comparison and capacity planning
+- Access via <a href="https://cloudiq.dell.com">cloudiq.dell.com</a></p>
+<h2 id="performance-data-for-tac">Performance Data for TAC<a class="headerlink" href="#performance-data-for-tac" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Collect 15-minute perf data for all subsystems
+for type in sg dev dir be cache rdf port; do
+    symstat -sid &lt;sid&gt; list -type $type -i 60 -c 15 &gt; /tmp/powermax-${type}-perf-$(date +%Y%m%d).txt &amp;
+done
+wait
+tar czf /tmp/powermax-perf-$(date +%Y%m%d).tar.gz /tmp/powermax-*-perf-*.txt
+</code></pre>
 
 
 

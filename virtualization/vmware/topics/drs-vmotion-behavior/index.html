@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-failure-causes" class="md-nav__link">
+  <a href="#evc-enhanced-vmotion-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Failure Causes
+        EVC (Enhanced vMotion Compatibility)
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#vmotion-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        vMotion Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-vmotion-failure-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common vMotion Failure Causes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drs-anti-affinity-affinity-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRS Anti-Affinity / Affinity Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-vmotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage vMotion
       
     </span>
   </a>
@@ -776,23 +809,137 @@
 
 <h1 id="drs-and-vmotion-behavior">DRS and vMotion Behavior<a class="headerlink" href="#drs-and-vmotion-behavior" title="Permanent link">&para;</a></h1>
 <h2 id="drs-modes">DRS Modes<a class="headerlink" href="#drs-modes" title="Permanent link">&para;</a></h2>
-<p>Manual<br />
-Partially automated<br />
-Fully automated</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Manual</strong></td>
+<td>DRS makes recommendations only — admin must approve each migration</td>
+</tr>
+<tr>
+<td><strong>Partially Automated</strong></td>
+<td>Initial placement is automated; migrations require approval</td>
+</tr>
+<tr>
+<td><strong>Fully Automated</strong></td>
+<td>DRS places and migrates VMs without intervention</td>
+</tr>
+</tbody>
+</table>
+<p>DRS evaluates cluster imbalance every 5 minutes. It uses a scale of 1–5 (1 = conservative, 5 = aggressive) for migration threshold.</p>
 <h2 id="vmotion-requirements">vMotion Requirements<a class="headerlink" href="#vmotion-requirements" title="Permanent link">&para;</a></h2>
-<p>Shared storage or vSAN<br />
-Network reachability<br />
-CPU compatibility<br />
-No locked resources</p>
-<h2 id="common-failure-causes">Common Failure Causes<a class="headerlink" href="#common-failure-causes" title="Permanent link">&para;</a></h2>
-<p>Network latency<br />
-Storage latency<br />
-CPU compatibility mismatch<br />
-Host resource contention</p>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<p>Migration completes successfully<br />
-No task failure<br />
-VM performance stable</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared storage</td>
+<td>VMs must live on datastores visible to both source and target host</td>
+</tr>
+<tr>
+<td>Network reachability</td>
+<td>vMotion VMkernel must be routable between hosts</td>
+</tr>
+<tr>
+<td>CPU compatibility</td>
+<td>CPUs must be in the same family, or EVC mode must be configured</td>
+</tr>
+<tr>
+<td>No locked resources</td>
+<td>VMs with USB passthrough, RDMs in physical mode, or NPIV cannot vMotion</td>
+</tr>
+<tr>
+<td>VMware Tools</td>
+<td>Must be installed and running for quiesced memory transfer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evc-enhanced-vmotion-compatibility">EVC (Enhanced vMotion Compatibility)<a class="headerlink" href="#evc-enhanced-vmotion-compatibility" title="Permanent link">&para;</a></h2>
+<p>EVC masks CPU features to the lowest common denominator in the cluster, enabling vMotion across CPU generations.</p>
+<pre><code class="language-powershell"># Check current EVC mode on a cluster
+Get-Cluster | Select-Object Name, EVCMode
+
+# Set EVC mode (prevents incompatible VMs from powering on)
+Set-Cluster -Cluster &quot;&lt;cluster&gt;&quot; -EVCMode &quot;intel-skylake&quot;
+</code></pre>
+<h2 id="vmotion-validation">vMotion Validation<a class="headerlink" href="#vmotion-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Recent vMotion events
+Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -eq &quot;VmMigratedEvent&quot; } |
+    Select-Object CreatedTime, @{N=&quot;VM&quot;;E={$_.Vm.Name}}, @{N=&quot;From&quot;;E={$_.SourceHost.Name}}, @{N=&quot;To&quot;;E={$_.Host.Name}}
+
+# DRS-initiated migrations
+Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -eq &quot;DrsVmMigratedEvent&quot; } |
+    Select-Object CreatedTime, @{N=&quot;VM&quot;;E={$_.Vm.Name}}
+
+# Check for failed migrations
+Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -match &quot;MigrationError&quot; } |
+    Select-Object CreatedTime, FullFormattedMessage
+</code></pre>
+<h2 id="common-vmotion-failure-causes">Common vMotion Failure Causes<a class="headerlink" href="#common-vmotion-failure-causes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptoms</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network latency &gt; 2s</td>
+<td>Migration stalls, times out</td>
+<td>Check vMotion VMkernel bandwidth and MTU</td>
+</tr>
+<tr>
+<td>CPU incompatibility</td>
+<td>Error: "incompatible CPU features"</td>
+<td>Enable or lower EVC mode</td>
+</tr>
+<tr>
+<td>Storage inaccessible</td>
+<td>Error: "cannot access datastore"</td>
+<td>Rescan adapters, check path state</td>
+</tr>
+<tr>
+<td>Memory overcommit</td>
+<td>Migration fails to reserve memory</td>
+<td>Reduce memory balloon or add RAM to target host</td>
+</tr>
+<tr>
+<td>Locked file (snapshot)</td>
+<td>Error: "file is locked"</td>
+<td>Consolidate snapshots before migrating</td>
+</tr>
+</tbody>
+</table>
+<h2 id="drs-anti-affinity-affinity-rules">DRS Anti-Affinity / Affinity Rules<a class="headerlink" href="#drs-anti-affinity-affinity-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List DRS rules for a cluster
+Get-DrsRule -Cluster &quot;&lt;cluster_name&gt;&quot;
+
+# Create a must-not-run-together rule (e.g., two critical VMs)
+New-DrsRule -Cluster &quot;&lt;cluster_name&gt;&quot; -Name &quot;anti-affinity-db&quot; `
+    -KeepTogether:$false -VM (Get-VM &quot;db01&quot;, &quot;db02&quot;) -Enabled:$true
+
+# Create a must-run-together rule (app + local cache VM)
+New-DrsRule -Cluster &quot;&lt;cluster_name&gt;&quot; -Name &quot;affinity-appdb&quot; `
+    -KeepTogether:$true -VM (Get-VM &quot;app01&quot;, &quot;cache01&quot;) -Enabled:$true
+</code></pre>
+<h2 id="storage-vmotion">Storage vMotion<a class="headerlink" href="#storage-vmotion" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Migrate a VM's disks to a different datastore (no downtime)
+Move-VM -VM &quot;&lt;vm_name&gt;&quot; -Datastore (Get-Datastore &quot;&lt;target_ds&gt;&quot;)
+
+# Relocate VM files and disks together
+Move-VM -VM &quot;&lt;vm_name&gt;&quot; -VMHost (Get-VMHost &quot;&lt;target_host&gt;&quot;) -Datastore (Get-Datastore &quot;&lt;target_ds&gt;&quot;)
+</code></pre>
 
 
 

@@ -712,10 +712,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#nat-load-balancing_1" class="md-nav__link">
+  <a href="#nat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NAT &amp; Load Balancing
+        NAT
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NAT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nat-rule-output-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Rule Output Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load Balancer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Load Balancer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-balancer-status-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load Balancer Status Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-nat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting NAT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Load Balancer
       
     </span>
   </a>
@@ -745,16 +812,124 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="nat-load-balancing_1">NAT &amp; Load Balancing<a class="headerlink" href="#nat-load-balancing_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NAT rules on Edge
+<h2 id="nat">NAT<a class="headerlink" href="#nat" title="Permanent link">&para;</a></h2>
+<p>NAT rules are configured on Tier-0 or Tier-1 gateways. CLI inspection runs on the Edge node.</p>
+<pre><code class="language-bash"># SSH to Edge node, enter the gateway VRF
 vrf &lt;lr_id&gt;
+
+# List all NAT rules
 get nat rules
 
-# Load balancer
+# NAT rule hit statistics
+get nat rule stats
+
+# SNAT translations active
+get nat translations
+</code></pre>
+<h3 id="nat-rule-output-fields">NAT Rule Output Fields<a class="headerlink" href="#nat-rule-output-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule ID</td>
+<td>Matches NSX Manager policy NAT rule ID</td>
+</tr>
+<tr>
+<td>Type</td>
+<td><code>SNAT</code>, <code>DNAT</code>, <code>REFLEXIVE</code>, <code>NO_NAT</code></td>
+</tr>
+<tr>
+<td>Match Source</td>
+<td>Source IP/prefix triggering this rule</td>
+</tr>
+<tr>
+<td>Match Destination</td>
+<td>Destination IP/prefix</td>
+</tr>
+<tr>
+<td>Translated Address</td>
+<td>Address substituted in the packet</td>
+</tr>
+<tr>
+<td>Action</td>
+<td><code>SNAT</code> = rewrite source; <code>DNAT</code> = rewrite destination</td>
+</tr>
+</tbody>
+</table>
+<h2 id="load-balancer">Load Balancer<a class="headerlink" href="#load-balancer" title="Permanent link">&para;</a></h2>
+<p>NSX-T load balancer runs on the Edge node. All commands below run in the Edge CLI (not VRF context).</p>
+<pre><code class="language-bash"># Overall load balancer status
 get load-balancer status
+
+# List virtual servers (VIPs)
 get load-balancer virtual-servers
+
+# Server pools and member state
 get load-balancer pools
+
+# Specific pool detail (member health)
+get load-balancer pool &lt;pool_id&gt;
+
+# Active connections per virtual server
+get load-balancer virtual-server &lt;vs_id&gt; stats
+</code></pre>
+<h3 id="load-balancer-status-values">Load Balancer Status Values<a class="headerlink" href="#load-balancer-status-values" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UP</code></td>
+<td>All pool members healthy</td>
+</tr>
+<tr>
+<td><code>PARTIALLY_UP</code></td>
+<td>At least one member healthy</td>
+</tr>
+<tr>
+<td><code>DOWN</code></td>
+<td>No healthy members</td>
+</tr>
+<tr>
+<td><code>DISABLED</code></td>
+<td>Administratively disabled</td>
+</tr>
+<tr>
+<td><code>DETACHED</code></td>
+<td>Edge cluster assignment missing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting-nat">Troubleshooting NAT<a class="headerlink" href="#troubleshooting-nat" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm rule exists for expected source
+get nat rules | grep &lt;source_ip&gt;
+
+# Check translation table for active SNAT flows
+get nat translations | grep &lt;internal_ip&gt;
+
+# Verify interface has correct uplink for NAT
+get interfaces
+</code></pre>
+<h2 id="troubleshooting-load-balancer">Troubleshooting Load Balancer<a class="headerlink" href="#troubleshooting-load-balancer" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Are pool members passing health checks?
+get load-balancer pools
+
+# Member is DOWN — check:
+# 1. Security group / DFW allows health check port
+# 2. Application listening on expected port
+# 3. Pool monitor type matches application (HTTP vs TCP)
+
+# Check Edge CPU — LB is Edge-hosted, CPU bound under high load
+get service dataplane stats
 </code></pre>
 
 

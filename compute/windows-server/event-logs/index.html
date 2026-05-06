@@ -21,7 +21,7 @@
     
     
       
-        <title>Event Logs - Chris KB</title>
+        <title>Windows Server Event Logs - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#event-logs" class="md-skip">
+        <a href="#windows-server-event-logs" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Event Logs
+              Windows Server Event Logs
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#key-event-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Key Event Logs
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#get-winevent-common-queries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Get-WinEvent — Common Queries
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#key-security-event-ids" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Key Security Event IDs
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#searching-by-event-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Searching by Event ID
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#exporting-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Exporting Logs
       
     </span>
   </a>
@@ -767,10 +767,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#event-log-forwarding-wef" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Event Log Forwarding (WEF)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-size-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Size and Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sysmon-extended-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sysmon (Extended Logging)
       
     </span>
   </a>
@@ -796,43 +818,220 @@
 
 
 
-<h1 id="event-logs">Event Logs<a class="headerlink" href="#event-logs" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Windows Server Event Logs notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="windows-server-event-logs">Windows Server Event Logs<a class="headerlink" href="#windows-server-event-logs" title="Permanent link">&para;</a></h1>
+<p>Querying, filtering, and forwarding Windows event logs via PowerShell.</p>
+<h2 id="key-event-logs">Key Event Logs<a class="headerlink" href="#key-event-logs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System</td>
+<td><code>System</code></td>
+<td>OS events, driver failures, service stops, hardware</td>
+</tr>
+<tr>
+<td>Application</td>
+<td><code>Application</code></td>
+<td>App errors, .NET exceptions, SQL, IIS</td>
+</tr>
+<tr>
+<td>Security</td>
+<td><code>Security</code></td>
+<td>Authentication, account management, privilege use</td>
+</tr>
+<tr>
+<td>Setup</td>
+<td><code>Setup</code></td>
+<td>Windows Update, component installs</td>
+</tr>
+<tr>
+<td>Windows PowerShell</td>
+<td><code>Windows PowerShell</code></td>
+<td>PS script execution</td>
+</tr>
+<tr>
+<td>Sysmon</td>
+<td><code>Microsoft-Windows-Sysmon/Operational</code></td>
+<td>Process creation, network, file events (if deployed)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="get-winevent-common-queries">Get-WinEvent — Common Queries<a class="headerlink" href="#get-winevent-common-queries" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Errors in System log — last 24 hours
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'System'
+    Level     = 2
+    StartTime = (Get-Date).AddHours(-24)
+} | Select-Object TimeCreated, Id, Message | Format-List
+
+# Application errors — last 6 hours
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'Application'
+    Level     = 2
+    StartTime = (Get-Date).AddHours(-6)
+} | Select-Object -First 20 TimeCreated, Id, Message
+
+# Security log — failed logons (Event ID 4625)
+Get-WinEvent -FilterHashtable @{
+    LogName = 'Security'
+    Id      = 4625
+    StartTime = (Get-Date).AddHours(-24)
+} | Select-Object TimeCreated, Message | Select-Object -First 20
+
+# Successful logons (Event ID 4624)
+Get-WinEvent -FilterHashtable @{
+    LogName = 'Security'
+    Id      = 4624
+} -MaxEvents 20 | Select-Object TimeCreated, Message
+</code></pre>
+<h2 id="key-security-event-ids">Key Security Event IDs<a class="headerlink" href="#key-security-event-ids" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4624</td>
+<td>Successful logon</td>
+</tr>
+<tr>
+<td>4625</td>
+<td>Failed logon</td>
+</tr>
+<tr>
+<td>4634</td>
+<td>Logoff</td>
+</tr>
+<tr>
+<td>4648</td>
+<td>Logon with explicit credentials (RunAs)</td>
+</tr>
+<tr>
+<td>4663</td>
+<td>Object access attempt</td>
+</tr>
+<tr>
+<td>4688</td>
+<td>Process creation</td>
+</tr>
+<tr>
+<td>4698</td>
+<td>Scheduled task created</td>
+</tr>
+<tr>
+<td>4719</td>
+<td>Audit policy changed</td>
+</tr>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+</tr>
+<tr>
+<td>4732</td>
+<td>Member added to a local security group</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>Account locked out</td>
+</tr>
+<tr>
+<td>4756</td>
+<td>Member added to a universal security group</td>
+</tr>
+<tr>
+<td>7036</td>
+<td>Service started or stopped</td>
+</tr>
+<tr>
+<td>41</td>
+<td>Kernel power — unexpected reboot</td>
+</tr>
+<tr>
+<td>6008</td>
+<td>Unexpected shutdown</td>
+</tr>
+</tbody>
+</table>
+<h2 id="searching-by-event-id">Searching by Event ID<a class="headerlink" href="#searching-by-event-id" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Account lockouts in last hour
+Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4740; StartTime=(Get-Date).AddHours(-1) } |
+    ForEach-Object {
+        $xml = [xml]$_.ToXml()
+        [PSCustomObject]@{
+            Time     = $_.TimeCreated
+            Account  = $xml.Event.EventData.Data | Where-Object Name -eq 'TargetUserName' | Select-Object -ExpandProperty '#text'
+            CallerDC = $xml.Event.EventData.Data | Where-Object Name -eq 'SubjectDomainName' | Select-Object -ExpandProperty '#text'
+        }
+    }
+
+# Service stops (7034 = unexpected, 7036 = started/stopped)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034,7036; StartTime=(Get-Date).AddHours(-24) } |
+    Select-Object TimeCreated, Message | Format-List
+</code></pre>
+<h2 id="exporting-logs">Exporting Logs<a class="headerlink" href="#exporting-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Export Security log to EVTX file
+wevtutil epl Security C:\Logs\Security-$(Get-Date -Format 'yyyyMMdd').evtx
+
+# Export filtered events to XML
+Get-WinEvent -FilterHashtable @{ LogName='System'; Level=2 } -MaxEvents 500 |
+    Export-Clixml C:\Logs\SystemErrors.xml
+
+# Export to CSV for analysis
+Get-WinEvent -FilterHashtable @{ LogName='System'; Level=2; StartTime=(Get-Date).AddDays(-7) } |
+    Select-Object TimeCreated, Id, LevelDisplayName, Message |
+    Export-Csv C:\Logs\SystemErrors.csv -NoTypeInformation
+</code></pre>
+<h2 id="event-log-forwarding-wef">Event Log Forwarding (WEF)<a class="headerlink" href="#event-log-forwarding-wef" title="Permanent link">&para;</a></h2>
+<p>Windows Event Forwarding collects events centrally from multiple servers.</p>
+<pre><code class="language-powershell"># On collector — enable WecSvc
+wecutil qc /q
+
+# Create subscription (from XML file)
+wecutil cs C:\Subscriptions\security-events.xml
+
+# List subscriptions
+wecutil es
+
+# Check subscription status
+wecutil gr &lt;SubscriptionName&gt;
+</code></pre>
+<p>On source servers, configure via GPO:
+- <code>Computer Configuration → Windows Settings → Security Settings → System Services → Windows Remote Management → Automatic</code>
+- <code>Computer Configuration → Administrative Templates → Windows Components → Event Forwarding → Configure target Subscription Manager</code></p>
+<h2 id="log-size-and-retention">Log Size and Retention<a class="headerlink" href="#log-size-and-retention" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check current log sizes and limits
+Get-WinEvent -ListLog System, Application, Security |
+    Select-Object LogName, MaximumSizeInBytes,
+        @{N=&quot;CurrentSizeMB&quot;; E={ [math]::Round($_.FileSize/1MB,1) }},
+        LogMode
+
+# Set max size (e.g., Security log to 1 GB)
+wevtutil sl Security /ms:1073741824
+
+# Clear a log (after archiving)
+wevtutil cl Application
+</code></pre>
+<h2 id="sysmon-extended-logging">Sysmon (Extended Logging)<a class="headerlink" href="#sysmon-extended-logging" title="Permanent link">&para;</a></h2>
+<p>If Sysmon is deployed:</p>
+<pre><code class="language-powershell"># Process creation events (Event ID 1)
+Get-WinEvent -LogName 'Microsoft-Windows-Sysmon/Operational' |
+    Where-Object { $_.Id -eq 1 } |
+    Select-Object -First 20 TimeCreated, Message | Format-List
+
+# Network connections (Event ID 3)
+Get-WinEvent -LogName 'Microsoft-Windows-Sysmon/Operational' |
+    Where-Object { $_.Id -eq 3 } |
+    Select-Object -First 20 TimeCreated, Message | Format-List
+</code></pre>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-and-inspect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List and Inspect
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#initiator-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Initiator Groups
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#port-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Port Groups
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#creating-a-masking-view" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Creating a Masking View
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deleting-a-masking-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting a Masking View
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-host-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Host Access
       
     </span>
   </a>
@@ -775,30 +797,84 @@
 
 
 <h1 id="masking-views">Masking Views<a class="headerlink" href="#masking-views" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Masking Views.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<p>A Masking View on PowerMax connects three components — a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs) — to grant a host access to storage. All three must exist before the Masking View can be created.</p>
+<h2 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all masking views
+symaccess list -sid &lt;sid&gt; view
+
+# Show a specific masking view
+symaccess show view &lt;view_name&gt; -sid &lt;sid&gt;
+
+# Show which masking views a host's initiators are in
+symaccess show -inits &lt;wwn&gt; -sid &lt;sid&gt;
+
+# Show all masking views for a storage group
+symaccess list -sid &lt;sid&gt; view -sg &lt;sg_name&gt;
+</code></pre>
+<h2 id="initiator-groups">Initiator Groups<a class="headerlink" href="#initiator-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all initiator groups
+symaccess list -sid &lt;sid&gt; -type initiator
+
+# Show initiators in a group
+symaccess show &lt;ig_name&gt; -sid &lt;sid&gt; -type initiator
+
+# Create an initiator group
+symaccess create -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator
+
+# Add host HBA WWN to initiator group
+symaccess -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator add -wwn &lt;wwn&gt;
+
+# Remove initiator
+symaccess -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator remove -wwn &lt;wwn&gt;
+
+# Create a cascaded (parent) initiator group
+symaccess create -sid &lt;sid&gt; -name &lt;parent_ig&gt; -type initiator
+symaccess -sid &lt;sid&gt; -name &lt;parent_ig&gt; -type initiator add -ig &lt;child_ig&gt;
+</code></pre>
+<h2 id="port-groups">Port Groups<a class="headerlink" href="#port-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all port groups
+symaccess list -sid &lt;sid&gt; -type port
+
+# Show ports in a group
+symaccess show &lt;pg_name&gt; -sid &lt;sid&gt; -type port
+
+# Create a port group
+symaccess create -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port
+
+# Add FA port to port group
+symaccess -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port add -dirport &lt;dir_id&gt;:&lt;port_id&gt;
+
+# Remove port
+symaccess -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port remove -dirport &lt;dir_id&gt;:&lt;port_id&gt;
+</code></pre>
+<h2 id="creating-a-masking-view">Creating a Masking View<a class="headerlink" href="#creating-a-masking-view" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Prerequisites: SG, IG, and PG must all exist
+# Create the masking view linking all three
+symaccess create view -sid &lt;sid&gt; -name &lt;view_name&gt; \
+    -sg &lt;sg_name&gt; \
+    -ig &lt;ig_name&gt; \
+    -pg &lt;pg_name&gt;
+</code></pre>
+<h2 id="deleting-a-masking-view">Deleting a Masking View<a class="headerlink" href="#deleting-a-masking-view" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Delete masking view (does not delete SG/IG/PG)
+symaccess delete view &lt;view_name&gt; -sid &lt;sid&gt;
+
+# Delete an initiator group (must not be in any masking view)
+symaccess delete -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator
+
+# Delete a port group
+symaccess delete -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port
+</code></pre>
+<h2 id="troubleshooting-host-access">Troubleshooting Host Access<a class="headerlink" href="#troubleshooting-host-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify host WWN is registered with the array
+symcfg -sid &lt;sid&gt; list -dir all | grep &lt;wwn&gt;
+
+# Check which LUNs a host can see
+symaccess show view &lt;view_name&gt; -sid &lt;sid&gt; | grep -A 20 &quot;Storage Group&quot;
+
+# Verify host-to-LUN assignment is correct
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep -A 5 &quot;Host&quot;
+</code></pre>
 
 
 

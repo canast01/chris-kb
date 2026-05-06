@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vsan" class="md-nav__link">
+  <a href="#cluster-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vSAN
+        Cluster Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-and-disk-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage and Disk Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#objects-and-resyncing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects and Resyncing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-triage-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Triage Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Indicators
       
     </span>
   </a>
@@ -745,19 +811,108 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="vsan">vSAN<a class="headerlink" href="#vsan" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">esxcli vsan cluster get
+<h2 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Cluster membership and UUID
+esxcli vsan cluster get
+
+# Cluster health summary (all checks)
 esxcli vsan health cluster get
 esxcli vsan health summary get
-esxcli vsan storage list
-esxcli vsan network list
-esxcli vsan network ipconfig list
-esxcli vsan trace get
-esxcli vsan datastore list
-esxcli vsan debug object list
-esxcli vsan debug resync list
+
+# Health check details — filter for failures only
+esxcli vsan health cluster get | grep -v &quot;GREEN\|green&quot;
 </code></pre>
+<h2 id="storage-and-disk-groups">Storage and Disk Groups<a class="headerlink" href="#storage-and-disk-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all vSAN storage devices (SSD cache + capacity)
+esxcli vsan storage list
+
+# Per-disk statistics (reads, writes, errors)
+esxcli vsan storage stats get
+
+# Disk group layout — which SSD maps to which capacities
+esxcli vsan storage list | grep -E &quot;Is SSD|Disk Group&quot;
+</code></pre>
+<h2 id="objects-and-resyncing">Objects and Resyncing<a class="headerlink" href="#objects-and-resyncing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List vSAN objects — state, policy compliance
+esxcli vsan debug object list
+
+# Filter for non-healthy objects
+esxcli vsan debug object list | grep -v &quot;healthy&quot;
+
+# Resync status — active rebuild/repair operations
+esxcli vsan debug resync list
+
+# Resync byte count (estimate time remaining)
+esxcli vsan debug resync list | grep -E &quot;Total Bytes|Remaining&quot;
+</code></pre>
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># vSAN VMkernel adapters
+esxcli vsan network list
+
+# Unicast agent configuration per NIC
+esxcli vsan network ipconfig list
+
+# Connectivity test between cluster hosts
+esxcli vsan debug network test
+</code></pre>
+<h2 id="datastore">Datastore<a class="headerlink" href="#datastore" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># vSAN datastore UUID and mount info
+esxcli vsan datastore list
+
+# Trace vSAN I/O (debugging, brief capture)
+esxcli vsan trace get
+</code></pre>
+<h2 id="quick-triage-checklist">Quick Triage Checklist<a class="headerlink" href="#quick-triage-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Cluster health
+esxcli vsan health summary get
+
+# 2. Any resync in progress
+esxcli vsan debug resync list
+
+# 3. Objects needing attention
+esxcli vsan debug object list | grep -v healthy
+
+# 4. Network VMkernel tagged
+esxcli vsan network list
+
+# 5. Storage devices visible
+esxcli vsan storage list | grep -c &quot;naa\.&quot;
+</code></pre>
+<h2 id="status-indicators">Status Indicators<a class="headerlink" href="#status-indicators" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Health: GREEN</td>
+<td>Check passing</td>
+</tr>
+<tr>
+<td>Health: YELLOW</td>
+<td>Warning — monitor</td>
+</tr>
+<tr>
+<td>Health: RED</td>
+<td>Failure — action required</td>
+</tr>
+<tr>
+<td>Resync bytes &gt; 0</td>
+<td>Rebuild or repair active — avoid maintenance</td>
+</tr>
+<tr>
+<td>Object state: absent</td>
+<td>Component missing — check disk/host</td>
+</tr>
+<tr>
+<td>Object state: degraded</td>
+<td>Redundancy reduced — replace disk before next failure</td>
+</tr>
+</tbody>
+</table>
 
 
 

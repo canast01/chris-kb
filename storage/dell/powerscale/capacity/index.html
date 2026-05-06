@@ -21,7 +21,7 @@
     
     
       
-        <title>Capacity - Chris KB</title>
+        <title>PowerScale Capacity - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#capacity" class="md-skip">
+        <a href="#powerscale-capacity" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Capacity
+              PowerScale Capacity
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#cluster-capacity-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Cluster Capacity Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#storage-pool-detail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Storage Pool Detail
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#quotas-smartquotas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Quotas (SmartQuotas)
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#quota-notifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Quota Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifying-large-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying Large Consumers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-trend-and-forecasting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Trend and Forecasting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-management-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Management Actions
       
     </span>
   </a>
@@ -774,31 +807,120 @@
 
 
 
-<h1 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Capacity.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-capacity">PowerScale Capacity<a class="headerlink" href="#powerscale-capacity" title="Permanent link">&para;</a></h1>
+<p>Capacity monitoring, quotas, and planning on Dell PowerScale.</p>
+<h2 id="cluster-capacity-overview">Cluster Capacity Overview<a class="headerlink" href="#cluster-capacity-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall cluster used vs. free
+isi statistics system list | grep -E &quot;Cluster Capacity|Used|Free|HDD|SSD&quot;
+
+# Capacity by storage pool / node pool
+isi storagepool nodepools list
+isi storagepool tiers list
+
+# Live statistics query
+isi statistics query current \
+    --stats cluster.disk.xfers.rate.read,cluster.disk.xfers.rate.write,\
+cluster.disk.bytes.rate.read,cluster.disk.bytes.rate.write
+</code></pre>
+<h2 id="storage-pool-detail">Storage Pool Detail<a class="headerlink" href="#storage-pool-detail" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Node pool capacity breakdown
+isi storagepool nodepools list -v
+
+# File pool policies and tiering
+isi filepool policies list
+isi filepool default-policy view
+
+# SmartPools job status
+isi job status | grep -i SmartPools
+isi job jobs list | grep SmartPool
+</code></pre>
+<h2 id="quotas-smartquotas">Quotas (SmartQuotas)<a class="headerlink" href="#quotas-smartquotas" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all directory quotas
+isi quota quotas list --type directory
+
+# View a specific quota
+isi quota quotas view --path /ifs/data/project1 --type directory
+
+# Create a hard limit quota (10 TB)
+isi quota quotas create --path /ifs/data/project1 \
+    --type directory \
+    --hard-threshold 10T \
+    --soft-threshold 9T \
+    --soft-grace 1W
+
+# Modify quota threshold
+isi quota quotas modify --path /ifs/data/project1 \
+    --type directory \
+    --hard-threshold 20T
+
+# Delete a quota
+isi quota quotas delete --path /ifs/data/project1 --type directory
+
+# Show quota usage report
+isi quota quotas list --type directory | awk '{print $1, $2, $3, $4}'
+</code></pre>
+<h2 id="quota-notifications">Quota Notifications<a class="headerlink" href="#quota-notifications" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List quota notification rules
+isi quota notifications list
+
+# View current notification settings
+isi quota settings notifications view
+</code></pre>
+<h2 id="identifying-large-consumers">Identifying Large Consumers<a class="headerlink" href="#identifying-large-consumers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Largest directories under /ifs (run from cluster shell)
+du -sh /ifs/* 2&gt;/dev/null | sort -h | tail -20
+
+# Directories nearing quota threshold
+isi quota quotas list --type directory | awk '
+    NR&gt;1 {
+        if ($3 != &quot;---&quot; &amp;&amp; $2 != &quot;---&quot;) {
+            pct = $3/$2*100
+            if (pct &gt; 80) print &quot;WARNING:&quot;, pct&quot;%&quot;, $1
+        }
+    }'
+</code></pre>
+<h2 id="capacity-trend-and-forecasting">Capacity Trend and Forecasting<a class="headerlink" href="#capacity-trend-and-forecasting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Historical capacity statistics
+isi statistics history list \
+    --stats cluster.disk.bytes.used,cluster.disk.bytes.free
+
+# Estimate days until full (rough — divide free bytes by daily consumption rate)
+isi statistics query current --stats cluster.disk.bytes.used,cluster.disk.bytes.free
+</code></pre>
+<p>For longer-term trending, use:
+- <strong>InsightIQ</strong> — on-premises analytics for PowerScale
+- <strong>CloudIQ</strong> — cloud-connected capacity forecasting with trend alerts</p>
+<h2 id="capacity-management-actions">Capacity Management Actions<a class="headerlink" href="#capacity-management-actions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 80% used</td>
+<td>Alert, review quotas, identify top consumers</td>
+</tr>
+<tr>
+<td>&gt; 90% used</td>
+<td>Emergency — identify and remove/archive data</td>
+</tr>
+<tr>
+<td>Node pool full but cluster has free space</td>
+<td>File pool policy not moving data — check SmartPools job</td>
+</tr>
+<tr>
+<td>SSD tier full</td>
+<td>Check SSD caching policies; consider adding SSD nodes</td>
+</tr>
+<tr>
+<td>Quota exceeded by application</td>
+<td>Increase quota with change approval</td>
+</tr>
+</tbody>
+</table>
 
 
 

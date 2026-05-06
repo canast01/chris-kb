@@ -21,7 +21,7 @@
     
     
       
-        <title>Replication - Chris KB</title>
+        <title>PowerScale Replication (SyncIQ) - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#replication" class="md-skip">
+        <a href="#powerscale-replication-synciq" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Replication
+              PowerScale Replication (SyncIQ)
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#policy-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Policy Management
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#running-and-monitoring-jobs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Running and Monitoring Jobs
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#policy-health-and-rpo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Policy Health and RPO
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#failover-and-failback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Failover and Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synciq-certificates-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SyncIQ Certificates and Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -774,31 +796,115 @@
 
 
 
-<h1 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Replication.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-replication-synciq">PowerScale Replication (SyncIQ)<a class="headerlink" href="#powerscale-replication-synciq" title="Permanent link">&para;</a></h1>
+<p>SyncIQ policy management, monitoring, and failover/failback operations on Dell PowerScale.</p>
+<h2 id="policy-management">Policy Management<a class="headerlink" href="#policy-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all SyncIQ policies
+isi sync policies list
+isi sync policies list -v
+
+# View a specific policy
+isi sync policies view &lt;policy_name&gt;
+
+# Create a policy (source → target, daily at 02:00)
+isi sync policies create &lt;policy_name&gt; \
+    --action sync \
+    --source-root-path /ifs/data/project1 \
+    --target-host &lt;target-cluster-ip&gt; \
+    --target-path /ifs/replicated/project1 \
+    --schedule &quot;every 1 days at 02:00&quot;
+
+# Enable / disable a policy
+isi sync policies modify &lt;policy_name&gt; --enabled yes
+isi sync policies modify &lt;policy_name&gt; --enabled no
+
+# Delete a policy
+isi sync policies delete &lt;policy_name&gt;
+</code></pre>
+<h2 id="running-and-monitoring-jobs">Running and Monitoring Jobs<a class="headerlink" href="#running-and-monitoring-jobs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Start a manual sync job
+isi sync jobs start &lt;policy_name&gt;
+
+# Check currently running jobs
+isi sync jobs list
+isi sync jobs list --state running
+
+# View job details
+isi sync jobs view &lt;job_id&gt;
+
+# Check last completed job result
+isi sync jobs list --state finished | head -5
+
+# Failed jobs
+isi sync jobs list --state failed
+</code></pre>
+<h2 id="policy-health-and-rpo">Policy Health and RPO<a class="headerlink" href="#policy-health-and-rpo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Last successful sync time for all policies
+isi sync policies list | grep -E &quot;Policy Name|Last Success&quot;
+
+# Policies that haven't synced in &gt; 24 hours
+isi sync policies list -v | grep -E &quot;Name|Last Success&quot; | paste - - | \
+    awk '{ if ($NF &lt; strftime(&quot;%s&quot;) - 86400) print &quot;OVERDUE:&quot;, $0 }'
+
+# Policy performance report
+isi sync reports list &lt;policy_name&gt;
+isi sync reports view &lt;policy_name&gt; &lt;report_id&gt;
+</code></pre>
+<h2 id="failover-and-failback">Failover and Failback<a class="headerlink" href="#failover-and-failback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># --- Planned Failover ---
+
+# Step 1 — disable the source policy (stops new syncs)
+isi sync policies modify &lt;policy_name&gt; --enabled no
+
+# Step 2 — run a final sync to minimise RPO
+isi sync jobs start &lt;policy_name&gt;
+isi sync jobs list --state running   # wait for completion
+
+# Step 3 — on the TARGET cluster, allow writes (break the mirror)
+isi sync policies delete &lt;policy_name&gt;   # or use Superna Eyeglass for orchestrated failover
+# OR use the SyncIQ failover command if available:
+isi sync policies failover &lt;policy_name&gt;
+
+# Step 4 — mount shares from DR cluster
+# (update DNS or DFS to point to DR cluster)
+</code></pre>
+<pre><code class="language-bash"># --- Failback ---
+
+# Step 1 — create a return policy from DR to primary
+isi sync policies create &lt;return_policy_name&gt; \
+    --action sync \
+    --source-root-path /ifs/replicated/project1 \
+    --target-host &lt;primary-cluster-ip&gt; \
+    --target-path /ifs/data/project1
+
+# Step 2 — run full sync back to primary
+isi sync jobs start &lt;return_policy_name&gt;
+
+# Step 3 — once synced, re-enable original policy on primary
+isi sync policies modify &lt;policy_name&gt; --enabled yes
+</code></pre>
+<h2 id="synciq-certificates-and-connectivity">SyncIQ Certificates and Connectivity<a class="headerlink" href="#synciq-certificates-and-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List replication peer certificates
+isi sync target policies list
+
+# Test connectivity to the target cluster
+isi sync policies view &lt;policy_name&gt; | grep &quot;Target Host&quot;
+ping &lt;target-cluster-ip&gt;
+
+# Check SyncIQ service
+isi services synciq status
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View error details for a failed job
+isi sync jobs view &lt;job_id&gt;
+isi sync reports list &lt;policy_name&gt; | head -3
+
+# Check event log for SyncIQ errors
+isi event events list | grep -i sync
+
+# Reset a policy after conflict (when both sides have been written to)
+isi sync policies reset &lt;policy_name&gt;
+</code></pre>
 
 
 

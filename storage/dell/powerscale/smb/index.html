@@ -21,7 +21,7 @@
     
     
       
-        <title>SMB - Chris KB</title>
+        <title>PowerScale SMB - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#smb" class="md-skip">
+        <a href="#powerscale-smb" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SMB
+              PowerScale SMB
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#share-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Share Management
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#permissions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Permissions
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#smb-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        SMB Settings
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#smb-sessions-and-open-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        SMB Sessions and Open Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smb-access-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMB Access Zones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-smb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting SMB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smb-auditing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMB Auditing
       
     </span>
   </a>
@@ -774,31 +807,110 @@
 
 
 
-<h1 id="smb">SMB<a class="headerlink" href="#smb" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for SMB.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-smb">PowerScale SMB<a class="headerlink" href="#powerscale-smb" title="Permanent link">&para;</a></h1>
+<p>SMB share management, configuration, and troubleshooting on Dell PowerScale.</p>
+<h2 id="share-management">Share Management<a class="headerlink" href="#share-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all SMB shares
+isi smb shares list
+isi smb shares list -v
+
+# View a specific share
+isi smb shares view &lt;share_name&gt;
+
+# Create a share
+isi smb shares create &lt;share_name&gt; /ifs/data/project1 \
+    --description &quot;Project 1 share&quot; \
+    --browsable yes \
+    --allow-execute-always yes
+
+# Modify a share
+isi smb shares modify &lt;share_name&gt; --description &quot;Updated description&quot;
+isi smb shares modify &lt;share_name&gt; --add-permissions 'user:&lt;username&gt;:allow:full'
+
+# Delete a share
+isi smb shares delete &lt;share_name&gt;
+</code></pre>
+<h2 id="permissions">Permissions<a class="headerlink" href="#permissions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View share permissions (ACL)
+isi smb shares view &lt;share_name&gt; | grep -A 20 &quot;Permission&quot;
+
+# Add a user with read permission
+isi smb shares modify &lt;share_name&gt; \
+    --add-permissions 'user:CORP\jsmith:allow:read'
+
+# Add a group with change permission
+isi smb shares modify &lt;share_name&gt; \
+    --add-permissions 'group:CORP\fileusers:allow:change'
+
+# Set full control for an admin group
+isi smb shares modify &lt;share_name&gt; \
+    --add-permissions 'group:CORP\storeadmins:allow:full'
+
+# Remove a permission entry
+isi smb shares modify &lt;share_name&gt; \
+    --remove-permissions 'user:CORP\jsmith:allow:read'
+</code></pre>
+<h2 id="smb-settings">SMB Settings<a class="headerlink" href="#smb-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Global SMB settings (server configuration)
+isi smb settings global view
+
+# Per-share default settings
+isi smb settings shares view
+
+# SMB service status
+isi services smb status
+
+# Restart SMB service (with caution — disrupts active sessions)
+isi services smb restart
+</code></pre>
+<h2 id="smb-sessions-and-open-files">SMB Sessions and Open Files<a class="headerlink" href="#smb-sessions-and-open-files" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active SMB sessions
+isi smb sessions list
+
+# Open files per session
+isi smb openfiles list
+
+# Disconnect a specific session
+isi smb sessions delete &lt;session_id&gt;
+</code></pre>
+<h2 id="smb-access-zones">SMB Access Zones<a class="headerlink" href="#smb-access-zones" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List shares in a specific access zone
+isi smb shares list --zone Zone1
+
+# Create share in a non-default access zone
+isi smb shares create &lt;share_name&gt; /ifs/zone1/data \
+    --zone Zone1
+</code></pre>
+<h2 id="troubleshooting-smb">Troubleshooting SMB<a class="headerlink" href="#troubleshooting-smb" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SMB protocol stats
+isi statistics protocol list --protocol smb2
+isi statistics protocol list --protocol smb3
+
+# Check for SMB errors in events
+isi event events list | grep -i smb
+
+# Verify AD authentication is working
+isi auth status | grep -i &quot;Active Directory\|joined&quot;
+isi auth ads list
+
+# Check group memberships resolve correctly
+isi auth users view &lt;username&gt;
+isi auth groups view &lt;groupname&gt;
+
+# Test access zone authentication
+isi zone zones view &lt;zone_name&gt;
+</code></pre>
+<h2 id="smb-auditing">SMB Auditing<a class="headerlink" href="#smb-auditing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable SMB audit for a share
+isi smb shares modify &lt;share_name&gt; --enable-oplock-audit yes
+
+# View audit settings
+isi audit settings global view
+isi audit settings protocols view
+
+# Enable protocol audit logging (SMB events to syslog)
+isi audit settings protocols modify --audit-success create,delete,rename,set-security
+</code></pre>
 
 
 

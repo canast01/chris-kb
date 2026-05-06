@@ -705,6 +705,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-and-inspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List and Inspect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-and-remove-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add and Remove Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-operations-via-device-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Operations via Device Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,16 +776,59 @@
 
 <h1 id="device-groups-legacy">Device Groups (Legacy)<a class="headerlink" href="#device-groups-legacy" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). Device groups are the legacy SYMCLI grouping mechanism (pre-Unisphere for PowerMax). For current deployments, prefer Storage Groups via <code>symsg</code>. Device groups remain relevant for SRDF operations and Solutions Enabler scripts.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Create and manage device groups
+<h2 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all device groups on an array
 symdg list -sid &lt;sid&gt;
+symdg list -sid &lt;sid&gt; -v
+
+# Show contents of a specific device group
 symdg show &lt;dg_name&gt; -sid &lt;sid&gt;
+symdg show &lt;dg_name&gt; -sid &lt;sid&gt; -v
+
+# List device groups containing a specific device
+symdg list -dev &lt;devname&gt; -sid &lt;sid&gt;
+</code></pre>
+<h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a regular device group
 symdg create &lt;dg_name&gt; -type regular -sid &lt;sid&gt;
+
+# Create an RDF device group (for SRDF operations)
+symdg create &lt;dg_name&gt; -type RDF1 -sid &lt;sid&gt;   # R1 side
+symdg create &lt;dg_name&gt; -type RDF2 -sid &lt;sid&gt;   # R2 side
+
+# Delete a device group (must be empty)
 symdg delete &lt;dg_name&gt; -sid &lt;sid&gt;
+</code></pre>
+<h2 id="add-and-remove-devices">Add and Remove Devices<a class="headerlink" href="#add-and-remove-devices" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a device to a group
 symdg -g &lt;dg_name&gt; add dev &lt;devname&gt; -sid &lt;sid&gt;
+
+# Add a range of devices
+symdg -g &lt;dg_name&gt; add dev &lt;start_dev&gt;:&lt;end_dev&gt; -sid &lt;sid&gt;
+
+# Remove a device from a group
 symdg -g &lt;dg_name&gt; remove dev &lt;devname&gt; -sid &lt;sid&gt;
+
+# List devices in the group
+symdev list -g &lt;dg_name&gt; -sid &lt;sid&gt;
+</code></pre>
+<h2 id="srdf-operations-via-device-group">SRDF Operations via Device Group<a class="headerlink" href="#srdf-operations-via-device-group" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SRDF state for all devices in a group
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; query
+
+# Suspend SRDF replication for the group
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; suspend -noprompt
+
+# Establish / re-establish replication
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; establish -noprompt
+
+# Failover to R2 (planned)
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; failover -noprompt
+
+# Failback to R1
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; restore -noprompt
 </code></pre>
 
 

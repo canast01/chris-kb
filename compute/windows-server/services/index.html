@@ -21,7 +21,7 @@
     
     
       
-        <title>Services - Chris KB</title>
+        <title>Windows Server Services - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#services" class="md-skip">
+        <a href="#windows-server-services" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Services
+              Windows Server Services
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#service-status-and-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Service Status and Control
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#listing-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Listing Services
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#service-account-and-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Service Account and Dependencies
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#scexe-service-control-legacy-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        sc.exe — Service Control (Legacy / Scripts)
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#key-infrastructure-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Key Infrastructure Services
       
     </span>
   </a>
@@ -767,10 +767,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#service-recovery-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Service Recovery Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-service-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Service Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-logs-via-event-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Logs via Event Viewer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-new-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a New Service
       
     </span>
   </a>
@@ -796,43 +829,186 @@
 
 
 
-<h1 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Windows Server Services notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="windows-server-services">Windows Server Services<a class="headerlink" href="#windows-server-services" title="Permanent link">&para;</a></h1>
+<p>Managing Windows services via PowerShell and sc.exe.</p>
+<h2 id="service-status-and-control">Service Status and Control<a class="headerlink" href="#service-status-and-control" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check service status
+Get-Service -Name &lt;ServiceName&gt;
+Get-Service -Name &lt;ServiceName&gt; | Select-Object *
+
+# Start / stop / restart
+Start-Service -Name &lt;ServiceName&gt;
+Stop-Service -Name &lt;ServiceName&gt;
+Restart-Service -Name &lt;ServiceName&gt; -Force
+
+# Set startup type
+Set-Service -Name &lt;ServiceName&gt; -StartupType Automatic
+Set-Service -Name &lt;ServiceName&gt; -StartupType Disabled
+Set-Service -Name &lt;ServiceName&gt; -StartupType Manual
+
+# Start and set to automatic in one step
+Set-Service -Name &lt;ServiceName&gt; -StartupType Automatic -Status Running
+</code></pre>
+<h2 id="listing-services">Listing Services<a class="headerlink" href="#listing-services" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All running services
+Get-Service | Where-Object { $_.Status -eq &quot;Running&quot; }
+
+# Automatic-start services that are stopped (should not normally be stopped)
+Get-Service | Where-Object { $_.StartType -eq &quot;Automatic&quot; -and $_.Status -ne &quot;Running&quot; } |
+    Select-Object Name, DisplayName, Status
+
+# All services with start type
+Get-Service | Select-Object Name, DisplayName, Status, StartType | Sort-Object StartType, Name
+
+# Services matching a name pattern
+Get-Service -Name &quot;SQL*&quot;
+Get-Service | Where-Object { $_.DisplayName -match &quot;IIS&quot; }
+</code></pre>
+<h2 id="service-account-and-dependencies">Service Account and Dependencies<a class="headerlink" href="#service-account-and-dependencies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># View service account via WMI
+Get-CimInstance Win32_Service -Filter &quot;Name='wuauserv'&quot; |
+    Select-Object Name, StartName, State, StartMode
+
+# All services not running as LocalSystem or NetworkService
+Get-CimInstance Win32_Service |
+    Where-Object { $_.StartName -notin @(&quot;LocalSystem&quot;,&quot;NT AUTHORITY\NetworkService&quot;,&quot;NT AUTHORITY\LocalService&quot;) } |
+    Select-Object Name, StartName, State
+
+# Service dependencies
+(Get-Service -Name &lt;ServiceName&gt;).DependentServices
+(Get-Service -Name &lt;ServiceName&gt;).ServicesDependedOn
+</code></pre>
+<h2 id="scexe-service-control-legacy-scripts">sc.exe — Service Control (Legacy / Scripts)<a class="headerlink" href="#scexe-service-control-legacy-scripts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-cmd">:: Query a service
+sc query &lt;ServiceName&gt;
+sc qc &lt;ServiceName&gt;   :: Config (start type, binary path, account)
+
+:: Start / stop
+sc start &lt;ServiceName&gt;
+sc stop &lt;ServiceName&gt;
+
+:: Change startup type
+sc config &lt;ServiceName&gt; start= auto
+sc config &lt;ServiceName&gt; start= disabled
+sc config &lt;ServiceName&gt; start= demand
+
+:: Delete a service
+sc delete &lt;ServiceName&gt;
+</code></pre>
+<h2 id="key-infrastructure-services">Key Infrastructure Services<a class="headerlink" href="#key-infrastructure-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service Name</th>
+<th>Display Name</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W32Time</td>
+<td>Windows Time</td>
+<td>Time sync with AD / NTP</td>
+</tr>
+<tr>
+<td>Netlogon</td>
+<td>Netlogon</td>
+<td>AD domain authentication</td>
+</tr>
+<tr>
+<td>NTDS</td>
+<td>Active Directory Domain Services</td>
+<td>DC — AD database</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>DNS Server</td>
+<td>DNS resolution</td>
+</tr>
+<tr>
+<td>WinRM</td>
+<td>Windows Remote Management</td>
+<td>PowerShell remoting</td>
+</tr>
+<tr>
+<td>EventLog</td>
+<td>Windows Event Log</td>
+<td>Event logging</td>
+</tr>
+<tr>
+<td>wuauserv</td>
+<td>Windows Update</td>
+<td>Patch management</td>
+</tr>
+<tr>
+<td>CryptSvc</td>
+<td>Cryptographic Services</td>
+<td>Certificate store</td>
+</tr>
+<tr>
+<td>BFE</td>
+<td>Base Filtering Engine</td>
+<td>Windows Firewall core</td>
+</tr>
+<tr>
+<td>mpssvc</td>
+<td>Windows Defender Firewall</td>
+<td>Host firewall</td>
+</tr>
+<tr>
+<td>WinDefend</td>
+<td>Windows Defender Antivirus</td>
+<td>AV (if not replaced)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="service-recovery-options">Service Recovery Options<a class="headerlink" href="#service-recovery-options" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Set service recovery actions via sc.exe
+# First failure: restart; second failure: restart; subsequent: restart; reset after 86400s
+sc failure &lt;ServiceName&gt; reset= 86400 actions= restart/5000/restart/5000/restart/5000
+
+# View current recovery actions
+sc qfailure &lt;ServiceName&gt;
+</code></pre>
+<h2 id="remote-service-management">Remote Service Management<a class="headerlink" href="#remote-service-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check service on a remote server
+Get-Service -Name &lt;ServiceName&gt; -ComputerName &lt;servername&gt;
+
+# Restart service on remote server
+Invoke-Command -ComputerName &lt;servername&gt; -ScriptBlock { Restart-Service -Name &lt;ServiceName&gt; -Force }
+
+# Check multiple servers at once
+$servers = @(&quot;srv01&quot;,&quot;srv02&quot;,&quot;srv03&quot;)
+$servers | ForEach-Object {
+    $svc = Get-Service -Name &lt;ServiceName&gt; -ComputerName $_ -ErrorAction SilentlyContinue
+    [PSCustomObject]@{ Server = $_; Status = $svc.Status; StartType = $svc.StartType }
+}
+</code></pre>
+<h2 id="service-logs-via-event-viewer">Service Logs via Event Viewer<a class="headerlink" href="#service-logs-via-event-viewer" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Service start/stop events (Event ID 7036)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7036 } -MaxEvents 20 |
+    Select-Object TimeCreated, Message | Format-List
+
+# Unexpected service termination (Event ID 7034)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034 } -MaxEvents 10 |
+    Select-Object TimeCreated, Message | Format-List
+
+# Service control manager errors
+Get-WinEvent -FilterHashtable @{ LogName='System'; ProviderName='Service Control Manager'; Level=2 } -MaxEvents 20 |
+    Select-Object TimeCreated, Message | Format-List
+</code></pre>
+<h2 id="creating-a-new-service">Creating a New Service<a class="headerlink" href="#creating-a-new-service" title="Permanent link">&para;</a></h2>
+<pre><code class="language-cmd">:: Register a new service
+sc create MyService binPath= &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; ^
+    start= auto obj= &quot;NT AUTHORITY\NetworkService&quot; DisplayName= &quot;My Application Service&quot;
+
+:: Or with PowerShell (requires admin)
+New-Service -Name &quot;MyService&quot; `
+    -BinaryPathName &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; `
+    -DisplayName &quot;My Application Service&quot; `
+    -StartupType Automatic `
+    -Description &quot;Application background service&quot;
+</code></pre>
 
 
 

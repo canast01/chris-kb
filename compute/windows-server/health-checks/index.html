@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>Windows Server Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#windows-server-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              Windows Server Health Checks
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#system-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        System Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#cpu-and-memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        CPU and Memory
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#disk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Disk
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Services
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#event-log-quick-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Event Log Quick Review
       
     </span>
   </a>
@@ -767,10 +767,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#network" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pending-reboots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pending Reboots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Summary
       
     </span>
   </a>
@@ -796,43 +818,140 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Windows Server Health Checks notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="windows-server-health-checks">Windows Server Health Checks<a class="headerlink" href="#windows-server-health-checks" title="Permanent link">&para;</a></h1>
+<p>Quick checks to confirm a Windows Server is healthy before and after changes, and during incident triage.</p>
+<h2 id="system-overview">System Overview<a class="headerlink" href="#system-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Uptime
+(Get-Date) - (gcim Win32_OperatingSystem).LastBootUpTime
+
+# OS version, build, and hostname
+Get-ComputerInfo | Select-Object CsName, OsName, OsVersion, OsBuildNumber, WindowsVersion
+
+# Last 5 system events (errors/warnings)
+Get-WinEvent -LogName System -MaxEvents 100 |
+    Where-Object { $_.LevelDisplayName -in &quot;Error&quot;,&quot;Warning&quot; } |
+    Select-Object -First 5 TimeCreated, LevelDisplayName, Message
+</code></pre>
+<h2 id="cpu-and-memory">CPU and Memory<a class="headerlink" href="#cpu-and-memory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># CPU usage (10-second sample)
+$cpu = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 2 -MaxSamples 5
+$cpu.CounterSamples.CookedValue | Measure-Object -Average | Select-Object Average
+
+# Memory
+$os = Get-CimInstance Win32_OperatingSystem
+[PSCustomObject]@{
+    TotalGB     = [math]::Round($os.TotalVisibleMemorySize/1MB, 1)
+    FreeGB      = [math]::Round($os.FreePhysicalMemory/1MB, 1)
+    UsedPct     = [math]::Round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize * 100, 1)
+}
+
+# Top CPU-consuming processes
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id, CPU, WorkingSet
+</code></pre>
+<h2 id="disk">Disk<a class="headerlink" href="#disk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Disk free space — flag below 20%
+Get-PSDrive -PSProvider FileSystem | Select-Object Name,
+    @{N=&quot;FreeGB&quot;;   E={ [math]::Round($_.Free/1GB, 1) }},
+    @{N=&quot;TotalGB&quot;;  E={ [math]::Round(($_.Used + $_.Free)/1GB, 1) }},
+    @{N=&quot;UsedPct&quot;;  E={ [math]::Round($_.Used/($_.Used + $_.Free)*100, 1) }} |
+    Where-Object { $_.UsedPct -gt 80 }
+
+# Disk performance counters
+Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Transfer' -SampleInterval 2 -MaxSamples 3 |
+    ForEach-Object { $_.CounterSamples | Select-Object Path, CookedValue }
+</code></pre>
+<h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Services in a stopped state that should be running (auto start)
+Get-Service | Where-Object { $_.StartType -eq &quot;Automatic&quot; -and $_.Status -ne &quot;Running&quot; } |
+    Select-Object Name, DisplayName, Status
+
+# Check a specific service
+Get-Service -Name &lt;ServiceName&gt; | Select-Object Name, Status, StartType
+</code></pre>
+<h2 id="event-log-quick-review">Event Log Quick Review<a class="headerlink" href="#event-log-quick-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># System errors in last 24 hours
+Get-WinEvent -FilterHashtable @{ LogName='System'; Level=2; StartTime=(Get-Date).AddHours(-24) } |
+    Select-Object TimeCreated, Id, Message | Select-Object -First 10
+
+# Application errors in last 24 hours
+Get-WinEvent -FilterHashtable @{ LogName='Application'; Level=2; StartTime=(Get-Date).AddHours(-24) } |
+    Select-Object TimeCreated, Id, Message | Select-Object -First 10
+</code></pre>
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Interface status
+Get-NetAdapter | Select-Object Name, Status, LinkSpeed, MacAddress
+
+# IP addresses
+Get-NetIPAddress | Where-Object { $_.AddressFamily -eq &quot;IPv4&quot; } |
+    Select-Object InterfaceAlias, IPAddress, PrefixLength
+
+# Active TCP connections
+Get-NetTCPConnection -State Established |
+    Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, OwningProcess |
+    Sort-Object RemoteAddress | Select-Object -First 20
+
+# Test DNS resolution
+Resolve-DnsName corp.local
+</code></pre>
+<h2 id="pending-reboots">Pending Reboots<a class="headerlink" href="#pending-reboots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check for pending reboot from Windows Update or software installs
+$rebootPending = $false
+if (Get-ItemProperty &quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired&quot; -EA SilentlyContinue) { $rebootPending = $true }
+if (Get-ItemProperty &quot;HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager&quot; -Name PendingFileRenameOperations -EA SilentlyContinue) { $rebootPending = $true }
+&quot;Reboot Pending: $rebootPending&quot;
+</code></pre>
+<h2 id="health-check-summary">Health Check Summary<a class="headerlink" href="#health-check-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uptime reasonable</td>
+<td><code>(Get-Date) - LastBootUpTime</code></td>
+<td>No unexpected recent reboot</td>
+</tr>
+<tr>
+<td>CPU usage</td>
+<td><code>Get-Counter</code></td>
+<td>&lt; 80% sustained</td>
+</tr>
+<tr>
+<td>Memory available</td>
+<td><code>Get-CimInstance Win32_OperatingSystem</code></td>
+<td>&gt; 20% free</td>
+</tr>
+<tr>
+<td>No disk &gt; 80%</td>
+<td><code>Get-PSDrive</code></td>
+<td>All &lt; 80% used</td>
+</tr>
+<tr>
+<td>No stopped auto services</td>
+<td><code>Get-Service</code></td>
+<td>0 stopped auto-start</td>
+</tr>
+<tr>
+<td>No System errors (24h)</td>
+<td><code>Get-WinEvent</code></td>
+<td>0 critical errors</td>
+</tr>
+<tr>
+<td>Network adapters up</td>
+<td><code>Get-NetAdapter</code></td>
+<td>All status = Up</td>
+</tr>
+<tr>
+<td>Pending reboot</td>
+<td>Registry check</td>
+<td>$false</td>
+</tr>
+</tbody>
+</table>
 
 
 

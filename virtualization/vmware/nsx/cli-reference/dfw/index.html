@@ -712,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#distributed-firewall-dfw-nsx-manager" class="md-nav__link">
+  <a href="#dfw-statistics-nsx-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Distributed Firewall (DFW) — NSX Manager
+        DFW Statistics — NSX Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dfw-inspection-on-esxi-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DFW Inspection on ESXi Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifying-a-vms-filter-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying a VM's Filter Name
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rule-output-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule Output Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Troubleshooting
       
     </span>
   </a>
@@ -745,18 +789,101 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="distributed-firewall-dfw-nsx-manager">Distributed Firewall (DFW) — NSX Manager<a class="headerlink" href="#distributed-firewall-dfw-nsx-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># DFW rules overview (via NSX Manager shell)
+<h2 id="dfw-statistics-nsx-manager">DFW Statistics — NSX Manager<a class="headerlink" href="#dfw-statistics-nsx-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Connect to NSX Manager CLI
 nsxcli
-get firewall stats
-get dfw stats
 
-# From ESXi host — inspect DFW
+# Firewall rule statistics (hit counts, bytes)
+get firewall stats
+
+# DFW summary across all transport nodes
+get dfw stats
+</code></pre>
+<h2 id="dfw-inspection-on-esxi-host">DFW Inspection on ESXi Host<a class="headerlink" href="#dfw-inspection-on-esxi-host" title="Permanent link">&para;</a></h2>
+<p>The DFW is enforced on each ESXi host via <code>vsipioctl</code>. All commands run as root on the ESXi host.</p>
+<pre><code class="language-bash"># List all DFW filters attached to VMs on this host
 summarize-dvfilter
+
+# Output format shows: vmname -&gt; vnic -&gt; filter_name
+# Example filter name: nic-12345-eth0-vmware-sfw.2
+</code></pre>
+<pre><code class="language-bash"># Get DFW rules applied to a specific filter
 vsipioctl getrules -f &lt;filter_name&gt;
+
+# Show address sets (IP groups, security groups) used in rules
 vsipioctl getaddrsets -f &lt;filter_name&gt;
+
+# Per-rule hit statistics for a filter
 vsipioctl getstats -f &lt;filter_name&gt;
+
+# Show service / port-protocol objects
+vsipioctl getservices -f &lt;filter_name&gt;
+</code></pre>
+<h2 id="identifying-a-vms-filter-name">Identifying a VM's Filter Name<a class="headerlink" href="#identifying-a-vms-filter-name" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — find the VM's world ID
+esxcli vm process list | grep -A5 &lt;vm_name&gt;
+
+# Step 2 — list filters and match to VM
+summarize-dvfilter | grep -A3 &lt;vm_name&gt;
+
+# Step 3 — inspect rules for that filter
+vsipioctl getrules -f &lt;filter_name_from_step2&gt;
+</code></pre>
+<h2 id="rule-output-interpretation">Rule Output Interpretation<a class="headerlink" href="#rule-output-interpretation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text"># Sample getrules output:
+ruleset domain-c12:500  {
+  rule 1234 at 1 inout protocol any from any to any accept;
+  rule 1235 at 2 inout protocol tcp from addrset sg-web to addrset sg-db port {3306} accept;
+  rule 65535 at 99 inout protocol any from any to any drop;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rule &lt;id&gt;</code></td>
+<td>NSX DFW rule ID — matches Policy &gt; Security &gt; Rules</td>
+</tr>
+<tr>
+<td><code>inout</code></td>
+<td>Applies to both ingress and egress</td>
+</tr>
+<tr>
+<td><code>addrset</code></td>
+<td>References a security group or IP set</td>
+</tr>
+<tr>
+<td><code>drop</code></td>
+<td>Packet silently dropped</td>
+</tr>
+<tr>
+<td><code>reject</code></td>
+<td>TCP RST / ICMP unreachable sent</td>
+</tr>
+<tr>
+<td><code>accept</code></td>
+<td>Traffic permitted</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-troubleshooting">Common Troubleshooting<a class="headerlink" href="#common-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm DFW is enforced on a VM (filter count &gt; 0)
+summarize-dvfilter | grep -c &lt;vm_name&gt;
+
+# Check if a rule is being hit (non-zero pkt count)
+vsipioctl getstats -f &lt;filter_name&gt; | grep -v &quot; 0 pkts&quot;
+
+# Temporarily check connectivity without DFW:
+# In NSX Manager — Policy → Security → Gateway Firewall → disable rule
+# Note: disabling DFW globally is a major security change — use exclusion list instead
+
+# Add VM to DFW exclusion list (NSX Manager only, not CLI)
+# System → Fabric → Nodes → Host Transport Nodes → DFW Exclusion List
 </code></pre>
 
 

@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#networks_1" class="md-nav__link">
+  <a href="#standard-vswitches" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Networks
+        Standard vSwitches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-vswitches-vds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed vSwitches (VDS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmkernel-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMkernel Adapters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#physical-nics-vmnic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical NICs (vmnic)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-and-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS and Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nic-teaming-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NIC Teaming Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vlan-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN Report
       
     </span>
   </a>
@@ -745,20 +811,72 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="networks_1">Networks<a class="headerlink" href="#networks_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Standard switches
+<h2 id="standard-vswitches">Standard vSwitches<a class="headerlink" href="#standard-vswitches" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List standard vSwitches on a host
 Get-VirtualSwitch -VMHost &lt;host&gt;
+Get-VirtualSwitch -VMHost &lt;host&gt; | Select-Object Name, NumPorts, Nic, @{N=&quot;MTU&quot;;E={$_.Mtu}}
+
+# Port groups on a standard switch
 Get-VirtualPortGroup -VMHost &lt;host&gt;
-
-# Distributed switches
+Get-VirtualPortGroup -VMHost &lt;host&gt; | Select-Object Name, VLanId, @{N=&quot;vSwitch&quot;;E={$_.VirtualSwitchName}}
+</code></pre>
+<h2 id="distributed-vswitches-vds">Distributed vSwitches (VDS)<a class="headerlink" href="#distributed-vswitches-vds" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All distributed switches
 Get-VDSwitch
-Get-VDSwitch | Select-Object Name, NumPorts, Version
-Get-VDPortgroup
 
-# VMkernel adapters
+# VDS detail — name, version, uplinks, port count
+Get-VDSwitch | Select-Object Name, NumPorts, Version, Mtu,
+    @{N=&quot;Uplinks&quot;;E={$_.ExtensionData.Config.UplinkPortPolicy.UplinkPortName -join &quot;, &quot;}}
+
+# Distributed port groups
+Get-VDPortgroup
+Get-VDPortgroup | Select-Object Name, VlanConfiguration, NumPorts,
+    @{N=&quot;VDS&quot;;E={$_.VDSwitch.Name}}
+
+# VMs connected to a specific DVPortgroup
+Get-VDPortgroup -Name &quot;&lt;portgroup_name&gt;&quot; | Get-VM | Select-Object Name, PowerState
+</code></pre>
+<h2 id="vmkernel-adapters">VMkernel Adapters<a class="headerlink" href="#vmkernel-adapters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All VMkernel adapters on a host
 Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel | Select-Object Name, IP, SubnetMask, VMotionEnabled, ManagementTrafficEnabled
+
+# With IP, subnet, and traffic type flags
+Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel |
+    Select-Object Name, IP, SubnetMask, Mac,
+    VMotionEnabled, ManagementTrafficEnabled,
+    FaultToleranceLoggingEnabled, VsanTrafficEnabled
+</code></pre>
+<h2 id="physical-nics-vmnic">Physical NICs (vmnic)<a class="headerlink" href="#physical-nics-vmnic" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Physical NICs on a host
+Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -Physical |
+    Select-Object Name, Mac, BitRatePerSec,
+    @{N=&quot;Speed&quot;;E={$_.BitRatePerSec / 1000000}},
+    @{N=&quot;LinkUp&quot;;E={$_.ExtensionData.LinkSpeed -ne $null}}
+</code></pre>
+<h2 id="dns-and-routing">DNS and Routing<a class="headerlink" href="#dns-and-routing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># DNS configuration on a host
+Get-VMHostNetwork -VMHost &lt;host&gt; | Select-Object HostName, DomainName, DnsAddress
+
+# Default gateway
+(Get-VMHostNetwork -VMHost &lt;host&gt;).ConsoleGateway
+</code></pre>
+<h2 id="nic-teaming-policy">NIC Teaming Policy<a class="headerlink" href="#nic-teaming-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Teaming policy for a standard port group
+$pg = Get-VirtualPortGroup -VMHost &lt;host&gt; -Name &quot;&lt;portgroup_name&gt;&quot;
+$pg.ExtensionData.ComputedPolicy.NicTeaming
+
+# Active/standby NICs for a portgroup
+$pg.ExtensionData.ComputedPolicy.NicTeaming.NicOrder
+</code></pre>
+<h2 id="vlan-report">VLAN Report<a class="headerlink" href="#vlan-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All VLANs in use across VDS port groups
+Get-VDPortgroup | Select-Object Name, @{N=&quot;VLAN&quot;;E={$_.VlanConfiguration.VlanId}} |
+    Sort-Object VLAN
+
+# VLAN range trunks (access vs trunk)
+Get-VDPortgroup | Select-Object Name,
+    @{N=&quot;VLANType&quot;;E={$_.VlanConfiguration.GetType().Name}},
+    @{N=&quot;VLANId&quot;;E={$_.VlanConfiguration.VlanId}}
 </code></pre>
 
 

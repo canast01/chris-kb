@@ -21,7 +21,7 @@
     
     
       
-        <title>Cluster Health - Chris KB</title>
+        <title>PowerScale Cluster Health - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cluster-health" class="md-skip">
+        <a href="#powerscale-cluster-health" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cluster Health
+              PowerScale Cluster Health
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#cluster-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Cluster Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#node-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Node Health
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#active-events-and-alerts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Active Events and Alerts
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#cluster-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Cluster Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synciq-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SyncIQ Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobs-background-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs (Background Tasks)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Summary
       
     </span>
   </a>
@@ -774,31 +818,135 @@
 
 
 
-<h1 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Cluster Health.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-cluster-health">PowerScale Cluster Health<a class="headerlink" href="#powerscale-cluster-health" title="Permanent link">&para;</a></h1>
+<p>Daily health checks and status commands for Dell PowerScale (Isilon) clusters.</p>
+<h2 id="cluster-overview">Cluster Overview<a class="headerlink" href="#cluster-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Cluster identity, version, and status
+isi version
+isi status
+isi cluster identity view
+
+# Node count and status summary
+isi node list
+isi status -n all   # Per-node health summary
+</code></pre>
+<h2 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all nodes with status
+isi node list
+
+# Detailed view of a specific node
+isi node view &lt;node_id&gt;
+
+# Node hardware sensors (temperature, fans, power)
+isi node sensors view &lt;node_id&gt;
+
+# Node drives — check for failed or degraded drives
+isi node drives list &lt;node_id&gt;
+isi node drives list &lt;node_id&gt; | grep -iE &quot;failed|degraded|missing&quot;
+</code></pre>
+<h2 id="active-events-and-alerts">Active Events and Alerts<a class="headerlink" href="#active-events-and-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All unresolved critical events
+isi event events list --severity critical
+
+# All unresolved events (all severities)
+isi event events list
+
+# Events from the last 24 hours
+isi event events list --start-time $(date -d 'yesterday' '+%Y-%m-%d')
+
+# Alert channels configured
+isi event channels list
+</code></pre>
+<h2 id="cluster-capacity">Cluster Capacity<a class="headerlink" href="#cluster-capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall used vs. free capacity
+isi statistics system list | grep -E &quot;Cluster Capacity|Used|Free&quot;
+
+# Storage pool capacity breakdown
+isi storagepool nodepools list
+isi storagepool tiers list
+
+# SmartQuotas — total quota usage
+isi quota quotas list --type directory | head -20
+</code></pre>
+<h2 id="protocol-services">Protocol Services<a class="headerlink" href="#protocol-services" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NFS service status
+isi services -a | grep nfs
+
+# SMB service status
+isi services -a | grep smb
+
+# All running services
+isi services -a | grep running
+</code></pre>
+<h2 id="synciq-replication">SyncIQ Replication<a class="headerlink" href="#synciq-replication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Policy status
+isi sync policies list
+isi sync policies view &lt;policy_name&gt;
+
+# Last job result for each policy
+isi sync jobs list --state finished | head -10
+
+# Check for failed replication jobs
+isi sync jobs list --state failed
+isi sync jobs list --state paused
+</code></pre>
+<h2 id="jobs-background-tasks">Jobs (Background Tasks)<a class="headerlink" href="#jobs-background-tasks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Currently running jobs
+isi job status
+
+# Any job in error state
+isi job jobs list | grep -i error
+
+# FlexProtect status (data protection rebuild)
+isi job jobs list | grep -i &quot;FlexProtect\|Repair&quot;
+</code></pre>
+<h2 id="health-check-summary">Health Check Summary<a class="headerlink" href="#health-check-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All nodes online</td>
+<td><code>isi node list</code></td>
+<td>All = online</td>
+</tr>
+<tr>
+<td>No critical events</td>
+<td><code>isi event events list --severity critical</code></td>
+<td>0 events</td>
+</tr>
+<tr>
+<td>Capacity &lt; 80%</td>
+<td><code>isi statistics system list</code></td>
+<td>Used &lt; 80%</td>
+</tr>
+<tr>
+<td>NFS/SMB services running</td>
+<td><code>isi services -a</code></td>
+<td>Both running</td>
+</tr>
+<tr>
+<td>SyncIQ policies healthy</td>
+<td><code>isi sync policies list</code></td>
+<td>All enabled, last job success</td>
+</tr>
+<tr>
+<td>No jobs in error</td>
+<td><code>isi job jobs list</code></td>
+<td>0 errors</td>
+</tr>
+<tr>
+<td>No failed drives</td>
+<td><code>isi node drives list</code></td>
+<td>0 failed/degraded</td>
+</tr>
+</tbody>
+</table>
 
 
 

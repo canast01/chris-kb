@@ -21,7 +21,7 @@
     
     
       
-        <title>Storage - Chris KB</title>
+        <title>Linux Storage - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#storage" class="md-skip">
+        <a href="#linux-storage" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Storage
+              Linux Storage
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#disk-and-block-device-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Disk and Block Device Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#lvm-physical-volumes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        LVM — Physical Volumes
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#lvm-volume-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        LVM — Volume Groups
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#lvm-logical-volumes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        LVM — Logical Volumes
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#filesystem-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Filesystem Operations
       
     </span>
   </a>
@@ -767,10 +767,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#disk-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Disk Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multipath-san-luns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath (SAN LUNs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iscsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iSCSI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Mounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-io-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk I/O Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Swap
       
     </span>
   </a>
@@ -796,43 +851,172 @@
 
 
 
-<h1 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Linux Storage notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="linux-storage">Linux Storage<a class="headerlink" href="#linux-storage" title="Permanent link">&para;</a></h1>
+<p>Disk, LVM, filesystem, and mount management on RHEL and Ubuntu.</p>
+<h2 id="disk-and-block-device-overview">Disk and Block Device Overview<a class="headerlink" href="#disk-and-block-device-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all block devices with sizes and mount points
+lsblk
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE,UUID
+
+# Disk details and partition table
+fdisk -l /dev/sdb
+parted /dev/sdb print
+
+# Identify device by serial number / WWN (useful for SAN)
+lsblk -o NAME,SERIAL,WWN,SIZE
+udevadm info /dev/sdb | grep -E &quot;ID_SERIAL|ID_WWN&quot;
+</code></pre>
+<h2 id="lvm-physical-volumes">LVM — Physical Volumes<a class="headerlink" href="#lvm-physical-volumes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List PVs
+pvdisplay
+pvs
+
+# Create PV on a new disk
+pvcreate /dev/sdb
+
+# Remove PV (after moving data off)
+pvremove /dev/sdb
+</code></pre>
+<h2 id="lvm-volume-groups">LVM — Volume Groups<a class="headerlink" href="#lvm-volume-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List VGs
+vgdisplay
+vgs
+
+# Create VG
+vgcreate vg_data /dev/sdb /dev/sdc
+
+# Extend VG with a new disk
+vgextend vg_data /dev/sdd
+
+# Check free space in VG
+vgs -o name,size,free
+</code></pre>
+<h2 id="lvm-logical-volumes">LVM — Logical Volumes<a class="headerlink" href="#lvm-logical-volumes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List LVs
+lvdisplay
+lvs
+
+# Create LV
+lvcreate -L 50G -n lv_app vg_data
+
+# Create LV using percentage of free VG space
+lvcreate -l 80%FREE -n lv_app vg_data
+
+# Extend LV and filesystem in one step
+lvextend -L +20G /dev/vg_data/lv_app
+xfs_growfs /dev/vg_data/lv_app     # XFS — online resize
+resize2fs /dev/vg_data/lv_app      # ext4 — online resize
+
+# Remove LV
+lvremove /dev/vg_data/lv_app
+</code></pre>
+<h2 id="filesystem-operations">Filesystem Operations<a class="headerlink" href="#filesystem-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Format
+mkfs.xfs /dev/vg_data/lv_app       # XFS (default on RHEL)
+mkfs.ext4 /dev/vg_data/lv_app      # ext4
+
+# Mount temporarily
+mount /dev/vg_data/lv_app /opt/app
+
+# Persistent mount in /etc/fstab
+echo &quot;/dev/vg_data/lv_app  /opt/app  xfs  defaults,nofail  0  2&quot; &gt;&gt; /etc/fstab
+mount -a    # Test fstab without reboot
+
+# Check filesystem
+xfs_repair /dev/vg_data/lv_app    # XFS (must be unmounted)
+e2fsck -f /dev/vg_data/lv_app     # ext4 (must be unmounted)
+</code></pre>
+<h2 id="disk-usage">Disk Usage<a class="headerlink" href="#disk-usage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Filesystem usage summary
+df -h
+
+# Directory sizes (find large consumers)
+du -sh /var/log/* 2&gt;/dev/null | sort -h | tail -10
+du -sh /home/* 2&gt;/dev/null | sort -h | tail -10
+
+# Find files larger than 1 GB
+find / -xdev -size +1G -type f 2&gt;/dev/null
+
+# Find files modified in the last 24 hours
+find /var/log -newer /tmp -type f 2&gt;/dev/null | head -20
+</code></pre>
+<h2 id="multipath-san-luns">Multipath (SAN LUNs)<a class="headerlink" href="#multipath-san-luns" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List multipath devices
+multipath -ll
+
+# Check path states
+multipath -ll | grep -E &quot;status|running|active|failed&quot;
+
+# Reload multipath config
+systemctl reload multipathd
+
+# Add a new LUN (after SAN zoning/mapping)
+rescan-scsi-bus.sh       # Install: sg3_utils
+echo &quot;- - -&quot; &gt; /sys/class/scsi_host/host*/scan
+multipath
+
+# Verify device is visible
+lsblk | grep dm-
+</code></pre>
+<h2 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Discover targets
+iscsiadm -m discovery -t sendtargets -p &lt;iscsi-target-ip&gt;
+
+# Login to target
+iscsiadm -m node --login
+
+# Check session status
+iscsiadm -m session
+
+# Persistent login (survive reboot)
+iscsiadm -m node -o update -n node.startup -v automatic
+</code></pre>
+<h2 id="nfs-mounts">NFS Mounts<a class="headerlink" href="#nfs-mounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Mount NFS share
+mount -t nfs 10.0.0.5:/export/data /mnt/data
+
+# Persistent NFS mount (with timeout options)
+echo &quot;10.0.0.5:/export/data  /mnt/data  nfs  defaults,_netdev,timeo=30,retrans=3  0  0&quot; &gt;&gt; /etc/fstab
+
+# Check NFS mount stats
+nfsstat -m
+
+# Show NFS exports from server
+showmount -e 10.0.0.5
+</code></pre>
+<h2 id="disk-io-performance">Disk I/O Performance<a class="headerlink" href="#disk-io-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># I/O statistics per device — extended
+iostat -xz 1 5
+
+# Key columns: %util (saturation), await (ms latency), r/s w/s (IOPS)
+# %util &gt; 80% = busy; await &gt; 20ms = latency concern
+
+# Per-process I/O (requires iotop)
+iotop -o -P
+
+# Disk read/write speed test (non-destructive — writes to tmpfs)
+dd if=/dev/zero of=/tmp/testfile bs=1G count=1 oflag=direct
+</code></pre>
+<h2 id="swap">Swap<a class="headerlink" href="#swap" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check swap usage
+free -h
+swapon --show
+
+# Add swap space (temporary — file-based)
+dd if=/dev/zero of=/swapfile bs=1G count=4
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+
+# Persistent — add to /etc/fstab
+echo &quot;/swapfile  none  swap  sw  0  0&quot; &gt;&gt; /etc/fstab
+
+# Check swappiness
+cat /proc/sys/vm/swappiness
+# Set lower value for server workloads (10 recommended)
+echo &quot;vm.swappiness=10&quot; &gt;&gt; /etc/sysctl.d/99-sysctl.conf
+sysctl -p
+</code></pre>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Performance - Chris KB</title>
+        <title>Windows Server Performance - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#performance" class="md-skip">
+        <a href="#windows-server-performance" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Performance
+              Windows Server Performance
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#quick-performance-snapshot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Quick Performance Snapshot
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#performance-counters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Performance Counters
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#performance-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Performance Thresholds
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#data-collector-sets-perfmon" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Data Collector Sets (PerfMon)
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#resource-monitor-resmonexe" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Resource Monitor (resmon.exe)
       
     </span>
   </a>
@@ -767,10 +767,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#memory-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Memory Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-performance-analyzer-wpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Performance Analyzer (WPA)
       
     </span>
   </a>
@@ -796,43 +840,173 @@
 
 
 
-<h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Windows Server Performance notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="windows-server-performance">Windows Server Performance<a class="headerlink" href="#windows-server-performance" title="Permanent link">&para;</a></h1>
+<p>Performance monitoring, baseline capture, and bottleneck identification on Windows Server.</p>
+<h2 id="quick-performance-snapshot">Quick Performance Snapshot<a class="headerlink" href="#quick-performance-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># CPU usage (5-sample average)
+$cpu = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 2 -MaxSamples 5
+[math]::Round(($cpu.CounterSamples.CookedValue | Measure-Object -Average).Average, 1)
+
+# Memory
+$os = Get-CimInstance Win32_OperatingSystem
+[PSCustomObject]@{
+    TotalGB   = [math]::Round($os.TotalVisibleMemorySize/1MB, 1)
+    FreeGB    = [math]::Round($os.FreePhysicalMemory/1MB, 1)
+    UsedPct   = [math]::Round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory)/$os.TotalVisibleMemorySize*100, 1)
+}
+
+# Top processes by CPU
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id,
+    @{N=&quot;CPU%&quot;; E={ [math]::Round($_.CPU, 1) }}, WorkingSet
+
+# Top processes by memory
+Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10 Name, Id,
+    @{N=&quot;MemMB&quot;; E={ [math]::Round($_.WorkingSet/1MB, 1) }}
+</code></pre>
+<h2 id="performance-counters">Performance Counters<a class="headerlink" href="#performance-counters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># CPU — sustained above 85% = problem
+Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 5 -MaxSamples 12 |
+    ForEach-Object { $_.CounterSamples | Select-Object Path, CookedValue }
+
+# Memory — pages/sec above 1000 sustained = memory pressure
+Get-Counter '\Memory\Pages/sec', '\Memory\Available MBytes' -SampleInterval 5 -MaxSamples 6
+
+# Disk — latency above 20ms = problem
+Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Transfer' -SampleInterval 2 -MaxSamples 5
+
+# Network — throughput and errors
+Get-Counter '\Network Interface(*)\Bytes Total/sec', '\Network Interface(*)\Packets Received Errors'
+
+# Context switches — above 10,000/s per CPU = possible bottleneck
+Get-Counter '\System\Context Switches/sec'
+</code></pre>
+<h2 id="performance-thresholds">Performance Thresholds<a class="headerlink" href="#performance-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Counter</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU % Processor Time</td>
+<td>&gt; 70% sustained</td>
+<td>&gt; 90% sustained</td>
+</tr>
+<tr>
+<td>Memory Available MB</td>
+<td>&lt; 20% of total</td>
+<td>&lt; 10% of total</td>
+</tr>
+<tr>
+<td>Pages/sec</td>
+<td>&gt; 100/sec</td>
+<td>&gt; 1,000/sec</td>
+</tr>
+<tr>
+<td>Disk Avg. sec/Transfer</td>
+<td>&gt; 15 ms</td>
+<td>&gt; 25 ms</td>
+</tr>
+<tr>
+<td>Disk % Disk Time</td>
+<td>&gt; 80%</td>
+<td>&gt; 95%</td>
+</tr>
+<tr>
+<td>Network % Bandwidth</td>
+<td>&gt; 70%</td>
+<td>&gt; 90%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-collector-sets-perfmon">Data Collector Sets (PerfMon)<a class="headerlink" href="#data-collector-sets-perfmon" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Create a data collector set from command line
+logman create counter &quot;PerfBaseline&quot; ^
+    -c &quot;\Processor(_Total)\% Processor Time&quot; ^
+       &quot;\Memory\Available MBytes&quot; ^
+       &quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot; ^
+       &quot;\Network Interface(*)\Bytes Total/sec&quot; ^
+    -si 00:00:05 ^
+    -f bincirc ^
+    -max 500 ^
+    -o C:\PerfLogs\baseline
+
+logman start PerfBaseline
+logman stop PerfBaseline
+</code></pre>
+<h2 id="resource-monitor-resmonexe">Resource Monitor (resmon.exe)<a class="headerlink" href="#resource-monitor-resmonexe" title="Permanent link">&para;</a></h2>
+<p>Run <code>resmon.exe</code> for a real-time graphical view of CPU, memory, disk, and network broken down per-process. Useful for identifying which process is consuming resources during an incident.</p>
+<h2 id="memory-analysis">Memory Analysis<a class="headerlink" href="#memory-analysis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Memory allocation by process
+Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 15 Name, Id,
+    @{N=&quot;WS_MB&quot;;    E={ [math]::Round($_.WorkingSet/1MB,1) }},
+    @{N=&quot;Priv_MB&quot;;  E={ [math]::Round($_.PrivateMemorySize64/1MB,1) }},
+    @{N=&quot;VM_GB&quot;;    E={ [math]::Round($_.VirtualMemorySize64/1GB,2) }}
+
+# Non-paged pool exhaustion (Event ID 2019 in System log)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=2019 } -MaxEvents 5
+
+# Check for memory leaks — watch a process over time
+$proc = Get-Process -Name &quot;w3wp&quot;
+for ($i=0; $i -lt 6; $i++) {
+    [PSCustomObject]@{
+        Time   = Get-Date -Format HH:mm:ss
+        WS_MB  = [math]::Round($proc.WorkingSet/1MB, 1)
+    }
+    Start-Sleep 10
+}
+</code></pre>
+<h2 id="cpu-analysis">CPU Analysis<a class="headerlink" href="#cpu-analysis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Per-core CPU usage
+1..4 | ForEach-Object {
+    Get-Counter &quot;\Processor($_)\% Processor Time&quot; -SampleInterval 2 -MaxSamples 3 |
+        ForEach-Object { $_.CounterSamples | Select-Object Path, CookedValue }
+}
+
+# Process with high CPU — get thread-level detail
+$proc = Get-Process -Name &quot;sqlservr&quot;
+$proc.Threads | Sort-Object TotalProcessorTime -Descending | Select-Object -First 5 Id, TotalProcessorTime
+
+# Check for CPU throttling or power plan
+powercfg /getactivescheme
+# Should be: High Performance for servers
+</code></pre>
+<h2 id="disk-performance">Disk Performance<a class="headerlink" href="#disk-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Disk latency per physical disk
+Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Read',
+            '\PhysicalDisk(*)\Avg. Disk sec/Write',
+            '\PhysicalDisk(*)\Disk Reads/sec',
+            '\PhysicalDisk(*)\Disk Writes/sec' -SampleInterval 2 -MaxSamples 5 |
+    ForEach-Object { $_.CounterSamples | Select-Object Path, CookedValue }
+
+# Identify busy volume
+Get-Counter '\LogicalDisk(*)\% Disk Time' -SampleInterval 2 -MaxSamples 3 |
+    ForEach-Object { $_.CounterSamples | Sort-Object CookedValue -Descending | Select-Object -First 5 Path, CookedValue }
+</code></pre>
+<h2 id="network-performance">Network Performance<a class="headerlink" href="#network-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Throughput per adapter
+Get-Counter '\Network Interface(*)\Bytes Total/sec' -SampleInterval 2 -MaxSamples 3
+
+# Errors and discards
+Get-Counter '\Network Interface(*)\Packets Received Errors',
+            '\Network Interface(*)\Packets Outbound Errors'
+
+# Adapter details
+Get-NetAdapterStatistics | Select-Object Name, ReceivedBytes, SentBytes, ReceivedDiscardedPackets, OutboundDiscardedPackets
+</code></pre>
+<h2 id="windows-performance-analyzer-wpa">Windows Performance Analyzer (WPA)<a class="headerlink" href="#windows-performance-analyzer-wpa" title="Permanent link">&para;</a></h2>
+<p>For deep-dive analysis, collect a Windows Performance Recorder (WPR) trace:</p>
+<pre><code class="language-cmd">:: Start trace
+wpr -start CPU -start DiskIO -start Network -filemode
+
+:: Stop and save
+wpr -stop C:\Logs\trace-$(date /t).etl
+
+:: Open in WPA (Windows Performance Analyzer) for flame graphs and timeline analysis
+</code></pre>
 
 
 

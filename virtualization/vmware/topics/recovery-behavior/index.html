@@ -744,6 +744,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#after-vsan-component-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        After vSAN Component Failure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-performance-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Performance Impact
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-escalate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -764,21 +797,173 @@
 
 
 <h1 id="recovery-behavior-expectations">Recovery Behavior Expectations<a class="headerlink" href="#recovery-behavior-expectations" title="Permanent link">&para;</a></h1>
+<p>Understanding what normal recovery looks like prevents unnecessary intervention during incidents.</p>
 <h2 id="after-host-failure">After Host Failure<a class="headerlink" href="#after-host-failure" title="Permanent link">&para;</a></h2>
-<p>Expected:</p>
-<p>HA restart time: 1–5 minutes
-Resync begins automatically
-Temporary performance impact</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Expected Behavior</th>
+<th>Timeframe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HA detection</td>
+<td>vCenter marks host as unreachable</td>
+<td>0–30 seconds</td>
+</tr>
+<tr>
+<td>HA restart</td>
+<td>FDM restarts VMs on remaining hosts</td>
+<td>1–5 minutes</td>
+</tr>
+<tr>
+<td>VM boot</td>
+<td>Guest OS boots normally</td>
+<td>1–3 minutes</td>
+</tr>
+<tr>
+<td>vSAN resync</td>
+<td>If vSAN — rebuild begins for affected components</td>
+<td>Minutes to hours (data-dependent)</td>
+</tr>
+<tr>
+<td>DRS rebalance</td>
+<td>DRS may initiate vMotions to rebalance</td>
+<td>Within 5–15 minutes</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Monitor HA restart events
+Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -match &quot;VmRestartedByHA&quot; } |
+    Select-Object CreatedTime, @{N=&quot;VM&quot;;E={$_.Vm.Name}}, FullFormattedMessage
+
+# Check current host state
+Get-VMHost | Select-Object Name, ConnectionState, PowerState
+</code></pre>
 <h2 id="after-storage-failure">After Storage Failure<a class="headerlink" href="#after-storage-failure" title="Permanent link">&para;</a></h2>
-<p>Expected:</p>
-<p>Object rebuild begins
-Reduced performance
-Possible latency increase</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Expected Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path marked dead</td>
+<td><code>esxcli storage core path list</code> shows <code>State: dead</code></td>
+</tr>
+<tr>
+<td>APD declared</td>
+<td>After 140 seconds of all paths down (APD)</td>
+</tr>
+<tr>
+<td>PDL declared</td>
+<td>If array signals permanent loss via SCSI sense code</td>
+</tr>
+<tr>
+<td>VMs paused</td>
+<td>APD/PDL triggers HA response (if configured)</td>
+</tr>
+<tr>
+<td>Object rebuild (vSAN)</td>
+<td>New replica created on remaining disk capacity</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Check path states on ESXi host
+esxcli storage core path list | grep -E &quot;State:|Device:&quot;
+
+# APD/PDL events in vmkernel log
+grep -i &quot;APD\|PDL\|lost path&quot; /var/log/vmkernel.log | tail -20
+</code></pre>
+<p><strong>Do not rescan storage unnecessarily during a recovery</strong> — it can delay path re-establishment.</p>
 <h2 id="after-network-failure">After Network Failure<a class="headerlink" href="#after-network-failure" title="Permanent link">&para;</a></h2>
-<p>Expected:</p>
-<p>Temporary VM isolation
-HA or DRS response
-Possible alarm storm</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Expected Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Link down detected</td>
+<td>vmkernel.log logs "Link down" immediately</td>
+</tr>
+<tr>
+<td>HA heartbeat breaks</td>
+<td>After 10 seconds without heartbeat, HA considers host isolated</td>
+</tr>
+<tr>
+<td>Isolation response</td>
+<td>Host executes configured isolation response (leave/power off/shutdown)</td>
+</tr>
+<tr>
+<td>Alarms</td>
+<td>Alarm storm for disconnected VMs and host</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>Once link restored, host reconnects to vCenter within 60–120 seconds</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Check for recent network isolation events
+Get-VIEvent -MaxSamples 1000 | Where-Object { $_.GetType().Name -match &quot;DasHostIsolated&quot; } |
+    Select-Object CreatedTime, FullFormattedMessage
+</code></pre>
+<h2 id="after-vsan-component-failure">After vSAN Component Failure<a class="headerlink" href="#after-vsan-component-failure" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Resync activity (normal after component failure)
+esxcli vsan debug resync list
+
+# Object health — degraded objects mean rebuild in progress
+esxcli vsan debug object list | grep -v healthy
+
+# Do NOT remove a second disk until resync completes
+esxcli vsan debug resync list | grep &quot;Total Bytes&quot;
+</code></pre>
+<h2 id="recovery-performance-impact">Recovery Performance Impact<a class="headerlink" href="#recovery-performance-impact" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Performance Impact</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HA restart</td>
+<td>Affected VMs fully stopped during restart</td>
+<td>Minutes</td>
+</tr>
+<tr>
+<td>vSAN resync</td>
+<td>Up to 30% IOPS reduction during rebuild</td>
+<td>Hours</td>
+</tr>
+<tr>
+<td>NIC failover (teaming)</td>
+<td>Brief (&lt;1s) packet loss during failover</td>
+<td>Sub-second</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>10–15% overhead on source host during transfer</td>
+<td>Minutes per VM</td>
+</tr>
+</tbody>
+</table>
+<h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
+<ul>
+<li>HA restarts still in progress after 15 minutes</li>
+<li>vSAN resync has not started 10 minutes after host failure</li>
+<li>APD not resolved after storage path recovery</li>
+<li>VM fails to power on with "insufficient resources" after HA restart</li>
+</ul>
 
 
 

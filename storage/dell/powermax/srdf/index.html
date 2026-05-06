@@ -21,7 +21,7 @@
     
     
       
-        <title>SRDF - Chris KB</title>
+        <title>SRDF Operations - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srdf" class="md-skip">
+        <a href="#srdf-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRDF
+              SRDF Operations
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#check-srdf-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Check SRDF State
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#srdfs-pair-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        SRDF/S Pair States
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#srdfa-asynchronous-specific" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        SRDF/A (Asynchronous) Specific
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#suspend-and-resume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Suspend and Resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-failover-swap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover (Swap)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Health Check
       
     </span>
   </a>
@@ -774,31 +807,100 @@
 
 
 
-<h1 id="srdf">SRDF<a class="headerlink" href="#srdf" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for SRDF.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="srdf-operations">SRDF Operations<a class="headerlink" href="#srdf-operations" title="Permanent link">&para;</a></h1>
+<p>Day-2 operational tasks for SRDF/S (synchronous) and SRDF/A (asynchronous) replication on PowerMax. For architecture and standards, see the <a href="../../../../disaster-recovery/srdf-s/">DR section</a>.</p>
+<h2 id="check-srdf-state">Check SRDF State<a class="headerlink" href="#check-srdf-state" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all SRDF groups (RDFGs)
+symrdf -sid &lt;sid&gt; list -rdfg all
+
+# Query pair states for a specific RDFG
+symrdf -sid &lt;sid&gt; query -rdfg &lt;rdfg_id&gt;
+
+# Check for any pairs not in Synchronized state
+symrdf -sid &lt;sid&gt; query -rdfg all | grep -v &quot;Synchronized\|InSync\|^$\|Group\|Pair\|---&quot;
+
+# Detailed view of a specific group
+symrdf -sid &lt;sid&gt; list -rdfg &lt;rdfg_id&gt; -v
+</code></pre>
+<h2 id="srdfs-pair-states">SRDF/S Pair States<a class="headerlink" href="#srdfs-pair-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synchronized</td>
+<td>In sync — normal production state</td>
+</tr>
+<tr>
+<td>Synchronizing</td>
+<td>Catching up — data transfer in progress</td>
+</tr>
+<tr>
+<td>Suspended</td>
+<td>Paused — writes queued on R1</td>
+</tr>
+<tr>
+<td>Failed Over</td>
+<td>R2 is R/W, R1 is NR — after failover</td>
+</tr>
+<tr>
+<td>Partitioned</td>
+<td>Communication lost between R1 and R2</td>
+</tr>
+<tr>
+<td>Split</td>
+<td>Deliberately separated — R2 is R/W independently</td>
+</tr>
+</tbody>
+</table>
+<h2 id="srdfa-asynchronous-specific">SRDF/A (Asynchronous) Specific<a class="headerlink" href="#srdfa-asynchronous-specific" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SRDF/A cycle time and RPO
+symrdf -sid &lt;sid&gt; list -rdfg &lt;rdfg_id&gt; | grep -E &quot;Cycle|RPO|Delta&quot;
+
+# Check SRDF/A transmit idle state (DSE)
+symrdf -sid &lt;sid&gt; query -rdfg &lt;rdfg_id&gt; | grep -i &quot;Transmit\|Idle\|Active&quot;
+</code></pre>
+<h2 id="suspend-and-resume">Suspend and Resume<a class="headerlink" href="#suspend-and-resume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Suspend SRDF (stops replication — R1 continues to accept writes)
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_id&gt; suspend -noprompt
+
+# Resume SRDF (R1 re-syncs to R2)
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_id&gt; resume -noprompt
+
+# Resume with consistency check
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_id&gt; establish -noprompt
+</code></pre>
+<h2 id="planned-failover-swap">Planned Failover (Swap)<a class="headerlink" href="#planned-failover-swap" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — Suspend SRDF on R1 side
+symrdf -g &lt;dg_name&gt; -sid &lt;r1_sid&gt; suspend -noprompt
+
+# Step 2 — Swap roles (R2 becomes R/W, R1 becomes write-disabled)
+symrdf -g &lt;dg_name&gt; -sid &lt;r1_sid&gt; swap -noprompt
+
+# Step 3 — After workload moved to DR site, restore to original direction
+symrdf -g &lt;dg_name&gt; -sid &lt;r1_sid&gt; restore -noprompt
+</code></pre>
+<h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># After restoring primary site — re-establish sync from R1 to R2
+symrdf -g &lt;dg_name&gt; -sid &lt;r1_sid&gt; establish -noprompt
+
+# Wait for synchronization to complete
+watch -n 30 &quot;symrdf -sid &lt;r1_sid&gt; query -rdfg &lt;rdfg_id&gt; | grep -v Synchronized&quot;
+</code></pre>
+<h2 id="srdf-health-check">SRDF Health Check<a class="headerlink" href="#srdf-health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full RDFG health summary
+symrdf -sid &lt;sid&gt; list -rdfg all | grep -E &quot;RDFG|State|Mode|Pairs&quot;
+
+# Check for any groups with errors or issues
+symrdf -sid &lt;sid&gt; list -rdfg all | grep -iE &quot;error\|partition\|failed\|suspend&quot; 
+
+# Link utilisation
+symstat -sid &lt;sid&gt; list -type rdf -i 10 -c 3
+</code></pre>
 
 
 

@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-and-inspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List and Inspect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-and-remove-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add and Remove Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parent-child-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parent / Child Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rename-and-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename and Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,31 +798,100 @@
 
 <h1 id="storage-groups">Storage Groups<a class="headerlink" href="#storage-groups" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). Storage Groups are the primary logical grouping mechanism in Unisphere for PowerMax and SYMCLI. Every device that is presented to a host must be in a Storage Group that is part of a Masking View.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List
+<h2 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all storage groups
 symsg list -sid &lt;sid&gt;
 symsg list -sid &lt;sid&gt; -v
+
+# Show contents and properties of a specific SG
 symsg show &lt;sg_name&gt; -sid &lt;sid&gt;
 symsg show &lt;sg_name&gt; -sid &lt;sid&gt; -v
 
-# Create / delete
-symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -type regular
-symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -type parent
-symsg delete &lt;sg_name&gt; -sid &lt;sid&gt;
+# Show SRP (Storage Resource Pool) and service level
+symsg show &lt;sg_name&gt; -sid &lt;sid&gt; | grep -E &quot;SRP|Service Level|Compression&quot;
 
-# Add / remove devices
+# List SGs containing a specific device
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Storage Group&quot;
+</code></pre>
+<h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a regular (leaf) storage group
+symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -type regular
+
+# Create with SRP and service level
+symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -srp SRP_1 -slo Diamond
+
+# Create a parent storage group (contains child SGs)
+symsg create &lt;parent_sg&gt; -sid &lt;sid&gt; -type parent
+
+# Delete a storage group (must have no devices and no masking views)
+symsg delete &lt;sg_name&gt; -sid &lt;sid&gt;
+</code></pre>
+<h2 id="add-and-remove-devices">Add and Remove Devices<a class="headerlink" href="#add-and-remove-devices" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a device to a storage group
 symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;devname&gt;
+
+# Add a range of devices
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;start&gt;:&lt;end&gt;
+
+# Remove a device from a storage group
 symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; remove dev &lt;devname&gt;
 
-# Add child SG to parent SG
+# Create new devices and add to SG
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; addnew dev count=5 emulation=FBA size=100GB
+</code></pre>
+<h2 id="parent-child-hierarchy">Parent / Child Hierarchy<a class="headerlink" href="#parent-child-hierarchy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add child SG to parent SG
 symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; add sg &lt;child_sg&gt;
+
+# Remove child SG from parent SG
 symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; remove sg &lt;child_sg&gt;
 
-# Rename
-symsg rename &lt;old_sg&gt; -new_sg_name &lt;new_sg&gt; -sid &lt;sid&gt;
+# Show hierarchy
+symsg show &lt;parent_sg&gt; -sid &lt;sid&gt; | grep -A 20 &quot;Child Storage Group&quot;
 </code></pre>
+<h2 id="rename-and-modify">Rename and Modify<a class="headerlink" href="#rename-and-modify" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Rename a storage group
+symsg rename &lt;old_sg&gt; -new_sg_name &lt;new_sg&gt; -sid &lt;sid&gt;
+
+# Change service level
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -slo Platinum
+
+# Enable/disable compression
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -compression enabled
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List all SGs</td>
+<td><code>symsg list -sid &lt;sid&gt;</code></td>
+</tr>
+<tr>
+<td>Show SG contents</td>
+<td><code>symsg show &lt;sg&gt; -sid &lt;sid&gt;</code></td>
+</tr>
+<tr>
+<td>Add device to SG</td>
+<td><code>symsg -sid &lt;sid&gt; -sg &lt;sg&gt; add dev &lt;dev&gt;</code></td>
+</tr>
+<tr>
+<td>Create SG with service level</td>
+<td><code>symsg create &lt;sg&gt; -sid &lt;sid&gt; -srp SRP_1 -slo Diamond</code></td>
+</tr>
+<tr>
+<td>Add child to parent SG</td>
+<td><code>symsg -sid &lt;sid&gt; -sg &lt;parent&gt; add sg &lt;child&gt;</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

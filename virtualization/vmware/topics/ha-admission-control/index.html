@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-policies" class="md-nav__link">
+  <a href="#admission-control-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Policies
+        Admission Control Policies
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operational-check" class="md-nav__link">
+  <a href="#checking-admission-control-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Check
+        Checking Admission Control Status
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#risk-indicator" class="md-nav__link">
+  <a href="#configure-admission-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Risk Indicator
+        Configure Admission Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admission-control-and-overcommit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admission Control and Overcommit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risk-indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk Indicators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-heartbeat-datastores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA Heartbeat Datastores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Checklist
       
     </span>
   </a>
@@ -776,19 +820,109 @@
 
 <h1 id="ha-admission-control">HA Admission Control<a class="headerlink" href="#ha-admission-control" title="Permanent link">&para;</a></h1>
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Ensures enough resources exist to restart VMs after a host failure.</p>
-<h2 id="common-policies">Common Policies<a class="headerlink" href="#common-policies" title="Permanent link">&para;</a></h2>
-<p>Host failures cluster tolerates</p>
-<p>Percentage of cluster resources reserved</p>
-<p>Dedicated failover hosts</p>
-<h2 id="operational-check">Operational Check<a class="headerlink" href="#operational-check" title="Permanent link">&para;</a></h2>
-<p>Cluster → Configure → vSphere HA</p>
-<p>Verify:</p>
-<p>Admission control enabled<br />
-Failover capacity available<br />
-No warnings</p>
-<h2 id="risk-indicator">Risk Indicator<a class="headerlink" href="#risk-indicator" title="Permanent link">&para;</a></h2>
-<p>Insufficient failover capacity warning</p>
+<p>Admission control reserves cluster capacity so that in the event of a host failure, vSphere HA can restart all VMs from the failed host on remaining hosts. Without it, a cluster at 100% utilisation cannot restart failed VMs.</p>
+<h2 id="admission-control-policies">Admission Control Policies<a class="headerlink" href="#admission-control-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>How It Works</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Host failures tolerated</strong></td>
+<td>Reserves capacity equivalent to N hosts worth of CPU and memory</td>
+<td>Homogeneous clusters</td>
+</tr>
+<tr>
+<td><strong>Cluster resource percentage</strong></td>
+<td>Reserves X% of total cluster CPU and memory</td>
+<td>Heterogeneous clusters</td>
+</tr>
+<tr>
+<td><strong>Dedicated failover hosts</strong></td>
+<td>Designated hosts sit idle, used only for failover</td>
+<td>Compliance environments requiring dedicated DR capacity</td>
+</tr>
+</tbody>
+</table>
+<h2 id="checking-admission-control-status">Checking Admission Control Status<a class="headerlink" href="#checking-admission-control-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># HA configuration including admission control policy
+Get-Cluster | Select-Object Name, HAEnabled,
+    @{N=&quot;FailoverLevel&quot;;E={$_.ExtensionData.Configuration.DasConfig.AdmissionControlPolicy.FailoverLevel}},
+    @{N=&quot;AdmissionControlEnabled&quot;;E={$_.ExtensionData.Configuration.DasConfig.AdmissionControlEnabled}}
+
+# Cluster current failover capacity
+Get-Cluster | ForEach-Object {
+    $view = $_.ExtensionData
+    [PSCustomObject]@{
+        Cluster     = $_.Name
+        FailoverCPU = $view.Summary.AdmissionControlInfo.CurrentFailoverResourcesUsed.Cpu
+        FailoverMem = $view.Summary.AdmissionControlInfo.CurrentFailoverResourcesUsed.Memory
+    }
+}
+</code></pre>
+<h2 id="configure-admission-control">Configure Admission Control<a class="headerlink" href="#configure-admission-control" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Set to tolerate 1 host failure (percentage policy)
+Set-Cluster -Cluster &quot;&lt;cluster_name&gt;&quot; -HAAdmissionControlEnabled:$true -HAFailoverLevel 1
+
+# Disable admission control (not recommended for production)
+Set-Cluster -Cluster &quot;&lt;cluster_name&gt;&quot; -HAAdmissionControlEnabled:$false
+</code></pre>
+<h2 id="admission-control-and-overcommit">Admission Control and Overcommit<a class="headerlink" href="#admission-control-and-overcommit" title="Permanent link">&para;</a></h2>
+<p>Admission control uses <em>reservation</em> values where set, or a default 32 MHz / 0 MB where no reservations exist. VMs with large reservations can cause admission control to block VM power-ons even when physical resources are available.</p>
+<pre><code class="language-powershell"># Find VMs with CPU reservations
+Get-VM | Where-Object { $_.VMResourceConfiguration.CpuReservationMhz -gt 0 } |
+    Select-Object Name, @{N=&quot;CpuResMHz&quot;;E={$_.VMResourceConfiguration.CpuReservationMhz}}
+
+# Find VMs with memory reservations
+Get-VM | Where-Object { $_.VMResourceConfiguration.MemReservationMB -gt 0 } |
+    Select-Object Name, @{N=&quot;MemResMB&quot;;E={$_.VMResourceConfiguration.MemReservationMB}}
+</code></pre>
+<h2 id="risk-indicators">Risk Indicators<a class="headerlink" href="#risk-indicators" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Warning</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Insufficient failover resources"</td>
+<td>Cluster is too full — HA cannot guarantee restarts</td>
+</tr>
+<tr>
+<td>Admission control disabled</td>
+<td>Any host failure may leave VMs unrecoverable</td>
+</tr>
+<tr>
+<td>All hosts at DRS imbalance level 4–5</td>
+<td>Pre-failure utilisation too high</td>
+</tr>
+<tr>
+<td>Host in maintenance with no headroom</td>
+<td>Remaining hosts cannot absorb a second failure</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ha-heartbeat-datastores">HA Heartbeat Datastores<a class="headerlink" href="#ha-heartbeat-datastores" title="Permanent link">&para;</a></h2>
+<p>HA uses datastore heartbeats to distinguish host isolation from host failure (avoiding false restarts).</p>
+<pre><code class="language-powershell"># Heartbeat datastores configured on a cluster
+$cluster = Get-Cluster &quot;&lt;cluster_name&gt;&quot;
+$cluster.ExtensionData.Configuration.DasConfig.HeartbeatDatastore
+</code></pre>
+<p>Ensure at least 2 heartbeat datastores are configured — ideally on different storage arrays.</p>
+<h2 id="operational-checklist">Operational Checklist<a class="headerlink" href="#operational-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Admission control enabled and policy matches cluster design</li>
+<li>[ ] Failover capacity available (no "Insufficient failover resources" warning)</li>
+<li>[ ] HA heartbeat datastores ≥ 2</li>
+<li>[ ] No hosts in unexpected maintenance mode reducing capacity</li>
+<li>[ ] VM reservations reviewed — excessive reservations inflate required failover capacity</li>
+</ul>
 
 
 

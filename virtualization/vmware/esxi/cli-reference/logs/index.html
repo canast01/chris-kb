@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#logs_1" class="md-nav__link">
+  <a href="#key-log-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logs
+        Key Log Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live-tailing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live Tailing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-for-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching for Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Syslog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-rotation-and-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Rotation and Persistence
       
     </span>
   </a>
@@ -745,26 +800,115 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="logs_1">Logs<a class="headerlink" href="#logs_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Live tailing
+<h2 id="key-log-files">Key Log Files<a class="headerlink" href="#key-log-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vmkernel</td>
+<td><code>/var/log/vmkernel.log</code></td>
+<td>Storage, network, driver-level events</td>
+</tr>
+<tr>
+<td>hostd</td>
+<td><code>/var/log/hostd.log</code></td>
+<td>Host management agent (API, VM operations)</td>
+</tr>
+<tr>
+<td>vpxa</td>
+<td><code>/var/log/vpxa.log</code></td>
+<td>vCenter agent communication</td>
+</tr>
+<tr>
+<td>vobd</td>
+<td><code>/var/log/vobd.log</code></td>
+<td>Hardware/system observation (IPMI, sensors)</td>
+</tr>
+<tr>
+<td>esxi.log</td>
+<td><code>/var/log/esxi.log</code></td>
+<td>ESXi core syslog</td>
+</tr>
+<tr>
+<td>syslog.log</td>
+<td><code>/var/log/syslog.log</code></td>
+<td>General system syslog</td>
+</tr>
+<tr>
+<td>auth.log</td>
+<td><code>/var/log/auth.log</code></td>
+<td>SSH logins, sudo</td>
+</tr>
+<tr>
+<td>fdm.log</td>
+<td><code>/var/log/fdm.log</code></td>
+<td>HA agent (Fault Domain Manager)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="live-tailing">Live Tailing<a class="headerlink" href="#live-tailing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Follow key logs in real time
 tail -f /var/log/vmkernel.log
 tail -f /var/log/hostd.log
 tail -f /var/log/vpxa.log
-tail -f /var/log/vobd.log
-tail -f /var/log/esxi.log
-tail -f /var/log/syslog.log
+tail -f /var/log/fdm.log
 
-# Grep for issues
-grep -i &quot;error&quot; /var/log/vmkernel.log
-grep -i &quot;warning&quot; /var/log/hostd.log
-grep -i &quot;disconnected&quot; /var/log/vpxa.log
-grep -i &quot;lost connectivity&quot; /var/log/vmkernel.log
-grep &lt;vm_name&gt; /var/log/vmkernel.log
+# Multiple logs at once (busybox tail on ESXi)
+tail -f /var/log/vmkernel.log /var/log/hostd.log
+</code></pre>
+<h2 id="searching-for-issues">Searching for Issues<a class="headerlink" href="#searching-for-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Errors and warnings
+grep -i &quot;error\|warning\|fail\|fault&quot; /var/log/vmkernel.log | tail -30
+grep -i &quot;error&quot; /var/log/hostd.log | tail -20
+grep -i &quot;disconnected\|lost connectivity&quot; /var/log/vpxa.log | tail -10
 
-# Log locations
-ls /var/log/
+# Storage path errors
+grep -i &quot;lost path\|path down\|APD\|PDL&quot; /var/log/vmkernel.log | tail -20
+
+# Network errors
+grep -i &quot;link down\|carrier\|vmnic&quot; /var/log/vmkernel.log | tail -20
+
+# HA events
+grep -i &quot;isolation\|restart\|fdm&quot; /var/log/fdm.log | tail -20
+
+# VM-specific events
+grep &quot;&lt;vm_name&gt;&quot; /var/log/vmkernel.log | tail -20
+grep &quot;&lt;vm_name&gt;&quot; /var/log/hostd.log | tail -20
+</code></pre>
+<h2 id="collect-support-bundle">Collect Support Bundle<a class="headerlink" href="#collect-support-bundle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Generate ESXi support bundle (vm-support)
+vm-support -n -w /tmp/
+# Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
+
+# Or trigger from vSphere Client: Host → Actions → Export System Logs
+</code></pre>
+<h2 id="remote-syslog">Remote Syslog<a class="headerlink" href="#remote-syslog" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check current syslog configuration
+esxcli system syslog config get
+
+# Set a remote syslog target
+esxcli system syslog config set --loghost=udp://syslog.corp.local:514
+esxcli system syslog reload
+
+# Add a second syslog target (comma-separated)
+esxcli system syslog config set --loghost=&quot;udp://syslog1.corp.local:514,tcp://syslog2.corp.local:514&quot;
+</code></pre>
+<h2 id="log-rotation-and-persistence">Log Rotation and Persistence<a class="headerlink" href="#log-rotation-and-persistence" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Log size and rotation config
+esxcli system syslog config get | grep -E &quot;rotate\|size&quot;
+
+# Persistent log location (survives reboots — if scratch disk configured)
 ls /scratch/log/
+
+# Check scratch disk assignment
+esxcli system syslog config get | grep &quot;local0&quot;
+cat /etc/vmware/locker.conf
 </code></pre>
 
 

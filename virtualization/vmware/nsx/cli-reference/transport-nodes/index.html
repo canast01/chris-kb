@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transport-nodes-fabric_1" class="md-nav__link">
+  <a href="#transport-nodes-nsx-manager-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transport Nodes &amp; Fabric
+        Transport Nodes (NSX Manager CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transport-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport Zones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tunnel-endpoints-teps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tunnel Endpoints (TEPs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esxi-host-fabric-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host Fabric Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-node-fabric-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Node Fabric Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-mode-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance Mode Workflow
       
     </span>
   </a>
@@ -745,19 +811,108 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="transport-nodes-fabric_1">Transport Nodes &amp; Fabric<a class="headerlink" href="#transport-nodes-fabric_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Transport nodes
+<h2 id="transport-nodes-nsx-manager-cli">Transport Nodes (NSX Manager CLI)<a class="headerlink" href="#transport-nodes-nsx-manager-cli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">nsxcli
+
+# List all transport nodes (ESXi hosts + Edge nodes)
 get transport-nodes
+
+# Detail for a specific transport node
 get transport-node &lt;id&gt;
+
+# Operational status (UP/DOWN/DEGRADED)
 get transport-node &lt;id&gt; status
 
-# Host node connectivity
+# Summary status for all nodes
+get transport-node-status
+</code></pre>
+<h2 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List transport zones (overlay and VLAN backed)
 get transport-zone
+
+# Detail for a specific zone
 get transport-zone &lt;name&gt;
 
-# Tunnel endpoints
+# Which transport nodes are in a zone
+get transport-nodes | grep &lt;zone_name&gt;
+</code></pre>
+<h2 id="tunnel-endpoints-teps">Tunnel Endpoints (TEPs)<a class="headerlink" href="#tunnel-endpoints-teps" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all TEP IPs and associated hosts
 get tunnel endpoints
+
+# Tunnel status between all TEP pairs
+get tunnel status
+
+# Tunnel to a specific remote TEP
+get tunnel status &lt;remote_tep_ip&gt;
+</code></pre>
+<h2 id="esxi-host-fabric-verification">ESXi Host Fabric Verification<a class="headerlink" href="#esxi-host-fabric-verification" title="Permanent link">&para;</a></h2>
+<p>SSH to the ESXi host:</p>
+<pre><code class="language-bash"># NSX VIBs installed
+esxcli software vib list | grep -i nsx
+
+# VDS and NSX Port ID mapping
+net-vdl2 -M all -s 0
+
+# TEP VMkernel IP and state
+esxcli network ip interface ipv4 get | grep -A2 vmk
+
+# TEP uplink binding
+esxcli network ip interface list | grep -i nsx
+</code></pre>
+<h2 id="edge-node-fabric-status">Edge Node Fabric Status<a class="headerlink" href="#edge-node-fabric-status" title="Permanent link">&para;</a></h2>
+<p>SSH to Edge node:</p>
+<pre><code class="language-bash"># Edge interfaces (uplinks + overlay)
+get interfaces
+
+# Geneve overlay interface
+get interface nsx-geneve
+
+# Uplink state
+get interface fp-eth0
+get interface fp-eth1
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport node status DEGRADED</td>
+<td><code>get transport-node &lt;id&gt; status</code> — check VIB version mismatch</td>
+</tr>
+<tr>
+<td>Tunnel DOWN between two hosts</td>
+<td><code>get tunnel status</code> — check TEP IP reachability and MTU ≥ 1600</td>
+</tr>
+<tr>
+<td>ESXi host not joining fabric</td>
+<td><code>esxcli software vib list | grep nsx</code> — VIB may have failed install</td>
+</tr>
+<tr>
+<td>BFD session flapping</td>
+<td>Underlay MTU or path instability — check physical switch</td>
+</tr>
+<tr>
+<td>Segment VMs can't communicate</td>
+<td><code>get logical-switch &lt;id&gt; status</code> + <code>get tunnel status</code> between both host TEPs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="maintenance-mode-workflow">Maintenance Mode Workflow<a class="headerlink" href="#maintenance-mode-workflow" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Before putting ESXi host in maintenance mode:
+# 1. Check no active vSAN resync
+esxcli vsan debug resync list
+
+# 2. Verify NSX DFW is not the sole enforcement point for a segment
+nsxcli
+get transport-node &lt;id&gt; status
+
+# 3. After host in maintenance mode — confirm tunnels reconverged
 get tunnel status
 </code></pre>
 

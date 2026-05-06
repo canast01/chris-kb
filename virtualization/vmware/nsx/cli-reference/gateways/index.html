@@ -712,10 +712,98 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tier-0-and-tier-1-gateways_1" class="md-nav__link">
+  <a href="#list-gateways-nsx-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tier-0 and Tier-1 Gateways
+        List Gateways (NSX Manager)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enter-gateway-context-on-edge-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enter Gateway Context on Edge Node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bgp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BGP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Routes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-and-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA and Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nat-on-tier-0-tier-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT on Tier-0 / Tier-1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
       
     </span>
   </a>
@@ -745,28 +833,122 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="tier-0-and-tier-1-gateways_1">Tier-0 and Tier-1 Gateways<a class="headerlink" href="#tier-0-and-tier-1-gateways_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List gateways (NSX Manager)
+<h2 id="list-gateways-nsx-manager">List Gateways (NSX Manager)<a class="headerlink" href="#list-gateways-nsx-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all logical routers (Tier-0 and Tier-1)
+nsxcli
+get logical-routers
+</code></pre>
+<p>Output includes: UUID, VRF ID, type (TIER0 / TIER1), and Edge cluster.</p>
+<h2 id="enter-gateway-context-on-edge-node">Enter Gateway Context on Edge Node<a class="headerlink" href="#enter-gateway-context-on-edge-node" title="Permanent link">&para;</a></h2>
+<p>SSH to the Edge node, then:</p>
+<pre><code class="language-bash"># List all router VRFs on this Edge
 get logical-routers
 
-# On an Edge Node — enter router context
-vrf &lt;logical-router-id&gt;
+# Enter a specific router's VRF
+vrf &lt;vrf_id&gt;
 
-# Show routes
+# Exit VRF context
+exit
+</code></pre>
+<h2 id="routing">Routing<a class="headerlink" href="#routing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show routing table (all protocols)
+vrf &lt;vrf_id&gt;
 get route
+
+# Detailed route table (next-hop, preference, metric)
 get route detail
+
+# Filter for a specific prefix
+get route &lt;prefix&gt;/&lt;mask&gt;
+
+# Forwarding information base (FIB)
+get forwarding
+</code></pre>
+<h2 id="bgp">BGP<a class="headerlink" href="#bgp" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># BGP neighbor summary (all peers, state, prefixes)
 get bgp neighbor summary
+
+# Detailed view of a specific neighbor
 get bgp neighbor &lt;neighbor_ip&gt;
+
+# Routes received from a neighbor
 get bgp neighbor &lt;neighbor_ip&gt; routes
 
-# Forwarding table
-get forwarding
+# Routes advertised to a neighbor
+get bgp neighbor &lt;neighbor_ip&gt; advertised-routes
 
-# Interfaces
-get interfaces
-get interface &lt;name&gt;
+# BGP configuration summary
+get bgp config
 </code></pre>
+<h2 id="static-routes">Static Routes<a class="headerlink" href="#static-routes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Static routes on this gateway
+get route static
+</code></pre>
+<h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All interfaces (uplinks, downlinks, loopback)
+get interfaces
+
+# Specific interface detail
+get interface &lt;name&gt;
+
+# Interface counters (tx/rx bytes, drops)
+get interface &lt;name&gt; counters
+</code></pre>
+<h2 id="ha-and-failover">HA and Failover<a class="headerlink" href="#ha-and-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># HA state (Active/Standby)
+get edge-cluster status
+
+# Force failover to standby (Active→Standby)
+# Only run on Active Edge node
+set edge-cluster failover
+
+# Edge high availability info
+get high-availability channels
+get high-availability status
+</code></pre>
+<h2 id="nat-on-tier-0-tier-1">NAT on Tier-0 / Tier-1<a class="headerlink" href="#nat-on-tier-0-tier-1" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List NAT rules on this gateway
+vrf &lt;lr_id&gt;
+get nat rules
+
+# NAT rule statistics (hit counters)
+get nat rule stats
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find gateway VRF ID</td>
+<td><code>get logical-routers</code></td>
+</tr>
+<tr>
+<td>Check BGP sessions</td>
+<td><code>vrf &lt;id&gt;</code> → <code>get bgp neighbor summary</code></td>
+</tr>
+<tr>
+<td>Verify route exists</td>
+<td><code>vrf &lt;id&gt;</code> → <code>get route &lt;prefix&gt;</code></td>
+</tr>
+<tr>
+<td>Check interface status</td>
+<td><code>vrf &lt;id&gt;</code> → <code>get interfaces</code></td>
+</tr>
+<tr>
+<td>Check HA state</td>
+<td><code>get edge-cluster status</code></td>
+</tr>
+<tr>
+<td>Force failover</td>
+<td><code>set edge-cluster failover</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

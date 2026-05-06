@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#connection-session_1" class="md-nav__link">
+  <a href="#install-and-configure-powercli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Connection &amp; Session
+        Install and Configure PowerCLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disconnecting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disconnecting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-as-a-script-non-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running as a Script / Non-Interactive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proxy-and-certificate-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy and Certificate Settings
       
     </span>
   </a>
@@ -745,20 +800,69 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="connection-session_1">Connection &amp; Session<a class="headerlink" href="#connection-session_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install PowerCLI
-Install-Module VMware.PowerCLI -Scope CurrentUser
+<h2 id="install-and-configure-powercli">Install and Configure PowerCLI<a class="headerlink" href="#install-and-configure-powercli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Install from PowerShell Gallery (run once)
+Install-Module VMware.PowerCLI -Scope CurrentUser -Force
+
+# Suppress invalid certificate warnings (lab/self-signed)
 Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+
+# Opt out of CEIP telemetry
 Set-PowerCLIConfiguration -ParticipateInCeip $false -Confirm:$false
 
-# Connect
-Connect-VIServer -Server &lt;vcenter&gt;
-Connect-VIServer -Server &lt;vcenter&gt; -User &lt;user&gt; -Password &lt;pass&gt;
+# Check installed version
+Get-Module VMware.PowerCLI -ListAvailable | Select-Object Name, Version
+
+# Update to latest
+Update-Module VMware.PowerCLI
+</code></pre>
+<h2 id="connecting">Connecting<a class="headerlink" href="#connecting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Interactive (prompts for credentials)
+Connect-VIServer -Server &lt;vcenter_fqdn&gt;
+
+# Credential in command (scripts — use a secret vault for production)
+Connect-VIServer -Server vcenter.corp.local -User administrator@vsphere.local -Password &lt;password&gt;
+
+# Using a credential object (safer for scripts)
+$cred = Get-Credential
+Connect-VIServer -Server vcenter.corp.local -Credential $cred
+
+# Connect to multiple vCenters
+Connect-VIServer -Server vcenter1.corp.local, vcenter2.corp.local
+</code></pre>
+<h2 id="session-info">Session Info<a class="headerlink" href="#session-info" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Current connection(s)
+$global:DefaultVIServer
+$global:DefaultVIServers   # when connected to multiple
+
+# Session details (user, API version, connection time)
+$global:DefaultVIServer | Select-Object Name, User, Version, IsConnected, SessionId
+</code></pre>
+<h2 id="disconnecting">Disconnecting<a class="headerlink" href="#disconnecting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Disconnect from all vCenters
 Disconnect-VIServer * -Confirm:$false
 
-# Who am I
-$global:DefaultVIServer
+# Disconnect from a specific vCenter
+Disconnect-VIServer -Server vcenter.corp.local -Confirm:$false
+</code></pre>
+<h2 id="running-as-a-script-non-interactive">Running as a Script / Non-Interactive<a class="headerlink" href="#running-as-a-script-non-interactive" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Store encrypted credential on disk (per-user, per-machine)
+$cred = Get-Credential
+$cred | Export-Clixml -Path &quot;$env:USERPROFILE\.vcenter_cred.xml&quot;
+
+# Load credential in script
+$cred = Import-Clixml -Path &quot;$env:USERPROFILE\.vcenter_cred.xml&quot;
+Connect-VIServer -Server vcenter.corp.local -Credential $cred
+</code></pre>
+<h2 id="proxy-and-certificate-settings">Proxy and Certificate Settings<a class="headerlink" href="#proxy-and-certificate-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Skip proxy for vCenter (when vCenter is on-prem but proxy is active)
+Set-PowerCLIConfiguration -ProxyPolicy NoProxy -Confirm:$false
+
+# Trust all certificates (only for lab environments)
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+
+# Require valid certificates (production default)
+Set-PowerCLIConfiguration -InvalidCertificateAction Fail -Confirm:$false
 </code></pre>
 
 

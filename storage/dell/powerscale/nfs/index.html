@@ -21,7 +21,7 @@
     
     
       
-        <title>NFS - Chris KB</title>
+        <title>PowerScale NFS - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#nfs" class="md-skip">
+        <a href="#powerscale-nfs" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NFS
+              PowerScale NFS
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#export-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Export Management
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#export-client-access-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Export Client Access Levels
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#nfs-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        NFS Settings
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#nfs-zones-access-zones" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        NFS Zones (Access Zones)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Aliases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting NFS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tuning
       
     </span>
   </a>
@@ -774,31 +807,113 @@
 
 
 
-<h1 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for NFS.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerscale-nfs">PowerScale NFS<a class="headerlink" href="#powerscale-nfs" title="Permanent link">&para;</a></h1>
+<p>NFS export management, configuration, and troubleshooting on Dell PowerScale.</p>
+<h2 id="export-management">Export Management<a class="headerlink" href="#export-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all exports
+isi nfs exports list
+isi nfs exports list -v
+
+# View a specific export
+isi nfs exports view &lt;export_id&gt;
+
+# Create an export
+isi nfs exports create /ifs/data/myshare \
+    --clients 10.0.0.0/24 \
+    --read-write-clients 10.0.0.0/24 \
+    --root-clients 10.0.1.5 \
+    --description &quot;Application data share&quot;
+
+# Modify an existing export
+isi nfs exports modify &lt;export_id&gt; --addread-write-clients 10.0.2.0/24
+isi nfs exports modify &lt;export_id&gt; --description &quot;Updated description&quot;
+
+# Delete an export
+isi nfs exports delete &lt;export_id&gt;
+
+# Validate all exports for errors
+isi nfs exports check
+</code></pre>
+<h2 id="export-client-access-levels">Export Client Access Levels<a class="headerlink" href="#export-client-access-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Client Type</th>
+<th>Permission</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--clients</code></td>
+<td>Read-only access</td>
+</tr>
+<tr>
+<td><code>--read-write-clients</code></td>
+<td>Read/write access</td>
+</tr>
+<tr>
+<td><code>--root-clients</code></td>
+<td>Root access (uid 0 not squashed)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="nfs-settings">NFS Settings<a class="headerlink" href="#nfs-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Global NFS settings
+isi nfs settings global view
+
+# Default export settings (applied to new exports)
+isi nfs settings export view
+
+# NFS service status
+isi services nfs status
+
+# Restart NFS service (with caution — disrupts active mounts)
+isi services nfs restart
+</code></pre>
+<h2 id="nfs-zones-access-zones">NFS Zones (Access Zones)<a class="headerlink" href="#nfs-zones-access-zones" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List access zones
+isi zones list
+
+# Create export in a specific access zone
+isi nfs exports create /ifs/zone1/data \
+    --zone Zone1 \
+    --read-write-clients 10.1.0.0/24
+
+# List exports by access zone
+isi nfs exports list --zone Zone1
+</code></pre>
+<h2 id="nfs-aliases">NFS Aliases<a class="headerlink" href="#nfs-aliases" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NFS aliases map a shorter path to a full /ifs path
+isi nfs aliases list
+isi nfs aliases create /exports/data /ifs/data/project1
+</code></pre>
+<h2 id="troubleshooting-nfs">Troubleshooting NFS<a class="headerlink" href="#troubleshooting-nfs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check mount errors from client side (Linux)
+showmount -e &lt;powerscale-ip&gt;
+mount -t nfs &lt;ip&gt;:/ifs/data/share /mnt/test
+dmesg | grep nfs | tail -10
+
+# Check NFS stats on the cluster
+isi statistics protocol list --protocol nfs3
+isi statistics protocol list --protocol nfs4
+
+# Check for NFS errors in events
+isi event events list | grep -i nfs
+
+# Verify export path exists
+isi quota quotas list --path /ifs/data/share
+ls -la /ifs/data/share   # (from cluster shell)
+</code></pre>
+<h2 id="performance-tuning">Performance Tuning<a class="headerlink" href="#performance-tuning" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Increase NFS export throughput — disable attribute caching (for consistency-sensitive workloads)
+isi nfs exports modify &lt;export_id&gt; --no-attribute-cache
+
+# Block size for large sequential I/O
+isi nfs exports modify &lt;export_id&gt; --block-size 524288
+
+# Check current NFS client stats
+isi statistics client list | grep nfs | sort -k3 -rn | head -10
+</code></pre>
 
 
 

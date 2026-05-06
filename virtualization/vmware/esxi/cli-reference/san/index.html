@@ -712,6 +712,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#fibre-channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fibre Channel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#iscsi" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -723,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fibre-channel" class="md-nav__link">
+  <a href="#storage-paths-and-multipathing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fibre Channel
+        Storage Paths and Multipathing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lun-and-device-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LUN and Device Info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -756,21 +789,95 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
-<hr />
+<h2 id="fibre-channel">Fibre Channel<a class="headerlink" href="#fibre-channel" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List HBAs and WWPNs
+esxcli storage san fc list
+
+# FC HBA stats (errors, logins)
+esxcli storage san fc stats get -A vmhba0
+esxcli storage san fc stats get -A vmhba1
+
+# FC device paths
+esxcli storage nmp device list | grep vmhba
+
+# Path status to all LUNs
+esxcli storage nmp path list
+
+# Paths to a specific device
+esxcli storage nmp path list -d &lt;naa.xxx&gt;
+
+# Dead paths
+esxcli storage core path list | grep &quot;dead\|Dead&quot;
+</code></pre>
 <h2 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">esxcli iscsi adapter list
+<pre><code class="language-bash"># List iSCSI adapters
+esxcli iscsi adapter list
+
+# iSCSI adapter details (IQN, status)
 esxcli iscsi adapter get -A vmhba64
+
+# List discovery targets
 esxcli iscsi adapter discovery sendtarget list -A vmhba64
-esxcli iscsi adapter discovery sendtarget add --address &lt;ip&gt;:&lt;port&gt; -A vmhba64
-esxcli iscsi adapter discovery sendtarget remove --address &lt;ip&gt;:&lt;port&gt; -A vmhba64
+
+# Add a send-target (static discovery)
+esxcli iscsi adapter discovery sendtarget add \
+    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
+
+# Remove a send-target
+esxcli iscsi adapter discovery sendtarget remove \
+    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
+
+# List active iSCSI sessions
 esxcli iscsi session list
+
+# iSCSI network portals (bound VMkernel adapters)
 esxcli iscsi logicalnetworkportal list -A vmhba64
 </code></pre>
-<hr />
-<h2 id="fibre-channel">Fibre Channel<a class="headerlink" href="#fibre-channel" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">esxcli storage san fc list
-esxcli storage san fc stats get -A vmhba0
-esxcli storage san iscsi list
+<h2 id="storage-paths-and-multipathing">Storage Paths and Multipathing<a class="headerlink" href="#storage-paths-and-multipathing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all LUN paths with state
+esxcli storage core path list
+
+# NMP (Native Multipath Plugin) device list
+esxcli storage nmp device list
+
+# PSP (Path Selection Policy) per device
+esxcli storage nmp device list | grep -E &quot;Device:|PSP:&quot;
+
+# Set PSP for a device (e.g., Round Robin for PowerMax)
+esxcli storage nmp device set -d &lt;naa.xxx&gt; -P VMW_PSP_RR
+
+# Force rescan of all adapters
+esxcli storage core adapter rescan --all
+
+# Rescan a specific adapter
+esxcli storage core adapter rescan -A vmhba0
+</code></pre>
+<h2 id="lun-and-device-info">LUN and Device Info<a class="headerlink" href="#lun-and-device-info" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all storage devices
+esxcli storage core device list
+
+# Device details (vendor, model, size, queue depth)
+esxcli storage core device list -d &lt;naa.xxx&gt;
+
+# VAAI (XCOPY/ATS) support on a device
+esxcli storage core device vaai status get -d &lt;naa.xxx&gt;
+
+# Queue depth per device
+esxcli storage core device list | grep &quot;Queue Full Threshold&quot;
+
+# Set queue depth for a device
+esxcli storage core device set --device &lt;naa.xxx&gt; -O MaxQueueDepth=64
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check for APD (All Paths Down) or PDL (Permanent Device Loss)
+grep -i &quot;APD\|PDL\|lost path&quot; /var/log/vmkernel.log | tail -20
+
+# Dead path detail
+esxcli storage core path list | grep -A 5 &quot;State: dead&quot;
+
+# Rescan and verify paths recovered
+esxcli storage core adapter rescan --all
+esxcli storage core path list | grep -c &quot;State: active&quot;
 </code></pre>
 
 

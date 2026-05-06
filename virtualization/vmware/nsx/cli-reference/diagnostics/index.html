@@ -712,10 +712,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#diagnostics-troubleshooting_1" class="md-nav__link">
+  <a href="#central-cli-nsx-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Diagnostics &amp; Troubleshooting
+        Central CLI (NSX Manager)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traceflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traceflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packet-capture-on-edge-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packet Capture on Edge Node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bgp-and-routing-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BGP and Routing Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-and-cluster-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health and Cluster Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-diagnostic-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Diagnostic Scenarios
       
     </span>
   </a>
@@ -745,26 +822,137 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="diagnostics-troubleshooting_1">Diagnostics &amp; Troubleshooting<a class="headerlink" href="#diagnostics-troubleshooting_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Central CLI (run from NSX Manager against any node)
-nsxcli -u admin
+<h2 id="central-cli-nsx-manager">Central CLI (NSX Manager)<a class="headerlink" href="#central-cli-nsx-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Connect to NSX Manager via SSH then enter nsxcli
+nsxcli
 
-# Traceflow (Manager UI / API primarily, CLI helper)
+# Or run a single command without interactive mode
+nsxcli -c &quot;get managers&quot;
+</code></pre>
+<h2 id="traceflow">Traceflow<a class="headerlink" href="#traceflow" title="Permanent link">&para;</a></h2>
+<p>Traceflow injects a probe packet to trace its path through the logical network.</p>
+<pre><code class="language-bash"># List active traceflows
 get traceflows
 
-# Packet capture on Edge
+# Traceflow is primarily launched from NSX Manager UI:
+# Plan &amp; Troubleshoot → Traceflow
+# Or via API: POST /api/v1/traceflows
+</code></pre>
+<h2 id="packet-capture-on-edge-node">Packet Capture on Edge Node<a class="headerlink" href="#packet-capture-on-edge-node" title="Permanent link">&para;</a></h2>
+<p>SSH to the Edge node, then:</p>
+<pre><code class="language-bash"># Capture on uplink (physical interface)
 debug packet capture interface fp-eth0 count 500
+
+# Capture on Geneve overlay interface
 debug packet capture interface nsx-geneve count 500
 
-# Log levels
-set service manager logging-level debug
-set service manager logging-level info
+# Capture with filter (BPF syntax)
+debug packet capture interface fp-eth0 filter &quot;host 10.0.0.1&quot; count 200
 
-# System logs
-get logs
-get log manager follow
+# Write to file for Wireshark analysis
+debug packet capture interface fp-eth0 file /tmp/cap.pcap count 1000
 </code></pre>
+<h2 id="log-management">Log Management<a class="headerlink" href="#log-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View recent logs
+get logs
+
+# Follow logs in real time
+get log manager follow
+
+# Set log level (Edge or Manager node)
+set service manager logging-level debug
+set service manager logging-level info      # reset after troubleshooting
+
+# NSX log file locations (SSH to node)
+ls /var/log/vmware/nsx-*/
+tail -f /var/log/vmware/nsx-manager/manager.log
+tail -f /var/log/vmware/nsx-edge/edge.log
+</code></pre>
+<h2 id="connectivity-tests">Connectivity Tests<a class="headerlink" href="#connectivity-tests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Ping from NSX Manager node
+vrf &lt;lr_id&gt;
+ping &lt;destination_ip&gt;
+ping &lt;destination_ip&gt; repeat 100 size 1400
+
+# Traceroute through overlay
+traceroute &lt;destination_ip&gt;
+
+# Test DNS resolution from Edge
+nslookup &lt;hostname&gt;
+</code></pre>
+<h2 id="bgp-and-routing-diagnostics">BGP and Routing Diagnostics<a class="headerlink" href="#bgp-and-routing-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check BGP session state (run on Edge in gateway VRF)
+vrf &lt;lr_id&gt;
+get bgp neighbor summary
+
+# BGP route counts per neighbor
+get bgp neighbor &lt;neighbor_ip&gt;
+
+# Advertised routes to a peer
+get bgp neighbor &lt;neighbor_ip&gt; advertised-routes
+
+# Received routes from a peer
+get bgp neighbor &lt;neighbor_ip&gt; routes
+
+# Full forwarding table
+get forwarding
+
+# Check for route to a specific prefix
+get route &lt;prefix&gt;/&lt;mask&gt;
+</code></pre>
+<h2 id="health-and-cluster-status">Health and Cluster Status<a class="headerlink" href="#health-and-cluster-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NSX Manager cluster health
+get managers
+get clusters
+get cluster status
+
+# Corfu DB (control plane) status
+get corfu-cluster status
+
+# Individual service status
+get service manager
+get service http
+get service controller
+
+# Transport node connectivity
+get transport-nodes
+get transport-node-status
+</code></pre>
+<h2 id="common-diagnostic-scenarios">Common Diagnostic Scenarios<a class="headerlink" href="#common-diagnostic-scenarios" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM can't reach gateway</td>
+<td><code>vsipioctl getrules</code> on source ESXi host — check DFW drop</td>
+</tr>
+<tr>
+<td>BGP session down</td>
+<td><code>vrf &lt;id&gt;</code> → <code>get bgp neighbor summary</code> on Edge</td>
+</tr>
+<tr>
+<td>Tunnel flapping</td>
+<td><code>get tunnel status</code> — check underlay MTU (needs ≥ 1600 for Geneve)</td>
+</tr>
+<tr>
+<td>Segment not reachable</td>
+<td><code>get logical-switch &lt;id&gt; status</code> — check replication mode</td>
+</tr>
+<tr>
+<td>High CPU on Edge</td>
+<td><code>get service dataplane stats</code> — check connection table</td>
+</tr>
+<tr>
+<td>Manager UI unreachable</td>
+<td><code>get service http</code> + <code>get cluster status</code> on Manager node</td>
+</tr>
+</tbody>
+</table>
 
 
 

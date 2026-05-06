@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-delete-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Delete Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-flags-and-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Flags and Properties
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,26 +798,99 @@
 
 <h1 id="devices">Devices<a class="headerlink" href="#devices" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). Devices are the thin or thick volumes presented to hosts. All production devices on PowerMax should be thin (TDEV).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List devices
+<h2 id="list-devices">List Devices<a class="headerlink" href="#list-devices" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All devices
 symdev list -sid &lt;sid&gt;
 symdev list -sid &lt;sid&gt; -v
+
+# Assigned (in a masking view) vs unassigned
 symdev list -sid &lt;sid&gt; -assigned
 symdev list -sid &lt;sid&gt; -unassigned
+
+# Mapped to hosts
 symdev list -sid &lt;sid&gt; -mapped
-symdev list -sid &lt;sid&gt; -spare
-symdev list -sid &lt;sid&gt; -failed
+
+# Thin devices (TDEV) — should be all production volumes
 symdev list -sid &lt;sid&gt; -tdev
 
-# Device details
+# Failed or degraded devices
+symdev list -sid &lt;sid&gt; -failed
+
+# Spare devices
+symdev list -sid &lt;sid&gt; -spare
+</code></pre>
+<h2 id="device-details">Device Details<a class="headerlink" href="#device-details" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full device info (capacity, SG membership, SRDF state, host mapping)
 symdev show &lt;devname&gt; -sid &lt;sid&gt;
 symdev show &lt;devname&gt; -sid &lt;sid&gt; -v
 
-# Device performance
-symdev list -sid &lt;sid&gt; -perf
+# Show SRDF pair info for a device
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep -E &quot;RDF|Pair State|R1|R2&quot;
+
+# Show storage group membership
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Storage Group&quot;
 </code></pre>
+<h2 id="create-and-delete-devices">Create and Delete Devices<a class="headerlink" href="#create-and-delete-devices" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create thin devices (preferred method — add directly to SG)
+symconfigure -sid &lt;sid&gt; -cmd &quot;create dev count=10, size=100GB, emulation=FBA, config=TDEV, sg=&lt;sg_name&gt;;&quot; commit -noprompt
+
+# Delete a device (must be unmasked and removed from all SGs)
+symdev -sid &lt;sid&gt; not_ready &lt;devname&gt; -noprompt
+symconfigure -sid &lt;sid&gt; -cmd &quot;delete dev &lt;devname&gt;;&quot; commit -noprompt
+</code></pre>
+<h2 id="device-flags-and-properties">Device Flags and Properties<a class="headerlink" href="#device-flags-and-properties" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check if device is write-disabled (RDF R2 side in sync)
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Write Disable&quot;
+
+# Check thin pool subscription
+symcfg -sid &lt;sid&gt; show -pool -thin -demand | grep -E &quot;Total|Subscribed|Free&quot;
+
+# Check device binding to SRDF group
+symdev list -sid &lt;sid&gt; -rdfg &lt;rdfg_number&gt;
+</code></pre>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Device I/O stats (requires Solutions Enabler perf daemon)
+symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt;
+
+# All device stats (output can be large)
+symstat -sid &lt;sid&gt; list -type dev
+
+# Top devices by IOPS
+symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List all thin devices</td>
+<td><code>symdev list -sid &lt;sid&gt; -tdev</code></td>
+</tr>
+<tr>
+<td>Show device detail</td>
+<td><code>symdev show &lt;devname&gt; -sid &lt;sid&gt;</code></td>
+</tr>
+<tr>
+<td>List failed devices</td>
+<td><code>symdev list -sid &lt;sid&gt; -failed</code></td>
+</tr>
+<tr>
+<td>List unassigned devices</td>
+<td><code>symdev list -sid &lt;sid&gt; -unassigned</code></td>
+</tr>
+<tr>
+<td>Create TDEVs in SG</td>
+<td><code>symconfigure ... create dev ... sg=&lt;sg&gt;</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

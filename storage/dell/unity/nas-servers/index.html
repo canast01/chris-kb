@@ -21,7 +21,7 @@
     
     
       
-        <title>NAS Servers - Chris KB</title>
+        <title>Dell Unity NAS Servers - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#nas-servers" class="md-skip">
+        <a href="#dell-unity-nas-servers" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NAS Servers
+              Dell Unity NAS Servers
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#list-and-inspect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        List and Inspect
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#create-a-nas-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Create a NAS Server
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#ad-ldap-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        AD / LDAP Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-interfaces-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Interfaces (Network)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-systems-on-the-nas-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Systems (on the NAS Server)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-sp-rebalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover / SP Rebalance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -774,31 +818,103 @@
 
 
 
-<h1 id="nas-servers">NAS Servers<a class="headerlink" href="#nas-servers" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for NAS Servers.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="dell-unity-nas-servers">Dell Unity NAS Servers<a class="headerlink" href="#dell-unity-nas-servers" title="Permanent link">&para;</a></h1>
+<p>NAS server lifecycle management — create, configure, and troubleshoot NAS servers on Dell Unity.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.</p>
+<h2 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all NAS servers
+uemcli -d &lt;ip&gt; -u admin /nas/server show
+uemcli -d &lt;ip&gt; -u admin /nas/server show -detail
+
+# View a specific NAS server
+uemcli -d &lt;ip&gt; -u admin /nas/server -id &lt;nas_id&gt; show -detail
+</code></pre>
+<h2 id="create-a-nas-server">Create a NAS Server<a class="headerlink" href="#create-a-nas-server" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create NAS server on a specific SP
+uemcli -d &lt;ip&gt; -u admin /nas/server create \
+    -name &lt;nas_name&gt; \
+    -sp &lt;spa_or_spb&gt; \
+    -pool &lt;pool_id&gt;
+
+# Enable both NFS and SMB protocols
+uemcli -d &lt;ip&gt; -u admin /nas/server -id &lt;nas_id&gt; set \
+    -fileInterface &lt;if_id&gt;
+</code></pre>
+<h2 id="ad-ldap-authentication">AD / LDAP Authentication<a class="headerlink" href="#ad-ldap-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Join NAS server to Active Directory
+uemcli -d &lt;ip&gt; -u admin /nas/ad create \
+    -server &lt;nas_id&gt; \
+    -domain corp.local \
+    -username &lt;ad_admin_user&gt; \
+    -passwd &lt;password&gt; \
+    -organizationalUnit &quot;OU=Servers,DC=corp,DC=local&quot;
+
+# List AD configurations
+uemcli -d &lt;ip&gt; -u admin /nas/ad show
+
+# LDAP configuration (for NFS UID/GID mapping)
+uemcli -d &lt;ip&gt; -u admin /nas/ldap show
+</code></pre>
+<h2 id="file-interfaces-network">File Interfaces (Network)<a class="headerlink" href="#file-interfaces-network" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List file interfaces (IPs on the NAS server)
+uemcli -d &lt;ip&gt; -u admin /net/nas/if show
+uemcli -d &lt;ip&gt; -u admin /net/nas/if show -detail
+
+# Create a file interface (IP for NFS/SMB access)
+uemcli -d &lt;ip&gt; -u admin /net/nas/if create \
+    -server &lt;nas_id&gt; \
+    -port &lt;sp_port_id&gt; \
+    -addr &lt;ip_address&gt; \
+    -netmask &lt;mask&gt; \
+    -gateway &lt;gateway&gt;
+</code></pre>
+<h2 id="file-systems-on-the-nas-server">File Systems (on the NAS Server)<a class="headerlink" href="#file-systems-on-the-nas-server" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List file systems
+uemcli -d &lt;ip&gt; -u admin /stor/config/fs show
+uemcli -d &lt;ip&gt; -u admin /stor/config/fs show -detail
+
+# Create a file system
+uemcli -d &lt;ip&gt; -u admin /stor/config/fs create \
+    -name &lt;fs_name&gt; \
+    -nasServer &lt;nas_id&gt; \
+    -pool &lt;pool_id&gt; \
+    -size 5T \
+    -supportedProtocols Mixed   # NFS + SMB
+
+# Create NFS share on a file system
+uemcli -d &lt;ip&gt; -u admin /prot/nfs create \
+    -server &lt;nas_id&gt; \
+    -path / \
+    -fs &lt;fs_id&gt;
+
+# Create SMB share on a file system
+uemcli -d &lt;ip&gt; -u admin /prot/smb create \
+    -name &lt;share_name&gt; \
+    -server &lt;nas_id&gt; \
+    -path / \
+    -fs &lt;fs_id&gt;
+</code></pre>
+<h2 id="failover-sp-rebalance">Failover / SP Rebalance<a class="headerlink" href="#failover-sp-rebalance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Move NAS server to the other SP (planned rebalance)
+uemcli -d &lt;ip&gt; -u admin /nas/server -id &lt;nas_id&gt; set -sp &lt;spb&gt;
+
+# Check SP ownership after failover
+uemcli -d &lt;ip&gt; -u admin /nas/server show | grep -E &quot;Name|SP&quot;
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check NAS server health
+uemcli -d &lt;ip&gt; -u admin /nas/server -id &lt;nas_id&gt; show -detail | grep -E &quot;Health|State&quot;
+
+# Check file interface status
+uemcli -d &lt;ip&gt; -u admin /net/nas/if show | grep -E &quot;Health|Addr&quot;
+
+# Active NFS sessions
+uemcli -d &lt;ip&gt; -u admin /prot/nfs/session show
+
+# Active SMB sessions
+uemcli -d &lt;ip&gt; -u admin /prot/smb/session show
+</code></pre>
 
 
 

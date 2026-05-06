@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-checks-via-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Checks via Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-for-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export for Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerting-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerting Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,21 +798,91 @@
 
 <h1 id="events-audit">Events &amp; Audit<a class="headerlink" href="#events-audit" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
+<p>Part of the Dell PowerMax CLI Reference (SYMCLI). Review events after any array alert, before opening a support case, and as part of regular health checks.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Events
+<h2 id="system-events">System Events<a class="headerlink" href="#system-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all recent events
 symevent list -sid &lt;sid&gt;
 symevent list -sid &lt;sid&gt; -v
-symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2025 00:00:00&quot;
-symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2025 00:00:00&quot; -end_time &quot;01/02/2025 00:00:00&quot;
 
-# Audit log
+# Filter by time range
+symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
+symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot; -end_time &quot;01/02/2026 00:00:00&quot;
+
+# Filter by severity
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;WARNING\|ERROR\|FATAL&quot;
+
+# Event count summary
+symevent list -sid &lt;sid&gt; | wc -l
+</code></pre>
+<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all audit entries
 symaudit list -sid &lt;sid&gt;
 symaudit list -sid &lt;sid&gt; -v
-symaudit list -sid &lt;sid&gt; -start_time &quot;01/01/2025 00:00:00&quot;
+
+# Filter by time
+symaudit list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
+
+# Filter by user
 symaudit list -sid &lt;sid&gt; -user &lt;username&gt;
+
+# Filter by action type
+symaudit list -sid &lt;sid&gt; -v | grep -i &quot;Create\|Delete\|Modify\|SRDF&quot;
 </code></pre>
+<h2 id="health-checks-via-events">Health Checks via Events<a class="headerlink" href="#health-checks-via-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check for any uncleared events (active alerts)
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;uncleared\|active&quot;
+
+# Check for drive-related events
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;disk\|drive\|BE\|DAE&quot;
+
+# Check for replication events
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;RDF\|SRDF\|replication&quot;
+
+# Check for port/director events
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;port\|director\|link&quot;
+</code></pre>
+<h2 id="export-for-support-case">Export for Support Case<a class="headerlink" href="#export-for-support-case" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Export events to file for Dell TAC
+symevent list -sid &lt;sid&gt; -v -output csv &gt; /tmp/events-$(date +%Y%m%d).csv
+symaudit list -sid &lt;sid&gt; -v &gt; /tmp/audit-$(date +%Y%m%d).txt
+</code></pre>
+<h2 id="alerting-integration">Alerting Integration<a class="headerlink" href="#alerting-integration" title="Permanent link">&para;</a></h2>
+<p>Events on PowerMax can be forwarded via:
+- Unisphere for PowerMax → Settings → Alert Policies (email, SNMP trap)
+- Solutions Enabler SYMAPI server event daemon
+- Dell CloudIQ (cloud-connected monitoring) — see <a href="../../../../../monitoring/cloudiq/operations/">CloudIQ Operations</a></p>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List all events</td>
+<td><code>symevent list -sid &lt;sid&gt;</code></td>
+</tr>
+<tr>
+<td>Events with detail</td>
+<td><code>symevent list -sid &lt;sid&gt; -v</code></td>
+</tr>
+<tr>
+<td>Events since date</td>
+<td><code>symevent list -sid &lt;sid&gt; -start_time "MM/DD/YYYY HH:MM:SS"</code></td>
+</tr>
+<tr>
+<td>Audit log</td>
+<td><code>symaudit list -sid &lt;sid&gt;</code></td>
+</tr>
+<tr>
+<td>Audit by user</td>
+<td><code>symaudit list -sid &lt;sid&gt; -user &lt;username&gt;</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

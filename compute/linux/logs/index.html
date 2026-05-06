@@ -21,7 +21,7 @@
     
     
       
-        <title>Logs - Chris KB</title>
+        <title>Linux Logs - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#logs" class="md-skip">
+        <a href="#linux-logs" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Logs
+              Linux Logs
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#log-locations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Log Locations
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#journalctl-common-queries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        journalctl — Common Queries
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#dmesg-kernel-ring-buffer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        dmesg — Kernel Ring Buffer
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#audit-log-auditd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Audit Log (auditd)
       
     </span>
   </a>
@@ -756,10 +756,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#authentication-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Authentication Events
       
     </span>
   </a>
@@ -767,10 +767,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#log-rotation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Log Rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-log-forwarding-rsyslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Log Forwarding (rsyslog)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#journal-size-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Journal Size Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-events-around-an-incident" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Events Around an Incident
       
     </span>
   </a>
@@ -796,43 +829,189 @@
 
 
 
-<h1 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Linux Logs notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="linux-logs">Linux Logs<a class="headerlink" href="#linux-logs" title="Permanent link">&para;</a></h1>
+<p>Log locations, query commands, and forwarding configuration for RHEL and Ubuntu.</p>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path / Command</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System journal</td>
+<td><code>journalctl</code></td>
+<td>All systemd units, kernel, boot</td>
+</tr>
+<tr>
+<td>Kernel messages</td>
+<td><code>dmesg</code> / <code>journalctl -k</code></td>
+<td>Hardware, driver events</td>
+</tr>
+<tr>
+<td>Auth / SSH</td>
+<td><code>journalctl _SYSTEMD_UNIT=sshd.service</code></td>
+<td>Login, sudo, SSH</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td><code>/var/log/audit/audit.log</code></td>
+<td>SELinux denials, syscall auditing</td>
+</tr>
+<tr>
+<td>Application</td>
+<td><code>/var/log/&lt;app&gt;/</code> or <code>journalctl -u &lt;svc&gt;</code></td>
+<td>Per-service</td>
+</tr>
+<tr>
+<td>cron</td>
+<td><code>/var/log/cron</code> (RHEL) / <code>journalctl -u cron</code></td>
+<td>Scheduled job output</td>
+</tr>
+<tr>
+<td>Boot log</td>
+<td><code>journalctl -b</code></td>
+<td>Full boot sequence</td>
+</tr>
+<tr>
+<td>DNF/YUM history</td>
+<td><code>/var/log/dnf.log</code> + <code>dnf history</code></td>
+<td>Package installs/removals (RHEL)</td>
+</tr>
+<tr>
+<td>APT history</td>
+<td><code>/var/log/apt/history.log</code></td>
+<td>Package changes (Ubuntu)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="journalctl-common-queries">journalctl — Common Queries<a class="headerlink" href="#journalctl-common-queries" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Errors and above — last hour
+journalctl -p err --since &quot;1 hour ago&quot;
+
+# Follow a service in real time
+journalctl -u nginx.service -f
+
+# Messages since last boot
+journalctl -b
+
+# Previous boot (for crashed systems)
+journalctl -b -1
+
+# Between timestamps
+journalctl --since &quot;2026-05-01 08:00:00&quot; --until &quot;2026-05-01 09:00:00&quot;
+
+# By PID
+journalctl _PID=1234
+
+# Kernel messages only
+journalctl -k
+
+# Output as JSON (for parsing)
+journalctl -u myservice -o json | jq '.MESSAGE'
+
+# Export for TAC/vendor
+journalctl --since &quot;yesterday&quot; &gt; /tmp/journal-export.txt
+</code></pre>
+<h2 id="dmesg-kernel-ring-buffer">dmesg — Kernel Ring Buffer<a class="headerlink" href="#dmesg-kernel-ring-buffer" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Errors and warnings
+dmesg --level=err,warn
+
+# Watch in real time
+dmesg -w
+
+# Hardware errors (memory, disk, network)
+dmesg | grep -iE &quot;error|fail|reset|timeout|uncorrect&quot; | tail -30
+
+# Disk I/O errors
+dmesg | grep -iE &quot;sd[a-z]|nvme|blk_update_request|I/O error&quot;
+
+# OOM events
+dmesg | grep -i &quot;oom\|killed process\|out of memory&quot;
+</code></pre>
+<h2 id="audit-log-auditd">Audit Log (auditd)<a class="headerlink" href="#audit-log-auditd" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SELinux denials
+ausearch -m avc --start recent
+
+# Failed logins
+ausearch -m USER_AUTH --success no --start today
+
+# Changes to sensitive files
+ausearch -f /etc/passwd
+ausearch -f /etc/sudoers
+
+# Commands run via sudo
+ausearch -ua root --start today | grep EXECVE
+
+# Summary report
+aureport --summary
+aureport --login --failed
+</code></pre>
+<h2 id="authentication-events">Authentication Events<a class="headerlink" href="#authentication-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failed SSH password attempts
+journalctl _SYSTEMD_UNIT=sshd.service | grep &quot;Failed password&quot; | tail -30
+
+# Successful SSH logins
+journalctl _SYSTEMD_UNIT=sshd.service | grep &quot;Accepted&quot; | tail -20
+
+# sudo usage today
+journalctl --since today | grep sudo | tail -30
+
+# Account lockouts
+journalctl | grep &quot;pam_tally\|account locked\|pam_unix.*authentication failure&quot; | tail -20
+</code></pre>
+<h2 id="log-rotation">Log Rotation<a class="headerlink" href="#log-rotation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View rotation config
+cat /etc/logrotate.conf
+ls /etc/logrotate.d/
+
+# Force rotation (testing — non-destructive)
+logrotate -vf /etc/logrotate.d/&lt;appname&gt;
+
+# Check when logs were last rotated
+ls -la /var/log/*.1 /var/log/*.gz 2&gt;/dev/null | head -20
+</code></pre>
+<h2 id="remote-log-forwarding-rsyslog">Remote Log Forwarding (rsyslog)<a class="headerlink" href="#remote-log-forwarding-rsyslog" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># /etc/rsyslog.d/90-remote.conf — forward all logs via TCP to centralised syslog
+*.* action(type=&quot;omfwd&quot;
+    target=&quot;syslog.corp.local&quot;
+    port=&quot;514&quot;
+    protocol=&quot;tcp&quot;)
+
+# Restart rsyslog
+systemctl restart rsyslog
+
+# Verify TCP connection to syslog server
+ss -tnp | grep :514
+</code></pre>
+<h2 id="journal-size-management">Journal Size Management<a class="headerlink" href="#journal-size-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check journal disk usage
+journalctl --disk-usage
+
+# Vacuum to keep last 7 days
+journalctl --vacuum-time=7d
+
+# Vacuum to size limit
+journalctl --vacuum-size=500M
+
+# Persistent journal size cap in /etc/systemd/journald.conf:
+# SystemMaxUse=2G
+systemctl restart systemd-journald
+</code></pre>
+<h2 id="finding-events-around-an-incident">Finding Events Around an Incident<a class="headerlink" href="#finding-events-around-an-incident" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All logs ±5 minutes around a known failure time
+journalctl --since &quot;2026-05-01 14:25:00&quot; --until &quot;2026-05-01 14:35:00&quot; -p warning
+
+# Correlate kernel + service events at the same time
+journalctl --since &quot;2026-05-01 14:25:00&quot; --until &quot;2026-05-01 14:35:00&quot; \
+    -u myservice.service -k | sort
+
+# Search for a specific string across all units
+journalctl --since &quot;today&quot; | grep -i &quot;connection refused\|timeout\|SIGKILL&quot;
+</code></pre>
 
 
 

@@ -705,6 +705,157 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-vcenter-and-management-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. vCenter and Management Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-host-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Host Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-active-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Active Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-datastore-free-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Datastore Free Space
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-snapshot-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Snapshot Audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-vsan-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. vSAN Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-storage-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Storage Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ntp-and-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. NTP and DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-cluster-ha-and-drs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Cluster HA and DRS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-backup-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Backup Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-version-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Version Capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-rollback-plan-confirmed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Rollback Plan Confirmed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Summary Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,21 +874,151 @@
 
 
 <h1 id="pre-change-checks">Pre-Change Checks<a class="headerlink" href="#pre-change-checks" title="Permanent link">&para;</a></h1>
-<p>Pre-change checks confirm the platform is healthy before maintenance begins.</p>
+<p>Pre-change checks confirm the platform is healthy before maintenance begins. Run these before any host maintenance, upgrade, or configuration change.</p>
+<h2 id="1-vcenter-and-management-access">1. vCenter and Management Access<a class="headerlink" href="#1-vcenter-and-management-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm vCenter is reachable and you can authenticate
+Connect-VIServer -Server vcenter.corp.local
+
+# vCenter version and build
+$global:DefaultVIServer | Select-Object Name, Version, Build, IsConnected
+</code></pre>
+<h2 id="2-host-connectivity">2. Host Connectivity<a class="headerlink" href="#2-host-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm all hosts are connected and not in maintenance mode
+Get-VMHost | Select-Object Name, ConnectionState, PowerState |
+    Where-Object { $_.ConnectionState -ne &quot;Connected&quot; -or $_.PowerState -ne &quot;PoweredOn&quot; }
+
+# Any unexpected maintenance mode hosts?
+Get-VMHost | Where-Object { $_.ConnectionState -eq &quot;Maintenance&quot; } | Select-Object Name
+</code></pre>
+<h2 id="3-active-alarms">3. Active Alarms<a class="headerlink" href="#3-active-alarms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Triggered alarms on any host or VM
+Get-VMHost | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N=&quot;Alarms&quot;;E={$_.ExtensionData.TriggeredAlarmState.Count}}
+
+Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N=&quot;Alarms&quot;;E={$_.ExtensionData.TriggeredAlarmState.Count}}
+</code></pre>
+<p>Resolve or acknowledge all critical alarms before proceeding. Warning alarms: document and assess risk.</p>
+<h2 id="4-datastore-free-space">4. Datastore Free Space<a class="headerlink" href="#4-datastore-free-space" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Datastores below 20% free
+Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 } |
+    Select-Object Name, @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpaceGB,1)}},
+    @{N=&quot;UsedPct&quot;;E={[math]::Round((1-$_.FreeSpaceGB/$_.CapacityGB)*100,1)}}
+</code></pre>
+<h2 id="5-snapshot-audit">5. Snapshot Audit<a class="headerlink" href="#5-snapshot-audit" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Any snapshots older than 24h or larger than 10 GB
+Get-VM | Get-Snapshot |
+    Where-Object { $_.Created -lt (Get-Date).AddHours(-24) -or $_.SizeGB -gt 10 } |
+    Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
+    @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB,2)}}
+</code></pre>
+<h2 id="6-vsan-health">6. vSAN Health<a class="headerlink" href="#6-vsan-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run on each ESXi host in vSAN cluster
+esxcli vsan health summary get
+esxcli vsan debug resync list   # should be empty before maintenance
+esxcli vsan debug object list | grep -v healthy   # should return nothing
+</code></pre>
+<h2 id="7-storage-paths">7. Storage Paths<a class="headerlink" href="#7-storage-paths" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Any dead paths?
+esxcli storage core path list | grep &quot;State: dead&quot;
+
+# Count of active paths (should match expected multipath config)
+esxcli storage core path list | grep -c &quot;State: active&quot;
+</code></pre>
+<h2 id="8-ntp-and-dns">8. NTP and DNS<a class="headerlink" href="#8-ntp-and-dns" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># ESXi host time is synchronised
+esxcli system ntp get
+
+# Forward and reverse DNS resolves correctly
+nslookup $(hostname)
+nslookup vcenter.corp.local
+</code></pre>
+<h2 id="9-cluster-ha-and-drs">9. Cluster HA and DRS<a class="headerlink" href="#9-cluster-ha-and-drs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># HA and DRS state
+Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel
+
+# Any DRS faults or admission control warnings
+Get-Cluster | Select-Object Name,
+    @{N=&quot;HAStatus&quot;;E={$_.ExtensionData.Summary.OverallStatus}}
+</code></pre>
+<h2 id="10-backup-status">10. Backup Status<a class="headerlink" href="#10-backup-status" title="Permanent link">&para;</a></h2>
+<p>Confirm that the most recent backup completed successfully before making changes. A failed backup combined with a botched change = data at risk.</p>
+<h2 id="11-version-capture">11. Version Capture<a class="headerlink" href="#11-version-capture" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Capture current versions before upgrade
+Get-VMHost | Select-Object Name, Version, Build | Export-Csv -Path pre_change_versions.csv -NoTypeInformation
+$global:DefaultVIServer | Select-Object Name, Version, Build
+</code></pre>
+<h2 id="12-rollback-plan-confirmed">12. Rollback Plan Confirmed<a class="headerlink" href="#12-rollback-plan-confirmed" title="Permanent link">&para;</a></h2>
+<p>Before proceeding, document and confirm:</p>
 <ul>
-<li>Confirm vCenter access</li>
-<li>Confirm ESXi host connectivity</li>
-<li>Check active alarms</li>
-<li>Confirm no unexpected host maintenance mode</li>
-<li>Check datastore free space</li>
-<li>Confirm no stuck snapshots</li>
-<li>Confirm backup status</li>
-<li>Check vSAN health if applicable</li>
-<li>Confirm NTP and DNS health</li>
-<li>Confirm rollback plan</li>
-<li>Capture current versions</li>
-<li>Confirm maintenance window approval</li>
+<li>[ ] Rollback procedure is documented</li>
+<li>[ ] Maintenance window approval received</li>
+<li>[ ] Change record number noted</li>
+<li>[ ] Escalation contact available during window</li>
+<li>[ ] Time-boxed: if task not complete by X, abort and revert</li>
 </ul>
+<h2 id="pre-change-summary-table">Pre-Change Summary Table<a class="headerlink" href="#pre-change-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter accessible</td>
+<td>Connected</td>
+<td></td>
+</tr>
+<tr>
+<td>All hosts Connected</td>
+<td>No Maintenance</td>
+<td></td>
+</tr>
+<tr>
+<td>Active critical alarms</td>
+<td>Zero</td>
+<td></td>
+</tr>
+<tr>
+<td>Datastore free space</td>
+<td>&gt; 20%</td>
+<td></td>
+</tr>
+<tr>
+<td>Snapshots &gt; 24h</td>
+<td>Zero</td>
+<td></td>
+</tr>
+<tr>
+<td>vSAN health</td>
+<td>All GREEN</td>
+<td></td>
+</tr>
+<tr>
+<td>vSAN resync</td>
+<td>Not running</td>
+<td></td>
+</tr>
+<tr>
+<td>Dead storage paths</td>
+<td>Zero</td>
+<td></td>
+</tr>
+<tr>
+<td>NTP synchronised</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Backup complete</td>
+<td>Yes</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
 
 

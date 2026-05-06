@@ -21,7 +21,7 @@
     
     
       
-        <title>Pools - Chris KB</title>
+        <title>Dell Unity Storage Pools - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pools" class="md-skip">
+        <a href="#dell-unity-storage-pools" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pools
+              Dell Unity Storage Pools
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#pool-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Pool Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#create-a-pool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Create a Pool
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#expand-a-pool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Expand a Pool
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#modify-and-delete" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Modify and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-tiering-fast-vp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Tiering (FAST VP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pool-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool Health Summary
       
     </span>
   </a>
@@ -774,31 +818,114 @@
 
 
 
-<h1 id="pools">Pools<a class="headerlink" href="#pools" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Pools.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="dell-unity-storage-pools">Dell Unity Storage Pools<a class="headerlink" href="#dell-unity-storage-pools" title="Permanent link">&para;</a></h1>
+<p>Storage pool management, capacity monitoring, and disk group configuration on Dell Unity.</p>
+<h2 id="pool-overview">Pool Overview<a class="headerlink" href="#pool-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all pools
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail
+
+# View a specific pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail
+</code></pre>
+<h2 id="create-a-pool">Create a Pool<a class="headerlink" href="#create-a-pool" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a pool using an existing disk group (RAID5)
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
+    -name &lt;pool_name&gt; \
+    -diskGroup &lt;dg_id&gt; \
+    -raidType RAID5 \
+    -stripeWidth 5
+
+# Create with description
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
+    -name Production_Pool \
+    -diskGroup dg_1 \
+    -raidType RAID5 \
+    -descr &quot;Primary production pool - SAS SSD&quot;
+</code></pre>
+<h2 id="expand-a-pool">Expand a Pool<a class="headerlink" href="#expand-a-pool" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add another disk group to an existing pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set \
+    -addDiskGroup &lt;dg_id&gt;
+
+# Verify pool size after expansion
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail | \
+    grep -E &quot;Size|Used|Free&quot;
+</code></pre>
+<h2 id="modify-and-delete">Modify and Delete<a class="headerlink" href="#modify-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Rename a pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set -name &lt;new_name&gt;
+
+# Delete a pool (must be empty — no LUNs or file systems)
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; delete
+</code></pre>
+<h2 id="disk-groups">Disk Groups<a class="headerlink" href="#disk-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List disk groups
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show -detail
+
+# Create a disk group
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg create \
+    -diskType SAS \
+    -diskCount 5 \
+    -raidType RAID5
+
+# View disks in a disk group
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show | grep &lt;dg_id&gt;
+</code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pool utilisation — flag if above 80%
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail | \
+    grep -E &quot;Name|Size|Used|Free|Health&quot;
+
+# Individual disk usage within pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show -detail | \
+    grep -E &quot;Name|Pool|Health|State&quot;
+</code></pre>
+<h2 id="auto-tiering-fast-vp">Auto-Tiering (FAST VP)<a class="headerlink" href="#auto-tiering-fast-vp" title="Permanent link">&para;</a></h2>
+<p>If FAST VP (Fully Automated Storage Tiering) is licensed:</p>
+<pre><code class="language-bash"># View tiering policy on a LUN
+uemcli -d &lt;ip&gt; -u admin /stor/config/lun show -detail | grep -i tier
+
+# Set tiering policy on a LUN
+uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; set \
+    -tieringPolicy autotier   # Options: autotier, highestAvailable, lowestAvailable, noData
+
+# FAST VP relocation status
+uemcli -d &lt;ip&gt; -u admin /storage/fastp/session show
+</code></pre>
+<h2 id="pool-health-summary">Pool Health Summary<a class="headerlink" href="#pool-health-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pool health</td>
+<td>OK</td>
+<td>Any other value = investigate</td>
+</tr>
+<tr>
+<td>Free space</td>
+<td>&gt; 20%</td>
+<td>&lt; 20% = alert; &lt; 10% = emergency</td>
+</tr>
+<tr>
+<td>Disk group health</td>
+<td>OK</td>
+<td>Degraded = drive failure, replace urgently</td>
+</tr>
+<tr>
+<td>RAID rebuild</td>
+<td>Not running</td>
+<td>Rebuild running = do not make changes</td>
+</tr>
+</tbody>
+</table>
 
 
 

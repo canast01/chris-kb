@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-pool-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Pool Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smartpools-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SmartPools Job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spillover-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spillover Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssd-strategy-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSD Strategy Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,23 +798,104 @@
 
 <h1 id="storage-pools-tiers">Storage Pools &amp; Tiers<a class="headerlink" href="#storage-pools-tiers" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
+<p>Part of the Dell PowerScale (Isilon) CLI Reference. SmartPools (requires license) enables tiering across node pools with different media types.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Storage pools
+<h2 id="node-pools">Node Pools<a class="headerlink" href="#node-pools" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all node pools
 isi storagepool nodepools list
+
+# Detailed view of a node pool
 isi storagepool nodepools view &lt;pool_name&gt;
+
+# Check node pool capacity usage
+isi storagepool nodepools list | awk '{print $1, $4, $5, $6}'
+</code></pre>
+<h2 id="tiers">Tiers<a class="headerlink" href="#tiers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List configured tiers
 isi storagepool tiers list
+
+# View a tier (shows which node pools are members)
 isi storagepool tiers view &lt;tier_name&gt;
 
-# File pool policies
+# Create a tier
+isi storagepool tiers create &lt;tier_name&gt; --children &lt;nodepool1&gt;,&lt;nodepool2&gt;
+
+# Delete a tier
+isi storagepool tiers delete &lt;tier_name&gt;
+</code></pre>
+<h2 id="file-pool-policies">File Pool Policies<a class="headerlink" href="#file-pool-policies" title="Permanent link">&para;</a></h2>
+<p>File pool policies control which files land in which tier based on age, size, path, or access pattern:</p>
+<pre><code class="language-bash"># List all file pool policies
 isi filepool policies list
-isi filepool policies view &lt;policy_name&gt;
+
+# View the default policy (applied to all files not matched by a specific policy)
 isi filepool default-policy view
 
-# SmartPools status
-isi job status | grep -i pool
+# View a specific policy
+isi filepool policies view &lt;policy_name&gt;
+
+# Create a policy — move files older than 30 days to archive tier
+isi filepool policies create archive-old-files \
+    --file-matching-pattern 'accessed:&gt;30:days' \
+    --set-data-storage-target &lt;archive_tier&gt; \
+    --set-data-ssd-strategy avoid
+
+# Modify the default policy
+isi filepool default-policy modify \
+    --set-data-storage-target &lt;performance_tier&gt;
+
+# Delete a policy
+isi filepool policies delete &lt;policy_name&gt;
 </code></pre>
+<h2 id="smartpools-job">SmartPools Job<a class="headerlink" href="#smartpools-job" title="Permanent link">&para;</a></h2>
+<p>SmartPools runs periodically to move files between tiers according to file pool policies:</p>
+<pre><code class="language-bash"># Check SmartPools job status
+isi job jobs list | grep SmartPool
+isi job status | grep SmartPool
+
+# Start SmartPools manually (e.g., after policy change)
+isi job jobs start SmartPools
+
+# View SmartPools job results
+isi job history list | grep SmartPool
+</code></pre>
+<h2 id="spillover-configuration">Spillover Configuration<a class="headerlink" href="#spillover-configuration" title="Permanent link">&para;</a></h2>
+<p>When a tier is full, files spill over to another tier:</p>
+<pre><code class="language-bash"># View spillover settings
+isi storagepool settings view
+
+# Enable spillover to a specific tier
+isi storagepool settings modify \
+    --spillover-enabled yes \
+    --spillover-target &lt;tier_name&gt;
+</code></pre>
+<h2 id="ssd-strategy-options">SSD Strategy Options<a class="headerlink" href="#ssd-strategy-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>metadata</code></td>
+<td>SSD caches metadata only (default)</td>
+</tr>
+<tr>
+<td><code>metadata-write</code></td>
+<td>SSD caches metadata + write cache</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>SSD caches full file data</td>
+</tr>
+<tr>
+<td><code>avoid</code></td>
+<td>No SSD caching — use for cold/archive data</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#alarms-events_1" class="md-nav__link">
+  <a href="#triggered-alarms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alarms &amp; Events
+        Triggered Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledge-and-reset-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge and Reset Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-events-to-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Events to CSV
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-event-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Event Types
       
     </span>
   </a>
@@ -745,18 +789,104 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
-<hr />
-<h2 id="alarms-events_1">Alarms &amp; Events<a class="headerlink" href="#alarms-events_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Triggered alarms
+<h2 id="triggered-alarms">Triggered Alarms<a class="headerlink" href="#triggered-alarms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all alarm definitions
 Get-AlarmDefinition
-Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 }
 
-# Events
-Get-VIEvent -MaxSamples 200
-Get-VIEvent -Start (Get-Date).AddHours(-24)
-Get-VIEvent -Entity (Get-VM &lt;name&gt;) -MaxSamples 50
-Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -eq &quot;TaskEvent&quot; } | Select-Object CreatedTime, UserName, FullFormattedMessage
+# VMs with active triggered alarms
+Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N=&quot;Alarms&quot;;E={$_.ExtensionData.TriggeredAlarmState.Count}}
+
+# Triggered alarms on all hosts
+Get-VMHost | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N=&quot;Alarms&quot;;E={$_.ExtensionData.TriggeredAlarmState.Count}}
+
+# All triggered alarms across inventory
+Get-Datacenter | ForEach-Object {
+    $_.ExtensionData.TriggeredAlarmState | ForEach-Object {
+        [PSCustomObject]@{
+            Entity  = $_.Entity
+            Alarm   = $_.Alarm
+            Status  = $_.OverallStatus
+            Time    = $_.Time
+        }
+    }
+}
 </code></pre>
+<h2 id="acknowledge-and-reset-alarms">Acknowledge and Reset Alarms<a class="headerlink" href="#acknowledge-and-reset-alarms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Acknowledge a triggered alarm on a VM
+$vm = Get-VM &quot;&lt;vm_name&gt;&quot;
+$alarmMgr = Get-View AlarmManager
+$alarmMgr.AcknowledgeAlarm($vm.ExtensionData.TriggeredAlarmState[0].Alarm, $vm.ExtensionData.MoRef)
+
+# Reset alarm to green (use only when alarm is false-positive)
+$alarmMgr.SetAlarmStatus($vm.ExtensionData.TriggeredAlarmState[0].Alarm, $vm.ExtensionData.MoRef, &quot;green&quot;)
+</code></pre>
+<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Last 200 events (most recent first)
+Get-VIEvent -MaxSamples 200 | Select-Object CreatedTime, UserName, FullFormattedMessage
+
+# Events in the last 24 hours
+Get-VIEvent -Start (Get-Date).AddHours(-24) | Select-Object CreatedTime, UserName, FullFormattedMessage
+
+# Events for a specific VM
+Get-VIEvent -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;) -MaxSamples 50 |
+    Select-Object CreatedTime, FullFormattedMessage
+
+# Filter task events — useful for change auditing
+Get-VIEvent -MaxSamples 500 |
+    Where-Object { $_.GetType().Name -eq &quot;TaskEvent&quot; } |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Sort-Object CreatedTime -Descending
+
+# Error events only
+Get-VIEvent -MaxSamples 1000 | Where-Object { $_.GetType().Name -match &quot;Error|Fault&quot; } |
+    Select-Object CreatedTime, FullFormattedMessage
+</code></pre>
+<h2 id="export-events-to-csv">Export Events to CSV<a class="headerlink" href="#export-events-to-csv" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-VIEvent -Start (Get-Date).AddDays(-7) -MaxSamples 5000 |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Export-Csv -Path vcenter_events_7d.csv -NoTypeInformation
+</code></pre>
+<h2 id="common-event-types">Common Event Types<a class="headerlink" href="#common-event-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TaskEvent</code></td>
+<td>User-initiated action (power on, migrate, etc.)</td>
+</tr>
+<tr>
+<td><code>VmPoweredOnEvent</code></td>
+<td>VM powered on</td>
+</tr>
+<tr>
+<td><code>VmMigratedEvent</code></td>
+<td>vMotion completed</td>
+</tr>
+<tr>
+<td><code>VmGuestRebootEvent</code></td>
+<td>Guest OS reboot</td>
+</tr>
+<tr>
+<td><code>DrsVmMigratedEvent</code></td>
+<td>DRS-initiated migration</td>
+</tr>
+<tr>
+<td><code>AlarmStatusChangedEvent</code></td>
+<td>Alarm transitioned state</td>
+</tr>
+<tr>
+<td><code>UserLoginSessionEvent</code></td>
+<td>User connected to vCenter</td>
+</tr>
+</tbody>
+</table>
 
 
 
