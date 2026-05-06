@@ -1,5 +1,14 @@
 # Dell PowerMax
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>SYMCLI commands for discovery, devices, storage groups, masking views, SRDF, SnapVX, and more.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Dell PowerMax is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.
