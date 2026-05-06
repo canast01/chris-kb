@@ -39,4 +39,9 @@ Technical and operational KBs for vCenter.
   <span>PowerCLI VM health report, cluster capacity script, Python vSphere API reporter, and Ansible vCenter playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

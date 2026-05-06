@@ -16,4 +16,9 @@ PowerShell knowledge base articles, operational procedures, troubleshooting note
   <span>Windows health check, AD user audit, certificate expiry check, service monitoring, and remote execution scripts.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

@@ -12,6 +12,11 @@
   <span>Bash health check, Perl replication monitor, and Ansible daily check playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

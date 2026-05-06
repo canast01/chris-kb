@@ -12,6 +12,11 @@
   <span>Perl cluster health check, SyncIQ monitor, quota report, and Ansible playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

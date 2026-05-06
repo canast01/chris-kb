@@ -12,6 +12,11 @@
   <span>Python REST API health check, filesystem capacity report, ActiveDR monitor, and Bash scripts.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

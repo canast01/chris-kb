@@ -12,6 +12,11 @@
   <span>Bash fabric health check, Perl port error monitor, Python ISL utilization report, and Ansible config backup.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

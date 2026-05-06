@@ -19,4 +19,9 @@ Technical and operational KBs for NSX.
   <span>Python NSX-T API health check, transport node monitor, DFW rule audit, and Ansible NSX-T playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

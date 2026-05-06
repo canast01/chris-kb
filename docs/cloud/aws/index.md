@@ -60,4 +60,9 @@ AWS operational notes grouped by the way the platform is normally supported.
   <span>Bash and Python health checks, EC2 DR failover, S3 audit, cost report, and Ansible AWS playbooks.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

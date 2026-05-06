@@ -7,6 +7,11 @@
   <span>Python Keystone Collector health check and usage reporting scripts.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

@@ -12,6 +12,11 @@
   <span>SYMCLI health check, Perl SRDF monitor, DR failover script, and Ansible playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

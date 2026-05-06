@@ -34,4 +34,9 @@ Technical and operational KBs for vSAN.
   <span>PowerCLI vSAN health check, disk group report, RVC diagnostics, and Ansible vSAN playbook.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

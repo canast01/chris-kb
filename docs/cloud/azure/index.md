@@ -59,4 +59,9 @@ Azure cloud platform operational notes grouped by service area.
   <span>Bash and Python health checks, VM DR failover, cost audit, security review, and Ansible Azure playbooks.</span>
 </a>
 
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 </div>

@@ -9,6 +9,10 @@
     <strong>Scripts</strong>
     <span>Perl cluster health check, SnapMirror lag monitor, Python volume reporter, and Ansible playbook.</span>
   </a>
+  <div class="kb-card">
+    <h3><a href="operations/">Operations</a></h3>
+    <p>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</p>
+  </div>
 </div>
 
 ## Overview
