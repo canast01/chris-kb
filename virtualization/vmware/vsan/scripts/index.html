@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="vSAN Cluster Health Check (PowerShell / PowerCLI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -746,6 +763,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Disk Group Capacity Report (PowerShell / PowerCLI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -758,6 +792,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="vSAN Object Health Check (Python / pyVmomi)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -769,6 +820,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Performance Baseline Check (PowerShell / PowerCLI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -779,6 +847,79 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Ansible vSAN Health Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-vsan-health-check-via-powercli-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: vSAN Health Check via PowerCLI (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: vSAN Health Check via PowerCLI (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-vsan-disk-group-status-via-plink-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: vSAN Disk Group Status via Plink (CMD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: vSAN Disk Group Status via Plink (CMD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -884,6 +1025,81 @@ Write-Host &quot;`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallEx
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  <code>Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force</code>
+  When prompted about an untrusted repository, type <code>Y</code> and press Enter
+- Network access to your vCenter server
+- A vSAN cluster must exist in vCenter</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong> (important — otherwise Windows adds .txt)</li>
+<li>Name it <code>vsan_cluster_health.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VCenterHost</code></td>
+<td>vCenter IP or FQDN e.g. <code>"vcenter.company.local"</code></td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>$VCUser</code></td>
+<td>vCenter username e.g. <code>"administrator@vsphere.local"</code></td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>$VCPass</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+<tr>
+<td><code>$ClusterName</code></td>
+<td>Exact name of your vSAN cluster</td>
+<td>vSphere Client → cluster name in the inventory</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\vsan_cluster_health.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>=== vSAN Health Check: vSAN-Cluster ===
+
+[PASS    ] vSAN Health Service up-to-date
+[PASS    ] All hosts contributing stats
+[PASS    ] Network latency check
+[WARNING ] Disk format version
+
+--- Disk Group Capacity ---
+[PASS    ] Host=esxi-01.local  Total=3072GB  Used=1100GB  35.8%
+
+--- Resync Status ---
+[PASS    ] Objects resyncing: 0
+
+Overall: WARNING
+</code></pre>
+<p>Any test in yellow appears in yellow text, red tests in red. The script exits with code 1 for warnings, 2 for critical failures.</p>
 <hr />
 <h2 id="disk-group-capacity-report-powershell-powercli">Disk Group Capacity Report (PowerShell / PowerCLI)<a class="headerlink" href="#disk-group-capacity-report-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Print a per-host, per-disk-group capacity table showing cache and capacity tier details, sorted by utilization.</p>
@@ -948,6 +1164,78 @@ Write-Host &quot;`nDisk groups above ${WarnPercent}%: $warnCount&quot;
 Disconnect-VIServer -Confirm:$false
 exit ($warnCount -gt 0 ? 1 : 0)
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  <code>Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force</code>
+  When prompted about an untrusted repository, type <code>Y</code> and press Enter
+- Network access to your vCenter server
+- A vSAN cluster must exist in vCenter</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>vsan_diskgroup_report.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VCenterHost</code></td>
+<td>vCenter IP or FQDN</td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>$VCUser</code></td>
+<td>vCenter username</td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>$VCPass</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+<tr>
+<td><code>$ClusterName</code></td>
+<td>Exact name of your vSAN cluster</td>
+<td>vSphere Client → cluster name</td>
+</tr>
+<tr>
+<td><code>$WarnPercent</code></td>
+<td>Usage % threshold to trigger WARNING (default 70)</td>
+<td>Your preference</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\vsan_diskgroup_report.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>Host                      DiskGroup            Cache GB CacheHealth   Total GB  Used GB  Free GB  Used% Status
+---------------------------------------------------------------------------------------------------------
+esxi-01.company.local     DiskGroup-1               400 ok               3072     2200      872  71.6% WARNING
+esxi-02.company.local     DiskGroup-1               400 ok               3072     1100     1972  35.8% PASS
+
+Disk groups above 70%: 1
+</code></pre>
+<p>Disk groups above 70% appear in yellow. The script exits with code 1 if any disk group is above the threshold.</p>
 <hr />
 <h2 id="vsan-object-health-check-python-pyvmomi">vSAN Object Health Check (Python / pyVmomi)<a class="headerlink" href="#vsan-object-health-check-python-pyvmomi" title="Permanent link">&para;</a></h2>
 <p>Connect to vCenter via pyVmomi, query all vSAN objects, and report any that are not in a healthy state.</p>
@@ -1059,6 +1347,73 @@ else:
     Disconnect(si)
     sys.exit(0)
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The <code>pyVmomi</code> library — install it once by running in Command Prompt:
+  <code>pip install pyVmomi</code>
+- Network access to your vCenter server</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>vsan_object_health.py</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VCENTER_HOST</code></td>
+<td>vCenter IP or FQDN e.g. <code>"vcenter.company.local"</code></td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>VC_USER</code></td>
+<td>vCenter username e.g. <code>"administrator@vsphere.local"</code></td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>VC_PASS</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+<tr>
+<td><code>CLUSTER_NAME</code></td>
+<td>Exact name of your vSAN cluster e.g. <code>"vSAN-Cluster"</code></td>
+<td>vSphere Client → cluster name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open Command Prompt</strong></p>
+<p>Windows key → type <code>cmd</code> → press Enter</p>
+<p><strong>Step 4 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+python vsan_object_health.py
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>If everything is healthy:</p>
+<pre><code>=== vSAN Object Health: vSAN-Cluster ===
+
+All vSAN-backed VM objects appear accessible.
+</code></pre>
+<p>If issues are found:</p>
+<pre><code>VM                             Type       Label                     State
+---------------------------------------------------------------------------
+web-server-broken              vmdk       Hard disk 1               inaccessible
+
+Inaccessible/degraded objects: 1
+</code></pre>
+<p>The script exits with code 1 if any inaccessible objects are found.</p>
 <hr />
 <h2 id="performance-baseline-check-powershell-powercli">Performance Baseline Check (PowerShell / PowerCLI)<a class="headerlink" href="#performance-baseline-check-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Collect 24-hour vSAN performance statistics via <code>Get-VsanStat</code> and compare key metrics against configurable baselines.</p>
@@ -1126,6 +1481,78 @@ Write-Host &quot;`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallEx
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  <code>Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force</code>
+  When prompted about an untrusted repository, type <code>Y</code> and press Enter
+- Network access to your vCenter server
+- vSAN performance service must be enabled on the cluster (vSphere Client → cluster → Configure → vSAN → Services → Performance Service → Enable)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>vsan_perf_baseline.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VCenterHost</code></td>
+<td>vCenter IP or FQDN</td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>$VCUser</code></td>
+<td>vCenter username</td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>$VCPass</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+<tr>
+<td><code>$ClusterName</code></td>
+<td>Exact name of your vSAN cluster</td>
+<td>vSphere Client → cluster name</td>
+</tr>
+</tbody>
+</table>
+<p>You can also adjust the <code>$baselines</code> hash table to match your expected performance values.</p>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\vsan_perf_baseline.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>=== vSAN Performance Baseline: vSAN-Cluster ===
+Period: 2026-05-05T14:30:00 → 2026-05-06T14:30:00
+
+Metric                                            Avg Value       Baseline         Delta% Status
+----------------------------------------------------------------------------------------------------
+Backend.Throughput.Read.Average                      412.50          500           -17.5% PASS
+Performance.ReadLatency.Average                        3.20            5           -36.0% PASS
+Performance.WriteLatency.Average                      18.50           10            85.0% WARNING
+
+Overall: WARNING
+</code></pre>
+<p>Metrics more than 20% above baseline appear in yellow (WARNING), more than 50% above in red (CRITICAL).</p>
 <hr />
 <h2 id="ansible-vsan-health-playbook">Ansible vSAN Health Playbook<a class="headerlink" href="#ansible-vsan-health-playbook" title="Permanent link">&para;</a></h2>
 <p>Use <code>community.vmware</code> to gather vSAN cluster info, run health checks, inspect disk groups, and assert all health tests pass.</p>
@@ -1198,6 +1625,355 @@ exit $overallExit
       ansible.builtin.debug:
         msg: &quot;ALERT: vSAN health issue detected on {{ cluster_name }}&quot;
       when: yellow_assert is failed
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
+  <code>sudo apt update &amp;&amp; sudo apt install -y ansible python3-pip</code>
+- Install the VMware community collection and dependencies:
+  <code>ansible-galaxy collection install community.vmware</code>
+  <code>pip3 install pyVmomi requests</code>
+- Network access to your vCenter server</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<p>In your WSL terminal:</p>
+<pre><code class="language-bash">nano ~/vsan_health.yml
+</code></pre>
+<p>Paste the entire code block, then press <code>Ctrl+X</code>, then <code>Y</code>, then <code>Enter</code> to save.</p>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file and update the <code>vars:</code> section:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcenter_hostname</code></td>
+<td>vCenter IP or FQDN</td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>datacenter_name</code></td>
+<td>Datacenter name in vCenter</td>
+<td>vSphere Client → top of inventory</td>
+</tr>
+<tr>
+<td><code>cluster_name</code></td>
+<td>Exact name of your vSAN cluster</td>
+<td>vSphere Client → cluster name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Set credentials as environment variables</strong></p>
+<pre><code class="language-bash">export VC_USER=&quot;administrator@vsphere.local&quot;
+export VC_PASS=&quot;YourPassword&quot;
+</code></pre>
+<p><strong>Step 4 — Create a minimal inventory file</strong></p>
+<pre><code class="language-bash">echo &quot;localhost ansible_connection=local&quot; &gt; ~/inventory
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code class="language-bash">ansible-playbook -i ~/inventory ~/vsan_health.yml
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Each task prints <code>ok</code> or <code>failed</code>. A RED health test causes a hard failure. YELLOW tests are reported but do not stop the playbook (they are logged with <code>failed_when: false</code>). The final debug task prints a summary.</p>
+<hr />
+<h2 id="windows-vsan-health-check-via-powercli-powershell">Windows: vSAN Health Check via PowerCLI (PowerShell)<a class="headerlink" href="#windows-vsan-health-check-via-powercli-powershell" title="Permanent link">&para;</a></h2>
+<p>Use PowerCLI to connect to vCenter, retrieve vSAN cluster configuration and health summary, and highlight any tests in warning or critical state.</p>
+<pre><code class="language-powershell"># vsan_health_windows.ps1
+# Requires PowerCLI: Install-Module VMware.PowerCLI -Scope CurrentUser -Force
+# Requires PowerShell 5.1+ (already on Windows 10/11).
+
+param(
+    [string]$VCenterHost = &quot;vcenter.company.local&quot;,
+    [string]$VCUser      = &quot;administrator@vsphere.local&quot;,
+    [string]$VCPass      = &quot;YourPasswordHere&quot;
+)
+
+# Install PowerCLI if not already installed (run PowerShell as Administrator first):
+# Install-Module VMware.PowerCLI -Scope CurrentUser -Force
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+
+try {
+    Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+    Write-Host &quot;Connected to vCenter: $VCenterHost&quot; -ForegroundColor Green
+} catch {
+    Write-Host &quot;ERROR: Could not connect to vCenter. Check IP, username, and password.&quot; -ForegroundColor Red
+    Write-Host $_.Exception.Message
+    exit 1
+}
+
+Write-Host &quot;`n=== vSAN Cluster Health Summary ===&quot; -ForegroundColor Cyan
+Write-Host &quot;($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n&quot;
+
+$overallExit = 0
+$clusters = Get-Cluster | Where-Object { $_.VsanEnabled }
+
+if (-not $clusters) {
+    Write-Host &quot;No vSAN-enabled clusters found.&quot; -ForegroundColor Yellow
+    Disconnect-VIServer -Confirm:$false
+    exit 0
+}
+
+foreach ($cluster in $clusters) {
+    Write-Host &quot;--- Cluster: $($cluster.Name) ---&quot; -ForegroundColor Cyan
+
+    # Get vSAN cluster configuration
+    try {
+        $vsanConfig = Get-VsanClusterConfiguration -Cluster $cluster
+        Write-Host &quot;  Deduplication enabled : $($vsanConfig.SpaceEfficiencyEnabled)&quot;
+        Write-Host &quot;  Encryption enabled    : $($vsanConfig.EncryptionEnabled)&quot;
+        Write-Host &quot;  Default FTT policy    : $($vsanConfig.DefaultStoragePolicy)&quot;
+    } catch {
+        Write-Host &quot;  Configuration: could not retrieve ($($_.Exception.Message))&quot; -ForegroundColor Yellow
+    }
+
+    Write-Host &quot;&quot;
+
+    # Run health summary
+    try {
+        $healthSummary = Get-VsanClusterHealthSummary -Cluster $cluster -FetchFromCache:$false
+        Write-Host &quot;  Health Test Results:&quot;
+        $header = &quot;    {0,-55} {1}&quot;
+        Write-Host ($header -f &quot;Test Name&quot;, &quot;Status&quot;)
+        Write-Host (&quot;    &quot; + &quot;-&quot; * 65)
+
+        foreach ($group in $healthSummary.Groups) {
+            Write-Host &quot;    [Group: $($group.GroupName)]&quot; -ForegroundColor White
+            foreach ($test in $group.GroupTests) {
+                $s = switch ($test.TestHealth) {
+                    'green'  { 'PASS'     }
+                    'yellow' { 'WARNING'  }
+                    'red'    { 'CRITICAL' }
+                    default  { 'UNKNOWN'  }
+                }
+                $colour = switch ($s) {
+                    'PASS'     { 'Green'  }
+                    'WARNING'  { 'Yellow' }
+                    'CRITICAL' { 'Red'    }
+                    default    { 'White'  }
+                }
+                if ($s -eq 'CRITICAL') { $overallExit = 2 }
+                if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
+                Write-Host ($header -f &quot;      $($test.TestName)&quot;, $s) -ForegroundColor $colour
+            }
+        }
+    } catch {
+        Write-Host &quot;  Health check: could not retrieve ($($_.Exception.Message))&quot; -ForegroundColor Yellow
+    }
+
+    Write-Host &quot;&quot;
+}
+
+Write-Host &quot;Overall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})&quot;
+Disconnect-VIServer -Confirm:$false
+exit $overallExit
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_5">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_5" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell as Administrator:
+  <code>Install-Module VMware.PowerCLI -Scope CurrentUser -Force</code>
+  When prompted about an untrusted repository, type <code>Y</code> and press Enter
+- Network access to your vCenter server
+- A vSAN-enabled cluster must exist in vCenter</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>vsan_health_windows.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VCenterHost</code></td>
+<td>vCenter IP or FQDN e.g. <code>"vcenter.company.local"</code></td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>$VCUser</code></td>
+<td>vCenter username e.g. <code>"administrator@vsphere.local"</code></td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>$VCPass</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\vsan_health_windows.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>Connected to vCenter: vcenter.company.local
+
+=== vSAN Cluster Health Summary ===
+(2026-05-06 14:30:22)
+
+--- Cluster: vSAN-Cluster ---
+  Deduplication enabled : False
+  Encryption enabled    : False
+  Default FTT policy    : vSAN Default Storage Policy
+
+  Health Test Results:
+    Test Name                                               Status
+    -----------------------------------------------------------------
+    [Group: Hardware compatibility]
+      SCSI controller is VMware certified                   PASS
+    [Group: Network]
+      vSAN cluster partition                                PASS
+      All hosts have a vSAN vmknic configured               PASS
+    [Group: Data]
+      vSAN object health                                    WARNING
+
+Overall: WARNING
+</code></pre>
+<p>Any test in yellow status appears in yellow text, red tests in red.</p>
+<hr />
+<h2 id="windows-vsan-disk-group-status-via-plink-cmd">Windows: vSAN Disk Group Status via Plink (CMD)<a class="headerlink" href="#windows-vsan-disk-group-status-via-plink-cmd" title="Permanent link">&para;</a></h2>
+<p>Connect to an ESXi host that is part of your vSAN cluster via SSH using plink (from PuTTY) and run vSAN ESXCLI commands.</p>
+<pre><code class="language-batch">@echo off
+REM vsan_diskgroup_check.bat — vSAN disk group status via SSH (plink)
+REM Connects to an ESXi host in the vSAN cluster using plink (PuTTY SSH tool).
+REM
+REM DOWNLOAD PLINK: https://www.putty.org
+REM   - Download putty-64bit-X.XX-installer.msi and install it.
+REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
+REM
+REM NOTE: SSH must be enabled on the ESXi host:
+REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start
+REM
+REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
+REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
+
+set ESXI_HOST=192.168.1.100
+set SSH_USER=root
+set PLINK=&quot;C:\Program Files\PuTTY\plink.exe&quot;
+
+echo.
+echo === vSAN Disk Group Status Check: %ESXI_HOST% ===
+echo.
+
+echo --- vSAN Storage Disk List ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan storage list&quot;
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %ESXI_HOST%.
+    echo Check: 1) IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
+    exit /b 1
+)
+
+echo.
+echo --- vSAN Cluster Status ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan cluster get&quot;
+
+echo.
+echo --- vSAN Health Check Summary ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan health cluster list&quot;
+
+echo.
+echo === vSAN check complete ===
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_6">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_6" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
+- SSH enabled on the ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
+- The root password for the ESXi host
+- The ESXi host must be a member of the vSAN cluster you want to check
+- Network access from your PC to the ESXi host management IP</p>
+<p><strong>Step 1 — Accept the SSH fingerprint (one-time setup)</strong></p>
+<p>Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:</p>
+<pre><code>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+</code></pre>
+<p>When asked "Store key in cache?", type <code>y</code> and press Enter. Type the root password when prompted. Once connected, press <code>Ctrl+C</code> to disconnect. You only need to do this once per ESXi host.</p>
+<p><strong>Step 2 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>vsan_diskgroup_check.bat</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 3 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ESXI_HOST</code></td>
+<td>IP address of an ESXi host in the vSAN cluster e.g. <code>192.168.1.100</code></td>
+<td>vSphere Client → host summary page</td>
+</tr>
+<tr>
+<td><code>SSH_USER</code></td>
+<td>SSH username — almost always <code>root</code></td>
+<td>ESXi root account</td>
+</tr>
+<tr>
+<td><code>PLINK</code></td>
+<td>Path to plink.exe</td>
+<td>Default is <code>C:\Program Files\PuTTY\plink.exe</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 4 — Open Command Prompt</strong></p>
+<p>Windows key → type <code>cmd</code> → press Enter</p>
+<p><strong>Step 5 — Run it</strong></p>
+<p>You can double-click the <code>.bat</code> file on your Desktop, or run it from Command Prompt:</p>
+<pre><code>cd C:\Users\YourName\Desktop
+vsan_diskgroup_check.bat
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>=== vSAN Disk Group Status Check: 192.168.1.100 ===
+
+--- vSAN Storage Disk List ---
+   Device: naa.55cd2e404b9b4c12
+   Display Name: Local Micron Disk (naa.55cd2e404b9b4c12)
+   Is Cache Disk: true
+   Tier: CACHE
+   ...
+
+--- vSAN Cluster Status ---
+   Sub-Cluster Master UUID: 52c8d2a5-1234-5678-abcd-ef0123456789
+   Sub-Cluster Backup UUID: ...
+   ...
+
+--- vSAN Health Check Summary ---
+   Group ID  Test ID  Test Result
+   ...
+
+=== vSAN check complete ===
 </code></pre>
 
 

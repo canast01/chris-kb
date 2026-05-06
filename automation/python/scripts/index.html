@@ -793,6 +793,62 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#windows-run-python-scripts-from-command-prompt-cmd-batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: Run Python Scripts from Command Prompt (CMD Batch)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: Run Python Scripts from Command Prompt (CMD Batch)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-python-environment-setup-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: Python Environment Setup (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: Python Environment Setup (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -849,6 +905,352 @@
 <p>Add tested commands here.</p>
 <h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <p>Add known issues here as they come up.</p>
+<hr />
+<h2 id="windows-run-python-scripts-from-command-prompt-cmd-batch">Windows: Run Python Scripts from Command Prompt (CMD Batch)<a class="headerlink" href="#windows-run-python-scripts-from-command-prompt-cmd-batch" title="Permanent link">&para;</a></h2>
+<p>Checks for Python, creates a virtual environment, installs common infrastructure packages, and runs a specified Python script with environment variables pre-set. Suitable for running any of the scripts in this KB from a Windows machine without needing to install packages globally.</p>
+<pre><code class="language-bat">@echo off
+REM run-py-script.bat
+REM Usage: Edit the variables below, then double-click or run from Command Prompt.
+REM        The script you want to run must be in the same folder as this .bat file,
+REM        or provide a full path in PY_SCRIPT below.
+
+setlocal enabledelayedexpansion
+
+REM -----------------------------------------------------------------------
+REM EDIT THESE VALUES
+REM -----------------------------------------------------------------------
+set PY_SCRIPT=your_script.py
+set VENV_DIR=C:\venvs\kb-scripts
+
+REM Infrastructure environment variables — change to match your environment
+set FA_HOST=192.168.1.100
+set FA_API_TOKEN=your-token-here
+set AWS_ACCESS_KEY_ID=your-access-key
+set AWS_SECRET_ACCESS_KEY=your-secret-key
+set AWS_DEFAULT_REGION=us-east-1
+REM -----------------------------------------------------------------------
+
+echo.
+echo === Python Script Runner ===
+echo Script   : %PY_SCRIPT%
+echo Venv     : %VENV_DIR%
+echo.
+
+REM --- Step 1: Check Python is installed ---
+echo [1/5] Checking for Python...
+python --version &gt;nul 2&gt;&amp;1
+if errorlevel 1 (
+    echo ERROR: Python is not installed or not in PATH.
+    echo        Download and install Python 3 from https://python.org/downloads/
+    echo        During install, check &quot;Add Python to PATH&quot;.
+    pause
+    exit /b 1
+)
+python --version
+echo Python found.
+echo.
+
+REM --- Step 2: Create virtual environment if it doesn't exist ---
+echo [2/5] Setting up virtual environment at %VENV_DIR%...
+if not exist &quot;%VENV_DIR%\Scripts\activate.bat&quot; (
+    echo Creating new virtual environment...
+    python -m venv &quot;%VENV_DIR%&quot;
+    if errorlevel 1 (
+        echo ERROR: Failed to create virtual environment.
+        pause
+        exit /b 1
+    )
+    echo Virtual environment created.
+) else (
+    echo Virtual environment already exists, skipping creation.
+)
+echo.
+
+REM --- Step 3: Activate the virtual environment ---
+echo [3/5] Activating virtual environment...
+call &quot;%VENV_DIR%\Scripts\activate.bat&quot;
+echo Activated.
+echo.
+
+REM --- Step 4: Install required packages ---
+echo [4/5] Installing/updating packages...
+pip install --quiet --upgrade pip
+pip install py-pure-client pyVmomi requests netapp-ontap paramiko boto3
+if errorlevel 1 (
+    echo ERROR: Package installation failed.
+    pause
+    exit /b 1
+)
+echo Packages installed.
+echo.
+
+REM --- Step 5: Run the script ---
+echo [5/5] Running %PY_SCRIPT%...
+echo.
+python &quot;%PY_SCRIPT%&quot;
+set SCRIPT_RC=%errorlevel%
+
+echo.
+if %SCRIPT_RC% equ 0 (
+    echo Script completed successfully.
+) else (
+    echo Script exited with code %SCRIPT_RC%.
+)
+
+deactivate
+pause
+endlocal
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Windows PC with Python 3.8 or later installed (download from python.org)
+- The Python script you want to run saved to your Desktop or a folder you know
+- Network access to any infrastructure hosts referenced in the script</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC (search in the Start menu)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>run-py-script.bat</code> and save it to the same folder as your Python script (e.g. your Desktop)</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file and change these values near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PY_SCRIPT</code></td>
+<td>Filename of the Python script to run</td>
+<td>The <code>.py</code> file in the same folder</td>
+</tr>
+<tr>
+<td><code>VENV_DIR</code></td>
+<td>Folder path for the virtual environment</td>
+<td>Keep default <code>C:\venvs\kb-scripts</code> or change it</td>
+</tr>
+<tr>
+<td><code>FA_HOST</code></td>
+<td>IP address of your FlashArray</td>
+<td>FlashArray management interface IP</td>
+</tr>
+<tr>
+<td><code>FA_API_TOKEN</code></td>
+<td>API token for FlashArray auth</td>
+<td>FlashArray GUI → System → API Tokens</td>
+</tr>
+<tr>
+<td><code>AWS_ACCESS_KEY_ID</code></td>
+<td>AWS access key ID</td>
+<td>AWS IAM → Security credentials</td>
+</tr>
+<tr>
+<td><code>AWS_SECRET_ACCESS_KEY</code></td>
+<td>AWS secret access key</td>
+<td>AWS IAM → Security credentials</td>
+</tr>
+<tr>
+<td><code>AWS_DEFAULT_REGION</code></td>
+<td>AWS region code (e.g. <code>us-east-1</code>)</td>
+<td>Your AWS console region selector</td>
+</tr>
+</tbody>
+</table>
+<p>Remove or ignore any variables your specific script does not use.</p>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open Command Prompt: press <code>Windows key</code>, type <code>cmd</code>, press Enter.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+run-py-script.bat
+</code></pre>
+<p>Or simply double-click the <code>run-py-script.bat</code> file in File Explorer.</p>
+<p><strong>What you should see</strong></p>
+<p>The script prints numbered progress steps (1/5 through 5/5), installs packages on first run (subsequent runs skip this if already installed), then prints the output of your Python script. A "Script completed successfully." message appears at the end if the script exits cleanly. The window pauses so you can read the output before it closes.</p>
+<hr />
+<h2 id="windows-python-environment-setup-powershell">Windows: Python Environment Setup (PowerShell)<a class="headerlink" href="#windows-python-environment-setup-powershell" title="Permanent link">&para;</a></h2>
+<p>One-time setup script that verifies Python 3 is installed, creates a virtual environment in your Documents folder, installs common infrastructure packages, and validates that each key package imports correctly. Run this once before using any Python scripts in this KB.</p>
+<pre><code class="language-powershell"># setup-python-env.ps1
+# Run once to set up your Python environment on Windows.
+# Usage: Right-click → Run with PowerShell  (or see step-by-step guide below)
+
+#Requires -Version 5.1
+
+$ErrorActionPreference = &quot;Stop&quot;
+
+$VenvPath = Join-Path $env:USERPROFILE &quot;Documents\kb-venv&quot;
+$Packages = @(
+    &quot;py-pure-client&quot;,
+    &quot;pyVmomi&quot;,
+    &quot;requests&quot;,
+    &quot;netapp-ontap&quot;,
+    &quot;paramiko&quot;,
+    &quot;boto3&quot;
+)
+
+Write-Host &quot;&quot;
+Write-Host &quot;=== Python Environment Setup ===&quot; -ForegroundColor Cyan
+Write-Host &quot;Virtual environment: $VenvPath&quot;
+Write-Host &quot;&quot;
+
+# --- Step 1: Check for Python 3 ---
+Write-Host &quot;[1/5] Checking for Python 3...&quot; -ForegroundColor Yellow
+$pythonCmd = $null
+
+foreach ($cmd in @(&quot;python&quot;, &quot;python3&quot;)) {
+    try {
+        $ver = &amp; $cmd --version 2&gt;&amp;1
+        if ($ver -match &quot;Python 3\.&quot;) {
+            $pythonCmd = $cmd
+            Write-Host &quot;Found: $ver (command: $cmd)&quot; -ForegroundColor Green
+            break
+        }
+    } catch { }
+}
+
+if (-not $pythonCmd) {
+    Write-Host &quot;&quot;
+    Write-Host &quot;ERROR: Python 3 is not installed or not in PATH.&quot; -ForegroundColor Red
+    Write-Host &quot;&quot;
+    Write-Host &quot;To install Python 3, run the following command in a terminal:&quot; -ForegroundColor Yellow
+    Write-Host &quot;  winget install Python.Python.3&quot; -ForegroundColor White
+    Write-Host &quot;&quot;
+    Write-Host &quot;Or download manually from https://python.org/downloads/&quot; -ForegroundColor White
+    Write-Host &quot;During install, check 'Add Python to PATH'.&quot; -ForegroundColor White
+    Write-Host &quot;&quot;
+    Read-Host &quot;Press Enter to exit&quot;
+    exit 1
+}
+
+# --- Step 2: Create virtual environment ---
+Write-Host &quot;&quot;
+Write-Host &quot;[2/5] Setting up virtual environment...&quot; -ForegroundColor Yellow
+
+if (Test-Path (Join-Path $VenvPath &quot;Scripts\Activate.ps1&quot;)) {
+    Write-Host &quot;Virtual environment already exists at $VenvPath, skipping creation.&quot; -ForegroundColor Green
+} else {
+    Write-Host &quot;Creating virtual environment at $VenvPath...&quot;
+    &amp; $pythonCmd -m venv $VenvPath
+    Write-Host &quot;Virtual environment created.&quot; -ForegroundColor Green
+}
+
+# --- Step 3: Activate virtual environment ---
+Write-Host &quot;&quot;
+Write-Host &quot;[3/5] Activating virtual environment...&quot; -ForegroundColor Yellow
+$activateScript = Join-Path $VenvPath &quot;Scripts\Activate.ps1&quot;
+. $activateScript
+Write-Host &quot;Activated.&quot; -ForegroundColor Green
+
+# --- Step 4: Install packages ---
+Write-Host &quot;&quot;
+Write-Host &quot;[4/5] Installing packages...&quot; -ForegroundColor Yellow
+python -m pip install --quiet --upgrade pip
+foreach ($pkg in $Packages) {
+    Write-Host &quot;  Installing $pkg...&quot;
+    python -m pip install --quiet $pkg
+}
+Write-Host &quot;All packages installed.&quot; -ForegroundColor Green
+
+# --- Step 5: Test imports ---
+Write-Host &quot;&quot;
+Write-Host &quot;[5/5] Testing package imports...&quot; -ForegroundColor Yellow
+
+$importTests = @{
+    &quot;py-pure-client&quot; = &quot;import purestorage&quot;
+    &quot;pyVmomi&quot;        = &quot;import pyVmomi&quot;
+    &quot;boto3&quot;          = &quot;import boto3&quot;
+    &quot;requests&quot;       = &quot;import requests&quot;
+    &quot;paramiko&quot;       = &quot;import paramiko&quot;
+    &quot;netapp-ontap&quot;   = &quot;import netapp_ontap&quot;
+}
+
+$results = @()
+foreach ($entry in $importTests.GetEnumerator()) {
+    $pkg  = $entry.Key
+    $stmt = $entry.Value
+    try {
+        $output = python -c $stmt 2&gt;&amp;1
+        if ($LASTEXITCODE -eq 0) {
+            $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;OK&quot;; Version = (python -c &quot;import importlib.metadata; print(importlib.metadata.version('$pkg'))&quot; 2&gt;$null) }
+        } else {
+            $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;FAIL&quot;; Version = &quot;-&quot; }
+        }
+    } catch {
+        $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;FAIL&quot;; Version = &quot;-&quot; }
+    }
+}
+
+# --- Summary ---
+Write-Host &quot;&quot;
+Write-Host &quot;=== Installed Package Summary ===&quot; -ForegroundColor Cyan
+Write-Host (&quot;{0,-20} {1,-10} {2}&quot; -f &quot;Package&quot;, &quot;Status&quot;, &quot;Version&quot;)
+Write-Host (&quot;-&quot; * 50)
+foreach ($r in $results) {
+    $color = if ($r.Status -eq &quot;OK&quot;) { &quot;Green&quot; } else { &quot;Red&quot; }
+    Write-Host (&quot;{0,-20} {1,-10} {2}&quot; -f $r.Package, $r.Status, $r.Version) -ForegroundColor $color
+}
+
+$failed = $results | Where-Object { $_.Status -ne &quot;OK&quot; }
+Write-Host &quot;&quot;
+if ($failed) {
+    Write-Host &quot;WARNING: $($failed.Count) package(s) failed to import. Review errors above.&quot; -ForegroundColor Red
+} else {
+    Write-Host &quot;SUCCESS: All packages imported successfully.&quot; -ForegroundColor Green
+    Write-Host &quot;Your Python environment is ready. Activate it with:&quot; -ForegroundColor White
+    Write-Host &quot;  . `&quot;$activateScript`&quot;&quot; -ForegroundColor White
+}
+
+Write-Host &quot;&quot;
+Read-Host &quot;Press Enter to exit&quot;
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Windows PC (Windows 10 or later)
+- Internet access to download packages from PyPI
+- Administrator rights are not required, but PowerShell must be able to run scripts (the guide covers this)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC (search in the Start menu)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>setup-python-env.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>This script uses sensible defaults. The only value you may want to change is the virtual environment path:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VenvPath</code></td>
+<td>Folder where the virtual environment is created</td>
+<td>Defaults to <code>Documents\kb-venv</code> — change if you prefer a different location</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Press <code>Windows key</code>, type <code>PowerShell</code>, right-click <strong>Windows PowerShell</strong>, and select <strong>Run as Administrator</strong>.</p>
+<p><strong>Step 4 — Allow scripts to run</strong></p>
+<p>In the PowerShell window, paste and press Enter:</p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\setup-python-env.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The script steps through 5 numbered stages printed in yellow. If Python is missing it prints installation instructions and stops. Otherwise it creates the virtual environment, installs all six packages, then tests each import and prints a colour-coded summary table showing the package name, OK/FAIL status, and installed version. A green "SUCCESS" message confirms everything is ready.</p>
 
 
 

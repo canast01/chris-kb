@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Metered Usage Reporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -747,6 +764,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Burst Detection Script">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -754,6 +788,106 @@
     <span class="md-ellipsis">
       
         Ansible FOD Audit Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ansible FOD Audit Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-fod-license-status-via-unisphere-rest-api-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: FOD License Status via Unisphere REST API (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: FOD License Status via Unisphere REST API (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-pre-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Pre-Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Script
       
     </span>
   </a>
@@ -877,6 +1011,46 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Python 3.7 or newer installed (python.org)
+- The <code>requests</code> library: run <code>pip install requests</code> in Command Prompt
+- A CloudIQ API bearer token — see the CloudIQ portal to generate one, or use client credentials to get one</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong></li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong>, change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>fod_usage_reporter.py</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLOUDIQ_TOKEN</code></td>
+<td>Your CloudIQ API bearer token</td>
+<td>cloudiq.dell.com → Settings → API Access → generate a token</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<ul>
+<li><strong>For .py (Python):</strong> Open Command Prompt. Install Python first from python.org if needed.</li>
+</ul>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+set CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
+python fod_usage_reporter.py
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table listing each storage system with its committed tier, current usage, burst amount (how much over the committed tier), and status. Systems in burst are marked BURST, systems near the limit (90% of committed) are marked NEAR LIMIT, and healthy systems are OK. The final line shows how many systems are currently in burst.</p>
 <hr />
 <h2 id="burst-detection-script">Burst Detection Script<a class="headerlink" href="#burst-detection-script" title="Permanent link">&para;</a></h2>
 <p>Polls the CloudIQ API for a specific system and checks whether current usage exceeds the committed FOD baseline. Designed for cron or monitoring integration — prints a single status line and exits with an appropriate code.</p>
@@ -923,6 +1097,58 @@ else
   exit 0
 fi
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Linux/macOS computer or Windows with Git Bash installed
+- <code>curl</code> and <code>jq</code> installed (both available in Git Bash; install jq from https://stedolan.github.io/jq/)
+- A CloudIQ bearer token and the specific System ID you want to check</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> or Git Bash editor</li>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>fod_burst_detect.sh</code> on your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLOUDIQ_TOKEN</code></td>
+<td>CloudIQ bearer token</td>
+<td>cloudiq.dell.com → Settings → API Access</td>
+</tr>
+<tr>
+<td><code>SYSTEM_ID</code></td>
+<td>The system ID to check</td>
+<td>Found in the CloudIQ portal under Storage Systems — look for the <code>id</code> field</td>
+</tr>
+<tr>
+<td><code>COMMITTED_TIB</code></td>
+<td>Your committed FOD tier in TiB</td>
+<td>Check your FOD contract or CloudIQ capacity page</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<ul>
+<li><strong>For .sh (Bash):</strong> Install Git for Windows (gitforwindows.org) and open Git Bash.</li>
+</ul>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>cd ~/Desktop
+chmod +x fod_burst_detect.sh
+export CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
+export SYSTEM_ID=PS-001234
+export COMMITTED_TIB=50
+./fod_burst_detect.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A single line: either <code>OK: System PS-001234 within committed baseline. Used=45.3 TiB, Committed=50 TiB</code> or <code>WARNING: System PS-001234 is in burst.</code> with the overage shown. Exit code 0 means OK, exit code 1 means burst.</p>
 <hr />
 <h2 id="ansible-fod-audit-playbook">Ansible FOD Audit Playbook<a class="headerlink" href="#ansible-fod-audit-playbook" title="Permanent link">&para;</a></h2>
 <p>Playbook targeting localhost that calls the CloudIQ REST API to list all storage systems and their capacity, prints a summary, and warns if any system shows burst consumption.</p>
@@ -980,6 +1206,508 @@ fi
         msg: &gt;
           NOTICE: Review capacity results above for any system where used_tib
           exceeds committed_tib — those systems are incurring FOD burst charges.
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Ansible installed on a Linux/macOS control node (or WSL on Windows)
+- A CloudIQ bearer token set as an environment variable</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the code block above</li>
+<li>Save it as <code>fod_audit.yml</code> in your Ansible working directory</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLOUDIQ_TOKEN</code></td>
+<td>Your CloudIQ bearer token</td>
+<td>cloudiq.dell.com → Settings → API Access</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on your Ansible control node.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>export CLOUDIQ_TOKEN=eyJhbGciOiJSUzI1N...
+ansible-playbook fod_audit.yml
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Ansible lists all storage systems from CloudIQ and then fetches capacity details for each one. The final task prints a notice reminding you to check any system where <code>used_tib</code> is greater than <code>committed_tib</code> — those systems are in FOD burst and may incur additional charges.</p>
+<hr />
+<h2 id="windows-fod-license-status-via-unisphere-rest-api-powershell">Windows: FOD License Status via Unisphere REST API (PowerShell)<a class="headerlink" href="#windows-fod-license-status-via-unisphere-rest-api-powershell" title="Permanent link">&para;</a></h2>
+<p>Queries the Unisphere for PowerMax REST API to show array information and license details including FOD status — all from a PowerShell window on Windows.</p>
+<pre><code class="language-powershell"># fod_license_status.ps1 — FOD license status via Unisphere REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (built into Windows 10/11)
+# Run: .\fod_license_status.ps1
+
+$UnisphereHost = &quot;192.168.1.100&quot;   # IP or hostname of your Unisphere for PowerMax server
+$UnisphereUser = &quot;sysadmin&quot;        # Unisphere username
+$UnispherePass = &quot;yourpassword&quot;    # Unisphere password
+$SID           = &quot;000123456789&quot;    # Your PowerMax system ID (12 digits)
+
+# Trust self-signed certificates
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @&quot;
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+&quot;@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$Creds   = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(&quot;${UnisphereUser}:${UnispherePass}&quot;))
+$Headers = @{ Authorization = &quot;Basic $Creds&quot;; Accept = &quot;application/json&quot; }
+$BaseUrl = &quot;https://${UnisphereHost}:8443/univmax/restapi/100&quot;
+
+# Step 1: Get array info (model, total capacity)
+Write-Host &quot;Querying array info for SID $SID ...&quot;
+try {
+    $ArrayResp = Invoke-RestMethod -Uri &quot;$BaseUrl/system/symmetrix/$SID&quot; -Headers $Headers
+    $Model    = $ArrayResp.symmetrix.model
+    $UcapTb   = $ArrayResp.symmetrix.system_capacity.usable_total_tb
+    $UusedTb  = $ArrayResp.symmetrix.system_capacity.usable_used_tb
+
+    Write-Host &quot;&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  Array Information&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  SID             : $SID&quot;
+    Write-Host &quot;  Model           : $Model&quot;
+    Write-Host &quot;  Total Usable TB : $UcapTb&quot;
+    Write-Host &quot;  Used Usable TB  : $UusedTb&quot;
+} catch {
+    Write-Host &quot;WARNING: Could not retrieve array info - $($_.Exception.Message)&quot;
+}
+
+# Step 2: Get license details (FOD status)
+Write-Host &quot;&quot;
+Write-Host &quot;Querying license details ...&quot;
+try {
+    $LicResp = Invoke-RestMethod -Uri &quot;$BaseUrl/system/symmetrix/$SID/license&quot; -Headers $Headers
+    Write-Host &quot;&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  License Features (including FOD)&quot;
+    Write-Host &quot;========================================&quot;
+    $Features = $LicResp.feature
+    if (-not $Features) {
+        Write-Host &quot;  No license features returned.&quot;
+    } else {
+        foreach ($Feature in $Features) {
+            $Name    = $Feature.name
+            $Enabled = if ($Feature.enabled) { &quot;ENABLED&quot; } else { &quot;DISABLED&quot; }
+            $IsFod   = if ($Name -match &quot;Flex|FOD|on.Demand&quot;) { &quot;  &lt;-- FOD related&quot; } else { &quot;&quot; }
+            Write-Host &quot;  $Name : $Enabled$IsFod&quot;
+        }
+    }
+} catch {
+    Write-Host &quot;WARNING: Could not retrieve license info - $($_.Exception.Message)&quot;
+}
+
+Write-Host &quot;&quot;
+Write-Host &quot;========================================&quot;
+Write-Host &quot;  Query complete.&quot;
+Write-Host &quot;========================================&quot;
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or 11 (PowerShell 5.1 is already built in)
+- Network access to your Unisphere for PowerMax server on port 8443
+- Unisphere username and password with at least read-only access
+- The 12-digit SID of your PowerMax array</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong></li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong>, change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>fod_license_status.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$UnisphereHost</code></td>
+<td>IP or hostname of Unisphere for PowerMax</td>
+<td>Ask your storage admin</td>
+</tr>
+<tr>
+<td><code>$UnisphereUser</code></td>
+<td>Unisphere username</td>
+<td>Default is <code>sysadmin</code></td>
+</tr>
+<tr>
+<td><code>$UnispherePass</code></td>
+<td>Unisphere password</td>
+<td>Ask your storage admin</td>
+</tr>
+<tr>
+<td><code>$SID</code></td>
+<td>PowerMax system ID</td>
+<td>Shown in Unisphere under System → Arrays</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<ul>
+<li><strong>For .ps1 (PowerShell):</strong> Press Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></li>
+</ul>
+<p><strong>Step 4 — Allow scripts to run (one-time)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\fod_license_status.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>An array information block showing model, total usable capacity, and used capacity. Then a license features list — each feature shows ENABLED or DISABLED. Features related to Flex on Demand are marked with <code>&lt;-- FOD related</code> to make them easy to spot.</p>
+<hr />
+<h2 id="daily-check-script">Daily Check Script<a class="headerlink" href="#daily-check-script" title="Permanent link">&para;</a></h2>
+<p>Queries Unisphere REST for current capacity, calculates burst consumption, and flags if approaching the burst ceiling (&gt;70% of burst budget used).</p>
+<pre><code class="language-bash">#!/bin/bash
+# fod_daily_check.sh — Daily FOD capacity and burst check via Unisphere REST API
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_daily_check.sh
+# Exit: 0=OK  1=approaching burst ceiling  2=error
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+BURST_WARN_PCT=&quot;${BURST_WARN_PCT:-70}&quot;
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+echo &quot;========================================&quot;
+echo &quot;  FOD Daily Check&quot;
+echo &quot;  SID  : $SID&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+
+CAP_JSON=$(curl -sk --max-time 15 \
+  -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+
+if [[ -z &quot;$CAP_JSON&quot; || &quot;$CAP_JSON&quot; == &quot;{}&quot; ]]; then
+  echo &quot;ERROR: Could not retrieve capacity from Unisphere at ${UNISPHERE_HOST}&quot; &gt;&amp;2
+  exit 2
+fi
+
+python3 -c &quot;
+import sys, json
+d = json.load(sys.stdin)
+c = d.get('system_capacity', {})
+total    = float(c.get('usable_total_tb', 0))
+used     = float(c.get('usable_used_tb', 0))
+subscribed = float(c.get('subscribed_total_tb', 0))
+
+burst = max(0.0, used - total)
+burst_budget = max(0.0, subscribed - total)
+burst_pct = round(burst / burst_budget * 100, 1) if burst_budget &gt; 0 else 0.0
+
+print(f'  Total usable    : {total} TB')
+print(f'  Used            : {used} TB')
+print(f'  Subscribed      : {subscribed} TB')
+print(f'  Burst consumed  : {burst:.2f} TB')
+print(f'  Burst budget    : {burst_budget:.2f} TB')
+print(f'  Burst % used    : {burst_pct}%')
+
+warn = float('${BURST_WARN_PCT}')
+if burst_pct &gt;= warn:
+    print(f'  Status          : WARNING — burst ceiling {burst_pct}% used (threshold {warn}%)')
+    sys.exit(1)
+else:
+    print(f'  Status          : OK')
+    sys.exit(0)
+&quot; &lt;&lt;&lt; &quot;$CAP_JSON&quot;
+</code></pre>
+<hr />
+<h2 id="incident-triage-script">Incident Triage Script<a class="headerlink" href="#incident-triage-script" title="Permanent link">&para;</a></h2>
+<p>Captures FOD status, full license output, and capacity allocations to a timestamped file.</p>
+<pre><code class="language-bash">#!/bin/bash
+# fod_triage.sh — Capture FOD status and capacity state to timestamped file
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_triage.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+
+TS=$(date '+%Y%m%d_%H%M%S')
+OUTFILE=&quot;/tmp/fod_triage_${SID}_${TS}.txt&quot;
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+{
+  echo &quot;========================================&quot;
+  echo &quot;  FOD Incident Triage Capture&quot;
+  echo &quot;  SID  : $SID&quot;
+  echo &quot;  Time : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+  echo &quot;========================================&quot;
+
+  for ENDPOINT in system_capacity license; do
+    echo &quot;&quot;
+    echo &quot;--- Unisphere REST: ${ENDPOINT} ---&quot;
+    curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+      &quot;${BASE_URL}/system/symmetrix/${SID}/${ENDPOINT}&quot; 2&gt;&amp;1 | python3 -m json.tool 2&gt;/dev/null || echo &quot;Parse error&quot;
+  done
+
+  echo &quot;&quot;
+  echo &quot;--- Unisphere REST: capacity_allocations ---&quot;
+  curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+    &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;&amp;1 | python3 -m json.tool 2&gt;/dev/null || echo &quot;Parse error&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- Symmetrix info (SYMCLI if available) ---&quot;
+  SYMCLI_PATH=&quot;${SYMCLI_PATH:-/usr/symcli/bin}&quot;
+  if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+    &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; show 2&gt;&amp;1 || true
+    &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; list -license 2&gt;&amp;1 || true
+  else
+    echo &quot;  SYMCLI not available&quot;
+  fi
+
+  echo &quot;&quot;
+  echo &quot;========================================&quot;
+  echo &quot;  Triage capture complete: $OUTFILE&quot;
+  echo &quot;========================================&quot;
+} | tee &quot;$OUTFILE&quot;
+
+echo &quot;&quot;
+echo &quot;Output saved to: $OUTFILE&quot;
+</code></pre>
+<hr />
+<h2 id="change-pre-check-script">Change Pre-Check Script<a class="headerlink" href="#change-pre-check-script" title="Permanent link">&para;</a></h2>
+<p>Before a planned workload increase: confirms burst headroom is available, confirms the FOD billing cycle is not within the last 5 days (to avoid double-burst charges), and confirms Unisphere is reachable. Exits 2 if not ready.</p>
+<pre><code class="language-bash">#!/bin/bash
+# fod_precheck.sh — Pre-check before planned workload increase under FOD
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x BILLING_DAY_OF_MONTH=1 ./fod_precheck.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+BILLING_DAY_OF_MONTH=&quot;${BILLING_DAY_OF_MONTH:-1}&quot;   # Day of month billing cycle resets
+BURST_HEADROOM_WARN_PCT=90  # flag if burst budget is &gt;90% consumed
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  FOD Pre-Change Check&quot;
+echo &quot;  SID  : $SID&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+# Check 1: Unisphere reachable
+HTTP=$(curl -sk -o /dev/null -w &quot;%{http_code}&quot; --max-time 10 \
+  -H &quot;Authorization: Basic $AUTH&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;000&quot;)
+if [[ &quot;$HTTP&quot; =~ ^(200|201) ]]; then
+  check_pass &quot;Unisphere reachable (HTTP $HTTP)&quot;
+else
+  check_fail &quot;Unisphere not reachable (HTTP $HTTP)&quot;
+fi
+
+# Check 2: Burst headroom available
+CAP_JSON=$(curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+python3 -c &quot;
+import sys, json
+d = json.load(sys.stdin)
+c = d.get('system_capacity', {})
+total = float(c.get('usable_total_tb', 0))
+used  = float(c.get('usable_used_tb', 0))
+subscribed = float(c.get('subscribed_total_tb', 0))
+burst = max(0.0, used - total)
+burst_budget = max(0.0, subscribed - total)
+burst_pct = round(burst / burst_budget * 100, 1) if burst_budget &gt; 0 else 0.0
+warn = float('${BURST_HEADROOM_WARN_PCT}')
+if burst_pct &gt;= warn:
+    print(f'  [FAIL] Burst budget {burst_pct}% consumed — insufficient headroom for workload increase')
+    sys.exit(1)
+else:
+    print(f'  [PASS] Burst headroom available ({burst_pct}% of burst budget consumed)')
+    sys.exit(0)
+&quot; &lt;&lt;&lt; &quot;$CAP_JSON&quot; || FAIL=1
+
+# Check 3: Not within last 5 days of billing period
+TODAY=$(date '+%d')
+DAYS_IN_MONTH=$(date -d &quot;$(date '+%Y-%m-01') +1 month -1 day&quot; '+%d' 2&gt;/dev/null || \
+                python3 -c &quot;import calendar,datetime; d=datetime.date.today(); print(calendar.monthrange(d.year,d.month)[1])&quot;)
+DAYS_UNTIL_RESET=$(( (BILLING_DAY_OF_MONTH - 10#$TODAY + DAYS_IN_MONTH) % DAYS_IN_MONTH ))
+if [[ &quot;$DAYS_UNTIL_RESET&quot; -le 5 &amp;&amp; &quot;$DAYS_UNTIL_RESET&quot; -ge 0 ]]; then
+  check_fail &quot;Within 5 days of billing period end (${DAYS_UNTIL_RESET} days) — risk of double-burst charges&quot;
+else
+  check_pass &quot;Not within last 5 days of billing period (${DAYS_UNTIL_RESET} days until cycle reset)&quot;
+fi
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: READY — proceed with planned workload increase&quot;
+  exit 0
+else
+  echo &quot;  Result: NOT READY — resolve failures above before proceeding&quot;
+  exit 2
+fi
+</code></pre>
+<hr />
+<h2 id="post-change-validation-script">Post-Change Validation Script<a class="headerlink" href="#post-change-validation-script" title="Permanent link">&para;</a></h2>
+<p>After a workload change: confirms FOD consumption has returned to baseline within expected range, checks for unexpected burst activation, and generates a usage report.</p>
+<pre><code class="language-bash">#!/bin/bash
+# fod_postcheck.sh — Post-change validation after FOD workload change
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x BASELINE_USED_TB=x ./fod_postcheck.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+BASELINE_USED_TB=&quot;${BASELINE_USED_TB:-0}&quot;  # Set to pre-change used TB value
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  FOD Post-Change Validation&quot;
+echo &quot;  SID      : $SID&quot;
+echo &quot;  Baseline : ${BASELINE_USED_TB} TB used (pre-change)&quot;
+echo &quot;  Date     : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+CAP_JSON=$(curl -sk --max-time 15 \
+  -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+
+python3 -c &quot;
+import sys, json
+d = json.load(sys.stdin)
+c = d.get('system_capacity', {})
+total = float(c.get('usable_total_tb', 0))
+used  = float(c.get('usable_used_tb', 0))
+subscribed = float(c.get('subscribed_total_tb', 0))
+burst = max(0.0, used - total)
+burst_budget = max(0.0, subscribed - total)
+burst_pct = round(burst / burst_budget * 100, 1) if burst_budget &gt; 0 else 0.0
+baseline = float('${BASELINE_USED_TB}')
+delta = round(used - baseline, 2)
+
+print(f'  Total usable   : {total} TB')
+print(f'  Used (current) : {used} TB')
+print(f'  Delta from baseline: {delta:+.2f} TB')
+print(f'  Burst active   : {\&quot;YES\&quot; if burst &gt; 0 else \&quot;NO\&quot;} ({burst:.2f} TB burst)')
+print(f'  Burst %        : {burst_pct}%')
+print()
+
+fail = False
+if burst &gt; 0:
+    print('  [WARN] Burst is currently active — monitor for return to baseline')
+    fail = True
+else:
+    print('  [PASS] No burst activation detected')
+
+if delta &gt; 5.0:
+    print(f'  [WARN] Usage increased by {delta} TB vs baseline — verify this is expected')
+else:
+    print(f'  [PASS] Usage delta ({delta:+.2f} TB) within expected range')
+
+sys.exit(1 if fail else 0)
+&quot; &lt;&lt;&lt; &quot;$CAP_JSON&quot; || FAIL=1
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: PASS — FOD post-change validation successful&quot;
+  exit 0
+else
+  echo &quot;  Result: WARN — review items above and re-check after 1h&quot;
+  exit 1
+fi
+</code></pre>
+<hr />
+<h2 id="health-check-script">Health Check Script<a class="headerlink" href="#health-check-script" title="Permanent link">&para;</a></h2>
+<p>Cron-safe script reporting current capacity allocation, burst status (active/inactive), percentage of burst budget consumed, and days remaining in the billing period. Exits 0 (OK), 1 (warning), or 2 (critical).</p>
+<pre><code class="language-bash">#!/bin/bash
+# fod_health.sh — Cron-safe FOD health check
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_health.sh
+# Exit: 0=OK  1=WARNING  2=CRITICAL
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+BILLING_DAY_OF_MONTH=&quot;${BILLING_DAY_OF_MONTH:-1}&quot;
+WARN_BURST_PCT=&quot;${WARN_BURST_PCT:-70}&quot;
+CRIT_BURST_PCT=&quot;${CRIT_BURST_PCT:-90}&quot;
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+CAP_JSON=$(curl -sk --max-time 15 \
+  -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+
+TODAY=$(date '+%d')
+DAYS_IN_MONTH=$(python3 -c &quot;import calendar,datetime; d=datetime.date.today(); print(calendar.monthrange(d.year,d.month)[1])&quot; 2&gt;/dev/null || echo &quot;30&quot;)
+DAYS_LEFT=$(( (BILLING_DAY_OF_MONTH - 10#$TODAY + DAYS_IN_MONTH) % DAYS_IN_MONTH ))
+
+python3 -c &quot;
+import sys, json
+d = json.load(sys.stdin)
+c = d.get('system_capacity', {})
+total = float(c.get('usable_total_tb', 0))
+used  = float(c.get('usable_used_tb', 0))
+subscribed = float(c.get('subscribed_total_tb', 0))
+burst = max(0.0, used - total)
+burst_budget = max(0.0, subscribed - total)
+burst_pct = round(burst / burst_budget * 100, 1) if burst_budget &gt; 0 else 0.0
+burst_active = 'YES' if burst &gt; 0 else 'NO'
+warn = float('${WARN_BURST_PCT}')
+crit = float('${CRIT_BURST_PCT}')
+days_left = int('${DAYS_LEFT}')
+
+print(f'FOD_HEALTH SID=${SID} total_tb={total} used_tb={used} subscribed_tb={subscribed} burst_active={burst_active} burst_pct={burst_pct}% billing_days_remaining={days_left}')
+
+if burst_pct &gt;= crit:
+    sys.exit(2)
+elif burst_pct &gt;= warn:
+    sys.exit(1)
+else:
+    sys.exit(0)
+&quot; &lt;&lt;&lt; &quot;$CAP_JSON&quot;
 </code></pre>
 
 

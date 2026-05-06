@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Path Health Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -747,6 +764,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Path Count Validator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -754,6 +788,134 @@
     <span class="md-ellipsis">
       
         Policy Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Policy Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-powerpath-device-status-via-plink-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: PowerPath Device Status via Plink (CMD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: PowerPath Device Status via Plink (CMD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-powerpath-check-on-local-windows-host-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: PowerPath Check on Local Windows Host (CMD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: PowerPath Check on Local Windows Host (CMD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-pre-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Pre-Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Script
       
     </span>
   </a>
@@ -870,6 +1032,41 @@ else
   exit 0
 fi
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Linux server with PowerPath installed and licensed
+- The <code>powermt</code> command must be available — run <code>which powermt</code> to confirm
+- Run the script as root or with sudo (PowerPath requires elevated privileges)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>powerpath_health_check.sh</code> on the server where PowerPath is installed</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXPECTED_PATHS</code></td>
+<td>Number of paths you expect per device</td>
+<td>Depends on your SAN design — ask your storage admin (typically 4 or 8)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on the Linux server with PowerPath installed.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>chmod +x powerpath_health_check.sh
+sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table with one row per PowerPath pseudo device showing total paths, dead paths, alive paths, and status. The summary shows total devices, how many have dead paths, and how many have fewer paths than expected. If all paths are healthy the final status is <code>STATUS: OK — All paths healthy.</code></p>
 <hr />
 <h2 id="path-count-validator">Path Count Validator<a class="headerlink" href="#path-count-validator" title="Permanent link">&para;</a></h2>
 <p>Parses <code>powermt display dev=all</code> output and validates that every pseudo device has exactly the expected number of paths. Prints PASS/FAIL per device and a final summary. Exits 0 if all pass, 1 if any fail.</p>
@@ -943,6 +1140,41 @@ printf &quot;Total: %d devices — %d PASS, %d FAIL\n&quot;, $pass + $fail, $pas
 
 exit($fail &gt; 0 ? 1 : 0);
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Linux server with PowerPath installed
+- Perl must be available — run <code>perl --version</code> to check (it is installed by default on most Linux systems)
+- Run as root or with sudo</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>powerpath_path_validator.pl</code> on the server</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXPECTED_PATHS</code></td>
+<td>Number of paths per device you expect</td>
+<td>Ask your storage admin — commonly 4 or 8</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on the Linux server with PowerPath installed.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>chmod +x powerpath_path_validator.pl
+sudo EXPECTED_PATHS=4 perl powerpath_path_validator.pl
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table listing each pseudo device with total paths, dead paths, alive paths, and PASS or FAIL. A device FAILs if it has any dead paths or if the total path count does not equal <code>EXPECTED_PATHS</code>. The final line shows total devices, passes, and failures.</p>
 <hr />
 <h2 id="policy-audit">Policy Audit<a class="headerlink" href="#policy-audit" title="Permanent link">&para;</a></h2>
 <p>Runs <code>powermt display options</code> and <code>powermt display dev=all</code>, checks that all pseudo devices are using the CLAROpt (<code>co</code>) load balancing policy, and reports any exceptions. If the <code>--fix</code> flag is passed, automatically applies CLAROpt to all devices and persists the change with <code>powermt save</code>.</p>
@@ -1028,6 +1260,569 @@ else
   echo &quot;STATUS: PASS — All devices using CLAROpt policy.&quot;
   exit 0
 fi
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Linux server with PowerPath installed and licensed
+- Run as root or with sudo
+- Know what load balancing policy your environment should use (CLAROpt is the Dell recommended default)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>powerpath_policy_audit.sh</code> on the server</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXPECTED_POLICY</code></td>
+<td>The load balancing policy code to expect</td>
+<td><code>co</code> for CLAROpt (Dell recommended default)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on the Linux server with PowerPath installed.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<p>To check only (no changes made):</p>
+<pre><code>chmod +x powerpath_policy_audit.sh
+sudo ./powerpath_policy_audit.sh
+</code></pre>
+<p>To check and automatically fix any non-CLAROpt devices:</p>
+<pre><code>sudo ./powerpath_policy_audit.sh --fix
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The current global PowerPath options, then a per-device table showing the policy in use and PASS or FAIL. The summary shows how many devices are not using CLAROpt. With <code>--fix</code>, CLAROpt is applied to all devices and <code>powermt save</code> is run to make it permanent.</p>
+<hr />
+<h2 id="windows-powerpath-device-status-via-plink-cmd">Windows: PowerPath Device Status via Plink (CMD)<a class="headerlink" href="#windows-powerpath-device-status-via-plink-cmd" title="Permanent link">&para;</a></h2>
+<p>Uses plink.exe to SSH into a Linux host that has PowerPath installed and runs path health checks remotely from a Windows CMD window.</p>
+<pre><code class="language-batch">@echo off
+REM powerpath_remote_check.bat — PowerPath device check on a remote Linux host via plink
+REM Uses plink.exe (PuTTY) to SSH into the Linux server running PowerPath.
+REM Download PuTTY (includes plink.exe) from: https://www.putty.org
+REM
+REM NOTE: PowerPath must be installed on the REMOTE Linux server you are connecting to.
+REM This .bat runs on your Windows PC but checks a Linux SAN host.
+REM
+REM FIRST TIME SETUP: Run this once to accept the host key:
+REM   plink -ssh admin@192.168.1.100
+REM   Type 'y' when asked, then Ctrl+C.
+
+set HOST_IP=192.168.1.100
+set SSH_USER=root
+set PLINK=plink.exe
+
+echo ========================================
+echo   PowerPath Remote Check
+echo   Host: %HOST_IP%
+echo ========================================
+echo.
+
+echo --- PowerPath Device Status ---
+%PLINK% -ssh -l %SSH_USER% -batch %HOST_IP% &quot;powermt display dev=all&quot;
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %HOST_IP%. Check hostname and credentials.
+    exit /b 1
+)
+
+echo.
+echo --- PowerPath Path Check ---
+%PLINK% -ssh -l %SSH_USER% -batch %HOST_IP% &quot;powermt check&quot;
+
+echo.
+echo ========================================
+echo   Remote check complete.
+echo ========================================
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Windows PC with plink.exe from PuTTY (https://www.putty.org — free)
+- SSH access to the Linux server that has PowerPath installed (usually as root)
+- PowerPath must already be installed and licensed on the remote Linux host</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong></li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong>, change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>powerpath_remote_check.bat</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HOST_IP</code></td>
+<td>IP address of the Linux server with PowerPath</td>
+<td>Ask your storage admin</td>
+</tr>
+<tr>
+<td><code>SSH_USER</code></td>
+<td>SSH username</td>
+<td>Typically <code>root</code> for PowerPath servers</td>
+</tr>
+<tr>
+<td><code>PLINK</code></td>
+<td>Full path to plink.exe if not in PATH</td>
+<td>e.g. <code>C:\Program Files\PuTTY\plink.exe</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Accept the host key (one-time setup)</strong></p>
+<p>Open Command Prompt and run:</p>
+<pre><code>plink -ssh root@192.168.10.50
+</code></pre>
+<p>Type <code>y</code> when prompted, then press Ctrl+C.</p>
+<p><strong>Step 4 — Open a terminal</strong></p>
+<ul>
+<li><strong>For .bat (Command Prompt):</strong> Open Command Prompt (Windows key → type <code>cmd</code>).</li>
+</ul>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+powerpath_remote_check.bat
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The full output of <code>powermt display dev=all</code> showing every pseudo device with its paths, followed by <code>powermt check</code> output which reports any path failures or topology changes detected since the last check.</p>
+<hr />
+<h2 id="windows-powerpath-check-on-local-windows-host-cmd">Windows: PowerPath Check on Local Windows Host (CMD)<a class="headerlink" href="#windows-powerpath-check-on-local-windows-host-cmd" title="Permanent link">&para;</a></h2>
+<p>If PowerPath for Windows is installed directly on your Windows server (common in Windows SAN environments), you can run <code>powermt</code> commands locally without SSH. This .bat file runs a health check and saves a report.</p>
+<pre><code class="language-batch">@echo off
+REM powerpath_local_check.bat — PowerPath health check on a LOCAL Windows server
+REM Run this ON the Windows server that has PowerPath for Windows installed.
+REM PowerPath must be installed: https://www.dell.com/en-us/dt/data-protection/powerpath.htm
+REM Run this script as Administrator (right-click → Run as administrator).
+
+set REPORT_FILE=%USERPROFILE%\Desktop\powerpath_report.txt
+
+echo ========================================
+echo   PowerPath Local Health Check
+echo   Report will be saved to: %REPORT_FILE%
+echo ========================================
+echo.
+
+REM Check that powermt is available
+where powermt &gt;nul 2&gt;&amp;1
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: powermt.exe not found. Is PowerPath for Windows installed?
+    echo Install it from the Dell support portal and try again.
+    exit /b 1
+)
+
+echo Running powermt display dev=all ...
+echo ===== PowerPath Device Report ===== &gt; &quot;%REPORT_FILE%&quot;
+echo Generated: %DATE% %TIME% &gt;&gt; &quot;%REPORT_FILE%&quot;
+echo. &gt;&gt; &quot;%REPORT_FILE%&quot;
+
+powermt display dev=all &gt;&gt; &quot;%REPORT_FILE%&quot; 2&gt;&amp;1
+
+echo. &gt;&gt; &quot;%REPORT_FILE%&quot;
+echo ===== PowerPath Check Output ===== &gt;&gt; &quot;%REPORT_FILE%&quot;
+powermt check &gt;&gt; &quot;%REPORT_FILE%&quot; 2&gt;&amp;1
+
+echo. &gt;&gt; &quot;%REPORT_FILE%&quot;
+echo ===== PowerPath Migration Check ===== &gt;&gt; &quot;%REPORT_FILE%&quot;
+powermig -chkpath &gt;&gt; &quot;%REPORT_FILE%&quot; 2&gt;&amp;1
+
+echo.
+echo Health check complete. Opening report ...
+echo.
+
+REM Open the report in Notepad automatically
+notepad &quot;%REPORT_FILE%&quot;
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- PowerPath for Windows installed on this Windows server (it must be the server connected to the SAN, not just any Windows PC)
+- Administrator rights on the server
+- PowerPath is a licensed product — confirm with your storage admin that it is installed</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on the Windows server</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong>, change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>powerpath_local_check.bat</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>No variables need to be changed for a basic run. The report will be saved to your Desktop automatically. To change the report location, edit the <code>REPORT_FILE</code> line near the top.</p>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Right-click the <code>powerpath_local_check.bat</code> file on your Desktop and choose <strong>Run as administrator</strong>. PowerPath commands require admin rights to run.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<p>Double-click the .bat file (as administrator), or from an elevated Command Prompt:</p>
+<pre><code>cd C:\Users\YourName\Desktop
+powerpath_local_check.bat
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The script runs three PowerPath commands and saves their output to a text file on your Desktop called <code>powerpath_report.txt</code>. When it finishes, Notepad opens automatically showing the report. Look for lines containing <code>dead</code> (dead paths) or any devices with fewer paths than expected. The <code>powermt check</code> section reports any path topology changes.</p>
+<hr />
+<h2 id="daily-check-script">Daily Check Script<a class="headerlink" href="#daily-check-script" title="Permanent link">&para;</a></h2>
+<p>SSHes to each Linux host running PowerPath, runs <code>powermt display dev=all</code>, counts paths per device, flags any device with fewer than 2 active paths, and flags any path in a dead or failed state.</p>
+<pre><code class="language-bash">#!/bin/bash
+# powerpath_daily_check.sh — Daily PowerPath path health check on Linux hosts
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root EXPECTED_PATHS=4 ./powerpath_daily_check.sh
+
+set -euo pipefail
+
+HOST_IP=&quot;${HOST_IP:?Set HOST_IP}&quot;
+SSH_USER=&quot;${SSH_USER:-root}&quot;
+EXPECTED_PATHS=&quot;${EXPECTED_PATHS:-4}&quot;
+SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15&quot;
+FAIL=0
+
+echo &quot;========================================&quot;
+echo &quot;  PowerPath Daily Check&quot;
+echo &quot;  Host : ${SSH_USER}@${HOST_IP}&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+POWERMT_OUT=$(ssh $SSH_OPTS &quot;${SSH_USER}@${HOST_IP}&quot; &quot;powermt display dev=all&quot; 2&gt;&amp;1) || \
+  { echo &quot;ERROR: Cannot connect to $HOST_IP or powermt not available&quot;; exit 2; }
+
+echo &quot;$POWERMT_OUT&quot; | python3 -c &quot;
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+devices = {}
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            devices[current_dev] = {'total': total, 'dead': dead}
+            current_dev = None
+
+expected = int('${EXPECTED_PATHS}')
+min_paths = 2
+fail = False
+
+print(f\&quot;{'DEVICE':&lt;22} {'TOTAL':&gt;8} {'DEAD':&gt;6} {'ALIVE':&gt;6}  STATUS\&quot;)
+print('-' * 60)
+
+for dev, d in sorted(devices.items()):
+    alive = d['total'] - d['dead']
+    if d['dead'] &gt; 0:
+        status = 'DEAD PATHS  &lt;&lt;&lt;'
+        fail = True
+    elif alive &lt; min_paths:
+        status = f'LOW PATHS (only {alive} alive)  &lt;&lt;&lt;'
+        fail = True
+    else:
+        status = 'OK'
+    print(f\&quot;{dev:&lt;22} {d['total']:&gt;8} {d['dead']:&gt;6} {alive:&gt;6}  {status}\&quot;)
+
+print()
+print(f'Total devices: {len(devices)}')
+sys.exit(1 if fail else 0)
+&quot; || FAIL=1
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+[[ &quot;$FAIL&quot; -eq 0 ]] &amp;&amp; echo &quot;  Result: PASS — all paths healthy on $HOST_IP&quot; || \
+  echo &quot;  Result: FAIL — dead or low-path devices found on $HOST_IP&quot;
+exit $FAIL
+</code></pre>
+<hr />
+<h2 id="incident-triage-script">Incident Triage Script<a class="headerlink" href="#incident-triage-script" title="Permanent link">&para;</a></h2>
+<p>Captures <code>powermt display dev=all</code>, <code>powermt check</code>, <code>powermt display options=all</code>, and kernel messages related to SCSI/multipath to a timestamped file.</p>
+<pre><code class="language-bash">#!/bin/bash
+# powerpath_triage.sh — Capture PowerPath state to timestamped file
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root ./powerpath_triage.sh
+
+set -euo pipefail
+
+HOST_IP=&quot;${HOST_IP:?Set HOST_IP}&quot;
+SSH_USER=&quot;${SSH_USER:-root}&quot;
+SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15&quot;
+
+TS=$(date '+%Y%m%d_%H%M%S')
+OUTFILE=&quot;/tmp/powerpath_triage_${HOST_IP//./_}_${TS}.txt&quot;
+
+pp_ssh() { ssh $SSH_OPTS &quot;${SSH_USER}@${HOST_IP}&quot; &quot;$@&quot; 2&gt;&amp;1 || echo &quot;Command failed: $*&quot;; }
+
+{
+  echo &quot;========================================&quot;
+  echo &quot;  PowerPath Incident Triage&quot;
+  echo &quot;  Host : $HOST_IP&quot;
+  echo &quot;  Time : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+  echo &quot;========================================&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- powermt display dev=all ---&quot;
+  pp_ssh &quot;powermt display dev=all&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- powermt check ---&quot;
+  pp_ssh &quot;powermt check&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- powermt display options=all ---&quot;
+  pp_ssh &quot;powermt display options=all&quot; 2&gt;/dev/null || pp_ssh &quot;powermt display options&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- Kernel SCSI/multipath messages (last 100 lines) ---&quot;
+  pp_ssh &quot;dmesg | grep -iE 'scsi|multipath|emcpower|powerpath' | tail -100&quot; 2&gt;/dev/null || echo &quot;dmesg not available&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- /var/log/messages (SCSI related, last 50 lines) ---&quot;
+  pp_ssh &quot;grep -iE 'scsi|powerpath|emcpower' /var/log/messages 2&gt;/dev/null | tail -50&quot; 2&gt;/dev/null || echo &quot;Not available&quot;
+
+  echo &quot;&quot;
+  echo &quot;========================================&quot;
+  echo &quot;  Triage capture complete: $OUTFILE&quot;
+  echo &quot;========================================&quot;
+} | tee &quot;$OUTFILE&quot;
+
+echo &quot;&quot;
+echo &quot;Output saved to: $OUTFILE&quot;
+</code></pre>
+<hr />
+<h2 id="change-pre-check-script">Change Pre-Check Script<a class="headerlink" href="#change-pre-check-script" title="Permanent link">&para;</a></h2>
+<p>Before HBA maintenance or replacement: confirms each volume has more than 2 active paths, no paths are currently recovering, and <code>powermt check</code> returns clean. Exits 2 if any path count equals 1.</p>
+<pre><code class="language-bash">#!/bin/bash
+# powerpath_precheck.sh — Pre-check before HBA maintenance on a Linux host
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root MIN_PATHS=2 ./powerpath_precheck.sh
+
+set -euo pipefail
+
+HOST_IP=&quot;${HOST_IP:?Set HOST_IP}&quot;
+SSH_USER=&quot;${SSH_USER:-root}&quot;
+MIN_PATHS=&quot;${MIN_PATHS:-2}&quot;
+SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15&quot;
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  PowerPath Pre-Change Check&quot;
+echo &quot;  Host     : $HOST_IP&quot;
+echo &quot;  Min paths: $MIN_PATHS&quot;
+echo &quot;  Date     : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+pp_ssh() { ssh $SSH_OPTS &quot;${SSH_USER}@${HOST_IP}&quot; &quot;$@&quot; 2&gt;&amp;1; }
+
+# Check 1: powermt check returns clean
+echo &quot;--- powermt check ---&quot;
+CHECK_OUT=$(pp_ssh &quot;powermt check&quot; 2&gt;&amp;1) || { check_fail &quot;Cannot connect to $HOST_IP&quot;; exit 2; }
+echo &quot;$CHECK_OUT&quot;
+if echo &quot;$CHECK_OUT&quot; | grep -qi &quot;error\|dead\|failed\|topology change&quot;; then
+  check_fail &quot;powermt check reports issues — resolve before HBA maintenance&quot;
+else
+  check_pass &quot;powermt check returned clean&quot;
+fi
+
+# Check 2: All devices have &gt; MIN_PATHS active paths (and no paths = 1)
+echo &quot;&quot;
+echo &quot;--- Path count per device ---&quot;
+POWERMT_OUT=$(pp_ssh &quot;powermt display dev=all&quot; 2&gt;&amp;1)
+echo &quot;$POWERMT_OUT&quot; | python3 -c &quot;
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+fail = False
+min_paths = int('${MIN_PATHS}')
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            if alive &lt;= 1:
+                print(f'  [FAIL] {current_dev}: only {alive} alive path(s) — UNSAFE for HBA removal')
+                fail = True
+            elif alive &lt;= min_paths:
+                print(f'  [WARN] {current_dev}: {alive} alive paths (min {min_paths}) — proceed with caution')
+                fail = True
+            else:
+                print(f'  [PASS] {current_dev}: {alive} alive paths, {dead} dead')
+            current_dev = None
+
+sys.exit(1 if fail else 0)
+&quot; || FAIL=1
+
+# Check 3: No recovering paths
+RECOVERING=$(echo &quot;$POWERMT_OUT&quot; | grep -ic &quot;recovering&quot; || true)
+if [[ &quot;$RECOVERING&quot; -eq 0 ]]; then
+  check_pass &quot;No paths currently in recovering state&quot;
+else
+  check_fail &quot;$RECOVERING path(s) in recovering state — wait for recovery to complete&quot;
+fi
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: READY — safe to proceed with HBA maintenance&quot;
+  exit 0
+else
+  echo &quot;  Result: NOT READY — resolve failures above (exit 2)&quot;
+  exit 2
+fi
+</code></pre>
+<hr />
+<h2 id="post-change-validation-script">Post-Change Validation Script<a class="headerlink" href="#post-change-validation-script" title="Permanent link">&para;</a></h2>
+<p>After HBA maintenance: runs <code>powermt display dev=all</code>, confirms all expected paths per device are restored, and compares path count to the pre-change baseline.</p>
+<pre><code class="language-bash">#!/bin/bash
+# powerpath_postcheck.sh — Post-HBA maintenance path validation
+# Usage: HOST_IP=x SSH_USER=root EXPECTED_PATHS=4 ./powerpath_postcheck.sh
+
+set -euo pipefail
+
+HOST_IP=&quot;${HOST_IP:?Set HOST_IP}&quot;
+SSH_USER=&quot;${SSH_USER:-root}&quot;
+EXPECTED_PATHS=&quot;${EXPECTED_PATHS:-4}&quot;
+SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15&quot;
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  PowerPath Post-Change Validation&quot;
+echo &quot;  Host            : $HOST_IP&quot;
+echo &quot;  Expected paths  : $EXPECTED_PATHS&quot;
+echo &quot;  Date            : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+pp_ssh() { ssh $SSH_OPTS &quot;${SSH_USER}@${HOST_IP}&quot; &quot;$@&quot; 2&gt;&amp;1; }
+
+POWERMT_OUT=$(pp_ssh &quot;powermt display dev=all&quot; 2&gt;&amp;1) || \
+  { echo &quot;ERROR: Cannot connect to $HOST_IP&quot;; exit 1; }
+
+echo &quot;$POWERMT_OUT&quot; | python3 -c &quot;
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+expected = int('${EXPECTED_PATHS}')
+fail = False
+
+print(f\&quot;{'DEVICE':&lt;22} {'TOTAL':&gt;8} {'DEAD':&gt;6} {'ALIVE':&gt;6}  STATUS\&quot;)
+print('-' * 65)
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            if dead &gt; 0:
+                status = 'DEAD PATHS  &lt;&lt;&lt;'
+                fail = True
+            elif total &lt; expected:
+                status = f'LOW — expected {expected}, got {total}  &lt;&lt;&lt;'
+                fail = True
+            elif total == expected:
+                status = 'RESTORED OK'
+            else:
+                status = f'OK ({total} paths)'
+            print(f'{current_dev:&lt;22} {total:&gt;8} {dead:&gt;6} {alive:&gt;6}  {status}')
+            current_dev = None
+
+sys.exit(1 if fail else 0)
+&quot; || FAIL=1
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: PASS — all paths restored to expected count ($EXPECTED_PATHS) on $HOST_IP&quot;
+  exit 0
+else
+  echo &quot;  Result: FAIL — some devices have not fully restored expected paths&quot;
+  exit 1
+fi
+</code></pre>
+<hr />
+<h2 id="health-check-script">Health Check Script<a class="headerlink" href="#health-check-script" title="Permanent link">&para;</a></h2>
+<p>Cron-safe script reporting total devices, total paths, dead paths count, and devices with fewer than 2 active paths. Exits 0 (OK), 1 (warning), or 2 (critical/dead paths found).</p>
+<pre><code class="language-bash">#!/bin/bash
+# powerpath_health.sh — Cron-safe PowerPath health check
+# Usage: HOST_IP=x SSH_USER=root ./powerpath_health.sh
+# Exit: 0=OK  1=WARNING(low paths)  2=CRITICAL(dead paths)
+
+HOST_IP=&quot;${HOST_IP:?Set HOST_IP}&quot;
+SSH_USER=&quot;${SSH_USER:-root}&quot;
+MIN_ALIVE=&quot;${MIN_ALIVE:-2}&quot;
+SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15&quot;
+
+POWERMT_OUT=$(ssh $SSH_OPTS &quot;${SSH_USER}@${HOST_IP}&quot; &quot;powermt display dev=all&quot; 2&gt;/dev/null) || \
+  { echo &quot;PP_HEALTH host=${HOST_IP} status=CRITICAL reason=connection_failed&quot;; exit 2; }
+
+python3 -c &quot;
+import sys, re
+
+lines = '''${POWERMT_OUT}'''.splitlines()
+current_dev = None
+total_devices = 0
+total_paths   = 0
+dead_paths    = 0
+low_path_devs = 0
+min_alive = int('${MIN_ALIVE}')
+worst = 0
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        total_devices += 1
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            total_paths += total
+            dead_paths  += dead
+            if dead &gt; 0:
+                worst = max(worst, 2)
+            elif alive &lt; min_alive:
+                low_path_devs += 1
+                worst = max(worst, 1)
+            current_dev = None
+
+if dead_paths &gt; 0:
+    worst = 2
+elif low_path_devs &gt; 0:
+    worst = 1
+
+status_map = {0: 'OK', 1: 'WARNING', 2: 'CRITICAL'}
+print(f'PP_HEALTH host=${HOST_IP} total_devices={total_devices} total_paths={total_paths} dead_paths={dead_paths} low_path_devices={low_path_devs} status={status_map[worst]}')
+sys.exit(worst)
+&quot;
 </code></pre>
 
 

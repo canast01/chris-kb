@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Lag Monitor (Bash)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -746,6 +763,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Planned DR Failover (Bash)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -758,6 +792,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Relationship Health Report (Perl)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -768,6 +819,79 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Ansible SnapMirror Resync Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-snapmirror-relationship-status-via-rest-api-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: SnapMirror Relationship Status via REST API (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: SnapMirror Relationship Status via REST API (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-snapmirror-lag-alert-via-plink-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: SnapMirror Lag Alert via Plink (CMD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: SnapMirror Lag Alert via Plink (CMD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -894,6 +1018,68 @@ case $worst in
 esac
 exit $worst
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Git for Windows installed (download from gitforwindows.org — it is free and includes Git Bash)
+- <code>sshpass</code> available — this is tricky on Windows. The easiest approach is to use WSL (Windows Subsystem for Linux) instead of Git Bash, and run <code>sudo apt install sshpass</code> inside WSL
+- Network access to your destination ONTAP cluster management IP
+- An ONTAP admin username and password</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_lag_monitor.sh</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ONTAP_HOST</code></td>
+<td>Your destination cluster management IP</td>
+<td>NetApp System Manager</td>
+</tr>
+<tr>
+<td><code>ONTAP_USER</code></td>
+<td>ONTAP admin username</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>ONTAP_PASS</code></td>
+<td>ONTAP admin password</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>SM_WARN_MIN</code></td>
+<td>Minutes of lag before WARNING (default: 30)</td>
+<td>Your DR policy</td>
+</tr>
+<tr>
+<td><code>SM_CRIT_MIN</code></td>
+<td>Minutes of lag before CRITICAL (default: 60)</td>
+<td>Your DR policy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open WSL (Ubuntu from the Start menu), or open Git Bash.</p>
+<p><strong>Step 4 — Set variables and run</strong></p>
+<pre><code>export ONTAP_HOST=192.168.1.100
+export ONTAP_USER=admin
+export ONTAP_PASS=yourpassword
+cd /mnt/c/Users/YourName/Desktop
+bash sm_lag_monitor.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table listing every SnapMirror relationship with source path, destination path, lag in minutes, healthy flag, and a colour-coded status: green OK, yellow WARNING, red CRITICAL. A summary line at the bottom shows the overall worst state.</p>
 <hr />
 <h2 id="planned-dr-failover-bash">Planned DR Failover (Bash)<a class="headerlink" href="#planned-dr-failover-bash" title="Permanent link">&para;</a></h2>
 <p>Perform a controlled SnapMirror failover at the DR site: quiesce all relationships, wait for in-flight transfers to stop, break relationships to make destination volumes read-write, and print host-side mount instructions. Requires confirmation at each destructive step.</p>
@@ -1007,6 +1193,70 @@ log &quot;Command: snapmirror resync -destination-path \${DEST_SVM}:\${vol}&quot
 log &quot;&quot;
 log &quot;Failover complete. Log saved to: $LOG_FILE&quot;
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- This script performs a real DR failover — it will make your DR volumes writable and break replication. Only run this during a planned DR test or actual disaster. Get sign-off from your manager first
+- WSL (Windows Subsystem for Linux) with Ubuntu installed, plus <code>sshpass</code> (<code>sudo apt install sshpass</code>)
+- Network access to your destination ONTAP cluster
+- ONTAP admin credentials for the destination cluster</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_dr_failover.sh</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEST_CLUSTER</code></td>
+<td>DR cluster management IP</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>DEST_SVM</code></td>
+<td>Name of the DR SVM (e.g. <code>svm_dr</code>)</td>
+<td>NetApp System Manager on DR cluster</td>
+</tr>
+<tr>
+<td><code>VOLUMES</code></td>
+<td>Space-separated list of volume names to fail over</td>
+<td>Your DR runbook</td>
+</tr>
+<tr>
+<td><code>ONTAP_USER</code></td>
+<td>ONTAP admin username</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>ONTAP_PASS</code></td>
+<td>ONTAP admin password</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open WSL</strong></p>
+<p>Open the Ubuntu app from the Start menu.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>export DEST_CLUSTER=192.168.2.100
+export DEST_SVM=svm_dr
+export VOLUMES=&quot;vol1 vol2 vol3&quot;
+export ONTAP_USER=admin
+export ONTAP_PASS=yourpassword
+cd /mnt/c/Users/YourName/Desktop
+bash sm_dr_failover.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The script prompts you to confirm before each destructive step. It logs every action with a timestamp. After breaking the relationships it prints host-side mount instructions and saves a full log file to <code>/var/log/</code>. You can review the log file afterwards to document the failover.</p>
 <hr />
 <h2 id="relationship-health-report-perl">Relationship Health Report (Perl)<a class="headerlink" href="#relationship-health-report-perl" title="Permanent link">&para;</a></h2>
 <p>SSH to both source and destination clusters, collect SnapMirror relationship data, cross-reference to verify all expected relationships exist, and report any missing or broken-off relationships.</p>
@@ -1130,6 +1380,67 @@ print &quot;\n&quot;;
 printf &quot;Summary: OK=%d  ISSUES=%d  MISSING=%d\n&quot;, $ok, $warn, $missing;
 exit(($warn + $missing &gt; 0) ? 1 : 0);
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Strawberry Perl installed on Windows (download from strawberryperl.com)
+- The <code>Net::SSH2</code> Perl module (installed via cpan)
+- Network access to both your source and destination ONTAP cluster management IPs
+- ONTAP admin credentials (the same username/password must work on both clusters)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_health_report.pl</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SM_SRC_HOST</code></td>
+<td>Source cluster management IP</td>
+<td>NetApp System Manager</td>
+</tr>
+<tr>
+<td><code>SM_DST_HOST</code></td>
+<td>Destination cluster management IP</td>
+<td>NetApp System Manager</td>
+</tr>
+<tr>
+<td><code>ONTAP_USER</code></td>
+<td>ONTAP admin username</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>ONTAP_PASS</code></td>
+<td>ONTAP admin password</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open Command Prompt</strong></p>
+<p>Press the Windows key, type <code>cmd</code>, press Enter.</p>
+<p><strong>Step 4 — Install the Perl module and set variables</strong></p>
+<pre><code>cpan Net::SSH2
+set SM_SRC_HOST=192.168.1.100
+set SM_DST_HOST=192.168.2.100
+set ONTAP_USER=admin
+set ONTAP_PASS=yourpassword
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd %USERPROFILE%\Desktop
+perl sm_health_report.pl
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>The script connects to both clusters, retrieves SnapMirror data, and prints a table of all destination relationships showing the destination path, healthy flag, state, and lag time. Any relationship with issues is flagged with <code>*** ISSUE</code>. Below the table it lists any relationships that the source expects to exist but are missing from the destination. A summary line shows OK/ISSUES/MISSING counts.</p>
 <hr />
 <h2 id="ansible-snapmirror-resync-playbook">Ansible SnapMirror Resync Playbook<a class="headerlink" href="#ansible-snapmirror-resync-playbook" title="Permanent link">&para;</a></h2>
 <p>Resync SnapMirror relationships after a DR test — verify destination volumes exist, resync each relationship, wait for healthy status with retries, and print a completion summary.</p>
@@ -1236,6 +1547,304 @@ exit(($warn + $missing &gt; 0) ? 1 : 0);
           All {{ volumes | length }} SnapMirror relationships successfully resynced
           on {{ dest_cluster }}:{{ dest_svm }}.
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- WSL (Windows Subsystem for Linux) with Ubuntu installed
+- Inside WSL: <code>sudo apt install ansible python3-pip</code> and then <code>ansible-galaxy collection install netapp.ontap</code>
+- You should run this playbook after a DR test, once you are ready to re-establish SnapMirror protection on the destination cluster
+- Network access to the destination ONTAP cluster
+- ONTAP admin credentials</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_resync.yml</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>You pass all values on the command line — no need to edit the file.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dest_cluster</code></td>
+<td>DR cluster management IP</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>dest_svm</code></td>
+<td>DR SVM name</td>
+<td>NetApp System Manager on DR cluster</td>
+</tr>
+<tr>
+<td><code>volumes</code></td>
+<td>List of volume names, e.g. <code>["vol1","vol2"]</code></td>
+<td>Your DR runbook</td>
+</tr>
+<tr>
+<td><code>ontap_username</code></td>
+<td>ONTAP admin username</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>ontap_password</code></td>
+<td>ONTAP admin password</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open WSL</strong></p>
+<p>Open the Ubuntu app from the Start menu.</p>
+<p><strong>Step 4 — Run the playbook</strong></p>
+<pre><code>cp /mnt/c/Users/YourName/Desktop/sm_resync.yml ~/
+cd ~
+ansible-playbook sm_resync.yml \
+  -e &quot;dest_cluster=192.168.2.100 dest_svm=svm_dr ontap_username=admin ontap_password=yourpassword&quot; \
+  -e '{&quot;volumes&quot;:[&quot;vol1&quot;,&quot;vol2&quot;,&quot;vol3&quot;]}'
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Ansible checks that each destination volume exists, then triggers a resync for each SnapMirror relationship. It polls every 30 seconds (up to 12 retries = 6 minutes) waiting for each relationship to become healthy. When all relationships are healthy, it prints a summary with the lag time for each, then confirms the resync is complete.</p>
+<hr />
+<h2 id="windows-snapmirror-relationship-status-via-rest-api-powershell">Windows: SnapMirror Relationship Status via REST API (PowerShell)<a class="headerlink" href="#windows-snapmirror-relationship-status-via-rest-api-powershell" title="Permanent link">&para;</a></h2>
+<p>Use the ONTAP REST API on the destination cluster to retrieve all SnapMirror relationships, filter for any that are not in a healthy <code>snapmirrored</code> state, and print a formatted status report. No SSH or third-party tools required.</p>
+<pre><code class="language-powershell"># sm_status_rest.ps1 — SnapMirror Relationship Status via REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Run: .\sm_status_rest.ps1
+
+$DestCluster = &quot;192.168.2.100&quot;   # Your destination cluster management IP or hostname
+$OntapUser   = &quot;admin&quot;            # ONTAP username
+$OntapPass   = &quot;yourpassword&quot;     # ONTAP password
+
+# Handle self-signed SSL certificates
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @&quot;
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+&quot;@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Build basic auth header
+$AuthBytes  = [System.Text.Encoding]::ASCII.GetBytes(&quot;${OntapUser}:${OntapPass}&quot;)
+$AuthBase64 = [Convert]::ToBase64String($AuthBytes)
+$Headers    = @{ Authorization = &quot;Basic $AuthBase64&quot; }
+
+$BaseUrl = &quot;https://$DestCluster/api&quot;
+
+Write-Host &quot;`n=== SnapMirror Relationship Status Report ===&quot; -ForegroundColor Cyan
+Write-Host &quot;Cluster: $DestCluster  |  Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm')&quot;
+Write-Host (&quot;-&quot; * 70)
+
+# Fetch all SnapMirror relationships with relevant fields
+try {
+    $resp = Invoke-RestMethod `
+        -Uri     &quot;$BaseUrl/snapmirror/relationships?fields=source,destination,state,healthy,lag_time&quot; `
+        -Headers $Headers `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Error &quot;Failed to retrieve SnapMirror relationships: $($_.Exception.Message)&quot;
+    exit 1
+}
+
+$relationships = $resp.records
+if (-not $relationships -or $relationships.Count -eq 0) {
+    Write-Host &quot;No SnapMirror relationships found on this cluster.&quot;
+    exit 0
+}
+
+Write-Host &quot;Total relationships: $($relationships.Count)`n&quot;
+
+$issues = 0
+
+foreach ($rel in $relationships | Sort-Object { $_.healthy }) {
+    $source  = &quot;$($rel.source.svm.name):$($rel.source.path)&quot;
+    $dest    = &quot;$($rel.destination.svm.name):$($rel.destination.path)&quot;
+    $state   = $rel.state
+    $healthy = $rel.healthy
+    $lag     = $rel.lag_time
+
+    # Convert lag_time (ISO 8601 duration like PT1H30M) to readable format
+    $lagDisplay = if ($lag) { $lag } else { &quot;N/A&quot; }
+
+    if ($healthy -eq $true -and $state -eq &quot;snapmirrored&quot;) {
+        Write-Host (&quot;  [OK]     {0,-45} -&gt; {1,-35} lag={2}&quot; -f $source, $dest, $lagDisplay) -ForegroundColor Green
+    } else {
+        Write-Host (&quot;  [ISSUE]  {0,-45} -&gt; {1,-35} state={2}  healthy={3}  lag={4}&quot; -f `
+            $source, $dest, $state, $healthy, $lagDisplay) -ForegroundColor Red
+        $issues++
+    }
+}
+
+Write-Host &quot;`n&quot; + (&quot;-&quot; * 70)
+if ($issues -gt 0) {
+    Write-Host &quot;$issues relationship(s) are NOT in a healthy snapmirrored state.&quot; -ForegroundColor Red
+    exit 1
+} else {
+    Write-Host &quot;All $($relationships.Count) SnapMirror relationships are healthy.&quot; -ForegroundColor Green
+    exit 0
+}
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Windows 10 or Windows 11 PC (PowerShell is already installed)
+- Network access to your destination ONTAP cluster management IP
+- An ONTAP admin username and password</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_status_rest.ps1</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the saved file in Notepad and change these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$DestCluster</code></td>
+<td>Destination cluster management IP or hostname</td>
+<td>NetApp System Manager</td>
+</tr>
+<tr>
+<td><code>$OntapUser</code></td>
+<td>ONTAP admin username</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>$OntapPass</code></td>
+<td>ONTAP admin password</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Press the Windows key, type <code>PowerShell</code>, right-click <strong>Windows PowerShell</strong>, choose <strong>Run as Administrator</strong>.</p>
+<p><strong>Step 4 — Allow script execution (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\sm_status_rest.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A list of every SnapMirror relationship on the destination cluster. Healthy relationships (state=snapmirrored, healthy=true) appear in green with their lag time. Any relationship that is not healthy or not in snapmirrored state appears in red with full details. The script exits with code 1 if any issues are found.</p>
+<hr />
+<h2 id="windows-snapmirror-lag-alert-via-plink-cmd">Windows: SnapMirror Lag Alert via Plink (CMD)<a class="headerlink" href="#windows-snapmirror-lag-alert-via-plink-cmd" title="Permanent link">&para;</a></h2>
+<p>Use plink.exe to SSH into the ONTAP cluster, run the SnapMirror show command, and highlight any relationship where the <code>healthy</code> field is false. Works from any Windows Command Prompt.</p>
+<pre><code class="language-batch">@echo off
+REM sm_lag_alert.bat — SnapMirror Lag Alert via Plink (Windows CMD)
+REM Uses plink.exe (part of PuTTY) to SSH into the ONTAP cluster.
+REM Download PuTTY from: https://www.putty.org (free, trusted tool)
+REM
+REM FIRST-TIME SETUP: Run once to accept the host fingerprint:
+REM   plink.exe -ssh admin@192.168.1.100
+REM   Type 'y' when asked, then Ctrl+C to exit.
+
+set CLUSTER_HOST=192.168.1.100
+set SSH_USER=admin
+set PLINK=plink.exe
+
+echo.
+echo === SnapMirror Lag and Health Alert ===
+echo Cluster: %CLUSTER_HOST%
+echo Time: %date% %time%
+echo.
+
+REM --- Fetch SnapMirror relationships ---
+echo --- All SnapMirror Relationships ---
+%PLINK% -ssh -l %SSH_USER% -batch %CLUSTER_HOST% &quot;snapmirror show -fields source-path,destination-path,mirror-state,lag-time,healthy&quot;
+
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %CLUSTER_HOST%. Check hostname, username, and that plink.exe is in PATH.
+    goto :end
+)
+
+echo.
+
+REM --- Highlight unhealthy relationships ---
+echo --- UNHEALTHY Relationships (healthy = false) ---
+%PLINK% -ssh -l %SSH_USER% -batch %CLUSTER_HOST% &quot;snapmirror show -fields source-path,destination-path,mirror-state,lag-time,healthy&quot; | findstr /I &quot;false&quot;
+
+if %ERRORLEVEL% equ 1 (
+    echo All SnapMirror relationships are healthy.
+) else if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not retrieve SnapMirror data.
+)
+
+echo.
+echo === Alert check complete ===
+
+:end
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_5">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_5" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- PuTTY installed (download from putty.org — it is free). Make sure <code>plink.exe</code> is installed and accessible from Command Prompt
+- Network access to your ONTAP cluster management IP
+- An ONTAP admin username and password</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>sm_lag_alert.bat</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the saved file in Notepad and change these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLUSTER_HOST</code></td>
+<td>Your cluster management IP or hostname</td>
+<td>NetApp System Manager</td>
+</tr>
+<tr>
+<td><code>SSH_USER</code></td>
+<td>ONTAP SSH username (usually <code>admin</code>)</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — First-time host key acceptance</strong></p>
+<p>Open Command Prompt and run:</p>
+<pre><code>plink.exe -ssh admin@192.168.1.100
+</code></pre>
+<p>Type <code>y</code> when prompted to trust the host key, then press Ctrl+C.</p>
+<p><strong>Step 4 — Add password to plink commands (optional)</strong></p>
+<p>For unattended use, add <code>-pw yourpassword</code> to each plink line in the script, right after <code>-batch</code>.</p>
+<p><strong>Step 5 — Run the script</strong></p>
+<p>Double-click <code>sm_lag_alert.bat</code> on your Desktop, or run from Command Prompt:</p>
+<pre><code>cd %USERPROFILE%\Desktop
+sm_lag_alert.bat
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>First, the script prints all SnapMirror relationships with their source/destination paths, mirror state, lag time, and healthy flag. Then it prints a second section showing only the relationships where healthy is <code>false</code>. If all relationships are healthy, it prints "All SnapMirror relationships are healthy." instead.</p>
 
 
 

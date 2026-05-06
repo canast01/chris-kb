@@ -1,0 +1,1257 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>ECS CLI Reference - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ecs-cli-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ECS CLI Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../start-here/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Start Here
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../virtualization/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../automation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../site-map/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Site Admin
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../start-here/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../virtualization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../tools/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../site-map/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Admin
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-command-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick-Reference Command Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecs-management-shell-ecscli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ECS Management Shell (ecscli)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-api-aws-cli-s3cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 API (aws cli / s3cmd)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-store-admin-api-curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Store Admin API (curl)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-cli-ssh-node-level-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System CLI (SSH — Node-Level Access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-troubleshooting-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Troubleshooting Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+  
+                  
+
+
+
+<h1 id="ecs-cli-reference">ECS CLI Reference<a class="headerlink" href="#ecs-cli-reference" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">ECS</a> reference.</p>
+</blockquote>
+<hr />
+<p>ECS administration is split across three interfaces: the <strong>ECS Management Shell</strong> (<code>ecscli</code>), the <strong>ECS Management REST API</strong> (port 4443), and the <strong>S3-compatible object API</strong> (port 9020 HTTP / 9021 HTTPS). For system-level diagnostics, SSH access to individual nodes is also available.</p>
+<blockquote>
+<p><strong>Management API base URL</strong>: <code>https://&lt;ecs-node&gt;:4443</code><br />
+<strong>S3 endpoint</strong>: <code>https://&lt;ecs-node&gt;:9021</code> (virtual-hosted or path-style)<br />
+<strong>SSH node access</strong>: <code>ssh admin@&lt;ecs-node&gt;</code> (use <code>viprexec</code> for cluster-wide commands)</p>
+</blockquote>
+<hr />
+<h2 id="quick-reference-command-table">Quick-Reference Command Table<a class="headerlink" href="#quick-reference-command-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ecscli login -u sysadmin -p &lt;pass&gt; -e &lt;ecs-node&gt;</code></td>
+<td>Authenticate ecscli session</td>
+</tr>
+<tr>
+<td><code>ecscli namespace list</code></td>
+<td>List all namespaces</td>
+</tr>
+<tr>
+<td><code>ecscli bucket list --namespace &lt;ns&gt;</code></td>
+<td>List buckets in a namespace</td>
+</tr>
+<tr>
+<td><code>curl -s -k -u sysadmin:&lt;pass&gt; https://&lt;node&gt;:4443/login -D -</code></td>
+<td>Get REST API auth token</td>
+</tr>
+<tr>
+<td><code>curl ... GET /vdc/capacity</code></td>
+<td>VDC total/used/available capacity</td>
+</tr>
+<tr>
+<td><code>curl ... GET /vdc/nodes</code></td>
+<td>All nodes and health status</td>
+</tr>
+<tr>
+<td><code>curl ... GET /vdc/alerts</code></td>
+<td>Active alerts</td>
+</tr>
+<tr>
+<td><code>aws s3 ls s3://&lt;bucket&gt; --endpoint-url https://&lt;node&gt;:9021</code></td>
+<td>List S3 objects</td>
+</tr>
+<tr>
+<td><code>aws s3api list-buckets --endpoint-url https://&lt;node&gt;:9021</code></td>
+<td>List all S3 buckets</td>
+</tr>
+<tr>
+<td><code>viprexec -v -cmd "df -h /data/"</code></td>
+<td>Disk usage on all nodes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ecs-management-shell-ecscli">ECS Management Shell (ecscli)<a class="headerlink" href="#ecs-management-shell-ecscli" title="Permanent link">&para;</a></h2>
+<p><code>ecscli</code> is a Python-based CLI that wraps the ECS Management REST API. Install it on a management workstation or use it from the ECS node directly.</p>
+<pre><code class="language-bash"># Install (requires Python 3 + pip)
+pip install ecscli
+
+# --- Authentication ---
+# Login and store session token (~/.ecscli/session)
+ecscli login \
+  -u sysadmin \
+  -p '&lt;password&gt;' \
+  -e &lt;ecs-node&gt;
+
+# Verify login (shows currently authenticated user)
+ecscli user whoami
+
+# Logout / invalidate token
+ecscli logout
+
+# --- Namespace management ---
+# List all namespaces
+ecscli namespace list
+
+# Show namespace details (quota, replication group, retention)
+ecscli namespace get --name &lt;namespace&gt;
+
+# Create a namespace
+ecscli namespace create \
+  --name app_team_ns \
+  --replication-group &lt;rg-id&gt; \
+  --is-stale-allowed true
+
+# --- Bucket management ---
+# List buckets in a namespace
+ecscli bucket list --namespace &lt;namespace&gt;
+
+# Show bucket details (versioning, quota, replication group, owner)
+ecscli bucket get --namespace &lt;namespace&gt; --name &lt;bucket&gt;
+
+# Create a bucket
+ecscli bucket create \
+  --namespace &lt;namespace&gt; \
+  --name app-data-bucket \
+  --replication-group &lt;rg-id&gt; \
+  --versioning-enabled false
+
+# Enable versioning on an existing bucket
+ecscli bucket update \
+  --namespace &lt;namespace&gt; \
+  --name app-data-bucket \
+  --versioning-enabled true
+
+# Set a bucket quota (in GB)
+ecscli bucket update \
+  --namespace &lt;namespace&gt; \
+  --name app-data-bucket \
+  --quota 5000
+
+# Delete a bucket (must be empty)
+ecscli bucket delete --namespace &lt;namespace&gt; --name app-data-bucket
+
+# --- Object users / IAM ---
+# List object users in a namespace
+ecscli user list-object-users --namespace &lt;namespace&gt;
+
+# Create an object user (S3 access)
+ecscli user create --namespace &lt;namespace&gt; --name svc_app_backup
+
+# Generate S3 access keys for a user
+ecscli user secret-key create \
+  --namespace &lt;namespace&gt; \
+  --name svc_app_backup
+
+# List user's secret keys (shows key IDs only, not values)
+ecscli user secret-key list \
+  --namespace &lt;namespace&gt; \
+  --name svc_app_backup
+
+# Delete a secret key
+ecscli user secret-key delete \
+  --namespace &lt;namespace&gt; \
+  --name svc_app_backup \
+  --secret-key &lt;key_id&gt;
+</code></pre>
+<hr />
+<h2 id="s3-api-aws-cli-s3cmd">S3 API (aws cli / s3cmd)<a class="headerlink" href="#s3-api-aws-cli-s3cmd" title="Permanent link">&para;</a></h2>
+<p>ECS is fully S3-compatible. Use the standard AWS CLI or s3cmd pointed at the ECS endpoint.</p>
+<pre><code class="language-bash"># --- AWS CLI configuration for ECS ---
+# Configure a named profile for ECS
+aws configure --profile ecs
+# AWS Access Key ID:     &lt;object_user_access_key&gt;
+# AWS Secret Access Key: &lt;object_user_secret_key&gt;
+# Default region:        us-east-1  (arbitrary; ECS ignores region)
+# Default output format: json
+
+# All commands below use: --endpoint-url https://&lt;ecs-node&gt;:9021 --profile ecs
+# Add --no-verify-ssl if using self-signed certificates
+
+ECS_EP=&quot;https://&lt;ecs-node&gt;:9021&quot;
+PROFILE=&quot;--profile ecs --endpoint-url $ECS_EP --no-verify-ssl&quot;
+
+# --- Bucket operations ---
+# List all buckets
+aws s3api list-buckets $PROFILE
+
+# Create a bucket
+aws s3api create-bucket --bucket new-bucket $PROFILE
+
+# Get bucket location
+aws s3api get-bucket-location --bucket app-data-bucket $PROFILE
+
+# --- Object operations ---
+# List objects in a bucket (top level)
+aws s3 ls s3://app-data-bucket $PROFILE
+
+# List objects recursively with sizes
+aws s3 ls s3://app-data-bucket --recursive --human-readable $PROFILE
+
+# Upload a file
+aws s3 cp /local/path/file.tar.gz s3://app-data-bucket/backups/ $PROFILE
+
+# Upload an entire directory (recursive)
+aws s3 sync /local/backup/ s3://app-data-bucket/backups/ $PROFILE
+
+# Download an object
+aws s3 cp s3://app-data-bucket/backups/file.tar.gz /local/restore/ $PROFILE
+
+# Delete an object
+aws s3 rm s3://app-data-bucket/backups/file.tar.gz $PROFILE
+
+# Delete a bucket and all its contents
+aws s3 rb s3://app-data-bucket --force $PROFILE
+
+# --- Versioning ---
+# Enable versioning
+aws s3api put-bucket-versioning \
+  --bucket app-data-bucket \
+  --versioning-configuration Status=Enabled $PROFILE
+
+# List object versions (including delete markers)
+aws s3api list-object-versions --bucket app-data-bucket $PROFILE
+
+# Abort incomplete multipart uploads (cleans orphaned upload capacity)
+aws s3api list-multipart-uploads --bucket app-data-bucket $PROFILE
+aws s3api abort-multipart-upload \
+  --bucket app-data-bucket \
+  --key backups/largefile.tar.gz \
+  --upload-id &lt;UploadId&gt; $PROFILE
+
+# --- Lifecycle policy (expire old versions after 90 days) ---
+aws s3api put-bucket-lifecycle-configuration \
+  --bucket app-data-bucket \
+  --lifecycle-configuration '{
+    &quot;Rules&quot;: [{
+      &quot;ID&quot;: &quot;expire-old-versions&quot;,
+      &quot;Status&quot;: &quot;Enabled&quot;,
+      &quot;Filter&quot;: {&quot;Prefix&quot;: &quot;&quot;},
+      &quot;NoncurrentVersionExpiration&quot;: {&quot;NoncurrentDays&quot;: 90}
+    }]
+  }' $PROFILE
+</code></pre>
+<hr />
+<h2 id="object-store-admin-api-curl">Object Store Admin API (curl)<a class="headerlink" href="#object-store-admin-api-curl" title="Permanent link">&para;</a></h2>
+<p>The ECS Management REST API runs on port 4443. All requests after login require the <code>X-SDS-AUTH-TOKEN</code> header.</p>
+<pre><code class="language-bash">ECS=&quot;https://&lt;ecs-node&gt;:4443&quot;
+PASS=&quot;&lt;sysadmin_password&gt;&quot;
+
+# --- Authentication ---
+# Get auth token (returned in response header X-SDS-AUTH-TOKEN)
+TOKEN=$(curl -s -k -u &quot;sysadmin:${PASS}&quot; \
+  &quot;${ECS}/login&quot; -D - | grep &quot;X-SDS-AUTH-TOKEN&quot; | awk '{print $2}' | tr -d '\r')
+
+AUTH=&quot;-H \&quot;X-SDS-AUTH-TOKEN: ${TOKEN}\&quot;&quot;
+
+# --- Capacity ---
+# Get VDC capacity (totalProvisioned_GB, totalFree_GB, usedStorageCapacity_GB)
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/capacity&quot; | python3 -m json.tool
+
+# --- Node status ---
+# List all nodes with health state
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/nodes&quot; | python3 -m json.tool
+
+# Get details for a specific node
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/nodes/&lt;node-id&gt;&quot; | python3 -m json.tool
+
+# --- Alerts ---
+# List active alerts
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/alerts&quot; | python3 -m json.tool
+
+# --- Namespaces ---
+# Create a namespace
+curl -s -k -X POST \
+  -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  &quot;${ECS}/object/namespaces/namespace&quot; \
+  -d '{
+    &quot;id&quot;: &quot;app_team_ns&quot;,
+    &quot;default_data_services_vpool&quot;: &quot;&lt;replication-group-id&gt;&quot;,
+    &quot;is_stale_allowed&quot;: true,
+    &quot;is_compliance_enabled&quot;: false
+  }' | python3 -m json.tool
+
+# List all namespaces
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/object/namespaces&quot; | python3 -m json.tool
+
+# --- Buckets ---
+# List buckets in a namespace
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/object/bucket?namespace=app_team_ns&quot; | python3 -m json.tool
+
+# Get bucket details
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/object/bucket/app-data-bucket/info?namespace=app_team_ns&quot; | python3 -m json.tool
+
+# --- Replication groups ---
+# List replication groups (Virtual Data Center pools)
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/data-service/vpools&quot; | python3 -m json.tool
+
+# --- Logout ---
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/logout&quot;
+</code></pre>
+<hr />
+<h2 id="system-cli-ssh-node-level-access">System CLI (SSH — Node-Level Access)<a class="headerlink" href="#system-cli-ssh-node-level-access" title="Permanent link">&para;</a></h2>
+<p>For hardware diagnostics and low-level checks, SSH to an individual node as <code>admin</code> or <code>root</code>.</p>
+<pre><code class="language-bash"># SSH to an ECS node
+ssh admin@&lt;ecs-node&gt;
+
+# Check disk usage on the data partition
+df -h /data/
+
+# Check all mount points
+df -h
+
+# Check data disk status (ECS uses XFS on large raw disks)
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+
+# --- viprexec: run a command on ALL nodes in the cluster ---
+# Show disk usage on every node simultaneously
+viprexec -v -cmd &quot;df -h /data/&quot;
+
+# Show uptime on all nodes
+viprexec -v -cmd &quot;uptime&quot;
+
+# Check ECS service status on all nodes
+viprexec -v -cmd &quot;service storageos status&quot;
+
+# Restart ECS services on all nodes (use with caution)
+viprexec -v -cmd &quot;service storageos restart&quot;
+
+# --- Per-node service checks ---
+# Check all running ECS Java processes
+ps aux | grep -i ecs
+
+# View current ECS node log
+tail -f /opt/emc/caspian/fabric/agent/logs/agent.log
+
+# View storageos service log
+journalctl -u storageos -f
+
+# Check NTP sync status (ECS nodes are time-sensitive)
+chronyc tracking
+timedatectl status
+</code></pre>
+<hr />
+<h2 id="common-troubleshooting-commands">Common Troubleshooting Commands<a class="headerlink" href="#common-troubleshooting-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># --- dtquery: check data table / chunk health ---
+# Run from any ECS node as root (internal diagnostic tool)
+ssh root@&lt;ecs-node&gt;
+
+# Query chunk status for a specific object
+/opt/storageos/tools/dtquery query --type CHUNK --id &lt;chunk-id&gt;
+
+# --- Cassandra (ECS metadata store) health ---
+# Check Cassandra ring status from a node
+/opt/storageos/tools/nodetool status
+
+# Check Cassandra compaction stats
+/opt/storageos/tools/nodetool compactionstats
+
+# Flush Cassandra memtables to disk
+/opt/storageos/tools/nodetool flush
+
+# Check Cassandra heap usage
+/opt/storageos/tools/nodetool info | grep -i heap
+
+# --- ZooKeeper (ECS coordination service) health ---
+# Check ZooKeeper cluster status from a node
+echo &quot;stat&quot; | nc localhost 2181
+
+# List ZooKeeper ensemble members
+echo &quot;conf&quot; | nc localhost 2181
+
+# Check ZooKeeper leader/follower role
+echo &quot;srvr&quot; | nc localhost 2181 | grep Mode
+
+# --- Geo-replication lag (REST API) ---
+curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/geo-replication/status&quot; | python3 -m json.tool
+
+# --- Check S3 endpoint responsiveness ---
+curl -sv --max-time 10 \
+  &quot;https://&lt;ecs-node&gt;:9021/&quot; \
+  --resolve &quot;&lt;ecs-node&gt;:9021:&lt;ecs-node-ip&gt;&quot; 2&gt;&amp;1 | grep -E &quot;&lt; HTTP|Connected|SSL&quot;
+
+# --- ECS log collection (for Dell Support) ---
+# Trigger diagnostic bundle from Management API
+curl -s -k -X POST \
+  -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
+  &quot;${ECS}/vdc/support-bundle&quot; | python3 -m json.tool
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

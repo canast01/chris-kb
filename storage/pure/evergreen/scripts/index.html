@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Pre-Upgrade Path Validation (Bash)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -747,6 +764,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Upgrade Readiness Check (Python)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -754,6 +788,106 @@
     <span class="md-ellipsis">
       
         Ansible Pre-Upgrade Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ansible Pre-Upgrade Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-evergreenone-usage-report-via-pure1-rest-api-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: Evergreen//One Usage Report via Pure1 REST API (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: Evergreen//One Usage Report via Pure1 REST API (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-check-script-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Script (Python)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-script-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Script (Python)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-pre-check-script-bash-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Pre-Check Script (Bash + Python)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation-script-bash-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation Script (Bash + Python)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-script-python-cron-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Script (Python, cron-safe)
       
     </span>
   </a>
@@ -945,6 +1079,58 @@ else
     exit 0
 fi
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- WSL (Windows Subsystem for Linux) or Git Bash on Windows
+- The Pure Storage CLI tools installed: <code>pip install py-pure-client</code>
+- A FlashArray API token (from the FlashArray GUI under Settings → Users → API Tokens)
+- Run this script BEFORE scheduling a Purity upgrade or Evergreen controller swap — it is a pre-flight check</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>pre_upgrade_validate.sh</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FA_HOST</code></td>
+<td>FlashArray management IP or hostname</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>FA_API_TOKEN</code></td>
+<td>FlashArray API token</td>
+<td>FlashArray GUI → Settings → Users → API Tokens</td>
+</tr>
+<tr>
+<td><code>FA_MEDIATOR_HOST</code></td>
+<td>Mediator IP (optional — only for ActiveCluster)</td>
+<td>Your storage admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open WSL</strong></p>
+<p>Open Ubuntu from the Start menu.</p>
+<p><strong>Step 4 — Set variables and run</strong></p>
+<pre><code>pip install py-pure-client
+export FA_HOST=192.168.1.10
+export FA_API_TOKEN=your-token-here
+cd /mnt/c/Users/YourName/Desktop
+bash pre_upgrade_validate.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Six numbered checks, each showing <code>[GO]</code> in green, <code>[WARN]</code> in yellow, or <code>[NO-GO]</code> in red. The summary at the bottom gives a final verdict: READY FOR UPGRADE (all green), PROCEED WITH CAUTION (some warnings), or NOT READY FOR UPGRADE (blockers found). Do not start an upgrade if you see any <code>[NO-GO]</code> items.</p>
 <hr />
 <h2 id="upgrade-readiness-check-python">Upgrade Readiness Check (Python)<a class="headerlink" href="#upgrade-readiness-check-python" title="Permanent link">&para;</a></h2>
 <p>Use the FlashArray REST API to assess upgrade readiness: check the current Purity version, outstanding alerts, pending drive rebuilds, and pod sync state, then print a formatted readiness report with blockers highlighted.</p>
@@ -1099,6 +1285,52 @@ else:
     print(f&quot;{GRN}No blockers found — array is ready for upgrade.{NC}&quot;)
     sys.exit(0)
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Python 3 installed (python.org — tick "Add Python to PATH")
+- A FlashArray API token
+- Network access to your FlashArray management IP</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>fa_upgrade_readiness.py</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FA_HOST</code></td>
+<td>FlashArray management IP or hostname</td>
+<td>Your storage admin</td>
+</tr>
+<tr>
+<td><code>FA_API_TOKEN</code></td>
+<td>FlashArray API token</td>
+<td>FlashArray GUI → Settings → Users → API Tokens</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open Command Prompt and install packages</strong></p>
+<pre><code>pip install py-pure-client tabulate
+</code></pre>
+<p><strong>Step 4 — Set variables and run</strong></p>
+<pre><code>set FA_HOST=192.168.1.10
+set FA_API_TOKEN=your-token-here
+cd %USERPROFILE%\Desktop
+python fa_upgrade_readiness.py
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A formatted table with four rows: Purity version (INFO), active alerts (OK/WARN/BLOCKER), drive status (OK/WARN/BLOCKER), and ActiveCluster pod status (OK/WARN/BLOCKER). Blockers are shown in red. If there are no blockers, the script prints "No blockers found — array is ready for upgrade." in green and exits with code 0. Blockers cause it to exit with code 2.</p>
 <hr />
 <h2 id="ansible-pre-upgrade-playbook">Ansible Pre-Upgrade Playbook<a class="headerlink" href="#ansible-pre-upgrade-playbook" title="Permanent link">&para;</a></h2>
 <p>Run pre-upgrade readiness checks across an entire FlashArray fleet — retrieve current Purity version, check for active alerts, validate drive health, verify ActiveCluster pod health, and assert there are no blockers before proceeding with any upgrade.</p>
@@ -1259,6 +1491,661 @@ else:
         validate_certs: &quot;{{ fa_validate_certs }}&quot;
         status_code: [200, 204]
       ignore_errors: true
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- WSL (Windows Subsystem for Linux) with Ubuntu installed
+- Inside WSL: <code>sudo apt install ansible</code>
+- An inventory file listing your FlashArrays — this playbook runs against a group called <code>flasharrays</code>
+- Per-host variable <code>fa_api_token</code> — set this in your inventory or Ansible vault</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>evergreen_pre_upgrade.yml</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Create an inventory file</strong></p>
+<p>Create a file called <code>flasharrays.yml</code> in the same folder with content like:</p>
+<pre><code class="language-yaml">all:
+  children:
+    flasharrays:
+      hosts:
+        192.168.1.10:
+          fa_api_token: &quot;your-token-for-array1&quot;
+        192.168.1.11:
+          fa_api_token: &quot;your-token-for-array2&quot;
+</code></pre>
+<p><strong>Step 3 — Open WSL</strong></p>
+<p>Open Ubuntu from the Start menu.</p>
+<p><strong>Step 4 — Copy the files and run the playbook</strong></p>
+<pre><code>cp /mnt/c/Users/YourName/Desktop/evergreen_pre_upgrade.yml ~/
+cp /mnt/c/Users/YourName/Desktop/flasharrays.yml ~/
+cd ~
+ansible-playbook evergreen_pre_upgrade.yml -i flasharrays.yml
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Ansible runs all four checks on every FlashArray in your inventory simultaneously. For each array it prints the Purity version, then asserts that there are no critical alerts, no failed drives, and no offline pods. If any array has a blocker, that host fails with a clear message. Arrays that pass all checks print a readiness summary at the end.</p>
+<hr />
+<h2 id="windows-evergreenone-usage-report-via-pure1-rest-api-powershell">Windows: Evergreen//One Usage Report via Pure1 REST API (PowerShell)<a class="headerlink" href="#windows-evergreenone-usage-report-via-pure1-rest-api-powershell" title="Permanent link">&para;</a></h2>
+<p>Authenticate to the Pure1 REST API using an API key, retrieve capacity metrics for all arrays in your Evergreen//One subscription, and print a formatted report showing total capacity, used capacity, and data reduction ratio.</p>
+<pre><code class="language-powershell"># evergreen_usage_pure1.ps1 — Evergreen//One Usage Report via Pure1 REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Pure1 API: https://api.pure1.purestorage.com/api/1.x/
+# API tokens generated at: https://pure1.purestorage.com (Settings -&gt; API Registration)
+# Run: .\evergreen_usage_pure1.ps1
+
+$Pure1ApiKey = &quot;your-pure1-api-key&quot;   # Generate at pure1.purestorage.com -&gt; Settings -&gt; API Registration
+
+# Handle SSL
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @&quot;
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+&quot;@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$Pure1Base = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+
+# --- Step 1: Get OAuth2 access token using API key ---
+# Pure1 uses a simplified token exchange: POST with api_token in body
+Write-Host &quot;Authenticating to Pure1 API ...&quot; -ForegroundColor Cyan
+
+try {
+    $TokenResp = Invoke-RestMethod `
+        -Uri    &quot;$Pure1Base/oauth2/1.0/token&quot; `
+        -Method POST `
+        -Body   &quot;grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Atoken-exchange&amp;subject_token=$([uri]::EscapeDataString($Pure1ApiKey))&amp;subject_token_type=urn%3Apure%3Aoauth%3Atoken-type%3Aapi-token&quot; `
+        -ContentType &quot;application/x-www-form-urlencoded&quot; `
+        -ErrorAction Stop
+} catch {
+    Write-Error &quot;Authentication failed: $($_.Exception.Message)&quot;
+    Write-Host &quot;Tip: Generate your API key at https://pure1.purestorage.com -&gt; Settings -&gt; API Registration&quot; -ForegroundColor Yellow
+    exit 1
+}
+
+$AccessToken = $TokenResp.access_token
+if (-not $AccessToken) {
+    Write-Error &quot;No access token returned. Check your Pure1 API key.&quot;
+    exit 1
+}
+
+$AuthHeaders = @{ Authorization = &quot;Bearer $AccessToken&quot; }
+Write-Host &quot;Authenticated successfully.&quot; -ForegroundColor Green
+
+# --- Step 2: Get array list ---
+Write-Host &quot;`nFetching arrays from Pure1 ...&quot; -ForegroundColor Cyan
+
+try {
+    $ArraysResp = Invoke-RestMethod `
+        -Uri     &quot;$Pure1Base/arrays&quot; `
+        -Headers $AuthHeaders `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Error &quot;Failed to retrieve arrays: $($_.Exception.Message)&quot;
+    exit 1
+}
+
+$Arrays = $ArraysResp.items
+if (-not $Arrays -or $Arrays.Count -eq 0) {
+    Write-Host &quot;No arrays found in Pure1. Check your account access.&quot;
+    exit 0
+}
+
+Write-Host &quot;Found $($Arrays.Count) array(s).`n&quot;
+
+# --- Step 3: Get capacity and data reduction metrics ---
+$EndMs   = [long](([datetime]::UtcNow - [datetime]&quot;1970-01-01&quot;).TotalMilliseconds)
+$StartMs = $EndMs - (24 * 3600 * 1000)   # last 24 hours
+
+$MetricNames = &quot;array_total_capacity,array_total_used,array_data_reduction&quot;
+
+try {
+    $MetricsResp = Invoke-RestMethod `
+        -Uri     &quot;$Pure1Base/metrics/history?names=$MetricNames&amp;start_time=$StartMs&amp;end_time=$EndMs&amp;aggregation=avg&amp;resolution=86400000&quot; `
+        -Headers $AuthHeaders `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Warning &quot;Could not retrieve metrics: $($_.Exception.Message)&quot;
+    $MetricsResp = $null
+}
+
+# Organise metrics by array name
+$ArrayMetrics = @{}
+if ($MetricsResp -and $MetricsResp.items) {
+    foreach ($m in $MetricsResp.items) {
+        $arrayName = $m.resources[0].name
+        $metricKey = $m.name
+        $lastVal   = ($m.data | Select-Object -Last 1)[1]
+        if (-not $ArrayMetrics[$arrayName]) { $ArrayMetrics[$arrayName] = @{} }
+        $ArrayMetrics[$arrayName][$metricKey] = $lastVal
+    }
+}
+
+# --- Step 4: Print report ---
+Write-Host &quot;=== Evergreen//One Usage Report ===&quot; -ForegroundColor Cyan
+Write-Host (&quot;  {0,-30} {1,12} {2,12} {3,8}  {4}&quot; -f &quot;Array&quot;, &quot;Total (TiB)&quot;, &quot;Used (TiB)&quot;, &quot;% Used&quot;, &quot;Data Reduction&quot;)
+Write-Host (&quot;  &quot; + &quot;-&quot; * 80)
+
+foreach ($arr in $Arrays) {
+    $name    = $arr.name
+    $metrics = $ArrayMetrics[$name]
+
+    $totalBytes = if ($metrics) { $metrics[&quot;array_total_capacity&quot;] } else { $null }
+    $usedBytes  = if ($metrics) { $metrics[&quot;array_total_used&quot;]     } else { $null }
+    $drRatio    = if ($metrics) { $metrics[&quot;array_data_reduction&quot;] } else { $null }
+
+    $totalTiB = if ($totalBytes) { [math]::Round($totalBytes / 1TB, 2) } else { &quot;N/A&quot; }
+    $usedTiB  = if ($usedBytes)  { [math]::Round($usedBytes  / 1TB, 2) } else { &quot;N/A&quot; }
+    $pctUsed  = if ($totalBytes -and $usedBytes -and $totalBytes -gt 0) {
+        [math]::Round($usedBytes / $totalBytes * 100, 1)
+    } else { &quot;N/A&quot; }
+    $drDisplay = if ($drRatio) { &quot;{0:F2}x&quot; -f $drRatio } else { &quot;N/A&quot; }
+
+    $colour = if ($pctUsed -is [double] -and $pctUsed -ge 90) { &quot;Red&quot; } `
+              elseif ($pctUsed -is [double] -and $pctUsed -ge 80) { &quot;Yellow&quot; } `
+              else { &quot;Green&quot; }
+
+    Write-Host (&quot;  {0,-30} {1,12} {2,12} {3,7}%  {4}&quot; -f `
+        $name, $totalTiB, $usedTiB, $pctUsed, $drDisplay) -ForegroundColor $colour
+}
+
+Write-Host &quot;`n=== Report complete ===&quot; -ForegroundColor Cyan
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Windows 10 or Windows 11 PC (PowerShell is already installed)
+- A Pure1 API key — log in to pure1.purestorage.com, go to <strong>Settings → API Registration</strong>, and create a new API token
+- Internet access to reach api.pure1.purestorage.com</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type <code>Notepad</code>, press Enter)</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>evergreen_usage_pure1.ps1</code> — save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the saved file in Notepad and change this line near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put here</th>
+<th>Where to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$Pure1ApiKey</code></td>
+<td>Your Pure1 API token</td>
+<td>pure1.purestorage.com → Settings → API Registration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Press the Windows key, type <code>PowerShell</code>, right-click <strong>Windows PowerShell</strong>, choose <strong>Run as Administrator</strong>.</p>
+<p><strong>Step 4 — Allow script execution (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\evergreen_usage_pure1.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table listing every array in your Pure1 account with its total capacity in TiB, used capacity in TiB, percentage used, and data reduction ratio. Arrays below 80% used appear in green, 80-89% in yellow, and 90%+ in red. This gives you an at-a-glance capacity view across your entire Evergreen//One fleet from your Windows desktop.</p>
+<hr />
+<h2 id="daily-check-script-python">Daily Check Script (Python)<a class="headerlink" href="#daily-check-script-python" title="Permanent link">&para;</a></h2>
+<p>Connect to the Pure1 API, retrieve health scores for all arrays, and flag any array below a score of 90. For each array, also check the FlashArray REST API for active critical alerts. Outputs PASS/FAIL per array.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+evergreen_daily_check.py
+Requires: pip install requests pyjwt cryptography py-pure-client
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE, FA_HOST, FA_API_TOKEN
+&quot;&quot;&quot;
+
+import os
+import sys
+import time
+
+try:
+    import jwt
+    import requests
+    from pypureclient import flasharray
+except ImportError:
+    sys.exit(&quot;ERROR: pip install requests pyjwt cryptography py-pure-client&quot;)
+
+PURE1_APP_ID         = os.environ.get(&quot;PURE1_APP_ID&quot;, &quot;&quot;)
+PURE1_PRIVATE_KEY_FILE = os.environ.get(&quot;PURE1_PRIVATE_KEY_FILE&quot;, &quot;&quot;)
+FA_HOST              = os.environ.get(&quot;FA_HOST&quot;, &quot;&quot;)
+FA_API_TOKEN         = os.environ.get(&quot;FA_API_TOKEN&quot;, &quot;&quot;)
+PURE1_API_BASE       = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+HEALTH_WARN          = 90
+
+RED = &quot;\033[0;31m&quot;; GRN = &quot;\033[0;32m&quot;; YEL = &quot;\033[0;33m&quot;; NC = &quot;\033[0m&quot;
+overall = 0
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {&quot;iss&quot;: PURE1_APP_ID, &quot;iat&quot;: int(time.time()), &quot;exp&quot;: int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm=&quot;RS256&quot;)
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f&quot;{PURE1_API_BASE}/oauth2/1.0/token&quot;,
+        data={&quot;grant_type&quot;: &quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+              &quot;subject_token&quot;: jwt_tok,
+              &quot;subject_token_type&quot;: &quot;urn:ietf:params:oauth:token-type:jwt&quot;},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+
+print(f&quot;\n=== Evergreen Daily Check ===&quot;)
+print(f&quot;Generated: {__import__('datetime').datetime.now():%Y-%m-%d %H:%M}\n&quot;)
+
+# --- Pure1: array health scores ---
+if PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE:
+    try:
+        token = get_access_token(get_pure1_token())
+        arrays_resp = requests.get(f&quot;{PURE1_API_BASE}/arrays&quot;,
+                                   headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}, timeout=30)
+        arrays_resp.raise_for_status()
+        for arr in arrays_resp.json().get(&quot;items&quot;, []):
+            name   = arr.get(&quot;name&quot;, &quot;unknown&quot;)
+            score  = arr.get(&quot;health_score&quot;, None)
+            if score is not None and score &lt; HEALTH_WARN:
+                print(f&quot;  {RED}[FAIL]{NC} {name}: health score {score} &lt; {HEALTH_WARN}&quot;)
+                overall = max(overall, 1)
+            else:
+                s = f&quot;{score}&quot; if score is not None else &quot;N/A&quot;
+                print(f&quot;  {GRN}[PASS]{NC} {name}: health score {s}&quot;)
+    except Exception as exc:
+        print(f&quot;  {YEL}[WARN]{NC} Pure1 check failed: {exc}&quot;)
+else:
+    print(f&quot;  {YEL}[SKIP]{NC} PURE1_APP_ID/PURE1_PRIVATE_KEY_FILE not set — skipping Pure1 check&quot;)
+
+# --- Per-array: critical alerts via FlashArray REST API ---
+if FA_HOST and FA_API_TOKEN:
+    print()
+    try:
+        client = flasharray.Client(target=FA_HOST, api_token=FA_API_TOKEN)
+        alerts_resp = client.get_alerts(filter=&quot;flagged='true'&quot;)
+        alerts = list(alerts_resp.items) if alerts_resp.status_code == 200 else []
+        crits  = [a for a in alerts if getattr(a, &quot;severity&quot;, &quot;&quot;) == &quot;error&quot;]
+        if crits:
+            print(f&quot;  {RED}[FAIL]{NC} {FA_HOST}: {len(crits)} critical alert(s)&quot;)
+            for a in crits:
+                print(f&quot;         [{a.id}] {a.summary}&quot;)
+            overall = max(overall, 2)
+        else:
+            print(f&quot;  {GRN}[PASS]{NC} {FA_HOST}: no critical alerts&quot;)
+    except Exception as exc:
+        print(f&quot;  {YEL}[WARN]{NC} FlashArray alert check failed: {exc}&quot;)
+else:
+    print(f&quot;  {YEL}[SKIP]{NC} FA_HOST/FA_API_TOKEN not set — skipping per-array alert check&quot;)
+
+print()
+label = &quot;PASS&quot; if overall == 0 else &quot;WARN&quot; if overall == 1 else &quot;FAIL&quot;
+colour = GRN if overall == 0 else YEL if overall == 1 else RED
+print(f&quot;{colour}RESULT: {label}{NC}&quot;)
+sys.exit(overall)
+</code></pre>
+<hr />
+<h2 id="incident-triage-script-python">Incident Triage Script (Python)<a class="headerlink" href="#incident-triage-script-python" title="Permanent link">&para;</a></h2>
+<p>Pull all arrays from Pure1, capture health score, active alerts, and capacity stats for each. Save to a timestamped JSON file including array version and model.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+evergreen_incident_triage.py
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+&quot;&quot;&quot;
+
+import os
+import sys
+import time
+import json
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit(&quot;ERROR: pip install requests pyjwt cryptography&quot;)
+
+PURE1_APP_ID           = os.environ.get(&quot;PURE1_APP_ID&quot;, &quot;&quot;)
+PURE1_PRIVATE_KEY_FILE = os.environ.get(&quot;PURE1_PRIVATE_KEY_FILE&quot;, &quot;&quot;)
+PURE1_API_BASE         = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit(&quot;Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE&quot;)
+
+TS  = datetime.datetime.now().strftime(&quot;%Y%m%d_%H%M%S&quot;)
+OUT = f&quot;evergreen_triage_{TS}.json&quot;
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {&quot;iss&quot;: PURE1_APP_ID, &quot;iat&quot;: int(time.time()), &quot;exp&quot;: int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm=&quot;RS256&quot;)
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f&quot;{PURE1_API_BASE}/oauth2/1.0/token&quot;,
+        data={&quot;grant_type&quot;: &quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+              &quot;subject_token&quot;: jwt_tok,
+              &quot;subject_token_type&quot;: &quot;urn:ietf:params:oauth:token-type:jwt&quot;},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+
+token   = get_access_token(get_pure1_token())
+headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}
+
+arrays_resp = requests.get(f&quot;{PURE1_API_BASE}/arrays&quot;, headers=headers, timeout=30)
+arrays_resp.raise_for_status()
+arrays = arrays_resp.json().get(&quot;items&quot;, [])
+
+triage = {&quot;timestamp&quot;: TS, &quot;arrays&quot;: []}
+
+for arr in arrays:
+    name    = arr.get(&quot;name&quot;, &quot;unknown&quot;)
+    model   = arr.get(&quot;model&quot;, &quot;unknown&quot;)
+    version = arr.get(&quot;version&quot;, &quot;unknown&quot;)
+    score   = arr.get(&quot;health_score&quot;, None)
+
+    # Capacity metrics (latest 24h average)
+    end_ms   = int(time.time() * 1000)
+    start_ms = end_ms - 86400000
+    metrics_resp = requests.get(
+        f&quot;{PURE1_API_BASE}/metrics/history&quot;,
+        headers=headers,
+        params={&quot;names&quot;: &quot;array_total_capacity,array_total_used&quot;,
+                &quot;start_time&quot;: start_ms, &quot;end_time&quot;: end_ms,
+                &quot;aggregation&quot;: &quot;avg&quot;, &quot;resolution&quot;: 86400000},
+        timeout=30,
+    )
+    capacity = {}
+    if metrics_resp.ok:
+        for m in metrics_resp.json().get(&quot;items&quot;, []):
+            res_name = m.get(&quot;resource&quot;, {}).get(&quot;name&quot;, &quot;&quot;)
+            if res_name == name and m.get(&quot;data&quot;):
+                capacity[m[&quot;name&quot;]] = m[&quot;data&quot;][-1][1]
+
+    triage[&quot;arrays&quot;].append({
+        &quot;name&quot;:         name,
+        &quot;model&quot;:        model,
+        &quot;version&quot;:      version,
+        &quot;health_score&quot;: score,
+        &quot;capacity&quot;:     capacity,
+    })
+    print(f&quot;  Captured: {name} ({model}, {version}, score={score})&quot;)
+
+with open(OUT, &quot;w&quot;) as f:
+    json.dump(triage, f, indent=2)
+
+print(f&quot;\nTriage data saved to: {OUT}&quot;)
+</code></pre>
+<hr />
+<h2 id="change-pre-check-script-bash-python">Change Pre-Check Script (Bash + Python)<a class="headerlink" href="#change-pre-check-script-bash-python" title="Permanent link">&para;</a></h2>
+<p>Run before an NDU upgrade. Verifies <code>purearray upgrade --check</code> passes on the target array, health score is above 90 in Pure1, no active critical alerts, and all pods are online. Exits 2 on failure.</p>
+<pre><code class="language-bash">#!/bin/bash
+# evergreen_precheck.sh
+# Usage: FA_HOST=fa01 FA_API_TOKEN=xxx PURE1_APP_ID=xxx PURE1_PRIVATE_KEY_FILE=/path/key.pem ./evergreen_precheck.sh
+
+FA_HOST=&quot;${FA_HOST:?Set FA_HOST}&quot;
+FA_API_TOKEN=&quot;${FA_API_TOKEN:?Set FA_API_TOKEN}&quot;
+EXIT_CODE=0
+
+RED='\033[0;31m'; GRN='\033[0;32m'; NC='\033[0m'
+go()   { echo -e &quot;  ${GRN}[GO]${NC}    $*&quot;; }
+nogo() { echo -e &quot;  ${RED}[NO-GO]${NC} $*&quot;; EXIT_CODE=2; }
+
+export PURENETWORK_HOST=&quot;$FA_HOST&quot;
+export PURENETWORK_API_TOKEN=&quot;$FA_API_TOKEN&quot;
+
+echo &quot;=== Evergreen Change Pre-Check: ${FA_HOST} ===&quot;
+echo &quot;Time: $(date)&quot;
+echo
+
+# Check 1: purearray upgrade --check
+echo &quot;[ 1 ] NDU upgrade compatibility check&quot;
+if purearray upgrade --check 2&gt;/dev/null | grep -qi 'ready\|pass\|ok'; then
+    go &quot;purearray upgrade --check passed&quot;
+else
+    nogo &quot;purearray upgrade --check did not confirm readiness — review output&quot;
+fi
+
+# Check 2: Pure1 health score
+echo &quot;[ 2 ] Pure1 health score&quot;
+if [[ -n &quot;${PURE1_APP_ID:-}&quot; &amp;&amp; -n &quot;${PURE1_PRIVATE_KEY_FILE:-}&quot; ]]; then
+    SCORE=$(python3 - &lt;&lt;'PYEOF'
+import os, sys, time, jwt, requests
+app_id = os.environ[&quot;PURE1_APP_ID&quot;]
+key_file = os.environ[&quot;PURE1_PRIVATE_KEY_FILE&quot;]
+base = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+with open(key_file) as f:
+    key = f.read()
+tok = jwt.encode({&quot;iss&quot;: app_id, &quot;iat&quot;: int(time.time()), &quot;exp&quot;: int(time.time())+3600}, key, algorithm=&quot;RS256&quot;)
+tok = tok if isinstance(tok, str) else tok.decode()
+at = requests.post(f&quot;{base}/oauth2/1.0/token&quot;,
+    data={&quot;grant_type&quot;:&quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+          &quot;subject_token&quot;: tok, &quot;subject_token_type&quot;:&quot;urn:ietf:params:oauth:token-type:jwt&quot;},
+    timeout=30).json()[&quot;access_token&quot;]
+arrays = requests.get(f&quot;{base}/arrays&quot;, headers={&quot;Authorization&quot;: f&quot;Bearer {at}&quot;}, timeout=30).json().get(&quot;items&quot;,[])
+fa = os.environ.get(&quot;FA_HOST&quot;,&quot;&quot;)
+for a in arrays:
+    if a.get(&quot;name&quot;,&quot;&quot;).lower() == fa.lower() or fa in a.get(&quot;name&quot;,&quot;&quot;):
+        print(a.get(&quot;health_score&quot;, 0))
+        sys.exit(0)
+print(0)
+PYEOF
+)
+    if [[ &quot;${SCORE:-0}&quot; -ge 90 ]]; then
+        go &quot;Pure1 health score: ${SCORE}&quot;
+    else
+        nogo &quot;Pure1 health score ${SCORE} &lt; 90&quot;
+    fi
+else
+    echo -e &quot;  [SKIP] PURE1_APP_ID/PURE1_PRIVATE_KEY_FILE not set — skipping Pure1 check&quot;
+fi
+
+# Check 3: No critical alerts
+echo &quot;[ 3 ] Active critical alerts&quot;
+CRIT=$(purealert list 2&gt;/dev/null | grep -ic 'critical' || true)
+[[ $CRIT -gt 0 ]] &amp;&amp; nogo &quot;$CRIT critical alert(s) active&quot; || go &quot;No critical alerts&quot;
+
+# Check 4: All pods online
+echo &quot;[ 4 ] Pod health&quot;
+OFFLINE_PODS=$(purepod list 2&gt;/dev/null | awk 'NR&gt;1 &amp;&amp; $2!=&quot;online&quot; {print $1}' | paste -sd',' -)
+[[ -n &quot;$OFFLINE_PODS&quot; ]] &amp;&amp; nogo &quot;Pods not online: $OFFLINE_PODS&quot; || go &quot;All pods online&quot;
+
+echo
+[[ $EXIT_CODE -eq 0 ]] &amp;&amp; echo -e &quot;${GRN}VERDICT: GO${NC}&quot; || echo -e &quot;${RED}VERDICT: NO-GO${NC}&quot;
+exit $EXIT_CODE
+</code></pre>
+<hr />
+<h2 id="post-change-validation-script-bash-python">Post-Change Validation Script (Bash + Python)<a class="headerlink" href="#post-change-validation-script-bash-python" title="Permanent link">&para;</a></h2>
+<p>After an NDU upgrade, confirm the target Purity version is installed, no new alerts appeared post-upgrade, and the Pure1 health score is maintained.</p>
+<pre><code class="language-bash">#!/bin/bash
+# evergreen_postcheck.sh
+# Usage: FA_HOST=fa01 FA_API_TOKEN=xxx EXPECTED_VERSION=6.6.3 ./evergreen_postcheck.sh
+
+FA_HOST=&quot;${FA_HOST:?Set FA_HOST}&quot;
+FA_API_TOKEN=&quot;${FA_API_TOKEN:?Set FA_API_TOKEN}&quot;
+EXPECTED_VERSION=&quot;${EXPECTED_VERSION:-}&quot;
+EXIT_CODE=0
+
+export PURENETWORK_HOST=&quot;$FA_HOST&quot;
+export PURENETWORK_API_TOKEN=&quot;$FA_API_TOKEN&quot;
+
+RED='\033[0;31m'; GRN='\033[0;32m'; YEL='\033[0;33m'; NC='\033[0m'
+ok()   { echo -e &quot;  ${GRN}[OK]${NC}   $*&quot;; }
+fail() { echo -e &quot;  ${RED}[FAIL]${NC} $*&quot;; EXIT_CODE=1; }
+warn() { echo -e &quot;  ${YEL}[WARN]${NC} $*&quot;; }
+
+echo &quot;=== Evergreen Post-Change Validation: ${FA_HOST} ===&quot;
+echo &quot;Time: $(date)&quot;
+echo
+
+# Check 1: Purity version
+if [[ -n &quot;$EXPECTED_VERSION&quot; ]]; then
+    ACTUAL=$(purearray list 2&gt;/dev/null | awk 'NR==2{print $2}')
+    if [[ &quot;$ACTUAL&quot; == &quot;$EXPECTED_VERSION&quot; ]]; then
+        ok &quot;Purity version: ${ACTUAL}&quot;
+    else
+        fail &quot;Purity version is ${ACTUAL}, expected ${EXPECTED_VERSION}&quot;
+    fi
+else
+    ACTUAL=$(purearray list 2&gt;/dev/null | awk 'NR==2{print $2}')
+    warn &quot;EXPECTED_VERSION not set — current version is ${ACTUAL}&quot;
+fi
+
+# Check 2: No new critical alerts
+CRIT=$(purealert list 2&gt;/dev/null | grep -ic 'critical' || true)
+[[ $CRIT -gt 0 ]] &amp;&amp; fail &quot;$CRIT critical alert(s) present post-upgrade&quot; || ok &quot;No critical alerts&quot;
+
+# Check 3: Pure1 health score
+if [[ -n &quot;${PURE1_APP_ID:-}&quot; &amp;&amp; -n &quot;${PURE1_PRIVATE_KEY_FILE:-}&quot; ]]; then
+    SCORE=$(python3 - &lt;&lt;'PYEOF'
+import os, sys, time, jwt, requests
+app_id = os.environ[&quot;PURE1_APP_ID&quot;]
+key_file = os.environ[&quot;PURE1_PRIVATE_KEY_FILE&quot;]
+base = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+with open(key_file) as f:
+    key = f.read()
+tok = jwt.encode({&quot;iss&quot;: app_id, &quot;iat&quot;: int(time.time()), &quot;exp&quot;: int(time.time())+3600}, key, algorithm=&quot;RS256&quot;)
+tok = tok if isinstance(tok, str) else tok.decode()
+at = requests.post(f&quot;{base}/oauth2/1.0/token&quot;,
+    data={&quot;grant_type&quot;:&quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+          &quot;subject_token&quot;: tok, &quot;subject_token_type&quot;:&quot;urn:ietf:params:oauth:token-type:jwt&quot;},
+    timeout=30).json()[&quot;access_token&quot;]
+arrays = requests.get(f&quot;{base}/arrays&quot;, headers={&quot;Authorization&quot;: f&quot;Bearer {at}&quot;}, timeout=30).json().get(&quot;items&quot;,[])
+fa = os.environ.get(&quot;FA_HOST&quot;,&quot;&quot;)
+for a in arrays:
+    if a.get(&quot;name&quot;,&quot;&quot;).lower() == fa.lower() or fa in a.get(&quot;name&quot;,&quot;&quot;):
+        print(a.get(&quot;health_score&quot;, 0))
+        sys.exit(0)
+print(0)
+PYEOF
+)
+    [[ &quot;${SCORE:-0}&quot; -ge 90 ]] &amp;&amp; ok &quot;Pure1 health score maintained: ${SCORE}&quot; || fail &quot;Pure1 health score dropped to ${SCORE}&quot;
+else
+    warn &quot;PURE1_APP_ID/PURE1_PRIVATE_KEY_FILE not set — skipping Pure1 score check&quot;
+fi
+
+echo
+[[ $EXIT_CODE -eq 0 ]] &amp;&amp; echo -e &quot;${GRN}RESULT: PASS${NC}&quot; || echo -e &quot;${RED}RESULT: FAIL${NC}&quot;
+exit $EXIT_CODE
+</code></pre>
+<hr />
+<h2 id="health-check-script-python-cron-safe">Health Check Script (Python, cron-safe)<a class="headerlink" href="#health-check-script-python-cron-safe" title="Permanent link">&para;</a></h2>
+<p>Lightweight cron-safe script providing a fleet summary: total arrays, arrays with critical alerts, arrays below health score 90, and total capacity consumed. Exits 0 (healthy), 1 (warning), or 2 (critical).</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+evergreen_health.py — cron-safe Evergreen fleet health check
+Requires: pip install requests pyjwt cryptography py-pure-client
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+Cron: */15 * * * * python3 /opt/scripts/evergreen_health.py &gt;&gt; /var/log/evergreen_health.log 2&gt;&amp;1
+&quot;&quot;&quot;
+
+import os
+import sys
+import time
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit(&quot;ERROR: pip install requests pyjwt cryptography&quot;)
+
+PURE1_APP_ID           = os.environ.get(&quot;PURE1_APP_ID&quot;, &quot;&quot;)
+PURE1_PRIVATE_KEY_FILE = os.environ.get(&quot;PURE1_PRIVATE_KEY_FILE&quot;, &quot;&quot;)
+PURE1_API_BASE         = &quot;https://api.pure1.purestorage.com/api/1.0&quot;
+HEALTH_WARN            = 90
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit(&quot;Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE&quot;)
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {&quot;iss&quot;: PURE1_APP_ID, &quot;iat&quot;: int(time.time()), &quot;exp&quot;: int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm=&quot;RS256&quot;)
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f&quot;{PURE1_API_BASE}/oauth2/1.0/token&quot;,
+        data={&quot;grant_type&quot;: &quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+              &quot;subject_token&quot;: jwt_tok,
+              &quot;subject_token_type&quot;: &quot;urn:ietf:params:oauth:token-type:jwt&quot;},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+
+try:
+    token   = get_access_token(get_pure1_token())
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}
+
+    arrays = requests.get(f&quot;{PURE1_API_BASE}/arrays&quot;, headers=headers, timeout=30).json().get(&quot;items&quot;, [])
+
+    total_arrays  = len(arrays)
+    low_score     = sum(1 for a in arrays if (a.get(&quot;health_score&quot;) or 100) &lt; HEALTH_WARN)
+    crit_alerts   = sum(1 for a in arrays if (a.get(&quot;alert_severity&quot;) or &quot;&quot;) == &quot;error&quot;)
+
+    # Total capacity consumed (sum across fleet)
+    end_ms   = int(time.time() * 1000)
+    start_ms = end_ms - 86400000
+    metrics  = requests.get(f&quot;{PURE1_API_BASE}/metrics/history&quot;,
+                             headers=headers,
+                             params={&quot;names&quot;: &quot;array_total_used&quot;,
+                                     &quot;start_time&quot;: start_ms, &quot;end_time&quot;: end_ms,
+                                     &quot;aggregation&quot;: &quot;avg&quot;, &quot;resolution&quot;: 86400000},
+                             timeout=30).json().get(&quot;items&quot;, [])
+    total_used_tib = sum(
+        (m[&quot;data&quot;][-1][1] / (1024**4) if m.get(&quot;data&quot;) else 0)
+        for m in metrics
+    )
+
+    worst = 0
+    if crit_alerts &gt; 0:
+        worst = 2
+    elif low_score &gt; 0:
+        worst = 1
+
+    status = &quot;HEALTHY&quot; if worst == 0 else &quot;WARNING&quot; if worst == 1 else &quot;CRITICAL&quot;
+    ts     = datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+
+    print(f&quot;[{ts}] {status} | total_arrays={total_arrays} crit_alerts={crit_alerts} &quot;
+          f&quot;low_score_arrays={low_score} total_used={total_used_tib:.1f}TiB&quot;)
+    sys.exit(worst)
+
+except Exception as exc:
+    print(f&quot;[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] ERROR: {exc}&quot;)
+    sys.exit(2)
 </code></pre>
 
 

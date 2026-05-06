@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="ESXi Host Health Check (PowerShell / PowerCLI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -746,6 +763,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Storage Path Health Check (Bash / esxcli)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -758,6 +792,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="ESXi Syslog and Event Collector (Python)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -769,6 +820,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NTP Configuration Audit (Bash)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -779,6 +847,79 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Ansible ESXi Configuration Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-esxi-host-health-via-rest-api-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: ESXi Host Health via REST API (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: ESXi Host Health via REST API (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-esxi-esxcli-commands-via-plink-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: ESXi ESXCLI Commands via Plink (CMD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: ESXi ESXCLI Commands via Plink (CMD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -905,6 +1046,70 @@ foreach ($vmhost in (Get-VMHost | Sort-Object Name)) {
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  <code>Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force</code>
+  When prompted about an untrusted repository, type <code>Y</code> and press Enter
+- Network access to your vCenter server (the script connects via vCenter, which then manages the ESXi hosts)</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong> (important — otherwise Windows adds .txt)</li>
+<li>Name it <code>esxi_host_health.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$VCenterHost</code></td>
+<td>vCenter IP or FQDN e.g. <code>"vcenter.company.local"</code></td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>$VCUser</code></td>
+<td>vCenter username e.g. <code>"administrator@vsphere.local"</code></td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>$VCPass</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\esxi_host_health.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>For each ESXi host managed by vCenter, you will see a block like:</p>
+<pre><code>=== esxi-01.company.local ===
+[PASS    ] ConnectionState                    Connected / PoweredOn
+[PASS    ] Hardware Sensors                   All sensors green
+[PASS    ] Datastore: datastore1              Used=42.1%  Free=289GB
+[PASS    ] Network Adapters                   All adapters have link
+[PASS    ] Service: hostd                     Running
+[PASS    ] Service: vpxa                      Running
+[PASS    ] Service: ntpd                      Running
+</code></pre>
+<p>Any WARNING items appear in yellow, CRITICAL in red. The script exits with code 2 if any critical issues are found.</p>
 <hr />
 <h2 id="storage-path-health-check-bash-esxcli">Storage Path Health Check (Bash / esxcli)<a class="headerlink" href="#storage-path-health-check-bash-esxcli" title="Permanent link">&para;</a></h2>
 <p>Run on an ESXi host via SSH. Report per-device path counts (active / standby / dead) and exit non-zero if any dead paths exist.</p>
@@ -976,6 +1181,47 @@ else
 fi
 exit $CRIT
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- SSH must be enabled on the ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
+- An SSH client on your Windows PC — either:
+  - <strong>Git Bash</strong> (install from https://git-scm.com) — gives you a bash shell on Windows
+  - <strong>PuTTY</strong> (install from https://www.putty.org) — see the plink section at the bottom of this page
+  - <strong>Windows Subsystem for Linux (WSL)</strong> — install Ubuntu from the Microsoft Store
+- The root password for your ESXi host</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>esxi_path_health.sh</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — No edits needed</strong></p>
+<p>This script runs entirely on the ESXi host — no variables to change. The <code>ssh</code> command below pipes the script over the connection.</p>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<ul>
+<li><strong>Git Bash:</strong> right-click Desktop → "Git Bash Here"</li>
+<li><strong>WSL:</strong> Windows key → type <code>Ubuntu</code> → press Enter</li>
+</ul>
+<p><strong>Step 4 — Run it</strong></p>
+<p>Replace <code>192.168.1.100</code> with your ESXi host's IP:</p>
+<pre><code class="language-bash">ssh root@192.168.1.100 'bash -s' &lt; ~/Desktop/esxi_path_health.sh
+</code></pre>
+<p>Type the root password when prompted.</p>
+<p><strong>What you should see</strong></p>
+<pre><code>===================================
+ ESXi Storage Path Health Check
+ 2026-05-06T14:30:00Z
+===================================
+Device                                    Active  Standby     Dead    Total Status
+------                                    ------  -------     ----    ----- ------
+naa.60003ff44dc75adcbc1e2f3a4b5c6d7e       2        0          0        2   OK
+naa.60003ff44dc75adcbc1e2f3a4b5c6d7f       2        0          0        2   OK
+
+RESULT: PASS — all paths healthy
+</code></pre>
+<p>If any device shows <code>DEAD_PATHS</code> the script exits with code 1.</p>
 <hr />
 <h2 id="esxi-syslog-and-event-collector-python">ESXi Syslog and Event Collector (Python)<a class="headerlink" href="#esxi-syslog-and-event-collector-python" title="Permanent link">&para;</a></h2>
 <p>Connect to vCenter via pyVmomi, retrieve events from the last 24 hours filtered by severity, and report NMP/storage errors.</p>
@@ -1090,6 +1336,69 @@ else:
 Disconnect(si)
 sys.exit(1 if issues or vmk_entries else 0)
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The <code>pyVmomi</code> library — install it once by running in Command Prompt:
+  <code>pip install pyVmomi</code>
+- Network access to your vCenter server</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>esxi_event_collector.py</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VCENTER_HOST</code></td>
+<td>vCenter IP or FQDN e.g. <code>"vcenter.company.local"</code></td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>VC_USER</code></td>
+<td>vCenter username e.g. <code>"administrator@vsphere.local"</code></td>
+<td>Your vCenter login</td>
+</tr>
+<tr>
+<td><code>VC_PASS</code></td>
+<td>vCenter password</td>
+<td>Your vCenter password</td>
+</tr>
+<tr>
+<td><code>HOURS_BACK</code></td>
+<td>How many hours of events to retrieve (default 24)</td>
+<td>Your preference</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open Command Prompt</strong></p>
+<p>Windows key → type <code>cmd</code> → press Enter</p>
+<p><strong>Step 4 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+python esxi_event_collector.py
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>Events from last 24h on vcenter.company.local
+Total events retrieved: 312
+
+No WARNING/ERROR host events found.
+
+VMkernel NMP/storage log entries:
+  None found.
+</code></pre>
+<p>If storage or NMP issues are present, they will be listed with timestamps and host names. The script exits with code 1 if any issues are found.</p>
 <hr />
 <h2 id="ntp-configuration-audit-bash">NTP Configuration Audit (Bash)<a class="headerlink" href="#ntp-configuration-audit-bash" title="Permanent link">&para;</a></h2>
 <p>SSH to each ESXi host (or run locally), verify NTP service state, configured servers, and time offset.</p>
@@ -1152,6 +1461,58 @@ case $overall in
 esac
 exit $overall
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- SSH must be enabled on each ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
+- Passwordless SSH set up from your Linux/WSL machine to each ESXi host as root — or be prepared to type the password for each host
+- A bash shell — use Git Bash (https://git-scm.com) or WSL (Ubuntu from the Microsoft Store)
+- Network access from your machine to all ESXi host management IPs</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> (or a text editor in WSL: <code>nano ~/esxi_ntp_audit.sh</code>)</li>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>esxi_ntp_audit.sh</code> (in WSL, save to your home directory)</li>
+</ol>
+<p><strong>Step 2 — Fill in your ESXi hosts</strong></p>
+<p>Open the file and update this line near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ESXI_HOSTS</code></td>
+<td>Space-separated list of ESXi hostnames or IPs e.g. <code>"192.168.1.101 192.168.1.102"</code></td>
+<td>vSphere Client → host list</td>
+</tr>
+</tbody>
+</table>
+<p>Or set it when you run the script (see Step 5).</p>
+<p><strong>Step 3 — Open a bash terminal</strong></p>
+<ul>
+<li><strong>WSL:</strong> Windows key → type <code>Ubuntu</code> → press Enter</li>
+<li><strong>Git Bash:</strong> right-click Desktop → "Git Bash Here"</li>
+</ul>
+<p><strong>Step 4 — Make the script executable</strong></p>
+<pre><code class="language-bash">chmod +x ~/esxi_ntp_audit.sh
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code class="language-bash">ESXI_HOSTS=&quot;192.168.1.101 192.168.1.102 192.168.1.103&quot; ~/esxi_ntp_audit.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>Hostname                  NTP Server(s)        Service    Offset(ms)   Status
+--------                  -------------        -------    ----------   ------
+192.168.1.101             192.168.1.1          running    12ms         OK
+192.168.1.102             192.168.1.1          running    8ms          OK
+192.168.1.103             NOT_CONFIGURED       running    N/A          NO_NTP_SERVER
+
+Overall: CRITICAL
+</code></pre>
+<p>Any host with NTP issues exits with code 2 (CRITICAL).</p>
 <hr />
 <h2 id="ansible-esxi-configuration-playbook">Ansible ESXi Configuration Playbook<a class="headerlink" href="#ansible-esxi-configuration-playbook" title="Permanent link">&para;</a></h2>
 <p>Use the <code>community.vmware</code> collection to verify NTP, DNS, syslog, and SSH security profile compliance across all ESXi hosts in a cluster.</p>
@@ -1239,6 +1600,370 @@ exit $overall
           - host_facts.hosts_facts | length &gt; 0
         fail_msg: &quot;No hosts found in cluster {{ cluster_name }}&quot;
         success_msg: &quot;Compliance check complete for {{ host_facts.hosts_facts | length }} hosts&quot;
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
+  <code>sudo apt update &amp;&amp; sudo apt install -y ansible python3-pip</code>
+- Install the VMware community collection and dependencies:
+  <code>ansible-galaxy collection install community.vmware</code>
+  <code>pip3 install pyVmomi requests</code>
+- Network access to your vCenter server</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<p>In your WSL terminal:</p>
+<pre><code class="language-bash">nano ~/esxi_compliance.yml
+</code></pre>
+<p>Paste the entire code block, then press <code>Ctrl+X</code>, then <code>Y</code>, then <code>Enter</code> to save.</p>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file and update the <code>vars:</code> section:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcenter_hostname</code></td>
+<td>vCenter IP or FQDN</td>
+<td>Your vCenter server address</td>
+</tr>
+<tr>
+<td><code>datacenter_name</code></td>
+<td>Datacenter name in vCenter</td>
+<td>vSphere Client → top of inventory</td>
+</tr>
+<tr>
+<td><code>cluster_name</code></td>
+<td>Cluster name to audit</td>
+<td>vSphere Client → cluster list</td>
+</tr>
+<tr>
+<td><code>ntp_servers</code></td>
+<td>Your NTP server IPs</td>
+<td>Your network admin</td>
+</tr>
+<tr>
+<td><code>dns_servers</code></td>
+<td>Your DNS server IPs</td>
+<td>Your network admin</td>
+</tr>
+<tr>
+<td><code>syslog_host</code></td>
+<td>Your syslog server URI e.g. <code>"udp://syslog.local:514"</code></td>
+<td>Your syslog server address</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Set credentials as environment variables</strong></p>
+<pre><code class="language-bash">export VC_USER=&quot;administrator@vsphere.local&quot;
+export VC_PASS=&quot;YourPassword&quot;
+</code></pre>
+<p><strong>Step 4 — Create a minimal inventory file</strong></p>
+<pre><code class="language-bash">echo &quot;localhost ansible_connection=local&quot; &gt; ~/inventory
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code class="language-bash">ansible-playbook -i ~/inventory ~/esxi_compliance.yml
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Each task prints <code>ok</code> (no change needed) or <code>changed</code> (configuration was corrected). If no hosts are found in the cluster, you get a <code>FAILED</code> assertion. Any task that encounters an error (such as a host that cannot be reached) will show <code>fatal</code> with the error detail.</p>
+<hr />
+<h2 id="windows-esxi-host-health-via-rest-api-powershell">Windows: ESXi Host Health via REST API (PowerShell)<a class="headerlink" href="#windows-esxi-host-health-via-rest-api-powershell" title="Permanent link">&para;</a></h2>
+<p>Use the ESXi Embedded Host Client REST API (available on ESXi 6.x and newer) to check system health and list services — no extra modules needed.</p>
+<pre><code class="language-powershell"># esxi_rest_health.ps1
+# Uses the ESXi local REST API on port 443.
+# Available on ESXi 6.x and newer (Embedded Host Client REST API).
+# Requires PowerShell 5.1+ (already on Windows 10/11). No extra modules needed.
+
+param(
+    [string]$EsxiHost = &quot;192.168.1.100&quot;,
+    [string]$EsxiUser = &quot;root&quot;,
+    [string]$EsxiPass = &quot;YourRootPasswordHere&quot;
+)
+
+# Ignore SSL certificate errors (ESXi uses self-signed certs)
+Add-Type @&quot;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAll : ICertificatePolicy {
+    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int prob) { return true; }
+}
+&quot;@
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = &quot;https://$EsxiHost/rest&quot;
+
+# Step 1: Authenticate — POST /rest/com/vmware/cis/session with Basic auth
+$authBytes = [System.Text.Encoding]::ASCII.GetBytes(&quot;${EsxiUser}:${EsxiPass}&quot;)
+$authB64   = [System.Convert]::ToBase64String($authBytes)
+$authHeaders = @{ Authorization = &quot;Basic $authB64&quot; }
+
+try {
+    $sessionResp = Invoke-RestMethod -Uri &quot;$BaseUrl/com/vmware/cis/session&quot; -Method POST -Headers $authHeaders
+    $sessionToken = $sessionResp.value
+} catch {
+    Write-Host &quot;ERROR: Could not authenticate to ESXi host. Check IP, username, and password.&quot; -ForegroundColor Red
+    Write-Host $_.Exception.Message
+    exit 1
+}
+
+$apiHeaders = @{ &quot;vmware-api-session-id&quot; = $sessionToken }
+
+Write-Host &quot;`n=== ESXi Host Health Check: $EsxiHost ===&quot; -ForegroundColor Cyan
+Write-Host &quot;($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n&quot;
+
+# Step 2: GET /rest/appliance/health/system — overall health
+try {
+    $health = Invoke-RestMethod -Uri &quot;$BaseUrl/appliance/health/system&quot; -Method GET -Headers $apiHeaders
+    $healthVal = $health.value
+    $colour = if ($healthVal -eq &quot;green&quot;) { &quot;Green&quot; } elseif ($healthVal -eq &quot;yellow&quot;) { &quot;Yellow&quot; } else { &quot;Red&quot; }
+    Write-Host &quot;System Health: &quot; -NoNewline
+    Write-Host $healthVal.ToUpper() -ForegroundColor $colour
+} catch {
+    Write-Host &quot;System Health: UNKNOWN (could not retrieve — $($_.Exception.Message))&quot; -ForegroundColor Yellow
+}
+
+Write-Host &quot;&quot;
+
+# Step 3: GET /rest/appliance/vmon/service — list services
+try {
+    $services = Invoke-RestMethod -Uri &quot;$BaseUrl/appliance/vmon/service&quot; -Method GET -Headers $apiHeaders
+    Write-Host &quot;--- Services ---&quot;
+    $header = &quot;{0,-40} {1,-15} {2}&quot;
+    Write-Host ($header -f &quot;Service&quot;, &quot;State&quot;, &quot;Startup Type&quot;)
+    Write-Host (&quot;-&quot; * 70)
+
+    $stoppedServices = @()
+    foreach ($svc in ($services.value | Sort-Object { $_.key })) {
+        $state   = $svc.value.state
+        $startup = $svc.value.startup_type
+        $colour  = if ($state -eq &quot;STARTED&quot;) { &quot;Green&quot; } elseif ($state -eq &quot;STOPPED&quot;) { &quot;Red&quot; } else { &quot;Yellow&quot; }
+        Write-Host ($header -f $svc.key, $state, $startup) -ForegroundColor $colour
+        if ($state -eq &quot;STOPPED&quot; -and $startup -eq &quot;AUTOMATIC&quot;) {
+            $stoppedServices += $svc.key
+        }
+    }
+
+    if ($stoppedServices.Count -gt 0) {
+        Write-Host &quot;`nWARNING: The following automatic services are stopped:&quot; -ForegroundColor Yellow
+        $stoppedServices | ForEach-Object { Write-Host &quot;  - $_&quot; -ForegroundColor Yellow }
+    } else {
+        Write-Host &quot;`nAll automatic services are running.&quot; -ForegroundColor Green
+    }
+} catch {
+    Write-Host &quot;Services: UNKNOWN (could not retrieve — $($_.Exception.Message))&quot; -ForegroundColor Yellow
+}
+
+# Log out
+try {
+    Invoke-RestMethod -Uri &quot;$BaseUrl/com/vmware/cis/session&quot; -Method DELETE -Headers $apiHeaders | Out-Null
+} catch {}
+
+Write-Host &quot;`nCheck complete.&quot; -ForegroundColor Cyan
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_5">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_5" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
+- ESXi 6.x or newer (the Embedded Host Client REST API was introduced in ESXi 6.0)
+- Network access to your ESXi host on port 443
+- The root password for your ESXi host</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>esxi_rest_health.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update the <code>param(</code> block:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$EsxiHost</code></td>
+<td>ESXi host IP address e.g. <code>"192.168.1.100"</code></td>
+<td>vSphere Client → host summary</td>
+</tr>
+<tr>
+<td><code>$EsxiUser</code></td>
+<td>ESXi username — almost always <code>"root"</code></td>
+<td>ESXi root account</td>
+</tr>
+<tr>
+<td><code>$EsxiPass</code></td>
+<td>ESXi root password</td>
+<td>Your ESXi root password</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
+<p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
+<p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run it</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\esxi_rest_health.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>=== ESXi Host Health Check: 192.168.1.100 ===
+(2026-05-06 14:30:22)
+
+System Health: GREEN
+
+--- Services ---
+Service                                  State           Startup Type
+----------------------------------------------------------------------
+hostd                                    STARTED         AUTOMATIC
+ntpd                                     STARTED         AUTOMATIC
+sfcbd                                    STOPPED         MANUAL
+
+All automatic services are running.
+
+Check complete.
+</code></pre>
+<p>Any service that should start automatically but is stopped is listed as a warning.</p>
+<hr />
+<h2 id="windows-esxi-esxcli-commands-via-plink-cmd">Windows: ESXi ESXCLI Commands via Plink (CMD)<a class="headerlink" href="#windows-esxi-esxcli-commands-via-plink-cmd" title="Permanent link">&para;</a></h2>
+<p>Connect to an ESXi host via SSH using plink (from PuTTY) and run a series of diagnostic ESXCLI commands with clear labels.</p>
+<pre><code class="language-batch">@echo off
+REM esxi_esxcli_check.bat — ESXi diagnostic commands via SSH (plink)
+REM Connects to an ESXi host using plink (PuTTY command-line SSH tool).
+REM
+REM DOWNLOAD PLINK: https://www.putty.org
+REM   - Download putty-64bit-X.XX-installer.msi and install it.
+REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
+REM
+REM ENABLE SSH ON ESXI:
+REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start
+REM
+REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
+REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
+
+set ESXI_HOST=192.168.1.100
+set SSH_USER=root
+set PLINK=&quot;C:\Program Files\PuTTY\plink.exe&quot;
+
+echo.
+echo === ESXi ESXCLI Diagnostic Check: %ESXI_HOST% ===
+echo.
+
+echo --- ESXi Version ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli system version get&quot;
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %ESXI_HOST%.
+    echo Check: 1) IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
+    exit /b 1
+)
+
+echo.
+echo --- Storage Multipath Devices (first 40 lines) ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli storage nmp device list | head -40&quot;
+
+echo.
+echo --- Network NICs ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli network nic list&quot;
+
+echo.
+echo --- Host Summary (product, build, status) ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;vim-cmd hostsvc/hostsummary | grep -E 'product|build|status'&quot;
+
+echo.
+echo --- System Uptime (seconds) ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli system stats uptime get&quot;
+
+echo.
+echo === Diagnostic check complete ===
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_6">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_6" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
+- SSH enabled on your ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
+- The root password for your ESXi host
+- Network access from your PC to the ESXi host management IP</p>
+<p><strong>Step 1 — Accept the SSH fingerprint (one-time setup)</strong></p>
+<p>Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:</p>
+<pre><code>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+</code></pre>
+<p>When asked "Store key in cache?", type <code>y</code> and press Enter. Type the root password when prompted. Once connected, press <code>Ctrl+C</code> to disconnect. You only need to do this once per ESXi host.</p>
+<p><strong>Step 2 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong> on your Windows PC</li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong></li>
+<li>Set "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>esxi_esxcli_check.bat</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 3 — Fill in your details</strong></p>
+<p>Open the file in Notepad and update these lines near the top:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to enter</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ESXI_HOST</code></td>
+<td>ESXi host IP address e.g. <code>192.168.1.100</code></td>
+<td>vSphere Client → host summary page</td>
+</tr>
+<tr>
+<td><code>SSH_USER</code></td>
+<td>SSH username — almost always <code>root</code></td>
+<td>ESXi root account</td>
+</tr>
+<tr>
+<td><code>PLINK</code></td>
+<td>Path to plink.exe</td>
+<td>Default is <code>C:\Program Files\PuTTY\plink.exe</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 4 — Open Command Prompt</strong></p>
+<p>Windows key → type <code>cmd</code> → press Enter</p>
+<p><strong>Step 5 — Run it</strong></p>
+<p>You can double-click the <code>.bat</code> file on your Desktop, or run it from Command Prompt:</p>
+<pre><code>cd C:\Users\YourName\Desktop
+esxi_esxcli_check.bat
+</code></pre>
+<p><strong>What you should see</strong></p>
+<pre><code>=== ESXi ESXCLI Diagnostic Check: 192.168.1.100 ===
+
+--- ESXi Version ---
+   Product: VMware ESXi
+   Version: 8.0.0
+   Build: Releasebuild-20513097
+
+--- Storage Multipath Devices (first 40 lines) ---
+   Device Display Name: Local VMware Disk (mpx.vmhba0:C0:T0:L0)
+   ...
+
+--- Network NICs ---
+   Name    PCI          Driver  Link  Speed  Duplex MAC Address
+   vmnic0  0000:02:00.0 nvmxnet3  Up  10000  Full   00:0c:29:ab:cd:ef
+
+--- Host Summary (product, build, status) ---
+   product = &quot;VMware ESXi&quot;
+   build = &quot;20513097&quot;
+
+--- System Uptime (seconds) ---
+   1382400
+
+=== Diagnostic check complete ===
 </code></pre>
 
 

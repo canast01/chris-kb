@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Array Capacity vs. COD Reserve Reporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -747,6 +764,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="COD Threshold Alerter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -754,6 +788,106 @@
     <span class="md-ellipsis">
       
         Ansible COD Capacity Audit Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ansible COD Capacity Audit Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-cod-license-query-via-unisphere-rest-api-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows: COD License Query via Unisphere REST API (PowerShell)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows: COD License Query via Unisphere REST API (PowerShell)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-run-this-script-step-by-step_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to run this script — step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-pre-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Pre-Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Script
       
     </span>
   </a>
@@ -835,6 +969,47 @@ echo &quot;  Review output above for COD reserve vs. activated capacity.&quot;
 echo &quot;  Alert if activated capacity approaches total installed capacity.&quot;
 echo &quot;========================================&quot;
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- A Linux server with Dell Solutions Enabler (SYMCLI) installed — this is where <code>symcfg</code>, <code>sympd</code>, and <code>symlicense</code> live
+- Access to that server via SSH or a local terminal
+- The SID (System ID) of your PowerMax array — a 12-digit number</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open a text editor on the Solutions Enabler server</li>
+<li>Copy the entire code block above</li>
+<li>Save it as <code>cod_capacity_report.sh</code></li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SID</code></td>
+<td>Your PowerMax system ID (12 digits)</td>
+<td>Run <code>symcfg list</code> on the Solutions Enabler server to see all known arrays</td>
+</tr>
+<tr>
+<td><code>SYMCLI_PATH</code></td>
+<td>Path to SYMCLI binaries</td>
+<td>Default is <code>/usr/symcli/bin</code> — check with <code>which symcfg</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on the Solutions Enabler host (Linux).</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>chmod +x cod_capacity_report.sh
+SID=000123456789 ./cod_capacity_report.sh
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Four sections: array configuration overview (capacity in GB/TB), physical drive inventory (first 60 lines), license status showing COD licenses, and thin pool utilisation showing how full each storage pool is. Review pool utilisation to see how much COD reserve remains.</p>
 <hr />
 <h2 id="cod-threshold-alerter">COD Threshold Alerter<a class="headerlink" href="#cod-threshold-alerter" title="Permanent link">&para;</a></h2>
 <p>Reads <code>symcfg</code> pool output for a PowerMax SID and parses usable vs. total pool capacity. Warns if the activated pool utilisation is above a configurable threshold, signalling it is time to plan the next COD activation.</p>
@@ -931,6 +1106,55 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </code></pre>
+<h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Python 3.7 or newer on the Solutions Enabler host (or any Linux server with SYMCLI on PATH)
+- The <code>symcfg</code> command must be accessible — run <code>symcfg list</code> to test
+- The SID of your PowerMax array</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the code block above</li>
+<li>Save it as <code>cod_threshold_alerter.py</code> on the Solutions Enabler server</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SID</code></td>
+<td>Your PowerMax system ID (12 digits)</td>
+<td>Run <code>symcfg list</code></td>
+</tr>
+<tr>
+<td><code>WARN_PCT</code></td>
+<td>Pool usage % to trigger WARNING</td>
+<td>Default is <code>80</code></td>
+</tr>
+<tr>
+<td><code>CRIT_PCT</code></td>
+<td>Pool usage % to trigger CRITICAL</td>
+<td>Default is <code>90</code></td>
+</tr>
+<tr>
+<td><code>SYMCLI_PATH</code></td>
+<td>Path to SYMCLI binaries</td>
+<td>Default is <code>/usr/symcli/bin</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on the Solutions Enabler host.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>SID=000123456789 WARN_PCT=80 CRIT_PCT=90 python3 cod_threshold_alerter.py
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>A table listing each storage pool with its name, percentage used, and a status of OK, WARNING, or CRITICAL. The final line shows the overall worst status. Use this in a cron job to get alerts before COD capacity is exhausted.</p>
 <hr />
 <h2 id="ansible-cod-capacity-audit-playbook">Ansible COD Capacity Audit Playbook<a class="headerlink" href="#ansible-cod-capacity-audit-playbook" title="Permanent link">&para;</a></h2>
 <p>Playbook targeting a Solutions Enabler host. Runs <code>symcfg</code> and <code>symlicense</code> commands, prints the output, and fails the play if capacity utilisation is above the warning threshold.</p>
@@ -983,6 +1207,495 @@ if __name__ == &quot;__main__&quot;:
           Review pool_list output above and consider COD activation.
       when: &gt;
         pool_list.stdout is search('(8[0-9]|9[0-9]|100)\s*%')
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Ansible installed on a Linux/macOS control node (or WSL on Windows)
+- An inventory entry for your Solutions Enabler server under the group <code>symcli_host</code>
+- SYMCLI (<code>symcfg</code>, <code>symlicense</code>) installed on the target host</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Copy the code block above</li>
+<li>Save it as <code>cod_capacity_audit.yml</code> in your Ansible working directory</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sid</code></td>
+<td>Your PowerMax system ID</td>
+<td>Run <code>symcfg list</code> on the Solutions Enabler server</td>
+</tr>
+<tr>
+<td><code>symcli_path</code></td>
+<td>Path to SYMCLI binaries</td>
+<td>Default is <code>/usr/symcli/bin</code></td>
+</tr>
+<tr>
+<td><code>warn_pct</code></td>
+<td>Pool usage % warning threshold</td>
+<td>Default is <code>80</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<p>Open a terminal on your Ansible control node.</p>
+<p><strong>Step 4 — Run the script</strong></p>
+<pre><code>ansible-playbook -i inventory cod_capacity_audit.yml -e sid=000123456789
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>Ansible prints the array configuration overview, pool utilisation, and license status. If the pool output contains a percentage at or above the warning threshold, a warning message is displayed but the play does not fail — review the pool list output to assess the situation.</p>
+<hr />
+<h2 id="windows-cod-license-query-via-unisphere-rest-api-powershell">Windows: COD License Query via Unisphere REST API (PowerShell)<a class="headerlink" href="#windows-cod-license-query-via-unisphere-rest-api-powershell" title="Permanent link">&para;</a></h2>
+<p>Queries the Unisphere for PowerMax REST API from a Windows PC to report current licensed capacity and available COD headroom. No SYMCLI installation required — just network access to the Unisphere server.</p>
+<pre><code class="language-powershell"># cod_license_query.ps1 — COD license query via Unisphere REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (built into Windows 10/11)
+# Run: .\cod_license_query.ps1
+
+$UnisphereHost = &quot;192.168.1.100&quot;   # IP or hostname of your Unisphere for PowerMax server
+$UnisphereUser = &quot;sysadmin&quot;        # Unisphere username
+$UnispherePass = &quot;yourpassword&quot;    # Unisphere password
+$SID           = &quot;000123456789&quot;    # Your PowerMax system ID (12 digits)
+
+# Trust self-signed certificates (Unisphere uses self-signed certs by default)
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @&quot;
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+&quot;@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$Creds   = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(&quot;${UnisphereUser}:${UnispherePass}&quot;))
+$Headers = @{ Authorization = &quot;Basic $Creds&quot;; Accept = &quot;application/json&quot; }
+$BaseUrl = &quot;https://${UnisphereHost}:8443/univmax/restapi/100&quot;
+
+# Step 1: Get system capacity
+Write-Host &quot;Querying system capacity for SID $SID ...&quot;
+try {
+    $CapResp = Invoke-RestMethod -Uri &quot;$BaseUrl/system/symmetrix/$SID/system_capacity&quot; -Headers $Headers
+    Write-Host &quot;&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  System Capacity — $SID&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  Usable Total (TB) : $($CapResp.system_capacity.usable_total_tb)&quot;
+    Write-Host &quot;  Usable Used  (TB) : $($CapResp.system_capacity.usable_used_tb)&quot;
+    Write-Host &quot;  Subscribed   (TB) : $($CapResp.system_capacity.subscribed_total_tb)&quot;
+} catch {
+    Write-Host &quot;WARNING: Could not retrieve system capacity - $($_.Exception.Message)&quot;
+}
+
+# Step 2: Get license information (includes COD)
+Write-Host &quot;&quot;
+Write-Host &quot;Querying license information ...&quot;
+try {
+    $LicResp = Invoke-RestMethod -Uri &quot;$BaseUrl/system/symmetrix/$SID/license&quot; -Headers $Headers
+    Write-Host &quot;&quot;
+    Write-Host &quot;========================================&quot;
+    Write-Host &quot;  License Information&quot;
+    Write-Host &quot;========================================&quot;
+    $Licenses = $LicResp.feature
+    if (-not $Licenses) {
+        Write-Host &quot;  No license features returned. Check SID and Unisphere version.&quot;
+    } else {
+        foreach ($Lic in $Licenses) {
+            $Name    = $Lic.name
+            $Enabled = if ($Lic.enabled) { &quot;ENABLED&quot; } else { &quot;DISABLED&quot; }
+            Write-Host &quot;  $Name : $Enabled&quot;
+        }
+    }
+} catch {
+    Write-Host &quot;WARNING: Could not retrieve license info - $($_.Exception.Message)&quot;
+}
+
+Write-Host &quot;&quot;
+Write-Host &quot;========================================&quot;
+Write-Host &quot;  Query complete.&quot;
+Write-Host &quot;========================================&quot;
+</code></pre>
+<h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
+<p><strong>Before you start — what you need</strong>
+- Windows 10 or 11 (PowerShell 5.1 is already installed)
+- Network access to your Unisphere for PowerMax server on port 8443
+- Unisphere username and password with at least read-only access
+- The 12-digit SID of your PowerMax array</p>
+<p><strong>Step 1 — Save the file</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong></li>
+<li>Copy the entire code block above</li>
+<li>Click <strong>File → Save As</strong>, change "Save as type" to <strong>All Files</strong></li>
+<li>Name it <code>cod_license_query.ps1</code> and save it to your Desktop</li>
+</ol>
+<p><strong>Step 2 — Fill in your details</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What to put</th>
+<th>How to find it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$UnisphereHost</code></td>
+<td>IP or hostname of Unisphere for PowerMax</td>
+<td>Ask your storage admin</td>
+</tr>
+<tr>
+<td><code>$UnisphereUser</code></td>
+<td>Unisphere username</td>
+<td>Default is <code>sysadmin</code></td>
+</tr>
+<tr>
+<td><code>$UnispherePass</code></td>
+<td>Unisphere password</td>
+<td>Ask your storage admin</td>
+</tr>
+<tr>
+<td><code>$SID</code></td>
+<td>PowerMax system ID</td>
+<td>Shown in Unisphere under System → Arrays, or run <code>symcfg list</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 3 — Open a terminal</strong></p>
+<ul>
+<li><strong>For .ps1 (PowerShell):</strong> Press Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></li>
+</ul>
+<p><strong>Step 4 — Allow scripts to run (one-time)</strong></p>
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre>
+<p><strong>Step 5 — Run the script</strong></p>
+<pre><code>cd C:\Users\YourName\Desktop
+.\cod_license_query.ps1
+</code></pre>
+<p><strong>What you should see</strong></p>
+<p>First a capacity block showing total usable, used, and subscribed capacity in TB. Then a license block listing every licensed feature on the array and whether it is enabled or disabled. Look for entries containing "COD" or "Capacity on Demand" to see the COD license status.</p>
+<hr />
+<h2 id="daily-check-script">Daily Check Script<a class="headerlink" href="#daily-check-script" title="Permanent link">&para;</a></h2>
+<p>Queries the Unisphere REST API for the <code>system_capacity</code> endpoint, parses <code>total_usable_capacity_gb</code> and <code>used_capacity_gb</code>, calculates percentage used, flags if above 85%, and prints licensed vs consumed COD capacity.</p>
+<pre><code class="language-bash">#!/bin/bash
+# cod_daily_check.sh — Daily capacity check via Unisphere REST API
+# Usage: UNISPHERE_HOST=192.168.1.100 SID=000123456789 UNISPHERE_USER=sysadmin UNISPHERE_PASS=secret ./cod_daily_check.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+SYMCLI_PATH=&quot;${SYMCLI_PATH:-/usr/symcli/bin}&quot;
+WARN_PCT=85
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+echo &quot;========================================&quot;
+echo &quot;  COD Daily Check&quot;
+echo &quot;  SID  : $SID&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+
+# Query system_capacity endpoint
+CAP_JSON=$(curl -sk -H &quot;Authorization: Basic $AUTH&quot; \
+  -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;&amp;1)
+
+if [[ $? -ne 0 || -z &quot;$CAP_JSON&quot; ]]; then
+  echo &quot;ERROR: Could not reach Unisphere at ${UNISPHERE_HOST}&quot; &gt;&amp;2
+  exit 2
+fi
+
+TOTAL_GB=$(echo &quot;$CAP_JSON&quot; | python3 -c \
+  &quot;import sys,json; d=json.load(sys.stdin); print(d.get('system_capacity',{}).get('usable_total_tb',0))&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+USED_GB=$(echo &quot;$CAP_JSON&quot;  | python3 -c \
+  &quot;import sys,json; d=json.load(sys.stdin); print(d.get('system_capacity',{}).get('usable_used_tb',0))&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+
+PCT=$(python3 -c &quot;t=float('${TOTAL_GB}'); u=float('${USED_GB}'); print(round(u/t*100,1) if t&gt;0 else 0)&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+
+echo &quot;&quot;
+echo &quot;  Total usable : ${TOTAL_GB} TB&quot;
+echo &quot;  Used         : ${USED_GB} TB&quot;
+echo &quot;  % Used       : ${PCT}%&quot;
+
+STATUS=0
+python3 -c &quot;exit(0 if float('${PCT}') &lt; ${WARN_PCT} else 1)&quot; 2&gt;/dev/null &amp;&amp; \
+  echo &quot;  Status       : OK&quot; || \
+  { echo &quot;  Status       : WARNING — capacity above ${WARN_PCT}%&quot;; STATUS=1; }
+
+echo &quot;&quot;
+echo &quot;--- Licensed vs Consumed COD Capacity ---&quot;
+if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+  &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; -pool -dp list 2&gt;&amp;1 || true
+  &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; list -license 2&gt;&amp;1 || true
+else
+  echo &quot;  SYMCLI not available at ${SYMCLI_PATH} — skipping local license check&quot;
+fi
+
+echo &quot;========================================&quot;
+exit $STATUS
+</code></pre>
+<hr />
+<h2 id="incident-triage-script">Incident Triage Script<a class="headerlink" href="#incident-triage-script" title="Permanent link">&para;</a></h2>
+<p>Captures full capacity output from the Unisphere REST API and <code>symcfg -sid $SID list -license</code> to a timestamped file for incident documentation.</p>
+<pre><code class="language-bash">#!/bin/bash
+# cod_triage.sh — Capture COD capacity and license state to timestamped file
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_triage.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+SYMCLI_PATH=&quot;${SYMCLI_PATH:-/usr/symcli/bin}&quot;
+
+TS=$(date '+%Y%m%d_%H%M%S')
+OUTFILE=&quot;/tmp/cod_triage_${SID}_${TS}.txt&quot;
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+{
+  echo &quot;========================================&quot;
+  echo &quot;  COD Incident Triage Capture&quot;
+  echo &quot;  SID  : $SID&quot;
+  echo &quot;  Time : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+  echo &quot;========================================&quot;
+  echo &quot;&quot;
+
+  echo &quot;--- Unisphere REST: system_capacity ---&quot;
+  curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+    &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;&amp;1 | python3 -m json.tool 2&gt;/dev/null || echo &quot;Parse error&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- Unisphere REST: license ---&quot;
+  curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+    &quot;${BASE_URL}/system/symmetrix/${SID}/license&quot; 2&gt;&amp;1 | python3 -m json.tool 2&gt;/dev/null || echo &quot;Parse error&quot;
+
+  echo &quot;&quot;
+  echo &quot;--- SYMCLI: symcfg list -license ---&quot;
+  if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+    &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; list -license 2&gt;&amp;1 || true
+  else
+    echo &quot;  SYMCLI not available&quot;
+  fi
+
+  echo &quot;&quot;
+  echo &quot;--- SYMCLI: pool list ---&quot;
+  if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+    &quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; -pool -dp list 2&gt;&amp;1 || true
+  fi
+
+  echo &quot;&quot;
+  echo &quot;========================================&quot;
+  echo &quot;  Triage capture complete: $OUTFILE&quot;
+  echo &quot;========================================&quot;
+} | tee &quot;$OUTFILE&quot;
+
+echo &quot;&quot;
+echo &quot;Output saved to: $OUTFILE&quot;
+</code></pre>
+<hr />
+<h2 id="change-pre-check-script">Change Pre-Check Script<a class="headerlink" href="#change-pre-check-script" title="Permanent link">&para;</a></h2>
+<p>Before requesting a COD activation: confirms current capacity utilisation is approaching threshold (&gt;80% used), confirms Unisphere is reachable, and confirms no pending license changes. Exits 2 if the system is not ready.</p>
+<pre><code class="language-bash">#!/bin/bash
+# cod_precheck.sh — Pre-check before COD activation request
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_precheck.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+SYMCLI_PATH=&quot;${SYMCLI_PATH:-/usr/symcli/bin}&quot;
+ACTIVATION_THRESHOLD=80
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  COD Activation Pre-Check&quot;
+echo &quot;  SID  : $SID&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+# Check 1: Unisphere reachable
+HTTP=$(curl -sk -o /dev/null -w &quot;%{http_code}&quot; --max-time 10 \
+  -H &quot;Authorization: Basic $AUTH&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;000&quot;)
+if [[ &quot;$HTTP&quot; =~ ^(200|201) ]]; then
+  check_pass &quot;Unisphere reachable (HTTP $HTTP)&quot;
+else
+  check_fail &quot;Unisphere not reachable (HTTP $HTTP)&quot;
+fi
+
+# Check 2: Capacity utilisation approaching threshold
+CAP_JSON=$(curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+PCT=$(echo &quot;$CAP_JSON&quot; | python3 -c \
+  &quot;import sys,json; d=json.load(sys.stdin); c=d.get('system_capacity',{}); t=float(c.get('usable_total_tb',0)); u=float(c.get('usable_used_tb',0)); print(round(u/t*100,1) if t&gt;0 else 0)&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+
+if python3 -c &quot;exit(0 if float('${PCT}') &gt;= ${ACTIVATION_THRESHOLD} else 1)&quot; 2&gt;/dev/null; then
+  check_pass &quot;Capacity utilisation is ${PCT}% (above ${ACTIVATION_THRESHOLD}% threshold — COD activation warranted)&quot;
+else
+  check_fail &quot;Capacity utilisation is only ${PCT}% (below ${ACTIVATION_THRESHOLD}% — COD activation may not be needed yet)&quot;
+fi
+
+# Check 3: No pending license changes (check via SYMCLI if available)
+if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+  PENDING=$(${SYMCLI_PATH}/symcfg -sid &quot;$SID&quot; list -license 2&gt;&amp;1 | grep -i &quot;pending&quot; || true)
+  if [[ -z &quot;$PENDING&quot; ]]; then
+    check_pass &quot;No pending license changes detected via SYMCLI&quot;
+  else
+    check_fail &quot;Pending license changes detected: $PENDING&quot;
+  fi
+else
+  echo &quot;  [SKIP] SYMCLI not available — pending license check skipped&quot;
+fi
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: READY — proceed with COD activation request&quot;
+  exit 0
+else
+  echo &quot;  Result: NOT READY — resolve failures above before proceeding&quot;
+  exit 2
+fi
+</code></pre>
+<hr />
+<h2 id="post-change-validation-script">Post-Change Validation Script<a class="headerlink" href="#post-change-validation-script" title="Permanent link">&para;</a></h2>
+<p>After COD activation: verifies new capacity is visible in <code>symcfg show</code> and confirms storage groups are still accessible.</p>
+<pre><code class="language-bash">#!/bin/bash
+# cod_postcheck.sh — Post-change validation after COD activation
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_postcheck.sh
+
+set -euo pipefail
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+SYMCLI_PATH=&quot;${SYMCLI_PATH:-/usr/symcli/bin}&quot;
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+FAIL=0
+
+check_pass() { echo &quot;  [PASS] $*&quot;; }
+check_fail() { echo &quot;  [FAIL] $*&quot;; FAIL=1; }
+
+echo &quot;========================================&quot;
+echo &quot;  COD Post-Change Validation&quot;
+echo &quot;  SID  : $SID&quot;
+echo &quot;  Date : $(date '+%Y-%m-%d %H:%M:%S')&quot;
+echo &quot;========================================&quot;
+echo &quot;&quot;
+
+# Check 1: New capacity visible via symcfg show
+echo &quot;--- New capacity visible in SYMCLI ---&quot;
+if [[ -x &quot;${SYMCLI_PATH}/symcfg&quot; ]]; then
+  OUTPUT=$(&quot;${SYMCLI_PATH}/symcfg&quot; -sid &quot;$SID&quot; show 2&gt;&amp;1)
+  echo &quot;$OUTPUT&quot; | grep -E &quot;(Usable|Total|Capacity|GBs|TBs)&quot; || true
+  check_pass &quot;symcfg show completed — review capacity figures above&quot;
+else
+  echo &quot;  SYMCLI not available — skipping symcfg show check&quot;
+fi
+
+echo &quot;&quot;
+# Check 2: Storage groups still accessible via Unisphere REST
+echo &quot;--- Storage groups accessible ---&quot;
+SG_JSON=$(curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/sloprovisioning/symmetrix/${SID}/storagegroup&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+SG_COUNT=$(echo &quot;$SG_JSON&quot; | python3 -c \
+  &quot;import sys,json; d=json.load(sys.stdin); print(len(d.get('storageGroupId',d.get('storage_group_id',[]) if isinstance(d.get('storageGroupId',None),list) else [])))&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+
+if [[ &quot;$SG_COUNT&quot; -gt 0 ]]; then
+  check_pass &quot;$SG_COUNT storage group(s) visible via Unisphere REST&quot;
+else
+  check_fail &quot;No storage groups returned — verify array connectivity and COD activation status&quot;
+fi
+
+# Check 3: Current capacity via Unisphere REST
+echo &quot;&quot;
+echo &quot;--- Post-activation capacity summary ---&quot;
+CAP_JSON=$(curl -sk -H &quot;Authorization: Basic $AUTH&quot; -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+echo &quot;$CAP_JSON&quot; | python3 -c \
+  &quot;import sys,json; d=json.load(sys.stdin); c=d.get('system_capacity',{}); print('  Total usable TB :', c.get('usable_total_tb','N/A')); print('  Used usable TB  :', c.get('usable_used_tb','N/A'))&quot; 2&gt;/dev/null || echo &quot;  Could not parse capacity&quot;
+
+echo &quot;&quot;
+echo &quot;========================================&quot;
+if [[ &quot;$FAIL&quot; -eq 0 ]]; then
+  echo &quot;  Result: PASS — COD activation validated&quot;
+  exit 0
+else
+  echo &quot;  Result: FAIL — investigate issues above&quot;
+  exit 1
+fi
+</code></pre>
+<hr />
+<h2 id="health-check-script">Health Check Script<a class="headerlink" href="#health-check-script" title="Permanent link">&para;</a></h2>
+<p>Cron-safe script that reports SID, total usable, used, available, and % used. Exits 0 (OK), 1 (warning at 80%), or 2 (critical at 90%).</p>
+<pre><code class="language-bash">#!/bin/bash
+# cod_health.sh — Cron-safe COD health check
+# Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_health.sh
+# Exit: 0=OK  1=WARNING(&gt;80%)  2=CRITICAL(&gt;90%)
+
+UNISPHERE_HOST=&quot;${UNISPHERE_HOST:?Set UNISPHERE_HOST}&quot;
+SID=&quot;${SID:?Set SID}&quot;
+UNISPHERE_USER=&quot;${UNISPHERE_USER:?Set UNISPHERE_USER}&quot;
+UNISPHERE_PASS=&quot;${UNISPHERE_PASS:?Set UNISPHERE_PASS}&quot;
+WARN_PCT=&quot;${WARN_PCT:-80}&quot;
+CRIT_PCT=&quot;${CRIT_PCT:-90}&quot;
+
+BASE_URL=&quot;https://${UNISPHERE_HOST}:8443/univmax/restapi/100&quot;
+AUTH=$(printf '%s:%s' &quot;$UNISPHERE_USER&quot; &quot;$UNISPHERE_PASS&quot; | base64)
+
+CAP_JSON=$(curl -sk --max-time 15 \
+  -H &quot;Authorization: Basic $AUTH&quot; \
+  -H &quot;Accept: application/json&quot; \
+  &quot;${BASE_URL}/system/symmetrix/${SID}/system_capacity&quot; 2&gt;/dev/null || echo &quot;{}&quot;)
+
+read -r TOTAL USED PCT &lt;&lt;&lt; &quot;$(echo &quot;$CAP_JSON&quot; | python3 -c &quot;
+import sys, json
+d = json.load(sys.stdin)
+c = d.get('system_capacity', {})
+t = float(c.get('usable_total_tb', 0))
+u = float(c.get('usable_used_tb', 0))
+a = t - u
+p = round(u / t * 100, 1) if t &gt; 0 else 0
+print(t, u, p)
+&quot; 2&gt;/dev/null || echo &quot;0 0 0&quot;)&quot;
+
+AVAIL=$(python3 -c &quot;print(round(float('${TOTAL}')-float('${USED}'),2))&quot; 2&gt;/dev/null || echo &quot;0&quot;)
+
+STATUS=&quot;OK&quot;
+EXIT=0
+if python3 -c &quot;exit(0 if float('${PCT}') &gt;= ${CRIT_PCT} else 1)&quot; 2&gt;/dev/null; then
+  STATUS=&quot;CRITICAL&quot;; EXIT=2
+elif python3 -c &quot;exit(0 if float('${PCT}') &gt;= ${WARN_PCT} else 1)&quot; 2&gt;/dev/null; then
+  STATUS=&quot;WARNING&quot;; EXIT=1
+fi
+
+echo &quot;COD_HEALTH SID=${SID} total_tb=${TOTAL} used_tb=${USED} avail_tb=${AVAIL} pct_used=${PCT}% status=${STATUS}&quot;
+exit $EXIT
 </code></pre>
 
 
