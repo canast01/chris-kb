@@ -4,6 +4,11 @@ Technical and operational KBs for ESXi.
 
 <div class="kb-grid kb-grid-3">
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>esxcli, vim-cmd, vmkfstools, esxtop, services, firewall, vSAN, and more.</span>
+</a>
+
 <a class="kb-card" href="host-health/">
   <strong>Host Health</strong>
   <span>Host health, sensors, hardware status, services, and operational readiness.</span>
