@@ -4,6 +4,50 @@ Commonly used Purity CLI commands for managing Pure FlashArray systems.
 
 ---
 
+## purearray — Array & System Management
+
+Displays attributes and monitors I/O performance across the array.
+
+```bash
+# Array identity and attributes
+purearray list
+purearray list --controller
+purearray list --space
+purearray list --ntpserver
+purearray list --syslogserver
+purearray list --banner
+purearray list --console-lockout
+purearray list --connection-key
+
+# Performance monitoring
+purearray monitor
+purearray monitor --latency
+purearray monitor --bandwidth
+purearray monitor --iops
+purearray monitor --size
+purearray monitor --queue-depth
+
+# Configure array settings
+purearray setattr --name <new_name>
+purearray setattr --banner <text>
+purearray setattr --idle-timeout <mins>
+purearray setattr --scsi-timeout <secs>
+purearray setattr --proxy <url>
+
+# Upgrades
+purearray upgrade list
+purearray upgrade download --version <v>
+
+# Phonehome / remote support
+purearray phonehome list
+purearray phonehome send
+purearray remoteassist --action open
+purearray remoteassist --action close
+purearray remoteassist --status
+```
+
+---
+
 ## pureadmin — Administrative Accounts
 
 Displays and manages administrative accounts.
@@ -21,6 +65,7 @@ pureadmin delete testuser --api-token
 
 # Global settings
 pureadmin global list
+pureadmin global list --lockout
 pureadmin global disable --single-sign-on
 pureadmin global enable --single-sign-on
 pureadmin global setattr --lockout-duration 1m
@@ -57,6 +102,7 @@ purealert list --filter "severity='critical'"
 purealert list --filter "issue='failure'"
 purealert flag 121212
 purealert unflag 121212
+purealert acknowledge <ID>
 ```
 
 ---
@@ -73,6 +119,7 @@ pureaudit list --filter 'user = "root"'
 pureaudit list --filter 'command="purepod"'
 pureaudit list --filter 'command="purepod" and subcommand="create"'
 pureaudit list --filter 'command="purepod" and user="pureuser"'
+pureaudit list --filter "action='create'"
 ```
 
 ---
@@ -85,7 +132,19 @@ Reproduces the current array configuration.
 pureconfig list
 pureconfig list --all
 pureconfig list --object
+pureconfig list --object <type>
 pureconfig list --system
+```
+
+---
+
+## pureds — Directory Services
+
+Manages Active Directory and LDAP integration.
+
+```bash
+pureds list
+pureds check
 ```
 
 ---
@@ -123,7 +182,7 @@ puredrive admit
 Displays and manages Host Group objects.
 
 ```bash
-# Create / delete
+# Create / delete / rename
 purehgroup create MY-HOSTS
 purehgroup create MY-HOSTS --hostlist MY-HOST-001,MY-HOST-002
 purehgroup delete MY-HOSTS
@@ -134,6 +193,7 @@ purehgroup rename MY-HOSTS YOUR-HOSTS
 purehgroup list
 purehgroup list --connect
 purehgroup list --connect MY-HOSTS
+purehgroup list --host
 purehgroup list --space
 purehgroup list --filter "host_list='MY-SERVER-001'"
 
@@ -147,6 +207,8 @@ purehgroup setattr MY-HOSTS --hostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --addhostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --remhostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --hostlist ""
+purehgroup addhost --hostlist <h1,h2> <hg>
+purehgroup remhost --hostlist <h1> <hg>
 ```
 
 ---
@@ -171,6 +233,8 @@ purehost list --connect
 purehost list --connect --private
 purehost list --connect --shared
 purehost list --personality
+purehost list --wwn
+purehost list --iqn
 purehost list MY-SERVER*
 purehost list MY-SERVER-001
 purehost list MY-SERVER-001 --connect
@@ -184,12 +248,20 @@ purehost connect MY-SERVER-001 MY-SERVER-002 --vol MY_VOL_001
 purehost disconnect MY-SERVER-001 --vol MY_VOL_001
 purehost disconnect MY-SERVER-001 MY-SERVER-002 --vol MY_VOL_001
 
-# Manage WWNs and personality
+# Manage WWNs, iQNs, and personality
 purehost setattr MY-SERVER-001 --wwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --addwwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --remwwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --wwnlist ""
 purehost setattr MY-SERVER-001 --personality esxi
+purehost setattr MY-SERVER-001 --personality solaris
+purehost addwwn MY-SERVER-001 --wwn <wwn>
+purehost remwwn MY-SERVER-001 --wwn <wwn>
+purehost addiqn MY-SERVER-001 --iqn <iqn>
+
+# Monitor
+purehost monitor --bandwidth
+purehost monitor --iops
 ```
 
 ---
@@ -206,8 +278,23 @@ purehw list --type bay --spec
 purehw list --type ct
 purehw list --type eth
 purehw list --type fc
+purehw list --type fan
+purehw list --type psu
+purehw list --type nvram
+purehw list --type sas
+purehw list --spec --type drive
 purehw list CT0 --spec
 purehw list CT0.FC0
+```
+
+---
+
+## purenetwork — Network
+
+Displays management and replication network configuration.
+
+```bash
+purenetwork list
 ```
 
 ---
@@ -264,11 +351,14 @@ Displays array host connection ports.
 ```bash
 pureport list
 pureport list --initiator
+pureport list --type fc
+pureport list --type eth
 pureport list --raw --filter "name='*FC*'"
 pureport list --raw --filter "name='*ETH*'"
 pureport list --raw --filter "name='CT0.FC*'"
 pureport list --initiator --raw --filter "name='CT0.FC0'"
 pureport list --initiator --raw --filter "initiator.wwn='1000000000000001'"
+pureport monitor --bandwidth
 ```
 
 ---
@@ -283,21 +373,29 @@ purevol create --size 10G MY_VOLUME_001
 purevol create --size 10G MY_VOLUME_001 --bw-limit 10M
 purevol create --size 10G MY_VOLUME_001 MY_VOLUME_002
 purevol create --size 1G MYPOD001::MY_VOL_001
+purevol create --source <vol> <new_vol>
 purevol destroy MY_VOL_001
 purevol destroy MY_VOL_001 MY_VOL_002
 purevol eradicate MY_VOL_001
 purevol eradicate MY_VOL_001 MY_VOL_002
+purevol eradicate --all
 purevol recover MY_VOL_001
+purevol recover --all
 purevol rename MY_VOL_001 MY_VOL_002
 
 # List
 purevol list
 purevol list MY_VOL_001
 purevol list MY_VOL*
+purevol list --all
 purevol list --snap
 purevol list --pending
 purevol list --pending-only
+purevol list --shared
+purevol list --obj-name
+purevol list --total
 purevol list --space --sort size,total
+purevol list --snap --space
 purevol list --sort size
 purevol list --sort size-
 purevol list --sort serial
@@ -305,6 +403,7 @@ purevol list --sort serial-
 purevol list --sort created
 purevol list --sort created-
 purevol list --filter "size='20T'"
+purevol list --filter "size > 100G"
 
 # Connect / disconnect
 purevol connect MY_VOL_001 --host MY-SERVER-001
@@ -320,18 +419,121 @@ purevol setattr --size 2G MY_VOL_001
 purevol setattr --size 2G MY_VOL_001 MY_VOL_002
 purevol setattr --bw-limit 1M MY_VOL_001
 purevol setattr --bw-limit 1M MY_VOL_001 MY_VOL_002
+purevol setattr --readonly MY_VOL_001
 purevol truncate --size 1G MY_VOL_001
 
 # Copy / move
 purevol copy MY_VOL_001 MY_VOL_002
 purevol copy MY_VOL_001 MY_VOL_002 --overwrite
+purevol copy --snapshot <snap> <target>
 purevol move vol001 MYPOD001
 purevol move MYPOD001::vol001 ""
 
 # Snapshots
 purevol snap MY_VOL_001
 purevol snap MY_VOL_001 --suffix PRD
+purevol snap MY_VOL_001 --suffix <text>
+purevol snap MY_VOL_001 --expiration <time>
+
+# Monitor
+purevol monitor
+purevol monitor --iops
+purevol monitor --latency
+purevol monitor --historical 24h
 
 # Pod volume operations
 purevol remove --array PFAX70-REMOTE --with-unknown MYPOD001
+```
+
+---
+
+## CSV Exports
+
+Use `--csv` with `>` to create a new file or `>>` to append to an existing one. To run from a remote terminal:
+
+```bash
+ssh pureuser@<array_ip> "purevol list --csv" > local_file.csv
+```
+
+### Array & System
+
+```bash
+purearray list --csv > array_inventory.csv
+purearray list --space --csv >> array_inventory.csv
+purearray list --controller --csv >> array_inventory.csv
+purearray list --ntpserver --csv >> array_inventory.csv
+purearray list --syslogserver --csv >> array_inventory.csv
+purearray monitor --csv >> array_performance.csv
+purearray monitor --latency --csv >> array_performance.csv
+purearray monitor --bandwidth --csv >> array_performance.csv
+purearray monitor --iops --csv >> array_performance.csv
+purearray monitor --size --csv >> array_performance.csv
+purearray monitor --queue-depth --csv >> array_performance.csv
+purearray list --connection-key --csv >> array_config.csv
+purearray phonehome list --csv >> support_history.csv
+purearray upgrade list --csv >> system_updates.csv
+purearray list --banner --csv >> security_audit.csv
+purearray list --console-lockout --csv >> security_audit.csv
+purearray remoteassist --status --csv >> support_history.csv
+```
+
+### Volumes & Data
+
+```bash
+purevol list --csv > volume_report.csv
+purevol list --all --csv >> volume_report.csv
+purevol list --snap --csv >> volume_report.csv
+purevol list --pending-only --csv >> volume_report.csv
+purevol list --space --csv >> volume_report.csv
+purevol list --obj-name --csv >> volume_report.csv
+purevol list --shared --csv >> volume_report.csv
+purevol list --snap --space --csv >> snapshot_usage.csv
+purevol list --filter "size > 100G" --csv >> filtered_volumes.csv
+purevol monitor --csv > volume_performance.csv
+purevol monitor --historical 24h --csv >> volume_performance.csv
+```
+
+### Hosts & Connectivity
+
+```bash
+purehost list --csv > host_mapping.csv
+purehost list --all --csv >> host_mapping.csv
+purehost list --connect --csv >> active_connections.csv
+purehost list --wwn --csv >> initiator_list.csv
+purehost list --iqn --csv >> initiator_list.csv
+purehost monitor --balance --csv > connectivity_health.csv
+purehost monitor --bandwidth --csv >> host_performance.csv
+purehost monitor --iops --csv >> host_performance.csv
+purehgroup list --csv > group_mapping.csv
+purehgroup list --host --csv >> group_mapping.csv
+purehgroup list --space --csv >> group_mapping.csv
+```
+
+### Hardware & Health
+
+```bash
+purehw list --csv > hardware_health.csv
+purehw list --type eth --csv >> hardware_health.csv
+purehw list --type fc --csv >> hardware_health.csv
+purehw list --type bay --csv >> hardware_health.csv
+purehw list --type fan --csv >> hardware_health.csv
+purehw list --type psu --csv >> hardware_health.csv
+purehw list --type nvram --csv >> hardware_health.csv
+purehw list --type sas --csv >> hardware_health.csv
+puredrive list --csv > drive_inventory.csv
+pureport list --csv > port_config.csv
+pureport list --initiator --csv >> port_config.csv
+```
+
+### Admin & Security
+
+```bash
+pureadmin list --csv > admin_users.csv
+pureadmin list --lockout --csv >> security_report.csv
+pureadmin list --api-token --csv >> admin_users.csv
+purealert list --csv > system_alerts.csv
+purealert list --filter "state='open'" --csv >> critical_alerts.csv
+pureaudit list --csv > audit_trail.csv
+pureds list --csv > directory_services.csv
+puredns list --csv >> network_config.csv
 ```
