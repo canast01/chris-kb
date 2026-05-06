@@ -1,5 +1,28 @@
 # Pure FlashArray
 
+<div class="kb-grid kb-grid-5">
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</p>
+  </div>
+  <div class="kb-card">
+    <h3><a href="health-checks/">Health Checks</a></h3>
+    <p>Array health, alerts, capacity, and replication validation.</p>
+  </div>
+  <div class="kb-card">
+    <h3><a href="volumes/">Volumes</a></h3>
+    <p>Volume provisioning, snapshots, and management.</p>
+  </div>
+  <div class="kb-card">
+    <h3><a href="hosts/">Hosts</a></h3>
+    <p>Host and host group connectivity and WWN management.</p>
+  </div>
+  <div class="kb-card">
+    <h3><a href="protection-groups/">Protection Groups</a></h3>
+    <p>Snapshot schedules, replication, and recovery.</p>
+  </div>
+</div>
+
 ## Overview
 
 Pure FlashArray is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.
