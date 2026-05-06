@@ -9,21 +9,21 @@ Architecture knowledge base landing page.
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="disaster-recovery-design/">
   <strong>Disaster Recovery Design</strong>
-  <span>Disaster Recovery Design articles, procedures, notes, and references.</span>
+  <span>RPO/RTO targets, site topology, failover patterns, and DR architecture decision frameworks.</span>
 </a>
 
 <a class="kb-card" href="high-availability/">
   <strong>High Availability</strong>
-  <span>High Availability articles, procedures, notes, and references.</span>
+  <span>Redundancy patterns, clustering options, failover design, and availability SLA considerations.</span>
 </a>
 
 <a class="kb-card" href="network-design/">
   <strong>Network Design</strong>
-  <span>Network Design articles, procedures, notes, and references.</span>
+  <span>Topology, segmentation, routing, and naming standards for enterprise network architecture.</span>
 </a>
 
 <a class="kb-card" href="storage-design/">
   <strong>Storage Design</strong>
-  <span>Storage Design articles, procedures, notes, and references.</span>
+  <span>Tiering strategy, protocol selection, capacity planning, and array placement principles.</span>
 </a>
 </div>

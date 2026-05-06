@@ -2,67 +2,95 @@
 
 ## Overview
 
-Dell ECS is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.
+Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.
 
 ## Where It Fits
 
-- Primary storage operations
-- Application and VM data services
-- Backup and recovery workflows
-- Replication and disaster recovery
-- Performance and capacity planning
+- Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival)
+- Long-term retention and compliance storage with CAS (fixed-content, WORM)
+- Geo-distributed active-active object storage across multiple data centres using VDC replication groups
+- Multi-tenant storage service — separate namespaces and IAM policies per team or application
+- On-premises alternative to public cloud object storage where data sovereignty or latency requirements apply
+- Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies
 
 ## Daily Checks
 
-- Review active alerts
-- Check capacity usage
-- Validate replication or protection status
-- Confirm support connectivity
-- Review performance trends
-- Check recent configuration changes
+- Log in to the ECS Portal and review the Dashboard → Alerts panel for any active hardware or software alarms
+- Check the ECS Portal Dashboard → Capacity view to confirm cluster utilisation is below 70% of usable capacity
+- Check ECS Portal → Geo Monitoring to verify geo-replication lag between VDCs is within acceptable thresholds
+- Query `GET /vdc/capacity` via the Management REST API to retrieve current cluster capacity metrics programmatically
+- Query `GET /vdc/nodes` to confirm all nodes report as `GOOD` status
+- Review ECS Portal → Hardware to confirm all node disks are healthy with no `FAILED` or `SUSPECT` disks
+- Check namespace and bucket usage growth trends to identify unexpected capacity spikes (versioning, multipart uploads)
 
 ## Health Commands
 
 ~~~bash
-show status
-show alerts
-show capacity
-show replication
-show version
+# Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN header)
+curl -s -k -u "sysadmin:<password>" \
+  "https://<ecs-node>:4443/login" -D -
+
+# Retrieve VDC capacity (total, used, available, percent full)
+curl -s -k -H "X-SDS-AUTH-TOKEN: <token>" \
+  "https://<ecs-node>:4443/vdc/capacity"
+
+# List all nodes and their health status
+curl -s -k -H "X-SDS-AUTH-TOKEN: <token>" \
+  "https://<ecs-node>:4443/vdc/nodes"
+
+# Retrieve active alerts for the VDC
+curl -s -k -H "X-SDS-AUTH-TOKEN: <token>" \
+  "https://<ecs-node>:4443/vdc/alerts"
+
+# List namespaces (ecscli)
+ecscli namespace list
+
+# List buckets in a namespace (ecscli)
+ecscli bucket list --namespace <namespace>
+
+# Get bucket metadata including versioning, quota, replication group
+ecscli bucket get --namespace <namespace> --name <bucket>
 ~~~
 
 ## Common Issues
 
 | Symptom | Likely Cause | Action |
 |---|---|---|
-| High latency | Backend contention or host path issue | Review performance and paths |
-| Capacity warning | Growth, snapshots, or retention | Review usage and cleanup options |
-| Replication lag | Network, target, or workload pressure | Check replication status |
-| Host path down | SAN zoning, cabling, or multipathing | Validate fabric and host paths |
+| Node shows `DEGRADED` or offline in portal | Disk failure, NIC fault, or node OS crash | Check ECS Portal → Hardware for disk state; check node OS logs via SSH; replace failed disk via guided procedure |
+| Geo-replication lag growing between VDCs | WAN link saturation, remote VDC node issue, or replication group misconfiguration | Check ECS Portal → Geo Monitoring; review bandwidth utilisation on inter-site link; verify remote VDC is healthy |
+| S3 access denied despite correct credentials | IAM policy misconfiguration, wrong namespace, or bucket policy conflict | Confirm namespace and IAM user assignment; check bucket policy with `ecscli bucket get`; verify S3 endpoint and path-style vs virtual-hosted-style addressing |
+| Capacity growing unexpectedly | Bucket versioning accumulating old versions, incomplete multipart uploads, or lifecycle policy absent | Check versioning status on buckets; list and abort incomplete multipart uploads via S3 API; add lifecycle policies to expire old versions |
+| ECS Portal login fails | Management service down or certificate expired | Check service status on node; restart ECS portal service if needed; verify TLS certificate expiry |
+| Bucket quota exceeded, writes failing | Bucket or namespace quota threshold reached | Increase quota via ECS Portal → Buckets → Edit, or expire old objects; review lifecycle rules |
 
 ## Operational Tasks
 
-- Provision storage
-- Expand volumes or file systems
-- Review snapshots
-- Validate replication
-- Confirm host connectivity
-- Review firmware or software level
+- Create a namespace per team or application via ECS Portal → Namespace → New, and assign a replication group
+- Create a bucket within a namespace, configure replication group, versioning, and quota at creation time
+- Create IAM users and assign S3 access keys within the namespace for application authentication
+- Configure a lifecycle policy on a bucket to transition or expire objects after a defined retention period
+- Add a new node to an existing VDC via ECS Portal → Hardware → Add Node; ECS will automatically rebalance data
+- Configure geo-replication by adding a remote VDC to the replication group and setting the replication mode (sync or async)
+- Rotate object user secret keys with `ecscli user secret-key create` and update consuming applications
+- Run capacity and performance reports from ECS Portal → Dashboard for capacity planning input
 
 ## Upgrade Notes
 
-1. Confirm current version
-2. Review vendor compatibility matrix
-3. Confirm backups and rollback plan
-4. Validate support contract
-5. Upgrade during maintenance window
-6. Confirm host access and replication after upgrade
+1. Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding
+2. Review the Dell ECS release notes for the target version; note any configuration changes or mandatory interim upgrades required
+3. Verify all nodes are healthy (`GOOD`) and geo-replication lag is at zero before starting the upgrade
+4. Download the upgrade package from Dell Support and upload it to the ECS upgrade staging area via the Portal
+5. ECS upgrades are rolling (one node at a time); the portal will indicate per-node progress — do not force simultaneous node upgrades
+6. After all nodes upgrade, confirm all nodes return to `GOOD` status and geo-replication resumes with no lag
+7. Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace
 
 ## Best Practices
 
-- Keep naming consistent
-- Monitor capacity growth
-- Document storage mappings
-- Validate multipathing
-- Test restore and failover procedures
-- Review support advisories regularly
+- Separate namespaces per team or application — do not share a single namespace across unrelated workloads
+- Enable bucket versioning only where application recovery requirements demand it; versioning causes unbounded capacity growth without lifecycle policies
+- Always attach a lifecycle policy to versioned buckets to expire non-current versions after the required retention period
+- Use replication groups spanning at least two VDCs for any production data to achieve geo-redundancy
+- Configure namespace and bucket quotas to prevent a single tenant from consuming cluster-wide capacity
+- Authenticate to the Management API with a service account rather than the `sysadmin` default credential in automation scripts
+- Monitor cluster utilisation and plan capacity expansion before reaching 70% of usable space; ECS performance degrades as utilisation approaches 85%
+- Document replication group topology and VDC peering configuration — changes to replication groups are difficult to reverse without data movement

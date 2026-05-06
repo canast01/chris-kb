@@ -11,67 +11,100 @@
 
 ## Overview
 
-Dell PowerMax is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.
+Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax 2000 and 8000 models, designed for mission-critical workloads requiring sub-millisecond latency and continuous availability. It is managed via Unisphere for PowerMax (GUI) or SYMCLI (Solutions Enabler). PowerMax provides synchronous and asynchronous remote replication through SRDF (Symmetrix Remote Data Facility), local snapshots via SnapVX (up to 256 snapshots per device), and automated storage tiering with FAST VP.
 
 ## Where It Fits
 
-- Primary storage operations
-- Application and VM data services
-- Backup and recovery workflows
-- Replication and disaster recovery
-- Performance and capacity planning
+- Primary block storage for tier-1 databases (Oracle, SQL Server, SAP HANA) requiring consistent sub-millisecond latency
+- Synchronous DR replication with SRDF/S for zero RPO between data centres
+- Asynchronous DR replication with SRDF/A for longer-distance sites where synchronous distance is impractical
+- Local point-in-time snapshots with SnapVX for application-consistent backups, dev/test clones, and fast recovery
+- Multi-host SAN environments — storage groups, masking views, and port groups control LUN presentation
+- Automated storage tiering with FAST VP to move data between NVMe, SAS, and NL-SAS tiers based on activity
 
 ## Daily Checks
 
-- Review active alerts
-- Check capacity usage
-- Validate replication or protection status
-- Confirm support connectivity
-- Review performance trends
-- Check recent configuration changes
+- Open Unisphere for PowerMax and review the Dashboard for active alerts and system health status
+- Run `symcfg -sid <SID> show` to confirm array-level health and director status
+- Run `symdf list -sid <SID>` to check SRDF pair states — all R1 pairs should be `Synchronized` (SRDF/S) or `Consistent` (SRDF/A)
+- Review `sympd list -sid <SID>` to confirm no physical drives are in a `Failed` or `Degraded` state
+- Check storage group thin device pool utilisation via Unisphere or `symsg list -sid <SID>`
+- Confirm any SnapVX sessions that are no longer needed have been terminated to avoid hitting per-device limits
+- Review Unisphere → Performance → Array to check I/O response time and throughput against baselines
 
 ## Health Commands
 
 ~~~bash
-show status
-show alerts
-show capacity
-show replication
-show version
+# List all Symmetrix arrays visible to Solutions Enabler
+symcfg list
+
+# Show full array configuration and health for a specific SID
+symcfg -sid <SID> show
+
+# List SRDF groups (RDF groups) for the array
+symdf list -sid <SID>
+
+# Show SRDF pair state for a specific RDF group
+symrdf -sid <SID> -rdfg <group> query
+
+# List all storage groups
+symsg list -sid <SID>
+
+# List all device groups
+symdg list -sid <SID>
+
+# List all physical drives and their state
+sympd list -sid <SID>
+
+# List SnapVX snapshots for a storage group
+symsnap list -sid <SID> -sg <storage-group>
+
+# Show real-time I/O statistics (R2 side)
+symstat -sid <SID> -type r2
+
+# Show replication sessions (SRDF and SnapVX)
+symreplicate list -sid <SID>
 ~~~
 
 ## Common Issues
 
 | Symptom | Likely Cause | Action |
 |---|---|---|
-| High latency | Backend contention or host path issue | Review performance and paths |
-| Capacity warning | Growth, snapshots, or retention | Review usage and cleanup options |
-| Replication lag | Network, target, or workload pressure | Check replication status |
-| Host path down | SAN zoning, cabling, or multipathing | Validate fabric and host paths |
+| SRDF pair in `R1 Updated` or `Transmit Idle` state | Link failure, R2 array unreachable, or SRDF director port error | Run `symrdf -sid <SID> -rdfg <group> query`; check director port with `symcfg -sid <SID> show`; investigate WAN link and RDF port health |
+| SRDF pair in `Suspended` state | Manual suspend or automatic suspend triggered by I/O error | Confirm cause; if intentional verify R2 is consistent; resume with `symrdf -sid <SID> -rdfg <group> resume` |
+| SnapVX session quota exceeded (256 per device limit) | Accumulated snapshots not being expired or unlinked | Run `symsnap list -sid <SID>` to identify stale sessions; terminate or expire unneeded snaps with `symsnap -sid <SID> terminate` |
+| Storage group thin device at capacity warning threshold | Thin device allocated capacity approaching the pool limit | Increase thin pool allocation via Unisphere; or expand the storage group device with `symdev -sid <SID> modify` |
+| Director port errors or I/O latency spike | SAN fabric event, host HBA issue, or director port degraded | Check `symcfg -sid <SID> show` for port status; review fabric zoning and host multipathing |
+| Unisphere certificate expired, GUI inaccessible | TLS certificate for Unisphere web service has lapsed | Replace the certificate via the Solutions Enabler configuration; restart the Unisphere service after renewal |
 
 ## Operational Tasks
 
-- Provision storage
-- Expand volumes or file systems
-- Review snapshots
-- Validate replication
-- Confirm host connectivity
-- Review firmware or software level
+- Create a new storage group with `symsg -sid <SID> create <sg-name>` and add thin devices
+- Create a masking view to present a storage group to a host: configure initiator group, port group, storage group, then create the masking view in Unisphere or with `symmask`
+- Create a SnapVX snapshot: `symsnap -sid <SID> create -sg <sg-name> -name <snap-name>`
+- Link a SnapVX snapshot to a target storage group for dev/test or restore
+- Establish an SRDF pair: define RDF groups on both arrays, then use `symrdf -sid <SID> createpair` or Unisphere wizard
+- Change SRDF mode between synchronous and asynchronous via `symrdf -sid <SID> -rdfg <group> set mode`
+- Perform a planned SRDF failover (split) and failback via `symrdf split` and `symrdf restore` during DR tests
+- Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modify
 
 ## Upgrade Notes
 
-1. Confirm current version
-2. Review vendor compatibility matrix
-3. Confirm backups and rollback plan
-4. Validate support contract
-5. Upgrade during maintenance window
-6. Confirm host access and replication after upgrade
+1. Record the current PowerMaxOS and Solutions Enabler version from `symcfg list` and the Unisphere About page
+2. Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions
+3. Confirm all SRDF pairs are in `Synchronized` or `Consistent` state before upgrade; suspend replication if advised by release notes
+4. Back up the Solutions Enabler database and Unisphere configuration files to an external location
+5. Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes
+6. Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push
+7. After the upgrade completes, run `symcfg list`, `symdf list -sid <SID>`, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy
 
 ## Best Practices
 
-- Keep naming consistent
-- Monitor capacity growth
-- Document storage mappings
-- Validate multipathing
-- Test restore and failover procedures
-- Review support advisories regularly
+- Use SRDF/A with write-order consistency groups (`symcg`) for multi-volume application workloads to ensure crash-consistent recovery at the DR site
+- Implement FAST VP policies to automate data tiering between NVMe and capacity tiers based on observed I/O patterns; review tier placement quarterly
+- Set I/O limit SLOs (Service Level Objectives) on storage groups via Unisphere to enforce per-workload latency and bandwidth caps and prevent noisy-neighbour problems
+- Document Symmetrix device IDs, storage group names, and masking view mappings in a CMDB or equivalent; SYMCLI device IDs are array-specific and not portable
+- Never exceed 256 SnapVX snapshots per device; implement automated snap expiry policies in backup software or scripted `symsnap terminate` jobs to stay within limits
+- Use Unisphere Performance → Thresholds to set alert thresholds on response time and port utilisation so issues are caught before they affect hosts
+- Test SRDF failover and failback procedures at least annually; document the exact SYMCLI sequence and validate host I/O resumes on R2 within the target RTO
+- Keep Solutions Enabler and Unisphere at the same major version as PowerMaxOS to avoid CLI and API incompatibilities
