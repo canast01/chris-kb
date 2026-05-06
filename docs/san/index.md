@@ -1,18 +1,6 @@
 # SAN
 
-<div class="kb-summary">
-SAN knowledge base landing page.
-</div>
-
-## Main Areas
-
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="cisco/">Cisco SAN</a></h3>
-  <p>Cisco MDS, DCNM, Nexus Dashboard, zoning, ports, and ISLs.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="brocade/">Brocade SAN</a></h3>
-  <p>Fabric OS, SANnav, zoning, ports, and ISLs.</p>
-</div>
+<a class="kb-card" href="cisco/"><strong>Cisco SAN</strong><span>MDS switches — architecture, standards, lifecycle, CLI, scripts, troubleshooting, and security.</span></a>
+<a class="kb-card" href="brocade/"><strong>Brocade SAN</strong><span>Fabric OS switches — architecture, standards, lifecycle, CLI, scripts, troubleshooting, and security.</span></a>
 </div>
