@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#connection-details" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Connection Details
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#aws-cli-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        AWS CLI Configuration
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#common-s3-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Common S3 Operations
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#access-keys-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Access Keys Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace-and-bucket-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace and Bucket Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Access
       
     </span>
   </a>
@@ -775,30 +797,125 @@
 
 
 <h1 id="s3-access">S3 Access<a class="headerlink" href="#s3-access" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for S3 Access.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<p>ECS exposes an S3-compatible API endpoint. Any S3-compatible client (AWS CLI, boto3, s3cmd, rclone) can access ECS using its S3 endpoint.</p>
+<h2 id="connection-details">Connection Details<a class="headerlink" href="#connection-details" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 Endpoint</td>
+<td><code>https://&lt;ecs_s3_vip&gt;</code> or <code>https://&lt;ecs_node_ip&gt;</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Access Key / Secret Key (managed in ECS UI or API)</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>Self-signed cert by default — clients need <code>--no-verify-ssl</code> or trusted CA</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>9020 (HTTP), 9021 (HTTPS)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aws-cli-configuration">AWS CLI Configuration<a class="headerlink" href="#aws-cli-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Configure AWS CLI profile for ECS
+aws configure --profile ecs
+# AWS Access Key ID: &lt;ecs_access_key&gt;
+# AWS Secret Access Key: &lt;ecs_secret_key&gt;
+# Default region: us-east-1 (ECS ignores region — use any value)
+
+# Test connectivity
+aws s3 ls --profile ecs --endpoint-url https://&lt;ecs_endpoint&gt; --no-verify-ssl
+</code></pre>
+<h2 id="common-s3-operations">Common S3 Operations<a class="headerlink" href="#common-s3-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List buckets
+aws s3 ls \
+    --profile ecs \
+    --endpoint-url https://&lt;ecs_endpoint&gt; \
+    --no-verify-ssl
+
+# List objects in a bucket
+aws s3 ls s3://&lt;bucket_name&gt;/ \
+    --profile ecs \
+    --endpoint-url https://&lt;ecs_endpoint&gt; \
+    --no-verify-ssl
+
+# Upload a file
+aws s3 cp /local/file s3://&lt;bucket_name&gt;/key \
+    --profile ecs \
+    --endpoint-url https://&lt;ecs_endpoint&gt; \
+    --no-verify-ssl
+
+# Download a file
+aws s3 cp s3://&lt;bucket_name&gt;/key /local/destination \
+    --profile ecs \
+    --endpoint-url https://&lt;ecs_endpoint&gt; \
+    --no-verify-ssl
+
+# Sync a directory
+aws s3 sync /local/dir s3://&lt;bucket_name&gt;/ \
+    --profile ecs \
+    --endpoint-url https://&lt;ecs_endpoint&gt; \
+    --no-verify-ssl
+</code></pre>
+<h2 id="access-keys-management">Access Keys Management<a class="headerlink" href="#access-keys-management" title="Permanent link">&para;</a></h2>
+<p>Access keys are created in the ECS Management Console:</p>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>Manage</strong> → <strong>Users</strong> → select user → <strong>Generate Secret Key</strong></li>
+<li>Keys can also be created via the ECS REST API</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="namespace-and-bucket-paths">Namespace and Bucket Paths<a class="headerlink" href="#namespace-and-bucket-paths" title="Permanent link">&para;</a></h2>
+<p>ECS organises data into namespaces. Buckets belong to a namespace. The S3 endpoint path style is:</p>
+<pre><code>https://&lt;ecs_endpoint&gt;/&lt;bucket_name&gt;/&lt;object_key&gt;
+</code></pre>
+<p>Some clients support virtual-hosted style:</p>
+<pre><code>https://&lt;bucket_name&gt;.&lt;ecs_endpoint&gt;/&lt;object_key&gt;
+</code></pre>
+<h2 id="troubleshooting-access">Troubleshooting Access<a class="headerlink" href="#troubleshooting-access" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Likely Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>S3 endpoint down or wrong port</td>
+<td>Check port 9021 (HTTPS) or 9020 (HTTP)</td>
+</tr>
+<tr>
+<td><code>SSL certificate error</code></td>
+<td>Self-signed cert</td>
+<td>Use <code>--no-verify-ssl</code> or install ECS CA cert</td>
+</tr>
+<tr>
+<td><code>Access Denied</code></td>
+<td>Wrong access key or bucket policy</td>
+<td>Verify key and bucket policy</td>
+</tr>
+<tr>
+<td><code>NoSuchBucket</code></td>
+<td>Bucket doesn't exist or wrong namespace</td>
+<td>Check bucket name and namespace</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>Bucket policy denies access</td>
+<td>Review bucket policy in ECS console</td>
+</tr>
+</tbody>
+</table>
 
 
 

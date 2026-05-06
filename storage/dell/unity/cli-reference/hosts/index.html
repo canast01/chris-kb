@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-os-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host OS Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initiators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initiators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lun-access-control-host-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LUN Access Control (Host Access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-lun-presentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-to-End LUN Presentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +789,111 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Hosts
-uemcli -d &lt;ip&gt; /remote/host show
-uemcli -d &lt;ip&gt; /remote/host show -detail
-uemcli -d &lt;ip&gt; /remote/host create -name &lt;host_name&gt; -type Initiator
+<h2 id="hosts">Hosts<a class="headerlink" href="#hosts" title="Permanent link">&para;</a></h2>
+<p>Hosts represent servers that access Unity storage. Each host has associated initiators (WWNs or IQNs).</p>
+<pre><code class="language-bash"># List all hosts
+uemcli -d &lt;ip&gt; -u admin /remote/host show
 
-# Initiators
-uemcli -d &lt;ip&gt; /remote/initiator show
-uemcli -d &lt;ip&gt; /remote/initiator create -host &lt;host_id&gt; -uid &lt;wwn_or_iqn&gt; -type FC
+# Detailed host view — name, OS type, initiators, LUN access
+uemcli -d &lt;ip&gt; -u admin /remote/host show -detail
 
-# LUN access (host-to-LUN mapping)
-uemcli -d &lt;ip&gt; /stor/config/lunacl show
-uemcli -d &lt;ip&gt; /stor/config/lunacl create -lun &lt;lun_id&gt; -host &lt;host_id&gt;
-uemcli -d &lt;ip&gt; /stor/config/lunacl -id &lt;acl_id&gt; delete
+# Specific host
+uemcli -d &lt;ip&gt; -u admin /remote/host -id &lt;host_id&gt; show -detail
+
+# Create a host
+uemcli -d &lt;ip&gt; -u admin /remote/host create \
+    -name &lt;hostname&gt; \
+    -type Initiator \
+    -osType Linux
+</code></pre>
+<h2 id="host-os-types">Host OS Types<a class="headerlink" href="#host-os-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>OS Type</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td><code>Linux</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>Windows</code></td>
+</tr>
+<tr>
+<td>VMware</td>
+<td><code>VMware</code></td>
+</tr>
+<tr>
+<td>AIX</td>
+<td><code>AIX</code></td>
+</tr>
+<tr>
+<td>HP-UX</td>
+<td><code>HPUX</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="initiators">Initiators<a class="headerlink" href="#initiators" title="Permanent link">&para;</a></h2>
+<p>Each HBA port or iSCSI IQN is a separate initiator:</p>
+<pre><code class="language-bash"># List all initiators
+uemcli -d &lt;ip&gt; -u admin /remote/initiator show
+
+# Initiator detail — WWN/IQN, health, host association
+uemcli -d &lt;ip&gt; -u admin /remote/initiator show -detail
+
+# Register a Fibre Channel initiator (WWN)
+uemcli -d &lt;ip&gt; -u admin /remote/initiator create \
+    -host &lt;host_id&gt; \
+    -uid 20:00:00:90:fa:12:34:56 \
+    -type FC
+
+# Register an iSCSI initiator (IQN)
+uemcli -d &lt;ip&gt; -u admin /remote/initiator create \
+    -host &lt;host_id&gt; \
+    -uid iqn.2024-01.com.example:host01 \
+    -type iSCSI
+
+# Delete an initiator
+uemcli -d &lt;ip&gt; -u admin /remote/initiator -id &lt;initiator_id&gt; delete
+</code></pre>
+<h2 id="lun-access-control-host-access">LUN Access Control (Host Access)<a class="headerlink" href="#lun-access-control-host-access" title="Permanent link">&para;</a></h2>
+<p>LUN access grants a host access to a LUN:</p>
+<pre><code class="language-bash"># List all LUN access control entries
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl show
+
+# Access for a specific LUN
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl show | grep &lt;lun_id&gt;
+
+# Grant a host access to a LUN
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create \
+    -lun &lt;lun_id&gt; \
+    -host &lt;host_id&gt;
+
+# With specific access type (production = read-write)
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create \
+    -lun &lt;lun_id&gt; \
+    -host &lt;host_id&gt; \
+    -accessType production
+
+# Revoke LUN access
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl -id &lt;acl_id&gt; delete
+</code></pre>
+<h2 id="end-to-end-lun-presentation">End-to-End LUN Presentation<a class="headerlink" href="#end-to-end-lun-presentation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — create or identify host
+uemcli -d &lt;ip&gt; -u admin /remote/host create -name server01 -type Initiator -osType Linux
+
+# Step 2 — register initiators
+uemcli -d &lt;ip&gt; -u admin /remote/initiator create -host &lt;host_id&gt; -uid &lt;wwn&gt; -type FC
+
+# Step 3 — grant LUN access
+uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create -lun &lt;lun_id&gt; -host &lt;host_id&gt;
+
+# Step 4 — on the host, rescan HBAs and confirm device appears
+# Linux: rescan-scsi-bus.sh or echo &quot;- - -&quot; &gt; /sys/class/scsi_host/host*/scan
 </code></pre>
 
 

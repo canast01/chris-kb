@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#autosupport_1" class="md-nav__link">
+  <a href="#view-autosupport-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AutoSupport
+        View AutoSupport Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#send-autosupport-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Send AutoSupport Messages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autosupport-delivery-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AutoSupport Delivery Methods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-iq-and-autosupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active IQ and AutoSupport
       
     </span>
   </a>
@@ -745,17 +800,89 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="autosupport_1">AutoSupport<a class="headerlink" href="#autosupport_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">autosupport show
+<p>AutoSupport is NetApp's telemetry and support system. It sends system health, configuration, and event data to NetApp support and can trigger proactive support cases.</p>
+<h2 id="view-autosupport-status">View AutoSupport Status<a class="headerlink" href="#view-autosupport-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># AutoSupport configuration and status
+autosupport show
+
+# Per-node view
 autosupport show -node &lt;node&gt;
-autosupport invoke -node &lt;node&gt; -type test
-autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual upload&quot;
-autosupport history show
-autosupport history show -node &lt;node&gt;
-autosupport modify -node &lt;node&gt; -state enable
-autosupport modify -node &lt;node&gt; -mail-hosts &lt;smtp&gt;
+
+# Delivery status (whether messages are reaching NetApp)
+autosupport show -fields last-subject-sent, last-successful-destination
 </code></pre>
+<h2 id="send-autosupport-messages">Send AutoSupport Messages<a class="headerlink" href="#send-autosupport-messages" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test AutoSupport delivery (sends a test message)
+autosupport invoke -node &lt;node&gt; -type test
+
+# Send full AutoSupport bundle (for TAC cases)
+autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual upload for case SR-XXXXX&quot;
+
+# Send specific subsystem data
+autosupport invoke -node &lt;node&gt; -type test -subsystem storage
+</code></pre>
+<h2 id="history">History<a class="headerlink" href="#history" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># AutoSupport message history
+autosupport history show
+
+# Per-node history
+autosupport history show -node &lt;node&gt;
+
+# History with delivery status
+autosupport history show -fields seq-num, status, triggered-time, destination
+</code></pre>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable AutoSupport
+autosupport modify -node &lt;node&gt; -state enable
+
+# Disable AutoSupport (not recommended except for offline systems)
+autosupport modify -node &lt;node&gt; -state disable
+
+# Set SMTP relay
+autosupport modify -node &lt;node&gt; -mail-hosts &lt;smtp_server&gt;
+
+# Set proxy (if AutoSupport uses HTTPS via proxy)
+autosupport modify -node &lt;node&gt; -proxy-url http://proxy.corp.local:8080
+
+# Set notification address (where AutoSupport emails are sent)
+autosupport modify -node &lt;node&gt; -noteto ops@corp.local
+</code></pre>
+<h2 id="autosupport-delivery-methods">AutoSupport Delivery Methods<a class="headerlink" href="#autosupport-delivery-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td>Recommended — direct to NetApp (port 443)</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>Email relay to NetApp addresses</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>Not recommended — insecure</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Set protocol
+autosupport modify -node &lt;node&gt; -transport https
+
+# Verify HTTPS connectivity to NetApp
+autosupport check show
+</code></pre>
+<h2 id="active-iq-and-autosupport">Active IQ and AutoSupport<a class="headerlink" href="#active-iq-and-autosupport" title="Permanent link">&para;</a></h2>
+<p>AutoSupport data feeds into NetApp Active IQ (cloud-based analytics):</p>
+<ul>
+<li>Review at <a href="https://activeiq.netapp.com">activeiq.netapp.com</a></li>
+<li>Provides capacity forecasts, risk warnings, firmware recommendations</li>
+<li>AutoSupport must be enabled and reaching NetApp for Active IQ to populate</li>
+</ul>
 
 
 

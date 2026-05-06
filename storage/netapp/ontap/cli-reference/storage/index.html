@@ -712,10 +712,99 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#storage-aggregates-disks_1" class="md-nav__link">
+  <a href="#aggregates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage — Aggregates &amp; Disks
+        Aggregates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aggregates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-capacity-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate Capacity Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raid-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAID Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shelf-and-enclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shelf and Enclosure
       
     </span>
   </a>
@@ -745,22 +834,133 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="storage-aggregates-disks_1">Storage — Aggregates &amp; Disks<a class="headerlink" href="#storage-aggregates-disks_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Aggregates
+<h2 id="aggregates">Aggregates<a class="headerlink" href="#aggregates" title="Permanent link">&para;</a></h2>
+<p>An aggregate is the physical RAID group that holds one or more volumes.</p>
+<pre><code class="language-bash"># List all aggregates
 storage aggregate show
-storage aggregate show -state online
-storage aggregate show -fields aggr-name,node,size,availsize,usedsize,state
-storage aggregate show-space
-storage aggregate show-space -aggregate &lt;aggr&gt;
-storage aggregate modify -aggregate &lt;aggr&gt; -maxraidsize &lt;n&gt;
 
-# Disks
+# Only online aggregates
+storage aggregate show -state online
+
+# Aggregate detail — size, used, available, RAID type
+storage aggregate show -fields aggr-name, node, size, availsize, usedsize, state
+
+# Space breakdown including snapshot reserve
+storage aggregate show-space
+
+# Specific aggregate space
+storage aggregate show-space -aggregate &lt;aggr&gt;
+</code></pre>
+<h3 id="aggregate-capacity-thresholds">Aggregate Capacity Thresholds<a class="headerlink" href="#aggregate-capacity-thresholds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Free Space</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 20%</td>
+<td>Healthy</td>
+</tr>
+<tr>
+<td>10–20%</td>
+<td>Alert — add capacity or move volumes</td>
+</tr>
+<tr>
+<td>&lt; 10%</td>
+<td>Emergency — volumes may go offline</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Find aggregates below 20% free
+storage aggregate show -fields aggr-name, node, availsize, usedpercent | \
+    awk '$NF &gt; 80 {print}'
+</code></pre>
+<h3 id="aggregate-operations">Aggregate Operations<a class="headerlink" href="#aggregate-operations" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Rename an aggregate
+storage aggregate rename -aggregate &lt;old_name&gt; -newname &lt;new_name&gt;
+
+# Set maximum RAID group size
+storage aggregate modify -aggregate &lt;aggr&gt; -maxraidsize 24
+
+# Add disks to an aggregate
+storage aggregate add-disks -aggregate &lt;aggr&gt; -diskcount &lt;n&gt;
+</code></pre>
+<h2 id="disks">Disks<a class="headerlink" href="#disks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All disk inventory
 storage disk show
+
+# Broken disks (failed or suspect)
 storage disk show -broken
-storage disk show -fields disk,bay,node,container-type,disk-type,rpm,size,position
-storage disk unfail -disk &lt;disk&gt;
-storage disk assign -disk &lt;disk&gt; -owner &lt;node&gt;
+
+# Disk details — location, owner, type, size, bay
+storage disk show -fields disk, bay, node, container-type, disk-type, rpm, size, position
+
+# Spare disks available
+storage disk show -container-type spare
+</code></pre>
+<h3 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>raid_dp</code></td>
+<td>In a RAID-DP group</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td><code>spare</code></td>
+<td>Available for use</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td><code>broken</code></td>
+<td>Failed</td>
+<td>Replace</td>
+</tr>
+<tr>
+<td><code>partner</code></td>
+<td>Owned by HA partner</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td><code>unknown</code></td>
+<td>Not recognized</td>
+<td>Check cabling</td>
+</tr>
+</tbody>
+</table>
+<h3 id="disk-operations">Disk Operations<a class="headerlink" href="#disk-operations" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Unfail a disk (re-add to aggregate after investigation)
+storage disk unfail -disk &lt;disk_name&gt;
+
+# Assign disk ownership
+storage disk assign -disk &lt;disk_name&gt; -owner &lt;node_name&gt;
+
+# Manually mark a disk as spare
+storage disk assign -disk &lt;disk_name&gt; -owner &lt;node_name&gt; -container-type spare
+</code></pre>
+<h2 id="raid-groups">RAID Groups<a class="headerlink" href="#raid-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RAID group status per aggregate
+storage aggregate show-raidtree -aggregate &lt;aggr&gt;
+
+# RAID type (RAID-DP, RAID-TEC)
+storage aggregate show -fields raidtype
+</code></pre>
+<h2 id="shelf-and-enclosure">Shelf and Enclosure<a class="headerlink" href="#shelf-and-enclosure" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Disk shelves
+storage shelf show
+
+# Shelf module detail
+storage shelf show -detail
 </code></pre>
 
 

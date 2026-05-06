@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#daily-health-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Daily Health Check
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#weekly-health-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Weekly Health Check
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#capacity-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Capacity Monitoring
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#replication-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Replication Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Summary Table
       
     </span>
   </a>
@@ -775,30 +808,151 @@
 
 
 <h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h2 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. System alerts — any unacknowledged issues?
+alert show current
+
+# 2. Filesystem status
+filesys status
+filesys show space
+
+# 3. Disk state — all normal?
+disk show state
+
+# 4. Replication lag
+replication status
+replication show stats | grep lag
+
+# 5. Cleaning status
+filesys clean status
+</code></pre>
+<h2 id="weekly-health-check">Weekly Health Check<a class="headerlink" href="#weekly-health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Compression and deduplication ratio
+filesys show compression summary
+
+# DDBoost active clients
+ddboost show clients
+
+# NFS and CIFS connections
+nfs show clients
+cifs show clients
+
+# Alert history (look for recurring alerts)
+alert show history brief
+
+# System uptime and performance stats
+system show uptime
+system show stats
+</code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Post-comp used</td>
+<td>&gt; 80%</td>
+<td>Plan expansion or cleaning cycle</td>
+</tr>
+<tr>
+<td>MTree quota used</td>
+<td>&gt; 85%</td>
+<td>Increase quota or expire old data</td>
+</tr>
+<tr>
+<td>Cleaning last run</td>
+<td>&gt; 7 days</td>
+<td>Trigger <code>filesys clean start</code></td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&gt; 4 hours</td>
+<td>Investigate network or source load</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All replication contexts
+replication show all
+
+# Contexts not in replicating or idle state
+replication status | grep -v &quot;replicating\|idle&quot;
+
+# Lag detail per context
+replication show stats
+</code></pre>
+<h2 id="hardware-health">Hardware Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Disk states (no failed or reconstructing disks)
+disk show state | grep -v normal
+
+# Enclosure health (power, fans, temperature)
+enclosure show hardware | grep -iE &quot;fault|failed|warning&quot;
+
+# RAID group status
+raid show all | grep -v &quot;normal\|OK&quot;
+</code></pre>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>[ ] No critical or error alerts active</li>
+<li>[ ] Filesystem enabled and healthy</li>
+<li>[ ] All disks in normal state</li>
+<li>[ ] No RAID rebuild in progress</li>
+<li>[ ] Replication lag within acceptable range</li>
+<li>[ ] Cleaning not in progress (or aware it may run)</li>
+<li>[ ] Support bundle taken for baseline</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active alerts</td>
+<td>None critical</td>
+<td><code>alert show current</code></td>
+</tr>
+<tr>
+<td>Filesystem state</td>
+<td>Enabled</td>
+<td><code>filesys status</code></td>
+</tr>
+<tr>
+<td>Disk state</td>
+<td>All normal</td>
+<td><code>disk show state</code></td>
+</tr>
+<tr>
+<td>RAID state</td>
+<td>Normal</td>
+<td><code>raid show all</code></td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&lt; 4 hours</td>
+<td><code>replication show stats</code></td>
+</tr>
+<tr>
+<td>Capacity used</td>
+<td>&lt; 80%</td>
+<td><code>filesys show space</code></td>
+</tr>
+<tr>
+<td>Last cleaning</td>
+<td>&lt; 7 days</td>
+<td><code>filesys clean status</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

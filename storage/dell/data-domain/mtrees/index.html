@@ -21,7 +21,7 @@
     
     
       
-        <title>Mtrees - Chris KB</title>
+        <title>MTree Operations - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mtrees" class="md-skip">
+        <a href="#mtree-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Mtrees
+              MTree Operations
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#capacity-and-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Capacity and Usage
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#mtree-space-actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        MTree Space Actions
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#replication-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Replication State
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#retention-lock-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Retention Lock Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-mtrees-for-new-backup-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating MTrees for New Backup Applications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommissioning-an-mtree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommissioning an MTree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Summary
       
     </span>
   </a>
@@ -774,31 +807,102 @@
 
 
 
-<h1 id="mtrees">Mtrees<a class="headerlink" href="#mtrees" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Mtrees.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="mtree-operations">MTree Operations<a class="headerlink" href="#mtree-operations" title="Permanent link">&para;</a></h1>
+<p>MTrees are the primary logical partitions on a Data Domain system. Each MTree maps to a directory under <code>/data/col1/</code> and can have independent quotas, replication, and retention lock settings.</p>
+<h2 id="capacity-and-usage">Capacity and Usage<a class="headerlink" href="#capacity-and-usage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all MTrees with usage
+mtree list --verbose
+
+# Check MTree quota utilisation
+mtree quota show
+
+# Compare pre-compression vs post-compression per MTree
+filesys show compression | grep -B2 -A5 &quot;mtree&quot;
+</code></pre>
+<h2 id="mtree-space-actions">MTree Space Actions<a class="headerlink" href="#mtree-space-actions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Reduce quota if an MTree is over-allocated
+mtree quota set hard-limit &lt;new_size&gt; TiB /data/col1/&lt;mtree_name&gt;
+
+# Remove quota entirely (no limit)
+mtree quota reset /data/col1/&lt;mtree_name&gt;
+</code></pre>
+<h2 id="replication-state">Replication State<a class="headerlink" href="#replication-state" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check which MTrees are replicating and their state
+replication show all | grep &lt;mtree_name&gt;
+
+# Show replication lag for a specific MTree
+replication show stats | grep &lt;mtree_name&gt;
+</code></pre>
+<h2 id="retention-lock-review">Retention Lock Review<a class="headerlink" href="#retention-lock-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check if retention lock is enabled on an MTree
+mtree retention-lock status /data/col1/&lt;mtree_name&gt;
+
+# List MTrees with retention lock enabled
+mtree list --verbose | grep -E &quot;mtree|retention&quot;
+</code></pre>
+<h2 id="creating-mtrees-for-new-backup-applications">Creating MTrees for New Backup Applications<a class="headerlink" href="#creating-mtrees-for-new-backup-applications" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — create the MTree
+mtree create /data/col1/&lt;application&gt;_backup
+
+# Step 2 — set a quota (prevent runaway growth)
+mtree quota set hard-limit 5 TiB /data/col1/&lt;application&gt;_backup
+mtree quota set soft-limit 4 TiB /data/col1/&lt;application&gt;_backup
+
+# Step 3 — create an NFS export or DDBoost storage unit
+nfs add export /data/col1/&lt;application&gt;_backup clients &lt;backup_server_ip&gt;
+# OR
+ddboost storage-unit create &lt;application&gt;_backup
+
+# Step 4 — verify
+mtree show /data/col1/&lt;application&gt;_backup
+mtree quota show
+</code></pre>
+<h2 id="decommissioning-an-mtree">Decommissioning an MTree<a class="headerlink" href="#decommissioning-an-mtree" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — confirm backup data has been expired in the backup application
+# Step 2 — remove the NFS export or DDBoost storage unit
+nfs del export /data/col1/&lt;mtree_name&gt;
+# OR
+ddboost storage-unit delete &lt;storage_unit_name&gt;
+
+# Step 3 — delete the MTree
+mtree delete /data/col1/&lt;mtree_name&gt;
+
+# Step 4 — run cleaning to reclaim space
+filesys clean start
+filesys clean status
+</code></pre>
+<h2 id="health-summary">Health Summary<a class="headerlink" href="#health-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MTree quota used</td>
+<td>&lt; 85%</td>
+<td><code>mtree quota show</code></td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&lt; 4 hours</td>
+<td><code>replication show stats</code></td>
+</tr>
+<tr>
+<td>Retention lock as expected</td>
+<td>Per policy</td>
+<td><code>mtree retention-lock status</code></td>
+</tr>
+<tr>
+<td>DDBoost storage unit exists</td>
+<td>Configured</td>
+<td><code>ddboost storage-unit list</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

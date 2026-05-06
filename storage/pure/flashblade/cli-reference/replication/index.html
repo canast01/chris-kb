@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#replication-activedr-async" class="md-nav__link">
+  <a href="#remote-array-replication-target" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replication (ActiveDR / Async)
+        Remote Array (Replication Target)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-system-replica-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File System Replica Links
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pause-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause and Resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-replica-link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Replica Link
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-lag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Lag
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-store-replication-buckets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Store Replication (Buckets)
       
     </span>
   </a>
@@ -745,18 +811,93 @@
 <blockquote>
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="replication-activedr-async">Replication (ActiveDR / Async)<a class="headerlink" href="#replication-activedr-async" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replication targets
+<p>Pure FlashBlade supports asynchronous replication (snapshot-based) and ActiveDR (near-synchronous) for NFS/SMB file replication.</p>
+<h2 id="remote-array-replication-target">Remote Array (Replication Target)<a class="headerlink" href="#remote-array-replication-target" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List configured remote arrays
 purefb remote-array show
-purefb remote-array create --name &lt;target_name&gt; --management-address &lt;ip&gt;
 
-# Replication links
+# Add a replication target
+purefb remote-array create \
+    --name &lt;target_name&gt; \
+    --management-address &lt;target_management_ip&gt;
+
+# The target FlashBlade must also trust this array (reciprocal)
+</code></pre>
+<h2 id="file-system-replica-links">File System Replica Links<a class="headerlink" href="#file-system-replica-links" title="Permanent link">&para;</a></h2>
+<p>Replica links replicate file systems between source and target arrays:</p>
+<pre><code class="language-bash"># List all replica links
 purefb fs-replica-link show
-purefb fs-replica-link create --local-filesystem &lt;fs_name&gt; --remote-filesystem &lt;remote_fs&gt;
 
-# Status
+# Detailed view — state, lag, direction
 purefb fs-replica-link show --detailed
+
+# Create a replica link
+purefb fs-replica-link create \
+    --local-filesystem &lt;local_fs_name&gt; \
+    --remote-filesystem &lt;remote_fs_name&gt; \
+    --remote-array &lt;target_name&gt;
+</code></pre>
+<h2 id="replication-status">Replication Status<a class="headerlink" href="#replication-status" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>replicating</code></td>
+<td>Data actively syncing</td>
+</tr>
+<tr>
+<td><code>idle</code></td>
+<td>Up to date — no new changes</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>Manually suspended</td>
+</tr>
+<tr>
+<td><code>broken</code></td>
+<td>Link failed — investigate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pause replication
+purefb fs-replica-link update \
+    --paused true \
+    --local-filesystem &lt;fs_name&gt; \
+    --remote-filesystem &lt;remote_fs_name&gt; \
+    --remote-array &lt;target_name&gt;
+
+# Resume replication
+purefb fs-replica-link update \
+    --paused false \
+    --local-filesystem &lt;fs_name&gt; \
+    --remote-filesystem &lt;remote_fs_name&gt; \
+    --remote-array &lt;target_name&gt;
+</code></pre>
+<h2 id="delete-a-replica-link">Delete a Replica Link<a class="headerlink" href="#delete-a-replica-link" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb fs-replica-link delete \
+    --local-filesystem &lt;fs_name&gt; \
+    --remote-filesystem &lt;remote_fs_name&gt; \
+    --remote-array &lt;target_name&gt;
+</code></pre>
+<h2 id="monitoring-lag">Monitoring Lag<a class="headerlink" href="#monitoring-lag" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Replication lag (time behind)
+purefb fs-replica-link show --detailed | grep -i lag
+</code></pre>
+<h2 id="object-store-replication-buckets">Object Store Replication (Buckets)<a class="headerlink" href="#object-store-replication-buckets" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List object replica links
+purefb os-replica-link show
+
+# Create bucket replication
+purefb os-replica-link create \
+    --local-bucket &lt;bucket_name&gt; \
+    --remote-bucket &lt;remote_bucket_name&gt; \
+    --remote-array &lt;target_name&gt;
 </code></pre>
 
 

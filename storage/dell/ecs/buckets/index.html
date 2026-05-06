@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#bucket-management-via-ecs-management-console-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Bucket Management via ECS Management Console / API
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#bucket-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Bucket Policies
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#object-retention-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Object Retention (Compliance)
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#bucket-acls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Bucket ACLs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operations
       
     </span>
   </a>
@@ -775,30 +797,94 @@
 
 
 <h1 id="buckets">Buckets<a class="headerlink" href="#buckets" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Buckets.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<p>Dell ECS (Elastic Cloud Storage) uses S3-compatible buckets as the fundamental storage object. Buckets contain objects and have associated policies, retention settings, and replication configuration.</p>
+<h2 id="bucket-management-via-ecs-management-console-api">Bucket Management via ECS Management Console / API<a class="headerlink" href="#bucket-management-via-ecs-management-console-api" title="Permanent link">&para;</a></h2>
+<p>ECS is primarily managed via its web UI or REST API. The key CLI tool is <code>ecscli</code> for scripted operations.</p>
+<pre><code class="language-bash"># List all buckets (using AWS CLI against ECS S3 endpoint)
+aws s3 ls s3:// --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+
+# Create a bucket
+aws s3 mb s3://&lt;bucket_name&gt; --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+
+# Delete a bucket (must be empty)
+aws s3 rb s3://&lt;bucket_name&gt; --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+</code></pre>
+<h2 id="bucket-policies">Bucket Policies<a class="headerlink" href="#bucket-policies" title="Permanent link">&para;</a></h2>
+<p>ECS supports S3-compatible bucket policies for access control:</p>
+<pre><code class="language-bash"># View a bucket policy
+aws s3api get-bucket-policy \
+    --bucket &lt;bucket_name&gt; \
+    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+
+# Apply a bucket policy
+aws s3api put-bucket-policy \
+    --bucket &lt;bucket_name&gt; \
+    --policy file://bucket_policy.json \
+    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+</code></pre>
+<h2 id="object-retention-compliance">Object Retention (Compliance)<a class="headerlink" href="#object-retention-compliance" title="Permanent link">&para;</a></h2>
+<p>ECS supports WORM (Write Once, Read Many) object lock for compliance use cases:</p>
+<pre><code class="language-bash"># Check object lock configuration on a bucket
+aws s3api get-object-lock-configuration \
+    --bucket &lt;bucket_name&gt; \
+    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+</code></pre>
+<h2 id="bucket-acls">Bucket ACLs<a class="headerlink" href="#bucket-acls" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View bucket ACL
+aws s3api get-bucket-acl \
+    --bucket &lt;bucket_name&gt; \
+    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+</code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Check Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-bucket usage</td>
+<td>ECS Management Console → Monitoring → Bucket Usage</td>
+</tr>
+<tr>
+<td>Cluster utilisation</td>
+<td>ECS Management Console → Dashboard</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>ECS Management Console → Replication Groups</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-operations">Common Operations<a class="headerlink" href="#common-operations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List bucket contents</td>
+<td><code>aws s3 ls s3://&lt;bucket&gt; --endpoint-url ...</code></td>
+</tr>
+<tr>
+<td>Copy object to bucket</td>
+<td><code>aws s3 cp &lt;file&gt; s3://&lt;bucket&gt;/ --endpoint-url ...</code></td>
+</tr>
+<tr>
+<td>Delete object</td>
+<td><code>aws s3 rm s3://&lt;bucket&gt;/&lt;key&gt; --endpoint-url ...</code></td>
+</tr>
+<tr>
+<td>Sync local to bucket</td>
+<td><code>aws s3 sync &lt;local_dir&gt; s3://&lt;bucket&gt;/ --endpoint-url ...</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#disk-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enclosures-and-shelves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enclosures and Shelves
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tier-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raid-group-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAID Group Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replacing-a-failed-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replacing a Failed Disk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,18 +811,112 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Disk info
+<h2 id="disk-status">Disk Status<a class="headerlink" href="#disk-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All disks with state (normal, unknown, suspect, failed)
 disk show state
+
+# Full hardware detail per disk
 disk show hardware
+
+# Disk performance statistics
 disk show stats
 
-# Enclosures
+# Disk error counts
+disk show detail | grep -E &quot;slot|error&quot;
+</code></pre>
+<h2 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>normal</code></td>
+<td>Healthy and in use</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>spare</code></td>
+<td>Hot spare, available</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>reconstructing</code></td>
+<td>Rebuilding RAID after failure</td>
+<td>Monitor; do not remove disks</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Drive failure</td>
+<td>Replace immediately</td>
+</tr>
+<tr>
+<td><code>unknown</code></td>
+<td>Newly inserted or not recognized</td>
+<td>Check seating; may need <code>disk show hardware</code> to confirm</td>
+</tr>
+<tr>
+<td><code>absent</code></td>
+<td>Bay empty</td>
+<td>Expected if slot unused</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enclosures-and-shelves">Enclosures and Shelves<a class="headerlink" href="#enclosures-and-shelves" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enclosure hardware overview
 enclosure show hardware
+
+# All enclosures with status
 enclosure show all
 
-# Tier status
+# Specific enclosure
+enclosure show hardware enclosure &lt;enc_id&gt;
+</code></pre>
+<h2 id="tier-management">Tier Management<a class="headerlink" href="#tier-management" title="Permanent link">&para;</a></h2>
+<p>Data Domain supports tiering to object storage (Cloud Tier) or tape:</p>
+<pre><code class="language-bash"># List all tiers (active, cloud)
 tier list
+
+# Detail on each tier (capacity, compression, usage)
+tier show detail
+
+# Cloud tier configuration (if licensed)
+tier show detail cloud
+</code></pre>
+<h2 id="raid-group-status">RAID Group Status<a class="headerlink" href="#raid-group-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RAID group state and disk members
+raid show all
+raid show detail
+
+# RAID rebuilding progress (after disk replacement)
+raid show detail | grep -E &quot;Rebuilding|Complete&quot;
+</code></pre>
+<h2 id="replacing-a-failed-disk">Replacing a Failed Disk<a class="headerlink" href="#replacing-a-failed-disk" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Identify the failed disk slot:
+   <code>bash
+   disk show state | grep failed</code></li>
+<li>Note the enclosure and slot number.</li>
+<li>Physically replace the disk.</li>
+<li>Verify the system picks up the new disk:
+   <code>bash
+   disk show state</code></li>
+<li>Monitor RAID rebuild:
+   <code>bash
+   raid show detail | grep -i rebuild</code></li>
+</ol>
+<h2 id="capacity-summary">Capacity Summary<a class="headerlink" href="#capacity-summary" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Filesystem space usage
+filesys show space
+
+# Compressed vs logical usage
+filesys show compression summary
+
+# Tier capacity breakdown
 tier show detail
 </code></pre>
 

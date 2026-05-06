@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#service-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-and-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance and Throughput
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-segment-processing-dsp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Segment Processing (DSP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,17 +800,102 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># DDBoost status
+<p>DDBoost (Dell Data Domain Boost) offloads deduplication processing to the backup client, reducing network traffic and improving backup performance. It is used by NetBackup, Networker, Avamar, Veeam, and other backup applications.</p>
+<h2 id="service-status">Service Status<a class="headerlink" href="#service-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># DDBoost service status and connection count
 ddboost status
-ddboost show clients
 
-# Users and storage units
-ddboost storage-unit list
-ddboost storage-unit create &lt;name&gt;
-ddboost user list
-ddboost user add &lt;username&gt;
+# Active client connections
+ddboost show clients
+ddboost show clients --verbose
 </code></pre>
+<h2 id="storage-units">Storage Units<a class="headerlink" href="#storage-units" title="Permanent link">&para;</a></h2>
+<p>Storage units are the logical mount points backup applications connect to:</p>
+<pre><code class="language-bash"># List all storage units
+ddboost storage-unit list
+ddboost storage-unit show &lt;storage_unit_name&gt;
+
+# Create a storage unit
+ddboost storage-unit create &lt;storage_unit_name&gt;
+
+# Create with MTree path
+ddboost storage-unit create &lt;name&gt; --user &lt;ddboost_user&gt;
+
+# Delete a storage unit
+ddboost storage-unit delete &lt;storage_unit_name&gt;
+
+# Storage unit usage and quota
+ddboost storage-unit show &lt;name&gt; --verbose
+</code></pre>
+<h2 id="users">Users<a class="headerlink" href="#users" title="Permanent link">&para;</a></h2>
+<p>Each backup application needs a dedicated DDBoost user:</p>
+<pre><code class="language-bash"># List DDBoost users
+ddboost user list
+
+# Add a user
+ddboost user add &lt;username&gt;
+
+# Change password
+ddboost user change password &lt;username&gt;
+
+# Assign user to a storage unit
+ddboost user assign &lt;username&gt; storage-unit &lt;storage_unit_name&gt;
+
+# Remove user
+ddboost user del &lt;username&gt;
+</code></pre>
+<h2 id="performance-and-throughput">Performance and Throughput<a class="headerlink" href="#performance-and-throughput" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># DDBoost throughput statistics
+ddboost show stats
+
+# Connection statistics per client
+ddboost show clients --verbose | grep -E &quot;host|throughput|bytes&quot;
+</code></pre>
+<h2 id="distributed-segment-processing-dsp">Distributed Segment Processing (DSP)<a class="headerlink" href="#distributed-segment-processing-dsp" title="Permanent link">&para;</a></h2>
+<p>DSP moves deduplication to the client side, reducing network load:</p>
+<pre><code class="language-bash"># DSP status
+ddboost option show | grep -i &quot;dist-seg&quot;
+
+# Enable DSP
+ddboost option set distributed-segment-processing enabled
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup fails to connect</td>
+<td>DDBoost enabled and user exists</td>
+<td><code>ddboost status</code></td>
+</tr>
+<tr>
+<td>Slow backup speed</td>
+<td>DSP not enabled</td>
+<td><code>ddboost option show</code></td>
+</tr>
+<tr>
+<td>Authentication errors</td>
+<td>User/password mismatch</td>
+<td><code>ddboost user list</code></td>
+</tr>
+<tr>
+<td>Storage unit full</td>
+<td>Quota or filesystem space</td>
+<td><code>ddboost storage-unit show &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>Client not in list</td>
+<td>Wrong hostname or not connected</td>
+<td><code>ddboost show clients</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -705,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#disks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-health-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Health States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-processors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Processors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enclosures-and-daes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enclosures and DAEs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power-supplies-and-fans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power Supplies and Fans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#battery-backup-units-bbu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Battery Backup Units (BBU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Health Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,18 +828,99 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Disks
-uemcli -d &lt;ip&gt; /stor/config/disk show
-uemcli -d &lt;ip&gt; /stor/config/disk show -detail
+<h2 id="disks">Disks<a class="headerlink" href="#disks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all disks
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show
 
-# Disk groups
-uemcli -d &lt;ip&gt; /stor/config/dg show
-uemcli -d &lt;ip&gt; /stor/config/dg show -detail
+# Detailed disk view — model, speed, capacity, health, location
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show -detail
 
-# Storage processors
-uemcli -d &lt;ip&gt; /sys/sp show
-uemcli -d &lt;ip&gt; /sys/sp show -detail
+# Filter by health
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show -detail | grep -i &quot;health\|failed\|degraded&quot;
+</code></pre>
+<h3 id="disk-health-states">Disk Health States<a class="headerlink" href="#disk-health-states" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OK</td>
+<td>Healthy</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Degraded</td>
+<td>Performance issue or predictive failure</td>
+<td>Monitor closely</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>Drive has failed</td>
+<td>Replace immediately</td>
+</tr>
+<tr>
+<td>Faulted</td>
+<td>Array has quarantined the disk</td>
+<td>Replace</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>Not recognized</td>
+<td>Check seating</td>
+</tr>
+</tbody>
+</table>
+<h2 id="disk-groups">Disk Groups<a class="headerlink" href="#disk-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List disk groups (RAID sets)
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show
+
+# Detail — RAID type, disk count, health, pool association
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show -detail
+
+# Filter degraded disk groups
+uemcli -d &lt;ip&gt; -u admin /stor/config/dg show -detail | grep -i degraded
+</code></pre>
+<h2 id="storage-processors">Storage Processors<a class="headerlink" href="#storage-processors" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SP status (SPA and SPB)
+uemcli -d &lt;ip&gt; -u admin /sys/sp show
+
+# SP detail — model, firmware, network ports, health
+uemcli -d &lt;ip&gt; -u admin /sys/sp show -detail
+
+# SP memory and CPU utilisation
+uemcli -d &lt;ip&gt; -u admin /sys/sp show -detail | grep -E &quot;CPU|Memory|Health&quot;
+</code></pre>
+<h2 id="enclosures-and-daes">Enclosures and DAEs<a class="headerlink" href="#enclosures-and-daes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List enclosures (disk array enclosures)
+uemcli -d &lt;ip&gt; -u admin /sys/encl show
+
+# Enclosure detail
+uemcli -d &lt;ip&gt; -u admin /sys/encl show -detail
+</code></pre>
+<h2 id="power-supplies-and-fans">Power Supplies and Fans<a class="headerlink" href="#power-supplies-and-fans" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Power supply health
+uemcli -d &lt;ip&gt; -u admin /sys/powersupply show
+
+# Fan status
+uemcli -d &lt;ip&gt; -u admin /sys/fan show
+</code></pre>
+<h2 id="battery-backup-units-bbu">Battery Backup Units (BBU)<a class="headerlink" href="#battery-backup-units-bbu" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># BBU status (protects write cache on SP failure)
+uemcli -d &lt;ip&gt; -u admin /sys/battery show
+uemcli -d &lt;ip&gt; -u admin /sys/battery show -detail
+</code></pre>
+<h2 id="hardware-health-summary">Hardware Health Summary<a class="headerlink" href="#hardware-health-summary" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Quick hardware health overview
+uemcli -d &lt;ip&gt; -u admin /sys/general show -detail | grep -i health
+
+# All hardware components with non-OK status
+uemcli -d &lt;ip&gt; -u admin /sys/sp show -detail | grep -iv &quot;OK\|header&quot;
+uemcli -d &lt;ip&gt; -u admin /stor/config/disk show -detail | grep -iv &quot;OK\|header&quot;
 </code></pre>
 
 

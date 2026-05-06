@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-and-view-mtrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List and View MTrees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quotas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtree-retention-lock-compliance-enterprise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTree Retention Lock (Compliance / Enterprise)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtree-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTree Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operations-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operations Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,19 +811,94 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List MTrees
+<p>MTrees are logical partitions of the Data Domain filesystem. Each MTree has its own quota, replication, and retention settings. All backup data lives under <code>/data/col1/</code>.</p>
+<h2 id="list-and-view-mtrees">List and View MTrees<a class="headerlink" href="#list-and-view-mtrees" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all MTrees
 mtree list
-mtree show &lt;mtree_name&gt;
 
-# Create / delete
-mtree create /data/col1/&lt;mtree_name&gt;
-mtree delete /data/col1/&lt;mtree_name&gt;
+# Detail for a specific MTree
+mtree show /data/col1/&lt;mtree_name&gt;
 
-# Quota
-mtree quota set hard-limit &lt;size&gt; &lt;unit&gt; /data/col1/&lt;mtree_name&gt;
-mtree quota show
+# All MTrees with usage stats
+mtree list --verbose
 </code></pre>
+<h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create an MTree
+mtree create /data/col1/&lt;mtree_name&gt;
+
+# Delete an MTree (must be empty or use force)
+mtree delete /data/col1/&lt;mtree_name&gt;
+</code></pre>
+<h2 id="quotas">Quotas<a class="headerlink" href="#quotas" title="Permanent link">&para;</a></h2>
+<p>Quotas limit MTree disk usage and prevent one tenant from consuming all space:</p>
+<pre><code class="language-bash"># View current quotas
+mtree quota show
+
+# Set hard limit (backup fails when limit is reached)
+mtree quota set hard-limit 10 TiB /data/col1/&lt;mtree_name&gt;
+
+# Set soft limit (alert raised when exceeded)
+mtree quota set soft-limit 8 TiB /data/col1/&lt;mtree_name&gt;
+
+# Remove a quota
+mtree quota reset /data/col1/&lt;mtree_name&gt;
+</code></pre>
+<h2 id="mtree-retention-lock-compliance-enterprise">MTree Retention Lock (Compliance / Enterprise)<a class="headerlink" href="#mtree-retention-lock-compliance-enterprise" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable retention lock on an MTree
+mtree retention-lock enable mode enterprise /data/col1/&lt;mtree_name&gt;
+
+# Set minimum/maximum retention period
+mtree retention-lock set min-retention-period 30days /data/col1/&lt;mtree_name&gt;
+mtree retention-lock set max-retention-period 7years /data/col1/&lt;mtree_name&gt;
+
+# View retention lock settings
+mtree retention-lock status /data/col1/&lt;mtree_name&gt;
+</code></pre>
+<h2 id="mtree-replication">MTree Replication<a class="headerlink" href="#mtree-replication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add an MTree as a replication source (see replication CLI ref for full setup)
+replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt; destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
+
+# View replication contexts for this MTree
+replication show all | grep &lt;mtree_name&gt;
+</code></pre>
+<h2 id="capacity-summary">Capacity Summary<a class="headerlink" href="#capacity-summary" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Space used by each MTree
+mtree list --verbose | grep -E &quot;name|pre-comp|post-comp|quota&quot;
+
+# Compare pre-compression vs post-compression (dedup savings)
+filesys show compression | grep -A5 &quot;mtree&quot;
+</code></pre>
+<h2 id="common-operations-table">Common Operations Table<a class="headerlink" href="#common-operations-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create MTree</td>
+<td><code>mtree create /data/col1/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>Set hard quota</td>
+<td><code>mtree quota set hard-limit &lt;size&gt; TiB /data/col1/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>View quotas</td>
+<td><code>mtree quota show</code></td>
+</tr>
+<tr>
+<td>Delete MTree</td>
+<td><code>mtree delete /data/col1/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>Enable retention lock</td>
+<td><code>mtree retention-lock enable mode enterprise /data/col1/&lt;name&gt;</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

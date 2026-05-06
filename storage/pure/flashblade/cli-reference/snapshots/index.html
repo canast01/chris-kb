@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#snapshots_1" class="md-nav__link">
+  <a href="#list-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Snapshots
+        List Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#destroy-and-eradicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destroy and Eradicate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduled-snapshot-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled Snapshot Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-snapshots-from-nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing Snapshots from NFS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Monitoring
       
     </span>
   </a>
@@ -745,24 +811,74 @@
 <blockquote>
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="snapshots_1">Snapshots<a class="headerlink" href="#snapshots_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List snapshots
+<p>FlashBlade snapshots are instant point-in-time copies of file systems or object store buckets. They are read-only and space-efficient (copy-on-write).</p>
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all snapshots
 purefb snapshot show
+
+# Snapshots for a specific file system
+purefb snapshot show --source &lt;filesystem_name&gt;
+
+# Snapshot detail — size, creation time, source
 purefb snapshot show --name &lt;snapshot_name&gt;
+</code></pre>
+<h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Manual snapshot of a file system
+purefb snapshot create \
+    --source &lt;filesystem_name&gt; \
+    --name &lt;snapshot_name&gt;
 
-# Create snapshot
-purefb snapshot create --source &lt;filesystem_name&gt; --name &lt;snapshot_name&gt;
+# Example: pre-change snapshot
+purefb snapshot create --source prod-nfs --name pre-maint-20260506
+</code></pre>
+<h2 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h2>
+<p>Restore creates a new file system from a snapshot (non-destructive — original snapshot preserved):</p>
+<pre><code class="language-bash"># Restore (copy) a snapshot to a new file system
+purefb snapshot copy \
+    --name &lt;snapshot_name&gt; \
+    --target &lt;new_filesystem_name&gt;
 
-# Restore
-purefb snapshot copy --name &lt;snapshot_name&gt; --target &lt;new_fs_name&gt;
-
-# Destroy / eradicate
+# The new file system is writable — export via NFS/SMB to complete recovery
+</code></pre>
+<h2 id="destroy-and-eradicate">Destroy and Eradicate<a class="headerlink" href="#destroy-and-eradicate" title="Permanent link">&para;</a></h2>
+<p>FlashBlade uses a two-step deletion model:</p>
+<pre><code class="language-bash"># Step 1 — destroy (moves to pending eradication)
 purefb snapshot destroy --name &lt;snapshot_name&gt;
+
+# Step 2 — eradicate (permanently deletes — 24-hour hold by default)
 purefb snapshot eradicate --name &lt;snapshot_name&gt;
 
-# Scheduled policies
+# List pending eradication items
+purefb snapshot show --pending-only
+</code></pre>
+<h2 id="scheduled-snapshot-policies">Scheduled Snapshot Policies<a class="headerlink" href="#scheduled-snapshot-policies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List snapshot policies
 purefb snapshot-rule show
+
+# Create a snapshot policy
+purefb snapshot-rule create \
+    --name &lt;rule_name&gt; \
+    --keep-for &lt;duration&gt;   # e.g., 7d, 30d
+
+# Attach a policy to a file system
+purefb fs-snapshot-rule create \
+    --filesystem &lt;fs_name&gt; \
+    --rule &lt;rule_name&gt;
+</code></pre>
+<h2 id="accessing-snapshots-from-nfs">Accessing Snapshots from NFS<a class="headerlink" href="#accessing-snapshots-from-nfs" title="Permanent link">&para;</a></h2>
+<p>FlashBlade exposes snapshots via the <code>.snapshot</code> directory on the NFS export:</p>
+<pre><code class="language-bash"># From NFS client
+ls /mnt/nfs_export/.snapshot/
+
+# Restore a file from snapshot
+cp /mnt/nfs_export/.snapshot/&lt;snapshot_name&gt;/path/to/file /mnt/nfs_export/path/to/file
+</code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Snapshot space usage
+purefb snapshot show | grep -i size
+
+# Total space used by snapshots vs live data
+purefb array show | grep -i snap
 </code></pre>
 
 

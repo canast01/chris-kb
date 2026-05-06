@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Pools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expand-a-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand a Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-and-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raid-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAID Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pool-health-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool Health States
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +811,152 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List pools
-uemcli -d &lt;ip&gt; /stor/config/pool show
-uemcli -d &lt;ip&gt; /stor/config/pool show -detail
+<h2 id="list-pools">List Pools<a class="headerlink" href="#list-pools" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All pools (summary)
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show
 
-# Create pool (RAID5 example)
-uemcli -d &lt;ip&gt; /stor/config/pool create -name &lt;pool_name&gt; -diskGroup &lt;dg_id&gt; -raidType RAID5
+# Detailed — name, size, used, free, health, RAID type
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail
 
-# Modify pool
-uemcli -d &lt;ip&gt; /stor/config/pool -id &lt;pool_id&gt; set -name &lt;new_name&gt;
-
-# Delete pool
-uemcli -d &lt;ip&gt; /stor/config/pool -id &lt;pool_id&gt; delete
+# Specific pool by ID
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail
 </code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pool utilisation
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail | \
+    grep -E &quot;Name|Size|Used|Free|Health&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Free Space</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 30%</td>
+<td>Healthy — no action</td>
+</tr>
+<tr>
+<td>20–30%</td>
+<td>Monitor closely</td>
+</tr>
+<tr>
+<td>10–20%</td>
+<td>Alert — plan expansion</td>
+</tr>
+<tr>
+<td>&lt; 10%</td>
+<td>Emergency — add capacity immediately</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create-a-pool">Create a Pool<a class="headerlink" href="#create-a-pool" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a pool using an existing disk group
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
+    -name &lt;pool_name&gt; \
+    -diskGroup &lt;dg_id&gt; \
+    -raidType RAID5 \
+    -stripeWidth 5
+
+# With description
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
+    -name Production_Pool \
+    -diskGroup dg_1 \
+    -raidType RAID5 \
+    -descr &quot;Primary production pool - SAS SSD&quot;
+</code></pre>
+<h2 id="expand-a-pool">Expand a Pool<a class="headerlink" href="#expand-a-pool" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a disk group to an existing pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set \
+    -addDiskGroup &lt;dg_id&gt;
+
+# Verify size after expansion
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail | \
+    grep -E &quot;Size|Used|Free&quot;
+</code></pre>
+<h2 id="modify-and-delete">Modify and Delete<a class="headerlink" href="#modify-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Rename a pool
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set -name &lt;new_name&gt;
+
+# Delete a pool (must be empty — no LUNs or file systems)
+uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; delete
+</code></pre>
+<h2 id="raid-types">RAID Types<a class="headerlink" href="#raid-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>RAID Type</th>
+<th>Overhead</th>
+<th>Protection</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID5</td>
+<td>1 disk</td>
+<td>1 drive failure</td>
+<td>General purpose SSD/SAS</td>
+</tr>
+<tr>
+<td>RAID6</td>
+<td>2 disks</td>
+<td>2 drive failures</td>
+<td>High-capacity NL-SAS</td>
+</tr>
+<tr>
+<td>RAID10</td>
+<td>50%</td>
+<td>1 disk per mirrored pair</td>
+<td>High IOPS workloads</td>
+</tr>
+<tr>
+<td>RAID1/0</td>
+<td>50%</td>
+<td>1 disk per pair</td>
+<td>Critical databases</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pool-health-states">Pool Health States<a class="headerlink" href="#pool-health-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OK</td>
+<td>Healthy</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Degraded</td>
+<td>A disk group is degraded</td>
+<td>Check disk health</td>
+</tr>
+<tr>
+<td>Minor</td>
+<td>Non-critical condition</td>
+<td>Review alerts</td>
+</tr>
+<tr>
+<td>Major</td>
+<td>Significant degradation</td>
+<td>Immediate investigation</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>Service impacting</td>
+<td>Emergency response</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#users-authentication_1" class="md-nav__link">
+  <a href="#local-admin-users" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Users &amp; Authentication
+        Local Admin Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Tokens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-services-ldap-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Services (LDAP / Active Directory)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-factor-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Factor Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log
       
     </span>
   </a>
@@ -745,19 +811,93 @@
 <blockquote>
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="users-authentication_1">Users &amp; Authentication<a class="headerlink" href="#users-authentication_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Admin users
+<h2 id="local-admin-users">Local Admin Users<a class="headerlink" href="#local-admin-users" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all local admin users
 purefb admin show
-purefb admin create --name &lt;user&gt; --role array_admin
-purefb admin update --name &lt;user&gt; --password &lt;pass&gt;
 
-# API tokens
+# Create a local user
+purefb admin create --name &lt;username&gt; --role array_admin
+
+# Set password
+purefb admin update --name &lt;username&gt; --password &lt;new_password&gt;
+
+# Delete a user
+purefb admin delete --name &lt;username&gt;
+</code></pre>
+<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>array_admin</code></td>
+<td>Full administrative access</td>
+</tr>
+<tr>
+<td><code>readonly</code></td>
+<td>Read-only — view configuration and stats</td>
+</tr>
+<tr>
+<td><code>ops_admin</code></td>
+<td>Operational access (not configuration)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-tokens">API Tokens<a class="headerlink" href="#api-tokens" title="Permanent link">&para;</a></h2>
+<p>API tokens are used for automation and integration (Pure1, scripts, REST API):</p>
+<pre><code class="language-bash"># List API clients / tokens
 purefb api-client show
-purefb api-client create --name &lt;client_name&gt; --role array_admin
 
-# Directory services (LDAP/AD)
+# Create an API client
+purefb api-client create \
+    --name &lt;client_name&gt; \
+    --role array_admin
+
+# Delete an API client
+purefb api-client delete --name &lt;client_name&gt;
+
+# Generate a new API token for a user
+purefb admin apitoken create --name &lt;username&gt;
+</code></pre>
+<h2 id="directory-services-ldap-active-directory">Directory Services (LDAP / Active Directory)<a class="headerlink" href="#directory-services-ldap-active-directory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View directory service configuration
 purefb directory-service show
+
+# Configure LDAP/AD authentication
+purefb directory-service update \
+    --enabled true \
+    --uri &quot;ldap://ldap.corp.local&quot; \
+    --base-dn &quot;DC=corp,DC=local&quot; \
+    --bind-user &quot;CN=svcldap,OU=ServiceAccounts,DC=corp,DC=local&quot; \
+    --bind-password &lt;password&gt;
+
+# Test directory service connectivity
+purefb directory-service test
+</code></pre>
+<h2 id="multi-factor-authentication">Multi-Factor Authentication<a class="headerlink" href="#multi-factor-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># MFA configuration
+purefb mfa show
+
+# Require MFA for all admin logins
+purefb mfa update --enabled true
+</code></pre>
+<h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active admin sessions
+purefb admin show --sessions
+
+# Logout all sessions for a user (emergency)
+purefb admin invalidate-sessions --name &lt;username&gt;
+</code></pre>
+<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View admin audit log (login, config changes)
+purefb audit show
+
+# Export audit log
+purefb audit export
 </code></pre>
 
 

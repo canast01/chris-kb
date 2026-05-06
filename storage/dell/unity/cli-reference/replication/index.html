@@ -705,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#replication-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pause-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause and Resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Sync
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-replication-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Replication Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +833,103 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Replication sessions
-uemcli -d &lt;ip&gt; /prot/rep/session show
-uemcli -d &lt;ip&gt; /prot/rep/session show -detail
+<h2 id="replication-sessions">Replication Sessions<a class="headerlink" href="#replication-sessions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all replication sessions
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show
 
-# Pause / resume
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; pause
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; resume
+# Detailed view — state, lag, source/destination resources
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show -detail
 
-# Failover
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; failover -keepSync
+# Specific session
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; show -detail
+</code></pre>
+<h2 id="session-states">Session States<a class="headerlink" href="#session-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active</td>
+<td>Replication running normally</td>
+</tr>
+<tr>
+<td>Idle</td>
+<td>No sync in progress; awaiting next interval</td>
+</tr>
+<tr>
+<td>Syncing</td>
+<td>Data transfer in progress</td>
+</tr>
+<tr>
+<td>Paused</td>
+<td>Manually suspended</td>
+</tr>
+<tr>
+<td>Failed</td>
+<td>Error — check alerts</td>
+</tr>
+<tr>
+<td>Failed Over</td>
+<td>DR site is now active</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Pause replication (source continues accepting writes)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; pause
 
-# Sync
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; sync
+# Resume replication (re-syncs data accumulated during pause)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; resume
+</code></pre>
+<h2 id="manual-sync">Manual Sync<a class="headerlink" href="#manual-sync" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trigger an immediate sync outside the RPO schedule
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
+</code></pre>
+<h2 id="planned-failover">Planned Failover<a class="headerlink" href="#planned-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failover with final sync — syncs, then activates DR copy (recommended)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover -keepSync
+
+# Emergency failover without sync (data may be behind RPO)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover
+</code></pre>
+<h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — reverse replication (DR becomes source, primary becomes destination)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; reverse
+
+# Step 2 — sync data back to primary
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
+
+# Step 3 — fail back to original primary
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failback
+</code></pre>
+<h2 id="replication-connections">Replication Connections<a class="headerlink" href="#replication-connections" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List connections (Unity ↔ Unity or Unity ↔ PowerStore)
+uemcli -d &lt;ip&gt; -u admin /prot/rep/connect show
+
+# Create a replication connection
+uemcli -d &lt;ip&gt; -u admin /prot/rep/connect create \
+    -destAddress &lt;destination_sp_ip&gt; \
+    -destUsername admin \
+    -destPassword &lt;password&gt;
+</code></pre>
+<h2 id="create-a-replication-session">Create a Replication Session<a class="headerlink" href="#create-a-replication-session" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Replicate a LUN to a remote Unity
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session create \
+    -srcRes &lt;lun_id&gt; \
+    -dstSys &lt;connection_id&gt; \
+    -dstResName &lt;remote_lun_name&gt; \
+    -rpo 3600   # RPO in seconds (3600 = 1 hour)
+</code></pre>
+<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check all sessions for non-healthy states
+uemcli -d &lt;ip&gt; -u admin /prot/rep/session show | grep -v &quot;Active\|Idle\|Session&quot;
+
+# Replication-related alerts
+uemcli -d &lt;ip&gt; -u admin /prac/alert show | grep -i repl
 </code></pre>
 
 

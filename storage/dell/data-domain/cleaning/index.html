@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#how-cleaning-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        How Cleaning Works
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#running-cleaning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Running Cleaning
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#automatic-cleaning-schedule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Automatic Cleaning Schedule
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#monitoring-cleaning-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Monitoring Cleaning Progress
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#space-reclaim-expectations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Reclaim Expectations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-trigger-cleaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Trigger Cleaning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,30 +808,88 @@
 
 
 <h1 id="cleaning">Cleaning<a class="headerlink" href="#cleaning" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Cleaning.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<p>Cleaning (garbage collection) reclaims disk space after backup data is expired or deleted by the backup application. Without regular cleaning, space is not returned to the usable pool even after backups are removed.</p>
+<h2 id="how-cleaning-works">How Cleaning Works<a class="headerlink" href="#how-cleaning-works" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Backup application marks expired data for deletion.</li>
+<li>Data Domain marks the associated dedup segments as unreferenced.</li>
+<li>Cleaning scans all segments, identifies unreferenced ones, and reclaims their space.</li>
+<li>Post-clean, <code>filesys show space</code> shows reduced post-comp usage.</li>
+</ol>
+<h2 id="running-cleaning">Running Cleaning<a class="headerlink" href="#running-cleaning" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Start an immediate cleaning cycle
+filesys clean start
+
+# Check cleaning status
+filesys clean status
+
+# Stop cleaning in progress
+filesys clean stop
+</code></pre>
+<h2 id="automatic-cleaning-schedule">Automatic Cleaning Schedule<a class="headerlink" href="#automatic-cleaning-schedule" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View scheduled cleaning windows
+filesys clean schedule show
+
+# Set a cleaning schedule (run Tuesdays at 02:00)
+filesys clean schedule set day tue start-time 02:00
+
+# Enable automatic cleaning
+filesys clean schedule enable
+
+# Disable automatic cleaning (manual-only mode)
+filesys clean schedule disable
+</code></pre>
+<h2 id="monitoring-cleaning-progress">Monitoring Cleaning Progress<a class="headerlink" href="#monitoring-cleaning-progress" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active cleaning progress
+filesys clean status
+
+# Space before and after (run filesys show space before and after)
+filesys show space
+
+# Cleaning history
+filesys clean show history
+</code></pre>
+<h2 id="space-reclaim-expectations">Space Reclaim Expectations<a class="headerlink" href="#space-reclaim-expectations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dataset Size</th>
+<th>Estimated Cleaning Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10 TB</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>10–50 TB</td>
+<td>4–12 hours</td>
+</tr>
+<tr>
+<td>&gt; 50 TB</td>
+<td>12–24+ hours</td>
+</tr>
+</tbody>
+</table>
+<p>Cleaning can run concurrently with backup operations but will impact throughput. Schedule during off-peak windows when possible.</p>
+<h2 id="when-to-trigger-cleaning">When to Trigger Cleaning<a class="headerlink" href="#when-to-trigger-cleaning" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>After expiring a large backup policy</li>
+<li>After deleting old data manually</li>
+<li>When capacity is above 75% and not recovering naturally</li>
+<li>Before a capacity upgrade (to accurately assess current usage)</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Cleaning not reclaiming space — confirm data is actually expired
+# Check in backup application: are expired jobs marked as deleted?
+
+# Cleaning status shows errors
+log view | grep -i clean
+
+# Cleaning taking too long
+system show stats   # check if high I/O is causing slowdown
+</code></pre>
 
 
 

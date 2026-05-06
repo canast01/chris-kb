@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-count-per-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Count Per Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-and-driver-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service and Driver Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-device-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Device Detail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-maintenance-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Maintenance Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,16 +800,79 @@
 <blockquote>
 <p>Part of the Dell PowerPath CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Quick health check sequence
+<h2 id="quick-health-check">Quick Health Check<a class="headerlink" href="#quick-health-check" title="Permanent link">&para;</a></h2>
+<p>Run this sequence to assess PowerPath state on a Linux host:</p>
+<pre><code class="language-bash"># 1. Count alive paths (healthy multipath state)
 powermt display dev=all | grep -c &quot;alive&quot;
+
+# 2. Count dead paths (should be zero)
 powermt display dev=all | grep -c &quot;dead&quot;
+
+# 3. Show dead paths directly
 powermt display dead
+
+# 4. PowerPath self-check
 powermt check
+
+# 5. Attempt to restore dead paths
+powermt restore
+</code></pre>
+<h2 id="path-count-per-device">Path Count Per Device<a class="headerlink" href="#path-count-per-device" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Summary per device (alive vs dead)
+powermt display dev=all | awk '
+    /emcpower/ { dev=$1; alive=0; dead=0 }
+    /alive/    { alive++ }
+    /dead/     { dead++ }
+    /^$/       { if (dev) printf &quot;%s  alive: %d  dead: %d\n&quot;, dev, alive, dead; dev=&quot;&quot; }
+'
+
+# Simpler per-device path count
+powermt display dev=all | grep -E &quot;emcpower|State&quot;
+</code></pre>
+<h2 id="configuration-verification">Configuration Verification<a class="headerlink" href="#configuration-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Save current PowerPath configuration (persist after reboot)
+powermt save
+
+# Load saved configuration
 powermt restore
 
-# Count paths per device
-powermt display dev=all | awk '/emcpower/{dev=$1} /alive/{count++} /dead/{dead++} /^$/{if(dev) print dev, &quot;alive:&quot;count, &quot;dead:&quot;dead; dev=&quot;&quot;; count=0; dead=0}'
+# Check PowerPath version
+powermt version
+
+# Check license
+powermt lic
+</code></pre>
+<h2 id="service-and-driver-status">Service and Driver Status<a class="headerlink" href="#service-and-driver-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — PowerPath daemon status
+systemctl status PowerPath
+service PowerPath status
+
+# Check loaded driver
+lsmod | grep emcpower
+
+# Kernel module version
+modinfo emcpower | grep version
+</code></pre>
+<h2 id="per-device-detail">Per-Device Detail<a class="headerlink" href="#per-device-detail" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full detail for one device
+powermt display dev=emcpower0
+
+# Device identifier (NAA/disk ID)
+powermt display dev=emcpower0 | grep -E &quot;Pseudo|WWN|ID&quot;
+</code></pre>
+<h2 id="post-maintenance-validation">Post-Maintenance Validation<a class="headerlink" href="#post-maintenance-validation" title="Permanent link">&para;</a></h2>
+<p>After any SAN maintenance (zoning changes, LUN remapping, path reconfiguration):</p>
+<pre><code class="language-bash"># 1. Rescan for new devices
+powermt config
+
+# 2. Verify all paths recovered
+powermt display dead
+
+# 3. Confirm path balance
+powermt display dev=all | grep -E &quot;emcpower|alive|dead&quot;
+
+# 4. Save new configuration
+powermt save
 </code></pre>
 
 

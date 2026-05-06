@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>ECS Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#ecs-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              ECS Health Checks
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#daily-health-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Daily Health Check
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#node-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Node Health
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#storage-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Storage Capacity
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#replication-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Replication Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Summary Table
       
     </span>
   </a>
@@ -774,31 +807,88 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="ecs-health-checks">ECS Health Checks<a class="headerlink" href="#ecs-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check cluster status via ECS Management Console
+# Dashboard → Cluster Health
+
+# S3 endpoint connectivity test
+curl -k https://&lt;ecs_s3_endpoint&gt;/
+# Expected: 200 or 403 (not connection refused)
+
+# Check via AWS CLI (using admin credentials)
+aws s3 ls --endpoint-url https://&lt;ecs_s3_endpoint&gt;
+</code></pre>
+<h2 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h2>
+<p>ECS is typically a scale-out appliance cluster. Check node status from the ECS Management Console:</p>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>Dashboard</strong> → <strong>Nodes</strong> → verify all nodes <code>ONLINE</code></li>
+<li>Any node <code>DEGRADED</code> or <code>OFFLINE</code> requires immediate investigation</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<h2 id="storage-capacity">Storage Capacity<a class="headerlink" href="#storage-capacity" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
+<li>Navigate to <strong>Monitoring</strong> → <strong>Disk Usage</strong></li>
+<li>ECS raises alerts at 70% and 80% capacity by default</li>
+<li>Raw capacity includes overhead for replication and metadata</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
+<p>ECS replication groups ensure data is replicated across sites:</p>
 <ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
+<li><strong>Monitor</strong> → <strong>Replication</strong> → check replication group health</li>
+<li>Verify replication lag is within acceptable RPO</li>
+<li>Any <code>FAILED</code> replication context requires investigation</li>
 </ul>
+<h2 id="alert-review">Alert Review<a class="headerlink" href="#alert-review" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Alerts</strong> → <strong>Current Alerts</strong> in ECS Management Console</li>
+<li>ECS integrates with SNMP and email for alerting</li>
+<li>Review all <code>ERROR</code> and <code>CRITICAL</code> alerts before making changes</li>
+</ul>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All nodes online and healthy</li>
+<li>[ ] No active alerts at ERROR or CRITICAL level</li>
+<li>[ ] Replication health OK (no lag or failed replication)</li>
+<li>[ ] Capacity below 75%</li>
+<li>[ ] S3 endpoint responding</li>
+</ul>
+<h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+<th>Action if Not Met</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node state</td>
+<td>All ONLINE</td>
+<td>Investigate offline nodes</td>
+</tr>
+<tr>
+<td>Capacity</td>
+<td>&lt; 75%</td>
+<td>Plan expansion</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>No lag/failures</td>
+<td>Check network and replication group</td>
+</tr>
+<tr>
+<td>S3 endpoint</td>
+<td>Reachable</td>
+<td>Check load balancer and node services</td>
+</tr>
+<tr>
+<td>Alerts</td>
+<td>None critical</td>
+<td>Resolve before changes</td>
+</tr>
+</tbody>
+</table>
 
 
 

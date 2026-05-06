@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#local-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-and-session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login and Session Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +811,104 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Local users
+<h2 id="local-users">Local Users<a class="headerlink" href="#local-users" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all local users
 user list
-user add &lt;username&gt;
-user change password &lt;username&gt;
-user del &lt;username&gt;
+
+# User detail (role, last login)
 user show &lt;username&gt;
 
-# Roles
+# Add a local user
+user add &lt;username&gt;
+
+# Change a user's password
+user change password &lt;username&gt;
+
+# Delete a user
+user del &lt;username&gt;
+</code></pre>
+<h2 id="user-roles">User Roles<a class="headerlink" href="#user-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin</code></td>
+<td>Full administrative access</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Limited — can view, change own password</td>
+</tr>
+<tr>
+<td><code>backup-operator</code></td>
+<td>DDBoost access; cannot manage system settings</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>Disabled account</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Show available roles
 user role show
+
+# List all roles
 role list
 
-# Authentication
+# Assign a role to a user
+user modify &lt;username&gt; --role &lt;role_name&gt;
+</code></pre>
+<h2 id="authentication-settings">Authentication Settings<a class="headerlink" href="#authentication-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show authentication configuration (local, LDAP, AD)
 auth show
+
+# Enable LDAP authentication
+auth add ldap server &lt;ldap_ip&gt; bind-dn &lt;dn&gt; bind-password &lt;pass&gt; base-dn &lt;base_dn&gt;
+
+# Enable Active Directory
+auth add active-directory &lt;domain&gt;
+
+# Test LDAP authentication
+auth test ldap server &lt;ldap_ip&gt;
+</code></pre>
+<h2 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View password policy
+user password-policy show
+
+# Set minimum password length
+user password-policy set min-length 12
+
+# Set maximum password age (days)
+user password-policy set max-age 90
+</code></pre>
+<h2 id="ssh-keys">SSH Keys<a class="headerlink" href="#ssh-keys" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show authorized SSH keys for a user
+user ssh-keys show &lt;username&gt;
+
+# Add an SSH public key
+user ssh-keys add &lt;username&gt; key &quot;&lt;public_key_string&gt;&quot;
+
+# Remove an SSH key
+user ssh-keys del &lt;username&gt; key &lt;key_id&gt;
+</code></pre>
+<h2 id="login-and-session-management">Login and Session Management<a class="headerlink" href="#login-and-session-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active login sessions
+user login show
+
+# Terminate a specific session
+user login terminate &lt;session_id&gt;
+</code></pre>
+<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View authentication audit log
+log view | grep -i &quot;login\|auth\|failed&quot;
+
+# Export audit events
+log dump system | grep -i auth
 </code></pre>
 
 

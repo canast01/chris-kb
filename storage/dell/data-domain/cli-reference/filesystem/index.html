@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#filesystem-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filesystem Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-and-disable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable and Disable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleaning-garbage-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleaning (Garbage Collection)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-and-compression-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity and Compression Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compression-ratio-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression Ratio Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#space-recovery-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Recovery Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filesystem-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filesystem Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,22 +811,100 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Filesystem status
-filesys show
-filesys show compression
-filesys show space
+<p>The Data Domain filesystem (DDFS) manages all deduplication and compression. All user data lives in the active tier under <code>/data/col1/</code>.</p>
+<h2 id="filesystem-status">Filesystem Status<a class="headerlink" href="#filesystem-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Filesystem state (enabled/disabled)
 filesys status
 
-# Enable / disable / clean
+# Full status overview
+filesys show
+
+# Compression and deduplication statistics
+filesys show compression
+
+# Space usage breakdown (pre-comp, post-comp, physical)
+filesys show space
+</code></pre>
+<h2 id="enable-and-disable">Enable and Disable<a class="headerlink" href="#enable-and-disable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable the filesystem (required before accepting backup data)
 filesys enable
+
+# Disable the filesystem (maintenance only — stops all I/O)
 filesys disable
+</code></pre>
+<h2 id="cleaning-garbage-collection">Cleaning (Garbage Collection)<a class="headerlink" href="#cleaning-garbage-collection" title="Permanent link">&para;</a></h2>
+<p>Cleaning reclaims space from deleted or expired files. It runs automatically but can be triggered manually:</p>
+<pre><code class="language-bash"># Start a cleaning cycle
 filesys clean start
+
+# Show cleaning status
 filesys clean status
 
-# Capacity
+# Stop an in-progress clean
+filesys clean stop
+</code></pre>
+<p>Cleaning is I/O intensive. Schedule during off-peak hours if running manually.</p>
+<h2 id="capacity-and-compression-analysis">Capacity and Compression Analysis<a class="headerlink" href="#capacity-and-compression-analysis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall capacity summary
 filesys show space
+
+# Compression ratio and savings
 filesys show compression summary
+
+# Per-MTree compression
+filesys show compression | grep -A5 &quot;mtree&quot;
+
+# Logical vs physical usage
+filesys show space | grep -E &quot;Used|Available|Total&quot;
+</code></pre>
+<h2 id="compression-ratio-fields">Compression Ratio Fields<a class="headerlink" href="#compression-ratio-fields" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-comp</td>
+<td>Total logical data written (before dedup/compression)</td>
+</tr>
+<tr>
+<td>Post-comp</td>
+<td>Physical space used on disk</td>
+</tr>
+<tr>
+<td>Global comp factor</td>
+<td>Overall compression ratio</td>
+</tr>
+<tr>
+<td>Local comp factor</td>
+<td>Per-stream compression ratio</td>
+</tr>
+<tr>
+<td>Dedup savings</td>
+<td>Percentage saved by deduplication</td>
+</tr>
+</tbody>
+</table>
+<h2 id="space-recovery-actions">Space Recovery Actions<a class="headerlink" href="#space-recovery-actions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Expire old backup data (via backup application policy — not DD CLI)
+# Data Domain only deletes data when the backup app marks it expired
+
+# After deletions, run cleaning to reclaim space
+filesys clean start
+
+# Monitor reclaim progress
+filesys clean status
+filesys show space   # compare before/after
+</code></pre>
+<h2 id="filesystem-checks">Filesystem Checks<a class="headerlink" href="#filesystem-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check filesystem integrity
+filesys check
+
+# View filesystem event log
+filesys show log
 </code></pre>
 
 

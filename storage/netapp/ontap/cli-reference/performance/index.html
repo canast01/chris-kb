@@ -712,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#performance-qos_1" class="md-nav__link">
+  <a href="#statistics-collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance &amp; QoS
+        Statistics Collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-statistics-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Statistics Objects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qos-policy-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QoS Policy Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-qos-to-a-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply QoS to a Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qos-workload-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QoS Workload Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-thresholds-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Thresholds Reference
       
     </span>
   </a>
@@ -745,20 +800,135 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="performance-qos_1">Performance &amp; QoS<a class="headerlink" href="#performance-qos_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Statistics
-statistics show
+<h2 id="statistics-collection">Statistics Collection<a class="headerlink" href="#statistics-collection" title="Permanent link">&para;</a></h2>
+<p>ONTAP statistics require a sample to be collected before viewing:</p>
+<pre><code class="language-bash"># Start a statistics collection
 statistics start -object volume -sample-id perf_check
+
+# Wait 10–30 seconds, then stop
 statistics stop -sample-id perf_check
 
-# QoS policy groups
-qos policy-group show
-qos policy-group create -policy-group &lt;name&gt; -vserver &lt;svm&gt; -max-throughput &lt;iops&gt;IOPS
-qos policy-group modify -policy-group &lt;name&gt; -max-throughput &lt;iops&gt;IOPS
-qos workload show
-qos statistics performance show
+# View collected statistics
+statistics show -sample-id perf_check
 </code></pre>
+<h2 id="common-statistics-objects">Common Statistics Objects<a class="headerlink" href="#common-statistics-objects" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Measures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>volume</code></td>
+<td>Volume IOPS, throughput, latency</td>
+</tr>
+<tr>
+<td><code>lun</code></td>
+<td>LUN IOPS, latency</td>
+</tr>
+<tr>
+<td><code>vserver</code></td>
+<td>Per-SVM protocol performance</td>
+</tr>
+<tr>
+<td><code>node</code></td>
+<td>Node CPU, network, disk</td>
+</tr>
+<tr>
+<td><code>aggregate</code></td>
+<td>Aggregate IOPS, latency</td>
+</tr>
+<tr>
+<td><code>disk</code></td>
+<td>Per-disk I/O</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Volume-level latency
+statistics show -sample-id perf_check | grep -E &quot;total_latency|read_latency|write_latency&quot;
+
+# IOPS per volume
+statistics show -sample-id perf_check | grep -E &quot;total_ops|read_ops|write_ops&quot;
+</code></pre>
+<h2 id="qos-policy-groups">QoS Policy Groups<a class="headerlink" href="#qos-policy-groups" title="Permanent link">&para;</a></h2>
+<p>QoS limits or guarantees throughput for specific volumes or LUNs:</p>
+<pre><code class="language-bash"># List all QoS policy groups
+qos policy-group show
+
+# Create a QoS max throughput policy (limit)
+qos policy-group create \
+    -policy-group prod-limit \
+    -vserver &lt;svm&gt; \
+    -max-throughput 5000IOPS
+
+# Create a min throughput policy (guarantee)
+qos policy-group create \
+    -policy-group db-floor \
+    -vserver &lt;svm&gt; \
+    -min-throughput 2000IOPS
+
+# Modify a policy group
+qos policy-group modify -policy-group prod-limit -max-throughput 8000IOPS
+
+# Delete a policy group
+qos policy-group delete -policy-group prod-limit
+</code></pre>
+<h2 id="apply-qos-to-a-volume">Apply QoS to a Volume<a class="headerlink" href="#apply-qos-to-a-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Assign a QoS policy to a volume
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group prod-limit
+
+# Remove QoS from a volume
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group none
+</code></pre>
+<h2 id="qos-workload-monitoring">QoS Workload Monitoring<a class="headerlink" href="#qos-workload-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All active QoS workloads
+qos workload show
+
+# QoS performance statistics (current IOPS and latency per workload)
+qos statistics performance show
+
+# Sort by highest IOPS
+qos statistics performance show | sort -rn -k3
+</code></pre>
+<h2 id="performance-thresholds-reference">Performance Thresholds Reference<a class="headerlink" href="#performance-thresholds-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume read latency</td>
+<td>&gt; 5 ms</td>
+<td>&gt; 20 ms</td>
+</tr>
+<tr>
+<td>Volume write latency</td>
+<td>&gt; 5 ms</td>
+<td>&gt; 20 ms</td>
+</tr>
+<tr>
+<td>Aggregate utilisation</td>
+<td>&gt; 70%</td>
+<td>&gt; 85%</td>
+</tr>
+<tr>
+<td>CPU utilisation (node)</td>
+<td>&gt; 70%</td>
+<td>&gt; 90%</td>
+</tr>
+<tr>
+<td>Disk busy %</td>
+<td>&gt; 50%</td>
+<td>&gt; 80%</td>
+</tr>
+</tbody>
+</table>
 
 
 

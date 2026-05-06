@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#restore-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Restore Methods
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#validating-restore-readiness" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Validating Restore Readiness
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#ddboost-restore-backup-application" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        DDBoost Restore (Backup Application)
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#nfs-restore-direct-file-copy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        NFS Restore (Direct File Copy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-expectations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Expectations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-slow-restores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Slow Restores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tape-out-cifs-restores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tape-Out / CIFS Restores
       
     </span>
   </a>
@@ -775,30 +808,108 @@
 
 
 <h1 id="restore-support">Restore Support<a class="headerlink" href="#restore-support" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Restore Support.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<p>Guidance for supporting backup application restore operations from Data Domain.</p>
+<h2 id="restore-methods">Restore Methods<a class="headerlink" href="#restore-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Protocol</th>
+<th>When Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDBoost restore</td>
+<td>DDBoost</td>
+<td>NetBackup, Networker, Veeam using boost protocol</td>
+</tr>
+<tr>
+<td>NFS restore</td>
+<td>NFS</td>
+<td>Direct file access to MTree from backup server</td>
+</tr>
+<tr>
+<td>CIFS restore</td>
+<td>SMB</td>
+<td>Direct file access from Windows backup server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="validating-restore-readiness">Validating Restore Readiness<a class="headerlink" href="#validating-restore-readiness" title="Permanent link">&para;</a></h2>
+<p>Before a restore, confirm:</p>
+<pre><code class="language-bash"># 1. Filesystem is healthy and enabled
+filesys status
+
+# 2. MTree has data and correct quota
+mtree list --verbose | grep &lt;mtree_name&gt;
+
+# 3. NFS/CIFS export or DDBoost storage unit accessible
+nfs show exports | grep &lt;mtree_path&gt;
+ddboost storage-unit list
+
+# 4. No active cleaning cycle (cleaning can slow restore I/O)
+filesys clean status
+</code></pre>
+<h2 id="ddboost-restore-backup-application">DDBoost Restore (Backup Application)<a class="headerlink" href="#ddboost-restore-backup-application" title="Permanent link">&para;</a></h2>
+<p>Restores are initiated from the backup application (NetBackup, Networker, Veeam). The Data Domain role is passive — it serves data to the backup server.</p>
+<pre><code class="language-bash"># Monitor DDBoost active connections during restore
+ddboost show clients
+ddboost show stats | grep -i read
+</code></pre>
+<h2 id="nfs-restore-direct-file-copy">NFS Restore (Direct File Copy)<a class="headerlink" href="#nfs-restore-direct-file-copy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Mount the MTree on the backup server
+mount &lt;dd_ip&gt;:/data/col1/&lt;mtree_name&gt; /mnt/dd_restore
+
+# Navigate to backup data
+ls /mnt/dd_restore/
+
+# Restore-specific files or directories
+cp -r /mnt/dd_restore/&lt;backup_path&gt;/ /target/restore/path/
+</code></pre>
+<h2 id="performance-expectations">Performance Expectations<a class="headerlink" href="#performance-expectations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Expected Throughput</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDBoost restore (with DSP)</td>
+<td>200–500 MB/s per stream</td>
+</tr>
+<tr>
+<td>NFS restore</td>
+<td>100–300 MB/s (network and disk I/O bound)</td>
+</tr>
+<tr>
+<td>Multiple concurrent restores</td>
+<td>Shared bandwidth — plan accordingly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting-slow-restores">Troubleshooting Slow Restores<a class="headerlink" href="#troubleshooting-slow-restores" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check DD CPU and I/O during restore
+system show stats
+
+# Check if cleaning is running (impacts read performance)
+filesys clean status
+
+# Check active restore clients
+ddboost show clients --verbose
+nfs show clients
+
+# Network bandwidth to restore destination
+# (Check on the backup server with iperf or similar)
+</code></pre>
+<h2 id="tape-out-cifs-restores">Tape-Out / CIFS Restores<a class="headerlink" href="#tape-out-cifs-restores" title="Permanent link">&para;</a></h2>
+<p>If backup data was originally written via CIFS:</p>
+<pre><code class="language-bash"># Confirm CIFS share is accessible
+cifs share show | grep &lt;mtree_name&gt;
+cifs show clients
+</code></pre>
 
 
 

@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#log-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-shell-ddsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Shell (ddsh)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-history-for-tac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert History for TAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,23 +811,84 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Logs
+<h2 id="log-access">Log Access<a class="headerlink" href="#log-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View system log (most recent events)
 log view
+
+# List available log files
 log list
+
+# Dump the full system log to stdout
 log dump system
+
+# Follow the log in real time
 log watch
 
-# Support bundle
+# Specific log file
+log view &lt;log_filename&gt;
+</code></pre>
+<h2 id="support-bundle">Support Bundle<a class="headerlink" href="#support-bundle" title="Permanent link">&para;</a></h2>
+<p>Support bundles collect all logs and diagnostics for TAC cases:</p>
+<pre><code class="language-bash"># Create a support bundle
 support bundle create
+
+# List available bundles
 support bundle show
 
-# System diagnostics
+# Export bundle to remote server (SCP)
+support bundle export scp://user@host:/path/bundle.tar.gz
+
+# Export bundle to FTP
+support bundle export ftp://user:pass@host/path/
+</code></pre>
+<h2 id="system-shell-ddsh">System Shell (ddsh)<a class="headerlink" href="#system-shell-ddsh" title="Permanent link">&para;</a></h2>
+<p><code>ddsh</code> provides a Unix-like shell with additional diagnostic tools:</p>
+<pre><code class="language-bash"># Enter the diagnostic shell
 ddsh
+
 # Inside ddsh:
-#  diagnose all
-#  iostat 1 10
-#  vmstat 1 10
+diagnose all             # full system diagnostic run
+iostat 1 10              # I/O statistics (1s interval, 10 iterations)
+vmstat 1 10              # Virtual memory and CPU stats
+netstat -an              # Active network connections
+df -h                    # Filesystem usage
+top                      # Process list
+</code></pre>
+<h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Ping from the Data Domain
+net ping &lt;ip&gt;
+
+# Traceroute
+net traceroute &lt;ip&gt;
+
+# Interface error counters
+net show stats | grep -i error
+</code></pre>
+<h2 id="hardware-diagnostics">Hardware Diagnostics<a class="headerlink" href="#hardware-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall health check (hardware + software)
+health check show
+
+# Disk health
+disk show state
+disk show detail | grep -E &quot;error|sector&quot;
+
+# Enclosure sensors (temperature, power, fan)
+enclosure show hardware
+</code></pre>
+<h2 id="performance-capture">Performance Capture<a class="headerlink" href="#performance-capture" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Inside ddsh — capture IOPS and throughput
+iostat -x 1 30
+
+# Filesystem stats snapshot
+filesys show stats
+
+# DDBoost throughput
+ddboost show stats
+</code></pre>
+<h2 id="alert-history-for-tac">Alert History for TAC<a class="headerlink" href="#alert-history-for-tac" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Export all current and historical alerts
+alert show history &gt; /tmp/alert_history.txt
+support bundle create   # includes alert history automatically
 </code></pre>
 
 

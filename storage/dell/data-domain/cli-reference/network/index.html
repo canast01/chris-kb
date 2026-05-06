@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interface-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ping-and-connectivity-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ping and Connectivity Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonding-lacp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonding / LACP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +822,81 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Interfaces
+<h2 id="interface-status">Interface Status<a class="headerlink" href="#interface-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All interfaces — IP, speed, state
 net show all
+
+# Interface configuration (IP, netmask, MTU, bonding)
 net show config
+
+# Network settings summary
 net show settings
 
-# Routes
-net route show
-net route add host &lt;ip&gt; gateway &lt;gw&gt; dev &lt;if&gt;
-net route del host &lt;ip&gt;
+# Interface statistics (rx/tx, errors, drops)
+net show stats
+</code></pre>
+<h2 id="interface-configuration">Interface Configuration<a class="headerlink" href="#interface-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Configure an interface IP
+net config eth1 &lt;ip_address&gt; netmask &lt;mask&gt;
 
-# DNS
+# Bring an interface up or down
+net enable eth1
+net disable eth1
+</code></pre>
+<h2 id="routing">Routing<a class="headerlink" href="#routing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Current routing table
+net route show
+
+# Add a host route
+net route add host &lt;destination_ip&gt; gateway &lt;gateway_ip&gt; dev &lt;interface&gt;
+
+# Add a network route
+net route add net &lt;network_ip&gt; netmask &lt;mask&gt; gateway &lt;gateway_ip&gt;
+
+# Delete a route
+net route del host &lt;destination_ip&gt;
+</code></pre>
+<h2 id="dns">DNS<a class="headerlink" href="#dns" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Hosts file entries
 net hosts show
-net config hosts add &lt;ip&gt; &lt;hostname&gt;
+
+# Add a static host entry
+net config hosts add &lt;ip_address&gt; &lt;hostname&gt;
+
+# DNS server configuration
+net show settings | grep -i dns
+</code></pre>
+<h2 id="ntp">NTP<a class="headerlink" href="#ntp" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NTP server list
+ntp show
+
+# NTP sync status
+ntp status
+
+# Add NTP server
+ntp add timeserver &lt;ntp_ip&gt;
+
+# Remove NTP server
+ntp del timeserver &lt;ntp_ip&gt;
+</code></pre>
+<h2 id="ping-and-connectivity-testing">Ping and Connectivity Testing<a class="headerlink" href="#ping-and-connectivity-testing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Ping from Data Domain
+net ping &lt;destination_ip&gt;
+net ping &lt;destination_ip&gt; count 10
+
+# Traceroute
+net traceroute &lt;destination_ip&gt;
+</code></pre>
+<h2 id="bonding-lacp">Bonding / LACP<a class="headerlink" href="#bonding-lacp" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show bonding configuration
+net config bond show
+
+# Create a bond
+net config bond create bond0 &lt;eth1&gt; &lt;eth2&gt; lacp
+</code></pre>
+<h2 id="firewall">Firewall<a class="headerlink" href="#firewall" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show open ports and firewall rules
+net config firewall show
 </code></pre>
 
 

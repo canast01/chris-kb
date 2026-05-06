@@ -21,7 +21,7 @@
     
     
       
-        <title>SVMs - Chris KB</title>
+        <title>SVMs (Storage Virtual Machines) - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#svms" class="md-skip">
+        <a href="#svms-storage-virtual-machines" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SVMs
+              SVMs (Storage Virtual Machines)
             
           </span>
         </div>
@@ -712,10 +712,98 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#svms-storage-virtual-machines" class="md-nav__link">
+  <a href="#list-and-view-svms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SVMs (Storage Virtual Machines)
+        List and View SVMs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an SVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-an-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete an SVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-interfaces-lifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Interfaces (LIFs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifs-active-directory-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIFS / Active Directory Join
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svm-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVM State Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svm-dr-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVM DR (Disaster Recovery)
       
     </span>
   </a>
@@ -741,24 +829,97 @@
 
 
 
-<h1 id="svms">SVMs<a class="headerlink" href="#svms" title="Permanent link">&para;</a></h1>
+<h1 id="svms-storage-virtual-machines">SVMs (Storage Virtual Machines)<a class="headerlink" href="#svms-storage-virtual-machines" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="svms-storage-virtual-machines">SVMs (Storage Virtual Machines)<a class="headerlink" href="#svms-storage-virtual-machines" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List / status
+<p>SVMs (also called Vservers) are the data access layer in ONTAP. Each SVM has its own namespace, protocols, network interfaces, and security configuration.</p>
+<h2 id="list-and-view-svms">List and View SVMs<a class="headerlink" href="#list-and-view-svms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All SVMs
 vserver show
+
+# SVM with protocol and state info
+vserver show -fields vserver, type, state, allowed-protocols
+
+# Specific SVM detail
 vserver show -vserver &lt;svm&gt;
-vserver show -fields vserver,type,state,allowed-protocols
+</code></pre>
+<h2 id="create-an-svm">Create an SVM<a class="headerlink" href="#create-an-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create with NFS and CIFS protocols
+vserver create \
+    -vserver &lt;svm_name&gt; \
+    -rootvolume &lt;vol_name&gt; \
+    -aggregate &lt;aggr_name&gt; \
+    -rootvolume-security-style unix \
+    -language C.UTF-8
 
-# Create / delete
-vserver create -vserver &lt;svm&gt; -rootvolume &lt;vol&gt; -aggregate &lt;aggr&gt; -rootvolume-security-style unix
-vserver delete -vserver &lt;svm&gt;
+# Set allowed protocols
+vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs, cifs
+</code></pre>
+<h2 id="delete-an-svm">Delete an SVM<a class="headerlink" href="#delete-an-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Stop the SVM first
+vserver stop -vserver &lt;svm_name&gt;
 
-# Modify protocols
-vserver modify -vserver &lt;svm&gt; -allowed-protocols nfs,cifs,iscsi
-vserver show-protocols
+# Delete (removes all volumes and configuration)
+vserver delete -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="protocol-management">Protocol Management<a class="headerlink" href="#protocol-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View protocols enabled on an SVM
+vserver show-protocols -vserver &lt;svm_name&gt;
+
+# Modify allowed protocols
+vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs, cifs, iscsi
+</code></pre>
+<h2 id="network-interfaces-lifs">Network Interfaces (LIFs)<a class="headerlink" href="#network-interfaces-lifs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List LIFs for an SVM
+network interface show -vserver &lt;svm_name&gt;
+
+# Create a data LIF
+network interface create \
+    -vserver &lt;svm_name&gt; \
+    -lif &lt;lif_name&gt; \
+    -role data \
+    -data-protocol nfs \
+    -home-node &lt;node_name&gt; \
+    -home-port &lt;port&gt; \
+    -address &lt;ip&gt; \
+    -netmask &lt;mask&gt;
+
+# Migrate a LIF to another port
+network interface migrate \
+    -vserver &lt;svm_name&gt; \
+    -lif &lt;lif_name&gt; \
+    -dest-node &lt;node_name&gt; \
+    -dest-port &lt;port&gt;
+</code></pre>
+<h2 id="cifs-active-directory-join">CIFS / Active Directory Join<a class="headerlink" href="#cifs-active-directory-join" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Join SVM to Active Directory
+vserver cifs create \
+    -vserver &lt;svm_name&gt; \
+    -cifs-server &lt;netbios_name&gt; \
+    -domain corp.local \
+    -ou &quot;OU=StorageServers,DC=corp,DC=local&quot;
+
+# Check AD join status
+vserver cifs show -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="nfs-service">NFS Service<a class="headerlink" href="#nfs-service" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable NFS on an SVM
+vserver nfs create -vserver &lt;svm_name&gt; -access true -v3 enabled -v4.1 enabled
+
+# NFS status
+vserver nfs show -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="svm-state-management">SVM State Management<a class="headerlink" href="#svm-state-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Stop an SVM (client access suspended)
+vserver stop -vserver &lt;svm_name&gt;
+
+# Start an SVM
+vserver start -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="svm-dr-disaster-recovery">SVM DR (Disaster Recovery)<a class="headerlink" href="#svm-dr-disaster-recovery" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SnapMirror relationships on an SVM
+snapmirror show -destination-vserver &lt;svm_name&gt;
 </code></pre>
 
 

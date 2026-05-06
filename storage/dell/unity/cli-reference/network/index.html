@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-iscsi-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an iSCSI Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-an-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify an Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-an-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete an Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iscsi-portals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iSCSI Portals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ethernet-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ethernet Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,17 +822,103 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Interfaces
-uemcli -d &lt;ip&gt; /net/if show
-uemcli -d &lt;ip&gt; /net/if show -detail
+<h2 id="list-interfaces">List Interfaces<a class="headerlink" href="#list-interfaces" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All network interfaces (iSCSI, management, NAS)
+uemcli -d &lt;ip&gt; -u admin /net/if show
 
-# Create iSCSI interface
-uemcli -d &lt;ip&gt; /net/if create -type iSCSI -ipv4 &lt;ip&gt; -netmask &lt;mask&gt; -gateway &lt;gw&gt; -sp &lt;sp_id&gt; -port &lt;port_id&gt;
-
-# iSCSI portals
-uemcli -d &lt;ip&gt; /net/iscsi/node show
+# Detailed view — includes IP, subnet, SP association, port
+uemcli -d &lt;ip&gt; -u admin /net/if show -detail
 </code></pre>
+<h2 id="interface-types">Interface Types<a class="headerlink" href="#interface-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>Admin access to Unisphere UI and CLI</td>
+</tr>
+<tr>
+<td>iSCSI</td>
+<td>Block storage access over Ethernet</td>
+</tr>
+<tr>
+<td>File</td>
+<td>NAS NFS/SMB traffic</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Inter-array replication traffic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create-an-iscsi-interface">Create an iSCSI Interface<a class="headerlink" href="#create-an-iscsi-interface" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create iSCSI interface on SPA, Ethernet port 0
+uemcli -d &lt;ip&gt; -u admin /net/if create \
+    -type iSCSI \
+    -ipv4 &lt;iscsi_ip&gt; \
+    -netmask &lt;subnet_mask&gt; \
+    -gateway &lt;gateway_ip&gt; \
+    -sp spa \
+    -port &lt;eth_port_id&gt;
+
+# Verify
+uemcli -d &lt;ip&gt; -u admin /net/if show -detail | grep -A10 &lt;iscsi_ip&gt;
+</code></pre>
+<h2 id="modify-an-interface">Modify an Interface<a class="headerlink" href="#modify-an-interface" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Change IP address
+uemcli -d &lt;ip&gt; -u admin /net/if -id &lt;if_id&gt; set -ipv4 &lt;new_ip&gt; -netmask &lt;mask&gt; -gateway &lt;gw&gt;
+</code></pre>
+<h2 id="delete-an-interface">Delete an Interface<a class="headerlink" href="#delete-an-interface" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">uemcli -d &lt;ip&gt; -u admin /net/if -id &lt;if_id&gt; delete
+</code></pre>
+<h2 id="iscsi-portals">iSCSI Portals<a class="headerlink" href="#iscsi-portals" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List iSCSI nodes/portals
+uemcli -d &lt;ip&gt; -u admin /net/iscsi/node show
+
+# iSCSI node detail (IQN, IP, port)
+uemcli -d &lt;ip&gt; -u admin /net/iscsi/node show -detail
+</code></pre>
+<h2 id="ethernet-ports">Ethernet Ports<a class="headerlink" href="#ethernet-ports" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List physical Ethernet ports
+uemcli -d &lt;ip&gt; -u admin /net/port/eth show
+uemcli -d &lt;ip&gt; -u admin /net/port/eth show -detail
+
+# FC ports
+uemcli -d &lt;ip&gt; -u admin /net/port/fc show
+uemcli -d &lt;ip&gt; -u admin /net/port/fc show -detail
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iSCSI initiator can't connect</td>
+<td>Interface IP reachable?</td>
+<td><code>uemcli ... /net/if show -detail</code></td>
+</tr>
+<tr>
+<td>Wrong SP for interface</td>
+<td>SP association</td>
+<td><code>uemcli ... /net/if show -detail | grep SP</code></td>
+</tr>
+<tr>
+<td>Interface down</td>
+<td>Physical port state</td>
+<td><code>uemcli ... /net/port/eth show -detail</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

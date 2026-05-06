@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-list-and-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node List and Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smartfailing-a-drive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smartfailing a Drive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smartfailing-a-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smartfailing a Node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,24 +811,102 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List nodes
+<h2 id="node-list-and-status">Node List and Status<a class="headerlink" href="#node-list-and-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all nodes
 isi node list
+
+# Specific node detail (state, IP, version)
 isi node view &lt;node_id&gt;
 
-# Node hardware details
+# Node status overlay on the cluster status
+isi status -n &lt;node_id&gt;
+</code></pre>
+<h2 id="node-hardware">Node Hardware<a class="headerlink" href="#node-hardware" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Hardware details (model, CPU, RAM, NIC, HBA)
 isi node hardware view &lt;node_id&gt;
 
-# Node drives
+# Drive bays and disk states
 isi node drives list &lt;node_id&gt;
+
+# Specific bay
 isi node drives view &lt;node_id&gt; &lt;bay&gt;
 
-# Node sensors
+# Environmental sensors (temperature, fans, power supplies)
 isi node sensors view &lt;node_id&gt;
+</code></pre>
+<h2 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEALTHY</code></td>
+<td>Normal</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>SMARTFAIL</code></td>
+<td>Being evacuated</td>
+<td>Do not remove until complete</td>
+</tr>
+<tr>
+<td><code>DEAD</code></td>
+<td>Failed</td>
+<td>Replace after data evacuated</td>
+</tr>
+<tr>
+<td><code>REPLACING</code></td>
+<td>Replacement in progress</td>
+<td>Wait for rebuild</td>
+</tr>
+<tr>
+<td><code>STALLED</code></td>
+<td>Stuck rebuild</td>
+<td>Contact Dell support</td>
+</tr>
+</tbody>
+</table>
+<h2 id="smartfailing-a-drive">Smartfailing a Drive<a class="headerlink" href="#smartfailing-a-drive" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Mark a drive for evacuation (data moves to remaining drives)
+isi devices drive smartfail -d &lt;node_id&gt; -b &lt;bay_id&gt;
 
-# Smartfail / readd a node
+# Monitor FlexProtect rebuild after drive removal
+isi job jobs list | grep FlexProtect
+isi status -n &lt;node_id&gt;
+</code></pre>
+<h2 id="smartfailing-a-node">Smartfailing a Node<a class="headerlink" href="#smartfailing-a-node" title="Permanent link">&para;</a></h2>
+<p>Smartfailing a node redistributes all data from that node before removal:</p>
+<pre><code class="language-bash"># Initiate node smartfail
 isi devices smartfail -d &lt;node_id&gt;
+
+# Monitor progress
+isi status | grep smartfail
+isi job jobs list | grep -i FlexProtect
+
+# Re-add node after replacement/repair
 isi devices add -d &lt;node_id&gt;
+</code></pre>
+<h2 id="node-network">Node Network<a class="headerlink" href="#node-network" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Network interfaces on a node
+isi network interfaces list --node &lt;node_id&gt;
+
+# IP pool assignments
+isi network pools list
+
+# Check node's external IPs
+isi network interfaces list --node &lt;node_id&gt; | grep ext
+</code></pre>
+<h2 id="node-performance">Node Performance<a class="headerlink" href="#node-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Per-node I/O statistics
+isi statistics node list
+
+# Node CPU and memory usage
+isi statistics system list --nodes &lt;node_id&gt;
 </code></pre>
 
 

@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#path-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-state-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path State Values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-and-recover-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore and Recover Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-path-failover-and-unblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Path Failover and Unblock
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Detail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multipath-configuration-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath Configuration Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-path-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Path Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,22 +811,123 @@
 <blockquote>
 <p>Part of the Dell PowerPath CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Count alive paths per device
-powermt display dev=all | grep -E &quot;emcpower|alive|dead&quot;
+<h2 id="path-status">Path Status<a class="headerlink" href="#path-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All devices with all path states
+powermt display dev=all
 
-# Restore dead paths
+# Count alive vs dead paths
+powermt display dev=all | grep -c &quot;alive&quot;
+powermt display dev=all | grep -c &quot;dead&quot;
+
+# Show only dead paths (should return nothing in healthy state)
+powermt display dead
+</code></pre>
+<h2 id="path-state-values">Path State Values<a class="headerlink" href="#path-state-values" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alive</code></td>
+<td>Path healthy and in use</td>
+</tr>
+<tr>
+<td><code>dead</code></td>
+<td>Path failed — I/O not sent on this path</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Path HBA or connection failure</td>
+</tr>
+<tr>
+<td><code>unlic</code></td>
+<td>Path exists but PowerPath license does not cover it</td>
+</tr>
+<tr>
+<td><code>sdsf</code></td>
+<td>Standby path (used when primary paths fail)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="restore-and-recover-paths">Restore and Recover Paths<a class="headerlink" href="#restore-and-recover-paths" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Attempt to restore all dead paths
 powermt restore
 
-# Remove dead paths
+# Rescan for new devices or newly presented LUNs
+powermt config
+
+# Remove dead path records
 powermt remove dead
 
-# Path failover
-powermt fail dev=emcpower&lt;n&gt; path=&lt;hba_port&gt;
-
-# Unblock a failed path
-powermt unblock dev=emcpower&lt;n&gt; path=&lt;hba_port&gt;
+# After SAN maintenance — full recovery sequence
+powermt config
+powermt restore
+powermt display dead   # confirm zero dead paths
+powermt save
 </code></pre>
+<h2 id="manual-path-failover-and-unblock">Manual Path Failover and Unblock<a class="headerlink" href="#manual-path-failover-and-unblock" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Fail a specific path (force I/O off a port — testing/maintenance)
+powermt fail dev=emcpower0 path=&lt;hba_port_id&gt;
+
+# Unblock a path (re-enable after manual fail)
+powermt unblock dev=emcpower0 path=&lt;hba_port_id&gt;
+</code></pre>
+<h2 id="path-detail">Path Detail<a class="headerlink" href="#path-detail" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full detail for a device including each path's I/O stats
+powermt display dev=emcpower0
+
+# Output shows: Pseudo device, WWN, each HBA port, path state, bytes I/O
+powermt display dev=emcpower0 port
+</code></pre>
+<h2 id="multipath-configuration-verification">Multipath Configuration Verification<a class="headerlink" href="#multipath-configuration-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm ALUA active-optimized paths are being preferred
+powermt display dev=emcpower0 | grep -E &quot;State|ALUA&quot;
+
+# Verify expected number of paths per device
+# e.g., 4-path config: 2 HBAs × 2 storage ports
+powermt display dev=all | awk '/emcpower/{d=$1;c=0} /alive/{c++} /^$/{if(d) print d&quot; &quot;c; d=&quot;&quot;}'
+</code></pre>
+<h2 id="common-path-issues">Common Path Issues<a class="headerlink" href="#common-path-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Likely Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dead paths on all HBAs</td>
+<td>SAN switch or array port issue</td>
+<td>Check zoning and array port health</td>
+</tr>
+<tr>
+<td>Dead paths on one HBA</td>
+<td>HBA failure or cable/SFP</td>
+<td>Replace HBA or cable</td>
+</tr>
+<tr>
+<td>Paths not auto-recovering</td>
+<td><code>powermt restore</code> needed</td>
+<td>Run <code>powermt restore</code> after SAN fix</td>
+</tr>
+<tr>
+<td>New LUNs not visible</td>
+<td>No rescan</td>
+<td>Run <code>powermt config</code></td>
+</tr>
+<tr>
+<td>Unbalanced path I/O</td>
+<td>Wrong policy</td>
+<td><code>powermt set policy=co dev=all</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

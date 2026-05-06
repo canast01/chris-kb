@@ -712,10 +712,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#snapshots_1" class="md-nav__link">
+  <a href="#list-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Snapshots
+        List Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rename-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-reserve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Reserve
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-snapshots-from-the-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing Snapshots from the Client
       
     </span>
   </a>
@@ -745,23 +822,73 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="snapshots_1">Snapshots<a class="headerlink" href="#snapshots_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List
+<p>ONTAP snapshots are read-only point-in-time copies of a volume stored within the same volume's snapshot reserve.</p>
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All snapshots across all volumes
 volume snapshot show
+
+# Snapshots for a specific volume
 volume snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt;
 
-# Create / delete / restore
-volume snapshot create -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;name&gt;
-volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;name&gt;
-volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot * -force true
-volume snapshot restore -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;name&gt;
-volume snapshot rename -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;old&gt; -new-name &lt;new&gt;
+# Snapshot detail — size, creation time, busy state
+volume snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt; -fields size, create-time, busy
+</code></pre>
+<h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Manual snapshot
+volume snapshot create -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
 
-# Snapshot policy
+# Example: pre-patch snapshot
+volume snapshot create -vserver prod-svm -volume db01_vol -snapshot pre-patch-20260506
+</code></pre>
+<h2 id="delete-snapshots">Delete Snapshots<a class="headerlink" href="#delete-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Delete a specific snapshot
+volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
+
+# Delete all snapshots on a volume (use with care)
+volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot * -force true
+</code></pre>
+<h2 id="rename-a-snapshot">Rename a Snapshot<a class="headerlink" href="#rename-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume snapshot rename -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;old_name&gt; -new-name &lt;new_name&gt;
+</code></pre>
+<h2 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Revert a volume to a snapshot (disruptive — volume must be offline or quiesced)
+volume snapshot restore -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
+
+# For SnapRestore license — online restore (non-disruptive for non-DR scenarios)
+volume snapshot restore -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt; -online true
+</code></pre>
+<h2 id="snapshot-policies">Snapshot Policies<a class="headerlink" href="#snapshot-policies" title="Permanent link">&para;</a></h2>
+<p>Policies automate snapshot creation on a schedule:</p>
+<pre><code class="language-bash"># List snapshot policies
 volume snapshot policy show
-volume snapshot policy create -policy &lt;name&gt; -enabled true
-volume snapshot policy add-schedule -policy &lt;name&gt; -schedule &lt;sched&gt; -count &lt;n&gt;
+
+# Create a policy
+volume snapshot policy create -policy &lt;policy_name&gt; -enabled true
+
+# Add a schedule (hourly, daily, weekly)
+volume snapshot policy add-schedule \
+    -policy &lt;policy_name&gt; \
+    -schedule hourly \
+    -count 24
+
+# Assign policy to a volume
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot-policy &lt;policy_name&gt;
+</code></pre>
+<h2 id="snapshot-reserve">Snapshot Reserve<a class="headerlink" href="#snapshot-reserve" title="Permanent link">&para;</a></h2>
+<p>Snapshots consume space from the snapshot reserve. When the reserve is full, snapshots consume user data space:</p>
+<pre><code class="language-bash"># View snapshot reserve for a volume
+volume show -vserver &lt;svm&gt; -volume &lt;vol&gt; -fields snapshot-percent
+
+# Set snapshot reserve to 15%
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -percent-snapshot-space 15
+</code></pre>
+<h2 id="accessing-snapshots-from-the-client">Accessing Snapshots from the Client<a class="headerlink" href="#accessing-snapshots-from-the-client" title="Permanent link">&para;</a></h2>
+<p>ONTAP exposes snapshots via the <code>.snapshot</code> directory (NFS) or <code>~snapshot</code> share (CIFS):</p>
+<pre><code class="language-bash"># From NFS client
+ls /mnt/data/.snapshot/
+
+# From Windows client (if enabled)
+# \\server\share\~snapshot\
 </code></pre>
 
 

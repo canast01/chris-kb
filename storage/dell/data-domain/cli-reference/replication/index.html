@@ -705,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-replication-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Replication Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ongoing-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongoing Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-replication-lag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Replication Lag
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-passive-site-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover (Passive Site Activation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-establishing-replication-after-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-establishing Replication After Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Certificates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,26 +833,133 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Status
+<p>Data Domain replication runs at the MTree level and uses a source-destination model. Both systems must have network connectivity and matching software versions.</p>
+<h2 id="status-overview">Status Overview<a class="headerlink" href="#status-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All replication contexts (summary)
 replication show all
+
+# Replication configuration
 replication show config
+
+# Per-context statistics (lag, bytes sent, compression)
 replication show stats
 
-# Context operations
-replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree&gt; destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree&gt;
-replication initialize &lt;context_id&gt;
-replication resync &lt;context_id&gt;
-replication sync &lt;context_id&gt;
-replication break &lt;context_id&gt;
+# Quick status — state of all contexts
+replication status
+</code></pre>
+<h2 id="replication-states">Replication States<a class="headerlink" href="#replication-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>replicating</code></td>
+<td>Actively syncing data</td>
+</tr>
+<tr>
+<td><code>idle</code></td>
+<td>Up to date, waiting for next sync</td>
+</tr>
+<tr>
+<td><code>initializing</code></td>
+<td>First-time sync in progress</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Replication failed — check logs</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>Replication suspended</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configure-a-replication-context">Configure a Replication Context<a class="headerlink" href="#configure-a-replication-context" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add MTree-level replication (directional — source to destination)
+replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt; \
+    destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
 
-# Monitoring lag
+# Initialize replication (first sync — can take hours for large datasets)
+replication initialize &lt;context_id&gt;
+</code></pre>
+<h2 id="ongoing-operations">Ongoing Operations<a class="headerlink" href="#ongoing-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trigger an immediate sync (outside scheduled window)
+replication sync &lt;context_id&gt;
+
+# Pause replication (source continues; changes accumulated)
+replication disable &lt;context_id&gt;
+
+# Resume replication
+replication enable &lt;context_id&gt;
+
+# Break a context (irreversible — removes replication relationship)
+replication break &lt;context_id&gt;
+</code></pre>
+<h2 id="monitoring-replication-lag">Monitoring Replication Lag<a class="headerlink" href="#monitoring-replication-lag" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Lag in bytes (amount of data not yet replicated)
+replication show stats | grep lag
+
+# Lag in time
+replication status | grep -E &quot;context|lag&quot;
+</code></pre>
+<h2 id="failover-passive-site-activation">Failover (Passive Site Activation)<a class="headerlink" href="#failover-passive-site-activation" title="Permanent link">&para;</a></h2>
+<p>Run on the <strong>destination</strong> Data Domain when primary is unavailable:</p>
+<pre><code class="language-bash"># Break the context (makes destination writeable)
+replication failover &lt;context_id&gt;
+</code></pre>
+<p>After failover, configure backup applications to point to the destination system.</p>
+<h2 id="re-establishing-replication-after-failover">Re-establishing Replication After Failover<a class="headerlink" href="#re-establishing-replication-after-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1 — resync (when primary recovers)
+replication resync &lt;context_id&gt;
+
+# Step 2 — confirm sync complete
 replication status
 replication show stats | grep lag
 
-# Failover (passive side)
-replication failover &lt;context_id&gt;
+# Step 3 — failback: swap source/destination roles
+# (requires breaking and recreating context in reverse)
 </code></pre>
+<h2 id="replication-certificates">Replication Certificates<a class="headerlink" href="#replication-certificates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trust a remote DD (exchange certs — required for encrypted replication)
+replication add source ... --encryption aes128
+admintool certify &lt;remote_dd_hostname&gt;
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context stuck in error</td>
+<td>Alert detail</td>
+<td><code>alert show current</code></td>
+</tr>
+<tr>
+<td>High lag</td>
+<td>Network bandwidth or congestion</td>
+<td><code>replication show stats</code> → bytes/sec</td>
+</tr>
+<tr>
+<td>Initialization stalled</td>
+<td>Filesystem busy</td>
+<td><code>filesys show stats</code> on both systems</td>
+</tr>
+<tr>
+<td>No data replicating</td>
+<td>Context disabled</td>
+<td><code>replication show all</code> → state</td>
+</tr>
+</tbody>
+</table>
 
 
 

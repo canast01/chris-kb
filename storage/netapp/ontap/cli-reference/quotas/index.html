@@ -712,10 +712,87 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quotas_1" class="md-nav__link">
+  <a href="#view-quota-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quotas
+        View Quota Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-and-disable-quotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable and Disable Quotas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quota-rule-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quota Rule Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-quota-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Quota Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-a-quota-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify a Quota Rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-quota-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Quota Rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quota-report-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quota Report Interpretation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -745,16 +822,157 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
-<hr />
-<h2 id="quotas_1">Quotas<a class="headerlink" href="#quotas_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume quota show
+<p>ONTAP quotas limit disk space and file counts on volumes, trees (qtrees), or users.</p>
+<h2 id="view-quota-status">View Quota Status<a class="headerlink" href="#view-quota-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Quota status on all volumes
+volume quota show
+
+# Quota report for a specific volume (current usage vs limits)
 volume quota report -vserver &lt;svm&gt; -volume &lt;vol&gt;
-volume quota on -vserver &lt;svm&gt; -volume &lt;vol&gt;
-volume quota off -vserver &lt;svm&gt; -volume &lt;vol&gt;
-volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;
+
+# Quota rules for an SVM
 volume quota policy rule show -vserver &lt;svm&gt;
-volume quota policy rule create -vserver &lt;svm&gt; -policy-name default -type user -target &quot;&quot; -volume &lt;vol&gt; -disk-limit &lt;size&gt;
 </code></pre>
+<h2 id="enable-and-disable-quotas">Enable and Disable Quotas<a class="headerlink" href="#enable-and-disable-quotas" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable quotas on a volume
+volume quota on -vserver &lt;svm&gt; -volume &lt;vol&gt;
+
+# Disable quotas
+volume quota off -vserver &lt;svm&gt; -volume &lt;vol&gt;
+
+# Resize without disabling (picks up new rules)
+volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;
+</code></pre>
+<h2 id="quota-rule-types">Quota Rule Types<a class="headerlink" href="#quota-rule-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tree</code></td>
+<td>Applies to a qtree</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Applies to a specific user</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td>Applies to a group</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create-quota-rules">Create Quota Rules<a class="headerlink" href="#create-quota-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Tree quota — limit a qtree to 500 GB
+volume quota policy rule create \
+    -vserver &lt;svm&gt; \
+    -policy-name default \
+    -volume &lt;vol&gt; \
+    -type tree \
+    -target /qtree_name \
+    -disk-limit 500g \
+    -soft-disk-limit 400g
+
+# User quota — default user limit (empty target = all users)
+volume quota policy rule create \
+    -vserver &lt;svm&gt; \
+    -policy-name default \
+    -volume &lt;vol&gt; \
+    -type user \
+    -target &quot;&quot; \
+    -disk-limit 100g
+
+# Specific user quota
+volume quota policy rule create \
+    -vserver &lt;svm&gt; \
+    -policy-name default \
+    -volume &lt;vol&gt; \
+    -type user \
+    -target &quot;DOMAIN\username&quot; \
+    -disk-limit 200g
+</code></pre>
+<h2 id="modify-a-quota-rule">Modify a Quota Rule<a class="headerlink" href="#modify-a-quota-rule" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume quota policy rule modify \
+    -vserver &lt;svm&gt; \
+    -policy-name default \
+    -volume &lt;vol&gt; \
+    -type tree \
+    -target /qtree_name \
+    -disk-limit 1t
+</code></pre>
+<h2 id="delete-a-quota-rule">Delete a Quota Rule<a class="headerlink" href="#delete-a-quota-rule" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume quota policy rule delete \
+    -vserver &lt;svm&gt; \
+    -policy-name default \
+    -volume &lt;vol&gt; \
+    -type tree \
+    -target /qtree_name
+</code></pre>
+<h2 id="quota-report-interpretation">Quota Report Interpretation<a class="headerlink" href="#quota-report-interpretation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full report output
+volume quota report -vserver &lt;svm&gt; -volume &lt;vol&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk Used</td>
+<td>Current space consumed</td>
+</tr>
+<tr>
+<td>Disk Limit</td>
+<td>Hard limit</td>
+</tr>
+<tr>
+<td>Soft Disk Limit</td>
+<td>Soft limit — warning threshold</td>
+</tr>
+<tr>
+<td>Files Used</td>
+<td>Current file count</td>
+</tr>
+<tr>
+<td>File Limit</td>
+<td>Maximum file count</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quota not enforced</td>
+<td>Quotas enabled on volume?</td>
+<td><code>volume quota show</code> → state</td>
+</tr>
+<tr>
+<td>Rule not applied</td>
+<td>Did you resize?</td>
+<td><code>volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;</code></td>
+</tr>
+<tr>
+<td>User over limit</td>
+<td>Soft or hard limit exceeded?</td>
+<td><code>volume quota report</code> → usage vs limits</td>
+</tr>
+</tbody>
+</table>
 
 
 

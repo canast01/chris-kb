@@ -705,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health and Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#save-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Save Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-management-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Management Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,20 +833,110 @@
 <blockquote>
 <p>Part of the Dell PowerPath CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-powershell"># From PowerShell / CMD
+<p>PowerPath for Windows (PowerPath/VE for Windows in virtual environments) installs as a Windows service and driver, manageable via <code>powermt</code> in PowerShell or CMD.</p>
+<h2 id="basic-status">Basic Status<a class="headerlink" href="#basic-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Display all PowerPath devices and paths
 powermt display
+
+# Display all devices with path detail
 powermt display dev=all
+
+# Filter by storage class (symmetrix = PowerMax/VMAX)
 powermt display class=symmetrix
 
-powermt check
-powermt restore
-powermt save
-
-# PowerPath service
-Get-Service -Name &quot;EMCPower*&quot;
-Restart-Service -Name &quot;EMCPower*&quot;
+# Count alive paths
+powermt display dev=all | Select-String &quot;alive&quot; | Measure-Object | Select-Object Count
 </code></pre>
+<h2 id="health-and-recovery">Health and Recovery<a class="headerlink" href="#health-and-recovery" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># PowerPath self-check
+powermt check
+
+# Restore dead paths
+powermt restore
+
+# Dead paths
+powermt display dead
+</code></pre>
+<h2 id="save-configuration">Save Configuration<a class="headerlink" href="#save-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Save current configuration (persists policy settings across reboots)
+powermt save
+</code></pre>
+<h2 id="service-management">Service Management<a class="headerlink" href="#service-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># PowerPath service status
+Get-Service -Name &quot;EMCPower*&quot;
+Get-Service -Name &quot;PowerPath*&quot;
+
+# Restart PowerPath (use only during maintenance)
+Restart-Service -Name &quot;EMCPowerPath&quot; -Force
+
+# Check if PowerPath driver is loaded
+Get-WmiObject Win32_SystemDriver | Where-Object { $_.Name -match &quot;emcpower&quot; }
+</code></pre>
+<h2 id="device-management">Device Management<a class="headerlink" href="#device-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Full detail for a specific device
+powermt display dev=harddisk2
+
+# Mapping between Windows disk numbers and PowerPath pseudo-devices
+powermt display dev=all | Select-String &quot;harddisk&quot;
+
+# PowerPath version
+powermt version
+
+# License status
+powermt lic
+</code></pre>
+<h2 id="policy-configuration">Policy Configuration<a class="headerlink" href="#policy-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># View current policy per device
+powermt display dev=all | Select-String &quot;policy&quot;
+
+# Set policy (CLARiiON Optimized for Dell EMC arrays)
+powermt set policy=co dev=all class=clariion
+
+# Save after policy change
+powermt save
+</code></pre>
+<h2 id="event-log-integration">Event Log Integration<a class="headerlink" href="#event-log-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># PowerPath logs to Windows Event Log
+Get-WinEvent -LogName &quot;Application&quot; -MaxEvents 50 | Where-Object { $_.ProviderName -match &quot;PowerPath&quot; }
+Get-WinEvent -LogName &quot;System&quot; | Where-Object { $_.ProviderName -match &quot;EMC&quot; } | Select-Object TimeCreated, Message
+</code></pre>
+<h2 id="disk-management-integration">Disk Management Integration<a class="headerlink" href="#disk-management-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># PowerPath devices appear as disks in Windows
+# List disks via WMI
+Get-Disk | Where-Object { $_.FriendlyName -match &quot;DGC\|EMC&quot; } | Select-Object Number, FriendlyName, OperationalStatus, Size
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerPath not loading</td>
+<td>Service running?</td>
+<td><code>Get-Service EMCPower*</code></td>
+</tr>
+<tr>
+<td>Dead paths</td>
+<td>SAN connectivity issue</td>
+<td><code>powermt display dead</code></td>
+</tr>
+<tr>
+<td>Wrong policy applied</td>
+<td>Check and reset</td>
+<td><code>powermt display dev=all | Select-String policy</code></td>
+</tr>
+<tr>
+<td>Disks not visible</td>
+<td>Rescan and config</td>
+<td><code>powermt config</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

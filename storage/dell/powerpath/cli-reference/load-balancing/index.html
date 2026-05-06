@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#policy-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-current-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Current Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-load-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Load Distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-policies-by-array" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Policies by Array
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-path-prioritization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Path Prioritization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-uneven-load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Uneven Load
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -726,16 +822,119 @@
 <blockquote>
 <p>Part of the Dell PowerPath CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Show load balancing policy
-powermt display dev=emcpower&lt;n&gt; | grep -i policy
+<h2 id="policy-overview">Policy Overview<a class="headerlink" href="#policy-overview" title="Permanent link">&para;</a></h2>
+<p>PowerPath distributes I/O across available paths using a configurable policy. The right policy depends on the storage array type and workload characteristics.</p>
+<h2 id="available-policies">Available Policies<a class="headerlink" href="#available-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLARiiON Optimized</td>
+<td><code>co</code></td>
+<td>Default for Dell EMC arrays — uses active-optimized paths first</td>
+</tr>
+<tr>
+<td>Round Robin</td>
+<td><code>rr</code></td>
+<td>Distributes I/O evenly across all active paths</td>
+</tr>
+<tr>
+<td>Adaptive</td>
+<td><code>ad</code></td>
+<td>Load-based selection — switches to least-loaded path</td>
+</tr>
+<tr>
+<td>No Redirect</td>
+<td><code>nr</code></td>
+<td>Uses first active path only (no load balancing)</td>
+</tr>
+<tr>
+<td>Single Initiator</td>
+<td><code>si</code></td>
+<td>Pins I/O to a single HBA port</td>
+</tr>
+</tbody>
+</table>
+<h2 id="view-current-policy">View Current Policy<a class="headerlink" href="#view-current-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Policy for a specific device
+powermt display dev=emcpower0 | grep -i policy
 
-# Set policy on a device
-powermt set policy=&lt;policy&gt; dev=emcpower&lt;n&gt;
-# Policies: co (CLARiiON Optimized), rr (Round Robin), si (Single Initiator), etc.
+# Policy for all devices
+powermt display dev=all | grep -i policy
+</code></pre>
+<h2 id="set-policy">Set Policy<a class="headerlink" href="#set-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Set policy on a specific device
+powermt set policy=co dev=emcpower0
 
-# Set globally
+# Set policy across all devices of a specific class
 powermt set policy=co dev=all class=clariion
+powermt set policy=rr dev=all class=symmetrix
+
+# Set policy globally (all devices, all classes)
+powermt set policy=co dev=all
+
+# Save after changing policy (persists across reboots)
+powermt save
+</code></pre>
+<h2 id="verifying-load-distribution">Verifying Load Distribution<a class="headerlink" href="#verifying-load-distribution" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check path I/O statistics (bytes sent per path)
+powermt display dev=emcpower0 | grep -E &quot;Bytes|I/Os&quot;
+
+# Full device detail with path stats
+powermt display dev=emcpower0 port
+</code></pre>
+<h2 id="recommended-policies-by-array">Recommended Policies by Array<a class="headerlink" href="#recommended-policies-by-array" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Array</th>
+<th>Recommended Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax / VMAX</td>
+<td><code>co</code> (CLARiiON Optimized)</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td><code>co</code></td>
+</tr>
+<tr>
+<td>Unity</td>
+<td><code>co</code></td>
+</tr>
+<tr>
+<td>SC Series (Compellent)</td>
+<td><code>co</code></td>
+</tr>
+<tr>
+<td>Non-Dell arrays</td>
+<td><code>rr</code> (Round Robin)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dynamic-path-prioritization">Dynamic Path Prioritization<a class="headerlink" href="#dynamic-path-prioritization" title="Permanent link">&para;</a></h2>
+<p>With <code>co</code> policy, PowerPath prefers ALUA-optimized paths. If the owning storage processor fails:</p>
+<pre><code class="language-bash"># Paths will automatically shift to the non-optimized SP
+powermt display dev=emcpower0
+
+# After SP failover, confirm no dead paths
+powermt display dead
+</code></pre>
+<h2 id="troubleshooting-uneven-load">Troubleshooting Uneven Load<a class="headerlink" href="#troubleshooting-uneven-load" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check if policy is correctly applied
+powermt display dev=all | grep policy
+
+# If paths are unbalanced after array maintenance
+powermt restore
+powermt save
 </code></pre>
 
 

@@ -720,6 +720,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managing-nfs-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing NFS Exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nfs-options-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Options Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -727,6 +755,45 @@
     <span class="md-ellipsis">
       
         CIFS / SMB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CIFS / SMB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cifs-share-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIFS Share Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-cifs-dual-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS + CIFS Dual Protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -756,21 +823,125 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
 <h2 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">nfs show exports
-nfs add export /data/col1/&lt;mtree&gt; clients &lt;ip_or_cidr&gt;
-nfs del export /data/col1/&lt;mtree&gt; clients &lt;ip_or_cidr&gt;
-nfs show clients
+<p>Data Domain exports MTrees over NFS for backup applications that use the filesystem protocol (e.g., Networker, some Veeam configurations).</p>
+<pre><code class="language-bash"># List all NFS exports
+nfs show exports
+
+# NFS service status
 nfs status
+
+# NFS client connections
+nfs show clients
 </code></pre>
+<h3 id="managing-nfs-exports">Managing NFS Exports<a class="headerlink" href="#managing-nfs-exports" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Create an NFS export for an MTree
+nfs add export /data/col1/&lt;mtree_name&gt; clients &lt;ip_or_cidr&gt;
+
+# Allow multiple clients
+nfs add export /data/col1/&lt;mtree_name&gt; clients &lt;ip1&gt;,&lt;ip2&gt;
+
+# Modify export options (root squash, read-write)
+nfs modify export /data/col1/&lt;mtree_name&gt; clients &lt;ip&gt; options rw,root-squash
+
+# Remove a client from an export
+nfs del export /data/col1/&lt;mtree_name&gt; clients &lt;ip_or_cidr&gt;
+
+# Remove the entire export
+nfs del export /data/col1/&lt;mtree_name&gt;
+</code></pre>
+<h3 id="nfs-options-reference">NFS Options Reference<a class="headerlink" href="#nfs-options-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rw</code></td>
+<td>Read-write access</td>
+</tr>
+<tr>
+<td><code>ro</code></td>
+<td>Read-only access</td>
+</tr>
+<tr>
+<td><code>root-squash</code></td>
+<td>Map root user to anonymous (more secure)</td>
+</tr>
+<tr>
+<td><code>no-root-squash</code></td>
+<td>Root retains root privileges (needed for some backup apps)</td>
+</tr>
+<tr>
+<td><code>sync</code></td>
+<td>Synchronous writes — safer but slower</td>
+</tr>
+<tr>
+<td><code>async</code></td>
+<td>Asynchronous writes — faster but risk on crash</td>
+</tr>
+</tbody>
+</table>
 <h2 id="cifs-smb">CIFS / SMB<a class="headerlink" href="#cifs-smb" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">cifs show
+<pre><code class="language-bash"># CIFS service status and configuration
+cifs show
+
+# Active client connections
 cifs show clients
+
+# All CIFS shares
 cifs share show
-cifs share add /data/col1/&lt;mtree&gt;
-cifs share del /data/col1/&lt;mtree&gt;
+
+# Create a CIFS share for an MTree
+cifs share add /data/col1/&lt;mtree_name&gt;
+
+# Remove a CIFS share
+cifs share del /data/col1/&lt;mtree_name&gt;
 </code></pre>
+<h3 id="cifs-share-options">CIFS Share Options<a class="headerlink" href="#cifs-share-options" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Restrict share access to specific AD groups
+cifs share modify &lt;share_name&gt; add-writable-users &lt;DOMAIN&gt;\&lt;group&gt;
+
+# View share permissions
+cifs share show &lt;share_name&gt;
+</code></pre>
+<h2 id="nfs-cifs-dual-protocol">NFS + CIFS Dual Protocol<a class="headerlink" href="#nfs-cifs-dual-protocol" title="Permanent link">&para;</a></h2>
+<p>An MTree can be exported over both NFS and CIFS simultaneously for mixed environments. Ensure access controls are configured on both protocols to avoid permission conflicts.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS mount fails</td>
+<td>Export exists for client IP?</td>
+<td><code>nfs show exports</code></td>
+</tr>
+<tr>
+<td>Access denied on mount</td>
+<td><code>no-root-squash</code> needed?</td>
+<td><code>nfs modify export ... options no-root-squash</code></td>
+</tr>
+<tr>
+<td>CIFS share not visible</td>
+<td>CIFS enabled?</td>
+<td><code>cifs show</code></td>
+</tr>
+<tr>
+<td>Slow NFS backup</td>
+<td><code>async</code> option enabled?</td>
+<td><code>nfs show exports</code> → check options</td>
+</tr>
+</tbody>
+</table>
 
 
 
