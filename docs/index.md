@@ -98,10 +98,6 @@
   <span>Fibre Channel, iSCSI, NFS, SMB, DNS, DHCP, NTP, SNMP, LDAP, TLS.</span>
 </a>
 
-<a class="kb-card" href="certifications/">
-  <strong>Certifications</strong>
-  <span>Certification paths, study notes, and practice references.</span>
-</a>
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
