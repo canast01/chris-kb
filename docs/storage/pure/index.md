@@ -26,4 +26,19 @@ Pure Storage knowledge base articles, operational references, troubleshooting no
   <strong>Evergreen One</strong>
   <span>Storage as a service.</span>
 </a>
+
+<a class="kb-card" href="operations/alerts/">
+  <strong>Alerts</strong>
+  <span>Pure Storage alert management, severity handling, and escalation procedures across FlashArray and FlashBlade.</span>
+</a>
+
+<a class="kb-card" href="operations/pure1/">
+  <strong>Pure1</strong>
+  <span>Pure1 cloud management portal for fleet monitoring, AI-driven analytics, and capacity forecasting.</span>
+</a>
+
+<a class="kb-card" href="operations/support-cases/">
+  <strong>Support Cases</strong>
+  <span>Pure Storage support case submission, log collection, and escalation guidance.</span>
+</a>
 </div>

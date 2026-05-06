@@ -39,4 +39,9 @@ Technical and operational KBs for vSAN.
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Resync review, object health, disk group failures, and vSAN recovery procedures.</span>
+</a>
+
 </div>

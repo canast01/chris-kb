@@ -24,4 +24,9 @@ Technical and operational KBs for NSX.
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Edge health, transport node issues, DFW connectivity, and NSX recovery procedures.</span>
+</a>
+
 </div>

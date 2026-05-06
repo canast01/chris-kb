@@ -39,4 +39,9 @@ Technical and operational KBs for ESXi.
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Maintenance mode, host disconnects, storage path issues, and ESXi recovery procedures.</span>
+</a>
+
 </div>
