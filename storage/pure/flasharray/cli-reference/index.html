@@ -730,6 +730,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#purearray-array-system-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        purearray — Array &amp; System Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pureadmin-administrative-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -767,6 +778,17 @@
     <span class="md-ellipsis">
       
         pureconfig — Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pureds-directory-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pureds — Directory Services
       
     </span>
   </a>
@@ -829,6 +851,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#purenetwork-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        purenetwork — Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#purepod-activecluster-pods" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -861,6 +894,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#csv-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV Exports
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CSV Exports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#array-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array &amp; System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volumes &amp; Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hosts-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosts &amp; Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware &amp; Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin &amp; Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -883,6 +988,45 @@
 <h1 id="pure-storage-cli-reference">Pure Storage CLI Reference<a class="headerlink" href="#pure-storage-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Commonly used Purity CLI commands for managing Pure FlashArray systems.</p>
 <hr />
+<h2 id="purearray-array-system-management">purearray — Array &amp; System Management<a class="headerlink" href="#purearray-array-system-management" title="Permanent link">&para;</a></h2>
+<p>Displays attributes and monitors I/O performance across the array.</p>
+<pre><code class="language-bash"># Array identity and attributes
+purearray list
+purearray list --controller
+purearray list --space
+purearray list --ntpserver
+purearray list --syslogserver
+purearray list --banner
+purearray list --console-lockout
+purearray list --connection-key
+
+# Performance monitoring
+purearray monitor
+purearray monitor --latency
+purearray monitor --bandwidth
+purearray monitor --iops
+purearray monitor --size
+purearray monitor --queue-depth
+
+# Configure array settings
+purearray setattr --name &lt;new_name&gt;
+purearray setattr --banner &lt;text&gt;
+purearray setattr --idle-timeout &lt;mins&gt;
+purearray setattr --scsi-timeout &lt;secs&gt;
+purearray setattr --proxy &lt;url&gt;
+
+# Upgrades
+purearray upgrade list
+purearray upgrade download --version &lt;v&gt;
+
+# Phonehome / remote support
+purearray phonehome list
+purearray phonehome send
+purearray remoteassist --action open
+purearray remoteassist --action close
+purearray remoteassist --status
+</code></pre>
+<hr />
 <h2 id="pureadmin-administrative-accounts">pureadmin — Administrative Accounts<a class="headerlink" href="#pureadmin-administrative-accounts" title="Permanent link">&para;</a></h2>
 <p>Displays and manages administrative accounts.</p>
 <pre><code class="language-bash"># Create user with API token
@@ -897,6 +1041,7 @@ pureadmin delete testuser --api-token
 
 # Global settings
 pureadmin global list
+pureadmin global list --lockout
 pureadmin global disable --single-sign-on
 pureadmin global enable --single-sign-on
 pureadmin global setattr --lockout-duration 1m
@@ -928,6 +1073,7 @@ purealert list --filter &quot;severity='critical'&quot;
 purealert list --filter &quot;issue='failure'&quot;
 purealert flag 121212
 purealert unflag 121212
+purealert acknowledge &lt;ID&gt;
 </code></pre>
 <hr />
 <h2 id="pureaudit-audit-logs">pureaudit — Audit Logs<a class="headerlink" href="#pureaudit-audit-logs" title="Permanent link">&para;</a></h2>
@@ -939,6 +1085,7 @@ pureaudit list --filter 'user = &quot;root&quot;'
 pureaudit list --filter 'command=&quot;purepod&quot;'
 pureaudit list --filter 'command=&quot;purepod&quot; and subcommand=&quot;create&quot;'
 pureaudit list --filter 'command=&quot;purepod&quot; and user=&quot;pureuser&quot;'
+pureaudit list --filter &quot;action='create'&quot;
 </code></pre>
 <hr />
 <h2 id="pureconfig-configuration">pureconfig — Configuration<a class="headerlink" href="#pureconfig-configuration" title="Permanent link">&para;</a></h2>
@@ -946,7 +1093,14 @@ pureaudit list --filter 'command=&quot;purepod&quot; and user=&quot;pureuser&quo
 <pre><code class="language-bash">pureconfig list
 pureconfig list --all
 pureconfig list --object
+pureconfig list --object &lt;type&gt;
 pureconfig list --system
+</code></pre>
+<hr />
+<h2 id="pureds-directory-services">pureds — Directory Services<a class="headerlink" href="#pureds-directory-services" title="Permanent link">&para;</a></h2>
+<p>Manages Active Directory and LDAP integration.</p>
+<pre><code class="language-bash">pureds list
+pureds check
 </code></pre>
 <hr />
 <h2 id="puredns-dns">puredns — DNS<a class="headerlink" href="#puredns-dns" title="Permanent link">&para;</a></h2>
@@ -969,7 +1123,7 @@ puredrive admit
 <hr />
 <h2 id="purehgroup-host-groups">purehgroup — Host Groups<a class="headerlink" href="#purehgroup-host-groups" title="Permanent link">&para;</a></h2>
 <p>Displays and manages Host Group objects.</p>
-<pre><code class="language-bash"># Create / delete
+<pre><code class="language-bash"># Create / delete / rename
 purehgroup create MY-HOSTS
 purehgroup create MY-HOSTS --hostlist MY-HOST-001,MY-HOST-002
 purehgroup delete MY-HOSTS
@@ -980,6 +1134,7 @@ purehgroup rename MY-HOSTS YOUR-HOSTS
 purehgroup list
 purehgroup list --connect
 purehgroup list --connect MY-HOSTS
+purehgroup list --host
 purehgroup list --space
 purehgroup list --filter &quot;host_list='MY-SERVER-001'&quot;
 
@@ -993,6 +1148,8 @@ purehgroup setattr MY-HOSTS --hostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --addhostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --remhostlist MY-HOST-002,MY-HOST-003
 purehgroup setattr MY-HOSTS --hostlist &quot;&quot;
+purehgroup addhost --hostlist &lt;h1,h2&gt; &lt;hg&gt;
+purehgroup remhost --hostlist &lt;h1&gt; &lt;hg&gt;
 </code></pre>
 <hr />
 <h2 id="purehost-hosts">purehost — Hosts<a class="headerlink" href="#purehost-hosts" title="Permanent link">&para;</a></h2>
@@ -1012,6 +1169,8 @@ purehost list --connect
 purehost list --connect --private
 purehost list --connect --shared
 purehost list --personality
+purehost list --wwn
+purehost list --iqn
 purehost list MY-SERVER*
 purehost list MY-SERVER-001
 purehost list MY-SERVER-001 --connect
@@ -1025,12 +1184,20 @@ purehost connect MY-SERVER-001 MY-SERVER-002 --vol MY_VOL_001
 purehost disconnect MY-SERVER-001 --vol MY_VOL_001
 purehost disconnect MY-SERVER-001 MY-SERVER-002 --vol MY_VOL_001
 
-# Manage WWNs and personality
+# Manage WWNs, iQNs, and personality
 purehost setattr MY-SERVER-001 --wwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --addwwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --remwwnlist 1000000000000003
 purehost setattr MY-SERVER-001 --wwnlist &quot;&quot;
 purehost setattr MY-SERVER-001 --personality esxi
+purehost setattr MY-SERVER-001 --personality solaris
+purehost addwwn MY-SERVER-001 --wwn &lt;wwn&gt;
+purehost remwwn MY-SERVER-001 --wwn &lt;wwn&gt;
+purehost addiqn MY-SERVER-001 --iqn &lt;iqn&gt;
+
+# Monitor
+purehost monitor --bandwidth
+purehost monitor --iops
 </code></pre>
 <hr />
 <h2 id="purehw-hardware">purehw — Hardware<a class="headerlink" href="#purehw-hardware" title="Permanent link">&para;</a></h2>
@@ -1042,8 +1209,18 @@ purehw list --type bay --spec
 purehw list --type ct
 purehw list --type eth
 purehw list --type fc
+purehw list --type fan
+purehw list --type psu
+purehw list --type nvram
+purehw list --type sas
+purehw list --spec --type drive
 purehw list CT0 --spec
 purehw list CT0.FC0
+</code></pre>
+<hr />
+<h2 id="purenetwork-network">purenetwork — Network<a class="headerlink" href="#purenetwork-network" title="Permanent link">&para;</a></h2>
+<p>Displays management and replication network configuration.</p>
+<pre><code class="language-bash">purenetwork list
 </code></pre>
 <hr />
 <h2 id="purepod-activecluster-pods">purepod — ActiveCluster / Pods<a class="headerlink" href="#purepod-activecluster-pods" title="Permanent link">&para;</a></h2>
@@ -1090,11 +1267,14 @@ purepod replica-link monitor --replication
 <p>Displays array host connection ports.</p>
 <pre><code class="language-bash">pureport list
 pureport list --initiator
+pureport list --type fc
+pureport list --type eth
 pureport list --raw --filter &quot;name='*FC*'&quot;
 pureport list --raw --filter &quot;name='*ETH*'&quot;
 pureport list --raw --filter &quot;name='CT0.FC*'&quot;
 pureport list --initiator --raw --filter &quot;name='CT0.FC0'&quot;
 pureport list --initiator --raw --filter &quot;initiator.wwn='1000000000000001'&quot;
+pureport monitor --bandwidth
 </code></pre>
 <hr />
 <h2 id="purevol-volumes-and-snapshots">purevol — Volumes and Snapshots<a class="headerlink" href="#purevol-volumes-and-snapshots" title="Permanent link">&para;</a></h2>
@@ -1104,21 +1284,29 @@ purevol create --size 10G MY_VOLUME_001
 purevol create --size 10G MY_VOLUME_001 --bw-limit 10M
 purevol create --size 10G MY_VOLUME_001 MY_VOLUME_002
 purevol create --size 1G MYPOD001::MY_VOL_001
+purevol create --source &lt;vol&gt; &lt;new_vol&gt;
 purevol destroy MY_VOL_001
 purevol destroy MY_VOL_001 MY_VOL_002
 purevol eradicate MY_VOL_001
 purevol eradicate MY_VOL_001 MY_VOL_002
+purevol eradicate --all
 purevol recover MY_VOL_001
+purevol recover --all
 purevol rename MY_VOL_001 MY_VOL_002
 
 # List
 purevol list
 purevol list MY_VOL_001
 purevol list MY_VOL*
+purevol list --all
 purevol list --snap
 purevol list --pending
 purevol list --pending-only
+purevol list --shared
+purevol list --obj-name
+purevol list --total
 purevol list --space --sort size,total
+purevol list --snap --space
 purevol list --sort size
 purevol list --sort size-
 purevol list --sort serial
@@ -1126,6 +1314,7 @@ purevol list --sort serial-
 purevol list --sort created
 purevol list --sort created-
 purevol list --filter &quot;size='20T'&quot;
+purevol list --filter &quot;size &gt; 100G&quot;
 
 # Connect / disconnect
 purevol connect MY_VOL_001 --host MY-SERVER-001
@@ -1141,20 +1330,103 @@ purevol setattr --size 2G MY_VOL_001
 purevol setattr --size 2G MY_VOL_001 MY_VOL_002
 purevol setattr --bw-limit 1M MY_VOL_001
 purevol setattr --bw-limit 1M MY_VOL_001 MY_VOL_002
+purevol setattr --readonly MY_VOL_001
 purevol truncate --size 1G MY_VOL_001
 
 # Copy / move
 purevol copy MY_VOL_001 MY_VOL_002
 purevol copy MY_VOL_001 MY_VOL_002 --overwrite
+purevol copy --snapshot &lt;snap&gt; &lt;target&gt;
 purevol move vol001 MYPOD001
 purevol move MYPOD001::vol001 &quot;&quot;
 
 # Snapshots
 purevol snap MY_VOL_001
 purevol snap MY_VOL_001 --suffix PRD
+purevol snap MY_VOL_001 --suffix &lt;text&gt;
+purevol snap MY_VOL_001 --expiration &lt;time&gt;
+
+# Monitor
+purevol monitor
+purevol monitor --iops
+purevol monitor --latency
+purevol monitor --historical 24h
 
 # Pod volume operations
 purevol remove --array PFAX70-REMOTE --with-unknown MYPOD001
+</code></pre>
+<hr />
+<h2 id="csv-exports">CSV Exports<a class="headerlink" href="#csv-exports" title="Permanent link">&para;</a></h2>
+<p>Use <code>--csv</code> with <code>&gt;</code> to create a new file or <code>&gt;&gt;</code> to append to an existing one. To run from a remote terminal:</p>
+<pre><code class="language-bash">ssh pureuser@&lt;array_ip&gt; &quot;purevol list --csv&quot; &gt; local_file.csv
+</code></pre>
+<h3 id="array-system">Array &amp; System<a class="headerlink" href="#array-system" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">purearray list --csv &gt; array_inventory.csv
+purearray list --space --csv &gt;&gt; array_inventory.csv
+purearray list --controller --csv &gt;&gt; array_inventory.csv
+purearray list --ntpserver --csv &gt;&gt; array_inventory.csv
+purearray list --syslogserver --csv &gt;&gt; array_inventory.csv
+purearray monitor --csv &gt;&gt; array_performance.csv
+purearray monitor --latency --csv &gt;&gt; array_performance.csv
+purearray monitor --bandwidth --csv &gt;&gt; array_performance.csv
+purearray monitor --iops --csv &gt;&gt; array_performance.csv
+purearray monitor --size --csv &gt;&gt; array_performance.csv
+purearray monitor --queue-depth --csv &gt;&gt; array_performance.csv
+purearray list --connection-key --csv &gt;&gt; array_config.csv
+purearray phonehome list --csv &gt;&gt; support_history.csv
+purearray upgrade list --csv &gt;&gt; system_updates.csv
+purearray list --banner --csv &gt;&gt; security_audit.csv
+purearray list --console-lockout --csv &gt;&gt; security_audit.csv
+purearray remoteassist --status --csv &gt;&gt; support_history.csv
+</code></pre>
+<h3 id="volumes-data">Volumes &amp; Data<a class="headerlink" href="#volumes-data" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">purevol list --csv &gt; volume_report.csv
+purevol list --all --csv &gt;&gt; volume_report.csv
+purevol list --snap --csv &gt;&gt; volume_report.csv
+purevol list --pending-only --csv &gt;&gt; volume_report.csv
+purevol list --space --csv &gt;&gt; volume_report.csv
+purevol list --obj-name --csv &gt;&gt; volume_report.csv
+purevol list --shared --csv &gt;&gt; volume_report.csv
+purevol list --snap --space --csv &gt;&gt; snapshot_usage.csv
+purevol list --filter &quot;size &gt; 100G&quot; --csv &gt;&gt; filtered_volumes.csv
+purevol monitor --csv &gt; volume_performance.csv
+purevol monitor --historical 24h --csv &gt;&gt; volume_performance.csv
+</code></pre>
+<h3 id="hosts-connectivity">Hosts &amp; Connectivity<a class="headerlink" href="#hosts-connectivity" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">purehost list --csv &gt; host_mapping.csv
+purehost list --all --csv &gt;&gt; host_mapping.csv
+purehost list --connect --csv &gt;&gt; active_connections.csv
+purehost list --wwn --csv &gt;&gt; initiator_list.csv
+purehost list --iqn --csv &gt;&gt; initiator_list.csv
+purehost monitor --balance --csv &gt; connectivity_health.csv
+purehost monitor --bandwidth --csv &gt;&gt; host_performance.csv
+purehost monitor --iops --csv &gt;&gt; host_performance.csv
+purehgroup list --csv &gt; group_mapping.csv
+purehgroup list --host --csv &gt;&gt; group_mapping.csv
+purehgroup list --space --csv &gt;&gt; group_mapping.csv
+</code></pre>
+<h3 id="hardware-health">Hardware &amp; Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">purehw list --csv &gt; hardware_health.csv
+purehw list --type eth --csv &gt;&gt; hardware_health.csv
+purehw list --type fc --csv &gt;&gt; hardware_health.csv
+purehw list --type bay --csv &gt;&gt; hardware_health.csv
+purehw list --type fan --csv &gt;&gt; hardware_health.csv
+purehw list --type psu --csv &gt;&gt; hardware_health.csv
+purehw list --type nvram --csv &gt;&gt; hardware_health.csv
+purehw list --type sas --csv &gt;&gt; hardware_health.csv
+puredrive list --csv &gt; drive_inventory.csv
+pureport list --csv &gt; port_config.csv
+pureport list --initiator --csv &gt;&gt; port_config.csv
+</code></pre>
+<h3 id="admin-security">Admin &amp; Security<a class="headerlink" href="#admin-security" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">pureadmin list --csv &gt; admin_users.csv
+pureadmin list --lockout --csv &gt;&gt; security_report.csv
+pureadmin list --api-token --csv &gt;&gt; admin_users.csv
+purealert list --csv &gt; system_alerts.csv
+purealert list --filter &quot;state='open'&quot; --csv &gt;&gt; critical_alerts.csv
+pureaudit list --csv &gt; audit_trail.csv
+pureds list --csv &gt; directory_services.csv
+puredns list --csv &gt;&gt; network_config.csv
 </code></pre>
 
 
