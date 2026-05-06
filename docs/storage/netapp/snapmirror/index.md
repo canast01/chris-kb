@@ -12,6 +12,11 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>snapmirror show, update, resync, break, quiesce — failover and failback sequences.</span>
+</a>
+
 </div>
 
 ## Overview

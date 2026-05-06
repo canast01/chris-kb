@@ -152,6 +152,47 @@ else:
     sys.exit(0)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (download from python.org — tick "Add Python to PATH")
+- A Pure1 Application ID and RSA private key file — these are created at pure1.purestorage.com under **Settings → API Registration → Create Application**. When you create an application, you generate an RSA key pair and upload the public key. Keep the private key file (a `.pem` file) on your machine
+- Internet access to reach api.pure1.purestorage.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `eo1_usage.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `PURE1_APP_ID` | Your Pure1 Application ID | pure1.purestorage.com → Settings → API Registration |
+| `PURE1_PRIVATE_KEY_FILE` | Full path to your RSA private key `.pem` file | The file you downloaded when creating the application |
+
+**Step 3 — Open Command Prompt and install packages**
+
+```
+pip install requests pyjwt cryptography tabulate
+```
+
+**Step 4 — Set variables and run**
+
+```
+set PURE1_APP_ID=pure1:apikey:abc123
+set PURE1_PRIVATE_KEY_FILE=C:\Users\YourName\Desktop\pure1_private_key.pem
+cd %USERPROFILE%\Desktop
+python eo1_usage.py
+```
+
+**What you should see**
+
+A table listing every array in your Evergreen//One subscription with its service tier, committed capacity, consumed capacity, burst used, and percentage of committed consumed. Any array over 90% of committed capacity is flagged with a warning. A summary at the bottom shows total assets and lists any warnings. This is your primary report for Evergreen//One consumption tracking.
+
 ---
 
 ## SLA Compliance Check (Python)
@@ -340,6 +381,47 @@ else:
     sys.exit(0)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (python.org — tick "Add Python to PATH")
+- A Pure1 Application ID and RSA private key file (same setup as the Consumption Usage Report script above)
+- Internet access to reach api.pure1.purestorage.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `eo1_sla_check.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `PURE1_APP_ID` | Your Pure1 Application ID | pure1.purestorage.com → Settings → API Registration |
+| `PURE1_PRIVATE_KEY_FILE` | Full path to your RSA private key `.pem` file | The file you saved when creating the Pure1 application |
+
+**Step 3 — Open Command Prompt and install packages**
+
+```
+pip install requests pyjwt cryptography tabulate
+```
+
+**Step 4 — Set variables and run**
+
+```
+set PURE1_APP_ID=pure1:apikey:abc123
+set PURE1_PRIVATE_KEY_FILE=C:\Users\YourName\Desktop\pure1_private_key.pem
+cd %USERPROFILE%\Desktop
+python eo1_sla_check.py
+```
+
+**What you should see**
+
+A table showing each Evergreen//One array with its 30-day average availability percentage, average read latency, and average write latency. Arrays meeting the SLA (99.9999% availability, sub-1ms latency) show COMPLIANT in green. Any metric below the SLA threshold shows BREACH in red next to the specific value. If any breach is found, a summary at the bottom lists each one and tells you to contact the Pure account team for SLA credit review.
+
 ---
 
 ## Burst Alert Script (Bash)
@@ -481,3 +563,259 @@ else
     exit 0
 fi
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- WSL (Windows Subsystem for Linux) with Ubuntu, or a Linux server where you want to schedule this script as a cron job
+- Inside WSL/Linux: `curl`, `openssl`, `python3`, and `awk` — all standard on Ubuntu
+- A Pure1 Application ID and RSA private key file
+- A mail client (`mailx` or `sendmail`) if you want email alerts — or just run it manually to see the output
+- Your committed capacity in TiB (from your Evergreen//One contract)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `eo1_burst_alert.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `PURE1_APP_ID` | Your Pure1 Application ID | pure1.purestorage.com → Settings → API Registration |
+| `PURE1_PRIVATE_KEY_FILE` | Full path to your RSA private key `.pem` file | The file you saved when creating the application |
+| `COMMITTED_TB` | Your total committed capacity in TiB, e.g. `100` | Your Evergreen//One contract |
+| `WARN_BURST_PCT` | Burst % threshold for an alert (default: 20) | Your preference |
+| `ALERT_EMAIL` | Email address to receive alerts | Your preference |
+
+**Step 3 — Open WSL**
+
+Open Ubuntu from the Start menu.
+
+**Step 4 — Set variables and run**
+
+```
+export PURE1_APP_ID="pure1:apikey:abc123"
+export PURE1_PRIVATE_KEY_FILE="/home/youruser/pure1_private_key.pem"
+export COMMITTED_TB=100
+export WARN_BURST_PCT=20
+export ALERT_EMAIL="storage-alerts@company.com"
+cd /mnt/c/Users/YourName/Desktop
+bash eo1_burst_alert.sh
+```
+
+**What you should see**
+
+Timestamped log lines showing the authentication, the burst consumption fetched from Pure1, and the calculated burst percentage. If burst is below the threshold, it prints `OK: Burst X% is within threshold` and exits cleanly. If burst exceeds the threshold, it prints an alert body and (if a mail client is configured) sends an email to your alert address.
+
+---
+
+## Windows: Evergreen//One Subscription Check via Pure1 API (PowerShell)
+
+Authenticate to the Pure1 REST API using an API key, retrieve Evergreen//One subscription details and asset information, and print a formatted report. Warns if within 90 days of term end or above 90% capacity usage.
+
+~~~powershell
+# eo1_subscription_check.ps1 — Evergreen//One Subscription Check via Pure1 API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Pure1 API tokens generated at: https://pure1.purestorage.com (Settings -> API Registration)
+# Run: .\eo1_subscription_check.ps1
+
+$Pure1ApiKey = "your-pure1-api-key"   # Generate at pure1.purestorage.com -> Settings -> API Registration
+
+# Handle SSL
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$Pure1Base = "https://api.pure1.purestorage.com/api/1.0"
+
+# --- Step 1: Authenticate ---
+Write-Host "Authenticating to Pure1 API ..." -ForegroundColor Cyan
+
+try {
+    $TokenResp = Invoke-RestMethod `
+        -Uri    "$Pure1Base/oauth2/1.0/token" `
+        -Method POST `
+        -Body   "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Atoken-exchange&subject_token=$([uri]::EscapeDataString($Pure1ApiKey))&subject_token_type=urn%3Apure%3Aoauth%3Atoken-type%3Aapi-token" `
+        -ContentType "application/x-www-form-urlencoded" `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"
+    Write-Host "Tip: Generate your API key at https://pure1.purestorage.com -> Settings -> API Registration" -ForegroundColor Yellow
+    exit 1
+}
+
+$AccessToken = $TokenResp.access_token
+if (-not $AccessToken) {
+    Write-Error "No access token returned. Check API key."
+    exit 1
+}
+
+$AuthHeaders = @{ Authorization = "Bearer $AccessToken" }
+Write-Host "Authenticated." -ForegroundColor Green
+
+# --- Step 2: Get subscriptions ---
+Write-Host "`nFetching Evergreen//One subscriptions ..." -ForegroundColor Cyan
+
+try {
+    $SubsResp = Invoke-RestMethod `
+        -Uri     "$Pure1Base/subscriptions" `
+        -Headers $AuthHeaders `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Failed to retrieve subscriptions: $($_.Exception.Message)"
+    exit 1
+}
+
+$Subscriptions = $SubsResp.items
+if (-not $Subscriptions -or $Subscriptions.Count -eq 0) {
+    Write-Host "No Evergreen//One subscriptions found."
+    exit 0
+}
+
+Write-Host "Found $($Subscriptions.Count) subscription(s).`n"
+
+# --- Step 3: Get subscription assets ---
+try {
+    $AssetsResp = Invoke-RestMethod `
+        -Uri     "$Pure1Base/subscription-assets" `
+        -Headers $AuthHeaders `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Warning "Could not retrieve subscription assets: $($_.Exception.Message)"
+    $AssetsResp = $null
+}
+
+$Assets = if ($AssetsResp) { $AssetsResp.items } else { @() }
+
+# --- Step 4: Print report ---
+Write-Host "=== Evergreen//One Subscription Report ===" -ForegroundColor Cyan
+Write-Host ("Generated: {0}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"))
+Write-Host ("-" * 80)
+
+$today    = Get-Date
+$warnings = @()
+
+foreach ($sub in $Subscriptions) {
+    $subName = $sub.name ?? $sub.display_name ?? "unknown"
+    $subId   = $sub.id
+
+    # Term dates
+    $startDate = if ($sub.start_date) { [datetime]$sub.start_date } else { $null }
+    $endDate   = if ($sub.end_date)   { [datetime]$sub.end_date   } else { $null }
+    $daysLeft  = if ($endDate) { [math]::Round(($endDate - $today).TotalDays) } else { $null }
+
+    # Reserved/used capacity from the subscription record
+    $reservedTiB = [double]($sub.reserved_tib  ?? $sub.committed_tib  ?? 0)
+    $usedTiB     = [double]($sub.consumed_tib  ?? $sub.used_tib       ?? 0)
+    $pctUsed     = if ($reservedTiB -gt 0) { [math]::Round($usedTiB / $reservedTiB * 100, 1) } else { 0 }
+    $status      = $sub.status ?? "unknown"
+
+    Write-Host "`n  Subscription : $subName" -ForegroundColor Yellow
+    Write-Host ("  Status       : {0}" -f $status)
+    Write-Host ("  Start        : {0}" -f (if ($startDate) { $startDate.ToString("yyyy-MM-dd") } else { "N/A" }))
+    Write-Host ("  End          : {0}" -f (if ($endDate) { $endDate.ToString("yyyy-MM-dd") } else { "N/A" }))
+
+    if ($daysLeft -ne $null) {
+        if ($daysLeft -le 90) {
+            Write-Host ("  Days to end  : {0} *** EXPIRING SOON ***" -f $daysLeft) -ForegroundColor Red
+            $warnings += "Subscription '$subName' expires in $daysLeft days ($($endDate.ToString('yyyy-MM-dd')))"
+        } else {
+            Write-Host ("  Days to end  : {0}" -f $daysLeft) -ForegroundColor Green
+        }
+    }
+
+    Write-Host ("  Reserved     : {0:F2} TiB" -f $reservedTiB)
+
+    $capColour = if ($pctUsed -ge 90) { "Red" } elseif ($pctUsed -ge 80) { "Yellow" } else { "Green" }
+    Write-Host ("  Used         : {0:F2} TiB ({1:F1}%)" -f $usedTiB, $pctUsed) -ForegroundColor $capColour
+
+    if ($pctUsed -ge 90) {
+        $warnings += "Subscription '$subName' is at $pctUsed% capacity ($($usedTiB)/$($reservedTiB) TiB)"
+    }
+}
+
+# --- Assets summary ---
+if ($Assets -and $Assets.Count -gt 0) {
+    Write-Host "`n--- Assets Included in Subscription ---"
+    Write-Host ("  {0,-35} {1,-20} {2,12} {3,12}" -f "Asset", "Type", "Reserved", "Used")
+    Write-Host ("  " + "-" * 82)
+    foreach ($asset in $Assets) {
+        $assetName = $asset.name ?? "unknown"
+        $assetType = $asset.subscription_asset_type ?? $asset.model ?? "unknown"
+        $resTiB    = [double]($asset.reserved_tib ?? 0)
+        $usedTiB_a = [double]($asset.consumed_tib ?? 0)
+        Write-Host ("  {0,-35} {1,-20} {2,10:F2} TiB {3,10:F2} TiB" -f $assetName, $assetType, $resTiB, $usedTiB_a)
+    }
+}
+
+Write-Host "`n" + ("-" * 80)
+
+if ($warnings.Count -gt 0) {
+    Write-Host "`n*** WARNINGS ***" -ForegroundColor Red
+    foreach ($w in $warnings) {
+        Write-Host "  ! $w" -ForegroundColor Red
+    }
+    Write-Host "`nContact your Pure account team to discuss renewal or capacity expansion." -ForegroundColor Yellow
+    exit 1
+} else {
+    Write-Host "All subscriptions are within capacity and term limits." -ForegroundColor Green
+    exit 0
+}
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows 10 or Windows 11 PC (PowerShell is already installed — nothing to download)
+- A Pure1 API key — log in to pure1.purestorage.com, go to **Settings → API Registration**, and create a new API token. This is simpler than the JWT method used in the Python scripts — just a single token string
+- Internet access to reach api.pure1.purestorage.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `eo1_subscription_check.ps1` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change this line near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `$Pure1ApiKey` | Your Pure1 API token | pure1.purestorage.com → Settings → API Registration |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, choose **Run as Administrator**.
+
+**Step 4 — Allow script execution (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\eo1_subscription_check.ps1
+```
+
+**What you should see**
+
+A report showing each Evergreen//One subscription with its status, start date, end date, days remaining, reserved capacity, and current usage percentage. If any subscription is within 90 days of its term end, it is highlighted in red with `*** EXPIRING SOON ***`. If any subscription is above 90% capacity, it is also flagged in red. Below the subscription section, a table lists all the individual assets (arrays) included in the subscription. If warnings exist, the script prints a summary and exits with code 1 so it can be used in monitoring scripts.

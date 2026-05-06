@@ -81,6 +81,68 @@ Disconnect-VIServer -Confirm:$false
 exit ($flagged -gt 0 ? 1 : 0)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  `Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force`
+  When prompted about an untrusted repository, type `Y` and press Enter
+- Network access to your vCenter server
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — otherwise Windows adds .txt)
+5. Name it `vcenter_vm_inventory.ps1` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these values near the top (the `param(` block):
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `$VCenterHost` | vCenter IP or FQDN e.g. `vcenter.company.local` | Your vCenter server address |
+| `$VCUser` | vCenter username e.g. `administrator@vsphere.local` | Your vCenter login |
+| `$VCPass` | vCenter password | Your vCenter password |
+| `$SnapAgeDays` | Number of days after which a snapshot is considered old (default 7) | Your preference |
+
+You can edit the defaults directly in the param block, for example:
+`[string]$VCenterHost = "192.168.1.50"`
+
+**Step 3 — Open PowerShell as Administrator**
+
+Windows key → type `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+In PowerShell, paste this before running your script:
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\vcenter_vm_inventory.ps1
+```
+
+**What you should see**
+
+A table of all VMs prints to the screen, then a summary like:
+
+```
+Total VMs : 42
+Flagged   : 7
+CSV saved : vm_inventory_20260506_143022.csv
+```
+
+Open the CSV file on your Desktop in Excel to review all VM details and flags.
+
 ---
 
 ## Cluster Capacity Report (PowerShell / PowerCLI)
@@ -148,6 +210,63 @@ Write-Host $divider
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  `Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force`
+  When prompted about an untrusted repository, type `Y` and press Enter
+- Network access to your vCenter server
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `vcenter_cluster_capacity.ps1` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update the `param(` block:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `$VCenterHost` | vCenter IP or FQDN | Your vCenter server address |
+| `$VCUser` | vCenter username | Your vCenter login |
+| `$VCPass` | vCenter password | Your vCenter password |
+| `$WarnPercent` | Usage % threshold to trigger WARNING (default 80) | Your preference |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Windows key → type `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\vcenter_cluster_capacity.ps1
+```
+
+**What you should see**
+
+A table of all clusters with CPU and memory percentages:
+
+```
+Cluster                        Hosts    VMs  CPU GHz CPU Used    CPU%   Mem GB Mem Used   Mem% Status
+-----------------------------------------------------------------------------------------------
+Production-Cluster              4       32    96.0     41.2    42.9%   768.0    410.0    53.4% OK
+```
+
+Any cluster above 80% shows `WARNING` in red and the script exits with code 1.
 
 ---
 
@@ -221,6 +340,61 @@ if ($Remove -and $toRemove.Count -gt 0) {
 Disconnect-VIServer -Confirm:$false
 exit ($toRemove.Count -gt 0 ? 1 : 0)
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
+- VMware PowerCLI module — install it once by running this in PowerShell:
+  `Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force`
+  When prompted about an untrusted repository, type `Y` and press Enter
+- Network access to your vCenter server
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `vcenter_snapshot_cleanup.ps1` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update the `param(` block:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `$VCenterHost` | vCenter IP or FQDN | Your vCenter server address |
+| `$VCUser` | vCenter username | Your vCenter login |
+| `$VCPass` | vCenter password | Your vCenter password |
+| `$FlagAgeDays` | Age in days to flag a snapshot as old (default 3) | Your preference |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Windows key → type `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+To just list snapshots (safe, no changes):
+```
+cd C:\Users\YourName\Desktop
+.\vcenter_snapshot_cleanup.ps1
+```
+
+To list AND remove old snapshots (you will be asked to confirm):
+```
+.\vcenter_snapshot_cleanup.ps1 -Remove
+```
+
+**What you should see**
+
+A table of all snapshots with their age and size. Snapshots older than 3 days are flagged `OLD`. If you used `-Remove`, you will be prompted to type `YES` before anything is deleted. A log file is saved to your Desktop.
 
 ---
 
@@ -329,6 +503,58 @@ print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else '
 sys.exit(overall)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The `pyVmomi` and `requests` libraries — install them once by running in Command Prompt:
+  `pip install pyVmomi requests`
+- Network access to your vCenter server
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `vcenter_health.py` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `VCENTER_HOST` | vCenter IP or FQDN e.g. `"vcenter.company.local"` | Your vCenter server address |
+| `VC_USER` | vCenter username e.g. `"administrator@vsphere.local"` | Your vCenter login |
+| `VC_PASS` | vCenter password e.g. `"MyPassword123"` | Your vCenter password |
+
+**Step 3 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+python vcenter_health.py
+```
+
+**What you should see**
+
+```
+=== vCenter Health Dashboard: vcenter.company.local ===
+
+  [PASS    ] vCenter system health (REST)           green
+  [PASS    ] ESXi hosts connected                   4/4 connected
+  [PASS    ] Datastores accessible                  8/8 accessible
+  [PASS    ] Recent task errors                     0 failed task(s) in recent history
+
+Overall: PASS
+```
+
+Any CRITICAL items will appear in red. The script exits with code 2 on critical failures.
+
 ---
 
 ## Ansible vCenter Operational Playbook
@@ -413,3 +639,328 @@ Use the `community.vmware` collection to check cluster capacity, vSAN health, sn
       loop: "{{ vm_info.virtual_machines }}"
       when: item.snapshots is defined and item.snapshots | length > 0
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible is easiest to run on Windows via WSL (Windows Subsystem for Linux) — open Microsoft Store, install Ubuntu, then in the Ubuntu terminal run:
+  `sudo apt update && sudo apt install -y ansible python3-pip`
+- Install the VMware community collection:
+  `ansible-galaxy collection install community.vmware`
+  `pip3 install pyVmomi requests`
+- Network access to your vCenter server from the WSL environment
+
+**Step 1 — Save the file**
+
+1. In your WSL/Ubuntu terminal, create the file:
+   `nano ~/vcenter_operational.yml`
+2. Paste the entire code block above
+3. Press `Ctrl+X`, then `Y`, then `Enter` to save
+
+**Step 2 — Fill in your details**
+
+Open the file and update the `vars:` section:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `vcenter_hostname` | vCenter IP or FQDN | Your vCenter server address |
+| `datacenter_name` | Name of your datacenter in vCenter | vSphere Client → top of inventory tree |
+| `vc_username` | vCenter username | Your vCenter login |
+| `vc_password` | vCenter password (or set via env var `VC_PASS`) | Your vCenter password |
+
+**Step 3 — Set credentials as environment variables (recommended)**
+
+```bash
+export VC_USER="administrator@vsphere.local"
+export VC_PASS="YourPassword"
+```
+
+**Step 4 — Create a minimal inventory file**
+
+```bash
+echo "localhost ansible_connection=local" > ~/inventory
+```
+
+**Step 5 — Run it**
+
+```bash
+ansible-playbook -i ~/inventory ~/vcenter_operational.yml
+```
+
+**What you should see**
+
+Ansible prints each task with `ok`, `changed`, or `failed`. Any datastore below 20% free causes a `FAILED` assertion with the datastore name and percentage shown. VMs with snapshots are listed at the end.
+
+---
+
+## Windows: vCenter Session Audit via REST API (PowerShell)
+
+Use the vCenter REST API to list all VMs with power state and memory, and all ESXi hosts with connection state — no extra modules needed, just built-in PowerShell.
+
+~~~powershell
+# vcenter_rest_audit.ps1
+# Uses the vCenter REST API — no PowerCLI required.
+# Requires PowerShell 5.1+ (already on Windows 10/11).
+
+param(
+    [string]$VcenterHost = "192.168.1.50",
+    [string]$VcUser      = "administrator@vsphere.local",
+    [string]$VcPass      = "YourPasswordHere"
+)
+
+# Ignore SSL certificate errors (common in lab environments)
+Add-Type @"
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAll : ICertificatePolicy {
+    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int prob) { return true; }
+}
+"@
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = "https://$VcenterHost/api"
+
+# Step 1: Authenticate — POST /api/session with Basic auth
+$authBytes = [System.Text.Encoding]::ASCII.GetBytes("${VcUser}:${VcPass}")
+$authB64   = [System.Convert]::ToBase64String($authBytes)
+$authHeaders = @{ Authorization = "Basic $authB64" }
+
+try {
+    $sessionResp = Invoke-RestMethod -Uri "$BaseUrl/session" -Method POST -Headers $authHeaders
+} catch {
+    Write-Host "ERROR: Could not authenticate to vCenter. Check IP, username, and password." -ForegroundColor Red
+    Write-Host $_.Exception.Message
+    exit 1
+}
+
+$sessionToken = $sessionResp
+$apiHeaders = @{ "vmware-api-session-id" = $sessionToken }
+
+Write-Host "`n=== vCenter REST API Audit: $VcenterHost ===" -ForegroundColor Cyan
+Write-Host "($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n"
+
+# Step 2: GET /api/vcenter/vm — list all VMs
+try {
+    $vms = Invoke-RestMethod -Uri "$BaseUrl/vcenter/vm" -Method GET -Headers $apiHeaders
+    Write-Host "--- Virtual Machines ($($vms.Count) total) ---"
+    $header = "{0,-35} {1,-15} {2,8} {3}"
+    Write-Host ($header -f "VM Name", "Power State", "Mem MB", "VM ID")
+    Write-Host ("-" * 75)
+    foreach ($vm in ($vms | Sort-Object display_name)) {
+        $powerColour = if ($vm.power_state -eq "POWERED_ON") { "Green" } else { "Yellow" }
+        Write-Host ($header -f $vm.display_name, $vm.power_state, $vm.memory_size_MiB, $vm.vm) -ForegroundColor $powerColour
+    }
+} catch {
+    Write-Host "WARNING: Could not retrieve VM list: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
+Write-Host ""
+
+# Step 3: GET /api/vcenter/host — list all ESXi hosts
+try {
+    $hosts = Invoke-RestMethod -Uri "$BaseUrl/vcenter/host" -Method GET -Headers $apiHeaders
+    Write-Host "--- ESXi Hosts ($($hosts.Count) total) ---"
+    $header2 = "{0,-40} {1,-15} {2}"
+    Write-Host ($header2 -f "Host Name", "Connection", "Host ID")
+    Write-Host ("-" * 75)
+    foreach ($h in ($hosts | Sort-Object name)) {
+        $connColour = if ($h.connection_state -eq "CONNECTED") { "Green" } else { "Red" }
+        Write-Host ($header2 -f $h.name, $h.connection_state, $h.host) -ForegroundColor $connColour
+    }
+} catch {
+    Write-Host "WARNING: Could not retrieve host list: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
+# Step 4: Log out
+try {
+    Invoke-RestMethod -Uri "$BaseUrl/session" -Method DELETE -Headers $apiHeaders | Out-Null
+} catch {}
+
+Write-Host "`nAudit complete." -ForegroundColor Cyan
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
+- Network access to your vCenter server on port 443
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `vcenter_rest_audit.ps1` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top (the `param(` block):
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `$VcenterHost` | vCenter IP or FQDN e.g. `"192.168.1.50"` | Your vCenter server address |
+| `$VcUser` | vCenter username e.g. `"administrator@vsphere.local"` | Your vCenter login |
+| `$VcPass` | vCenter password | Your vCenter password |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Windows key → type `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\vcenter_rest_audit.ps1
+```
+
+**What you should see**
+
+```
+=== vCenter REST API Audit: 192.168.1.50 ===
+(2026-05-06 14:30:22)
+
+--- Virtual Machines (15 total) ---
+VM Name                             Power State      Mem MB  VM ID
+---------------------------------------------------------------------------
+web-server-01                       POWERED_ON         4096  vm-101
+db-server-01                        POWERED_ON         8192  vm-102
+test-vm-02                          POWERED_OFF        2048  vm-103
+
+--- ESXi Hosts (3 total) ---
+Host Name                                Connection     Host ID
+---------------------------------------------------------------------------
+esxi-01.company.local                    CONNECTED      host-201
+esxi-02.company.local                    CONNECTED      host-202
+
+Audit complete.
+```
+
+Powered-on VMs appear in green, powered-off in yellow. Disconnected hosts appear in red.
+
+---
+
+## Windows: vCenter ESXi Host Check via Plink (CMD)
+
+Connect to an ESXi host via SSH using plink (from PuTTY) and run quick health commands. Note: vCenter itself does not expose an SSH shell for ESXCLI commands — this script connects directly to an ESXi host instead.
+
+~~~batch
+@echo off
+REM esxi_host_check.bat — Quick ESXi host health check via SSH (plink)
+REM Connects to an ESXi host using plink (PuTTY command-line SSH tool).
+REM
+REM DOWNLOAD PLINK: https://www.putty.org
+REM   - Download putty-64bit-X.XX-installer.msi and install it.
+REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
+REM   - OR download the standalone plink.exe directly from the PuTTY site.
+REM
+REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
+REM   "C:\Program Files\PuTTY\plink.exe" -ssh root@192.168.1.100
+REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
+REM
+REM NOTE: SSH must be enabled on the ESXi host:
+REM   vSphere Client -> Host -> Manage -> Services -> SSH -> Start
+
+set ESXI_HOST=192.168.1.100
+set SSH_USER=root
+set PLINK="C:\Program Files\PuTTY\plink.exe"
+
+echo.
+echo === ESXi Host Health Check: %ESXI_HOST% ===
+echo.
+
+echo --- ESXi Version ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% "esxcli system version get"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %ESXI_HOST%.
+    echo Check: 1) IP address is correct  2) SSH is enabled on the host  3) Run first-time fingerprint setup above
+    exit /b 1
+)
+
+echo.
+echo --- System Uptime (seconds) ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% "esxcli system stats uptime get"
+
+echo.
+echo --- Storage Filesystems ---
+%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% "esxcli storage filesystem list"
+
+echo.
+echo === Check complete ===
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
+- SSH enabled on your ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
+- The root password for your ESXi host
+- Network access from your PC to the ESXi host management IP
+
+**Step 1 — Accept the SSH fingerprint (one-time setup)**
+
+Before the batch script will work, you must manually accept the host's SSH fingerprint once. Open Command Prompt and run:
+
+```
+"C:\Program Files\PuTTY\plink.exe" -ssh root@192.168.1.100
+```
+
+When asked "Store key in cache?", type `y` and press Enter. Then type the root password. Once connected, press `Ctrl+C` to disconnect. You only need to do this once per ESXi host.
+
+**Step 2 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `esxi_host_check.bat` and save it to your Desktop
+
+**Step 3 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `ESXI_HOST` | ESXi host IP address e.g. `192.168.1.100` | vSphere Client → host summary page |
+| `SSH_USER` | SSH username — almost always `root` | ESXi root account |
+| `PLINK` | Path to plink.exe | Default is `C:\Program Files\PuTTY\plink.exe` |
+
+**Step 4 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 5 — Run it**
+
+You can double-click the `.bat` file on your Desktop, or run it from Command Prompt:
+
+```
+cd C:\Users\YourName\Desktop
+esxi_host_check.bat
+```
+
+**What you should see**
+
+```
+=== ESXi Host Health Check: 192.168.1.100 ===
+
+--- ESXi Version ---
+   Product: VMware ESXi
+   Version: 8.0.0
+   Build: Releasebuild-20513097
+
+--- System Uptime (seconds) ---
+   1382400
+
+--- Storage Filesystems ---
+   Mount Point                     Type    Size          Free
+   /vmfs/volumes/datastore1        VMFS-6  499.75 GB     320.12 GB
+
+=== Check complete ===
+```

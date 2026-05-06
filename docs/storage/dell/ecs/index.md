@@ -12,6 +12,11 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>ECS management shell, S3 API commands, Object Store admin API, and system diagnostics.</span>
+</a>
+
 </div>
 
 ## Overview

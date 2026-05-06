@@ -163,6 +163,48 @@ print(f"{'='*60}\n")
 sys.exit(worst)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (download from python.org — tick "Add Python to PATH" during setup)
+- Network access to your FlashBlade management IP
+- A FlashBlade API token — log in to your FlashBlade GUI at `https://your-flashblade-ip`, go to **Settings → Users**, and create or copy an API token
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_health.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FB_HOST` | FlashBlade management IP or hostname | Your storage admin |
+| `FB_API_TOKEN` | FlashBlade API token | FlashBlade GUI → Settings → Users → API Tokens |
+
+**Step 3 — Open Command Prompt and install the package**
+
+Press the Windows key, type `cmd`, press Enter:
+```
+pip install py-pure-client
+```
+
+**Step 4 — Set variables and run**
+
+```
+set FB_HOST=192.168.1.20
+set FB_API_TOKEN=your-token-here
+cd %USERPROFILE%\Desktop
+python fb_health.py
+```
+
+**What you should see**
+
+The script connects and prints the array name and Purity//FB version. It then checks blades (storage modules), hardware components, active alerts, filesystems (flagging any over 90% used), and S3 buckets. Each check shows `OK` in green or lists issues in red/yellow. The final summary line shows HEALTHY, WARNING, or CRITICAL.
+
 ---
 
 ## Filesystem Capacity Report (Bash)
@@ -240,6 +282,47 @@ printf "Total filesystems: %d  |  Over %d%%: %d\n" "$total" "$WARN_PCT" "$over_w
 (( over_warn > 0 )) && echo -e "${YEL}Review filesystems approaching their provisioned limit.${NC}"
 exit $(( over_warn > 0 ? 1 : 0 ))
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- WSL (Windows Subsystem for Linux) or Git Bash on Windows
+- The Pure FlashBlade CLI tool `purefb` — install with `pip install py-pure-client`
+- A FlashBlade API token
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_fs_report.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FB_HOST` | FlashBlade management IP or hostname | Your storage admin |
+| `FB_API_TOKEN` | FlashBlade API token | FlashBlade GUI → Settings → Users → API Tokens |
+| `FB_WARN_PCT` | Percentage threshold for WARNING (default: 80) | Your capacity policy |
+
+**Step 3 — Open WSL**
+
+Open Ubuntu from the Start menu.
+
+**Step 4 — Install, set variables, and run**
+
+```
+pip install py-pure-client
+export FB_HOST=192.168.1.20
+export FB_API_TOKEN=your-token-here
+cd /mnt/c/Users/YourName/Desktop
+bash fb_fs_report.sh
+```
+
+**What you should see**
+
+A table listing each FlashBlade filesystem with its provisioned size, used space, percentage used, NFS/SMB protocol flags, and a status of OK (green) or WARNING (yellow) if over 80% used. A summary at the bottom shows how many filesystems are approaching their limit.
 
 ---
 
@@ -379,6 +462,52 @@ for lvl, msg in issues:
 sys.exit(worst)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (python.org — tick "Add Python to PATH")
+- API tokens for **both** FlashBlades in your ActiveDR pair
+- Network access to both FlashBlade management IPs
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_activedr.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FB_SRC_HOST` | Source FlashBlade management IP | Your storage admin |
+| `FB_SRC_API_TOKEN` | API token for source FlashBlade | FlashBlade GUI → Settings → Users → API Tokens |
+| `FB_DST_HOST` | Destination FlashBlade management IP | Your storage admin |
+| `FB_DST_API_TOKEN` | API token for destination FlashBlade | FlashBlade GUI → Settings → Users → API Tokens |
+| `FB_RPO_MINUTES` | Maximum acceptable lag in minutes (default: 15) | Your DR policy |
+
+**Step 3 — Open Command Prompt and install packages**
+
+```
+pip install py-pure-client tabulate
+```
+
+**Step 4 — Set variables and run**
+
+```
+set FB_SRC_HOST=192.168.1.20
+set FB_SRC_API_TOKEN=source-token
+set FB_DST_HOST=192.168.2.20
+set FB_DST_API_TOKEN=destination-token
+cd %USERPROFILE%\Desktop
+python fb_activedr.py
+```
+
+**What you should see**
+
+A table listing all ActiveDR replication links showing source/destination filesystem pair, replication status, direction, current lag time, and throughput. Links that are not actively replicating show `NOT ACTIVE` in red. Links with lag above your RPO threshold show `LAG WARN` in yellow. A summary at the bottom shows the overall health.
+
 ---
 
 ## S3 Bucket Audit (Python)
@@ -509,4 +638,606 @@ print(tabulate(
 
 print(f"\nNote: Buckets with versioning enabled and >{VERSION_WARN:,} objects may have significant version overhead.")
 print("Review with:  s3cmd versions s3://<bucket>  or  aws s3api list-object-versions --bucket <bucket>")
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (python.org — tick "Add Python to PATH")
+- S3 access credentials for your FlashBlade — these are Object Store user credentials, not admin credentials. Create an Object Store user in the FlashBlade GUI under **Settings → Object Store Users** and generate an access key/secret key pair
+- The FlashBlade S3 endpoint URL, typically `https://your-flashblade-ip` or a data VIP
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_s3_audit.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FB_S3_ENDPOINT` | FlashBlade S3 endpoint URL, e.g. `https://192.168.1.20` | Your storage admin |
+| `AWS_ACCESS_KEY_ID` | S3 access key ID | FlashBlade GUI → Settings → Object Store Users |
+| `AWS_SECRET_ACCESS_KEY` | S3 secret access key | FlashBlade GUI → Settings → Object Store Users |
+
+**Step 3 — Open Command Prompt and install packages**
+
+```
+pip install boto3 tabulate
+```
+
+**Step 4 — Set variables and run**
+
+```
+set FB_S3_ENDPOINT=https://192.168.1.20
+set AWS_ACCESS_KEY_ID=your-access-key
+set AWS_SECRET_ACCESS_KEY=your-secret-key
+cd %USERPROFILE%\Desktop
+python fb_s3_audit.py
+```
+
+**What you should see**
+
+A table sorted by bucket size (largest first) showing each bucket's name, object count, total size in GB, versioning status, and a flag. Buckets with versioning enabled and more than 10,000 objects are flagged in yellow — these may have high version overhead consuming unexpected capacity. A note at the bottom shows how to review object versions in detail.
+
+---
+
+## Windows: FlashBlade Health Check via REST API (PowerShell)
+
+Authenticate to the FlashBlade REST API, retrieve array information, active alerts, and hardware component health, then print a formatted health summary. Works from any Windows PC on the same network.
+
+~~~powershell
+# fb_health_rest.ps1 — FlashBlade Health Check via REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Run: .\fb_health_rest.ps1
+
+$FbHost   = "192.168.1.20"         # Your FlashBlade management IP or hostname
+$ApiToken = "your-api-token-here"  # Found in FlashBlade GUI: Settings -> Users -> API Tokens
+
+# Handle self-signed SSL certificates
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# FlashBlade REST API version — check your Purity//FB version for the right one
+$ApiVersion = "2.3"
+$ApiBase    = "https://$FbHost/api/$ApiVersion"
+
+# --- Step 1: Authenticate ---
+Write-Host "`nAuthenticating to FlashBlade $FbHost ..." -ForegroundColor Cyan
+
+try {
+    $LoginResp = Invoke-WebRequest `
+        -Uri     "$ApiBase/login" `
+        -Method  POST `
+        -Headers @{ "api-token" = $ApiToken } `
+        -UseBasicParsing `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"
+    exit 1
+}
+
+$AuthToken = $LoginResp.Headers["x-auth-token"]
+if (-not $AuthToken) {
+    Write-Error "No x-auth-token returned. Check API token."
+    exit 1
+}
+
+$AuthHeaders = @{ "x-auth-token" = $AuthToken; "Content-Type" = "application/json" }
+Write-Host "Authenticated successfully." -ForegroundColor Green
+
+function Invoke-FbApi {
+    param([string]$Path)
+    try {
+        return Invoke-RestMethod -Uri "$ApiBase$Path" -Headers $AuthHeaders -Method GET -ErrorAction Stop
+    } catch {
+        Write-Warning "API call failed for $Path : $($_.Exception.Message)"
+        return $null
+    }
+}
+
+Write-Host "`n=== FlashBlade Health Summary ===" -ForegroundColor Cyan
+Write-Host ("-" * 60)
+
+# --- Array info ---
+$arrays = Invoke-FbApi "/arrays"
+if ($arrays -and $arrays.items -and $arrays.items.Count -gt 0) {
+    $arr = $arrays.items[0]
+    Write-Host "Array Name  : $($arr.name)"
+    Write-Host "Purity//FB  : $($arr.os)"
+    $usedTiB  = [math]::Round($arr.space.total_physical / 1TB, 2)
+    Write-Host "Used Space  : $usedTiB TiB"
+}
+
+# --- Active alerts ---
+Write-Host "`n--- Alerts ---"
+$alerts = Invoke-FbApi "/alerts?filter=flagged%3D%27true%27"
+if ($alerts -and $alerts.items -and $alerts.items.Count -gt 0) {
+    foreach ($alert in $alerts.items) {
+        $colour = if ($alert.severity -eq "error") { "Red" } else { "Yellow" }
+        Write-Host "  [$($alert.severity.ToUpper())] $($alert.summary)" -ForegroundColor $colour
+    }
+} else {
+    Write-Host "  No active alerts." -ForegroundColor Green
+}
+
+# --- Hardware component health ---
+Write-Host "`n--- Hardware Components ---"
+$hw = Invoke-FbApi "/hardware"
+if ($hw -and $hw.items) {
+    $badHw = $hw.items | Where-Object { $_.status -notin @("ok", "not_installed", "") }
+    if ($badHw -and $badHw.Count -gt 0) {
+        Write-Host "  $($badHw.Count) component(s) NOT OK:" -ForegroundColor Red
+        foreach ($h in $badHw) {
+            Write-Host "    $($h.name): status=$($h.status)" -ForegroundColor Red
+        }
+    } else {
+        Write-Host "  All $($hw.items.Count) hardware components are OK." -ForegroundColor Green
+    }
+}
+
+# --- Logout ---
+try {
+    Invoke-RestMethod -Uri "$ApiBase/logout" -Method DELETE -Headers $AuthHeaders -ErrorAction SilentlyContinue | Out-Null
+} catch {}
+
+Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows 10 or Windows 11 PC (PowerShell is already installed — nothing to download)
+- Network access to your FlashBlade management IP
+- A FlashBlade API token — log in to the FlashBlade GUI at `https://your-flashblade-ip`, go to **Settings → Users**, and create or copy an API token
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_health_rest.ps1` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `$FbHost` | FlashBlade management IP or hostname | Your storage admin |
+| `$ApiToken` | Your FlashBlade API token | FlashBlade GUI → Settings → Users → API Tokens |
+| `$ApiVersion` | REST API version (default: 2.3) | Check your Purity//FB version — use 2.3 for most deployments |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, choose **Run as Administrator**.
+
+**Step 4 — Allow script execution (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\fb_health_rest.ps1
+```
+
+**What you should see**
+
+The script authenticates and prints the FlashBlade array name, Purity//FB version, and used space. Then it lists any active (flagged) alerts in red (errors) or yellow (warnings). Finally it checks all hardware components — any component not in "ok" or "not_installed" state is listed in red. If everything is fine, all three sections show green confirmations.
+
+---
+
+## Windows: FlashBlade Capacity and Filesystems via Plink (CMD)
+
+Use plink.exe to SSH into your FlashBlade and run the Purity CLI commands to list array capacity, alerts, and filesystems. Works from any Windows Command Prompt.
+
+~~~batch
+@echo off
+REM fb_capacity_report.bat — FlashBlade Capacity and Filesystems via Plink (Windows CMD)
+REM Uses plink.exe (part of PuTTY) to SSH into the FlashBlade.
+REM Download PuTTY from: https://www.putty.org (free, trusted tool)
+REM
+REM FIRST-TIME SETUP: Run once to accept the FlashBlade host fingerprint:
+REM   plink.exe -ssh pureuser@192.168.1.20
+REM   Type 'y' when asked, then Ctrl+C to exit.
+
+set FB_HOST=192.168.1.20
+set SSH_USER=pureuser
+set PLINK=plink.exe
+
+echo.
+echo === FlashBlade Capacity and Filesystem Report ===
+echo Array: %FB_HOST%
+echo Time: %date% %time%
+echo.
+
+REM --- Array capacity overview ---
+echo --- Array Capacity ---
+%PLINK% -ssh -l %SSH_USER% -batch %FB_HOST% "purity fb-array list"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %FB_HOST%. Check hostname and that plink.exe is in PATH.
+    goto :end
+)
+
+echo.
+
+REM --- Active alerts ---
+echo --- Active Alerts ---
+%PLINK% -ssh -l %SSH_USER% -batch %FB_HOST% "purity alert list"
+
+echo.
+
+REM --- Filesystem list ---
+echo --- Filesystems ---
+%PLINK% -ssh -l %SSH_USER% -batch %FB_HOST% "purity fs list"
+
+echo.
+echo === Report complete ===
+
+:end
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed (download from putty.org — it is free). Make sure `plink.exe` is available
+- Network access to your FlashBlade management IP
+- SSH access to the FlashBlade — the default SSH user is `pureuser`
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fb_capacity_report.bat` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FB_HOST` | FlashBlade management IP or hostname | Your storage admin |
+| `SSH_USER` | SSH username (default: `pureuser`) | Your storage admin |
+
+**Step 3 — First-time host key acceptance**
+
+Open Command Prompt and run:
+```
+plink.exe -ssh pureuser@192.168.1.20
+```
+Type `y` when prompted, then press Ctrl+C.
+
+**Step 4 — Add your password (optional)**
+
+For unattended use, add `-pw yourpassword` after `-batch` on each plink line.
+
+**Step 5 — Run the script**
+
+Double-click `fb_capacity_report.bat` on your Desktop, or run from Command Prompt:
+```
+cd %USERPROFILE%\Desktop
+fb_capacity_report.bat
+```
+
+**What you should see**
+
+Three sections: overall array capacity from `purity fb-array list`, any active alerts from `purity alert list`, and a list of all filesystems with their size and usage from `purity fs list`. This is a quick read-only health snapshot using only SSH and the built-in FlashBlade Purity CLI.
+
+---
+
+## Daily Check Script (Bash via SSH)
+
+Connect to a FlashBlade via SSH using the `purity` CLI, check array status, active alerts, hardware health, and filesystem capacity. Flag any filesystem over 80% used or any hardware component not healthy. Exit 0 for PASS, 1 for FAIL.
+
+~~~bash
+#!/bin/bash
+# fb_daily_check.sh
+# Usage: FB_HOST=flashblade01 SSH_USER=pureuser ./fb_daily_check.sh
+
+FB_HOST="${FB_HOST:?Set FB_HOST}"
+SSH_USER="${SSH_USER:-pureuser}"
+WARN_PCT="${WARN_PCT:-80}"
+
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SSH_USER}@${FB_HOST}"
+RED='\033[0;31m'; GRN='\033[0;32m'; YEL='\033[0;33m'; NC='\033[0m'
+FAIL=0
+
+pass() { echo -e "  ${GRN}[PASS]${NC} $*"; }
+fail() { echo -e "  ${RED}[FAIL]${NC} $*"; FAIL=1; }
+warn() { echo -e "  ${YEL}[WARN]${NC} $*"; }
+
+echo "=== FlashBlade Daily Check: ${FB_HOST} ==="
+echo "Time: $(date)"
+echo
+
+# Array info
+echo "--- Array Info ---"
+$SSH "purity fb-array list" 2>/dev/null || fail "Cannot connect or run purity commands"
+
+echo
+echo "--- Active Alerts ---"
+ALERTS=$($SSH "purity alert list" 2>/dev/null)
+CRIT=$(echo "$ALERTS" | grep -ic 'critical' || true)
+WARN_COUNT=$(echo "$ALERTS" | grep -ic 'warning' || true)
+if [[ $CRIT -gt 0 ]]; then
+    fail "$CRIT critical alert(s) active"
+    echo "$ALERTS" | grep -i 'critical'
+elif [[ $WARN_COUNT -gt 0 ]]; then
+    warn "$WARN_COUNT warning alert(s) active"
+else
+    pass "No active alerts"
+fi
+
+echo
+echo "--- Hardware Health ---"
+HW=$($SSH "purity hardware list" 2>/dev/null)
+HW_FAIL=$(echo "$HW" | awk 'NR>1 && $NF!="healthy" && $NF!="ok" && $NF!="" {print}')
+if [[ -n "$HW_FAIL" ]]; then
+    fail "Unhealthy hardware components detected:"
+    echo "$HW_FAIL"
+else
+    pass "All hardware components healthy"
+fi
+
+echo
+echo "--- Filesystem Capacity ---"
+FS=$($SSH "purity fs list --space" 2>/dev/null)
+FS_OVER=$(echo "$FS" | awk -v thr="$WARN_PCT" 'NR>1 {
+    gsub(/%/, "", $NF)
+    if ($NF+0 > thr+0) print $0
+}')
+if [[ -n "$FS_OVER" ]]; then
+    fail "Filesystems over ${WARN_PCT}% used:"
+    echo "$FS_OVER"
+else
+    pass "All filesystems below ${WARN_PCT}% used"
+fi
+
+echo
+if [[ $FAIL -eq 0 ]]; then
+    echo -e "${GRN}RESULT: PASS${NC}"
+else
+    echo -e "${RED}RESULT: FAIL${NC}"
+fi
+exit $FAIL
+~~~
+
+---
+
+## Incident Triage Script (Bash via SSH)
+
+Capture a full snapshot of array state to a timestamped file for incident investigation. Collects array info, all alerts, hardware status, filesystem stats, network interfaces, and pod status.
+
+~~~bash
+#!/bin/bash
+# fb_incident_triage.sh
+# Usage: FB_HOST=flashblade01 SSH_USER=pureuser ./fb_incident_triage.sh
+
+FB_HOST="${FB_HOST:?Set FB_HOST}"
+SSH_USER="${SSH_USER:-pureuser}"
+TS=$(date '+%Y%m%d_%H%M%S')
+OUT="fb_triage_${FB_HOST}_${TS}.txt"
+
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SSH_USER}@${FB_HOST}"
+
+log() { echo "$*" | tee -a "$OUT"; }
+
+log "=== FlashBlade Incident Triage: ${FB_HOST} ==="
+log "Timestamp: $(date)"
+log "Output file: ${OUT}"
+log ""
+
+for section in \
+    "Array Info:purity fb-array list" \
+    "All Alerts:purity alert list" \
+    "Hardware Status:purity hardware list" \
+    "Filesystem Stats:purity fs list --space" \
+    "Network Interfaces:purity network list" \
+    "Pod Status:purity pod list"
+do
+    label="${section%%:*}"
+    cmd="${section#*:}"
+    log "--- ${label} ---"
+    $SSH "$cmd" 2>&1 | tee -a "$OUT"
+    log ""
+done
+
+echo
+echo "Triage data saved to: ${OUT}"
+~~~
+
+---
+
+## Change Pre-Check Script (Bash via SSH)
+
+Run before any maintenance window on a FlashBlade. Verifies no active critical alerts, all hardware healthy, filesystems below 85% used, and both controllers healthy. Exits 2 if any check fails.
+
+~~~bash
+#!/bin/bash
+# fb_precheck.sh
+# Usage: FB_HOST=flashblade01 SSH_USER=pureuser ./fb_precheck.sh
+
+FB_HOST="${FB_HOST:?Set FB_HOST}"
+SSH_USER="${SSH_USER:-pureuser}"
+FS_MAX_PCT=85
+EXIT_CODE=0
+
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SSH_USER}@${FB_HOST}"
+RED='\033[0;31m'; GRN='\033[0;32m'; NC='\033[0m'
+
+go()   { echo -e "  ${GRN}[GO]${NC}    $*"; }
+nogo() { echo -e "  ${RED}[NO-GO]${NC} $*"; EXIT_CODE=2; }
+
+echo "=== FlashBlade Change Pre-Check: ${FB_HOST} ==="
+echo "Time: $(date)"
+echo
+
+# Check 1: No active critical alerts
+CRIT=$($SSH "purity alert list" 2>/dev/null | grep -ic 'critical' || true)
+if [[ $CRIT -gt 0 ]]; then
+    nogo "$CRIT critical alert(s) active — resolve before change"
+else
+    go "No critical alerts"
+fi
+
+# Check 2: All hardware healthy
+HW_FAIL=$($SSH "purity hardware list" 2>/dev/null | awk 'NR>1 && $NF!="healthy" && $NF!="ok" && $NF!=""' | wc -l | tr -d ' ')
+if [[ $HW_FAIL -gt 0 ]]; then
+    nogo "$HW_FAIL hardware component(s) not healthy"
+else
+    go "All hardware components healthy"
+fi
+
+# Check 3: Filesystems below 85%
+FS_OVER=$($SSH "purity fs list --space" 2>/dev/null | awk -v thr="$FS_MAX_PCT" 'NR>1 {
+    gsub(/%/, "", $NF); if ($NF+0 >= thr+0) print $1
+}')
+if [[ -n "$FS_OVER" ]]; then
+    nogo "Filesystem(s) at or above ${FS_MAX_PCT}%: $FS_OVER"
+else
+    go "All filesystems below ${FS_MAX_PCT}%"
+fi
+
+# Check 4: Both controllers healthy (CT0 + CT1)
+CTLR=$($SSH "purity array list" 2>/dev/null)
+CT_FAIL=$(echo "$CTLR" | grep -ic 'degraded\|failed\|offline' || true)
+if [[ $CT_FAIL -gt 0 ]]; then
+    nogo "One or more controllers not healthy"
+else
+    go "Both controllers healthy"
+fi
+
+echo
+if [[ $EXIT_CODE -eq 0 ]]; then
+    echo -e "${GRN}VERDICT: GO — safe to proceed${NC}"
+else
+    echo -e "${RED}VERDICT: NO-GO — resolve issues before proceeding${NC}"
+fi
+exit $EXIT_CODE
+~~~
+
+---
+
+## Post-Change Validation Script (Bash via SSH)
+
+Run after a maintenance window or blade firmware upgrade. Performs the same checks as pre-check and additionally confirms blade firmware matches the expected version.
+
+~~~bash
+#!/bin/bash
+# fb_postcheck.sh
+# Usage: FB_HOST=flashblade01 SSH_USER=pureuser [EXPECTED_FW=3.3.7] ./fb_postcheck.sh
+
+FB_HOST="${FB_HOST:?Set FB_HOST}"
+SSH_USER="${SSH_USER:-pureuser}"
+EXPECTED_FW="${EXPECTED_FW:-}"
+FS_MAX_PCT=85
+EXIT_CODE=0
+
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SSH_USER}@${FB_HOST}"
+RED='\033[0;31m'; GRN='\033[0;32m'; YEL='\033[0;33m'; NC='\033[0m'
+
+ok()   { echo -e "  ${GRN}[OK]${NC}   $*"; }
+fail() { echo -e "  ${RED}[FAIL]${NC} $*"; EXIT_CODE=1; }
+warn() { echo -e "  ${YEL}[WARN]${NC} $*"; }
+
+echo "=== FlashBlade Post-Change Validation: ${FB_HOST} ==="
+echo "Time: $(date)"
+echo
+
+# Check 1: No critical alerts
+CRIT=$($SSH "purity alert list" 2>/dev/null | grep -ic 'critical' || true)
+[[ $CRIT -gt 0 ]] && fail "$CRIT critical alert(s)" || ok "No critical alerts"
+
+# Check 2: All hardware healthy
+HW_FAIL=$($SSH "purity hardware list" 2>/dev/null | awk 'NR>1 && $NF!="healthy" && $NF!="ok" && $NF!=""' | wc -l | tr -d ' ')
+[[ $HW_FAIL -gt 0 ]] && fail "$HW_FAIL hardware component(s) not healthy" || ok "All hardware components healthy"
+
+# Check 3: Filesystems below 85%
+FS_OVER=$($SSH "purity fs list --space" 2>/dev/null | awk -v thr="$FS_MAX_PCT" 'NR>1 {
+    gsub(/%/, "", $NF); if ($NF+0 >= thr+0) print $1
+}')
+[[ -n "$FS_OVER" ]] && fail "Filesystem(s) at or above ${FS_MAX_PCT}%: $FS_OVER" || ok "All filesystems below ${FS_MAX_PCT}%"
+
+# Check 4: Controller health
+CT_FAIL=$($SSH "purity array list" 2>/dev/null | grep -ic 'degraded\|failed\|offline' || true)
+[[ $CT_FAIL -gt 0 ]] && fail "Controller health issue detected" || ok "Both controllers healthy"
+
+# Check 5: Blade firmware (if EXPECTED_FW set)
+if [[ -n "$EXPECTED_FW" ]]; then
+    FW_MISMATCH=$($SSH "purity hardware list" 2>/dev/null | awk -v fw="$EXPECTED_FW" '$0 ~ /blade/ && $0 !~ fw {print $1}')
+    if [[ -n "$FW_MISMATCH" ]]; then
+        fail "Blade(s) not at expected firmware ${EXPECTED_FW}: $FW_MISMATCH"
+    else
+        ok "All blades at expected firmware ${EXPECTED_FW}"
+    fi
+else
+    warn "EXPECTED_FW not set — skipping firmware version check"
+fi
+
+echo
+[[ $EXIT_CODE -eq 0 ]] && echo -e "${GRN}RESULT: PASS${NC}" || echo -e "${RED}RESULT: FAIL${NC}"
+exit $EXIT_CODE
+~~~
+
+---
+
+## Health Check Script (Bash, cron-safe)
+
+Lightweight cron-safe script. Outputs array model/version, active alert counts (CRIT/WARN), hardware status, and filesystem usage summary. Exits 0 (healthy), 1 (warning), or 2 (critical).
+
+~~~bash
+#!/bin/bash
+# fb_health.sh — cron-safe FlashBlade health check
+# Usage: FB_HOST=flashblade01 SSH_USER=pureuser ./fb_health.sh
+# Cron: */15 * * * * FB_HOST=fb01 SSH_USER=pureuser /opt/scripts/fb_health.sh >> /var/log/fb_health.log 2>&1
+
+FB_HOST="${FB_HOST:?Set FB_HOST}"
+SSH_USER="${SSH_USER:-pureuser}"
+SSH="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes ${SSH_USER}@${FB_HOST}"
+
+TS=$(date '+%Y-%m-%d %H:%M:%S')
+worst=0
+
+# Array info
+ARRAY_INFO=$($SSH "purity fb-array list" 2>/dev/null | head -4)
+
+# Alert counts
+CRIT_COUNT=$($SSH "purity alert list" 2>/dev/null | grep -ic 'critical' || echo 0)
+WARN_COUNT=$($SSH "purity alert list" 2>/dev/null | grep -ic 'warning' || echo 0)
+
+# Hardware: count non-healthy
+HW_FAIL=$($SSH "purity hardware list" 2>/dev/null | awk 'NR>1 && $NF!="healthy" && $NF!="ok" && $NF!=""' | wc -l | tr -d ' ')
+
+# Filesystem summary: highest % used
+FS_MAX=$($SSH "purity fs list --space" 2>/dev/null | awk 'NR>1 {gsub(/%/,""); print $NF+0}' | sort -n | tail -1)
+FS_MAX="${FS_MAX:-0}"
+
+# Determine exit code
+[[ $CRIT_COUNT -gt 0 || $HW_FAIL -gt 0 ]] && worst=2
+[[ $worst -lt 2 && ( $WARN_COUNT -gt 0 || $FS_MAX -ge 80 ) ]] && worst=1
+
+STATUS="HEALTHY"
+[[ $worst -eq 1 ]] && STATUS="WARNING"
+[[ $worst -eq 2 ]] && STATUS="CRITICAL"
+
+echo "[${TS}] ${FB_HOST} | ${STATUS} | CRIT_ALERTS=${CRIT_COUNT} WARN_ALERTS=${WARN_COUNT} HW_FAIL=${HW_FAIL} FS_MAX_PCT=${FS_MAX}%"
+exit $worst
 ~~~

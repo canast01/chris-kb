@@ -7,6 +7,16 @@
   <span>Python alert poller, capacity trend reporter, and Ansible daily CloudIQ health playbook.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>CloudIQ REST API reference — authentication, systems, alerts, capacity, and performance endpoints.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health score review, change readiness, incident triage, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

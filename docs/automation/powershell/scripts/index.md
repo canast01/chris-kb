@@ -121,6 +121,52 @@ $Results | Export-Csv -Path $ExportCsv -NoTypeInformation
 Write-Host "`nExported: $ExportCsv"
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7 (already on most Windows 10/11 machines)
+- WinRM (Windows Remote Management) enabled on the servers you want to check — ask your IT team if unsure
+- Admin credentials for the remote servers (or your account must have remote management access)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `windows-health-check.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+The server names are passed when you run the script — no editing needed inside the file.
+
+| Parameter | What to enter | Example |
+|---|---|---|
+| `-Servers` | Comma-separated list of server names or IPs | `server01,server02,192.168.1.10` |
+| `-Credential` | Optional — your admin credentials if needed | Leave out if your current account has access |
+| `-ExportCsv` | Optional — where to save the CSV report | Default is a timestamped file in your current folder |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\windows-health-check.ps1 -Servers server01,server02
+```
+
+**What you should see**
+
+A table with one row per server showing CPU%, memory%, any disks over 85%, any stopped automatic services, last boot time, and whether a reboot is pending. Below the table, any issues are highlighted in red or yellow. A CSV file is saved so you can open it in Excel.
+
 ---
 
 ## Active Directory User Audit (PowerShell)
@@ -224,6 +270,51 @@ Write-Host "Orphaned admin accounts                  : $($Orphaned.Count)"
 Write-Host ""
 Write-Host "Reports saved to: $OutputDir" -ForegroundColor Green
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows machine that is joined to your Active Directory domain
+- RSAT (Remote Server Administration Tools) installed — go to Windows Settings → Apps → Optional features → Add a feature → search for "RSAT: Active Directory"
+- A domain account with read access to Active Directory (a regular domain user is usually enough for read-only auditing)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `ad-user-audit.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+The parameters are optional — the defaults are usually fine:
+
+| Parameter | What to enter | Example |
+|---|---|---|
+| `-OutputDir` | Folder to save CSV reports | `C:\Reports` — this folder must exist |
+| `-InactiveDays` | Days without login to consider inactive | Default: `90` |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\ad-user-audit.ps1 -OutputDir C:\Reports
+```
+
+**What you should see**
+
+Five numbered checks run in sequence. Each prints how many accounts were found. At the end a summary table shows counts for each category. Five CSV files are saved in your output folder — open them in Excel to review the details.
 
 ---
 
@@ -369,6 +460,55 @@ if (($CritList.Count -gt 0 -or $WarnList.Count -gt 0) -and $SmtpServer -and $Ale
 }
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7
+- WinRM enabled on the servers to scan (for remote scanning — or run locally by passing `localhost` as the server)
+- SMTP server details if you want email alerts
+- Admin access on the servers being scanned
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `cert-expiry-monitor.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Parameters are passed on the command line:
+
+| Parameter | What to enter | Example |
+|---|---|---|
+| `-Servers` | Comma-separated server names/IPs | `webserver01,webserver02` |
+| `-WarnDays` | Days before expiry to warn | Default: `30` |
+| `-CritDays` | Days before expiry for critical alert | Default: `14` |
+| `-SmtpServer` | Your SMTP server address | `smtp.yourcompany.com` |
+| `-AlertEmail` | Email address to send alerts to | `ops@yourcompany.com` |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\cert-expiry-monitor.ps1 -Servers webserver01,webserver02 -SmtpServer smtp.example.com -AlertEmail ops@example.com
+```
+
+**What you should see**
+
+A table showing every certificate found on each server, sorted by days remaining. CRITICAL certificates (expiring soon) appear first. The summary line shows counts of CRITICAL vs WARNING. If any alerts are found and SMTP is configured, an email is sent.
+
 ---
 
 ## Service Health Monitor (PowerShell)
@@ -498,3 +638,646 @@ if ($NotRunning.Count -gt 0) {
 Write-Log "Check complete. ExitCode=$ExitCode | Log: $LOGFILE"
 exit $ExitCode
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7
+- WinRM enabled on the servers you want to check
+- Admin access to start/stop services if you want to use `-AttemptRestart`
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `service-health-monitor.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Edit the `$ServiceMap` section inside the script to match your environment:
+
+| Section | What to enter | Where to find it |
+|---|---|---|
+| Server names (e.g. `'webserver01'`) | Your actual server names or IPs | Your server list |
+| Service names (e.g. `'W3SVC'`) | The service names to check on each server | Run `Get-Service` on the server to see all service names |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\service-health-monitor.ps1
+```
+
+To also try restarting any stopped automatic services:
+
+```
+.\service-health-monitor.ps1 -AttemptRestart $true
+```
+
+**What you should see**
+
+Timestamped log lines as each service is checked. A summary table shows every server/service combination with its status. Any stopped automatic services are highlighted in red. The script exits with code 0 (all running), 1 (some stopped), or 2 (errors connecting). A log file is also saved.
+
+---
+
+## Windows: PowerShell Script Runner with Logging (CMD Batch)
+
+A batch file that launches any PowerShell script, logs all output to a timestamped file, and shows it in the console at the same time. Useful for running scripts on a schedule or double-clicking from your Desktop.
+
+~~~batch
+@echo off
+REM ps-runner.bat
+REM Launches a PowerShell script and logs all output to C:\Logs\
+REM
+REM Usage: Just double-click, or run from Command Prompt.
+REM        Edit PS_SCRIPT and LOG_DIR below to match your setup.
+
+set PS_SCRIPT=myscript.ps1
+set LOG_DIR=C:\Logs
+
+REM Create log directory if it doesn't exist
+if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
+
+REM Build a timestamped log filename
+for /f "tokens=1-3 delims=/ " %%a in ('date /t') do set DATE_PART=%%c%%b%%a
+for /f "tokens=1-2 delims=: " %%a in ('time /t') do set TIME_PART=%%a%%b
+set LOGFILE=%LOG_DIR%\%PS_SCRIPT%-%DATE_PART%-%TIME_PART%.log
+
+echo === PowerShell Script Runner ===
+echo Script  : %PS_SCRIPT%
+echo Log file: %LOGFILE%
+echo.
+
+REM Run the PowerShell script with execution policy bypass
+REM Output goes to both the console window and the log file
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0%PS_SCRIPT%" 2>&1 | tee "%LOGFILE%"
+
+if %errorlevel% equ 0 (
+    echo.
+    echo Script completed successfully.
+    echo Log saved to: %LOGFILE%
+) else (
+    echo.
+    echo Script FAILED with exit code %errorlevel%.
+    echo Review the log at: %LOGFILE%
+)
+
+pause
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell (already on Windows 10/11)
+- The PowerShell script you want to run saved in the same folder as this batch file
+- The `C:\Logs\` folder (the batch file creates it automatically if it doesn't exist)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `ps-runner.bat` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `PS_SCRIPT` | Filename of the PowerShell script to run, e.g. `windows-health-check.ps1` | The `.ps1` file you want to run (must be in the same folder as this batch file) |
+| `LOG_DIR` | Folder where log files are saved | Default: `C:\Logs` — will be created automatically |
+
+**Step 3 — Open the right terminal**
+
+- **For .bat / .cmd:** Open Command Prompt or just double-click the file
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+ps-runner.bat
+```
+
+Or just double-click the file from your Desktop.
+
+**What you should see**
+
+The PowerShell script runs and its output appears in the Command Prompt window in real time. At the same time, everything is saved to a timestamped log file in `C:\Logs\`. When it finishes, the window shows either "completed successfully" or "FAILED" and tells you where the log file is. The window stays open so you can read it.
+
+---
+
+## Windows: PowerShell Module Auto-Installer (PowerShell)
+
+Automatically check and install the PowerShell modules most commonly needed for infrastructure work. Includes an example of using Posh-SSH for SSH connections from PowerShell.
+
+~~~powershell
+# Install-InfraModules.ps1
+# Checks and installs required PowerShell modules for infrastructure work.
+# Run as Administrator for system-wide install, or without for current user only.
+
+$RequiredModules = @(
+    @{ Name = "VMware.PowerCLI";   MinVersion = "13.0.0" },
+    @{ Name = "Az";                MinVersion = "10.0.0" },
+    @{ Name = "AWS.Tools.Common";  MinVersion = "4.0.0"  },
+    @{ Name = "Posh-SSH";          MinVersion = "3.0.0"  }
+)
+
+$InstallScope = if ($IsWindows -and ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
+    "AllUsers"
+} else {
+    "CurrentUser"
+}
+
+Write-Host "`n=== PowerShell Module Auto-Installer ===" -ForegroundColor Cyan
+Write-Host "Install scope : $InstallScope"
+Write-Host "Time          : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n"
+
+Write-Host ("{0,-30} {1,-15} {2,-15} {3}" -f "Module", "Required", "Installed", "Status")
+Write-Host ("-" * 75)
+
+$results = foreach ($mod in $RequiredModules) {
+    $name       = $mod.Name
+    $minVersion = $mod.MinVersion
+
+    $installed = Get-Module -ListAvailable -Name $name |
+                 Sort-Object Version -Descending |
+                 Select-Object -First 1
+
+    if ($installed) {
+        if ([Version]$installed.Version -ge [Version]$minVersion) {
+            $status = "OK"
+            $color  = "Green"
+        } else {
+            $status = "Outdated — updating"
+            $color  = "Yellow"
+        }
+    } else {
+        $status = "Missing — installing"
+        $color  = "Red"
+    }
+
+    Write-Host ("{0,-30} {1,-15} {2,-15} " -f $name, $minVersion, ($installed.Version ?? "Not installed")) -NoNewline
+    Write-Host $status -ForegroundColor $color
+
+    [PSCustomObject]@{
+        Name      = $name
+        Required  = $minVersion
+        Installed = $installed.Version ?? "Not installed"
+        Status    = $status
+    }
+}
+
+Write-Host ""
+
+# Install or update modules that need it
+foreach ($r in $results) {
+    if ($r.Status -ne "OK") {
+        Write-Host "Installing $($r.Name)..." -ForegroundColor Yellow
+        try {
+            Install-Module -Name $r.Name -MinimumVersion $r.Required -Scope $InstallScope -Force -AllowClobber
+            Write-Host "  $($r.Name) installed successfully." -ForegroundColor Green
+        } catch {
+            Write-Host "  ERROR installing $($r.Name): $_" -ForegroundColor Red
+        }
+    }
+}
+
+Write-Host "`nAll modules checked." -ForegroundColor Cyan
+
+# --- Example: Using Posh-SSH for SSH from PowerShell ---
+Write-Host "`n--- Posh-SSH Example (SSH from PowerShell) ---" -ForegroundColor White
+Write-Host @"
+# Posh-SSH lets you SSH into Linux/network devices from PowerShell.
+# No need for PuTTY or plink.
+
+# Connect to a server (prompts for username/password):
+`$cred    = Get-Credential
+`$session = New-SSHSession -ComputerName "192.168.1.100" -Credential `$cred
+
+# Run a command:
+`$result = Invoke-SSHCommand -SessionId `$session.SessionId -Command "df -h"
+`$result.Output
+
+# Disconnect when done:
+Remove-SSHSession -SessionId `$session.SessionId
+"@
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7
+- Internet access so PowerShell can download modules from the PowerShell Gallery
+- Running as Administrator gives system-wide install; without it installs for your user only
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `Install-InfraModules.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+The `$RequiredModules` list near the top can be edited to add or remove modules:
+
+| Field | What to enter | Example |
+|---|---|---|
+| `Name` | PowerShell module name from the Gallery | `"Az"` |
+| `MinVersion` | Minimum version you need | `"10.0.0"` |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\Install-InfraModules.ps1
+```
+
+**What you should see**
+
+A table showing each module with its required version, currently installed version, and status (OK, Outdated, or Missing). Any missing or outdated modules are automatically downloaded and installed. At the end, an example snippet shows how to use Posh-SSH to connect to a Linux server directly from PowerShell.
+
+---
+
+## Daily Check Script
+
+Check that scheduled PowerShell tasks ran, review log files for errors, test connectivity to key infrastructure endpoints, and verify required modules are loaded and up to date. Environment variables: `SCRIPT_DIR` (default `C:\Scripts`), `LOG_DIR` (default `C:\Logs`).
+
+```powershell
+# ps_daily_check.ps1 — PowerShell automation environment daily health check
+# Run: .\ps_daily_check.ps1
+
+$ScriptDir  = $env:SCRIPT_DIR  ?? "C:\Scripts"
+$LogDir     = $env:LOG_DIR     ?? "C:\Logs"
+$InfraHosts = @("vcenter.local", "192.168.1.100")   # Adjust to your environment
+
+$Fail = 0
+function Check($label, $result) {
+    if ($result) { Write-Host "[OK]   $label" -ForegroundColor Green }
+    else         { Write-Host "[FAIL] $label" -ForegroundColor Red; $script:Fail++ }
+}
+
+Write-Host "=== PowerShell Daily Check — $(Get-Date) ==="
+
+# Module checks
+Check "VMware.PowerCLI installed"   (Get-Module VMware.PowerCLI -ListAvailable)
+Check "Az module installed"          (Get-Module Az -ListAvailable)
+Check "Posh-SSH installed"           (Get-Module Posh-SSH -ListAvailable)
+
+# Log file check - any ERROR lines in last 24h?
+if (Test-Path $LogDir) {
+    $recentErrors = Get-ChildItem $LogDir -Filter "*.log" | 
+                    Where-Object { $_.LastWriteTime -gt (Get-Date).AddHours(-24) } |
+                    Get-Content | Select-String "ERROR|CRITICAL|FAILED" | Measure-Object | Select-Object -ExpandProperty Count
+    Check "No errors in recent logs ($recentErrors found)" ($recentErrors -eq 0)
+}
+
+# Connectivity checks
+foreach ($h in $InfraHosts) {
+    Check "Network reachable: $h" (Test-Connection $h -Count 1 -Quiet -ErrorAction SilentlyContinue)
+}
+
+Write-Host ""
+Write-Host "Daily check: $Fail failure(s)"
+exit ($Fail -gt 0 ? 2 : 0)
+```
+
+---
+
+## Incident Triage Script
+
+Captures a full PowerShell automation environment snapshot to a timestamped file. Collects: PS version, all installed modules with versions, scheduled task statuses, last 200 lines of all log files in `$LogDir`, network connectivity to all `$InfraHosts`, and execution policy settings.
+
+```powershell
+# ps_incident_triage.ps1 — Capture PowerShell environment snapshot for incident triage
+# Run: .\ps_incident_triage.ps1
+
+$LogDir     = $env:LOG_DIR ?? "C:\Logs"
+$InfraHosts = @("vcenter.local", "192.168.1.100")   # Adjust to your environment
+$OutFile    = "C:\Temp\ps_triage_$(Get-Date -Format 'yyyyMMdd_HHmmss').txt"
+
+if (-not (Test-Path "C:\Temp")) { New-Item -ItemType Directory -Path "C:\Temp" | Out-Null }
+
+$output = [System.Text.StringBuilder]::new()
+function Log($msg) { $output.AppendLine($msg) | Out-Null; Write-Host $msg }
+
+Log "=== PowerShell Incident Triage — $(Get-Date) ==="
+Log ""
+
+# PS version
+Log "--- PowerShell Version ---"
+Log ($PSVersionTable | Out-String)
+
+# All installed modules with versions
+Log "--- Installed Modules ---"
+Log (Get-Module -ListAvailable | Sort-Object Name | Select-Object Name, Version, ModuleType | Format-Table -AutoSize | Out-String)
+
+# Scheduled task statuses
+Log "--- Scheduled Task Statuses ---"
+try {
+    Log (Get-ScheduledTask | Select-Object TaskName, TaskPath, State,
+         @{n='LastRunTime';e={(Get-ScheduledTaskInfo $_.TaskName -ErrorAction SilentlyContinue).LastRunTime}},
+         @{n='LastResult'; e={(Get-ScheduledTaskInfo $_.TaskName -ErrorAction SilentlyContinue).LastTaskResult}} |
+         Format-Table -AutoSize | Out-String)
+} catch {
+    Log "Unable to retrieve scheduled tasks: $_"
+}
+
+# Last 200 lines of each log file
+Log "--- Recent Log Content ($LogDir) ---"
+if (Test-Path $LogDir) {
+    Get-ChildItem $LogDir -Filter "*.log" | ForEach-Object {
+        Log "--- $($_.FullName) ---"
+        Log (Get-Content $_.FullName -Tail 200 | Out-String)
+    }
+} else {
+    Log "Log directory not found: $LogDir"
+}
+
+# Network connectivity
+Log "--- Network Connectivity ---"
+foreach ($h in $InfraHosts) {
+    $reachable = Test-Connection $h -Count 1 -Quiet -ErrorAction SilentlyContinue
+    Log "$(if ($reachable) { '[REACHABLE]' } else { '[UNREACHABLE]' })  $h"
+}
+
+# Execution policy
+Log ""
+Log "--- Execution Policy ---"
+Log (Get-ExecutionPolicy -List | Out-String)
+
+Log ""
+Log "=== Triage complete ==="
+
+$output.ToString() | Set-Content -Path $OutFile
+Write-Host ""
+Write-Host "Triage output saved to: $OutFile"
+```
+
+---
+
+## Change Pre-Check Script
+
+Run before modifying or deploying a PowerShell script. Confirms the script exists, performs a syntax check using the PS parser, verifies all required modules are installed, tests connectivity to all target systems, and creates a timestamped backup of the existing script. Exits non-zero on any failure.
+
+```powershell
+# ps_pre_check.ps1 — Pre-change validation before deploying a PowerShell script
+# Usage: .\ps_pre_check.ps1 -ScriptPath "C:\Scripts\myscript.ps1" -RequiredModules @("Az","Posh-SSH")
+param(
+    [Parameter(Mandatory)]
+    [string]$ScriptPath,
+
+    [string[]]$RequiredModules = @("Az", "Posh-SSH", "VMware.PowerCLI"),
+    [string[]]$TargetHosts     = @("vcenter.local", "192.168.1.100")
+)
+
+$Fail = 0
+function Pass($label) { Write-Host "[PASS] $label" -ForegroundColor Green }
+function Fail($label) { Write-Host "[FAIL] $label" -ForegroundColor Red; $script:Fail++ }
+
+Write-Host "=== PowerShell Change Pre-Check — $(Get-Date) ==="
+Write-Host "Script: $ScriptPath"
+Write-Host ""
+
+# 1. Script file exists
+if (Test-Path $ScriptPath) { Pass "Script file exists: $ScriptPath" }
+else                        { Fail "Script file NOT found: $ScriptPath"; exit 2 }
+
+# 2. Syntax check using PS parser
+Write-Host ""
+Write-Host "--- Syntax Check ---"
+$errors = $null
+[System.Management.Automation.Language.Parser]::ParseFile($ScriptPath, [ref]$null, [ref]$errors) | Out-Null
+if ($errors.Count -eq 0) { Pass "Syntax check passed (0 errors)" }
+else {
+    foreach ($e in $errors) { Write-Host "  Line $($e.Extent.StartLineNumber): $($e.Message)" -ForegroundColor Yellow }
+    Fail "Syntax check failed ($($errors.Count) error(s))"
+}
+
+# 3. Required modules
+Write-Host ""
+Write-Host "--- Required Modules ---"
+foreach ($mod in $RequiredModules) {
+    if (Get-Module $mod -ListAvailable) { Pass "Module installed: $mod" }
+    else                                { Fail "Module NOT installed: $mod" }
+}
+
+# 4. Connectivity to target systems
+Write-Host ""
+Write-Host "--- Target System Connectivity ---"
+foreach ($h in $TargetHosts) {
+    if (Test-Connection $h -Count 1 -Quiet -ErrorAction SilentlyContinue) { Pass "Reachable: $h" }
+    else                                                                    { Fail "UNREACHABLE: $h" }
+}
+
+# 5. Backup existing script
+Write-Host ""
+Write-Host "--- Backup ---"
+$BackupPath = "$ScriptPath.backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+try {
+    Copy-Item $ScriptPath $BackupPath -ErrorAction Stop
+    Pass "Backup created: $BackupPath"
+} catch {
+    Fail "Backup FAILED: $_"
+}
+
+Write-Host ""
+Write-Host "Pre-check complete: $Fail failure(s)"
+if ($Fail -gt 0) { exit 2 }
+exit 0
+```
+
+---
+
+## Post-Change Validation Script
+
+Run after deploying a modified script. Executes the script in test mode where available (`-WhatIf`), checks log output for expected results, compares to a baseline saved during the pre-check, and verifies no new errors have appeared in the log.
+
+```powershell
+# ps_post_validate.ps1 — Post-change validation after deploying a PowerShell script
+# Usage: .\ps_post_validate.ps1 -ScriptPath "C:\Scripts\myscript.ps1" -BaselineLog "C:\Temp\baseline.txt"
+param(
+    [Parameter(Mandatory)]
+    [string]$ScriptPath,
+
+    [string]$BaselineLog = "",
+    [string]$LogDir      = ($env:LOG_DIR ?? "C:\Logs")
+)
+
+$Pass = 0; $Fail = 0
+function Ok($label)   { Write-Host "[PASS] $label" -ForegroundColor Green; $script:Pass++ }
+function Fail($label) { Write-Host "[FAIL] $label" -ForegroundColor Red;   $script:Fail++ }
+
+Write-Host "=== PowerShell Post-Change Validation — $(Get-Date) ==="
+Write-Host "Script: $ScriptPath"
+Write-Host ""
+
+# 1. Script file exists after deploy
+if (Test-Path $ScriptPath) { Ok "Deployed script file exists" }
+else                        { Fail "Deployed script NOT found: $ScriptPath" }
+
+# 2. Syntax check on deployed file
+$errors = $null
+[System.Management.Automation.Language.Parser]::ParseFile($ScriptPath, [ref]$null, [ref]$errors) | Out-Null
+if ($errors.Count -eq 0) { Ok "Deployed script syntax valid" }
+else                      { Fail "Deployed script has $($errors.Count) syntax error(s)" }
+
+# 3. Test mode run (-WhatIf) if the script supports it
+Write-Host ""
+Write-Host "--- Test Mode Run (-WhatIf) ---"
+try {
+    $testOutput = & $ScriptPath -WhatIf 2>&1
+    Ok "Script executed in -WhatIf mode without terminating errors"
+    Write-Host ($testOutput | Out-String)
+} catch {
+    # -WhatIf may not be supported — try -Confirm:$false or just parse output
+    Write-Host "  Note: -WhatIf not supported by this script; skipping test run." -ForegroundColor Yellow
+}
+
+# 4. No new errors in log since deployment
+Write-Host ""
+Write-Host "--- Log Error Check (since $(Get-Date).AddMinutes(-10) approx) ---"
+if (Test-Path $LogDir) {
+    $newErrors = Get-ChildItem $LogDir -Filter "*.log" |
+                 Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-15) } |
+                 Get-Content |
+                 Select-String "ERROR|CRITICAL|FAILED" |
+                 Measure-Object | Select-Object -ExpandProperty Count
+    if ($newErrors -eq 0) { Ok "No new errors in logs after deployment" }
+    else                   { Fail "$newErrors new error line(s) found in logs after deployment" }
+} else {
+    Write-Host "  Log directory not found — skipping log check" -ForegroundColor Yellow
+}
+
+# 5. Compare to baseline output
+Write-Host ""
+Write-Host "--- Baseline Comparison ---"
+if ($BaselineLog -and (Test-Path $BaselineLog)) {
+    $currentOutput = & $ScriptPath 2>&1 | Out-String
+    $baselineContent = Get-Content $BaselineLog -Raw
+    if ($currentOutput -eq $baselineContent) { Ok "Output matches baseline" }
+    else {
+        Write-Host "  Differences found between current output and baseline:" -ForegroundColor Yellow
+        $diff = Compare-Object ($currentOutput -split "`n") ($baselineContent -split "`n")
+        $diff | ForEach-Object { Write-Host "  $($_.SideIndicator) $($_.InputObject)" -ForegroundColor Yellow }
+        Fail "Output differs from baseline — review differences above"
+    }
+} else {
+    Write-Host "  No baseline log provided or found — skipping comparison" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "Post-change validation: $Pass PASS  |  $Fail FAIL"
+if ($Fail -gt 0) { exit 2 }
+exit 0
+```
+
+---
+
+## Health Check Script
+
+Lightweight scheduled health check reporting PS version, key module inventory with versions, log error count in the last 24 hours, scheduled task last run status, and connectivity tests. Exits 0 (healthy), 1 (warning), or 2 (critical).
+
+```powershell
+# ps_health_check.ps1 — Scheduled PowerShell automation health check
+# Exit codes: 0=healthy  1=warning  2=critical
+
+$LogDir     = $env:LOG_DIR ?? "C:\Logs"
+$InfraHosts = @("vcenter.local", "192.168.1.100")   # Adjust to your environment
+$KeyModules = @("VMware.PowerCLI", "Az", "Posh-SSH")
+$Status     = 0   # 0=OK  1=WARN  2=CRIT
+
+function Warn  { if ($script:Status -lt 1) { $script:Status = 1 } }
+function Crit  { if ($script:Status -lt 2) { $script:Status = 2 } }
+
+Write-Host "=== PowerShell Health Check — $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
+Write-Host ""
+
+# 1. PS version
+Write-Host "PowerShell version : $($PSVersionTable.PSVersion)"
+Write-Host ""
+
+# 2. Key module inventory
+Write-Host "--- Module Inventory ---"
+foreach ($mod in $KeyModules) {
+    $installed = Get-Module $mod -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
+    if ($installed) {
+        Write-Host "  [OK]      $mod  $($installed.Version)" -ForegroundColor Green
+    } else {
+        Write-Host "  [MISSING] $mod" -ForegroundColor Red
+        Warn
+    }
+}
+Write-Host ""
+
+# 3. Log error count last 24h
+Write-Host "--- Log Errors (last 24h) ---"
+if (Test-Path $LogDir) {
+    $errorCount = Get-ChildItem $LogDir -Filter "*.log" |
+                  Where-Object { $_.LastWriteTime -gt (Get-Date).AddHours(-24) } |
+                  Get-Content |
+                  Select-String "ERROR|CRITICAL|FAILED" |
+                  Measure-Object | Select-Object -ExpandProperty Count
+    Write-Host "  Error lines in logs: $errorCount"
+    if ($errorCount -gt 0) { Warn }
+} else {
+    Write-Host "  Log directory not found: $LogDir" -ForegroundColor Yellow
+    Warn
+}
+Write-Host ""
+
+# 4. Scheduled task last run status
+Write-Host "--- Scheduled Task Last Run ---"
+try {
+    Get-ScheduledTask | ForEach-Object {
+        $info = Get-ScheduledTaskInfo $_.TaskName -ErrorAction SilentlyContinue
+        if ($info -and $info.LastTaskResult -ne 0 -and $info.LastTaskResult -ne $null) {
+            Write-Host "  [WARN] $($_.TaskName) last result: $($info.LastTaskResult)" -ForegroundColor Yellow
+            Warn
+        }
+    }
+    Write-Host "  Scheduled task check complete."
+} catch {
+    Write-Host "  Unable to check scheduled tasks: $_" -ForegroundColor Yellow
+    Warn
+}
+Write-Host ""
+
+# 5. Connectivity tests
+Write-Host "--- Connectivity ---"
+foreach ($h in $InfraHosts) {
+    $reachable = Test-Connection $h -Count 1 -Quiet -ErrorAction SilentlyContinue
+    if ($reachable) { Write-Host "  [OK]          $h" -ForegroundColor Green }
+    else            { Write-Host "  [UNREACHABLE] $h" -ForegroundColor Red; Crit }
+}
+Write-Host ""
+
+$statusLabel = switch ($Status) { 0 { "HEALTHY" } 1 { "WARNING" } 2 { "CRITICAL" } }
+Write-Host "Status: $statusLabel"
+exit $Status
+```

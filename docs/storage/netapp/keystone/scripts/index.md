@@ -107,6 +107,48 @@ esac
 exit $worst
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- This script is designed to run directly on the Linux server that hosts the Keystone Collector — it checks a local systemd service and local log files
+- SSH access to that Linux server, or a terminal already open on it
+- On Windows: use WSL, Git Bash, or PuTTY/SSH to connect to the collector server first
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `keystone_health.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `KEYSTONE_API_HOST` | Keystone API hostname (default: keystone.netapp.com) | Your NetApp account team |
+| `KEYSTONE_LOG_DIR` | Path to Keystone Collector logs (default: /var/log/keystone-collector) | Your Linux admin |
+
+**Step 3 — Copy the script to the Keystone Collector server**
+
+From Windows, open Command Prompt and use SCP to copy the file:
+```
+scp %USERPROFILE%\Desktop\keystone_health.sh youruser@collector-server:/home/youruser/
+```
+
+Or use WinSCP (winscp.net — free tool) to drag and drop the file.
+
+**Step 4 — Run the script on the collector server**
+
+SSH into the collector server (use PuTTY or Windows Terminal) and run:
+```
+bash keystone_health.sh
+```
+
+**What you should see**
+
+Three check results: `[PASS]`, `[WARN]`, or `[FAIL]` for the service status, last collection age, and API reachability. An overall status line at the bottom. If the collector service is stopped or the last collection was more than 2 hours ago, you will see `[FAIL]` and a hint on how to fix it.
+
 ---
 
 ## Keystone Usage Report (Python)
@@ -239,6 +281,52 @@ if __name__ == "__main__":
     main()
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (download from python.org — tick "Add Python to PATH" during setup)
+- A Keystone API key and your subscription ID — get these from your NetApp account team or the Keystone portal
+- Internet access to reach the Keystone API at keystone.netapp.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `keystone_usage.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `API_KEY` | Your Keystone Bearer API key | NetApp Keystone portal or your account team |
+| `SUBSCRIPTION_ID` | Your Keystone subscription ID | NetApp Keystone portal → Subscriptions |
+| `KEYSTONE_API_HOST` | API hostname (default: keystone.netapp.com) | Your NetApp account team |
+
+**Step 3 — Open Command Prompt**
+
+Press the Windows key, type `cmd`, press Enter.
+
+**Step 4 — Install required packages and set variables**
+
+```
+pip install requests tabulate
+set API_KEY=your-api-key-here
+set SUBSCRIPTION_ID=your-subscription-id
+```
+
+**Step 5 — Run the script**
+
+```
+cd %USERPROFILE%\Desktop
+python keystone_usage.py
+```
+
+**What you should see**
+
+A table with one row per Keystone service level tier (e.g., Extreme, Performance, Standard). Each row shows committed capacity, consumed capacity, burst used, burst percentage, and percentage of committed consumed. If any tier's burst exceeds 10% of committed capacity, it is flagged with a yellow `WARN` label.
+
 ---
 
 ## Volume Service Level Audit (Bash)
@@ -323,3 +411,377 @@ else
     exit 0
 fi
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- WSL (Windows Subsystem for Linux) with Ubuntu, or Git Bash from gitforwindows.org
+- `sshpass` installed inside WSL: `sudo apt install sshpass`
+- Network access to the ONTAP cluster that backs your Keystone subscription
+- ONTAP admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `keystone_vol_audit.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `ONTAP_HOST` | Cluster management IP or hostname | NetApp System Manager |
+| `ONTAP_USER` | ONTAP admin username | Your storage admin |
+| `ONTAP_PASS` | ONTAP admin password | Your storage admin |
+
+**Step 3 — Open WSL**
+
+Open the Ubuntu app from the Start menu.
+
+**Step 4 — Set variables and run**
+
+```
+export ONTAP_HOST=192.168.1.100
+export ONTAP_USER=admin
+export ONTAP_PASS=yourpassword
+cd /mnt/c/Users/YourName/Desktop
+bash keystone_vol_audit.sh
+```
+
+**What you should see**
+
+A table listing every online volume with its SVM, volume name, QoS policy group, and a flag. Volumes with a QoS policy assigned show green `OK`. Volumes with no QoS policy show red `NO QOS — unclassified`. At the end, a count of unclassified volumes and a remediation command if any are found. Unclassified volumes are a billing risk in Keystone.
+
+---
+
+## Windows: Keystone Subscription Usage via REST API (PowerShell)
+
+Authenticate to the NetApp ActiveIQ Keystone API using OAuth2 with a client ID and secret, retrieve subscription and usage data, and print a formatted capacity report.
+
+~~~powershell
+# keystone_usage_rest.ps1 — Keystone Subscription Usage via REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Keystone API via ActiveIQ: https://api.activeiq.netapp.com/
+# Run: .\keystone_usage_rest.ps1
+
+$KeystoneClientId     = "your-client-id"      # OAuth2 client ID from ActiveIQ portal
+$KeystoneClientSecret = "your-client-secret"   # OAuth2 client secret from ActiveIQ portal
+
+# Handle self-signed SSL certificates if needed
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$ApiBase = "https://api.activeiq.netapp.com"
+
+# --- Step 1: Get OAuth2 access token ---
+Write-Host "Authenticating to Keystone API ..." -ForegroundColor Cyan
+
+try {
+    $TokenResp = Invoke-RestMethod `
+        -Uri    "$ApiBase/v1/tokens/accessToken" `
+        -Method POST `
+        -Body   (@{ client_id = $KeystoneClientId; client_secret = $KeystoneClientSecret } | ConvertTo-Json) `
+        -ContentType "application/json" `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"
+    exit 1
+}
+
+$AccessToken = $TokenResp.access_token
+if (-not $AccessToken) {
+    Write-Error "No access token returned. Check client_id and client_secret."
+    exit 1
+}
+
+$AuthHeaders = @{ Authorization = "Bearer $AccessToken" }
+Write-Host "Authenticated successfully." -ForegroundColor Green
+
+# --- Step 2: List subscriptions ---
+Write-Host "`nFetching Keystone subscriptions ..." -ForegroundColor Cyan
+
+try {
+    $SubsResp = Invoke-RestMethod `
+        -Uri     "$ApiBase/v1/keystone/subscriptions" `
+        -Headers $AuthHeaders `
+        -Method  GET `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Failed to retrieve subscriptions: $($_.Exception.Message)"
+    exit 1
+}
+
+$Subscriptions = $SubsResp.items
+if (-not $Subscriptions -or $Subscriptions.Count -eq 0) {
+    Write-Host "No Keystone subscriptions found for this account."
+    exit 0
+}
+
+Write-Host "Found $($Subscriptions.Count) subscription(s).`n"
+
+# --- Step 3: For each subscription, get usage ---
+Write-Host "=== Keystone Subscription Usage Report ===" -ForegroundColor Cyan
+Write-Host ("-" * 80)
+
+foreach ($sub in $Subscriptions) {
+    $subId   = $sub.id
+    $subName = $sub.name
+
+    Write-Host "`nSubscription: $subName  (ID: $subId)" -ForegroundColor Yellow
+
+    try {
+        $UsageResp = Invoke-RestMethod `
+            -Uri     "$ApiBase/v1/keystone/subscriptions/$subId/usage" `
+            -Headers $AuthHeaders `
+            -Method  GET `
+            -ErrorAction Stop
+    } catch {
+        Write-Warning "Could not retrieve usage for subscription $subName : $($_.Exception.Message)"
+        continue
+    }
+
+    $tiers = $UsageResp.service_levels
+    if (-not $tiers) { $tiers = $UsageResp.tiers }
+
+    if (-not $tiers -or $tiers.Count -eq 0) {
+        Write-Host "  No tier data available for this subscription."
+        continue
+    }
+
+    Write-Host ("  {0,-25} {1,12} {2,12} {3,8}" -f "Tier", "Committed", "Consumed", "% Used")
+    Write-Host ("  " + "-" * 62)
+
+    foreach ($tier in $tiers) {
+        $committed = [double]($tier.committed_tib ?? $tier.committed ?? 0)
+        $consumed  = [double]($tier.consumed_tib  ?? $tier.consumed  ?? 0)
+        $pctUsed   = if ($committed -gt 0) { [math]::Round($consumed / $committed * 100, 1) } else { 0 }
+
+        $colour = if ($pctUsed -ge 90) { "Red" } elseif ($pctUsed -ge 80) { "Yellow" } else { "Green" }
+        $tierName = $tier.name ?? $tier.service_level ?? "unknown"
+
+        Write-Host ("  {0,-25} {1,10:F2} TiB {2,10:F2} TiB {3,6:F1}%" -f `
+            $tierName, $committed, $consumed, $pctUsed) -ForegroundColor $colour
+    }
+}
+
+Write-Host "`n" + ("-" * 80)
+Write-Host "Report complete." -ForegroundColor Cyan
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows 10 or Windows 11 PC (PowerShell is already installed)
+- A Keystone OAuth2 client ID and client secret — get these from the NetApp ActiveIQ portal (activeiq.netapp.com) or ask your NetApp account team
+- Internet access to reach api.activeiq.netapp.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `keystone_usage_rest.ps1` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `$KeystoneClientId` | Your OAuth2 client ID | NetApp ActiveIQ portal → API access |
+| `$KeystoneClientSecret` | Your OAuth2 client secret | NetApp ActiveIQ portal → API access |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, choose **Run as Administrator**.
+
+**Step 4 — Allow script execution (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\keystone_usage_rest.ps1
+```
+
+**What you should see**
+
+The script authenticates, lists your Keystone subscriptions, and for each one prints a table of service level tiers (e.g., Extreme, Performance, Standard) showing committed capacity in TiB, consumed capacity in TiB, and percentage used. Tiers below 80% used appear in green, 80-89% in yellow, and 90%+ in red.
+
+---
+
+## Windows: Keystone Usage Trending (PowerShell)
+
+Authenticate to the Keystone API and retrieve monthly usage history for each subscription. Print a simple text-based bar chart showing monthly consumption trends and warn if any month exceeded committed capacity.
+
+~~~powershell
+# keystone_trending.ps1 — Keystone Usage Trending (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Run: .\keystone_trending.ps1
+
+$KeystoneClientId     = "your-client-id"      # OAuth2 client ID from ActiveIQ portal
+$KeystoneClientSecret = "your-client-secret"   # OAuth2 client secret from ActiveIQ portal
+$MonthsBack           = 3                      # How many months of history to show
+
+# Handle self-signed SSL certificates if needed
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$ApiBase = "https://api.activeiq.netapp.com"
+
+# --- Authenticate ---
+Write-Host "Authenticating to Keystone API ..." -ForegroundColor Cyan
+try {
+    $TokenResp = Invoke-RestMethod `
+        -Uri    "$ApiBase/v1/tokens/accessToken" `
+        -Method POST `
+        -Body   (@{ client_id = $KeystoneClientId; client_secret = $KeystoneClientSecret } | ConvertTo-Json) `
+        -ContentType "application/json" `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"
+    exit 1
+}
+$AuthHeaders = @{ Authorization = "Bearer $($TokenResp.access_token)" }
+Write-Host "Authenticated." -ForegroundColor Green
+
+# --- Get subscriptions ---
+$SubsResp = Invoke-RestMethod -Uri "$ApiBase/v1/keystone/subscriptions" -Headers $AuthHeaders -Method GET
+$Subscriptions = $SubsResp.items
+if (-not $Subscriptions -or $Subscriptions.Count -eq 0) {
+    Write-Host "No subscriptions found."
+    exit 0
+}
+
+Write-Host "`n=== Keystone Usage Trend ($MonthsBack months) ===" -ForegroundColor Cyan
+
+# Helper: draw a simple ASCII bar
+function Get-Bar {
+    param([double]$pct, [int]$width = 30)
+    $filled = [math]::Round($pct / 100 * $width)
+    $filled = [math]::Max(0, [math]::Min($filled, $width))
+    return "[" + ("#" * $filled) + ("-" * ($width - $filled)) + "]"
+}
+
+foreach ($sub in $Subscriptions) {
+    $subId   = $sub.id
+    $subName = $sub.name
+    Write-Host "`nSubscription: $subName" -ForegroundColor Yellow
+
+    try {
+        $UsageResp = Invoke-RestMethod `
+            -Uri     "$ApiBase/v1/keystone/subscriptions/$subId/usage?granularity=monthly" `
+            -Headers $AuthHeaders `
+            -Method  GET `
+            -ErrorAction Stop
+    } catch {
+        Write-Warning "  Could not retrieve monthly usage for $subName"
+        continue
+    }
+
+    # Get the most recent N months of data
+    $monthlyData = $UsageResp.monthly_usage ?? $UsageResp.usage_history ?? @()
+    if (-not $monthlyData -or $monthlyData.Count -eq 0) {
+        Write-Host "  No monthly trend data available for this subscription."
+        continue
+    }
+
+    # Sort by date, take last N months
+    $sorted = $monthlyData | Sort-Object { $_.month ?? $_.period } | Select-Object -Last $MonthsBack
+
+    foreach ($entry in $sorted) {
+        $month     = $entry.month ?? $entry.period ?? "unknown"
+        $committed = [double]($entry.committed_tib ?? $entry.committed ?? 0)
+        $consumed  = [double]($entry.consumed_tib  ?? $entry.consumed  ?? 0)
+        $pct       = if ($committed -gt 0) { [math]::Round($consumed / $committed * 100, 1) } else { 0 }
+        $bar       = Get-Bar -pct $pct
+
+        $overCommit = $consumed -gt $committed
+
+        if ($overCommit) {
+            $flag   = " *** OVER COMMITTED"
+            $colour = "Red"
+        } elseif ($pct -ge 90) {
+            $flag   = " (near limit)"
+            $colour = "Yellow"
+        } else {
+            $flag   = ""
+            $colour = "Green"
+        }
+
+        Write-Host ("  {0,-10} {1} {2,5:F1}%  {3:F2}/{4:F2} TiB{5}" -f `
+            $month, $bar, $pct, $consumed, $committed, $flag) -ForegroundColor $colour
+    }
+}
+
+Write-Host "`n=== Trend report complete ===" -ForegroundColor Cyan
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows 10 or Windows 11 PC (PowerShell is already installed)
+- A Keystone OAuth2 client ID and client secret from the NetApp ActiveIQ portal
+- Internet access to reach api.activeiq.netapp.com
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `keystone_trending.ps1` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `$KeystoneClientId` | Your OAuth2 client ID | NetApp ActiveIQ portal → API access |
+| `$KeystoneClientSecret` | Your OAuth2 client secret | NetApp ActiveIQ portal → API access |
+| `$MonthsBack` | Number of months to show in the trend (default: 3) | Your preference |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, choose **Run as Administrator**.
+
+**Step 4 — Allow script execution (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\keystone_trending.ps1
+```
+
+**What you should see**
+
+For each Keystone subscription, the script prints a row per month showing a text bar chart. The bar fills up proportionally to how much of your committed capacity was consumed that month. Green means well within limits, yellow means approaching the limit (90%+), and red with `*** OVER COMMITTED` means that month exceeded your committed capacity — which may trigger burst billing charges. This lets you spot growth trends at a glance.

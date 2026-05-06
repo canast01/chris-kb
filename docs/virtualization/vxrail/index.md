@@ -44,4 +44,9 @@ VxRail operational notes for lifecycle, health, hardware, support, and troublesh
   <span>PowerCLI VxRail health check, LCM readiness validator, Bash node status scripts, and Ansible playbook.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>VxRail Manager REST API, mystic/vxm-cli commands, PowerCLI with VxRail module, and LCM operations.</span>
+</a>
+
 </div>

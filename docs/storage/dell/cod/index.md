@@ -7,6 +7,16 @@
   <span>Bash array capacity reporter, Python COD threshold alerter, and Ansible capacity audit playbook.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>SYMCLI capacity commands, Unisphere REST API for COD activation and license management.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, COD utilization review, activation procedure, and post-change validation.</span>
+</a>
+
 </div>
 
 ## Overview

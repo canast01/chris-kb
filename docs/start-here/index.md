@@ -113,11 +113,6 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 <div class="kb-grid kb-grid-3">
 
   <div class="kb-card">
-    <h3><a href="../operations-playbooks/">Operations Playbooks</a></h3>
-    <p>Daily checks, incident triage, change readiness, and validation.</p>
-  </div>
-
-  <div class="kb-card">
     <h3><a href="../standards/">Standards</a></h3>
     <p>Naming, builds, baselines, security standards, and zoning standards.</p>
   </div>

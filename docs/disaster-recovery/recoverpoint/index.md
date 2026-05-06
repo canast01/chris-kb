@@ -34,4 +34,14 @@ Recoverpoint operational notes and deep-dive references.
     <p>Python RecoverPoint API health check, consistency group monitor, and DR test failover script.</p>
   </div>
 
+  <a class="kb-card" href="cli-reference/">
+    <strong>CLI Reference</strong>
+    <span>boxmgmt CLI, RPAPI REST, CG operations, image access, test failover, and system status commands.</span>
+  </a>
+
+  <a class="kb-card" href="operations/">
+    <strong>Operations</strong>
+    <span>Daily CG status checks, RPA health, journal capacity, change readiness, incident triage, and failover procedure.</span>
+  </a>
+
 </div>

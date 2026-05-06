@@ -164,6 +164,48 @@ print(f"{'='*60}\n")
 sys.exit(worst)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (download from python.org — tick "Add Python to PATH" during setup)
+- Network access to your FlashArray management IP
+- A FlashArray API token (see Step 4 below for how to find it)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_health.py` — save it to your Desktop
+
+**Step 2 — Find your FlashArray API token**
+
+1. Open a web browser and go to `https://your-flasharray-ip`
+2. Log in with your admin credentials
+3. Click your username in the top-right corner → **API Tokens**
+4. Copy an existing token or click **Create API Token**
+
+**Step 3 — Open Command Prompt and install the package**
+
+Press the Windows key, type `cmd`, press Enter:
+```
+pip install py-pure-client
+```
+
+**Step 4 — Set variables and run**
+
+```
+set FA_HOST=192.168.1.10
+set FA_API_TOKEN=your-token-here
+cd %USERPROFILE%\Desktop
+python fa_health.py
+```
+
+**What you should see**
+
+The script connects to your FlashArray and prints the array name, Purity version, and capacity. Then it checks alerts, hardware, drives, and pods — printing `OK` in green for each passing check, or `[CRITICAL]`/`[WARNING]` in red/yellow for any issues. The summary at the end shows overall HEALTHY, WARNING, or CRITICAL.
+
 ---
 
 ## ActiveCluster Pod Status Monitor (Python)
@@ -296,6 +338,51 @@ print(f"{'='*70}\n")
 sys.exit(worst)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3 installed (download from python.org — tick "Add Python to PATH")
+- API tokens for **both** FlashArrays in your ActiveCluster pair — get them from the FlashArray GUI under Settings → Users → API Tokens on each array
+- Network access to both FlashArray management IPs
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_activecluster.py` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FA1_HOST` | First FlashArray management IP | Your storage admin |
+| `FA1_API_TOKEN` | API token for Array 1 | FlashArray GUI → Settings → Users → API Tokens |
+| `FA2_HOST` | Second FlashArray management IP | Your storage admin |
+| `FA2_API_TOKEN` | API token for Array 2 | FlashArray GUI → Settings → Users → API Tokens |
+
+**Step 3 — Open Command Prompt and install the package**
+
+```
+pip install py-pure-client
+```
+
+**Step 4 — Set variables and run**
+
+```
+set FA1_HOST=192.168.1.10
+set FA1_API_TOKEN=token-for-array1
+set FA2_HOST=192.168.1.11
+set FA2_API_TOKEN=token-for-array2
+cd %USERPROFILE%\Desktop
+python fa_activecluster.py
+```
+
+**What you should see**
+
+For each pod (ActiveCluster volume group), the script prints the pod name, online/offline status, whether it is stretched across two arrays, the member arrays, and the mediator version. It then cross-checks from Array 2's perspective. The summary shows HEALTHY, WARNING, or CRITICAL, with details on any issues found.
+
 ---
 
 ## Volume and Snapshot Report (Bash)
@@ -379,6 +466,52 @@ echo
 echo "Note: Snapshots older than ${SNAP_AGE_WARN_DAYS} days flagged for capacity review."
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- The Pure Storage CLI tools (`purevol`, `puresnap`) installed. These are part of the Pure Storage Python REST Client package. Install with: `pip install py-pure-client`
+- The CLI tools need to be in your PATH — on Windows, this is easiest in WSL or Git Bash
+- A FlashArray API token (see Array Health Check script above for how to find it)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_vol_snap_report.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FA_HOST` | FlashArray management IP or hostname | Your storage admin |
+| `FA_API_TOKEN` | FlashArray API token | FlashArray GUI → Settings → Users → API Tokens |
+| `SNAP_AGE_WARN_DAYS` | Days before a snapshot is flagged as old (default: 30) | Your snapshot policy |
+
+**Step 3 — Open WSL or Git Bash**
+
+Open the Ubuntu app (WSL) from the Start menu, or open Git Bash.
+
+**Step 4 — Install the CLI tools**
+
+```
+pip install py-pure-client
+```
+
+**Step 5 — Set variables and run**
+
+```
+export FA_HOST=192.168.1.10
+export FA_API_TOKEN=your-token-here
+cd /mnt/c/Users/YourName/Desktop
+bash fa_vol_snap_report.sh
+```
+
+**What you should see**
+
+Two sections: first a table of all volumes with size, used space, data reduction ratio, and which hosts are connected. Then a table of all snapshots with their creation date and size — snapshots older than 30 days are highlighted in yellow as `OLD (Nd)`. Reviewing old snapshots is important for capacity management.
+
 ---
 
 ## Drive Failure Alert (Bash)
@@ -441,6 +574,45 @@ else
     exit 0
 fi
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- The Pure Storage `puredrive` CLI tool installed (`pip install py-pure-client`)
+- WSL or Git Bash on Windows (the script uses Bash syntax)
+- A FlashArray API token
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_drive_alert.sh` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FA_HOST` | FlashArray management IP or hostname | Your storage admin |
+| `FA_API_TOKEN` | FlashArray API token | FlashArray GUI → Settings → Users → API Tokens |
+
+**Step 3 — Open WSL or Git Bash**
+
+Open Ubuntu from the Start menu (WSL), or open Git Bash.
+
+**Step 4 — Set variables and run**
+
+```
+export FA_HOST=192.168.1.10
+export FA_API_TOKEN=your-token-here
+cd /mnt/c/Users/YourName/Desktop
+bash fa_drive_alert.sh
+```
+
+**What you should see**
+
+A table of all drives in the FlashArray showing drive name, type, status, capacity, and blade/shelf location. Healthy drives show `healthy` in green. Any drive that is not healthy (failed, evacuating, etc.) is highlighted in red and the script prints `ALERT: X drive(s) in non-healthy state` and exits with code 2. A drive failure on a FlashArray is serious — open a Pure Storage support case immediately if you see this.
 
 ---
 
@@ -584,4 +756,742 @@ Authenticate to the FlashArray REST API v2, check array health, active alerts, p
     - name: Health check passed
       ansible.builtin.debug:
         msg: "All FlashArray health checks passed for {{ fa_url }}"
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- WSL (Windows Subsystem for Linux) with Ubuntu installed (open Microsoft Store, search "Ubuntu", install it)
+- Inside WSL: `sudo apt install ansible`
+- A FlashArray API token (see Array Health Check script above for how to get it)
+- Network access to your FlashArray management IP
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_health.yml` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+You pass all values on the command line — no need to edit the file.
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `fa_url` | Full URL to your FlashArray, e.g. `https://192.168.1.10` | Your storage admin |
+| `fa_api_token` | FlashArray API token | FlashArray GUI → Settings → Users → API Tokens |
+
+**Step 3 — Open WSL**
+
+Open Ubuntu from the Start menu.
+
+**Step 4 — Copy the file and run the playbook**
+
+```
+cp /mnt/c/Users/YourName/Desktop/fa_health.yml ~/
+cd ~
+ansible-playbook fa_health.yml \
+  -e "fa_url=https://192.168.1.10 fa_api_token=your-token-here"
+```
+
+**What you should see**
+
+Ansible authenticates to the FlashArray REST API and runs through each check in order: array info, alerts, drives, and pods. Each task prints `ok` (passing) or `failed` (with details). If a critical alert exists or any drive is degraded, the playbook stops and prints what was found. If everything passes, it prints `All FlashArray health checks passed.`
+
+---
+
+## Windows: FlashArray Health Check via REST API (PowerShell)
+
+Connect to the FlashArray REST API v2 using an API token, retrieve array information, active alerts, and drive health, then print a formatted health summary. Flags any critical alerts in red.
+
+~~~powershell
+# fa_health_rest.ps1 — FlashArray Health Check via REST API (Windows PowerShell)
+# Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
+# Run: .\fa_health_rest.ps1
+
+$FaHost   = "192.168.1.10"         # Your FlashArray management IP or hostname
+$ApiToken = "your-api-token-here"  # Found in FlashArray GUI: Settings -> Users -> API Tokens
+
+# Handle self-signed SSL certificates (FlashArrays use self-signed certs by default)
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$ApiBase = "https://$FaHost/api/2.26"
+
+# --- Step 1: Authenticate using API token ---
+Write-Host "`nAuthenticating to FlashArray $FaHost ..." -ForegroundColor Cyan
+
+try {
+    $LoginResp = Invoke-RestMethod `
+        -Uri     "$ApiBase/login" `
+        -Method  POST `
+        -Headers @{ "api-token" = $ApiToken } `
+        -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"
+    exit 1
+}
+
+# The x-auth-token is in the response headers — capture it
+$AuthToken = $LoginResp.'x-auth-token'
+if (-not $AuthToken) {
+    # Some PowerShell versions expose headers differently
+    Write-Warning "Could not extract x-auth-token from body. Trying via WebRequest..."
+    $wr = [System.Net.WebRequest]::Create("$ApiBase/login")
+    $wr.Method = "POST"
+    $wr.Headers.Add("api-token", $ApiToken)
+    $wresp = $wr.GetResponse()
+    $AuthToken = $wresp.Headers["x-auth-token"]
+    $wresp.Close()
+}
+
+if (-not $AuthToken) {
+    Write-Error "Could not obtain x-auth-token. Check API token."
+    exit 1
+}
+
+$AuthHeaders = @{ "x-auth-token" = $AuthToken; "Content-Type" = "application/json" }
+Write-Host "Authenticated successfully." -ForegroundColor Green
+
+function Invoke-FaApi {
+    param([string]$Path)
+    try {
+        return Invoke-RestMethod -Uri "$ApiBase$Path" -Headers $AuthHeaders -Method GET -ErrorAction Stop
+    } catch {
+        Write-Warning "API call failed for $Path : $($_.Exception.Message)"
+        return $null
+    }
+}
+
+Write-Host "`n=== FlashArray Health Summary ===" -ForegroundColor Cyan
+Write-Host ("-" * 60)
+
+# --- Array info ---
+$arrays = Invoke-FaApi "/arrays"
+if ($arrays -and $arrays.items -and $arrays.items.Count -gt 0) {
+    $arr = $arrays.items[0]
+    Write-Host "Array Name : $($arr.name)"
+    Write-Host "Purity     : $($arr.version)"
+    Write-Host "Capacity   : $([math]::Round($arr.capacity / 1TB, 2)) TiB total"
+}
+
+# --- Active alerts ---
+Write-Host "`n--- Alerts ---"
+$alerts = Invoke-FaApi "/alerts?filter=flagged%3D%27true%27"
+if ($alerts -and $alerts.items -and $alerts.items.Count -gt 0) {
+    foreach ($alert in $alerts.items) {
+        $colour = if ($alert.severity -eq "error") { "Red" } else { "Yellow" }
+        Write-Host "  [$($alert.severity.ToUpper())] $($alert.summary)" -ForegroundColor $colour
+    }
+} else {
+    Write-Host "  No active alerts." -ForegroundColor Green
+}
+
+# --- Drive health ---
+Write-Host "`n--- Drives ---"
+$drives = Invoke-FaApi "/drives"
+if ($drives -and $drives.items) {
+    $total   = $drives.items.Count
+    $badDrives = $drives.items | Where-Object { $_.status -ne "healthy" }
+    if ($badDrives -and $badDrives.Count -gt 0) {
+        Write-Host "  $total drives total, $($badDrives.Count) NOT healthy:" -ForegroundColor Red
+        foreach ($d in $badDrives) {
+            Write-Host "    Drive $($d.name): status=$($d.status)" -ForegroundColor Red
+        }
+    } else {
+        Write-Host "  All $total drives are healthy." -ForegroundColor Green
+    }
+}
+
+# --- Logout ---
+try {
+    Invoke-RestMethod -Uri "$ApiBase/logout" -Method DELETE -Headers $AuthHeaders -ErrorAction SilentlyContinue | Out-Null
+} catch {}
+
+Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Windows 10 or Windows 11 PC (PowerShell is already installed — nothing to download)
+- Network access to your FlashArray management IP
+- A FlashArray API token — log in to your FlashArray GUI at `https://your-flasharray-ip`, click your username in the top-right corner, click **API Tokens**, and copy a token
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_health_rest.ps1` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `$FaHost` | FlashArray management IP or hostname | Your storage admin |
+| `$ApiToken` | Your FlashArray API token | FlashArray GUI → Settings → Users → API Tokens |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Press the Windows key, type `PowerShell`, right-click **Windows PowerShell**, choose **Run as Administrator**.
+
+**Step 4 — Allow script execution (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\fa_health_rest.ps1
+```
+
+**What you should see**
+
+The script authenticates to your FlashArray REST API and prints the array name, Purity version, and total capacity. Then it lists any active (flagged) alerts — errors in red, warnings in yellow. Finally it prints drive health: either "All X drives are healthy" in green, or a red list of any unhealthy drives. The script does not require any third-party tools.
+
+---
+
+## Windows: FlashArray Volume Report via Plink (CMD)
+
+Use plink.exe (part of the free PuTTY package) to SSH into your FlashArray and run the Pure CLI commands to list array info, alerts, volumes, and drives. Works from any Windows Command Prompt.
+
+~~~batch
+@echo off
+REM fa_vol_report.bat — FlashArray Volume Report via Plink (Windows CMD)
+REM Uses plink.exe (part of PuTTY) to SSH into the FlashArray.
+REM Download PuTTY from: https://www.putty.org (free, trusted tool)
+REM
+REM FIRST-TIME SETUP: Run once to accept the FlashArray host fingerprint:
+REM   plink.exe -ssh pureuser@192.168.1.10
+REM   Type 'y' when asked, then Ctrl+C to exit.
+
+set FA_HOST=192.168.1.10
+set SSH_USER=pureuser
+set PLINK=plink.exe
+
+echo.
+echo === FlashArray Report ===
+echo Array: %FA_HOST%
+echo Time: %date% %time%
+echo.
+
+REM --- Array info ---
+echo --- Array Info ---
+%PLINK% -ssh -l %SSH_USER% -batch %FA_HOST% "purearray list"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %FA_HOST%. Check hostname and that plink.exe is in PATH.
+    goto :end
+)
+
+echo.
+
+REM --- Active alerts ---
+echo --- Active Alerts ---
+%PLINK% -ssh -l %SSH_USER% -batch %FA_HOST% "purealert list"
+
+echo.
+
+REM --- Volume list ---
+echo --- Volumes ---
+%PLINK% -ssh -l %SSH_USER% -batch %FA_HOST% "purevol list"
+
+echo.
+
+REM --- Drive health ---
+echo --- Drives ---
+%PLINK% -ssh -l %SSH_USER% -batch %FA_HOST% "puredrive list"
+
+echo.
+echo === Report complete ===
+
+:end
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed (download from putty.org — it is free). Make sure `plink.exe` is available — it comes with the full PuTTY installer
+- Network access to your FlashArray management IP
+- The `pureuser` account (or another SSH-enabled account) on the FlashArray. The default SSH user on FlashArray is `pureuser`
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (press the Windows key, type `Notepad`, press Enter)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Name it `fa_vol_report.bat` — save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file in Notepad and change these lines near the top:
+
+| Variable | What to put here | Where to find it |
+|---|---|---|
+| `FA_HOST` | FlashArray management IP or hostname | Your storage admin |
+| `SSH_USER` | SSH username (default for FlashArray: `pureuser`) | Your storage admin |
+
+**Step 3 — First-time host key acceptance**
+
+Open Command Prompt and run:
+```
+plink.exe -ssh pureuser@192.168.1.10
+```
+Type `y` when prompted, then press Ctrl+C.
+
+**Step 4 — Add your password (optional)**
+
+For unattended use, add `-pw yourpassword` to each plink command after `-batch`.
+
+**Step 5 — Run the script**
+
+Double-click `fa_vol_report.bat` on your Desktop, or run from Command Prompt:
+```
+cd %USERPROFILE%\Desktop
+fa_vol_report.bat
+```
+
+**What you should see**
+
+Four sections of output: array name and version from `purearray list`, any active alerts from `purealert list`, a list of all volumes with their size and used space from `purevol list`, and the status of all drives from `puredrive list`. This gives you a quick snapshot of array health using only SSH and the built-in Pure CLI.
+
+---
+
+## Daily Check Script (Bash)
+
+Runs all standard FlashArray daily checks in sequence: array status, active alerts, drive health, space utilisation, pod state, and controller redundancy. Exits non-zero if any critical alert is found or if any drive is not healthy.
+
+~~~bash
+#!/bin/bash
+# fa_daily_check.sh — FlashArray daily operations check
+# Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_daily_check.sh
+
+set -euo pipefail
+FA_HOST="${FA_HOST:?Set FA_HOST}"
+FA_API_TOKEN="${FA_API_TOKEN:?Set FA_API_TOKEN}"
+
+export PURENETWORK_HOST="$FA_HOST"
+export PURENETWORK_API_TOKEN="$FA_API_TOKEN"
+
+PASS=0; FAIL=0
+RED='\033[0;31m'; GRN='\033[0;32m'; YEL='\033[0;33m'; NC='\033[0m'
+
+check_pass() { echo -e "${GRN}[PASS]${NC} $1"; PASS=$((PASS+1)); }
+check_fail() { echo -e "${RED}[FAIL]${NC} $1"; FAIL=$((FAIL+1)); }
+check_warn() { echo -e "${YEL}[WARN]${NC} $1"; }
+
+echo "=== FlashArray Daily Check: $FA_HOST — $(date) ==="
+echo ""
+
+# Array info and reachability
+echo "--- Array Status ---"
+if purearray list 2>/dev/null; then
+  check_pass "Array reachable"
+else
+  check_fail "Array unreachable — cannot continue"; exit 2
+fi
+
+# Controller status
+echo ""
+echo "--- Controller Status ---"
+CTRL_OUT=$(purearray list --controller 2>/dev/null)
+echo "$CTRL_OUT"
+if echo "$CTRL_OUT" | grep -qiE 'unhealthy|offline|not ready'; then
+  check_fail "One or more controllers degraded"
+else
+  check_pass "Both controllers healthy"
+fi
+
+# Active alerts
+echo ""
+echo "--- Active Alerts ---"
+ALERT_OUT=$(purealert list 2>/dev/null)
+echo "$ALERT_OUT"
+CRIT=$(echo "$ALERT_OUT" | grep -ci 'error' || true)
+if [[ "$CRIT" -gt 0 ]]; then
+  check_fail "$CRIT critical alert(s) active"
+else
+  check_pass "No critical alerts"
+fi
+
+# Drive health
+echo ""
+echo "--- Drive Health ---"
+DRIVE_OUT=$(puredrive list 2>/dev/null)
+echo "$DRIVE_OUT"
+BAD=$(echo "$DRIVE_OUT" | tail -n +2 | awk '{print $3}' | grep -v '^healthy$' | grep -c '.' || true)
+if [[ "$BAD" -gt 0 ]]; then
+  check_fail "$BAD drive(s) not healthy"
+else
+  check_pass "All drives healthy"
+fi
+
+# Space utilisation
+echo ""
+echo "--- Array Space ---"
+purearray list --space 2>/dev/null
+check_pass "Space data collected"
+
+# Pod status (ActiveCluster)
+echo ""
+echo "--- Pod Status ---"
+POD_OUT=$(purepod list 2>/dev/null || echo "No pods configured")
+echo "$POD_OUT"
+if echo "$POD_OUT" | grep -qiE 'offline|error'; then
+  check_fail "One or more pods offline or in error"
+else
+  check_pass "Pods OK (or none configured)"
+fi
+
+echo ""
+echo "=== Daily check complete: $PASS passed, $FAIL failed ==="
+[[ $FAIL -gt 0 ]] && exit 2 || exit 0
+~~~
+
+---
+
+## Incident Triage Script (Bash)
+
+Rapidly collects comprehensive FlashArray diagnostic data for incident response. Captures array state, alerts, drive status, volume inventory, host connections, pod state, and performance metrics to a timestamped file for sharing with Pure Storage support.
+
+~~~bash
+#!/bin/bash
+# fa_triage.sh — FlashArray incident triage data collector
+# Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_triage.sh
+# Output: fa_triage_<host>_<timestamp>.txt
+
+FA_HOST="${FA_HOST:?Set FA_HOST}"
+FA_API_TOKEN="${FA_API_TOKEN:?Set FA_API_TOKEN}"
+
+export PURENETWORK_HOST="$FA_HOST"
+export PURENETWORK_API_TOKEN="$FA_API_TOKEN"
+
+OUTFILE="fa_triage_${FA_HOST}_$(date +%Y%m%d_%H%M%S).txt"
+exec > >(tee "$OUTFILE") 2>&1
+
+hdr() { echo ""; echo "### $1 ###"; echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S')"; echo ""; }
+
+echo "FlashArray Incident Triage — Array: $FA_HOST — $(date)"
+echo "========================================================"
+
+hdr "Array Info"
+purearray list 2>/dev/null || true
+
+hdr "Controller Status"
+purearray list --controller 2>/dev/null || true
+
+hdr "Active Alerts"
+purealert list 2>/dev/null || true
+
+hdr "Drive Status"
+puredrive list 2>/dev/null || true
+
+hdr "Volume List with Space"
+purevol list --space 2>/dev/null || true
+
+hdr "Host Connections"
+purehost list 2>/dev/null || true
+purehostgroup list 2>/dev/null || true
+
+hdr "Pod Status (ActiveCluster)"
+purepod list 2>/dev/null || true
+
+hdr "Snapshot List (most recent 50)"
+puresnap list --space 2>/dev/null | head -52 || true
+
+hdr "Array Performance (1 sample)"
+purearray monitor 2>/dev/null || true
+
+echo ""
+echo "========================================================"
+echo "Triage collection complete. Output saved to: $OUTFILE"
+~~~
+
+---
+
+## Change Pre-Check Script (Bash)
+
+Validates FlashArray readiness before a maintenance window. Confirms no active critical alerts, all drives healthy, all pods online, and dual-controller redundancy is intact. Exits with code 2 on any failure so it can be used as a gate in change automation.
+
+~~~bash
+#!/bin/bash
+# fa_precheck.sh — FlashArray pre-change validation
+# Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_precheck.sh
+
+set -euo pipefail
+FA_HOST="${FA_HOST:?Set FA_HOST}"
+FA_API_TOKEN="${FA_API_TOKEN:?Set FA_API_TOKEN}"
+
+export PURENETWORK_HOST="$FA_HOST"
+export PURENETWORK_API_TOKEN="$FA_API_TOKEN"
+
+FAIL=0
+GRN='\033[0;32m'; RED='\033[0;31m'; NC='\033[0m'
+ok()   { echo -e "${GRN}[OK]${NC}   $1"; }
+fail() { echo -e "${RED}[FAIL]${NC} $1"; FAIL=$((FAIL+1)); }
+
+echo "=== FlashArray Pre-Change Check: $FA_HOST — $(date) ==="
+echo ""
+
+# Array reachable
+purearray list &>/dev/null && ok "Array reachable" || { fail "Array unreachable"; exit 2; }
+
+# Controller health
+CTRL=$(purearray list --controller 2>/dev/null)
+if echo "$CTRL" | grep -qiE 'unhealthy|offline|not ready'; then
+  fail "Controller degraded — $(echo "$CTRL" | grep -iE 'unhealthy|offline|not ready' | head -3)"
+else
+  ok "Both controllers healthy"
+fi
+
+# No critical alerts
+CRIT=$(purealert list 2>/dev/null | grep -ci 'error' || true)
+if [[ "$CRIT" -gt 0 ]]; then
+  fail "$CRIT critical alert(s) present — resolve before proceeding"
+else
+  ok "No critical alerts"
+fi
+
+# All drives healthy
+BAD_DRIVES=$(puredrive list 2>/dev/null | tail -n +2 | awk '{print $3}' | grep -v '^healthy$' | grep -c '.' || true)
+if [[ "$BAD_DRIVES" -gt 0 ]]; then
+  fail "$BAD_DRIVES drive(s) not healthy"
+else
+  ok "All drives healthy"
+fi
+
+# Pod status
+POD_BAD=$(purepod list 2>/dev/null | tail -n +2 | awk '{print $2}' | grep -v '^online$' | grep -c '.' || true)
+if [[ "$POD_BAD" -gt 0 ]]; then
+  fail "$POD_BAD pod(s) not online"
+else
+  ok "All pods online (or none configured)"
+fi
+
+echo ""
+if [[ $FAIL -gt 0 ]]; then
+  echo -e "${RED}PRE-CHECK FAILED: $FAIL issue(s) — do NOT proceed with the change.${NC}"
+  exit 2
+fi
+echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
+~~~
+
+---
+
+## Post-Change Validation Script (Bash)
+
+Confirms FlashArray health after a maintenance window. Runs the same checks as pre-check plus verifies that ActiveCluster replication is active and that no new alerts have appeared since the change was made.
+
+~~~bash
+#!/bin/bash
+# fa_postcheck.sh — FlashArray post-change validation
+# Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_postcheck.sh
+
+set -euo pipefail
+FA_HOST="${FA_HOST:?Set FA_HOST}"
+FA_API_TOKEN="${FA_API_TOKEN:?Set FA_API_TOKEN}"
+
+export PURENETWORK_HOST="$FA_HOST"
+export PURENETWORK_API_TOKEN="$FA_API_TOKEN"
+
+FAIL=0
+GRN='\033[0;32m'; RED='\033[0;31m'; YEL='\033[0;33m'; NC='\033[0m'
+ok()   { echo -e "${GRN}[OK]${NC}   $1"; }
+fail() { echo -e "${RED}[FAIL]${NC} $1"; FAIL=$((FAIL+1)); }
+warn() { echo -e "${YEL}[WARN]${NC} $1"; }
+
+echo "=== FlashArray Post-Change Check: $FA_HOST — $(date) ==="
+echo ""
+
+# Array reachable
+purearray list &>/dev/null && ok "Array reachable" || { fail "Array unreachable"; exit 2; }
+
+# Controller health
+CTRL=$(purearray list --controller 2>/dev/null)
+if echo "$CTRL" | grep -qiE 'unhealthy|offline|not ready'; then
+  fail "Controller degraded"
+else
+  ok "Both controllers healthy"
+fi
+
+# No critical alerts
+CRIT=$(purealert list 2>/dev/null | grep -ci 'error' || true)
+if [[ "$CRIT" -gt 0 ]]; then
+  fail "$CRIT critical alert(s) present — investigate before closing change"
+else
+  ok "No critical alerts"
+fi
+
+# All drives healthy
+BAD_DRIVES=$(puredrive list 2>/dev/null | tail -n +2 | awk '{print $3}' | grep -v '^healthy$' | grep -c '.' || true)
+if [[ "$BAD_DRIVES" -gt 0 ]]; then
+  fail "$BAD_DRIVES drive(s) not healthy"
+else
+  ok "All drives healthy"
+fi
+
+# Pod/replication status
+POD_OUT=$(purepod list 2>/dev/null || true)
+if [[ -n "$POD_OUT" ]]; then
+  POD_BAD=$(echo "$POD_OUT" | tail -n +2 | awk '{print $2}' | grep -v '^online$' | grep -c '.' || true)
+  if [[ "$POD_BAD" -gt 0 ]]; then
+    fail "$POD_BAD pod(s) not online — replication may not have resumed"
+  else
+    ok "All pods online — replication active"
+  fi
+else
+  warn "No pods configured — skipping replication check"
+fi
+
+# Space check — flag if over 80%
+SPACE=$(purearray list --space 2>/dev/null)
+echo ""
+echo "--- Space Summary ---"
+echo "$SPACE"
+USED_PCT=$(echo "$SPACE" | awk 'NR==2 {gsub(/%/,"",$5); print $5}' 2>/dev/null || echo "0")
+if [[ "$USED_PCT" =~ ^[0-9]+$ ]] && [[ "$USED_PCT" -gt 80 ]]; then
+  warn "Array utilisation is ${USED_PCT}% — review capacity before closing change"
+else
+  ok "Array space within normal range"
+fi
+
+echo ""
+if [[ $FAIL -gt 0 ]]; then
+  echo -e "${RED}POST-CHECK FAILED: $FAIL issue(s) — investigate before closing change.${NC}"
+  exit 2
+fi
+echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
+~~~
+
+---
+
+## Health Check Script (Bash)
+
+Comprehensive single-command FlashArray health summary covering array status, capacity percentage, drive health, pod health, and alert count. Outputs a concise status block suitable for cron/monitoring or a morning ops check. Exits 0 for healthy, 1 for warnings, 2 for critical.
+
+~~~bash
+#!/bin/bash
+# fa_health.sh — FlashArray comprehensive health summary
+# Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_health.sh
+# Suitable for cron — exits 0 (OK), 1 (WARN), 2 (CRIT)
+
+FA_HOST="${FA_HOST:?Set FA_HOST}"
+FA_API_TOKEN="${FA_API_TOKEN:?Set FA_API_TOKEN}"
+
+export PURENETWORK_HOST="$FA_HOST"
+export PURENETWORK_API_TOKEN="$FA_API_TOKEN"
+
+GRN='\033[0;32m'; YEL='\033[0;33m'; RED='\033[0;31m'; NC='\033[0m'
+WORST=0   # 0=OK 1=WARN 2=CRIT
+
+status_line() {
+  local level="$1" label="$2" detail="$3"
+  case "$level" in
+    OK)   echo -e "  ${GRN}[OK]${NC}   $label${detail:+  — $detail}" ;;
+    WARN) echo -e "  ${YEL}[WARN]${NC} $label${detail:+  — $detail}"; [[ $WORST -lt 1 ]] && WORST=1 ;;
+    CRIT) echo -e "  ${RED}[CRIT]${NC} $label${detail:+  — $detail}"; WORST=2 ;;
+  esac
+}
+
+echo ""
+echo "============================================================"
+echo "  FlashArray Health Summary: $FA_HOST"
+echo "  $(date '+%Y-%m-%d %H:%M:%S')"
+echo "============================================================"
+
+# Reachability
+if ! purearray list &>/dev/null; then
+  echo -e "  ${RED}[CRIT]${NC} Array unreachable at $FA_HOST"
+  exit 2
+fi
+status_line OK "Array reachable"
+
+# Controller redundancy
+CTRL=$(purearray list --controller 2>/dev/null)
+if echo "$CTRL" | grep -qiE 'unhealthy|offline|not ready'; then
+  status_line CRIT "Controller" "degraded — check purearray list --controller"
+else
+  status_line OK "Dual-controller redundancy"
+fi
+
+# Alerts
+ALERT_OUT=$(purealert list 2>/dev/null)
+CRIT_COUNT=$(echo "$ALERT_OUT" | grep -ci 'error' || true)
+WARN_COUNT=$(echo "$ALERT_OUT" | grep -ci 'warning' || true)
+if [[ "$CRIT_COUNT" -gt 0 ]]; then
+  status_line CRIT "Alerts" "$CRIT_COUNT critical, $WARN_COUNT warning"
+elif [[ "$WARN_COUNT" -gt 0 ]]; then
+  status_line WARN "Alerts" "$WARN_COUNT warning(s)"
+else
+  status_line OK "Alerts" "none active"
+fi
+
+# Drive health
+DRIVE_OUT=$(puredrive list 2>/dev/null)
+TOTAL_DRIVES=$(echo "$DRIVE_OUT" | tail -n +2 | grep -c '.' || true)
+BAD_DRIVES=$(echo "$DRIVE_OUT" | tail -n +2 | awk '{print $3}' | grep -v '^healthy$' | grep -c '.' || true)
+if [[ "$BAD_DRIVES" -gt 0 ]]; then
+  status_line CRIT "Drives" "$BAD_DRIVES/$TOTAL_DRIVES not healthy"
+else
+  status_line OK "Drives" "all $TOTAL_DRIVES healthy"
+fi
+
+# Pods (ActiveCluster)
+POD_OUT=$(purepod list 2>/dev/null || true)
+if [[ -n "$POD_OUT" && $(echo "$POD_OUT" | wc -l) -gt 1 ]]; then
+  POD_BAD=$(echo "$POD_OUT" | tail -n +2 | awk '{print $2}' | grep -v '^online$' | grep -c '.' || true)
+  POD_TOTAL=$(echo "$POD_OUT" | tail -n +2 | grep -c '.' || true)
+  if [[ "$POD_BAD" -gt 0 ]]; then
+    status_line CRIT "Pods" "$POD_BAD/$POD_TOTAL not online"
+  else
+    status_line OK "Pods" "all $POD_TOTAL online"
+  fi
+else
+  status_line OK "Pods" "none configured"
+fi
+
+# Capacity
+SPACE=$(purearray list --space 2>/dev/null)
+RAW_CAPACITY=$(echo "$SPACE" | awk 'NR==2 {print $2}')
+RAW_USED=$(echo "$SPACE" | awk 'NR==2 {print $3}')
+USED_PCT=$(echo "$SPACE" | awk 'NR==2 {gsub(/%/,"",$5); print $5}' 2>/dev/null || echo "0")
+if [[ "$USED_PCT" =~ ^[0-9]+$ ]]; then
+  if [[ "$USED_PCT" -ge 90 ]]; then
+    status_line CRIT "Capacity" "${USED_PCT}% used (${RAW_USED} of ${RAW_CAPACITY})"
+  elif [[ "$USED_PCT" -ge 75 ]]; then
+    status_line WARN "Capacity" "${USED_PCT}% used (${RAW_USED} of ${RAW_CAPACITY})"
+  else
+    status_line OK "Capacity" "${USED_PCT}% used (${RAW_USED} of ${RAW_CAPACITY})"
+  fi
+else
+  status_line OK "Capacity" "$(echo "$SPACE" | awk 'NR==2')"
+fi
+
+echo "============================================================"
+case $WORST in
+  0) echo -e "  ${GRN}Overall: HEALTHY${NC}" ;;
+  1) echo -e "  ${YEL}Overall: WARNING${NC}" ;;
+  2) echo -e "  ${RED}Overall: CRITICAL${NC}" ;;
+esac
+echo "============================================================"
+echo ""
+
+exit $WORST
 ~~~

@@ -78,6 +78,45 @@ fi
 echo -e "${GREEN}Health check PASSED.${RESET}"
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- AWS CLI installed (download from https://aws.amazon.com/cli/)
+- An AWS account with credentials configured via `aws configure`
+- Git for Windows installed so you have Git Bash (download from https://gitforwindows.org)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `aws-health-check.sh` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `AWS_PROFILE` | Your AWS CLI profile name | Run `aws configure list-profiles` to see your profiles |
+| `AWS_REGION` | Your AWS region, e.g. `eu-west-1` | AWS Console → top-right region selector |
+
+**Step 3 — Open the right terminal**
+
+- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) → open Git Bash
+
+**Step 4 — Run it**
+
+```
+cd ~/Desktop
+bash aws-health-check.sh
+```
+
+**What you should see**
+
+A table of your EC2 instances with their state (running/stopped), a list of RDS databases, and load balancers. If any EC2 instances are stopped you will see a red WARNING line and the script exits with an error code.
+
 ---
 
 ## EC2 Instance Audit
@@ -227,6 +266,47 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed (download from https://python.org — tick "Add Python to PATH" during install)
+- AWS CLI installed and configured (`aws configure` run at least once)
+- The `boto3` package installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `ec2_audit.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `REGIONS` | Leave empty for all regions, or add specific ones like `["us-east-1", "eu-west-1"]` | AWS Console → region names |
+| `OUTPUT_FILE` | Where to save the CSV report | Default is `ec2_audit.csv` in the same folder |
+| `STOPPED_DAYS_THRESHOLD` | Number of days stopped before flagging | Default is `7` |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt. Install Python from python.org if not installed yet.
+
+**Step 4 — Install the required package and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install boto3
+python ec2_audit.py
+```
+
+**What you should see**
+
+Lines like `us-east-1: 12 instances` as it scans each region, then a summary showing total and flagged instances. A file called `ec2_audit.csv` will appear on your Desktop — open it in Excel to review flagged instances.
 
 ---
 
@@ -392,6 +472,45 @@ if __name__ == "__main__":
     main()
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed (download from https://python.org)
+- AWS CLI installed and configured with credentials that have S3 read access
+- The `boto3` package installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `s3_audit.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+This script uses your default AWS credentials automatically — no variables to change. Make sure `aws configure` has been run first.
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| AWS credentials | Set up via `aws configure` before running | AWS Console → IAM → your user → Security credentials |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Install the required package and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install boto3
+python s3_audit.py
+```
+
+**What you should see**
+
+A table with one row per S3 bucket. Each row shows YES/NO for public access blocks, ACL, policy, versioning, encryption, logging, and lifecycle. Buckets with problems show flags like `NO_PUB_BLOCK` or `PUBLIC_ACL`. The script exits with an error if any publicly accessible buckets are found.
+
 ---
 
 ## Cost and Usage Report
@@ -516,6 +635,46 @@ for svc, mc in top10:
 PYEOF
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- AWS CLI installed and configured
+- Cost Explorer enabled in your AWS account (it is on by default but may need enabling in Billing settings)
+- Git Bash installed (from https://gitforwindows.org) to run `.sh` scripts
+- Your AWS user must have the `ce:GetCostAndUsage` permission
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `aws-cost-report.sh` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `AWS_PROFILE` | Your AWS CLI profile name | Run `aws configure list-profiles` |
+| `MONTHS_BACK` | How many months of history to pull | Default is `3` |
+
+**Step 3 — Open the right terminal**
+
+- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) → open Git Bash
+
+**Step 4 — Run it**
+
+```
+cd ~/Desktop
+bash aws-cost-report.sh
+```
+
+**What you should see**
+
+A table of your top 10 most expensive AWS services for the past 3 months, with a dollar amount per month and a percentage change column. Services with more than 20% cost increase are marked with `*** >20% INCREASE ***`.
+
 ---
 
 ## EC2 DR Failover Playbook (Ansible)
@@ -615,6 +774,49 @@ Copies AMIs from the source region to the DR region, launches replacement EC2 in
           — public IP: {{ item.public_ip_address | default('none') }}
       loop: "{{ launched_instances.results | map(attribute='instances') | flatten }}"
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible installed (this runs on Linux or WSL — Ansible does not run natively on Windows)
+- AWS collections installed: run `ansible-galaxy collection install amazon.aws community.aws`
+- AWS credentials configured (via `aws configure` or environment variables)
+- At least one AMI ID in your source region to copy
+
+**Step 1 — Save the file**
+
+1. Open your WSL terminal (Windows key → type `wsl`)
+2. Navigate to your home directory: `cd ~`
+3. Create the file: `nano ec2_dr_failover.yml`
+4. Paste the code, then press `Ctrl+X`, then `Y`, then `Enter` to save
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values in the `vars:` section:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `source_region` | Your main AWS region | AWS Console → top-right region selector |
+| `dr_region` | Your DR/backup AWS region | Choose a different region from your main one |
+| `source_ami_ids` | List of AMI IDs to copy and launch | AWS Console → EC2 → AMIs |
+| `dr_subnet_id` | Subnet ID in your DR region | AWS Console → VPC → Subnets |
+| `dr_sg_ids` | Security group IDs in DR region | AWS Console → EC2 → Security Groups |
+| `key_name` | EC2 key pair name for SSH access | AWS Console → EC2 → Key Pairs |
+
+**Step 3 — Open the right terminal**
+
+- **For .yml (Ansible):** Needs Linux or WSL. Open your WSL terminal.
+
+**Step 4 — Run it**
+
+```
+cd ~
+ansible-playbook ec2_dr_failover.yml
+```
+
+**What you should see**
+
+Ansible prints each task as it runs. You will see it copying AMIs (this can take several minutes), then launching instances, then waiting for them to reach the running state. At the end it prints a summary with the new instance IDs and IP addresses.
 
 ---
 
@@ -744,6 +946,53 @@ if __name__ == "__main__":
     main()
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed
+- AWS CLI configured with credentials that have IAM read access (`iam:ListUsers`, `iam:ListAccessKeys`, `iam:GetAccessKeyLastUsed`)
+- The `boto3` package installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `iam_key_audit.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+The thresholds near the top can be adjusted:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `UNUSED_THRESHOLD` | Days before a never-used key is flagged | Default: `90` |
+| `LAST_USED_THRESHOLD` | Days since last use before flagging | Default: `60` |
+| `AGE_CRITICAL_THRESHOLD` | Key age in days before flagging as critical | Default: `365` |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+pip install boto3
+python iam_key_audit.py
+```
+
+To also deactivate stale keys (use with caution):
+
+```
+python iam_key_audit.py --deactivate
+```
+
+**What you should see**
+
+A table with one row per access key showing the user, key ID, status, age in days, last used days ago, and any flags. Flags like `AGE>365d` or `NEVER_USED>90d` highlight keys that need attention.
+
 ---
 
 ## CloudWatch Alarm Status Check
@@ -842,6 +1091,45 @@ for a in firing:
 sys.exit(1)
 PYEOF
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- AWS CLI installed and configured
+- Your AWS user needs `cloudwatch:DescribeAlarms` permission
+- Git Bash installed (from https://gitforwindows.org)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `cloudwatch-check.sh` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `AWS_PROFILE` | Your AWS CLI profile name | Run `aws configure list-profiles` |
+| `AWS_REGION` | Your AWS region | AWS Console → top-right |
+
+**Step 3 — Open the right terminal**
+
+- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) → open Git Bash
+
+**Step 4 — Run it**
+
+```
+cd ~/Desktop
+bash cloudwatch-check.sh
+```
+
+**What you should see**
+
+A count table showing how many alarms are in OK, ALARM, and INSUFFICIENT_DATA state. If any alarms are currently firing, a second detailed table appears showing the alarm name, metric, threshold value, and the reason text from AWS. The script exits with an error code if any alarms are firing.
 
 ---
 
@@ -960,3 +1248,262 @@ Checks EC2 instance states, RDS status, ELB health, S3 bucket replication, and R
           - "S3 buckets found       : {{ s3_facts.buckets | length }}"
           - "Result: PASSED (assertions above would have failed otherwise)"
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
+- AWS Ansible collections: run `ansible-galaxy collection install amazon.aws community.aws`
+- AWS credentials configured via `aws configure` or environment variables
+
+**Step 1 — Save the file**
+
+1. Open your WSL terminal (Windows key → type `wsl`)
+2. Create the file: `nano aws_infra_health.yml`
+3. Paste the code, then press `Ctrl+X`, `Y`, `Enter` to save
+
+**Step 2 — Fill in your details**
+
+Open the file and update the `vars:` section:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `aws_region` | Your AWS region, e.g. `eu-west-1` | AWS Console → top-right region selector |
+| `environment_tag` | The value of the `Environment` tag on your resources | Check your EC2/RDS tags in the AWS Console |
+
+**Step 3 — Open the right terminal**
+
+- **For .yml (Ansible):** Needs Linux or WSL. Open your WSL terminal.
+
+**Step 4 — Run it**
+
+```
+cd ~
+ansible-playbook aws_infra_health.yml
+```
+
+**What you should see**
+
+Ansible runs through each check in order — EC2, RDS, ELB, S3, Route53. Each `assert` task either shows `ok` (green) with a success message or `failed` (red) with a list of the problem resources. At the end it prints a summary block showing how many resources were checked.
+
+---
+
+## Windows: AWS Health Check via AWS CLI (CMD Batch)
+
+Check your AWS EC2 instances, ELB health, CloudWatch alarms, and RDS databases directly from Windows using the AWS CLI. No Linux needed.
+
+~~~batch
+@echo off
+REM aws-health-check.bat
+REM Requires: AWS CLI for Windows (download from https://aws.amazon.com/cli/)
+REM Run "aws configure" first to set your credentials.
+
+set AWS_PROFILE=default
+set AWS_REGION=us-east-1
+set LB_NAME=my-load-balancer
+
+echo === AWS Account Health Check ===
+echo Profile : %AWS_PROFILE%
+echo Region  : %AWS_REGION%
+echo.
+
+echo --- Caller Identity ---
+aws sts get-caller-identity --output table
+echo.
+
+echo --- EC2 Instance Status ---
+aws ec2 describe-instance-status --output table
+echo.
+
+echo --- ELB Instance Health ---
+aws elb describe-instance-health --load-balancer-name %LB_NAME% --output table
+echo.
+
+echo --- CloudWatch Alarms in ALARM State ---
+aws cloudwatch describe-alarms --state-value ALARM --output table
+echo.
+
+echo --- RDS Instances ---
+aws rds describe-db-instances --query "DBInstances[*].{ID:DBInstanceIdentifier,Status:DBInstanceStatus}" --output table
+echo.
+
+echo Health check complete.
+pause
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- AWS CLI for Windows installed (download the MSI installer from https://aws.amazon.com/cli/)
+- AWS credentials configured — open Command Prompt and run `aws configure` once to enter your access key, secret key, and region
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `aws-health-check.bat` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `AWS_PROFILE` | Your AWS CLI profile name, usually `default` | Run `aws configure list-profiles` in Command Prompt |
+| `AWS_REGION` | Your AWS region code, e.g. `eu-west-1` | AWS Console → top-right region selector |
+| `LB_NAME` | Your Classic Load Balancer name | AWS Console → EC2 → Load Balancers |
+
+**Step 3 — Open the right terminal**
+
+- **For .bat / .cmd:** Open Command Prompt or just double-click the file
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+aws-health-check.bat
+```
+
+Or just double-click the file from your Desktop.
+
+**What you should see**
+
+Tables printed in your Command Prompt window showing EC2 instance statuses, ELB health, any CloudWatch alarms currently in ALARM state, and your RDS database statuses. The window stays open (due to `pause`) so you can read the output before it closes.
+
+---
+
+## Windows: AWS S3 Bucket Inventory (PowerShell with AWS Tools)
+
+List all your S3 buckets and check versioning, logging, and encryption settings using the AWS Tools for PowerShell module.
+
+~~~powershell
+# aws-s3-inventory.ps1
+# Requires: AWS Tools for PowerShell
+# Install with: Install-Module -Name AWS.Tools.S3 -Scope CurrentUser
+
+param(
+    [string]$AwsAccessKey = "YOUR_ACCESS_KEY",
+    [string]$AwsSecretKey = "YOUR_SECRET_KEY",
+    [string]$AwsRegion    = "us-east-1"
+)
+
+# Install module if not present
+if (-not (Get-Module -ListAvailable -Name AWS.Tools.S3)) {
+    Write-Host "Installing AWS.Tools.S3 module..." -ForegroundColor Yellow
+    Install-Module -Name AWS.Tools.S3 -Scope CurrentUser -Force
+}
+
+Import-Module AWS.Tools.S3
+
+# Set credentials
+Initialize-AWSDefaultConfiguration -AccessKey $AwsAccessKey -SecretKey $AwsSecretKey -Region $AwsRegion
+
+Write-Host "`n=== AWS S3 Bucket Inventory ===" -ForegroundColor Cyan
+Write-Host "Region : $AwsRegion"
+Write-Host "Time   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n"
+
+$buckets = Get-S3Bucket
+
+$results = foreach ($bucket in $buckets) {
+    $name = $bucket.BucketName
+
+    # Versioning
+    try {
+        $versioning = (Get-S3BucketVersioning -BucketName $name).Status
+        $versioningStatus = if ($versioning) { $versioning } else { "Disabled" }
+    } catch {
+        $versioningStatus = "Error"
+    }
+
+    # Logging
+    try {
+        $logging = Get-S3BucketLogging -BucketName $name
+        $loggingEnabled = if ($logging.LoggingConfig.TargetBucketName) { "Yes" } else { "No" }
+    } catch {
+        $loggingEnabled = "Error"
+    }
+
+    # Encryption
+    try {
+        $encryption = Get-S3BucketEncryption -BucketName $name
+        $encryptionType = $encryption.ServerSideEncryptionConfiguration.Rules[0].ServerSideEncryptionByDefault.ServerSideEncryptionAlgorithm
+    } catch {
+        $encryptionType = "None"
+    }
+
+    # Flags
+    $flags = @()
+    if ($versioningStatus -eq "Disabled") { $flags += "NO_VERSIONING" }
+    if ($loggingEnabled -eq "No")         { $flags += "NO_LOGGING" }
+    if ($encryptionType -eq "None")       { $flags += "NO_ENCRYPTION" }
+
+    [PSCustomObject]@{
+        BucketName  = $name
+        Versioning  = $versioningStatus
+        Logging     = $loggingEnabled
+        Encryption  = $encryptionType
+        Flags       = if ($flags) { $flags -join "|" } else { "OK" }
+    }
+}
+
+$results | Format-Table -AutoSize
+
+$flagged = $results | Where-Object { $_.Flags -ne "OK" }
+Write-Host "Total buckets : $($results.Count)"
+Write-Host "Flagged       : $($flagged.Count)"
+
+if ($flagged.Count -gt 0) {
+    Write-Host "`nBuckets needing attention:" -ForegroundColor Yellow
+    $flagged | ForEach-Object {
+        Write-Host "  $($_.BucketName) — $($_.Flags)" -ForegroundColor Yellow
+    }
+}
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7 (already installed on most Windows 10/11 machines)
+- An AWS access key and secret key (create one in AWS Console → IAM → your user → Security credentials)
+- Internet access so PowerShell can download the AWS module
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `aws-s3-inventory.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values at the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `$AwsAccessKey` | Your AWS access key ID | AWS Console → IAM → Users → your user → Security credentials |
+| `$AwsSecretKey` | Your AWS secret access key | Same place — only shown once when created |
+| `$AwsRegion` | Your AWS region, e.g. `eu-west-1` | AWS Console → top-right region selector |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\aws-s3-inventory.ps1
+```
+
+**What you should see**
+
+The first time it runs, it will install the `AWS.Tools.S3` PowerShell module automatically (this takes a minute). Then it prints a table with one row per S3 bucket showing versioning status, whether logging is on, and the encryption type. Buckets missing any of these will be flagged at the bottom.

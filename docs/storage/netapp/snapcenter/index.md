@@ -12,6 +12,11 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>SnapCenter PowerShell cmdlets, REST API reference, backup and clone operations.</span>
+</a>
+
 </div>
 
 ## Overview

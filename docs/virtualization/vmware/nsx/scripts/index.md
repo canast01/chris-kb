@@ -109,6 +109,61 @@ print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else '
 sys.exit(overall)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The `requests` library — install it once by running in Command Prompt:
+  `pip install requests urllib3`
+- Network access to your NSX-T Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — otherwise Windows adds .txt)
+5. Name it `nsxt_health_check.py` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `NSX_HOST` | NSX Manager IP or FQDN e.g. `"192.168.1.200"` | Your NSX Manager address |
+| `NSX_USER` | NSX Manager username e.g. `"admin"` | Your NSX Manager login |
+| `NSX_PASS` | NSX Manager password | Your NSX Manager password |
+
+**Step 3 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+python nsxt_health_check.py
+```
+
+**What you should see**
+
+```
+=== NSX-T System Health Check: 192.168.1.200 ===
+
+  [PASS] Management cluster                             STABLE
+  [PASS] Control cluster                                STABLE
+  [PASS] Transport nodes                                total=8  up=8  down=0  degraded=0
+  [PASS] Edge cluster: edge-cluster-01                  2 member(s)
+  [PASS] Open CRITICAL alarms                           None
+  [PASS] Open MEDIUM alarms                             0 alarm(s)
+
+Overall: PASS
+```
+
+Any CRITICAL items appear in red. The script exits with code 2 on critical failures.
+
 ---
 
 ## Transport Node Status Monitor (Python)
@@ -217,6 +272,62 @@ else:
     sys.exit(0)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The `requests` library — install it once by running in Command Prompt:
+  `pip install requests`
+- Network access to your NSX-T Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `nsxt_transport_node_monitor.py` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `NSX_HOST` | NSX Manager IP or FQDN | Your NSX Manager address |
+| `NSX_USER` | NSX Manager username | Your NSX Manager login |
+| `NSX_PASS` | NSX Manager password | Your NSX Manager password |
+
+**Step 3 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+python nsxt_transport_node_monitor.py
+```
+
+**What you should see**
+
+```
+=== NSX-T Transport Node Status Monitor: 192.168.1.200 ===
+Transport nodes found: 8
+
+Node Name                                Type       State      Tunnels      TunnelDown Status
+-----------------------------------------------------------------------------------------------
+edge-node-01                             Edge       success    4            0          OK
+esxi-01.company.local                    ESXi       success    3            0          OK
+esxi-02.company.local                    ESXi       in_sync    3            1          TUNNEL_DOWN
+
+ISSUES (1):
+  esxi-02.company.local  [ESXi]  conn=in_sync  tunnels=3  down=1
+```
+
+The script exits with code 1 if any issues are found.
+
 ---
 
 ## DFW Rule Audit (Bash)
@@ -294,6 +405,62 @@ done <<< "$policy_ids"
 
 echo "Audit complete."
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A bash shell — use Git Bash (https://git-scm.com) or WSL (Ubuntu from the Microsoft Store)
+- Python 3 must be available in the shell (`python3 --version` to check)
+- `curl` must be available — it is included in Git Bash and WSL
+- Network access to your NSX Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+1. In WSL or Git Bash, create the file:
+   `nano ~/nsxt_dfw_audit.sh`
+2. Paste the entire code block above
+3. Press `Ctrl+X`, then `Y`, then `Enter` to save
+
+**Step 2 — No edits needed in the file**
+
+All variables are passed as environment variables when you run it (see Step 5).
+
+**Step 3 — Open a terminal**
+
+- **WSL:** Windows key → type `Ubuntu` → press Enter
+- **Git Bash:** right-click Desktop → "Git Bash Here"
+
+**Step 4 — Make the script executable**
+
+```bash
+chmod +x ~/nsxt_dfw_audit.sh
+```
+
+**Step 5 — Run it**
+
+```bash
+NSX_HOST="192.168.1.200" NSX_USER="admin" NSX_PASS="YourPassword" ~/nsxt_dfw_audit.sh
+```
+
+**What you should see**
+
+```
+=== NSX-T DFW Rule Audit ===
+Manager: 192.168.1.200
+2026-05-06T14:30:00Z
+
+Policies found: 3
+
+Policy: Default Layer3 Section (default-layer3-section)
+  12 rules
+    [ALLOW  ] Allow-Web-Traffic                        src=web-sg  dst=ANY...  *** ALLOW to ANY destination
+    [DROP   ] Block-All                                src=ANY  dst=ANY
+
+Audit complete.
+```
+
+Rules flagged as ALLOW ANY->ANY are marked `*** OVERLY_PERMISSIVE`.
 
 ---
 
@@ -403,6 +570,66 @@ print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else '
 sys.exit(overall)
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
+- The `requests` library — install it once by running in Command Prompt:
+  `pip install requests`
+- Network access to your NSX-T Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `nsxt_gateway_health.py` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `NSX_HOST` | NSX Manager IP or FQDN | Your NSX Manager address |
+| `NSX_USER` | NSX Manager username | Your NSX Manager login |
+| `NSX_PASS` | NSX Manager password | Your NSX Manager password |
+
+**Step 3 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+python nsxt_gateway_health.py
+```
+
+**What you should see**
+
+```
+=== NSX-T Segment and Gateway Health: 192.168.1.200 ===
+
+--- Segments ---
+  [PASS] web-segment                                 state=UP    subnet=10.0.1.1/24        gw=Tier1-GW-01
+  [PASS] app-segment                                 state=UP    subnet=10.0.2.1/24        gw=Tier1-GW-01
+
+--- Tier-0 Gateways ---
+  [INFO ] Tier0-GW-01                                ha_mode=ACTIVE_STANDBY  failover=PREEMPTIVE
+       BGP [PASS] 10.0.0.1             state=ESTABLISHED
+       BGP [PASS] 10.0.0.2             state=ESTABLISHED
+
+--- Tier-1 Gateways ---
+  [INFO ] Tier1-GW-01                                linked_t0=Tier0-GW-01        adv=TIER1_CONNECTED
+
+Overall: PASS
+```
+
+Any down BGP neighbor appears in red. The script exits with code 2 on critical failures.
+
 ---
 
 ## Ansible NSX-T Operational Playbook
@@ -511,3 +738,380 @@ Check NSX-T cluster, transport node, and edge health using the `uri` module, and
           - "Transport nodes up: {{ tn_status.json.up_count }}/{{ tn_status.json.total_count }}"
           - "Critical alarms: {{ critical_alarms.json.result_count }}"
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
+  `sudo apt update && sudo apt install -y ansible`
+- Network access to your NSX-T Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+In your WSL terminal:
+
+```bash
+nano ~/nsxt_operational.yml
+```
+
+Paste the entire code block, then press `Ctrl+X`, then `Y`, then `Enter` to save.
+
+**Step 2 — Fill in your details**
+
+Open the file and update the `vars:` section:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `nsx_host` | NSX Manager IP or FQDN | Your NSX Manager address |
+| `nsx_user` | NSX Manager username (or set via env var `NSX_USER`) | Your NSX Manager login |
+| `nsx_pass` | NSX Manager password (or set via env var `NSX_PASS`) | Your NSX Manager password |
+
+**Step 3 — Set credentials as environment variables**
+
+```bash
+export NSX_USER="admin"
+export NSX_PASS="YourPassword"
+```
+
+**Step 4 — Create a minimal inventory file**
+
+```bash
+echo "localhost ansible_connection=local" > ~/inventory
+```
+
+**Step 5 — Run it**
+
+```bash
+ansible-playbook -i ~/inventory ~/nsxt_operational.yml
+```
+
+**What you should see**
+
+Each task prints `ok` (assertion passed) or `fatal` (assertion failed). A non-STABLE cluster or any transport node that is down causes a hard failure with the detail shown. The final debug task prints a summary of the overall health status.
+
+---
+
+## Windows: NSX-T Manager Health via REST API (PowerShell)
+
+Use the NSX-T REST API with built-in PowerShell to check cluster status, transport node health, and active alarms — no extra modules needed.
+
+~~~powershell
+# nsxt_rest_health.ps1
+# Uses the NSX-T REST API — no extra modules required.
+# Requires PowerShell 5.1+ (already on Windows 10/11).
+
+param(
+    [string]$NsxManager = "192.168.1.200",
+    [string]$NsxUser    = "admin",
+    [string]$NsxPass    = "YourNSXPasswordHere"
+)
+
+# Ignore SSL certificate errors (NSX Manager uses self-signed certs by default)
+Add-Type @"
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAll : ICertificatePolicy {
+    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int prob) { return true; }
+}
+"@
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = "https://$NsxManager/api/v1"
+$authBytes = [System.Text.Encoding]::ASCII.GetBytes("${NsxUser}:${NsxPass}")
+$authB64   = [System.Convert]::ToBase64String($authBytes)
+$Headers   = @{
+    Authorization  = "Basic $authB64"
+    Accept         = "application/json"
+    "Content-Type" = "application/json"
+}
+
+function Invoke-NsxApi {
+    param([string]$Path)
+    try {
+        return Invoke-RestMethod -Uri "$BaseUrl$Path" -Method GET -Headers $Headers
+    } catch {
+        Write-Host "  WARNING: Could not retrieve $Path — $($_.Exception.Message)" -ForegroundColor Yellow
+        return $null
+    }
+}
+
+Write-Host "`n=== NSX-T Manager Health Check: $NsxManager ===" -ForegroundColor Cyan
+Write-Host "($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n"
+
+$overallExit = 0
+
+# Step 1: GET /api/v1/cluster/status — overall cluster health
+Write-Host "--- Cluster Status ---"
+$cluster = Invoke-NsxApi "/cluster/status"
+if ($cluster) {
+    $mgmtStatus = $cluster.mgmt_cluster_status.status
+    $ctrlStatus  = $cluster.control_cluster_status.status
+    $mgmtColour  = if ($mgmtStatus -eq "STABLE") { "Green" } else { "Red" }
+    $ctrlColour  = if ($ctrlStatus  -eq "STABLE") { "Green" } else { "Red" }
+    Write-Host "  Management cluster : " -NoNewline; Write-Host $mgmtStatus -ForegroundColor $mgmtColour
+    Write-Host "  Control cluster    : " -NoNewline; Write-Host $ctrlStatus  -ForegroundColor $ctrlColour
+
+    if ($mgmtStatus -ne "STABLE" -or $ctrlStatus -ne "STABLE") { $overallExit = 2 }
+
+    # Node details
+    $nodeCount = 0
+    foreach ($group in $cluster.detailed_cluster_status.groups_status) {
+        foreach ($member in $group.members) {
+            $nodeCount++
+            $ns = $member.status
+            $nc = if ($ns -eq "UP") { "Green" } else { "Red" }
+            Write-Host "    Node: $($member.display_name)  Status: " -NoNewline
+            Write-Host $ns -ForegroundColor $nc
+            if ($ns -ne "UP") { $overallExit = 2 }
+        }
+    }
+    Write-Host "  Total nodes: $nodeCount"
+}
+
+Write-Host ""
+
+# Step 2: GET /api/v1/transport-nodes/status — transport node health
+Write-Host "--- Transport Node Status ---"
+$tnStatus = Invoke-NsxApi "/transport-nodes/status"
+if ($tnStatus) {
+    $total   = $tnStatus.total_count
+    $up      = $tnStatus.up_count
+    $down    = $tnStatus.down_count
+    $degrad  = $tnStatus.degraded_count
+
+    $colour = if ($down -eq 0 -and $degrad -eq 0) { "Green" } elseif ($degrad -gt 0) { "Yellow" } else { "Red" }
+    Write-Host "  Total: $total  " -NoNewline
+    Write-Host "Up: $up  Down: $down  Degraded: $degrad" -ForegroundColor $colour
+
+    if ($down -gt 0) { $overallExit = [Math]::Max($overallExit, 2) }
+    if ($degrad -gt 0) { $overallExit = [Math]::Max($overallExit, 1) }
+
+    if ($down -gt 0) {
+        Write-Host "  WARNING: $down transport node(s) are DOWN." -ForegroundColor Red
+    }
+}
+
+Write-Host ""
+
+# Step 3: GET /api/v1/alarms — active alarms
+Write-Host "--- Active Alarms ---"
+$alarms = Invoke-NsxApi "/alarms?status=OPEN&severity=CRITICAL"
+if ($alarms) {
+    $alarmCount = $alarms.result_count
+    if ($alarmCount -gt 0) {
+        Write-Host "  CRITICAL alarms: $alarmCount" -ForegroundColor Red
+        foreach ($alarm in $alarms.results | Select-Object -First 5) {
+            Write-Host "    - $($alarm.alarm_source.display_name): $($alarm.summary)" -ForegroundColor Red
+        }
+        $overallExit = [Math]::Max($overallExit, 2)
+    } else {
+        Write-Host "  No open CRITICAL alarms." -ForegroundColor Green
+    }
+}
+
+$alarmsMedium = Invoke-NsxApi "/alarms?status=OPEN&severity=MEDIUM"
+if ($alarmsMedium) {
+    $medCount = $alarmsMedium.result_count
+    $mc = if ($medCount -gt 0) { "Yellow" } else { "Green" }
+    Write-Host "  MEDIUM alarms  : $medCount" -ForegroundColor $mc
+    if ($medCount -gt 0) { $overallExit = [Math]::Max($overallExit, 1) }
+}
+
+Write-Host ""
+$overallText = if ($overallExit -eq 0) { "PASS" } elseif ($overallExit -eq 1) { "WARNING" } else { "CRITICAL" }
+$overallColour = if ($overallExit -eq 0) { "Green" } elseif ($overallExit -eq 1) { "Yellow" } else { "Red" }
+Write-Host "Overall: " -NoNewline
+Write-Host $overallText -ForegroundColor $overallColour
+exit $overallExit
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
+- Network access to your NSX-T Manager on port 443
+- NSX Manager admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `nsxt_rest_health.ps1` and save it to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the file in Notepad and update the `param(` block:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `$NsxManager` | NSX Manager IP or FQDN e.g. `"192.168.1.200"` | Your NSX Manager address |
+| `$NsxUser` | NSX Manager username e.g. `"admin"` | Your NSX Manager login |
+| `$NsxPass` | NSX Manager password | Your NSX Manager password |
+
+**Step 3 — Open PowerShell as Administrator**
+
+Windows key → type `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\nsxt_rest_health.ps1
+```
+
+**What you should see**
+
+```
+=== NSX-T Manager Health Check: 192.168.1.200 ===
+(2026-05-06 14:30:22)
+
+--- Cluster Status ---
+  Management cluster : STABLE
+  Control cluster    : STABLE
+    Node: nsx-manager-01  Status: UP
+    Node: nsx-manager-02  Status: UP
+  Total nodes: 2
+
+--- Transport Node Status ---
+  Total: 8  Up: 8  Down: 0  Degraded: 0
+
+--- Active Alarms ---
+  No open CRITICAL alarms.
+  MEDIUM alarms  : 0
+
+Overall: PASS
+```
+
+Any cluster instability or transport nodes that are down appear in red. MEDIUM alarms appear in yellow.
+
+---
+
+## Windows: NSX-T Transport Node Check via Plink (CMD)
+
+Connect to NSX Manager via SSH using plink (from PuTTY) and run NSX-specific CLI commands to check cluster and transport node health. Note: NSX Manager uses its own CLI — commands are different from standard Linux.
+
+~~~batch
+@echo off
+REM nsxt_plink_check.bat — NSX-T Manager health check via SSH (plink)
+REM Connects to NSX Manager using plink (PuTTY command-line SSH tool).
+REM
+REM DOWNLOAD PLINK: https://www.putty.org
+REM   - Download putty-64bit-X.XX-installer.msi and install it.
+REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
+REM
+REM NOTE: NSX Manager uses its own CLI — these are NSX-specific commands,
+REM   NOT standard Linux/bash commands. Do not use standard Linux commands here.
+REM
+REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
+REM   "C:\Program Files\PuTTY\plink.exe" -ssh admin@192.168.1.200
+REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
+
+set NSX_HOST=192.168.1.200
+set SSH_USER=admin
+set PLINK="C:\Program Files\PuTTY\plink.exe"
+
+echo.
+echo === NSX-T Manager Health Check: %NSX_HOST% ===
+echo.
+
+echo --- Cluster Status ---
+%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get cluster status"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %NSX_HOST%.
+    echo Check: 1) IP is correct  2) SSH is accessible  3) Run first-time fingerprint setup above
+    exit /b 1
+)
+
+echo.
+echo --- Transport Nodes ---
+%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get transport-nodes"
+
+echo.
+echo --- Active Alarms ---
+%PLINK% -ssh -l %SSH_USER% -batch %NSX_HOST% "get alarms"
+
+echo.
+echo === NSX-T check complete ===
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
+- Network access to your NSX Manager on port 22 (SSH)
+- The NSX Manager admin password
+- Note: NSX Manager CLI uses its own set of commands (`get cluster status`, `get transport-nodes`, etc.) — these are not standard Linux commands
+
+**Step 1 — Accept the SSH fingerprint (one-time setup)**
+
+Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:
+
+```
+"C:\Program Files\PuTTY\plink.exe" -ssh admin@192.168.1.200
+```
+
+When asked "Store key in cache?", type `y` and press Enter. Type the admin password when prompted. Once connected, press `Ctrl+C` to disconnect. You only need to do this once per NSX Manager.
+
+**Step 2 — Save the file**
+
+1. Open **Notepad** on your Windows PC
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `nsxt_plink_check.bat` and save it to your Desktop
+
+**Step 3 — Fill in your details**
+
+Open the file in Notepad and update these lines near the top:
+
+| Variable | What to enter | How to find it |
+|---|---|---|
+| `NSX_HOST` | NSX Manager IP address e.g. `192.168.1.200` | Your NSX Manager address |
+| `SSH_USER` | NSX Manager SSH username — usually `admin` | Your NSX Manager login |
+| `PLINK` | Path to plink.exe | Default is `C:\Program Files\PuTTY\plink.exe` |
+
+**Step 4 — Open Command Prompt**
+
+Windows key → type `cmd` → press Enter
+
+**Step 5 — Run it**
+
+You can double-click the `.bat` file on your Desktop, or run it from Command Prompt:
+
+```
+cd C:\Users\YourName\Desktop
+nsxt_plink_check.bat
+```
+
+**What you should see**
+
+```
+=== NSX-T Manager Health Check: 192.168.1.200 ===
+
+--- Cluster Status ---
+Mgmt Cluster Status: STABLE
+Control Cluster Status: STABLE
+  Node: nsx-manager-01 (192.168.1.200) - UP
+  Node: nsx-manager-02 (192.168.1.201) - UP
+
+--- Transport Nodes ---
+ID                                    Display Name            Status
+--------------------------------------------------------------------
+abc12345-...                          esxi-01.company.local   UP
+def67890-...                          edge-node-01            UP
+
+--- Active Alarms ---
+No alarms found.
+
+=== NSX-T check complete ===
+```

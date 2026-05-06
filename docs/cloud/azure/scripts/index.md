@@ -87,6 +87,45 @@ fi
 echo -e "${GREEN}Health check PASSED — no critical events detected.${RESET}"
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Azure CLI installed (download from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
+- Logged in to Azure: run `az login` in your terminal first
+- Git Bash installed (from https://gitforwindows.org) to run `.sh` scripts on Windows
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `azure-health-check.sh` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `RESOURCE_GROUP` | Optional — leave blank to check all resource groups | Azure Portal → Resource Groups |
+
+**Step 3 — Open the right terminal**
+
+- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) → open Git Bash
+
+**Step 4 — Run it**
+
+```
+cd ~/Desktop
+bash azure-health-check.sh
+```
+
+**What you should see**
+
+Tables showing your VMs with power state, load balancers, and SQL servers. Then a section showing any critical events from the Azure activity log. If critical events are found the script exits with an error and shows a red ALERT message.
+
 ---
 
 ## VM Health and Compliance Report
@@ -200,6 +239,47 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed (download from https://python.org)
+- Azure CLI installed and you are logged in (`az login`)
+- The Azure Python SDK packages installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `azure_vm_compliance.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions → copy the Subscription ID |
+| `REQUIRED_TAGS` | Tags you want to enforce on all VMs | Your company's tagging policy |
+| `OUTPUT_FILE` | Where to save the CSV | Default: `azure_vm_compliance.csv` in the same folder |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Install packages and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install azure-identity azure-mgmt-compute azure-mgmt-recoveryservicesbackup azure-mgmt-resource
+python azure_vm_compliance.py
+```
+
+**What you should see**
+
+One line per VM as it scans: VM name, power state, and either OK or a list of flags like `MISSING_TAG_OWNER` or `NO_MONITORING_AGENT`. A CSV file is created that you can open in Excel for a full report.
 
 ---
 
@@ -327,6 +407,52 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed
+- Azure CLI installed and logged in (`az login`)
+- An SMTP server to send alerts from (e.g. Gmail SMTP, Office 365, or your company's mail relay)
+- The Azure Python SDK packages installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `azure_cost_spike.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `SMTP_SERVER` | Your mail server address | Your IT team or email provider settings |
+| `SMTP_PORT` | Mail server port, usually `587` | Your email provider docs |
+| `SMTP_USER` | Email account username | Your email account |
+| `SMTP_PASS` | Email account password | Your email account |
+| `ALERT_EMAIL` | Who to send alerts to | Your ops team email address |
+| `THRESHOLD_PCT` | Percentage increase before alerting | Default is `25` |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Install packages and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install azure-identity azure-mgmt-costmanagement
+python azure_cost_spike.py
+```
+
+**What you should see**
+
+A table showing each Azure service with its average daily spend for the previous 7 days and the current 7 days, plus a percentage change. Services that have spiked more than the threshold are marked with `*** SPIKE ***`. If spikes are found and SMTP is configured, an alert email is sent.
 
 ---
 
@@ -458,6 +584,47 @@ if __name__ == "__main__":
     main()
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed
+- Azure CLI installed and logged in (`az login`)
+- Your Azure account must have Network Contributor or Reader access to the subscription
+- The Azure Python SDK packages installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `azure_nsg_audit.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `DANGEROUS_PORTS` | Ports to flag as dangerous when open to the internet | Default: `{22, 3389}` (SSH and RDP) |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Install packages and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install azure-identity azure-mgmt-network
+python azure_nsg_audit.py
+```
+
+**What you should see**
+
+A table with one row per problematic NSG rule. Each row shows the NSG name, resource group, rule name, port, protocol, and a finding code like `SSH_OPEN_TO_INTERNET` or `RDP_OPEN_TO_INTERNET`. NSGs with no issues show `(no public inbound issues)`. The script exits with an error if any issues are found.
+
 ---
 
 ## VM DR Failover with Azure Site Recovery (Ansible)
@@ -552,6 +719,48 @@ Checks ASR replication health, triggers failover for specified VMs, waits for co
       loop: "{{ vm_status.results }}"
       when: item.vms is defined and item.vms | length > 0
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
+- Azure Ansible collection installed: `ansible-galaxy collection install azure.azcollection`
+- Azure Site Recovery set up in your subscription with replication already configured for the VMs
+- Azure credentials available via `az login` or service principal environment variables
+
+**Step 1 — Save the file**
+
+1. Open your WSL terminal (Windows key → type `wsl`)
+2. Create the file: `nano azure_dr_failover.yml`
+3. Paste the code, then press `Ctrl+X`, `Y`, `Enter` to save
+
+**Step 2 — Fill in your details**
+
+Open the file and update the `vars:` section:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `subscription_id` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `source_rg` | Resource group where your production VMs live | Azure Portal → Resource Groups |
+| `target_rg` | Resource group in your DR region | Azure Portal → Resource Groups |
+| `recovery_vault_name` | Name of your Recovery Services Vault | Azure Portal → Recovery Services Vaults |
+| `recovery_vault_rg` | Resource group containing the Recovery Vault | Same page as above |
+| `vm_names` | List of VM names to fail over, e.g. `["vm-app01"]` | Azure Portal → Virtual Machines |
+
+**Step 3 — Open the right terminal**
+
+- **For .yml (Ansible):** Needs Linux or WSL. Open your WSL terminal.
+
+**Step 4 — Run it**
+
+```
+cd ~
+ansible-playbook azure_dr_failover.yml
+```
+
+**What you should see**
+
+Ansible checks ASR replication health, triggers the failover for each VM in your list, then polls until the VMs come up running in the DR resource group. At the end it prints a summary confirming each VM's name and the result. The whole process can take 10–30 minutes depending on VM size.
 
 ---
 
@@ -673,6 +882,51 @@ if [[ "${DELETE_OLD:-}" == "--delete" ]]; then
 fi
 ~~~
 
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Azure CLI installed and you are logged in (`az login`)
+- Git Bash installed (from https://gitforwindows.org) to run `.sh` scripts on Windows
+- Your Azure account needs Contributor access to manage snapshots
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `azure-snapshot-audit.sh` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `AGE_DAYS` | Flag snapshots older than this many days | Default: `30` |
+
+**Step 3 — Open the right terminal**
+
+- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) → open Git Bash
+
+**Step 4 — Run it**
+
+```
+cd ~/Desktop
+bash azure-snapshot-audit.sh
+```
+
+To also delete old snapshots (use with caution — this is permanent):
+
+```
+bash azure-snapshot-audit.sh --delete
+```
+
+**What you should see**
+
+A table listing every managed disk snapshot with its age in days and size in GB. Snapshots older than your threshold are marked `<-- OLD`. At the bottom you see totals: how many old snapshots exist and how many GB they are taking up. If you run with `--delete` you will be asked to type `DELETE` to confirm before anything is removed.
+
 ---
 
 ## Key Vault Certificate Expiry Check
@@ -786,6 +1040,48 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python installed
+- Azure CLI installed and logged in (`az login`)
+- Your Azure account needs Key Vault Reader access plus `certificates/get` and `certificates/list` permissions on the Key Vaults
+- The Azure Python SDK packages installed
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files**
+5. Name it `azure_cert_expiry.py` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `WARNING_DAYS` | Days before expiry to warn | Default: `30` |
+| `CRITICAL_DAYS` | Days before expiry to mark as critical | Default: `14` |
+
+**Step 3 — Open the right terminal**
+
+- **For .py (Python):** Open Command Prompt.
+
+**Step 4 — Install packages and run**
+
+```
+cd C:\Users\YourName\Desktop
+pip install azure-identity azure-mgmt-keyvault azure-keyvault-certificates
+python azure_cert_expiry.py
+```
+
+**What you should see**
+
+A table sorted with CRITICAL certificates first, then WARNING, then OK. Each row shows the vault name, certificate name, expiry date, days remaining, and status. The script exits with an error if any CRITICAL certificates are found.
 
 ---
 
@@ -928,3 +1224,252 @@ Checks VM power states, load balancer health, storage account tiers, Key Vault c
           - "Run date        : {{ ansible_date_time.iso8601 }}"
           - "Result          : PASSED (assertions above would have failed otherwise)"
 ~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Ansible installed on Linux or WSL (Ansible does not run natively on Windows)
+- Azure Ansible collection: `ansible-galaxy collection install azure.azcollection`
+- Azure credentials via `az login` or a service principal
+
+**Step 1 — Save the file**
+
+1. Open your WSL terminal (Windows key → type `wsl`)
+2. Create the file: `nano azure_infra_health.yml`
+3. Paste the code, then press `Ctrl+X`, `Y`, `Enter` to save
+
+**Step 2 — Fill in your details**
+
+Open the file and update the `vars:` section:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `subscription_id` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `resource_groups` | List of resource group names to check | Azure Portal → Resource Groups |
+| `keyvault_names` | List of Key Vault names to check | Azure Portal → Key Vaults |
+| `cert_warning_days` | Days before expiry to flag | Default: `30` |
+
+**Step 3 — Open the right terminal**
+
+- **For .yml (Ansible):** Needs Linux or WSL. Open your WSL terminal.
+
+**Step 4 — Run it**
+
+```
+cd ~
+ansible-playbook azure_infra_health.yml
+```
+
+**What you should see**
+
+Ansible works through each check in sequence. VM asserts show green `ok` if all VMs are running or red `failed` with the list of problem VMs. Load balancer, storage, Key Vault, and NSG info is printed as debug messages. At the end a summary block shows what was checked.
+
+---
+
+## Windows: Azure VM Health Check via Azure CLI (CMD Batch)
+
+Check your Azure VMs, monitor alerts, and get Advisor recommendations directly from Windows using the Azure CLI.
+
+~~~batch
+@echo off
+REM azure-health-check.bat
+REM Requires: Azure CLI for Windows
+REM Download: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows
+REM Run "az login" in Command Prompt first to authenticate.
+
+set SUBSCRIPTION_ID=YOUR_SUBSCRIPTION_ID
+set RESOURCE_GROUP=YOUR_RESOURCE_GROUP
+
+echo === Azure VM Health Check ===
+echo Subscription : %SUBSCRIPTION_ID%
+echo Resource Group: %RESOURCE_GROUP%
+echo.
+
+echo --- Setting subscription context ---
+az account set --subscription %SUBSCRIPTION_ID%
+echo.
+
+echo --- VM List with Power State ---
+az vm list --show-details --query "[*].{Name:name,Status:powerState,RG:resourceGroup}" --output table
+echo.
+
+echo --- Activity Log Alerts ---
+az monitor activity-log alert list --output table
+echo.
+
+echo --- High Availability Advisor Recommendations ---
+az advisor recommendation list --category HighAvailability --output table
+echo.
+
+echo Health check complete.
+pause
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Azure CLI for Windows installed (download the MSI from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
+- Logged in to Azure: open Command Prompt and run `az login` — this opens your browser for authentication
+- Your Azure account must have at least Reader access on the subscription
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `azure-health-check.bat` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values near the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `SUBSCRIPTION_ID` | Your Azure subscription ID | Azure Portal → Subscriptions → copy the Subscription ID |
+| `RESOURCE_GROUP` | Your resource group name | Azure Portal → Resource Groups |
+
+**Step 3 — Open the right terminal**
+
+- **For .bat / .cmd:** Open Command Prompt or just double-click the file
+
+**Step 4 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+azure-health-check.bat
+```
+
+Or just double-click the file from your Desktop.
+
+**What you should see**
+
+A table of all your Azure VMs with their current power state (running, stopped, deallocated). Then any activity log alerts that are configured, followed by any High Availability recommendations from Azure Advisor. The window stays open so you can read the output.
+
+---
+
+## Windows: Azure Resource Health Report (PowerShell with Az Module)
+
+Get a full health and recommendations report for your Azure subscription using the official Az PowerShell module.
+
+~~~powershell
+# azure-resource-health.ps1
+# Requires: Az PowerShell module
+# Install with: Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+
+param(
+    [string]$SubscriptionId = "YOUR_SUBSCRIPTION_ID",
+    [string]$ResourceGroup  = "YOUR_RESOURCE_GROUP"
+)
+
+# Install Az module if not present
+if (-not (Get-Module -ListAvailable -Name Az.Accounts)) {
+    Write-Host "Installing Az module (this may take a few minutes)..." -ForegroundColor Yellow
+    Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+}
+
+Import-Module Az.Accounts
+Import-Module Az.Compute
+Import-Module Az.Advisor -ErrorAction SilentlyContinue
+
+Write-Host "`n=== Azure Resource Health Report ===" -ForegroundColor Cyan
+
+# Connect (opens browser for MFA login)
+Connect-AzAccount -SubscriptionId $SubscriptionId
+
+Write-Host "`n--- VM Power States ---" -ForegroundColor White
+
+$vms = if ($ResourceGroup) {
+    Get-AzVM -ResourceGroupName $ResourceGroup -Status
+} else {
+    Get-AzVM -Status
+}
+
+$vmReport = $vms | ForEach-Object {
+    $powerState = ($_.Statuses | Where-Object { $_.Code -like "PowerState/*" }).DisplayStatus
+    [PSCustomObject]@{
+        Name          = $_.Name
+        ResourceGroup = $_.ResourceGroupName
+        Location      = $_.Location
+        Size          = $_.HardwareProfile.VmSize
+        PowerState    = $powerState
+        Status        = if ($powerState -eq "VM running") { "OK" } else { "ATTENTION" }
+    }
+}
+
+$vmReport | Format-Table -AutoSize
+
+$notRunning = $vmReport | Where-Object { $_.Status -ne "OK" }
+if ($notRunning.Count -gt 0) {
+    Write-Host "VMs not running:" -ForegroundColor Yellow
+    $notRunning | ForEach-Object {
+        Write-Host "  $($_.Name) ($($_.ResourceGroup)) — $($_.PowerState)" -ForegroundColor Yellow
+    }
+}
+
+Write-Host "`n--- Advisor Recommendations ---" -ForegroundColor White
+try {
+    $recommendations = Get-AzAdvisorRecommendation
+    if ($recommendations) {
+        $recommendations | Select-Object -Property Category, Impact, ShortDescription, ResourceId |
+            Format-Table -AutoSize
+        Write-Host "Total recommendations: $($recommendations.Count)"
+    } else {
+        Write-Host "No Advisor recommendations found." -ForegroundColor Green
+    }
+} catch {
+    Write-Host "Could not retrieve Advisor recommendations: $_" -ForegroundColor Yellow
+}
+
+Write-Host "`n--- Summary ---" -ForegroundColor Cyan
+Write-Host "Subscription  : $SubscriptionId"
+Write-Host "Resource Group: $(if ($ResourceGroup) { $ResourceGroup } else { 'All' })"
+Write-Host "Total VMs     : $($vmReport.Count)"
+Write-Host "VMs running   : $(($vmReport | Where-Object { $_.Status -eq 'OK' }).Count)"
+Write-Host "VMs not running: $($notRunning.Count)"
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows PowerShell 5.1 or PowerShell 7
+- Internet access so PowerShell can download the Az module
+- An Azure account — the script will open your browser for MFA login
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search for Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Set "Save as type" to **All Files** (important — prevents Notepad adding .txt)
+5. Name it `azure-resource-health.ps1` and save to your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and update these values at the top:
+
+| Variable | What to enter | Where to find it |
+|---|---|---|
+| `$SubscriptionId` | Your Azure subscription ID | Azure Portal → Subscriptions |
+| `$ResourceGroup` | Your resource group name, or leave as empty `""` for all | Azure Portal → Resource Groups |
+
+**Step 3 — Open the right terminal**
+
+- **For .ps1 (PowerShell):** Windows key → `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run (one-time per session)**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run it**
+
+```
+cd C:\Users\YourName\Desktop
+.\azure-resource-health.ps1
+```
+
+**What you should see**
+
+The first time it runs, it installs the Az PowerShell module automatically (can take 5–10 minutes). Then your browser opens for Azure login. After login, it prints a table of VMs with their power state and flags any that are not running. Then it shows any Azure Advisor recommendations for improving your environment.

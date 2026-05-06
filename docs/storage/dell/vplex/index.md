@@ -12,6 +12,11 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>vplexcli commands: cluster health, virtual volumes, distributed devices, storage views, and migration.</span>
+</a>
+
 </div>
 
 ## Overview

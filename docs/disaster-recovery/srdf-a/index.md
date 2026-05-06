@@ -34,4 +34,14 @@ SRDF/A operational notes and deep-dive references.
     <p>SRDF state monitor, planned failover automation, cycle time tracking, and Ansible SRDF playbook.</p>
   </div>
 
+  <a class="kb-card" href="cli-reference/">
+    <strong>CLI Reference</strong>
+    <span>SYMCLI SRDF/A state commands, delta mark monitoring, cycle time, suspend/resume, and failover sequence.</span>
+  </a>
+
+  <a class="kb-card" href="operations/">
+    <strong>Operations</strong>
+    <span>Daily pair state checks, delta mark monitoring, change readiness, incident triage, and planned failover procedure.</span>
+  </a>
+
 </div>

@@ -7,6 +7,16 @@
   <span>Python REST API subscription monitor, capacity report, and Ansible alert check playbook.</span>
 </a>
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Dell API reference for APEX — authentication, systems, subscription capacity, and health endpoints.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily health review, capacity vs contracted, change readiness, and incident triage for APEX managed workloads.</span>
+</a>
+
 </div>
 
 ## Overview
