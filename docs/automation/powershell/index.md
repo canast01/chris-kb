@@ -11,4 +11,9 @@ PowerShell knowledge base articles, operational procedures, troubleshooting note
   <span>Core PowerShell, remoting, file operations, services, and VMware PowerCLI.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Windows health check, AD user audit, certificate expiry check, service monitoring, and remote execution scripts.</span>
+</a>
+
 </div>

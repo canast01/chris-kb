@@ -7,6 +7,11 @@
   <span>uemcli commands for pools, LUNs, NAS, NFS/CIFS, hosts, replication, and hardware.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash uemcli health check, Perl SP monitor, and Ansible replication check playbook.</span>
+</a>
+
 </div>
 
 ## Overview

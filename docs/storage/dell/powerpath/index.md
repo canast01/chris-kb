@@ -7,6 +7,11 @@
   <span>powermt display, check, restore, path management, and load balancing policy commands.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash path health checker, Perl path count validator, and dead path alerting scripts.</span>
+</a>
+
 </div>
 
 ## Overview

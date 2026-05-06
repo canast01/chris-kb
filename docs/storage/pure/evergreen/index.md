@@ -1,5 +1,14 @@
 # Pure Storage Evergreen
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash subscription health check, upgrade readiness validator, and pre-upgrade path check scripts.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Pure Storage Evergreen is a hardware subscription model for FlashArray and FlashBlade that bundles hardware, Purity software, support, and controller upgrades into a single ongoing subscription. The core design principle is non-disruptive controller refresh every three years — data stays in place, hosts remain connected, and there is no forklift replacement or data migration. The model spans three tiers: Evergreen//Forever (base hardware subscription with Every Modern controller upgrades), Evergreen//Flex (adds non-disruptive blade and capacity swap flexibility), and Evergreen//One (consumption-based STaaS, covered separately).

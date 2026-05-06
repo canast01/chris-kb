@@ -1,5 +1,14 @@
 # NetApp SnapCenter
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>PowerShell backup job monitor, failed job alert, and resource health check scripts.</span>
+</a>
+
+</div>
+
 ## Overview
 
 NetApp SnapCenter is centralized backup and recovery software that leverages application-consistent ONTAP snapshots to protect databases, virtual machines, and filesystems. It uses a plugin architecture to quiesce applications before snapshot creation, ensuring data consistency, and integrates with SnapMirror and SnapVault to replicate backups to secondary or tertiary storage. The web GUI is accessible at `https://[server]:8146` and automation is available via PowerShell cmdlets.

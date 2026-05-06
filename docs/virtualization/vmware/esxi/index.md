@@ -29,4 +29,9 @@ Technical and operational KBs for ESXi.
   <span>VMkernel, services, logs, ports, commands, and failure points.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>PowerCLI health check, Bash esxcli diagnostics, Python API health reporter, and Ansible ESXi playbook.</span>
+</a>
+
 </div>

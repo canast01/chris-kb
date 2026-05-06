@@ -5,6 +5,10 @@
     <h3><a href="cli-reference/">CLI Reference</a></h3>
     <p>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</p>
   </div>
+  <a class="kb-card" href="scripts/">
+    <strong>Scripts</strong>
+    <span>Python REST API health check, ActiveCluster monitor, Bash volume report, and Ansible playbook.</span>
+  </a>
 </div>
 
 ## Overview

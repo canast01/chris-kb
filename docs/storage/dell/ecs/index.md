@@ -1,5 +1,14 @@
 # Dell ECS
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python REST API health check, bucket audit, and node status scripts.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.

@@ -7,6 +7,11 @@
   <span>show zone, flogi database, interfaces, VSANs, trunking, diagnostics, and config backup.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash fabric health check, Python FLOGI database report, zoning audit, and Ansible config backup playbook.</span>
+</a>
+
 </div>
 
 ## Overview

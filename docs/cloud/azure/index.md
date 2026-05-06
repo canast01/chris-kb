@@ -54,4 +54,9 @@ Azure cloud platform operational notes grouped by service area.
   <span>Cost management, budgets, reservations, and cost optimization.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash and Python health checks, VM DR failover, cost audit, security review, and Ansible Azure playbooks.</span>
+</a>
+
 </div>

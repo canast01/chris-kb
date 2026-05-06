@@ -29,4 +29,9 @@ Recoverpoint operational notes and deep-dive references.
     <p>Recovery notes, checks, commands, troubleshooting, and validation.</p>
   </div>
 
+  <div class="kb-card">
+    <h3><a href="scripts/">Scripts</a></h3>
+    <p>Python RecoverPoint API health check, consistency group monitor, and DR test failover script.</p>
+  </div>
+
 </div>

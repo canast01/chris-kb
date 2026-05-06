@@ -29,4 +29,9 @@ Technical and operational KBs for vSAN.
   <span>Components, logs, commands, failure points, resync, and upgrade notes.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>PowerCLI vSAN health check, disk group report, RVC diagnostics, and Ansible vSAN playbook.</span>
+</a>
+
 </div>

@@ -7,6 +7,11 @@
   <span>purefb commands for file systems, object store, snapshots, replication, network, and hardware.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python REST API health check, filesystem capacity report, ActiveDR monitor, and Bash scripts.</span>
+</a>
+
 </div>
 
 ## Overview

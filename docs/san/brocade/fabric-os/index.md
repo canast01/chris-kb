@@ -7,6 +7,11 @@
   <span>switchshow, portshow, zoning, fabricshow, firmware, ISLs, and diagnostics.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash fabric health check, Perl port error monitor, Python ISL utilization report, and Ansible config backup.</span>
+</a>
+
 </div>
 
 ## Overview

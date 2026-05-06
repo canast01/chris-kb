@@ -7,6 +7,11 @@
   <span>isi commands for cluster status, NFS, SMB, snapshots, SyncIQ, quotas, auth, and statistics.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Perl cluster health check, SyncIQ monitor, quota report, and Ansible playbook.</span>
+</a>
+
 </div>
 
 ## Overview

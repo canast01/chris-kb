@@ -11,4 +11,9 @@ Ansible knowledge base articles, operational procedures, troubleshooting notes, 
   <span>ansible, ansible-playbook, ansible-galaxy, ansible-vault, ansible-lint, and more.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Infrastructure health playbooks, rolling update pattern, inventory validation, and ad-hoc examples.</span>
+</a>
+
 </div>

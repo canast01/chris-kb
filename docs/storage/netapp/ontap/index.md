@@ -5,6 +5,10 @@
     <h3><a href="cli-reference/">CLI Reference</a></h3>
     <p>Cluster, volume, SVM, NFS, CIFS, iSCSI, FC, SnapMirror, and QoS commands.</p>
   </div>
+  <a class="kb-card" href="scripts/">
+    <strong>Scripts</strong>
+    <span>Perl cluster health check, SnapMirror lag monitor, Python volume reporter, and Ansible playbook.</span>
+  </a>
 </div>
 
 ## Overview

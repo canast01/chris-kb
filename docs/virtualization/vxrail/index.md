@@ -39,4 +39,9 @@ VxRail operational notes for lifecycle, health, hardware, support, and troublesh
   <span>VxRail Manager, lifecycle, hardware, logs, ports, commands, and failure points.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>PowerCLI VxRail health check, LCM readiness validator, Bash node status scripts, and Ansible playbook.</span>
+</a>
+
 </div>

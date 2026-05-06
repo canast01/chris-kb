@@ -1,5 +1,14 @@
 # NetApp Keystone
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python Keystone Collector health check and usage reporting scripts.</span>
+</a>
+
+</div>
+
 ## Overview
 
 NetApp Keystone (Keystone STaaS) is a storage-as-a-service subscription offering that delivers on-premises NetApp infrastructure — AFF/FAS for block and file, and StorageGRID for object — on a consumption-based, OpEx model. Customers commit to a minimum capacity tier per service level and can burst above that commitment within the subscription period, with usage telemetry collected by the Keystone Collector agent and reported monthly for billing. The Keystone dashboard, embedded in BlueXP (formerly Active IQ), provides visibility into committed vs. consumed capacity, burst usage, and SLA compliance across all subscriptions.

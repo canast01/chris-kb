@@ -7,6 +7,11 @@
   <span>SYMCLI commands for discovery, devices, storage groups, masking views, SRDF, SnapVX, and more.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>SYMCLI health check, Perl SRDF monitor, DR failover script, and Ansible playbook.</span>
+</a>
+
 </div>
 
 ## Overview

@@ -14,4 +14,9 @@ Technical and operational KBs for NSX.
   <span>Managers, edges, overlays, ports, commands, logs, and failure points.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python NSX-T API health check, transport node monitor, DFW rule audit, and Ansible NSX-T playbook.</span>
+</a>
+
 </div>

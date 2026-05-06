@@ -11,4 +11,9 @@ Terraform knowledge base articles, operational procedures, troubleshooting notes
   <span>init, plan, apply, destroy, state, workspace, import, output, and more.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>State drift detection, workspace management, cost estimation, and DR infrastructure provisioning examples.</span>
+</a>
+
 </div>

@@ -7,6 +7,11 @@
   <span>filesys, mtree, replication, DDBoost, NFS, CIFS, disk, and diagnostics commands.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash health check, Perl replication monitor, and Ansible daily check playbook.</span>
+</a>
+
 </div>
 
 ## Overview

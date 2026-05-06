@@ -1,5 +1,14 @@
 # Dell VPLEX
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash distributed device health check, Perl Metro consistency group monitor, and director status scripts.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Dell VPLEX is a storage virtualization platform that presents a federated storage layer across heterogeneous arrays, abstracting physical storage into virtual volumes accessible to hosts. VPLEX Local provides active-active LUN access within a single data center across two arrays; VPLEX Metro extends this across two data centers up to ~10ms RTT with synchronous mirroring and transparent failover; VPLEX Geo adds asynchronous replication for greater distances using RecoverPoint. Management is via the `vplexcli` command-line interface or Unisphere for VPLEX.

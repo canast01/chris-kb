@@ -29,4 +29,9 @@ SRDF/A operational notes and deep-dive references.
     <p>Validation notes, checks, commands, troubleshooting, and validation.</p>
   </div>
 
+  <div class="kb-card">
+    <h3><a href="scripts/">Scripts</a></h3>
+    <p>SRDF state monitor, planned failover automation, cycle time tracking, and Ansible SRDF playbook.</p>
+  </div>
+
 </div>

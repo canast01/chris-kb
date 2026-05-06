@@ -34,4 +34,9 @@ Technical and operational KBs for vCenter.
   <span>Services, logs, ports, commands, failure points, and upgrade notes.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>PowerCLI VM health report, cluster capacity script, Python vSphere API reporter, and Ansible vCenter playbook.</span>
+</a>
+
 </div>
