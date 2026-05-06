@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>Scripts - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#scripts" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              Scripts
             
           </span>
         </div>
@@ -252,7 +252,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../" class="md-tabs__link">
+        <a href="../../../../virtualization/" class="md-tabs__link">
           
   
   
@@ -466,7 +466,7 @@
   
   
   
-    <a href="../../../" class="md-nav__link">
+    <a href="../../../../virtualization/" class="md-nav__link">
       
   
   
@@ -721,6 +721,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#alert-poller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Poller
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-trend-reporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Trend Reporter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible-cloudiq-daily-health-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible CloudIQ Daily Health Playbook
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -738,18 +779,285 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
+<h1 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the NSX-T reference.</p>
+<p>Part of the <a href="../">CloudIQ</a> reference.</p>
 </blockquote>
-<div class="kb-grid kb-grid-3">
+<hr />
+<h2 id="alert-poller">Alert Poller<a class="headerlink" href="#alert-poller" title="Permanent link">&para;</a></h2>
+<p>Polls the CloudIQ REST API for all active alerts across the storage estate and prints a formatted report grouped by severity. Exits non-zero if any CRITICAL alerts are found. Designed for cron or monitoring integration.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+# cloudiq_alert_poller.py — Poll CloudIQ for active alerts across all systems
+# Requirements: requests
+# Usage: CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy ./cloudiq_alert_poller.py
 
-<a class="kb-card" href="edge-health/">
-  <strong>Edge Health</strong>
-  <span>NSX edge node health, transport connectivity, routing state, and service validation.</span>
-</a>
+import os
+import sys
+import requests
+import urllib3
+from datetime import datetime
+from collections import defaultdict
 
-</div>
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+CLIENT_ID     = os.environ.get(&quot;CLOUDIQ_CLIENT_ID&quot;, &quot;&quot;)
+CLIENT_SECRET = os.environ.get(&quot;CLOUDIQ_CLIENT_SECRET&quot;, &quot;&quot;)
+CLOUDIQ_BASE  = &quot;https://cloudiq.dell.com&quot;
+AUTH_URL      = f&quot;{CLOUDIQ_BASE}/auth/v1/token&quot;
+API_BASE      = f&quot;{CLOUDIQ_BASE}/cloudiq/rest/v1&quot;
+
+if not CLIENT_ID or not CLIENT_SECRET:
+    print(&quot;ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.&quot;, file=sys.stderr)
+    sys.exit(1)
+
+session = requests.Session()
+
+
+def get_token():
+    resp = session.post(
+        AUTH_URL,
+        data={
+            &quot;grant_type&quot;: &quot;client_credentials&quot;,
+            &quot;client_id&quot;: CLIENT_ID,
+            &quot;client_secret&quot;: CLIENT_SECRET,
+        },
+        headers={&quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;},
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+
+def api_get(token, path, params=None):
+    resp = session.get(
+        f&quot;{API_BASE}{path}&quot;,
+        headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;, &quot;Accept&quot;: &quot;application/json&quot;},
+        params=params,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def main():
+    exit_code = 0
+
+    print(&quot;=&quot; * 70)
+    print(&quot;  CloudIQ Active Alert Report&quot;)
+    print(f&quot;  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}&quot;)
+    print(&quot;=&quot; * 70)
+
+    token = get_token()
+
+    data   = api_get(token, &quot;/alerts&quot;, params={&quot;state&quot;: &quot;ACTIVE&quot;})
+    alerts = data.get(&quot;results&quot;, data if isinstance(data, list) else [])
+
+    if not alerts:
+        print(&quot;\nNo active alerts.&quot;)
+        sys.exit(0)
+
+    # Group by severity
+    by_severity = defaultdict(list)
+    for alert in alerts:
+        sev = alert.get(&quot;severity&quot;, &quot;UNKNOWN&quot;).upper()
+        by_severity[sev].append(alert)
+
+    for sev in (&quot;CRITICAL&quot;, &quot;ERROR&quot;, &quot;WARNING&quot;, &quot;INFO&quot;, &quot;UNKNOWN&quot;):
+        group = by_severity.get(sev, [])
+        if not group:
+            continue
+        print(f&quot;\n--- {sev} ({len(group)}) ---&quot;)
+        print(f&quot;  {'SYSTEM':&lt;30}  {'COMPONENT':&lt;25}  DESCRIPTION&quot;)
+        print(&quot;  &quot; + &quot;-&quot; * 80)
+        for a in group:
+            system    = a.get(&quot;system_name&quot;, a.get(&quot;systemName&quot;, &quot;unknown&quot;))
+            component = a.get(&quot;component_name&quot;, a.get(&quot;componentName&quot;, a.get(&quot;object_name&quot;, &quot;unknown&quot;)))
+            desc      = a.get(&quot;description&quot;, a.get(&quot;message&quot;, &quot;no description&quot;))
+            print(f&quot;  {system:&lt;30}  {component:&lt;25}  {desc}&quot;)
+        if sev in (&quot;CRITICAL&quot;, &quot;ERROR&quot;):
+            exit_code = max(exit_code, 2)
+        elif sev == &quot;WARNING&quot;:
+            exit_code = max(exit_code, 1)
+
+    print(f&quot;\n{'=' * 70}&quot;)
+    print(f&quot;  Total active alerts: {len(alerts)}&quot;)
+    labels = {0: &quot;OK&quot;, 1: &quot;WARNING&quot;, 2: &quot;CRITICAL&quot;}
+    print(f&quot;  Overall: {labels.get(exit_code, 'UNKNOWN')}&quot;)
+    sys.exit(exit_code)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<hr />
+<h2 id="capacity-trend-reporter">Capacity Trend Reporter<a class="headerlink" href="#capacity-trend-reporter" title="Permanent link">&para;</a></h2>
+<p>Queries CloudIQ for all storage systems, fetches their capacity metrics, and prints a trend report showing current utilisation and projected days-to-full. Flags systems under 30 days to full.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+# cloudiq_capacity_reporter.py — CloudIQ capacity trend and days-to-full reporter
+# Requirements: requests
+# Usage: CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy WARN_DAYS=30 ./cloudiq_capacity_reporter.py
+
+import os
+import sys
+import requests
+from datetime import datetime
+
+CLIENT_ID     = os.environ.get(&quot;CLOUDIQ_CLIENT_ID&quot;, &quot;&quot;)
+CLIENT_SECRET = os.environ.get(&quot;CLOUDIQ_CLIENT_SECRET&quot;, &quot;&quot;)
+WARN_DAYS     = int(os.environ.get(&quot;WARN_DAYS&quot;, &quot;30&quot;))
+CLOUDIQ_BASE  = &quot;https://cloudiq.dell.com&quot;
+API_BASE      = f&quot;{CLOUDIQ_BASE}/cloudiq/rest/v1&quot;
+
+if not CLIENT_ID or not CLIENT_SECRET:
+    print(&quot;ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.&quot;, file=sys.stderr)
+    sys.exit(1)
+
+session = requests.Session()
+
+
+def get_token():
+    resp = session.post(
+        f&quot;{CLOUDIQ_BASE}/auth/v1/token&quot;,
+        data={&quot;grant_type&quot;: &quot;client_credentials&quot;,
+              &quot;client_id&quot;: CLIENT_ID, &quot;client_secret&quot;: CLIENT_SECRET},
+        headers={&quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;},
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+
+def api_get(token, path, params=None):
+    resp = session.get(
+        f&quot;{API_BASE}{path}&quot;,
+        headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;},
+        params=params,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def main():
+    exit_code = 0
+    token = get_token()
+
+    systems_data = api_get(token, &quot;/storage-systems&quot;)
+    systems = systems_data.get(&quot;results&quot;, [])
+
+    print(&quot;=&quot; * 80)
+    print(&quot;  CloudIQ Capacity Trend Report&quot;)
+    print(f&quot;  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}&quot;)
+    print(&quot;=&quot; * 80)
+    print(f&quot;\n{'SYSTEM':&lt;30}  {'TYPE':&lt;15}  {'USED %':&gt;7}  {'DAYS TO FULL':&gt;13}  STATUS&quot;)
+    print(&quot;-&quot; * 80)
+
+    for sys_obj in systems:
+        sys_id   = sys_obj.get(&quot;id&quot;, &quot;unknown&quot;)
+        sys_name = sys_obj.get(&quot;system_name&quot;, sys_obj.get(&quot;name&quot;, sys_id))
+        sys_type = sys_obj.get(&quot;system_type&quot;, sys_obj.get(&quot;type&quot;, &quot;unknown&quot;))
+
+        try:
+            cap = api_get(token, f&quot;/storage-systems/{sys_id}/capacity&quot;)
+        except Exception:
+            cap = {}
+
+        total  = float(cap.get(&quot;total_subscribed_tib&quot;, cap.get(&quot;total_tib&quot;, 0)))
+        used   = float(cap.get(&quot;used_tib&quot;, 0))
+        dtf    = cap.get(&quot;days_until_full&quot;, cap.get(&quot;daysUntilFull&quot;, None))
+        pct    = (used / total * 100) if total &gt; 0 else 0.0
+
+        if dtf is not None:
+            dtf_val = int(dtf)
+            dtf_str = str(dtf_val)
+        else:
+            dtf_val = 9999
+            dtf_str = &quot;N/A&quot;
+
+        if dtf_val &lt;= WARN_DAYS:
+            status = f&quot;WARNING — {dtf_str} days&quot;
+            exit_code = max(exit_code, 1)
+        elif pct &gt;= 85:
+            status = &quot;WARNING — over 85%&quot;
+            exit_code = max(exit_code, 1)
+        else:
+            status = &quot;OK&quot;
+
+        print(f&quot;{sys_name:&lt;30}  {sys_type:&lt;15}  {pct:&gt;6.1f}%  {dtf_str:&gt;13}  {status}&quot;)
+
+    print(&quot;-&quot; * 80)
+    labels = {0: &quot;OK&quot;, 1: &quot;WARNING&quot;, 2: &quot;CRITICAL&quot;}
+    print(f&quot;\nOverall: {labels.get(exit_code, 'UNKNOWN')}&quot;)
+    sys.exit(exit_code)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<hr />
+<h2 id="ansible-cloudiq-daily-health-playbook">Ansible CloudIQ Daily Health Playbook<a class="headerlink" href="#ansible-cloudiq-daily-health-playbook" title="Permanent link">&para;</a></h2>
+<p>Playbook targeting localhost. Authenticates to CloudIQ, retrieves active alerts and capacity summaries, prints the output, and fails if critical alerts are present.</p>
+<pre><code class="language-yaml">---
+# cloudiq_daily_health.yml — Ansible daily CloudIQ health check playbook
+# Usage: ansible-playbook cloudiq_daily_health.yml
+
+- name: Dell CloudIQ Daily Health Check
+  hosts: localhost
+  gather_facts: false
+  vars:
+    cloudiq_base: &quot;https://cloudiq.dell.com&quot;
+    client_id: &quot;{{ lookup('env', 'CLOUDIQ_CLIENT_ID') }}&quot;
+    client_secret: &quot;{{ lookup('env', 'CLOUDIQ_CLIENT_SECRET') }}&quot;
+    warn_days_to_full: 30
+
+  tasks:
+    - name: Authenticate to CloudIQ API
+      ansible.builtin.uri:
+        url: &quot;{{ cloudiq_base }}/auth/v1/token&quot;
+        method: POST
+        body_format: form-urlencoded
+        body:
+          grant_type: client_credentials
+          client_id: &quot;{{ client_id }}&quot;
+          client_secret: &quot;{{ client_secret }}&quot;
+        return_content: true
+      register: auth_resp
+      no_log: true
+
+    - name: Set access token
+      ansible.builtin.set_fact:
+        cloudiq_token: &quot;{{ auth_resp.json.access_token }}&quot;
+      no_log: true
+
+    - name: Get active alerts
+      ansible.builtin.uri:
+        url: &quot;{{ cloudiq_base }}/cloudiq/rest/v1/alerts?state=ACTIVE&quot;
+        method: GET
+        headers:
+          Authorization: &quot;Bearer {{ cloudiq_token }}&quot;
+        return_content: true
+      register: alerts_resp
+
+    - name: Show active alerts
+      ansible.builtin.debug:
+        msg: &quot;{{ alerts_resp.json.results | default([]) }}&quot;
+
+    - name: Get storage system capacity
+      ansible.builtin.uri:
+        url: &quot;{{ cloudiq_base }}/cloudiq/rest/v1/storage-systems&quot;
+        method: GET
+        headers:
+          Authorization: &quot;Bearer {{ cloudiq_token }}&quot;
+        return_content: true
+      register: systems_resp
+
+    - name: Show storage systems
+      ansible.builtin.debug:
+        msg: &quot;{{ systems_resp.json.results | default([]) | map(attribute='system_name') | list }}&quot;
+
+    - name: Fail if CRITICAL alerts present
+      ansible.builtin.fail:
+        msg: &quot;CRITICAL alerts active in CloudIQ. Review alerts_resp output above.&quot;
+      when: &gt;
+        (alerts_resp.json.results | default([]) |
+         selectattr('severity', 'equalto', 'CRITICAL') | list | length) &gt; 0
+</code></pre>
 
 
 
