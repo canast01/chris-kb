@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell PowerPath - Chris KB</title>
+        <title>Azure CLI Reference - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-powerpath" class="md-skip">
+        <a href="#azure-cli-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell PowerPath
+              Azure CLI Reference
             
           </span>
         </div>
@@ -730,10 +730,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#account-subscription" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Account &amp; Subscription
       
     </span>
   </a>
@@ -741,10 +741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#resource-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Resource Groups
       
     </span>
   </a>
@@ -752,10 +752,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#virtual-machines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Virtual Machines
       
     </span>
   </a>
@@ -763,10 +763,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#disks-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Disks &amp; Snapshots
       
     </span>
   </a>
@@ -774,10 +774,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#storage-accounts-blobs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        Storage Accounts &amp; Blobs
       
     </span>
   </a>
@@ -785,10 +785,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
+  <a href="#networking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Tasks
+        Networking
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
+  <a href="#azure-active-directory-entra-id" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Notes
+        Azure Active Directory (Entra ID)
       
     </span>
   </a>
@@ -807,10 +807,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#rbac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
+        RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitor-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor &amp; Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Vault
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup &amp; Recovery
       
     </span>
   </a>
@@ -836,101 +880,238 @@
 
 
 
-<h1 id="dell-powerpath">Dell PowerPath<a class="headerlink" href="#dell-powerpath" title="Permanent link">&para;</a></h1>
-<div class="kb-grid kb-grid-3">
+<h1 id="azure-cli-reference">Azure CLI Reference<a class="headerlink" href="#azure-cli-reference" title="Permanent link">&para;</a></h1>
+<p>Commonly used Azure CLI (<code>az</code>) commands for managing compute, storage, networking, identity, and monitoring.</p>
+<blockquote>
+<p>Requires <code>az login</code> or service principal credentials. Use <code>az account set --subscription &lt;id&gt;</code> to target a specific subscription.</p>
+</blockquote>
+<hr />
+<h2 id="account-subscription">Account &amp; Subscription<a class="headerlink" href="#account-subscription" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Login
+az login
+az login --service-principal -u &lt;app_id&gt; -p &lt;password&gt; --tenant &lt;tenant&gt;
+az login --identity   # Managed identity
 
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>powermt display, check, restore, path management, and load balancing policy commands.</span>
-</a>
+# Subscriptions
+az account list --output table
+az account show
+az account set --subscription &lt;id_or_name&gt;
 
-</div>
-
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerPath is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Primary storage operations</li>
-<li>Application and VM data services</li>
-<li>Backup and recovery workflows</li>
-<li>Replication and disaster recovery</li>
-<li>Performance and capacity planning</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review active alerts</li>
-<li>Check capacity usage</li>
-<li>Validate replication or protection status</li>
-<li>Confirm support connectivity</li>
-<li>Review performance trends</li>
-<li>Check recent configuration changes</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show status
-show alerts
-show capacity
-show replication
-show version
+# Identity
+az ad signed-in-user show
 </code></pre>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>High latency</td>
-<td>Backend contention or host path issue</td>
-<td>Review performance and paths</td>
-</tr>
-<tr>
-<td>Capacity warning</td>
-<td>Growth, snapshots, or retention</td>
-<td>Review usage and cleanup options</td>
-</tr>
-<tr>
-<td>Replication lag</td>
-<td>Network, target, or workload pressure</td>
-<td>Check replication status</td>
-</tr>
-<tr>
-<td>Host path down</td>
-<td>SAN zoning, cabling, or multipathing</td>
-<td>Validate fabric and host paths</td>
-</tr>
-</tbody>
-</table>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Provision storage</li>
-<li>Expand volumes or file systems</li>
-<li>Review snapshots</li>
-<li>Validate replication</li>
-<li>Confirm host connectivity</li>
-<li>Review firmware or software level</li>
-</ul>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm current version</li>
-<li>Review vendor compatibility matrix</li>
-<li>Confirm backups and rollback plan</li>
-<li>Validate support contract</li>
-<li>Upgrade during maintenance window</li>
-<li>Confirm host access and replication after upgrade</li>
-</ol>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Keep naming consistent</li>
-<li>Monitor capacity growth</li>
-<li>Document storage mappings</li>
-<li>Validate multipathing</li>
-<li>Test restore and failover procedures</li>
-<li>Review support advisories regularly</li>
-</ul>
+<hr />
+<h2 id="resource-groups">Resource Groups<a class="headerlink" href="#resource-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">az group list
+az group list --output table
+az group show --name &lt;rg&gt;
+az group create --name &lt;rg&gt; --location eastus
+az group delete --name &lt;rg&gt; --yes
+az group list --query &quot;[].{Name:name,Location:location,State:properties.provisioningState}&quot; --output table
+</code></pre>
+<hr />
+<h2 id="virtual-machines">Virtual Machines<a class="headerlink" href="#virtual-machines" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List
+az vm list --output table
+az vm list --resource-group &lt;rg&gt; --output table
+az vm list --resource-group &lt;rg&gt; --show-details --output table
+
+# Start / stop / restart
+az vm start --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm stop --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm deallocate --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm restart --resource-group &lt;rg&gt; --name &lt;vm&gt;
+
+# Details
+az vm show --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm get-instance-view --resource-group &lt;rg&gt; --name &lt;vm&gt;
+
+# Create
+az vm create --resource-group &lt;rg&gt; --name &lt;vm&gt; --image Ubuntu2204 --size Standard_D2s_v3 \
+  --admin-username azureuser --ssh-key-values ~/.ssh/id_rsa.pub
+
+# Resize
+az vm resize --resource-group &lt;rg&gt; --name &lt;vm&gt; --size Standard_D4s_v3
+
+# Run command
+az vm run-command invoke --resource-group &lt;rg&gt; --name &lt;vm&gt; --command-id RunShellScript \
+  --scripts &quot;uptime&quot;
+
+# Open port
+az vm open-port --resource-group &lt;rg&gt; --name &lt;vm&gt; --port 22
+</code></pre>
+<hr />
+<h2 id="disks-snapshots">Disks &amp; Snapshots<a class="headerlink" href="#disks-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Managed disks
+az disk list --resource-group &lt;rg&gt; --output table
+az disk show --resource-group &lt;rg&gt; --name &lt;disk&gt;
+az disk create --resource-group &lt;rg&gt; --name &lt;disk&gt; --size-gb 128 --sku Premium_LRS
+az disk delete --resource-group &lt;rg&gt; --name &lt;disk&gt; --yes
+
+# Attach disk to VM
+az vm disk attach --resource-group &lt;rg&gt; --vm-name &lt;vm&gt; --name &lt;disk&gt;
+az vm disk detach --resource-group &lt;rg&gt; --vm-name &lt;vm&gt; --name &lt;disk&gt;
+
+# Snapshots
+az snapshot list --resource-group &lt;rg&gt; --output table
+az snapshot create --resource-group &lt;rg&gt; --name &lt;snap&gt; --source &lt;disk_id&gt;
+az snapshot delete --resource-group &lt;rg&gt; --name &lt;snap&gt;
+</code></pre>
+<hr />
+<h2 id="storage-accounts-blobs">Storage Accounts &amp; Blobs<a class="headerlink" href="#storage-accounts-blobs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Storage accounts
+az storage account list --output table
+az storage account show --resource-group &lt;rg&gt; --name &lt;account&gt;
+az storage account create --resource-group &lt;rg&gt; --name &lt;account&gt; --sku Standard_LRS --kind StorageV2
+az storage account delete --resource-group &lt;rg&gt; --name &lt;account&gt; --yes
+
+# Containers
+az storage container list --account-name &lt;account&gt;
+az storage container create --account-name &lt;account&gt; --name &lt;container&gt;
+
+# Blobs
+az storage blob list --account-name &lt;account&gt; --container-name &lt;container&gt;
+az storage blob upload --account-name &lt;account&gt; --container-name &lt;container&gt; --file &lt;local_file&gt; --name &lt;blob_name&gt;
+az storage blob download --account-name &lt;account&gt; --container-name &lt;container&gt; --name &lt;blob_name&gt; --file &lt;local_file&gt;
+az storage blob delete --account-name &lt;account&gt; --container-name &lt;container&gt; --name &lt;blob_name&gt;
+
+# SAS token
+az storage container generate-sas --account-name &lt;account&gt; --name &lt;container&gt; \
+  --permissions rwdl --expiry 2025-12-31
+</code></pre>
+<hr />
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># VNets
+az network vnet list --output table
+az network vnet show --resource-group &lt;rg&gt; --name &lt;vnet&gt;
+az network vnet create --resource-group &lt;rg&gt; --name &lt;vnet&gt; --address-prefixes 10.0.0.0/16
+
+# Subnets
+az network vnet subnet list --resource-group &lt;rg&gt; --vnet-name &lt;vnet&gt; --output table
+az network vnet subnet create --resource-group &lt;rg&gt; --vnet-name &lt;vnet&gt; --name &lt;subnet&gt; --address-prefixes 10.0.1.0/24
+
+# NSGs
+az network nsg list --resource-group &lt;rg&gt; --output table
+az network nsg create --resource-group &lt;rg&gt; --name &lt;nsg&gt;
+az network nsg rule create --resource-group &lt;rg&gt; --nsg-name &lt;nsg&gt; --name Allow-SSH \
+  --priority 100 --protocol Tcp --destination-port-range 22 --access Allow
+
+# Public IPs
+az network public-ip list --output table
+az network public-ip create --resource-group &lt;rg&gt; --name &lt;pip&gt; --allocation-method Static
+
+# Load balancer
+az network lb list --output table
+</code></pre>
+<hr />
+<h2 id="azure-active-directory-entra-id">Azure Active Directory (Entra ID)<a class="headerlink" href="#azure-active-directory-entra-id" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Users
+az ad user list --output table
+az ad user show --id &lt;user_upn&gt;
+az ad user create --display-name &quot;Name&quot; --user-principal-name user@domain.com --password &lt;pass&gt;
+
+# Groups
+az ad group list --output table
+az ad group show --group &lt;group&gt;
+az ad group member list --group &lt;group&gt;
+
+# Service principals
+az ad sp list --output table
+az ad sp show --id &lt;app_id&gt;
+az ad sp create-for-rbac --name &lt;name&gt; --role Contributor --scopes /subscriptions/&lt;sub_id&gt;
+
+# App registrations
+az ad app list --output table
+az ad app show --id &lt;app_id&gt;
+</code></pre>
+<hr />
+<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Role assignments
+az role assignment list --assignee &lt;user_or_sp&gt;
+az role assignment list --scope /subscriptions/&lt;sub_id&gt;/resourceGroups/&lt;rg&gt;
+az role assignment create --assignee &lt;user_or_sp&gt; --role &quot;Contributor&quot; --scope &lt;resource_id&gt;
+az role assignment delete --assignee &lt;user_or_sp&gt; --role &quot;Contributor&quot; --scope &lt;resource_id&gt;
+
+# Role definitions
+az role definition list --output table
+az role definition show --name &quot;Contributor&quot;
+</code></pre>
+<hr />
+<h2 id="monitor-alerts">Monitor &amp; Alerts<a class="headerlink" href="#monitor-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Activity log
+az monitor activity-log list --max-events 50
+az monitor activity-log list --resource-group &lt;rg&gt; --offset 24h
+
+# Metrics
+az monitor metrics list --resource &lt;resource_id&gt; --metric &quot;Percentage CPU&quot;
+az monitor metrics list-definitions --resource &lt;resource_id&gt;
+
+# Alerts
+az monitor alert list --resource-group &lt;rg&gt;
+az monitor action-group list
+
+# Diagnostic settings
+az monitor diagnostic-settings list --resource &lt;resource_id&gt;
+az monitor diagnostic-settings create --name &lt;name&gt; --resource &lt;resource_id&gt; \
+  --workspace &lt;workspace_id&gt; --metrics '[{&quot;category&quot;:&quot;AllMetrics&quot;,&quot;enabled&quot;:true}]'
+</code></pre>
+<hr />
+<h2 id="key-vault">Key Vault<a class="headerlink" href="#key-vault" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Vaults
+az keyvault list --output table
+az keyvault show --name &lt;vault&gt;
+
+# Secrets
+az keyvault secret list --vault-name &lt;vault&gt;
+az keyvault secret show --vault-name &lt;vault&gt; --name &lt;secret&gt;
+az keyvault secret set --vault-name &lt;vault&gt; --name &lt;secret&gt; --value &lt;value&gt;
+az keyvault secret delete --vault-name &lt;vault&gt; --name &lt;secret&gt;
+
+# Keys
+az keyvault key list --vault-name &lt;vault&gt;
+az keyvault key show --vault-name &lt;vault&gt; --name &lt;key&gt;
+
+# Certificates
+az keyvault certificate list --vault-name &lt;vault&gt;
+az keyvault certificate show --vault-name &lt;vault&gt; --name &lt;cert&gt;
+</code></pre>
+<hr />
+<h2 id="aks">AKS<a class="headerlink" href="#aks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Clusters
+az aks list --output table
+az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+
+# Credentials
+az aks get-credentials --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+az aks get-credentials --resource-group &lt;rg&gt; --name &lt;cluster&gt; --admin
+
+# Scale
+az aks scale --resource-group &lt;rg&gt; --name &lt;cluster&gt; --node-count 5
+
+# Upgrade
+az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+az aks upgrade --resource-group &lt;rg&gt; --name &lt;cluster&gt; --kubernetes-version &lt;version&gt;
+
+# Node pools
+az aks nodepool list --resource-group &lt;rg&gt; --cluster-name &lt;cluster&gt;
+</code></pre>
+<hr />
+<h2 id="backup-recovery">Backup &amp; Recovery<a class="headerlink" href="#backup-recovery" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Recovery Services vaults
+az backup vault list --output table
+az backup vault show --resource-group &lt;rg&gt; --name &lt;vault&gt;
+
+# Backup items
+az backup item list --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --output table
+
+# Jobs
+az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --output table
+az backup job wait --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --name &lt;job_id&gt;
+
+# On-demand backup
+az backup protection backup-now --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; \
+  --container-name &lt;container&gt; --item-name &lt;item&gt; --retain-until &lt;date&gt;
+</code></pre>
 
 
 
