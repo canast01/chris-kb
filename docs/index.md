@@ -56,6 +56,21 @@
   <span>Array health, volumes, protection groups, and Pure1 monitoring.</span>
 </a>
 
+<a class="kb-card kb-card--accent" href="storage/netapp/">
+  <strong>NetApp</strong>
+  <span>ONTAP, SnapMirror, SnapCenter, and Keystone references.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="cloud/aws/">
+  <strong>AWS</strong>
+  <span>EC2, S3, IAM, VPC, monitoring, and cost management.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="automation/ansible/">
+  <strong>Ansible</strong>
+  <span>Playbooks, roles, inventory, vault, and troubleshooting.</span>
+</a>
+
 </div>
 
 ## Platforms
