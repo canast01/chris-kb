@@ -21,7 +21,7 @@
     
     
       
-        <title>Secure Connect Gateway - Chris KB</title>
+        <title>Dell Secure Connect Gateway - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#secure-connect-gateway" class="md-skip">
+        <a href="#dell-secure-connect-gateway" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Secure Connect Gateway
+              Dell Secure Connect Gateway
             
           </span>
         </div>
@@ -730,10 +730,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Overview
       
     </span>
   </a>
@@ -741,10 +741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#where-it-fits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Where It Fits
       
     </span>
   </a>
@@ -752,10 +752,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -781,24 +825,116 @@
 
 
 
-<h1 id="secure-connect-gateway">Secure Connect Gateway<a class="headerlink" href="#secure-connect-gateway" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Dell Secure Connect Gateway support connectivity notes.
+<h1 id="dell-secure-connect-gateway">Dell Secure Connect Gateway<a class="headerlink" href="#dell-secure-connect-gateway" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash connectivity health check, Python device registration auditor, and Ansible SCG status playbook.</span>
+</a>
+
 </div>
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell Secure Connect Gateway (SCG) is the outbound-only connectivity appliance that tunnels telemetry, support data, and remote access sessions from Dell storage and server infrastructure to Dell's support back-end. It replaces the legacy ESRS (EMC Secure Remote Services) gateway. SCG is deployed as a virtual appliance (OVA/QCOW2) or as a software package on a Linux host. It brokers all support-related communication including CloudIQ telemetry, SupportAssist diagnostics, and remote access for Dell support engineers.</p>
+<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li>Required for CloudIQ telemetry collection from PowerMax, PowerStore, PowerScale, Unity, VPLEX, and other Dell platforms</li>
+<li>Required for SupportAssist automated case creation and proactive alerting</li>
+<li>Enables Dell remote support sessions without opening inbound firewall rules — all connections are outbound on port 443</li>
+<li>Central connectivity point for APEX STaaS and FOD metering telemetry</li>
+<li>Replaces legacy ESRS in environments still running older EMC/Dell infrastructure</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Confirm SCG appliance is running and reachable from the management network</li>
+<li>Check SCG appliance GUI (HTTPS port 9443) for connectivity status: all devices should show as Connected</li>
+<li>Review the SCG event log for any failed telemetry uploads or device registration errors</li>
+<li>Confirm outbound HTTPS (port 443) to Dell endpoints (<code>esrs.emc.com</code>, <code>cloudiq.dell.com</code>) is reachable</li>
+<li>Check that all registered devices are actively sending telemetry — a device showing as offline in CloudIQ is usually an SCG connectivity issue</li>
+</ul>
+<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test outbound connectivity from the SCG appliance to Dell support endpoints
+curl -sv --max-time 10 https://esrs.emc.com/esrs/v2/device/heartbeat 2&gt;&amp;1 | grep -E &quot;(connected|SSL|error|timeout)&quot;
+
+curl -sv --max-time 10 https://cloudiq.dell.com 2&gt;&amp;1 | grep -E &quot;(connected|SSL|error|timeout)&quot;
+
+# Check SCG service status on Linux-based SCG
+systemctl status dell-scg 2&gt;/dev/null || service dell-scg status 2&gt;/dev/null
+
+# Check SCG version via REST API (local)
+curl -sk https://localhost:9443/scg/api/v1/system/version | python3 -m json.tool
+
+# List registered devices via SCG REST API
+curl -sk -u &quot;admin:&lt;password&gt;&quot; \
+  https://localhost:9443/scg/api/v1/devices | python3 -m json.tool
+
+# Check SCG log for recent errors
+journalctl -u dell-scg --since &quot;24 hours ago&quot; | grep -i &quot;error\|fail\|disconnect&quot; | tail -30
+
+# From a registered array — test SCG reachability (PowerMax example via Solutions Enabler)
+symcfg -sid &lt;SID&gt; -esrs list
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudIQ shows array as offline</td>
+<td>SCG cannot reach Dell CloudIQ endpoint, or device telemetry stopped</td>
+<td>Check SCG connectivity to <code>cloudiq.dell.com</code>; verify SCG service is running; check firewall rules for port 443 outbound</td>
+</tr>
+<tr>
+<td>SCG device shows as disconnected in SCG GUI</td>
+<td>Array lost connectivity to SCG (network change, IP change, certificate issue)</td>
+<td>Re-register the device from the array management interface; verify SCG IP/hostname is reachable from the array</td>
+</tr>
+<tr>
+<td>SupportAssist cases not being auto-created</td>
+<td>SCG cannot reach Dell ESRS endpoint, or SupportAssist not configured on the array</td>
+<td>Test connectivity to <code>esrs.emc.com</code>; check SupportAssist configuration on the platform; review SCG event log</td>
+</tr>
+<tr>
+<td>SCG appliance certificate expired</td>
+<td>SCG TLS certificate has lapsed</td>
+<td>Renew the SCG appliance certificate via the SCG GUI → Settings → Security</td>
+</tr>
+<tr>
+<td>SCG upgrade fails or hangs</td>
+<td>Upgrade package corrupted or insufficient disk space on appliance</td>
+<td>Check appliance disk space; download a fresh upgrade package; retry via SCG GUI → Software Update</td>
+</tr>
+<tr>
+<td>Duplicate SCG registrations</td>
+<td>Array registered to multiple SCG appliances</td>
+<td>Remove stale registrations from both the SCG and the array side; confirm only one active SCG registration per device</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Deploy a new SCG virtual appliance: download OVA from Dell Support, deploy to vSphere, configure IP/DNS/gateway via the initial setup wizard</li>
+<li>Register a new array to SCG: from the array management interface (e.g., Unisphere, SYMCLI), specify the SCG hostname/IP and complete the registration</li>
+<li>Upgrade SCG: download the update bundle from Dell Support and apply via SCG GUI → Software Update</li>
+<li>Add a second SCG for redundancy and configure failover registration on each array (primary/secondary SCG)</li>
+<li>Review and export SCG event logs for audit or troubleshooting via SCG GUI → Logs → Export</li>
+<li>Decommission an SCG: remove all device registrations before shutting down to avoid orphaned records in Dell's support back-end</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Deploy two SCG appliances in active/passive for redundancy — a single SCG failure silently stops all telemetry and support connectivity</li>
+<li>Place SCG appliances in a dedicated management network segment with direct outbound HTTPS access — avoid proxies where possible as they often break SCG certificate pinning</li>
+<li>Keep SCG software current — Dell releases SCG updates regularly to address TLS certificate chain changes at the Dell back-end</li>
+<li>Register devices to both SCG appliances (primary and secondary) so failover is automatic</li>
+<li>Audit SCG device registrations quarterly to remove decommissioned systems that are still registered</li>
+<li>Monitor the SCG appliance's own health (CPU, memory, disk) — the SCG is a VM and can be neglected during storage health reviews</li>
+</ul>
 
 
 

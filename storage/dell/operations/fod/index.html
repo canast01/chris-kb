@@ -21,7 +21,7 @@
     
     
       
-        <title>Fod - Chris KB</title>
+        <title>FOD — Flex on Demand - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fod" class="md-skip">
+        <a href="#fod-flex-on-demand" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Fod
+              FOD — Flex on Demand
             
           </span>
         </div>
@@ -744,7 +744,18 @@
   <a href="#common-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Common Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#month-end-billing-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Month-End Billing Procedure
       
     </span>
   </a>
@@ -755,7 +766,7 @@
   <a href="#incident-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Incident Notes
       
     </span>
   </a>
@@ -766,7 +777,18 @@
   <a href="#change-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Change Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -792,30 +814,57 @@
 
 
 
-<h1 id="fod">Fod<a class="headerlink" href="#fod" title="Permanent link">&para;</a></h1>
+<h1 id="fod-flex-on-demand">FOD — Flex on Demand<a class="headerlink" href="#fod-flex-on-demand" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python CloudIQ burst usage reporter, Bash month-end billing extractor, and Ansible FOD audit playbook.</span>
+</a>
+
+</div>
+
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Fod.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<p>Operational runbook for monitoring and reporting on Dell Flex on Demand (FOD) metered capacity consumption. FOD bills based on actual usage above the committed baseline — this page covers how to track consumption, identify burst events, and prepare month-end billing reports.</p>
+<h2 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>Current consumption</strong>: Query CloudIQ → Capacity for all FOD-enrolled systems and compare consumed TiB to the committed baseline</li>
+<li><strong>Burst events this month</strong>: Check CloudIQ capacity history for any days where consumption exceeded the committed tier</li>
+<li><strong>Telemetry continuity</strong>: Confirm CloudIQ is receiving uninterrupted telemetry from all FOD systems — gaps cause billing reconstruction from estimated data</li>
+<li><strong>SCG health</strong>: Verify Secure Connect Gateway is healthy on all sites hosting FOD-enrolled arrays</li>
+<li><strong>Month-end bill preview</strong>: Pull the CloudIQ API capacity report for the current billing period before the month closes and cross-check against the APEX Console billing preview</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<h2 id="month-end-billing-procedure">Month-End Billing Procedure<a class="headerlink" href="#month-end-billing-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>On the last working day of the month, log into the CloudIQ dashboard and export capacity utilisation data for all FOD-enrolled systems for the full billing month</li>
+<li>Identify any days where consumption exceeded the committed baseline — the delta is the burst amount that will be billed at the burst rate</li>
+<li>Cross-reference with the APEX Console → Billing &amp; Usage preview to confirm figures agree</li>
+<li>If there is a discrepancy between CloudIQ and APEX Console, open a Dell billing query before the invoice is issued — post-invoice corrections are harder to obtain</li>
+<li>Archive the monthly export to the shared drive and forward a summary to finance for cost centre reconciliation</li>
+</ol>
+<h2 id="incident-notes">Incident Notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<p>For unexpected burst billing events:</p>
 <ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
+<li><strong>Symptom</strong>: Monthly bill higher than expected; CloudIQ shows consumption above committed baseline on specific dates</li>
+<li><strong>Impact</strong>: Financial — burst TiB billed at the per-TiB burst rate specified in the FOD contract</li>
+<li><strong>Start time</strong>: What date did consumption cross the committed threshold?</li>
+<li><strong>What changed</strong>: Snapshot accumulation, new backup job, database growth, or data migration started on that date?</li>
+<li><strong>What was checked</strong>: CloudIQ capacity trend, snapshot schedules, backup job sizes</li>
+<li><strong>Resolution</strong>: Identify and remediate the cause of burst; adjust committed baseline at next contract renewal if growth is sustained</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="change-notes">Change Notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<p>For committed baseline adjustments:</p>
 <ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
+<li><strong>Approval</strong>: Baseline changes affect the monthly cost floor — finance approval required</li>
+<li><strong>Rollback plan</strong>: Baseline reductions save money but increase burst risk; document current baseline and growth trend before reducing</li>
+<li><strong>Validation steps</strong>: After baseline change, confirm the APEX Console reflects the new committed tier within 48 hours</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Pull the CloudIQ capacity report weekly, not just at month-end — catching a burst event early allows you to address the root cause before it accumulates across the billing period</li>
+<li>Automate the monthly export via the CloudIQ API and email the report to finance automatically</li>
+<li>Set CloudIQ capacity alerts at the committed baseline value so burst events trigger an immediate notification</li>
+<li>Review the FOD contract annually — if sustained growth means persistent burst, renegotiating the committed baseline is cheaper than paying burst rates indefinitely</li>
 </ul>
 
 

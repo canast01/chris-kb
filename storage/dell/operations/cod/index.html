@@ -21,7 +21,7 @@
     
     
       
-        <title>Cod - Chris KB</title>
+        <title>COD — Capacity on Demand - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cod" class="md-skip">
+        <a href="#cod-capacity-on-demand" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cod
+              COD — Capacity on Demand
             
           </span>
         </div>
@@ -744,7 +744,18 @@
   <a href="#common-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Common Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cod-activation-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COD Activation Procedure
       
     </span>
   </a>
@@ -755,7 +766,7 @@
   <a href="#incident-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Incident Notes
       
     </span>
   </a>
@@ -766,7 +777,18 @@
   <a href="#change-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Change Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -792,30 +814,62 @@
 
 
 
-<h1 id="cod">Cod<a class="headerlink" href="#cod" title="Permanent link">&para;</a></h1>
+<h1 id="cod-capacity-on-demand">COD — Capacity on Demand<a class="headerlink" href="#cod-capacity-on-demand" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash license inventory checker, Python activation tracker, and Ansible COD validation playbook.</span>
+</a>
+
+</div>
+
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Cod.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<p>Operational runbook for tracking, auditing, and activating Dell Capacity on Demand (COD) licenses across the storage estate. COD licenses gate access to pre-installed but reserved capacity — this page covers how to verify what is installed, what is activated, and how to act when activation is needed.</p>
+<h2 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>License inventory</strong>: Run <code>symlicense -sid &lt;SID&gt; list</code> on each PowerMax/VMAX to confirm which COD licenses are installed and their activation state</li>
+<li><strong>Utilisation headroom</strong>: Check how far current pool usage is from the activated ceiling — if above 75%, plan the next activation</li>
+<li><strong>Reserve remaining</strong>: Confirm that un-activated COD drives are still physically present and not misreported</li>
+<li><strong>License expiry</strong>: Some time-limited COD licenses have expiry dates — review for any approaching expiry in the next 90 days</li>
+<li><strong>CloudIQ capacity forecast</strong>: Review CloudIQ → Capacity for the relevant system to see the projected days until the activated pool is exhausted</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<h2 id="cod-activation-procedure">COD Activation Procedure<a class="headerlink" href="#cod-activation-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm the array SID and the exact capacity increment needed (e.g., 24 × 3.84 TB NVMe drives)</li>
+<li>Contact the Dell account team or submit a request via Dell MyAccount to purchase the COD activation license</li>
+<li>Receive the license file (<code>.xml</code> or <code>.dat</code>) and verify the SID in the file matches the target array</li>
+<li>Apply the license:</li>
+<li><strong>PowerMax via SYMCLI</strong>: <code>symlicense -sid &lt;SID&gt; install -file &lt;license.xml&gt;</code></li>
+<li><strong>PowerMax via Unisphere</strong>: Administration → Licenses → Install License</li>
+<li><strong>Unity via uemcli</strong>: <code>uemcli /sys/license upload</code></li>
+<li>Verify the new capacity is visible: <code>symcfg -sid &lt;SID&gt; show</code> and confirm pool size has increased</li>
+<li>Add newly activated drives to the appropriate thin pool or storage tier</li>
+<li>Update the COD inventory runbook with the activation date, key reference, and new activated ceiling</li>
+</ol>
+<h2 id="incident-notes">Incident Notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<p>If a COD activation is urgently needed (capacity event in progress):</p>
 <ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
+<li><strong>Symptom</strong>: Pool utilisation at or above 90%; write failures beginning or imminent</li>
+<li><strong>Impact</strong>: Applications writing to the affected pool may experience errors or throttling</li>
+<li><strong>Start time</strong>: When did pool utilisation cross 80%? (Check CloudIQ capacity trend)</li>
+<li><strong>What changed</strong>: Any unexpected data growth — new backups, snapshots, database growth?</li>
+<li><strong>What was checked</strong>: <code>symcfg -pool -dp list</code>, CloudIQ capacity page, license inventory</li>
+<li><strong>Resolution</strong>: Emergency COD activation via Dell account team (reference contract number); document activation key and new ceiling</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="change-notes">Change Notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<p>For planned COD activations:</p>
 <ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
+<li><strong>Approval</strong>: COD activation is a licensed capacity change — confirm with the budget owner and log in the change management system</li>
+<li><strong>Rollback plan</strong>: COD activation is not reversible — once activated, the capacity is licensed; document the pre-activation pool state</li>
+<li><strong>Validation steps</strong>: After activation, confirm pool size increase with <code>symcfg -sid &lt;SID&gt; -pool -dp list</code> and verify no change to replication or snapshot schedules</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Keep a spreadsheet of every array, its installed COD drives, activated ceiling, and remaining reserve — this is not visible in a single CLI command</li>
+<li>Set a CloudIQ capacity alert at 70% of the activated pool so there is time to procure the next activation key before an incident</li>
+<li>Store COD license files in a versioned, backed-up secrets store — lost keys require Dell re-issuance which can take days</li>
+<li>Coordinate COD activations with the capacity planning cycle, not reactively — reactive activations often occur during incidents</li>
 </ul>
 
 

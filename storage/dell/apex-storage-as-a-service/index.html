@@ -730,10 +730,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Overview
       
     </span>
   </a>
@@ -741,10 +741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#where-it-fits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Where It Fits
       
     </span>
   </a>
@@ -752,10 +752,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -782,23 +837,117 @@
 
 
 <h1 id="apex-storage-as-a-service">APEX Storage as a Service<a class="headerlink" href="#apex-storage-as-a-service" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Dell APEX Storage as a Service notes.
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python REST API subscription monitor, capacity report, and Ansible alert check playbook.</span>
+</a>
+
 </div>
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.</p>
+<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li>Organisations that want on-premises storage economics without capital expenditure or operational management overhead</li>
+<li>Environments requiring predictable $/TiB subscription pricing with burst capacity headroom</li>
+<li>Multi-platform environments (block, file, object) under a single consumption agreement</li>
+<li>IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell</li>
+<li>Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Log in to the APEX Console and review the Dashboard for any active service alerts or infrastructure health warnings</li>
+<li>Check current committed vs. consumed capacity to confirm usage is within the subscription tier</li>
+<li>Review the Billing &amp; Usage page for any unexpected burst consumption events</li>
+<li>Confirm the on-premises infrastructure is connected and reporting telemetry to APEX (APEX requires Secure Connect Gateway connectivity)</li>
+<li>Review any pending service requests or open incidents in the APEX Console support portal</li>
+</ul>
+<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Authenticate to the APEX REST API and retrieve a bearer token
+curl -s -X POST &quot;https://console.cloudapex.dell.com/api/v1/auth/token&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;client_id&quot;:&quot;&lt;client_id&gt;&quot;,&quot;client_secret&quot;:&quot;&lt;client_secret&gt;&quot;}' \
+  | jq -r '.access_token'
+
+# List all subscriptions for the account
+curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+  &quot;https://console.cloudapex.dell.com/api/v1/subscriptions&quot; | jq .
+
+# Get capacity metrics for a specific subscription
+curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+  &quot;https://console.cloudapex.dell.com/api/v1/subscriptions/&lt;subscription_id&gt;/capacity&quot; | jq .
+
+# Get active alerts for all APEX resources
+curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+  &quot;https://console.cloudapex.dell.com/api/v1/alerts?status=active&quot; | jq .
+
+# List service requests
+curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+  &quot;https://console.cloudapex.dell.com/api/v1/service-requests&quot; | jq .
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Infrastructure health warning in APEX Console</td>
+<td>On-premises hardware fault or connectivity loss from Secure Connect Gateway</td>
+<td>Check SCG connectivity; review hardware alerts on the underlying platform (PowerStore/PowerScale/PowerFlex)</td>
+</tr>
+<tr>
+<td>Burst capacity charges unexpected</td>
+<td>Workload growth or snapshot/backup accumulation pushing usage above committed tier</td>
+<td>Review consumed capacity trend in APEX Console; identify growth sources; raise committed tier if sustained</td>
+</tr>
+<tr>
+<td>APEX Console shows infrastructure as offline</td>
+<td>Secure Connect Gateway appliance down or network path to Dell blocked</td>
+<td>Check SCG appliance health and outbound HTTPS connectivity on port 443 to Dell APEX endpoints</td>
+</tr>
+<tr>
+<td>Capacity request delayed</td>
+<td>Service request not raised in APEX Console, or SLA window not yet elapsed</td>
+<td>Raise a capacity increase request via APEX Console; review the contracted SLA response time</td>
+</tr>
+<tr>
+<td>Billing discrepancy</td>
+<td>Consumed capacity reported differently between on-premises platform and APEX Console</td>
+<td>Allow 24 hours for telemetry sync; open a support case via APEX Console if discrepancy persists</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Raise a capacity increase request via APEX Console → Subscriptions → Request Capacity Increase</li>
+<li>Review monthly usage report from APEX Console → Billing &amp; Usage and export for finance reconciliation</li>
+<li>Add or modify user access to the APEX Console under Administration → Users &amp; Roles</li>
+<li>Open a support case for hardware or service issues via APEX Console → Support → Create Service Request</li>
+<li>Download the APEX API specification from the Console developer portal to build custom monitoring integrations</li>
+<li>Review the underlying platform health (PowerStore/PowerScale/PowerFlex) directly on the on-premises management interfaces if deeper diagnostics are needed</li>
+</ul>
+<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibility — do not initiate firmware changes on APEX-managed infrastructure without coordination</li>
+<li>Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows for upgrades and communicate via the Console</li>
+<li>Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface</li>
+<li>After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side</li>
+</ol>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Keep Secure Connect Gateway appliances highly available (deploy two SCG appliances for redundancy) — loss of SCG connectivity causes telemetry gaps and may trigger alerts</li>
+<li>Monitor committed vs. consumed capacity monthly and request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing</li>
+<li>Use the APEX REST API to build automated capacity reports that feed into internal capacity planning tools</li>
+<li>Review APEX Console alerts daily; infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance</li>
+<li>Document the subscription ID, contract end date, committed tier, and burst thresholds in a runbook so on-call staff can quickly interpret APEX Console data</li>
+</ul>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>COD - Chris KB</title>
+        <title>Dell Capacity on Demand - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cod" class="md-skip">
+        <a href="#dell-capacity-on-demand" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              COD
+              Dell Capacity on Demand
             
           </span>
         </div>
@@ -730,10 +730,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Overview
       
     </span>
   </a>
@@ -741,10 +741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#where-it-fits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Where It Fits
       
     </span>
   </a>
@@ -752,10 +752,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -781,24 +825,101 @@
 
 
 
-<h1 id="cod">COD<a class="headerlink" href="#cod" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Dell capacity-on-demand notes.
+<h1 id="dell-capacity-on-demand">Dell Capacity on Demand<a class="headerlink" href="#dell-capacity-on-demand" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash array capacity reporter, Python COD threshold alerter, and Ansible capacity audit playbook.</span>
+</a>
+
 </div>
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell Capacity on Demand (COD) is a flexible capacity licensing model that allows additional storage capacity to be pre-installed in the array but held in reserve. When needed, the capacity is activated by purchasing and applying a COD license key — no physical truck roll required. COD is available on PowerMax, VMAX, and select mid-range platforms, and is commonly used to ensure headroom for unpredictable workload growth without committing to full upfront capital for capacity that may not be needed immediately.</p>
+<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li>Arrays expected to grow unpredictably where physically installing capacity ahead of time eliminates lead time risk</li>
+<li>Capital budget management — defer activation costs until capacity is actually needed</li>
+<li>DR headroom: pre-install capacity at the DR site that can be rapidly activated during a failover or test</li>
+<li>Cloud migration projects where on-premises storage needs to temporarily scale up before workloads move off</li>
+<li>Service provider environments where additional tenant capacity must be provisioned rapidly</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Review total installed vs. activated capacity on each array with COD pre-installed drives</li>
+<li>Check for COD license keys that are approaching expiry (some COD licenses have term limits)</li>
+<li>Confirm activated capacity is being utilised; unused activated capacity still incurs license cost</li>
+<li>Review array capacity utilisation trend — if approaching the activated ceiling, plan the next COD activation</li>
+<li>Verify COD inventory in Dell Support/MyService360 matches what is physically installed in each array</li>
+</ul>
+<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PowerMax — list all devices including COD reserved capacity
+symcfg -sid &lt;SID&gt; show
+
+# PowerMax — list physical drives and identify COD (not yet activated) drives
+sympd list -sid &lt;SID&gt;
+
+# PowerMax — show storage pool utilisation to determine how close to activated cap
+symcfg -sid &lt;SID&gt; -pool -dp list
+
+# Confirm COD license status for a PowerMax array
+symlicense -sid &lt;SID&gt; list
+
+# Unity — list pool capacity and identify over-subscribed pools
+uemcli -d &lt;host&gt; -u admin -p &lt;pass&gt; /stor/pool show -detail
+
+# PowerScale — show total cluster usable capacity including reserved pools
+isi storagepool list
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Array approaching activated capacity ceiling</td>
+<td>Growth faster than expected; next COD activation needed</td>
+<td>Apply next COD license key via Unisphere or SYMCLI <code>symlicense</code>; purchase key from Dell account team</td>
+</tr>
+<tr>
+<td>COD license key application fails</td>
+<td>Wrong SID or license file format, or key already consumed</td>
+<td>Verify SID matches the key; check <code>symlicense list</code> for current licenses; open Dell Support case</td>
+</tr>
+<tr>
+<td>COD drives not visible after activation</td>
+<td>Firmware needs to enumerate new capacity; requires array reconfig</td>
+<td>Run <code>symcfg discover</code> or use Unisphere to trigger device discovery after license activation</td>
+</tr>
+<tr>
+<td>Reserved COD capacity not showing as available after license applied</td>
+<td>Array still binding new devices; may take several minutes</td>
+<td>Wait for background binding to complete; monitor with <code>sympd list</code> or Unisphere</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Purchase a COD activation license from the Dell account team, specifying the target array SID and capacity increment</li>
+<li>Apply the COD license key: <code>symlicense -sid &lt;SID&gt; install -file &lt;license.xml&gt;</code> (PowerMax) or via Unisphere</li>
+<li>Verify activated capacity after applying: <code>symcfg -sid &lt;SID&gt; show</code> and confirm the new pool or device capacity is visible</li>
+<li>Add newly activated drives to the appropriate thin pool or storage group to make capacity available to hosts</li>
+<li>Track COD inventory and activation history in a runbook to avoid double-purchasing or activating already-active keys</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Pre-install COD capacity to cover at least 12 months of projected growth to eliminate emergency procurement lead times</li>
+<li>Activate COD in increments aligned with actual consumption — do not activate all reserved capacity at once as it incurs immediate cost</li>
+<li>Store COD license key files in a secure, backed-up location (e.g., a password manager or secrets vault) — lost keys require Dell re-issuance</li>
+<li>Include COD activation steps in DR runbooks so capacity at the DR site can be activated rapidly during a real failover</li>
+<li>Reconcile installed vs. activated capacity in the Dell Support portal against what SYMCLI or Unisphere reports at least quarterly</li>
+</ul>
 
 
 

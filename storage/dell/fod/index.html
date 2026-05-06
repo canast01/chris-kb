@@ -21,7 +21,7 @@
     
     
       
-        <title>FOD - Chris KB</title>
+        <title>Dell Flex on Demand - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fod" class="md-skip">
+        <a href="#dell-flex-on-demand" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FOD
+              Dell Flex on Demand
             
           </span>
         </div>
@@ -730,10 +730,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Overview
       
     </span>
   </a>
@@ -741,10 +741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#where-it-fits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Where It Fits
       
     </span>
   </a>
@@ -752,10 +752,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
       
     </span>
   </a>
@@ -781,24 +836,106 @@
 
 
 
-<h1 id="fod">FOD<a class="headerlink" href="#fod" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Dell flex-on-demand notes.
+<h1 id="dell-flex-on-demand">Dell Flex on Demand<a class="headerlink" href="#dell-flex-on-demand" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python metered usage reporter, Bash burst detection script, and Ansible FOD audit playbook.</span>
+</a>
+
 </div>
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.</p>
+<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li>Environments with variable workload patterns where paying for peak capacity all the time is wasteful</li>
+<li>Dev/test environments that need burst capacity periodically but a low committed baseline</li>
+<li>Businesses that want to avoid capital expenditure on storage but remain on-premises</li>
+<li>Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement</li>
+<li>Situations where procurement lead times are too long to meet workload growth demands</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Review CloudIQ → Capacity for current metered consumption vs. committed baseline across all FOD-enrolled arrays</li>
+<li>Check for burst usage events in the current billing period that may increase the monthly charge</li>
+<li>Verify CloudIQ telemetry is active and reporting — FOD metering depends entirely on CloudIQ connectivity</li>
+<li>Confirm FOD-enrolled arrays are not approaching the physical installed ceiling (above which no more burst is available)</li>
+<li>Review the Dell MyAccount / APEX Console billing summary at month-end to validate metered charges</li>
+</ul>
+<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># CloudIQ REST API — get capacity metrics for a system (requires CloudIQ API token)
+curl -s -H &quot;Authorization: Bearer &lt;cloudiq_token&gt;&quot; \
+  &quot;https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems?system_id=&lt;system_id&gt;&quot; | jq .
+
+# PowerMax — show current thin pool utilisation (metered capacity is tracked here)
+symcfg -sid &lt;SID&gt; -pool -dp list
+
+# PowerStore — show capacity summary via PowerStore REST API
+curl -s -k -u &quot;admin:&lt;pass&gt;&quot; \
+  &quot;https://&lt;powerstore-host&gt;/api/rest/capacity&quot; | jq .
+
+# PowerScale — show total cluster usable capacity and used
+isi storagepool list
+
+# Confirm CloudIQ telemetry is active (check SCG/CloudIQ agent status)
+systemctl status dell-cloudiq-agent 2&gt;/dev/null || \
+  service dell-cloudiq-agent status 2&gt;/dev/null || echo &quot;Agent not found on this host&quot;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unexpected burst charges on FOD bill</td>
+<td>Workload spike or snapshot/backup growth pushed usage above committed baseline</td>
+<td>Review CloudIQ capacity trend for the billing period; identify the growth driver; adjust committed baseline if sustained</td>
+</tr>
+<tr>
+<td>CloudIQ reports no telemetry for a FOD-enrolled system</td>
+<td>Secure Connect Gateway offline or CloudIQ agent not running</td>
+<td>Check SCG appliance health; verify outbound HTTPS connectivity to Dell CloudIQ endpoints</td>
+</tr>
+<tr>
+<td>FOD capacity ceiling reached (no more burst available)</td>
+<td>All pre-installed burst capacity is consumed</td>
+<td>Contact Dell account team to install additional physical capacity under the FOD agreement</td>
+</tr>
+<tr>
+<td>Committed baseline appears incorrect in APEX Console</td>
+<td>Baseline was set at contract time and workload changed</td>
+<td>Submit a baseline adjustment request through APEX Console or Dell account team</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Enrol an array in FOD by working with the Dell account team to set the committed baseline and install pre-burst capacity</li>
+<li>Review monthly metered usage report from CloudIQ or APEX Console and compare to committed baseline</li>
+<li>Adjust the committed baseline up or down at contract renewal based on observed consumption patterns</li>
+<li>Request physical capacity addition when burst headroom is running low — Dell adds capacity under the FOD agreement</li>
+<li>Export CloudIQ usage data via API for internal chargeback or capacity planning reporting</li>
+</ul>
+<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
+<ol>
+<li>FOD billing is unaffected by firmware upgrades, but confirm CloudIQ telemetry resumes promptly after any maintenance that takes the array offline</li>
+<li>After adding physical burst capacity under a FOD agreement, confirm CloudIQ reflects the new total installed capacity</li>
+<li>If the array is migrated or replaced, work with Dell to transfer the FOD contract to the new system SID</li>
+</ol>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Set the committed baseline conservatively at contract start and adjust upward at renewal — it is easier to raise a baseline than recover overbilled burst charges</li>
+<li>Monitor CloudIQ capacity trends weekly so burst events are visible before the end-of-month bill</li>
+<li>Ensure Secure Connect Gateway redundancy — a single SCG failure that causes telemetry gaps can complicate billing disputes</li>
+<li>Automate monthly usage extraction via CloudIQ API and feed it into a finance reporting system to eliminate manual reconciliation</li>
+</ul>
 
 
 
