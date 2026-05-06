@@ -2,32 +2,57 @@
 
 Aria Operations is used to monitor vCenter, ESXi hosts, clusters, VMs, datastores, vSAN, NSX, and other infrastructure components.
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-3">
 
-  <div class="kb-card">
-    <h3><a href="alerts/">Alerts</a></h3>
-    <p>Alerts notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>HA topology, components, connectivity, and sizing.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="dashboards/">Dashboards</a></h3>
-    <p>Dashboards notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Naming conventions, build baseline, and configuration checklist.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="capacity/">Capacity</a></h3>
-    <p>Capacity notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Version matrix, upgrade paths, EOL tracking, and refresh planning.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="reports/">Reports</a></h3>
-    <p>Reports notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health monitoring, maintenance tasks, and runbooks.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Troubleshooting notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Command reference by category with syntax and examples.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for daily checks, health, incident triage, and validation.</span>
+</a>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic commands, log locations, and error codes.</span>
+</a>
+
+<a class="kb-card" href="integration/">
+  <strong>Integration</strong>
+  <span>VMware, backup tools, monitoring, authentication, and API integration.</span>
+</a>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Hardening checklist, RBAC, encryption, audit logging, and compliance.</span>
+</a>
+
+<a class="kb-card" href="vendor-support/">
+  <strong>Vendor Support</strong>
+  <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
+</a>
 
 </div>
 
