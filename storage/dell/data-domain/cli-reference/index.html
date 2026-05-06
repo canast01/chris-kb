@@ -723,146 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#system-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        System Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#filesystem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Filesystem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mtrees-data-management-units" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MTrees (Data Management Units)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ddboost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DDBoost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NFS
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cifs-smb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CIFS / SMB
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#users-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Users &amp; Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk &amp; Storage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup &amp; Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -885,177 +745,64 @@
 <blockquote>
 <p>Connect via SSH: <code>ssh sysadmin@&lt;dd_hostname&gt;</code>. Use <code>ddsh</code> for extended diagnostics.</p>
 </blockquote>
-<hr />
-<h2 id="system-status">System Status<a class="headerlink" href="#system-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># System info
-system show all
-system show version
-system show stats
-system show hardware
+<div class="kb-grid kb-grid-3">
 
-# Health
-health check show
-alert show current
-alert show history
-alert show history brief
-</code></pre>
-<hr />
-<h2 id="filesystem">Filesystem<a class="headerlink" href="#filesystem" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Filesystem status
-filesys show
-filesys show compression
-filesys show space
-filesys status
+<a class="kb-card" href="system/">
+  <strong>System Status</strong>
+  <span>system show all/version/stats/hardware, health check, and alerts.</span>
+</a>
 
-# Enable / disable / clean
-filesys enable
-filesys disable
-filesys clean start
-filesys clean status
+<a class="kb-card" href="filesystem/">
+  <strong>Filesystem</strong>
+  <span>filesys show/status/enable/disable/clean and capacity.</span>
+</a>
 
-# Capacity
-filesys show space
-filesys show compression summary
-</code></pre>
-<hr />
-<h2 id="mtrees-data-management-units">MTrees (Data Management Units)<a class="headerlink" href="#mtrees-data-management-units" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List MTrees
-mtree list
-mtree show &lt;mtree_name&gt;
+<a class="kb-card" href="mtrees/">
+  <strong>MTrees</strong>
+  <span>mtree list/show/create/delete and quota management.</span>
+</a>
 
-# Create / delete
-mtree create /data/col1/&lt;mtree_name&gt;
-mtree delete /data/col1/&lt;mtree_name&gt;
+<a class="kb-card" href="replication/">
+  <strong>Replication</strong>
+  <span>replication add/initialize/resync/sync/break/failover and lag monitoring.</span>
+</a>
 
-# Quota
-mtree quota set hard-limit &lt;size&gt; &lt;unit&gt; /data/col1/&lt;mtree_name&gt;
-mtree quota show
-</code></pre>
-<hr />
-<h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Status
-replication show all
-replication show config
-replication show stats
+<a class="kb-card" href="ddboost/">
+  <strong>DDBoost</strong>
+  <span>DDBoost status, clients, storage units, and user management.</span>
+</a>
 
-# Context operations
-replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree&gt; destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree&gt;
-replication initialize &lt;context_id&gt;
-replication resync &lt;context_id&gt;
-replication sync &lt;context_id&gt;
-replication break &lt;context_id&gt;
+<a class="kb-card" href="file-sharing/">
+  <strong>NFS & CIFS/SMB</strong>
+  <span>NFS exports (add/del/show) and CIFS shares management.</span>
+</a>
 
-# Monitoring lag
-replication status
-replication show stats | grep lag
+<a class="kb-card" href="network/">
+  <strong>Network</strong>
+  <span>Interface config, routes, DNS, and hostname management.</span>
+</a>
 
-# Failover (passive side)
-replication failover &lt;context_id&gt;
-</code></pre>
-<hr />
-<h2 id="ddboost">DDBoost<a class="headerlink" href="#ddboost" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># DDBoost status
-ddboost status
-ddboost show clients
+<a class="kb-card" href="users/">
+  <strong>Users & Security</strong>
+  <span>user list/add/del, roles, and auth configuration.</span>
+</a>
 
-# Users and storage units
-ddboost storage-unit list
-ddboost storage-unit create &lt;name&gt;
-ddboost user list
-ddboost user add &lt;username&gt;
-</code></pre>
-<hr />
-<h2 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">nfs show exports
-nfs add export /data/col1/&lt;mtree&gt; clients &lt;ip_or_cidr&gt;
-nfs del export /data/col1/&lt;mtree&gt; clients &lt;ip_or_cidr&gt;
-nfs show clients
-nfs status
-</code></pre>
-<hr />
-<h2 id="cifs-smb">CIFS / SMB<a class="headerlink" href="#cifs-smb" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">cifs show
-cifs show clients
-cifs share show
-cifs share add /data/col1/&lt;mtree&gt;
-cifs share del /data/col1/&lt;mtree&gt;
-</code></pre>
-<hr />
-<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Interfaces
-net show all
-net show config
-net show settings
+<a class="kb-card" href="disk/">
+  <strong>Disk & Storage</strong>
+  <span>disk show state/hardware/stats, enclosures, and tier status.</span>
+</a>
 
-# Routes
-net route show
-net route add host &lt;ip&gt; gateway &lt;gw&gt; dev &lt;if&gt;
-net route del host &lt;ip&gt;
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>log view/dump/watch, support bundle, and ddsh diagnostics.</span>
+</a>
 
-# DNS
-net hosts show
-net config hosts add &lt;ip&gt; &lt;hostname&gt;
-</code></pre>
-<hr />
-<h2 id="users-security">Users &amp; Security<a class="headerlink" href="#users-security" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Local users
-user list
-user add &lt;username&gt;
-user change password &lt;username&gt;
-user del &lt;username&gt;
-user show &lt;username&gt;
+<a class="kb-card" href="backup-config/">
+  <strong>Backup & Configuration</strong>
+  <span>config backup create/show/list/restore.</span>
+</a>
 
-# Roles
-user role show
-role list
-
-# Authentication
-auth show
-</code></pre>
-<hr />
-<h2 id="disk-storage">Disk &amp; Storage<a class="headerlink" href="#disk-storage" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Disk info
-disk show state
-disk show hardware
-disk show stats
-
-# Enclosures
-enclosure show hardware
-enclosure show all
-
-# Tier status
-tier list
-tier show detail
-</code></pre>
-<hr />
-<h2 id="diagnostics">Diagnostics<a class="headerlink" href="#diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Logs
-log view
-log list
-log dump system
-log watch
-
-# Support bundle
-support bundle create
-support bundle show
-
-# System diagnostics
-ddsh
-# Inside ddsh:
-#  diagnose all
-#  iostat 1 10
-#  vmstat 1 10
-</code></pre>
-<hr />
-<h2 id="backup-configuration">Backup &amp; Configuration<a class="headerlink" href="#backup-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Config backup
-config backup create
-config backup show
-
-# Config restore
-config backup list
-config backup restore &lt;backup_name&gt;
-</code></pre>
+</div>
 
 
 

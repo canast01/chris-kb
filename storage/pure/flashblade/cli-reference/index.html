@@ -723,113 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#array-status-identity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Array Status &amp; Identity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#blades-hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blades &amp; Hardware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#file-systems-nfs-smb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File Systems (NFS / SMB)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-store-s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object Store (S3)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snapshots" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Snapshots
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication-activedr-async" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication (ActiveDR / Async)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#users-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Users &amp; Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#support-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support &amp; Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -852,161 +745,49 @@
 <blockquote>
 <p>Connect via SSH to the FlashBlade management IP, or use <code>purefb</code> from a host with the CLI installed and configured.</p>
 </blockquote>
-<hr />
-<h2 id="array-status-identity">Array Status &amp; Identity<a class="headerlink" href="#array-status-identity" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Array info
-purefb array show
-purefb array show --version
+<div class="kb-grid kb-grid-3">
 
-# Hardware status
-purefb hardware show
-purefb hardware show --blades
-purefb hardware show --chassis
+<a class="kb-card" href="array-hardware/">
+  <strong>Array Status & Hardware</strong>
+  <span>purefb array show, hardware/blades/drives, alerts, and capacity.</span>
+</a>
 
-# Alerts
-purefb alert show
-purefb alert show --filter &quot;state='open'&quot;
+<a class="kb-card" href="file-systems/">
+  <strong>File Systems (NFS / SMB)</strong>
+  <span>purefb filesystem show/create/resize/destroy and NFS/SMB configuration.</span>
+</a>
 
-# Capacity
-purefb array show --space
-purefb filesystem show --space
-</code></pre>
-<hr />
-<h2 id="blades-hardware">Blades &amp; Hardware<a class="headerlink" href="#blades-hardware" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Blade status
-purefb blade show
-purefb blade show --id &lt;blade_id&gt;
+<a class="kb-card" href="object-store/">
+  <strong>Object Store (S3)</strong>
+  <span>purefb bucket, object-store-account, object-store-user, and access keys.</span>
+</a>
 
-# Drive health
-purefb drive show
-purefb drive show --blade &lt;blade_id&gt;
+<a class="kb-card" href="snapshots/">
+  <strong>Snapshots</strong>
+  <span>purefb snapshot show/create/copy/destroy/eradicate and snapshot rules.</span>
+</a>
 
-# Chassis
-purefb chassis show
-</code></pre>
-<hr />
-<h2 id="file-systems-nfs-smb">File Systems (NFS / SMB)<a class="headerlink" href="#file-systems-nfs-smb" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List file systems
-purefb filesystem show
-purefb filesystem show --name &lt;name&gt;
+<a class="kb-card" href="replication/">
+  <strong>Replication (ActiveDR)</strong>
+  <span>Remote arrays, fs-replica-link create/show, and replication status.</span>
+</a>
 
-# Create file system
-purefb filesystem create --name &lt;name&gt; --size 10T --nfs --nfs-rules &quot;*(rw,no_root_squash)&quot;
-purefb filesystem create --name &lt;name&gt; --size 10T --smb
+<a class="kb-card" href="network/">
+  <strong>Network</strong>
+  <span>purefb network-interface, subnet, DNS, and NTP configuration.</span>
+</a>
 
-# Resize
-purefb filesystem update --name &lt;name&gt; --size 20T
+<a class="kb-card" href="users/">
+  <strong>Users & Authentication</strong>
+  <span>purefb admin show/create/update, API clients, and directory services.</span>
+</a>
 
-# Destroy / eradicate
-purefb filesystem destroy --name &lt;name&gt;
-purefb filesystem eradicate --name &lt;name&gt;
+<a class="kb-card" href="support/">
+  <strong>Support & Diagnostics</strong>
+  <span>purefb phonehome, support show/update, and log export.</span>
+</a>
 
-# NFS exports
-purefb filesystem show --name &lt;name&gt;
-purefb filesystem update --name &lt;name&gt; --nfs-rules &quot;&lt;ip_or_cidr&gt;(rw,no_root_squash)&quot;
-
-# SMB shares
-purefb smb-share show
-purefb smb-share create --name &lt;share_name&gt; --filesystem &lt;fs_name&gt;
-purefb smb-share destroy --name &lt;share_name&gt;
-</code></pre>
-<hr />
-<h2 id="object-store-s3">Object Store (S3)<a class="headerlink" href="#object-store-s3" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Buckets
-purefb bucket show
-purefb bucket create --name &lt;bucket&gt; --account &lt;account&gt;
-purefb bucket destroy --name &lt;bucket&gt;
-purefb bucket eradicate --name &lt;bucket&gt;
-
-# Accounts
-purefb object-store-account show
-purefb object-store-account create --name &lt;account&gt;
-
-# Users
-purefb object-store-user show
-purefb object-store-user create --name &lt;user&gt; --account &lt;account&gt;
-
-# Access keys
-purefb object-store-access-key show
-purefb object-store-access-key create --user &lt;user&gt;/&lt;account&gt;
-</code></pre>
-<hr />
-<h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List snapshots
-purefb snapshot show
-purefb snapshot show --name &lt;snapshot_name&gt;
-
-# Create snapshot
-purefb snapshot create --source &lt;filesystem_name&gt; --name &lt;snapshot_name&gt;
-
-# Restore
-purefb snapshot copy --name &lt;snapshot_name&gt; --target &lt;new_fs_name&gt;
-
-# Destroy / eradicate
-purefb snapshot destroy --name &lt;snapshot_name&gt;
-purefb snapshot eradicate --name &lt;snapshot_name&gt;
-
-# Scheduled policies
-purefb snapshot-rule show
-</code></pre>
-<hr />
-<h2 id="replication-activedr-async">Replication (ActiveDR / Async)<a class="headerlink" href="#replication-activedr-async" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replication targets
-purefb remote-array show
-purefb remote-array create --name &lt;target_name&gt; --management-address &lt;ip&gt;
-
-# Replication links
-purefb fs-replica-link show
-purefb fs-replica-link create --local-filesystem &lt;fs_name&gt; --remote-filesystem &lt;remote_fs&gt;
-
-# Status
-purefb fs-replica-link show --detailed
-</code></pre>
-<hr />
-<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Network interfaces
-purefb network-interface show
-purefb network-interface show --name &lt;if_name&gt;
-
-# Subnets
-purefb subnet show
-purefb subnet create --name &lt;subnet&gt; --prefix &lt;cidr&gt; --gateway &lt;gw&gt;
-
-# DNS
-purefb dns show
-purefb dns update --nameservers &lt;ip1,ip2&gt;
-
-# NTP
-purefb ntp show
-purefb ntp update --ntpservers &lt;ntp_ip&gt;
-</code></pre>
-<hr />
-<h2 id="users-authentication">Users &amp; Authentication<a class="headerlink" href="#users-authentication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Admin users
-purefb admin show
-purefb admin create --name &lt;user&gt; --role array_admin
-purefb admin update --name &lt;user&gt; --password &lt;pass&gt;
-
-# API tokens
-purefb api-client show
-purefb api-client create --name &lt;client_name&gt; --role array_admin
-
-# Directory services (LDAP/AD)
-purefb directory-service show
-</code></pre>
-<hr />
-<h2 id="support-diagnostics">Support &amp; Diagnostics<a class="headerlink" href="#support-diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Phone home / phonehome
-purefb phonehome show
-purefb phonehome send --type auto
-
-# Support connectivity
-purefb support show
-purefb support update --enabled true
-
-# Log export
-purefb support log export
-</code></pre>
+</div>
 
 
 

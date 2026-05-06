@@ -723,102 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cluster-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health &amp; Diagnostics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk Groups
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#capacity-objects" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity &amp; Objects
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#networking-vsan-vmkernel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking (vSAN VMkernel)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#powercli-vsan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerCLI — vSAN
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#skyline-health-vsphere-client-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skyline Health (vSphere Client Context)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rvc-commands-ruby-vsphere-console-legacy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RVC Commands (Ruby vSphere Console — legacy)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -838,136 +742,39 @@
 
 <h1 id="vsan-cli-reference">vSAN CLI Reference<a class="headerlink" href="#vsan-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting vSAN clusters.</p>
-<hr />
-<h2 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># From ESXi host shell
-esxcli vsan cluster get
-esxcli vsan storage list
-esxcli vsan storage list | grep -i ssd
-esxcli vsan storage list | grep -i hdd
+<div class="kb-grid kb-grid-3">
 
-# Disk groups
-esxcli vsan storage list | grep -E &quot;Display Name|Type|UUID&quot;
+<a class="kb-card" href="cluster-status/">
+  <strong>Cluster Status & Capacity</strong>
+  <span>esxcli vsan cluster/storage/network list, datastore info, and Skyline health checks.</span>
+</a>
 
-# Network
-esxcli vsan network list
-esxcli vsan network ipconfig list
-</code></pre>
-<hr />
-<h2 id="health-diagnostics">Health &amp; Diagnostics<a class="headerlink" href="#health-diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Summary health
-esxcli vsan health cluster get
-esxcli vsan health summary get
+<a class="kb-card" href="health/">
+  <strong>Health & Diagnostics</strong>
+  <span>esxcli vsan health cluster/summary get, trace, debug objects, and resync.</span>
+</a>
 
-# Trace
-esxcli vsan trace get
+<a class="kb-card" href="disk-groups/">
+  <strong>Disk Groups</strong>
+  <span>esxcli vsan storage list/stats/evacuate/add/remove for disk groups.</span>
+</a>
 
-# VM objects
-esxcli vsan debug object list
-esxcli vsan debug object list | grep -i unhealthy
-esxcli vsan debug object list | grep -i absent
+<a class="kb-card" href="networking/">
+  <strong>Networking (vSAN VMkernel)</strong>
+  <span>vSAN VMkernel adapters, unicast agent, and host connectivity test.</span>
+</a>
 
-# Resync
-esxcli vsan debug resync list
-esxcli vsan debug resync summary get
+<a class="kb-card" href="powercli/">
+  <strong>PowerCLI — vSAN</strong>
+  <span>Get-VsanClusterConfiguration, Test-VsanClusterHealth, disk groups, object health, resync, and capacity.</span>
+</a>
 
-# Component status
-esxcli vsan debug component list
-</code></pre>
-<hr />
-<h2 id="disk-groups">Disk Groups<a class="headerlink" href="#disk-groups" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List disk groups
-esxcli vsan storage list
+<a class="kb-card" href="rvc/">
+  <strong>RVC Commands (Legacy)</strong>
+  <span>rvc vsan.health.health_check, disks_stats, resync_dashboard, and object_info.</span>
+</a>
 
-# Per-disk stats
-esxcli vsan storage stats get
-
-# Evacuate disk group (before removal)
-esxcli vsan storage evacuate -d &lt;device_naa&gt;
-
-# Add disk to disk group
-esxcli vsan storage add -s &lt;ssd_naa&gt; -d &lt;capacity_naa&gt;
-
-# Remove disk group
-esxcli vsan storage remove -s &lt;ssd_naa&gt;
-</code></pre>
-<hr />
-<h2 id="capacity-objects">Capacity &amp; Objects<a class="headerlink" href="#capacity-objects" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Datastore info
-esxcli vsan datastore list
-
-# Object count
-esxcli vsan debug object list | wc -l
-
-# Inaccessible objects
-esxcli vsan debug object list | grep -v &quot;Healthy&quot;
-</code></pre>
-<hr />
-<h2 id="networking-vsan-vmkernel">Networking (vSAN VMkernel)<a class="headerlink" href="#networking-vsan-vmkernel" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># vSAN network adapters
-esxcli vsan network list
-
-# Validate unicast agent
-esxcli vsan network ipconfig list
-
-# Test connectivity between hosts
-esxcli vsan debug network test
-</code></pre>
-<hr />
-<h2 id="powercli-vsan">PowerCLI — vSAN<a class="headerlink" href="#powercli-vsan" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Connect
-Connect-VIServer &lt;vcenter&gt;
-
-# Cluster config
-Get-VsanClusterConfiguration -Cluster &lt;cluster&gt;
-
-# Health check
-Test-VsanClusterHealth -Cluster &lt;cluster&gt;
-
-# Disk groups
-Get-VsanDiskGroup -VMHost &lt;host&gt;
-Get-VsanDisk -VMHost &lt;host&gt;
-
-# Object health
-Get-VsanView -Id VsanObjectSystem-vsan-object-system | ForEach-Object { $_.QueryObjectIdentities() }
-
-# Resync status
-Get-VsanResyncStatus -Cluster &lt;cluster&gt;
-
-# Capacity
-Get-VsanSpaceUsage -Cluster &lt;cluster&gt;
-
-# Witness
-Get-VsanFaultDomainConfiguration -Cluster &lt;cluster&gt;
-
-# vSAN health service
-$vhs = Get-VsanView -Id VsanVcClusterHealthSystem-vsan-cluster-health-system
-$vhs.VsanQueryVcClusterHealthSummary((Get-Cluster &lt;cluster&gt;).ExtensionData.MoRef, $null, $null, $true, $null, $null, 'defaultView')
-</code></pre>
-<hr />
-<h2 id="skyline-health-vsphere-client-context">Skyline Health (vSphere Client Context)<a class="headerlink" href="#skyline-health-vsphere-client-context" title="Permanent link">&para;</a></h2>
-<p>Accessed in vSphere Client → Cluster → Monitor → vSAN → Skyline Health</p>
-<pre><code class="language-bash"># From ESXi — equivalent checks
-esxcli vsan health cluster get | grep -i fail
-esxcli vsan health cluster get | grep -i warning
-
-# vSAN performance service status
-esxcli vsan perf get
-</code></pre>
-<hr />
-<h2 id="rvc-commands-ruby-vsphere-console-legacy">RVC Commands (Ruby vSphere Console — legacy)<a class="headerlink" href="#rvc-commands-ruby-vsphere-console-legacy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to vSAN cluster via RVC
-rvc &lt;user&gt;@&lt;vcenter&gt;
-
-# vSAN summary
-vsan.health.health_check &lt;cluster_path&gt;
-vsan.disks_stats &lt;cluster_path&gt;
-vsan.resync_dashboard &lt;cluster_path&gt;
-vsan.obj_status_report &lt;cluster_path&gt;
-vsan.object_info &lt;cluster_path&gt; &lt;object_uuid&gt;
-vsan.proactive_rebalance_info &lt;cluster_path&gt;
-vsan.cluster_info &lt;cluster_path&gt;
-</code></pre>
+</div>
 
 
 

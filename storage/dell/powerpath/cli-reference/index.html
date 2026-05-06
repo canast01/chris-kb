@@ -723,113 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#status-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status &amp; Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#devices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Devices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Paths
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hba-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HBA Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#load-balancing-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Load Balancing &amp; Policies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checks-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checks &amp; Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#windows-powerpath" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Windows PowerPath
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -849,138 +742,44 @@
 
 <h1 id="dell-powerpath-cli-reference">Dell PowerPath CLI Reference<a class="headerlink" href="#dell-powerpath-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Commonly used <code>powermt</code> commands for managing Dell PowerPath multipathing on Linux and Windows hosts.</p>
-<hr />
-<h2 id="status-overview">Status &amp; Overview<a class="headerlink" href="#status-overview" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Overall summary
-powermt display
-powermt display dev=all
-powermt display dev=all | head -100
+<div class="kb-grid kb-grid-3">
 
-# Path summary per device
-powermt display options
+<a class="kb-card" href="status/">
+  <strong>Status & Devices</strong>
+  <span>powermt display, dev=all, dead paths, version, and class info.</span>
+</a>
 
-# Display dead paths
-powermt display dead
+<a class="kb-card" href="paths/">
+  <strong>Paths</strong>
+  <span>Count alive/dead paths, restore, remove dead, failover, and unblock.</span>
+</a>
 
-# Display powerpath version
-powermt version
+<a class="kb-card" href="hba-ports/">
+  <strong>HBA Ports</strong>
+  <span>Show HBA ports and port info with powermt display hba/port.</span>
+</a>
 
-# Display registration
-powermt display reg
-</code></pre>
-<hr />
-<h2 id="devices">Devices<a class="headerlink" href="#devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all devices
-powermt display dev=all
+<a class="kb-card" href="load-balancing/">
+  <strong>Load Balancing & Policies</strong>
+  <span>Show and set load balancing policies (co, rr, si) per device or globally.</span>
+</a>
 
-# Single device
-powermt display dev=emcpower&lt;n&gt;
-powermt display dev=emcpower&lt;n&gt;a
+<a class="kb-card" href="config/">
+  <strong>Configuration & Checks</strong>
+  <span>powermt check, options, config, save, restore, and remove stale devices.</span>
+</a>
 
-# Logical device info
-powermt display ldev
+<a class="kb-card" href="windows/">
+  <strong>Windows PowerPath</strong>
+  <span>PowerPath commands from PowerShell/CMD and service management.</span>
+</a>
 
-# Device path details
-powermt display dev=emcpower&lt;n&gt; | grep -E &quot;path|state|mode&quot;
+<a class="kb-card" href="common-checks/">
+  <strong>Common Check Sequences</strong>
+  <span>Quick health check sequence and count paths per device.</span>
+</a>
 
-# Class info
-powermt display class=clariion
-powermt display class=symmetrix
-powermt display class=vplex
-</code></pre>
-<hr />
-<h2 id="paths">Paths<a class="headerlink" href="#paths" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Count alive paths per device
-powermt display dev=all | grep -E &quot;emcpower|alive|dead&quot;
-
-# Restore dead paths
-powermt restore
-
-# Remove dead paths
-powermt remove dead
-
-# Path failover
-powermt fail dev=emcpower&lt;n&gt; path=&lt;hba_port&gt;
-
-# Unblock a failed path
-powermt unblock dev=emcpower&lt;n&gt; path=&lt;hba_port&gt;
-</code></pre>
-<hr />
-<h2 id="hba-ports">HBA Ports<a class="headerlink" href="#hba-ports" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show HBA ports
-powermt display hba
-powermt display port
-powermt display hba=&lt;hba_id&gt;
-</code></pre>
-<hr />
-<h2 id="load-balancing-policies">Load Balancing &amp; Policies<a class="headerlink" href="#load-balancing-policies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show load balancing policy
-powermt display dev=emcpower&lt;n&gt; | grep -i policy
-
-# Set policy on a device
-powermt set policy=&lt;policy&gt; dev=emcpower&lt;n&gt;
-# Policies: co (CLARiiON Optimized), rr (Round Robin), si (Single Initiator), etc.
-
-# Set globally
-powermt set policy=co dev=all class=clariion
-</code></pre>
-<hr />
-<h2 id="checks-validation">Checks &amp; Validation<a class="headerlink" href="#checks-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check all paths
-powermt check
-
-# Check specific device
-powermt check dev=emcpower&lt;n&gt;
-
-# Verify consistency
-powermt display options
-
-# Show configuration file
-cat /etc/powermt.custom
-</code></pre>
-<hr />
-<h2 id="configuration-management">Configuration Management<a class="headerlink" href="#configuration-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Save configuration
-powermt save
-powermt save force
-
-# Load / restore config
-powermt restore
-
-# Reconfig (after new device attachment)
-powermt config
-
-# Remove stale devices
-powermt remove dev=emcpower&lt;n&gt;
-powermt remove dead
-</code></pre>
-<hr />
-<h2 id="windows-powerpath">Windows PowerPath<a class="headerlink" href="#windows-powerpath" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># From PowerShell / CMD
-powermt display
-powermt display dev=all
-powermt display class=symmetrix
-
-powermt check
-powermt restore
-powermt save
-
-# PowerPath service
-Get-Service -Name &quot;EMCPower*&quot;
-Restart-Service -Name &quot;EMCPower*&quot;
-</code></pre>
-<hr />
-<h2 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Quick health check sequence
-powermt display dev=all | grep -c &quot;alive&quot;
-powermt display dev=all | grep -c &quot;dead&quot;
-powermt display dead
-powermt check
-powermt restore
-
-# Count paths per device
-powermt display dev=all | awk '/emcpower/{dev=$1} /alive/{count++} /dead/{dead++} /^$/{if(dev) print dev, &quot;alive:&quot;count, &quot;dead:&quot;dead; dev=&quot;&quot;; count=0; dead=0}'
-</code></pre>
+</div>
 
 
 

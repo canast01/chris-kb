@@ -723,135 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#connection-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection &amp; Session
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hosts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hosts
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clusters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clusters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#virtual-machines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Virtual Machines
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snapshots" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Snapshots
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#datastores" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Datastores
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#networks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alarms-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alarms &amp; Events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#permissions-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Permissions &amp; Roles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inventory-reporting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inventory &amp; Reporting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vcenter-appliance-ssh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter Appliance (SSH)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -874,199 +745,64 @@
 <blockquote>
 <p>Requires VMware.PowerCLI module. Use <code>Connect-VIServer -Server &lt;vcenter&gt;</code> before running PowerCLI commands.</p>
 </blockquote>
-<hr />
-<h2 id="connection-session">Connection &amp; Session<a class="headerlink" href="#connection-session" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install PowerCLI
-Install-Module VMware.PowerCLI -Scope CurrentUser
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
-Set-PowerCLIConfiguration -ParticipateInCeip $false -Confirm:$false
+<div class="kb-grid kb-grid-3">
 
-# Connect
-Connect-VIServer -Server &lt;vcenter&gt;
-Connect-VIServer -Server &lt;vcenter&gt; -User &lt;user&gt; -Password &lt;pass&gt;
-Disconnect-VIServer * -Confirm:$false
+<a class="kb-card" href="connection/">
+  <strong>Connection & Session</strong>
+  <span>Install PowerCLI, Connect-VIServer, Disconnect-VIServer, and session info.</span>
+</a>
 
-# Who am I
-$global:DefaultVIServer
-</code></pre>
-<hr />
-<h2 id="hosts">Hosts<a class="headerlink" href="#hosts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all hosts
-Get-VMHost
-Get-VMHost | Select-Object Name, State, PowerState, ConnectionState, Version | Format-Table
+<a class="kb-card" href="hosts/">
+  <strong>Hosts</strong>
+  <span>List, select, details, maintenance mode, services, NTP, and syslog.</span>
+</a>
 
-# Host by name or cluster
-Get-VMHost -Name &lt;hostname&gt;
-Get-Cluster &lt;cluster_name&gt; | Get-VMHost
+<a class="kb-card" href="clusters/">
+  <strong>Clusters</strong>
+  <span>Get-Cluster, HA/DRS info, host list per cluster, and New-Cluster.</span>
+</a>
 
-# Host details
-Get-VMHost &lt;host&gt; | Select-Object *
-Get-VMHost &lt;host&gt; | Get-VMHostHardware
+<a class="kb-card" href="vms/">
+  <strong>Virtual Machines</strong>
+  <span>List, power ops, config (CPU/RAM), move, clone, and guest OS info.</span>
+</a>
 
-# Maintenance mode
-Set-VMHost -VMHost &lt;host&gt; -State Maintenance
-Set-VMHost -VMHost &lt;host&gt; -State Connected
+<a class="kb-card" href="snapshots/">
+  <strong>Snapshots</strong>
+  <span>Get/New/Remove-Snapshot and revert with Set-VM.</span>
+</a>
 
-# Host services
-Get-VMHostService -VMHost &lt;host&gt;
-Start-VMHostService -HostService (Get-VMHostService -VMHost &lt;host&gt; | Where-Object { $_.Key -eq &quot;TSM-SSH&quot; })
-Stop-VMHostService -HostService (Get-VMHostService -VMHost &lt;host&gt; | Where-Object { $_.Key -eq &quot;TSM-SSH&quot; })
+<a class="kb-card" href="datastores/">
+  <strong>Datastores</strong>
+  <span>List with capacity/usage, threshold filter, and datastore clusters.</span>
+</a>
 
-# NTP
-Get-VMHostNtpServer -VMHost &lt;host&gt;
-Add-VMHostNtpServer -VMHost &lt;host&gt; -NtpServer &lt;ip&gt;
+<a class="kb-card" href="networks/">
+  <strong>Networks</strong>
+  <span>Standard/distributed switches, port groups, and VMkernel adapters.</span>
+</a>
 
-# Syslog
-Get-VMHostSysLogServer -VMHost &lt;host&gt;
-Set-VMHostSysLogServer -VMHost &lt;host&gt; -SysLogServer udp://&lt;ip&gt;:514
-</code></pre>
-<hr />
-<h2 id="clusters">Clusters<a class="headerlink" href="#clusters" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Cluster
-Get-Cluster -Name &lt;name&gt;
-Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel | Format-Table
-Get-Cluster | Get-VMHost | Select-Object Name, State, @{N=&quot;Cluster&quot;;E={$_.Parent}} | Format-Table
+<a class="kb-card" href="alarms/">
+  <strong>Alarms & Events</strong>
+  <span>Get-AlarmDefinition, triggered alarms, Get-VIEvent with filters.</span>
+</a>
 
-# New cluster
-New-Cluster -Name &lt;name&gt; -Location (Get-Datacenter &lt;dc&gt;) -HAEnabled -DrsEnabled
-</code></pre>
-<hr />
-<h2 id="virtual-machines">Virtual Machines<a class="headerlink" href="#virtual-machines" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List
-Get-VM
-Get-VM -Name &lt;name&gt;
-Get-VM | Where-Object { $_.PowerState -eq &quot;PoweredOff&quot; }
-Get-VM | Select-Object Name, PowerState, NumCpu, MemoryGB, VMHost | Format-Table
+<a class="kb-card" href="permissions/">
+  <strong>Permissions & Roles</strong>
+  <span>Get-VIRole, Get-VIPermission, and New-VIPermission assignment.</span>
+</a>
 
-# Power operations
-Start-VM -VM &lt;name&gt;
-Stop-VM -VM &lt;name&gt; -Confirm:$false
-Shutdown-VMGuest -VM &lt;name&gt; -Confirm:$false
-Restart-VM -VM &lt;name&gt; -Confirm:$false
-Restart-VMGuest -VM &lt;name&gt; -Confirm:$false
-Suspend-VM -VM &lt;name&gt;
+<a class="kb-card" href="inventory/">
+  <strong>Inventory & Reporting</strong>
+  <span>Export VM and host inventory to CSV with custom calculated fields.</span>
+</a>
 
-# VM config
-Get-VM &lt;name&gt; | Get-HardDisk
-Get-VM &lt;name&gt; | Get-NetworkAdapter
-Set-VM -VM &lt;name&gt; -NumCpu 4 -MemoryGB 16 -Confirm:$false
+<a class="kb-card" href="appliance/">
+  <strong>vCenter Appliance (SSH)</strong>
+  <span>service-control, VCSA disk usage, logs, SSO identity, and cert check.</span>
+</a>
 
-# Move VM
-Move-VM -VM &lt;name&gt; -Destination (Get-VMHost &lt;host&gt;)
-Move-VM -VM &lt;name&gt; -Datastore (Get-Datastore &lt;ds&gt;)
-
-# Clone
-New-VM -Name &lt;new_name&gt; -VM &lt;source_vm&gt; -VMHost &lt;host&gt; -Datastore &lt;ds&gt;
-
-# Guest OS info
-Get-VM &lt;name&gt; | Select-Object @{N=&quot;IP&quot;;E={$_.Guest.IPAddress -join &quot;, &quot;}}, @{N=&quot;OS&quot;;E={$_.Guest.OSFullName}}
-</code></pre>
-<hr />
-<h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Snapshot -VM &lt;name&gt;
-Get-VM | Get-Snapshot | Select-Object VM, Name, Created, @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB,2)}} | Sort-Object SizeGB -Descending
-
-New-Snapshot -VM &lt;name&gt; -Name &quot;pre-patch-$(Get-Date -Format yyyy-MM-dd)&quot; -Memory:$false -Quiesce:$false
-Remove-Snapshot -Snapshot (Get-Snapshot -VM &lt;name&gt; -Name &lt;snap_name&gt;) -Confirm:$false
-Remove-Snapshot -VM &lt;name&gt; -RemoveChildren -Confirm:$false
-
-# Revert
-Set-VM -VM &lt;name&gt; -Snapshot (Get-Snapshot -VM &lt;name&gt; -Name &lt;snap_name&gt;) -Confirm:$false
-</code></pre>
-<hr />
-<h2 id="datastores">Datastores<a class="headerlink" href="#datastores" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Datastore
-Get-Datastore | Select-Object Name, CapacityGB, FreeSpaceGB, @{N=&quot;UsedPct&quot;;E={[math]::Round((1-$_.FreeSpaceGB/$_.CapacityGB)*100,1)}} | Sort-Object UsedPct -Descending
-
-# Datastores below threshold
-Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 } | Select-Object Name, FreeSpaceGB
-
-# Datastore cluster
-Get-DatastoreCluster
-Get-DatastoreCluster | Get-Datastore
-</code></pre>
-<hr />
-<h2 id="networks">Networks<a class="headerlink" href="#networks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Standard switches
-Get-VirtualSwitch -VMHost &lt;host&gt;
-Get-VirtualPortGroup -VMHost &lt;host&gt;
-
-# Distributed switches
-Get-VDSwitch
-Get-VDSwitch | Select-Object Name, NumPorts, Version
-Get-VDPortgroup
-
-# VMkernel adapters
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel | Select-Object Name, IP, SubnetMask, VMotionEnabled, ManagementTrafficEnabled
-</code></pre>
-<hr />
-<h2 id="alarms-events">Alarms &amp; Events<a class="headerlink" href="#alarms-events" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Triggered alarms
-Get-AlarmDefinition
-Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 }
-
-# Events
-Get-VIEvent -MaxSamples 200
-Get-VIEvent -Start (Get-Date).AddHours(-24)
-Get-VIEvent -Entity (Get-VM &lt;name&gt;) -MaxSamples 50
-Get-VIEvent -MaxSamples 500 | Where-Object { $_.GetType().Name -eq &quot;TaskEvent&quot; } | Select-Object CreatedTime, UserName, FullFormattedMessage
-</code></pre>
-<hr />
-<h2 id="permissions-roles">Permissions &amp; Roles<a class="headerlink" href="#permissions-roles" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Roles
-Get-VIRole
-Get-VIRole -Name &quot;ReadOnly&quot;
-
-# Permissions
-Get-VIPermission
-Get-VIPermission | Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; }
-
-# Assign role
-New-VIPermission -Entity (Get-Datacenter &lt;dc&gt;) -Principal &quot;&lt;domain&gt;\&lt;user&gt;&quot; -Role (Get-VIRole &quot;ReadOnly&quot;) -Propagate:$true
-</code></pre>
-<hr />
-<h2 id="inventory-reporting">Inventory &amp; Reporting<a class="headerlink" href="#inventory-reporting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># VM inventory to CSV
-Get-VM | Select-Object Name, PowerState, NumCpu, MemoryGB,
-  @{N=&quot;VMHost&quot;;E={$_.VMHost.Name}},
-  @{N=&quot;Cluster&quot;;E={$_.VMHost.Parent.Name}},
-  @{N=&quot;Datastore&quot;;E={($_ | Get-Datastore).Name -join &quot;;&quot;}},
-  @{N=&quot;GuestOS&quot;;E={$_.Guest.OSFullName}},
-  @{N=&quot;IP&quot;;E={$_.Guest.IPAddress -join &quot;;&quot;}} |
-  Export-Csv -Path vm_inventory.csv -NoTypeInformation
-
-# Host inventory
-Get-VMHost | Select-Object Name, Version, Build, Manufacturer, Model,
-  @{N=&quot;CPUModel&quot;;E={$_.ProcessorType}},
-  @{N=&quot;NumCPU&quot;;E={$_.NumCpu}},
-  @{N=&quot;MemGB&quot;;E={[math]::Round($_.MemoryTotalGB,0)}},
-  ConnectionState, PowerState |
-  Export-Csv -Path host_inventory.csv -NoTypeInformation
-</code></pre>
-<hr />
-<h2 id="vcenter-appliance-ssh">vCenter Appliance (SSH)<a class="headerlink" href="#vcenter-appliance-ssh" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to VCSA shell (SSH as root or administrator@vsphere.local)
-service-control --status
-service-control --start --all
-service-control --stop vpxd
-
-# Disk usage
-df -h
-
-# Log locations
-ls /var/log/vmware/vpxd/
-tail -f /var/log/vmware/vpxd/vpxd.log
-tail -f /var/log/vmware/vmdird/vmdird-syslog.log
-
-# SSO / identity
-/usr/lib/vmware-vmafd/bin/vmafd-cli get-domain-name --server-name localhost
-/usr/lib/vmware-vmafd/bin/vmafd-cli get-ls-location --server-name localhost
-
-# Certificate check
-/usr/lib/vmware-vmafd/bin/vecs-cli store list
-/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT
-</code></pre>
+</div>
 
 
 

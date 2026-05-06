@@ -723,102 +723,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#system-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        System &amp; Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-pools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Pools
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#luns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LUNs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#file-systems-nas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File Systems (NAS)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hosts-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hosts &amp; Access
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Interfaces
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#physical-disks-hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical Disks &amp; Hardware
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -841,143 +745,49 @@
 <blockquote>
 <p>Connect with: <code>uemcli -d &lt;array_ip&gt; -u &lt;user&gt; -p &lt;password&gt;</code> or set a connection profile.</p>
 </blockquote>
-<hr />
-<h2 id="system-status">System &amp; Status<a class="headerlink" href="#system-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># System info
-uemcli -d &lt;ip&gt; /sys/general show -detail
-uemcli -d &lt;ip&gt; /sys/time show
-uemcli -d &lt;ip&gt; /sys/sw/version show
+<div class="kb-grid kb-grid-3">
 
-# Alerts and events
-uemcli -d &lt;ip&gt; /prac/alert show
-uemcli -d &lt;ip&gt; /event/syslog show
+<a class="kb-card" href="system/">
+  <strong>System & Status</strong>
+  <span>System info, time, software version, alerts, events, licenses, and ESRS.</span>
+</a>
 
-# Licenses
-uemcli -d &lt;ip&gt; /sys/lic show
+<a class="kb-card" href="storage-pools/">
+  <strong>Storage Pools</strong>
+  <span>Pool list/create/modify/delete with RAID type and disk group.</span>
+</a>
 
-# Support / ESRS
-uemcli -d &lt;ip&gt; /sys/esrs show
-</code></pre>
-<hr />
-<h2 id="storage-pools">Storage Pools<a class="headerlink" href="#storage-pools" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List pools
-uemcli -d &lt;ip&gt; /stor/config/pool show
-uemcli -d &lt;ip&gt; /stor/config/pool show -detail
+<a class="kb-card" href="luns/">
+  <strong>LUNs</strong>
+  <span>LUN list/create/modify/delete/resize and LUN snapshots.</span>
+</a>
 
-# Create pool (RAID5 example)
-uemcli -d &lt;ip&gt; /stor/config/pool create -name &lt;pool_name&gt; -diskGroup &lt;dg_id&gt; -raidType RAID5
+<a class="kb-card" href="file-systems/">
+  <strong>File Systems (NAS)</strong>
+  <span>NAS servers, file systems, NFS shares, and CIFS shares.</span>
+</a>
 
-# Modify pool
-uemcli -d &lt;ip&gt; /stor/config/pool -id &lt;pool_id&gt; set -name &lt;new_name&gt;
+<a class="kb-card" href="hosts/">
+  <strong>Hosts & Access</strong>
+  <span>Host/initiator management and LUN-to-host access (ACLs).</span>
+</a>
 
-# Delete pool
-uemcli -d &lt;ip&gt; /stor/config/pool -id &lt;pool_id&gt; delete
-</code></pre>
-<hr />
-<h2 id="luns">LUNs<a class="headerlink" href="#luns" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List LUNs
-uemcli -d &lt;ip&gt; /stor/config/lun show
-uemcli -d &lt;ip&gt; /stor/config/lun show -detail
+<a class="kb-card" href="network/">
+  <strong>Network Interfaces</strong>
+  <span>Interface list/show and iSCSI interface/portal creation.</span>
+</a>
 
-# Create LUN
-uemcli -d &lt;ip&gt; /stor/config/lun create -name &lt;lun_name&gt; -pool &lt;pool_id&gt; -size 100G
+<a class="kb-card" href="replication/">
+  <strong>Replication</strong>
+  <span>Replication sessions, pause/resume, failover, and sync.</span>
+</a>
 
-# Modify LUN
-uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; set -size 200G
-uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; set -name &lt;new_name&gt;
+<a class="kb-card" href="hardware/">
+  <strong>Physical Disks & Hardware</strong>
+  <span>Disks, disk groups, and storage processor status.</span>
+</a>
 
-# Delete LUN
-uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; delete
-
-# LUN snapshots
-uemcli -d &lt;ip&gt; /prot/snap show -res &lt;lun_id&gt;
-uemcli -d &lt;ip&gt; /prot/snap create -name &lt;snap_name&gt; -res &lt;lun_id&gt;
-uemcli -d &lt;ip&gt; /prot/snap -id &lt;snap_id&gt; delete
-uemcli -d &lt;ip&gt; /prot/snap -id &lt;snap_id&gt; restore
-</code></pre>
-<hr />
-<h2 id="file-systems-nas">File Systems (NAS)<a class="headerlink" href="#file-systems-nas" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NAS servers
-uemcli -d &lt;ip&gt; /net/nas/server show
-uemcli -d &lt;ip&gt; /net/nas/server show -detail
-uemcli -d &lt;ip&gt; /net/nas/server create -name &lt;nas_name&gt; -sp &lt;sp_id&gt; -pool &lt;pool_id&gt;
-
-# File systems
-uemcli -d &lt;ip&gt; /stor/config/fs show
-uemcli -d &lt;ip&gt; /stor/config/fs show -detail
-uemcli -d &lt;ip&gt; /stor/config/fs create -name &lt;fs_name&gt; -nasServer &lt;nas_id&gt; -pool &lt;pool_id&gt; -size 1T
-uemcli -d &lt;ip&gt; /stor/config/fs -id &lt;fs_id&gt; set -size 2T
-uemcli -d &lt;ip&gt; /stor/config/fs -id &lt;fs_id&gt; delete
-
-# NFS shares
-uemcli -d &lt;ip&gt; /stor/config/nfs show
-uemcli -d &lt;ip&gt; /stor/config/nfs create -fs &lt;fs_id&gt; -path / -nfsVersion NFSv3
-uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; set -hostAccess &quot;&lt;ip&gt;(rw)&quot;
-uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; delete
-
-# CIFS shares
-uemcli -d &lt;ip&gt; /stor/config/cifs show
-uemcli -d &lt;ip&gt; /stor/config/cifs create -name &lt;share_name&gt; -fs &lt;fs_id&gt; -path /
-uemcli -d &lt;ip&gt; /stor/config/cifs -id &lt;cifs_id&gt; delete
-</code></pre>
-<hr />
-<h2 id="hosts-access">Hosts &amp; Access<a class="headerlink" href="#hosts-access" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Hosts
-uemcli -d &lt;ip&gt; /remote/host show
-uemcli -d &lt;ip&gt; /remote/host show -detail
-uemcli -d &lt;ip&gt; /remote/host create -name &lt;host_name&gt; -type Initiator
-
-# Initiators
-uemcli -d &lt;ip&gt; /remote/initiator show
-uemcli -d &lt;ip&gt; /remote/initiator create -host &lt;host_id&gt; -uid &lt;wwn_or_iqn&gt; -type FC
-
-# LUN access (host-to-LUN mapping)
-uemcli -d &lt;ip&gt; /stor/config/lunacl show
-uemcli -d &lt;ip&gt; /stor/config/lunacl create -lun &lt;lun_id&gt; -host &lt;host_id&gt;
-uemcli -d &lt;ip&gt; /stor/config/lunacl -id &lt;acl_id&gt; delete
-</code></pre>
-<hr />
-<h2 id="network-interfaces">Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Interfaces
-uemcli -d &lt;ip&gt; /net/if show
-uemcli -d &lt;ip&gt; /net/if show -detail
-
-# Create iSCSI interface
-uemcli -d &lt;ip&gt; /net/if create -type iSCSI -ipv4 &lt;ip&gt; -netmask &lt;mask&gt; -gateway &lt;gw&gt; -sp &lt;sp_id&gt; -port &lt;port_id&gt;
-
-# iSCSI portals
-uemcli -d &lt;ip&gt; /net/iscsi/node show
-</code></pre>
-<hr />
-<h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replication sessions
-uemcli -d &lt;ip&gt; /prot/rep/session show
-uemcli -d &lt;ip&gt; /prot/rep/session show -detail
-
-# Pause / resume
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; pause
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; resume
-
-# Failover
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; failover -keepSync
-
-# Sync
-uemcli -d &lt;ip&gt; /prot/rep/session -id &lt;session_id&gt; sync
-</code></pre>
-<hr />
-<h2 id="physical-disks-hardware">Physical Disks &amp; Hardware<a class="headerlink" href="#physical-disks-hardware" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Disks
-uemcli -d &lt;ip&gt; /stor/config/disk show
-uemcli -d &lt;ip&gt; /stor/config/disk show -detail
-
-# Disk groups
-uemcli -d &lt;ip&gt; /stor/config/dg show
-uemcli -d &lt;ip&gt; /stor/config/dg show -detail
-
-# Storage processors
-uemcli -d &lt;ip&gt; /sys/sp show
-uemcli -d &lt;ip&gt; /sys/sp show -detail
-</code></pre>
+</div>
 
 
 
