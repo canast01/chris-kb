@@ -847,30 +847,54 @@
 </div>
 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure FlashBlade is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.</p>
+<p>Pure Storage FlashBlade is an all-flash scale-out storage platform running Purity//FB OS, designed for unstructured data workloads including AI/ML, analytics, backup, and high-performance computing. Each chassis holds multiple blades that combine compute and NVMe flash storage, allowing capacity and performance to scale together by adding blades. It natively serves NFS v3/v4.1, SMB 2/3, S3 object, and HDFS protocols from a single platform, and supports asynchronous replication (ActiveDR) and synchronous replication (ActiveCluster for file systems) for data protection.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Primary storage operations</li>
-<li>Application and VM data services</li>
-<li>Backup and recovery workflows</li>
-<li>Replication and disaster recovery</li>
-<li>Performance and capacity planning</li>
+<li>AI/ML training data repositories requiring high-throughput parallel access from GPU clusters via NFS or S3</li>
+<li>High-performance backup target for Veeam, Commvault, and Veritas using the Rapid Restore integration</li>
+<li>Object storage for analytics pipelines consuming S3-compatible data with high concurrency</li>
+<li>Unstructured data consolidation replacing legacy NAS filers with a single scale-out platform</li>
+<li>HDFS-compatible storage for Hadoop-based analytics workloads without requiring a full Hadoop cluster</li>
+<li>Disaster recovery target using ActiveDR asynchronous replication from a primary FlashBlade or FlashArray</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review active alerts</li>
-<li>Check capacity usage</li>
-<li>Validate replication or protection status</li>
-<li>Confirm support connectivity</li>
-<li>Review performance trends</li>
-<li>Check recent configuration changes</li>
+<li>Check active alerts: <code>purefb alert list</code> — review any hardware, capacity, or replication warnings</li>
+<li>Check blade health: <code>purefb blade list</code> — confirm all blades are in <code>healthy</code> state with no <code>failed</code> or <code>missing</code> entries</li>
+<li>Review hardware component status: <code>purefb hardware list</code> — confirm no failed power supplies, fans, or FMs (fabric modules)</li>
+<li>Check filesystem capacity and utilization: <code>purefb filesystem list</code> — confirm no filesystems are approaching their limit</li>
+<li>Check S3 bucket usage and object counts: <code>purefb bucket list</code></li>
+<li>Review replication status: <code>purefb replication list</code> — confirm ActiveDR links are healthy and lag is within RPO</li>
+<li>Review recent snapshots and confirm expiry policy is functioning: <code>purefb snap list</code></li>
+<li>Check network interface status: <code>purefb network interface list</code> — confirm all data and replication interfaces are <code>up</code></li>
 </ul>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show status
-show alerts
-show capacity
-show replication
-show version
+<pre><code class="language-bash"># Show array name, Purity version, and overall status
+purefb array list
+
+# List all blades with health state and capacity contribution
+purefb blade list
+
+# List all hardware components (FMs, PSUs, fans) and their status
+purefb hardware list
+
+# List all filesystems with provisioned and used capacity
+purefb filesystem list
+
+# List all S3 buckets
+purefb bucket list
+
+# List all active alerts
+purefb alert list
+
+# List snapshots for filesystems and object store
+purefb snap list
+
+# Show replication links and lag for ActiveDR relationships
+purefb replication list
+
+# List all network interfaces and their status
+purefb network interface list
 </code></pre>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -883,53 +907,68 @@ show version
 </thead>
 <tbody>
 <tr>
-<td>High latency</td>
-<td>Backend contention or host path issue</td>
-<td>Review performance and paths</td>
+<td>Blade in <code>failed</code> or <code>missing</code> state</td>
+<td>Physical blade failure or seating issue</td>
+<td>Run <code>purefb blade list</code> to confirm; open a Pure support case immediately — capacity and performance will be degraded until replaced</td>
 </tr>
 <tr>
-<td>Capacity warning</td>
-<td>Growth, snapshots, or retention</td>
-<td>Review usage and cleanup options</td>
+<td>NFS mounts showing stale file handle errors after FlashBlade maintenance</td>
+<td>Client-side NFS state was not cleaned up after a FlashBlade controller event</td>
+<td>Unmount and remount the NFS filesystem on affected clients; for persistent mounts check <code>/etc/fstab</code> uses <code>soft</code> or <code>intr</code> options</td>
 </tr>
 <tr>
-<td>Replication lag</td>
-<td>Network, target, or workload pressure</td>
-<td>Check replication status</td>
+<td>S3 access key returning 403 Forbidden</td>
+<td>S3 access key expired, suspended, or IAM policy does not grant the required permissions</td>
+<td>Run <code>purefb objectstoreaccount list</code> and verify key status; regenerate key or review bucket policy and user permissions</td>
 </tr>
 <tr>
-<td>Host path down</td>
-<td>SAN zoning, cabling, or multipathing</td>
-<td>Validate fabric and host paths</td>
+<td>ActiveDR replication lag exceeding RPO</td>
+<td>Network bandwidth insufficient for change rate, or replication link is down</td>
+<td>Run <code>purefb replication list</code> to check lag and link status; verify network path between sites; check for bandwidth saturation on replication interfaces</td>
+</tr>
+<tr>
+<td>Filesystem approaching provisioned limit</td>
+<td>Organic data growth or backup tool writing more data than expected</td>
+<td>Expand the filesystem limit: <code>purefb filesystem setattr --size &lt;new_size&gt; &lt;fsname&gt;</code>; review backup retention policy to expire older data</td>
+</tr>
+<tr>
+<td>SMB client unable to access share after AD password change</td>
+<td>FlashBlade machine account password or AD bind credentials have expired</td>
+<td>Rejoin the FlashBlade to Active Directory or update the AD bind credentials in the FlashBlade AD configuration</td>
 </tr>
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Provision storage</li>
-<li>Expand volumes or file systems</li>
-<li>Review snapshots</li>
-<li>Validate replication</li>
-<li>Confirm host connectivity</li>
-<li>Review firmware or software level</li>
+<li>Create a new NFS filesystem: <code>purefb filesystem create --size &lt;size&gt; --nfs --nfs-rules '&lt;export_policy&gt;' &lt;fsname&gt;</code></li>
+<li>Create a new S3 bucket: <code>purefb bucket create --account &lt;account_name&gt; &lt;bucketname&gt;</code></li>
+<li>Create an S3 object store account and access key: <code>purefb objectstoreaccount create &lt;account&gt;</code> then <code>purefb objectstoreuser create --account &lt;account&gt; &lt;username&gt;</code></li>
+<li>Set up an ActiveDR replication link to a remote FlashBlade: configure a connection on both arrays, then create a filesystem replica link with <code>purefb replication fslink create</code></li>
+<li>Take a filesystem snapshot on demand: <code>purefb snap create --filesystem &lt;fsname&gt; &lt;snapname&gt;</code></li>
+<li>Restore a filesystem from snapshot: create a new filesystem from the snapshot or overwrite using <code>purefb filesystem copy</code></li>
+<li>Expand an existing filesystem: <code>purefb filesystem setattr --size &lt;new_size&gt; &lt;fsname&gt;</code> — expansion is non-disruptive to connected clients</li>
+<li>Add a new blade to scale capacity: insert blade physically, then use <code>purefb blade add</code> — the system automatically rebalances data across blades</li>
 </ul>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Confirm current version</li>
-<li>Review vendor compatibility matrix</li>
-<li>Confirm backups and rollback plan</li>
-<li>Validate support contract</li>
-<li>Upgrade during maintenance window</li>
-<li>Confirm host access and replication after upgrade</li>
+<li>Log into Pure1 to review the FlashBlade upgrade readiness report — Pure1 pre-checks the target Purity//FB version against your configuration and flags any blockers</li>
+<li>Confirm all blades are in <code>healthy</code> state (<code>purefb blade list</code>) and no hardware alerts are open before beginning the upgrade</li>
+<li>Notify NFS, SMB, and S3 clients of a potential brief reconnection event during the upgrade; FlashBlade upgrades are non-disruptive but protocol sessions may briefly re-establish</li>
+<li>Download the Purity//FB upgrade image from the Pure Support portal and stage it on the array</li>
+<li>Run the pre-upgrade validation to confirm the system is ready to upgrade without warnings</li>
+<li>Execute the upgrade during a maintenance window and monitor progress from the Purity GUI or CLI</li>
+<li>After upgrade, verify all filesystems, buckets, and replication links are healthy: <code>purefb filesystem list</code>, <code>purefb replication list</code>, and <code>purefb alert list</code></li>
 </ol>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Keep naming consistent</li>
-<li>Monitor capacity growth</li>
-<li>Document storage mappings</li>
-<li>Validate multipathing</li>
-<li>Test restore and failover procedures</li>
-<li>Review support advisories regularly</li>
+<li>Separate filesystems per application or team rather than sharing a single large filesystem — this enables independent capacity limits, snapshot schedules, and replication policies per workload</li>
+<li>Use S3 lifecycle policies (object expiry rules on buckets) to automatically expire old objects and prevent uncontrolled storage growth for analytics or backup workloads</li>
+<li>Configure Pure1 monitoring with capacity threshold alerts (e.g., at 70% and 85% used) and hardware fault notifications so issues are caught before they impact operations</li>
+<li>Test ActiveDR failover and failback procedures at least annually — include NFS and S3 client remounting steps in the DR runbook, not just the FlashBlade-side commands</li>
+<li>Use SAML/SSO integration for admin access rather than local accounts — this enforces MFA, enables central access revocation, and provides audit trail through your identity provider</li>
+<li>For backup workloads (Veeam, Commvault), use a dedicated filesystem per backup tier (daily, weekly, monthly) with matching snapshot retention so recovery points are easy to identify and manage</li>
+<li>Set NFS export policies to restrict client IP ranges to authorized subnets only — avoid exporting with <code>*</code> (all hosts) in production environments</li>
+<li>Monitor replication lag daily and define a documented RPO threshold; set alerts when lag exceeds the acceptable window rather than discovering breaches during an incident</li>
 </ul>
 
 

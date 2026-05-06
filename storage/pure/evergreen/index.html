@@ -21,7 +21,7 @@
     
     
       
-        <title>Pure Evergreen - Chris KB</title>
+        <title>Pure Storage Evergreen - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pure-evergreen" class="md-skip">
+        <a href="#pure-storage-evergreen" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pure Evergreen
+              Pure Storage Evergreen
             
           </span>
         </div>
@@ -836,32 +836,51 @@
 
 
 
-<h1 id="pure-evergreen">Pure Evergreen<a class="headerlink" href="#pure-evergreen" title="Permanent link">&para;</a></h1>
+<h1 id="pure-storage-evergreen">Pure Storage Evergreen<a class="headerlink" href="#pure-storage-evergreen" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure Evergreen is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.</p>
+<p>Pure Storage Evergreen is a hardware subscription model for FlashArray and FlashBlade that bundles hardware, Purity software, support, and controller upgrades into a single ongoing subscription. The core design principle is non-disruptive controller refresh every three years — data stays in place, hosts remain connected, and there is no forklift replacement or data migration. The model spans three tiers: Evergreen//Forever (base hardware subscription with Every Modern controller upgrades), Evergreen//Flex (adds non-disruptive blade and capacity swap flexibility), and Evergreen//One (consumption-based STaaS, covered separately).</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Primary storage operations</li>
-<li>Application and VM data services</li>
-<li>Backup and recovery workflows</li>
-<li>Replication and disaster recovery</li>
-<li>Performance and capacity planning</li>
+<li>Primary block and file storage for production VM and application workloads</li>
+<li>Environments requiring long-term platform continuity without data migration cycles</li>
+<li>Organisations replacing traditional CapEx storage refresh cycles with subscription-based OpEx</li>
+<li>Sites running ActiveCluster or replication that cannot tolerate disruptive upgrades</li>
+<li>Capacity expansion without downtime using Evergreen//Flex blade additions</li>
+<li>Colocation or remote sites where physical refresh logistics are a constraint</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review active alerts</li>
-<li>Check capacity usage</li>
-<li>Validate replication or protection status</li>
-<li>Confirm support connectivity</li>
-<li>Review performance trends</li>
-<li>Check recent configuration changes</li>
+<li>Confirm no open hardware alerts in Pure1 or the FlashArray/FlashBlade GUI</li>
+<li>Review array capacity: used, provisioned, and data reduction ratio</li>
+<li>Validate replication pod and ActiveCluster status are healthy</li>
+<li>Check host connectivity — confirm no offline or degraded paths via <code>purehost list</code> or GUI</li>
+<li>Review Purity software version against Pure support-recommended range</li>
+<li>Confirm Pure1 phone-home connectivity (support tunnel active)</li>
+<li>Check snapshot schedule completion and retention policy compliance</li>
 </ul>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show status
-show alerts
-show capacity
-show replication
-show version
+<pre><code class="language-bash"># List array hardware status and component health
+purearray list --hardware
+
+# Review active alerts on the array
+purealert list
+
+# Check capacity usage and data reduction
+purearray list --space
+
+# Verify host and host group path status
+purehost list
+purehostgroup list
+
+# Review replication pod and ActiveCluster status
+purepod list
+purepod list --failover-preference
+
+# Check Purity software version
+purearray list
+
+# Confirm Pure1 phone-home support tunnel status
+# (Portal: Pure1 &gt; Arrays &gt; select array &gt; Support &gt; Phone Home)
 </code></pre>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -874,53 +893,68 @@ show version
 </thead>
 <tbody>
 <tr>
-<td>High latency</td>
-<td>Backend contention or host path issue</td>
-<td>Review performance and paths</td>
+<td>Controller upgrade window missed</td>
+<td>Subscription renewal not scheduled ahead of expiry</td>
+<td>Contact Pure account team to schedule Ever Modern controller upgrade before subscription end date</td>
 </tr>
 <tr>
-<td>Capacity warning</td>
-<td>Growth, snapshots, or retention</td>
-<td>Review usage and cleanup options</td>
+<td>Host path goes offline during controller upgrade</td>
+<td>Multipath failover not validated pre-upgrade</td>
+<td>Pre-validate host multipathing with <code>purehostconnection list</code>; confirm all hosts have redundant paths before upgrade starts</td>
 </tr>
 <tr>
-<td>Replication lag</td>
-<td>Network, target, or workload pressure</td>
-<td>Check replication status</td>
+<td>ActiveCluster mediator unreachable during upgrade</td>
+<td>Network change or mediator misconfigured</td>
+<td>Verify mediator IP connectivity and quorum before entering upgrade window</td>
 </tr>
 <tr>
-<td>Host path down</td>
-<td>SAN zoning, cabling, or multipathing</td>
-<td>Validate fabric and host paths</td>
+<td>Replication pod sync lag after upgrade</td>
+<td>Workload spike during upgrade window</td>
+<td>Monitor pod sync status with <code>purepod list</code>; verify replication network bandwidth</td>
+</tr>
+<tr>
+<td>Pure1 phone-home offline</td>
+<td>Proxy change, firewall rule, or network reconfiguration</td>
+<td>Confirm outbound access to Pure1 endpoints on port 443; check proxy settings in array GUI</td>
+</tr>
+<tr>
+<td>Capacity alert at upgrade time</td>
+<td>Snapshot growth or volume provisioning without cleanup</td>
+<td>Review snapshot usage with <code>puresnapshot list --space</code>; expire or eradicate stale snapshots before upgrade</td>
 </tr>
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Provision storage</li>
-<li>Expand volumes or file systems</li>
-<li>Review snapshots</li>
-<li>Validate replication</li>
-<li>Confirm host connectivity</li>
-<li>Review firmware or software level</li>
+<li>Schedule Ever Modern controller upgrade with Pure support at least 30 days before subscription renewal date</li>
+<li>Plan and validate host multipathing before entering any controller upgrade window</li>
+<li>Validate ActiveCluster mediator and pod status before upgrade</li>
+<li>Confirm Purity software is within the upgrade-supported range (check Pure compatibility matrix)</li>
+<li>Review and clean up stale snapshots and destroyed volumes before capacity review</li>
+<li>Validate replication pod resume after upgrade completion</li>
+<li>Confirm all host paths are restored post-upgrade using <code>purehostconnection list</code></li>
+<li>Update subscription documentation with new controller generation and renewal date</li>
 </ul>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Confirm current version</li>
-<li>Review vendor compatibility matrix</li>
-<li>Confirm backups and rollback plan</li>
-<li>Validate support contract</li>
-<li>Upgrade during maintenance window</li>
-<li>Confirm host access and replication after upgrade</li>
+<li>Confirm Purity software version is within the supported range for the target controller generation using Pure's compatibility matrix</li>
+<li>Validate all host paths are redundant and multipathing is active on every connected host</li>
+<li>Confirm ActiveCluster mediator is reachable and pods are in sync before upgrade window</li>
+<li>Pause or validate replication schedules so lag does not trigger alerts during the upgrade</li>
+<li>Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap)</li>
+<li>Monitor host I/O during the upgrade using <code>purearray monitor</code> to confirm no latency impact</li>
+<li>After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed</li>
 </ol>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Keep naming consistent</li>
-<li>Monitor capacity growth</li>
-<li>Document storage mappings</li>
-<li>Validate multipathing</li>
-<li>Test restore and failover procedures</li>
-<li>Review support advisories regularly</li>
+<li>Schedule Ever Modern controller upgrades well before the subscription renewal date — do not let the window lapse</li>
+<li>Always upgrade Purity software to the recommended release before entering a controller upgrade window</li>
+<li>Validate host multipathing and fabric zoning before every upgrade; never proceed with single-path hosts</li>
+<li>Run controller upgrades during approved maintenance windows even though they are non-disruptive, to reduce risk</li>
+<li>Keep Pure1 phone-home active at all times so Pure Support has visibility and can provide proactive health alerts</li>
+<li>Document the current controller generation, subscription tier, and renewal date in your CMDB</li>
+<li>Review snapshot retention policies quarterly to prevent capacity bloat that can affect upgrade planning</li>
+<li>Engage your Pure account team quarterly to review subscription status, capacity trends, and upcoming upgrade eligibility</li>
 </ul>
 
 

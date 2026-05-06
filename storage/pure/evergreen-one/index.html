@@ -21,7 +21,7 @@
     
     
       
-        <title>Pure Evergreen One - Chris KB</title>
+        <title>Pure Storage Evergreen//One - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pure-evergreen-one" class="md-skip">
+        <a href="#pure-storage-evergreenone" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pure Evergreen One
+              Pure Storage Evergreen//One
             
           </span>
         </div>
@@ -836,32 +836,40 @@
 
 
 
-<h1 id="pure-evergreen-one">Pure Evergreen One<a class="headerlink" href="#pure-evergreen-one" title="Permanent link">&para;</a></h1>
+<h1 id="pure-storage-evergreenone">Pure Storage Evergreen//One<a class="headerlink" href="#pure-storage-evergreenone" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure Evergreen One is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.</p>
+<p>Evergreen//One is Pure Storage's Storage-as-a-Service consumption model: Pure owns and manages the hardware (on-premises or in a colocation), and customers pay per TB consumed on a monthly basis against a committed reserve tier, with burst capacity available on demand. The service includes installation, proactive monitoring via Pure1, all hardware and Purity software upgrades, and support — customers never plan or execute a storage upgrade. SLA commitments include 99.9999% availability and guaranteed performance outcomes (IOPS, bandwidth, latency) defined per workload tier; Pure credits the customer if SLAs are not met.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Primary storage operations</li>
-<li>Application and VM data services</li>
-<li>Backup and recovery workflows</li>
-<li>Replication and disaster recovery</li>
-<li>Performance and capacity planning</li>
+<li>Organisations shifting storage from CapEx to OpEx without giving up on-premises data sovereignty</li>
+<li>Workloads with variable or unpredictable capacity growth where fixed-capacity purchases are inefficient</li>
+<li>Colocation environments where physical hardware management is a constraint</li>
+<li>High-availability production workloads requiring a vendor-backed 99.9999% availability SLA</li>
+<li>Environments requiring guaranteed latency and IOPS SLAs tied to contractual obligations</li>
+<li>Teams that want Pure1 AIOps-driven monitoring without managing the underlying infrastructure</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review active alerts</li>
-<li>Check capacity usage</li>
-<li>Validate replication or protection status</li>
-<li>Confirm support connectivity</li>
-<li>Review performance trends</li>
-<li>Check recent configuration changes</li>
+<li>Review consumption vs. committed tier in Pure1 (used TB vs. reserved TB)</li>
+<li>Check burst usage trend — confirm burst is not being consumed unexpectedly</li>
+<li>Confirm no open SLA breach events in Pure1 under the Evergreen//One dashboard</li>
+<li>Review Pure1 health alerts for the arrays under the service</li>
+<li>Validate data protection status — snapshots, replication, and SafeMode configuration in Pure1</li>
+<li>Confirm Pure1 phone-home is active for all arrays in the subscription</li>
 </ul>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show status
-show alerts
-show capacity
-show replication
-show version
+<pre><code class="language-bash"># All monitoring and health review is performed through the Pure1 portal
+# Pure1: https://pure1.purestorage.com
+
+# Pure1 &gt; Arrays — array health, software version, and hardware status
+# Pure1 &gt; Evergreen//One &gt; Consumption — used vs. committed vs. burst
+# Pure1 &gt; Evergreen//One &gt; SLA — availability and performance SLA compliance reports
+# Pure1 &gt; Evergreen//One &gt; Capacity — capacity growth trends and forecasting
+
+# For array-level CLI access (if granted by Pure Support):
+purearray list --space         # capacity summary
+purealert list                 # active alerts
+purepod list                   # replication pod and ActiveCluster status
 </code></pre>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -874,53 +882,67 @@ show version
 </thead>
 <tbody>
 <tr>
-<td>High latency</td>
-<td>Backend contention or host path issue</td>
-<td>Review performance and paths</td>
+<td>Burst capacity consumed unexpectedly</td>
+<td>Rapid snapshot or volume growth, or workload spike</td>
+<td>Review volume and snapshot space usage in Pure1; identify top consumers and engage application teams</td>
 </tr>
 <tr>
-<td>Capacity warning</td>
-<td>Growth, snapshots, or retention</td>
-<td>Review usage and cleanup options</td>
+<td>SLA compliance report shows availability event</td>
+<td>Unplanned array component failure or network disruption</td>
+<td>Review Pure1 SLA event details; open a support case with Pure if root cause is not documented</td>
 </tr>
 <tr>
-<td>Replication lag</td>
-<td>Network, target, or workload pressure</td>
-<td>Check replication status</td>
+<td>SLA report shows latency breach</td>
+<td>Workload pattern change or resource contention on shared array</td>
+<td>Review Pure1 performance dashboards; engage Pure account team to right-size workload tier</td>
 </tr>
 <tr>
-<td>Host path down</td>
-<td>SAN zoning, cabling, or multipathing</td>
-<td>Validate fabric and host paths</td>
+<td>Billing discrepancy vs. invoice</td>
+<td>Burst usage not accounted for or committed tier misalignment</td>
+<td>Compare Pure1 consumption report to invoice line items; raise with Pure account team before billing close</td>
+</tr>
+<tr>
+<td>Capacity request not fulfilled on time</td>
+<td>Insufficient lead time given to Pure for hardware provisioning</td>
+<td>Submit capacity increase requests through Pure portal at least 30 days in advance</td>
+</tr>
+<tr>
+<td>Phone-home connectivity lost</td>
+<td>Network change or proxy reconfiguration</td>
+<td>Confirm outbound HTTPS access to Pure1 endpoints; review proxy settings with Pure Support</td>
 </tr>
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Provision storage</li>
-<li>Expand volumes or file systems</li>
-<li>Review snapshots</li>
-<li>Validate replication</li>
-<li>Confirm host connectivity</li>
-<li>Review firmware or software level</li>
+<li>Monitor consumption vs. committed tier in Pure1 weekly and before monthly billing close</li>
+<li>Review burst usage weekly to identify unexpected growth before it impacts the invoice</li>
+<li>Submit capacity increase requests through the Pure portal with sufficient lead time (typically 30 days)</li>
+<li>Review SLA compliance reports monthly and log any breach credits with the Pure account team</li>
+<li>Work with the Pure account team quarterly to review capacity trends and adjust committed tier if needed</li>
+<li>Validate SafeMode and data protection settings in Pure1 after any major workload change</li>
+<li>Review Pure1 AIOps recommendations for anomaly detection and performance optimisation</li>
+<li>Maintain accurate workload-to-tier mapping documentation for audit and billing validation</li>
 </ul>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Confirm current version</li>
-<li>Review vendor compatibility matrix</li>
-<li>Confirm backups and rollback plan</li>
-<li>Validate support contract</li>
-<li>Upgrade during maintenance window</li>
-<li>Confirm host access and replication after upgrade</li>
+<li>Evergreen//One has no customer-managed upgrade process — Pure handles all hardware and Purity software upgrades non-disruptively</li>
+<li>Upgrades are scheduled and executed by Pure Support; customers receive advance notification through Pure1 and email</li>
+<li>Validate that no change freezes or maintenance windows conflict with Pure's scheduled upgrade date</li>
+<li>Confirm all host paths are redundant and multipathing is active before Pure executes any upgrade (Pure will validate, but customer confirmation is good practice)</li>
+<li>After upgrade, confirm Pure1 shows the new software version and no new alerts are open</li>
+<li>Review SLA compliance report post-upgrade to confirm no availability events were recorded</li>
 </ol>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Keep naming consistent</li>
-<li>Monitor capacity growth</li>
-<li>Document storage mappings</li>
-<li>Validate multipathing</li>
-<li>Test restore and failover procedures</li>
-<li>Review support advisories regularly</li>
+<li>Set a Pure1 consumption alert at 80% of committed tier so there is lead time to request additional capacity</li>
+<li>Review burst usage at least weekly — burst billing can add significant cost if left unmonitored</li>
+<li>Work with the Pure account team on a quarterly capacity review cadence to keep the committed tier accurately sized</li>
+<li>Never disable Pure1 phone-home; Pure's SLA monitoring and proactive support depend on continuous telemetry</li>
+<li>Document the committed reserve tier, burst limits, and SLA thresholds in your service runbook for on-call reference</li>
+<li>Align capacity increase requests with budget cycles so approval is not a blocker to provisioning</li>
+<li>Review Pure1 SLA compliance reports before each billing close and flag any discrepancies to the account team promptly</li>
+<li>Use Pure1 AIOps anomaly alerts as an early warning for workload behaviour changes before they become SLA events</li>
 </ul>
 
 
