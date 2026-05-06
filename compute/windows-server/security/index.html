@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cis-benchmark-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIS Benchmark Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-defender-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Defender Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cyberark-pam-privileged-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CyberArk PAM (Privileged Access Management)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +808,126 @@
 
 
 <h1 id="windows-server-security">Windows Server Security<a class="headerlink" href="#windows-server-security" title="Permanent link">&para;</a></h1>
-<p>Windows Server builds are hardened to the CIS Microsoft Windows Server benchmark, applied via Group Policy Objects linked at the server OU level. Windows Defender is enabled and centrally managed via Microsoft Defender for Endpoint or SCCM; local exclusions are documented and approved per application. Local administrator accounts are managed through CyberArk PAM with LAPS providing rotating passwords for the built-in Administrator account where CyberArk is not yet deployed.</p>
+<h2 id="cis-benchmark-hardening">CIS Benchmark Hardening<a class="headerlink" href="#cis-benchmark-hardening" title="Permanent link">&para;</a></h2>
+<p>Windows Server builds are hardened to CIS Microsoft Windows Server Level 1 benchmark, applied via Group Policy Objects linked at the server OU level.</p>
+<p>Key GPO-enforced controls:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Policy Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account lockout</td>
+<td>10 failed attempts; 30-minute lockout</td>
+</tr>
+<tr>
+<td>Password policy</td>
+<td>Minimum 14 chars, complexity required, 90-day rotation</td>
+</tr>
+<tr>
+<td>Audit policy</td>
+<td>Success+Failure for: logon, privilege use, object access, policy change</td>
+</tr>
+<tr>
+<td>SMB signing</td>
+<td>RequireSecuritySignature = 1 on servers</td>
+</tr>
+<tr>
+<td>RDP NLA</td>
+<td>Require Network Level Authentication</td>
+</tr>
+<tr>
+<td>UAC</td>
+<td>Prompt for elevated operations</td>
+</tr>
+<tr>
+<td>Windows Defender</td>
+<td>Real-time protection enabled; cloud-delivered protection enabled</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>TLS 1.2 minimum; TLS 1.0/1.1 disabled via GPO</td>
+</tr>
+</tbody>
+</table>
+<p>Apply GPO immediately (without waiting for next policy refresh cycle):</p>
+<pre><code class="language-powershell">gpupdate /force
+rsop.msc   # View resulting set of policy
+</code></pre>
+<h2 id="windows-defender-configuration">Windows Defender Configuration<a class="headerlink" href="#windows-defender-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Verify Defender status
+Get-MpComputerStatus | Select-Object AMRunningMode, RealTimeProtectionEnabled, AntivirusSignatureLastUpdated
+
+# Trigger signature update
+Update-MpSignature
+
+# Check for active threats
+Get-MpThreatDetection | Select-Object ActionSuccess, CategoryID, Resources, InitialDetectionTime
+
+# Add exclusion (document every exclusion in CMDB)
+Add-MpPreference -ExclusionPath &quot;D:\App\Data\&quot;
+</code></pre>
+<h2 id="cyberark-pam-privileged-access-management">CyberArk PAM (Privileged Access Management)<a class="headerlink" href="#cyberark-pam-privileged-access-management" title="Permanent link">&para;</a></h2>
+<p>Local administrator accounts are managed via CyberArk:</p>
+<ol>
+<li>Onboard built-in Administrator account to CyberArk safe</li>
+<li>Set CyberArk to rotate the password on every checkout (or on a schedule)</li>
+<li>Require dual approval for admin access to Tier 1 systems</li>
+</ol>
+<p>For systems not yet onboarded to CyberArk, use LAPS:</p>
+<pre><code class="language-powershell"># Verify LAPS is installed
+Get-AdmPwdPassword -ComputerName $env:COMPUTERNAME
+
+# Check LAPS policy is applied
+Get-ItemProperty -Path &quot;HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd&quot; |
+    Select-Object AdmPwdEnabled, PasswordLength, PasswordAgeDays
+</code></pre>
+<h2 id="audit-policy">Audit Policy<a class="headerlink" href="#audit-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Review current audit policy
+auditpol /get /category:*
+
+# Force CIS audit policy (run as Administrator)
+auditpol /set /subcategory:&quot;Logon&quot; /success:enable /failure:enable
+auditpol /set /subcategory:&quot;Account Lockout&quot; /success:enable /failure:enable
+auditpol /set /subcategory:&quot;Privilege Use&quot; /success:enable /failure:enable
+</code></pre>
+<h2 id="windows-firewall">Windows Firewall<a class="headerlink" href="#windows-firewall" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check firewall state per profile
+Get-NetFirewallProfile | Select-Object Name, Enabled, DefaultInboundAction
+
+# View active rules
+Get-NetFirewallRule | Where-Object {$_.Enabled -eq &quot;True&quot; -and $_.Direction -eq &quot;Inbound&quot;} |
+    Select-Object DisplayName, Action, Profile
+
+# Add rule (example: allow monitoring on port 9182)
+New-NetFirewallRule -DisplayName &quot;Allow WMI Exporter&quot; -Direction Inbound -Protocol TCP -LocalPort 9182 -Action Allow
+</code></pre>
+<h2 id="event-log-forwarding">Event Log Forwarding<a class="headerlink" href="#event-log-forwarding" title="Permanent link">&para;</a></h2>
+<p>Forward security events to SIEM:</p>
+<pre><code class="language-powershell"># Check Windows Event Forwarding (WEF) subscriptions
+wecutil es   # List subscriptions
+
+# Or via Splunk/Elastic agent — verify agent service
+Get-Service SplunkForwarder | Select-Object Status
+Get-Service ElasticAgent | Select-Object Status
+</code></pre>
+<p>Events to forward to SIEM:
+- Security log: Event IDs 4624 (logon), 4625 (failed logon), 4648 (explicit logon), 4719 (policy change), 4728/4732/4756 (group membership changes)</p>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>CIS benchmark:</strong> Level 1 baseline applied via GPO; Level 2 controls reviewed and applied where operationally feasible</li>
-<li><strong>Windows Defender:</strong> Real-time protection enabled; exclusions documented and tracked in CMDB</li>
-<li><strong>Windows Firewall:</strong> Domain profile active; rules managed via GPO; host-based firewall logs forwarded to SIEM</li>
-<li><strong>CyberArk:</strong> Local admin accounts onboarded to CyberArk; break-glass procedure documented</li>
-<li><strong>LAPS:</strong> Deployed where CyberArk not available; password complexity and rotation interval configured via GPO</li>
-<li><strong>Audit policy:</strong> Success and failure auditing enabled for logon, privilege use, object access, and policy change</li>
-<li><strong>SMB signing:</strong> Required on all servers via GPO (<code>RequireSecuritySignature = 1</code>)</li>
+<li>[ ] CIS Level 1 GPO applied: <code>gpresult /h C:\temp\gpreport.html</code></li>
+<li>[ ] Windows Defender active with latest signatures</li>
+<li>[ ] CyberArk: Administrator account onboarded (or LAPS configured)</li>
+<li>[ ] Audit policy: logon success+failure enabled</li>
+<li>[ ] SMB signing required via GPO</li>
+<li>[ ] RDP NLA required</li>
+<li>[ ] TLS 1.0/1.1 disabled</li>
+<li>[ ] Windows Firewall enabled on all profiles</li>
+<li>[ ] Security event logs forwarded to SIEM</li>
+<li>[ ] WSUS/SCCM patching active; no updates pending &gt; 30 days</li>
 </ul>
 
 

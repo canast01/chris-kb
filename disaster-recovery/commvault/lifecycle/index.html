@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#release-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-upgrade-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commvault-to-metallic-saas-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommVault to Metallic SaaS Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +797,8 @@
 
 
 <h1 id="commvault-lifecycle">CommVault Lifecycle<a class="headerlink" href="#commvault-lifecycle" title="Permanent link">&para;</a></h1>
-<p>CommVault releases Feature Releases (FRs) on a quarterly cadence, each receiving maintenance releases (Service Packs) for approximately 12 months post-GA. The CommServe must always be upgraded before MediaAgents and Clients, and the CommServe database (SQL Server) is upgraded automatically as part of the CommServe installer — a pre-upgrade CommServe DB backup is mandatory. One FR behind is supported for MediaAgents and Clients; two FRs behind is not supported and will generate console warnings.</p>
+<h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
+<p>CommVault releases Feature Releases (FRs) quarterly, each receiving Maintenance Releases (MRs/SPs) for approximately 12 months post-GA.</p>
 <table>
 <thead>
 <tr>
@@ -752,12 +825,83 @@
 </tr>
 </tbody>
 </table>
+<p>Check current version EOL: <a href="https://documentation.commvault.com">documentation.commvault.com</a> → Product Lifecycle.</p>
+<h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
+<p><strong>Critical: always upgrade CommServe first.</strong></p>
+<ol>
+<li>
+<p><strong>Pre-upgrade</strong>: Back up CommServe SQL database manually
+   <code>powershell
+   # CommVault console: Storage → System Backup → Run Now
+   # Verify backup completes before proceeding</code></p>
+</li>
+<li>
+<p><strong>Upgrade CommServe</strong> — run installer on CommServe host; SQL DB upgraded automatically</p>
+</li>
+<li>
+<p><strong>Upgrade MediaAgents</strong> — via CommVault console: Infrastructure → MediaAgents → right-click → Update</p>
+</li>
+<li>
+<p>MediaAgents can be upgraded rolling if multiple MediaAgents serve each storage pool</p>
+</li>
+<li>
+<p><strong>Upgrade Clients</strong> — deploy via client group push or individually</p>
+</li>
+<li>Clients one FR behind CommServe: supported</li>
+<li>Clients two FRs behind CommServe: not supported — schedule urgent upgrade</li>
+</ol>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>CommServe DB upgrade is automatic during CommServe upgrade; ensure SQL Server SA credentials are available.</li>
-<li>Metallic SaaS migration: CommVault provides migration tooling from on-premises CommServe to Metallic; plan for client agent re-registration.</li>
-<li>EOL tracking: check CommVault End-of-Life information at documentation.commvault.com; alert when any FR in use is within 60 days of EOL.</li>
-<li>Upgrade window: schedule CommServe upgrade during a low-backup window; MediaAgent upgrades can be rolling if redundant MediaAgents exist for each storage pool.</li>
+<li>[ ] All jobs complete or suspended (no active jobs on the CommServe)</li>
+<li>[ ] CommServe SQL database backup completed and verified</li>
+<li>[ ] Command Center configuration exported: Main Menu → Export Configuration</li>
+<li>[ ] Compatibility verified for all integrated systems (VMware, storage arrays)</li>
+<li>[ ] Windows Server and SQL Server patched to CommVault minimum requirements</li>
 </ul>
+<h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check CommServe service status
+Get-Service GxCVD, GxEvMgrS, GxShmServer | Select Name, Status
+
+# Verify MediaAgent connectivity
+qoperation execute -af UpdateMediaAgent.xml   # or use console check
+
+# Run a test backup after upgrade
+# Select a non-critical VM → right-click → Back Up Now
+</code></pre>
+<p>Verify in Command Center: Jobs → Active Jobs — confirm no jobs stuck in queued state.</p>
+<h2 id="commvault-to-metallic-saas-migration">CommVault to Metallic SaaS Migration<a class="headerlink" href="#commvault-to-metallic-saas-migration" title="Permanent link">&para;</a></h2>
+<p>For cloud migration of on-premises CommVault to Metallic (SaaS):
+1. Deploy Metallic Gateway appliance or Cloud Connector
+2. Re-register existing clients to Metallic CommCell
+3. Initial full backup to Metallic; daily incrementals going forward
+4. Decommission on-premises CommServe after retention requirements satisfied</p>
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR version</td>
+<td>Alert when within 60 days of EOL; upgrade planning starts 90 days before</td>
+</tr>
+<tr>
+<td>Windows Server OS (CommServe host)</td>
+<td>Align CommServe OS lifecycle with CommVault support matrix</td>
+</tr>
+<tr>
+<td>SQL Server (CommServe DB)</td>
+<td>Track SQL Server EOL; upgrade requires CommVault testing</td>
+</tr>
+<tr>
+<td>Hyperscale X firmware</td>
+<td>Annual review against CommVault recommended firmware versions</td>
+</tr>
+</tbody>
+</table>
 
 
 

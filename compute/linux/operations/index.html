@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-and-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk and Filesystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-and-cpu-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process and CPU Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Investigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-and-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User and Access Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +819,191 @@
 
 
 <h1 id="linux-operations">Linux Operations<a class="headerlink" href="#linux-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operational checks confirm server health before business hours and after any overnight maintenance. Key checks include reviewing failed systemd units with <code>systemctl --failed</code>, disk utilisation with <code>df -h</code>, memory pressure with <code>free -h</code>, load average with <code>uptime</code>, and failed login attempts with <code>lastb</code>. Error-level log entries are reviewed via <code>journalctl -p err</code> on systemd-based systems or <code>/var/log/messages</code> on older RHEL releases. Any failed units, disks above 80%, or repeated login failures are escalated for investigation.</p>
-<ul>
-<li><code>systemctl --failed</code> — list any failed units</li>
-<li><code>df -h</code> — disk usage across all filesystems</li>
-<li><code>free -h</code> — memory and swap utilisation</li>
-<li><code>uptime</code> — load averages (1, 5, 15 min)</li>
-<li><code>lastb</code> — failed login attempts</li>
-<li><code>journalctl -p err -n 50</code> — last 50 error-level log entries</li>
-</ul>
+<blockquote>
+<p>Part of the <a href="../">Linux</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h2>
+<p>Run these checks before business hours or after any overnight maintenance window.</p>
+<pre><code class="language-bash"># Check for failed systemd units — any output means investigation required
+systemctl --failed
+
+# Disk usage — flag anything above 80%
+df -h
+
+# Memory and swap
+free -h
+# If swap is in use, check what's consuming memory
+cat /proc/meminfo | grep -E &quot;MemAvailable|SwapFree|Committed&quot;
+
+# Load average — compare to number of CPU cores
+uptime
+nproc  # total logical CPUs; load average should stay below this value
+
+# Failed login attempts
+lastb | head -20
+
+# Recent error-level log entries
+journalctl -p err -n 50 --no-pager
+# On older RHEL without journald
+grep -i &quot;error\|failed\|critical&quot; /var/log/messages | tail -50
+</code></pre>
+<hr />
+<h2 id="service-management">Service Management<a class="headerlink" href="#service-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all running services
+systemctl list-units --type=service --state=running
+
+# Start / stop / restart a service
+systemctl start &lt;service&gt;
+systemctl stop &lt;service&gt;
+systemctl restart &lt;service&gt;
+
+# Enable service to start at boot
+systemctl enable &lt;service&gt;
+
+# Check service status with recent log tail
+systemctl status &lt;service&gt;
+
+# View full service logs
+journalctl -u &lt;service&gt; -n 100 --no-pager
+journalctl -u &lt;service&gt; --since &quot;1 hour ago&quot;
+</code></pre>
+<hr />
+<h2 id="disk-and-filesystem">Disk and Filesystem<a class="headerlink" href="#disk-and-filesystem" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check disk usage with inode count (inode exhaustion causes &quot;no space left&quot; even with free space)
+df -h &amp;&amp; df -i
+
+# Find top disk consumers
+du -sh /* 2&gt;/dev/null | sort -rh | head -20
+du -sh /var/log/* | sort -rh | head -10
+
+# Check for large log files
+find /var/log -name &quot;*.log&quot; -size +500M -ls
+
+# Check block devices and mount points
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,TYPE
+
+# Check LVM volume group and logical volume space
+vgs
+lvs
+pvs
+
+# Extend an LVM logical volume (online — no unmount required for ext4/xfs)
+lvextend -l +100%FREE /dev/vg0/data
+resize2fs /dev/vg0/data       # ext4
+xfs_growfs /mount/point       # xfs
+</code></pre>
+<hr />
+<h2 id="process-and-cpu-troubleshooting">Process and CPU Troubleshooting<a class="headerlink" href="#process-and-cpu-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check top CPU consumers
+ps aux --sort=-%cpu | head -20
+
+# Check top memory consumers
+ps aux --sort=-%mem | head -20
+
+# Check system-wide CPU breakdown (interactive)
+top
+# Press 1 to expand per-CPU view; 'c' to show full command
+
+# Check load by process and thread
+pidstat -u 1 5  # CPU usage per process, 5 samples 1 second apart
+
+# Find zombie processes
+ps aux | awk '$8 == &quot;Z&quot;'
+
+# Check process open files (useful for &quot;too many open files&quot; errors)
+lsof -p &lt;pid&gt; | wc -l
+ulimit -n  # current open file limit
+</code></pre>
+<hr />
+<h2 id="memory-troubleshooting">Memory Troubleshooting<a class="headerlink" href="#memory-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Detailed memory breakdown
+cat /proc/meminfo
+
+# Check OOM (Out of Memory) killer events
+journalctl -k | grep -i &quot;oom\|killed process&quot;
+dmesg | grep -i &quot;oom\|killed process&quot;
+
+# Check which process the OOM killer targeted
+dmesg | grep -i &quot;out of memory&quot; | tail -10
+
+# Drop caches if available memory is low (safe on production — does not affect file data)
+echo 3 &gt; /proc/sys/vm/drop_caches
+</code></pre>
+<hr />
+<h2 id="network-operations">Network Operations<a class="headerlink" href="#network-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check interface state and IP addresses
+ip addr show
+ip link show
+
+# Check routing table
+ip route show
+ip route get &lt;destination-ip&gt;  # shows which interface and gateway would be used
+
+# Check listening ports and connections
+ss -tlnp   # TCP listeners
+ss -unlp   # UDP listeners
+ss -tnp    # established TCP connections with PID
+
+# Test connectivity
+ping -c 4 &lt;host&gt;
+traceroute &lt;host&gt;
+curl -v --max-time 5 http://&lt;host&gt;  # test HTTP reachability
+
+# Check DNS resolution
+dig &lt;hostname&gt;
+dig @&lt;dns-server-ip&gt; &lt;hostname&gt;
+nslookup &lt;hostname&gt; &lt;dns-server-ip&gt;
+
+# Check firewalld rules (RHEL)
+firewall-cmd --list-all
+firewall-cmd --list-services
+
+# Check iptables directly
+iptables -L -n -v
+</code></pre>
+<hr />
+<h2 id="log-investigation">Log Investigation<a class="headerlink" href="#log-investigation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Search journal for a specific service over a time range
+journalctl -u sshd --since &quot;2024-01-15 08:00&quot; --until &quot;2024-01-15 09:00&quot; --no-pager
+
+# Follow logs in real time
+journalctl -f
+journalctl -f -u &lt;service&gt;
+
+# Check authentication log (failed/successful logins)
+journalctl -u sshd | grep -E &quot;Failed|Accepted&quot;
+cat /var/log/secure   # RHEL
+cat /var/log/auth.log # Ubuntu/Debian
+
+# Kernel messages (hardware errors, OOM, filesystem errors)
+dmesg -T | tail -50
+dmesg -T | grep -i &quot;error\|warning\|fail&quot;
+</code></pre>
+<hr />
+<h2 id="user-and-access-management">User and Access Management<a class="headerlink" href="#user-and-access-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List logged-in users
+who
+w
+
+# Recent login history
+last | head -20
+lastb | head -20   # failed logins
+
+# Check sudo access for a user
+sudo -l -U &lt;username&gt;
+
+# Lock / unlock a user account
+passwd -l &lt;username&gt;   # lock
+passwd -u &lt;username&gt;   # unlock
+
+# Check account expiry
+chage -l &lt;username&gt;
+
+# Check /etc/sudoers and sudoers.d
+visudo -c   # validate sudoers file
+ls -la /etc/sudoers.d/
+</code></pre>
 
 
 

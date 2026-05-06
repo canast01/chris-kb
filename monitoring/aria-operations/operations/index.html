@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-triage-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Triage Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-review-weekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Review (Weekly)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-n-vm-review-weekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-N VM Review (Weekly)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adapter-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapter Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-collector-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Collector Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monthly-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monthly Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,16 +808,103 @@
 
 
 <h1 id="aria-operations-operations">Aria Operations Operations<a class="headerlink" href="#aria-operations-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operational checks ensure the Aria Operations platform is healthy and collecting data from all monitored endpoints. Review the Active Alerts dashboard each morning and verify cluster node health via Admin &gt; Cluster Management. Confirm all adapters are in a Collecting state under Admin &gt; Solutions, and check disk utilisation on analytics and data nodes to prevent collection gaps. Weekly, generate a capacity report for infrastructure review to surface trending issues before they become incidents.</p>
-<p><strong>Daily Checklist</strong>
-- Review Active Alerts dashboard — triage any Critical or Immediate alerts
-- Admin &gt; Cluster Management — confirm all nodes are Online
-- Admin &gt; Solutions — all adapters show status Collecting
-- Check disk space on analytics and data nodes (alert threshold: 80%)</p>
-<p><strong>Weekly Tasks</strong>
-- Generate Capacity Overview report for infrastructure review meeting
-- Review top-N VMs by CPU/memory contention and escalate if needed
-- Validate Remote Collector connectivity for distributed sites</p>
+<h2 id="daily-checklist">Daily Checklist<a class="headerlink" href="#daily-checklist" title="Permanent link">&para;</a></h2>
+<p>Run through these checks each morning before the ops team stand-up.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Location</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Alerts review</td>
+<td>Dashboards &gt; Active Alerts</td>
+<td>No unacknowledged Critical/Immediate alerts</td>
+</tr>
+<tr>
+<td>Cluster node health</td>
+<td>Admin &gt; Cluster Management</td>
+<td>All nodes show Online</td>
+</tr>
+<tr>
+<td>Adapter collection status</td>
+<td>Admin &gt; Solutions</td>
+<td>All adapters in Collecting state</td>
+</tr>
+<tr>
+<td>Disk usage — analytics nodes</td>
+<td>Admin &gt; Cluster Management &gt; [Node] &gt; Disk</td>
+<td>Below 80% used</td>
+</tr>
+<tr>
+<td>Remote Collector status</td>
+<td>Admin &gt; Environment &gt; Remote Collectors</td>
+<td>All collectors Online</td>
+</tr>
+</tbody>
+</table>
+<p>Any failed check should be raised in the team channel and tracked in the ops log before the stand-up.</p>
+<h2 id="alert-triage-workflow">Alert Triage Workflow<a class="headerlink" href="#alert-triage-workflow" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">1. Open Active Alerts dashboard
+2. Filter by Severity: Critical, Immediate
+3. For each alert:
+   a. Identify affected object (VM, host, cluster, datastore)
+   b. Check Recent Events on the object for correlated changes
+   c. Determine if alert is genuine, transient, or noise:
+      - Genuine: raise incident in ServiceNow
+      - Transient (resolved within threshold period): annotate and close
+      - Noise: review alert definition and adjust threshold or suppression
+4. Acknowledge all reviewed alerts
+5. Add notes to ServiceNow ticket referencing the alert name and object
+</code></pre>
+<h2 id="capacity-review-weekly">Capacity Review (Weekly)<a class="headerlink" href="#capacity-review-weekly" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>Dashboards &gt; INFRA-Capacity-Overview</strong></li>
+<li>Review time-remaining forecasts for CPU, memory, and datastore capacity</li>
+<li>Flag any cluster or datastore showing &lt; 60 days remaining to the capacity planning team</li>
+<li>Download the weekly Capacity Overview report (Reports &gt; Scheduled Reports)</li>
+<li>Share report in the weekly infrastructure review meeting</li>
+</ol>
+<h2 id="top-n-vm-review-weekly">Top-N VM Review (Weekly)<a class="headerlink" href="#top-n-vm-review-weekly" title="Permanent link">&para;</a></h2>
+<p>Navigate to <strong>Dashboards &gt; INFRA-Performance-TopN</strong> or run the Top-N VMs report:</p>
+<ul>
+<li>Top 10 VMs by CPU contention (&gt; 5% sustained)</li>
+<li>Top 10 VMs by memory balloon/swap</li>
+<li>Top 10 VMs by disk latency</li>
+</ul>
+<p>Escalate to application teams for VMs showing sustained contention above threshold.</p>
+<h2 id="adapter-health-checks">Adapter Health Checks<a class="headerlink" href="#adapter-health-checks" title="Permanent link">&para;</a></h2>
+<p>If an adapter shows <strong>Not Receiving Data</strong> or <strong>Error</strong>:</p>
+<pre><code class="language-text">1. Admin &gt; Solutions &gt; [Adapter] &gt; Test Connection
+2. Review adapter logs: Admin &gt; Solutions &gt; [Adapter] &gt; Logs &gt; Download
+3. Common causes:
+   - Credential expired or password rotated: update under Admin &gt; Credentials
+   - vCenter certificate changed: re-trust certificate in adapter settings
+   - Network connectivity: verify TCP 443 from collector to target
+4. If persistent: restart the adapter collection cycle under Solutions &gt; [Adapter] &gt; Start Collection
+</code></pre>
+<h2 id="remote-collector-connectivity">Remote Collector Connectivity<a class="headerlink" href="#remote-collector-connectivity" title="Permanent link">&para;</a></h2>
+<p>Check remote collector health from each distributed site:</p>
+<pre><code class="language-text">Admin &gt; Environment &gt; Remote Collectors
+- Status: Online / Offline
+- Last heartbeat timestamp
+- Assigned adapters
+</code></pre>
+<p>If a Remote Collector goes Offline, check:
+- VM power state
+- Network connectivity (TCP 443 to analytics cluster VIP)
+- Collector service status: log into collector VM and run <code>systemctl status vmware-casa</code></p>
+<h2 id="monthly-tasks">Monthly Tasks<a class="headerlink" href="#monthly-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Generate Monthly Executive Capacity Summary report and distribute</li>
+<li>Review alert noise: identify alert definitions with the highest fire frequency and tune thresholds</li>
+<li>Audit user accounts: Admin &gt; Access Control &gt; User Accounts — remove stale accounts</li>
+<li>Verify management pack versions are current (Admin &gt; Solutions &gt; check each adapter version)</li>
+<li>Review data node disk usage trend — project growth against retention policy</li>
+</ul>
 
 
 

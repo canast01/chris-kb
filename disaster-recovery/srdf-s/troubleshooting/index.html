@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-host-write-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Host Write Latency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-enters-write-disabled-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair Enters Write Disabled State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-in-invalid-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair in Invalid State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-in-split-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair in Split State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-fcip-link-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL / FCIP Link Failure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unintended-failover-during-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unintended Failover During Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,43 +797,115 @@
 
 
 <h1 id="srdfs-troubleshooting">SRDF/S Troubleshooting<a class="headerlink" href="#srdfs-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>SRDF/S issues typically manifest as pair state transitions away from <code>Synchronized</code>, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation directly impacts production host I/O — treat latency increases above 5ms RTT as a storage incident, not purely a network one. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Diagnostic Steps</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pair enters <code>Write Disabled</code></td>
-<td>WAN latency exceeded threshold; write queue backed up</td>
-<td>Check site RTT, review array write pending counts via <code>symcfg list -v</code></td>
-</tr>
-<tr>
-<td>Pair in <code>Invalid</code> state</td>
-<td>Unresolved split from prior failover</td>
-<td>Review last failover event log; run <code>symrdf resync</code> after confirming R1 data validity</td>
-</tr>
-<tr>
-<td>Pair in <code>Split</code> state</td>
-<td>Manual split or link failure</td>
-<td>Check FCIP/ISL link state; determine which side has latest data before re-establishing</td>
-</tr>
-<tr>
-<td>ISL/FCIP link failure</td>
-<td>Physical or FCIP tunnel loss</td>
-<td>Verify switch ISL counters, FCIP session state; escalate to network team</td>
-</tr>
-<tr>
-<td>Unintended failover during maintenance</td>
-<td>Maintenance window not declared; monitors fired</td>
-<td>Always suspend SRDF monitoring and set pair to <code>Suspended</code> before array maintenance</td>
-</tr>
-</tbody>
-</table>
+<blockquote>
+<p>Part of the <a href="../">SRDF/S</a> reference.</p>
+</blockquote>
+<p>SRDF/S issues typically manifest as pair state transitions away from <code>Synchronized</code>, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation <strong>directly impacts production write latency</strong> — treat RTT increases above 5ms as a storage incident, not purely a network event.</p>
+<p>Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
+<hr />
+<h2 id="high-host-write-latency">High Host Write Latency<a class="headerlink" href="#high-host-write-latency" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Applications report write slowness; storage latency exceeds baseline; no hardware alerts.</p>
+<pre><code class="language-bash"># Check current SRDF link RTT and write pending counts
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v | grep -E &quot;RTT\|Pending\|Link&quot;
+
+# Check write latency per device
+symdev -sid &lt;r1_sid&gt; show &lt;dev_id&gt; | grep -E &quot;Write|Response&quot;
+
+# Check array performance overview in Unisphere
+# Performance → Directors → SRDF directors → check write pending
+</code></pre>
+<p><strong>Root cause:</strong> Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.</p>
+<p><strong>Immediate action:</strong>
+1. Get the current RTT from the network team — compare to the baseline measured at deployment.
+2. If RTT has spiked, check for WAN link congestion or routing path changes.
+3. Engage the network team if RTT is elevated — do not accept "the link is up" as resolution; RTT matters.</p>
+<hr />
+<h2 id="pair-enters-write-disabled-state">Pair Enters Write Disabled State<a class="headerlink" href="#pair-enters-write-disabled-state" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>symrdf query</code> shows pair state as <code>Write Disabled</code>; hosts may report I/O errors.</p>
+<p><code>Write Disabled</code> indicates the R1 array could not complete writes to R2 within the write timeout threshold (typically due to RTT spike or link loss). The R1 array disables writes on the affected R1 devices to preserve data consistency.</p>
+<pre><code class="language-bash"># Confirm Write Disabled state
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query | grep &quot;Write Disabled&quot;
+
+# Check for link errors
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v
+</code></pre>
+<p><strong>Recovery:</strong></p>
+<ol>
+<li>Resolve the underlying link or RTT issue first.</li>
+<li>Once the link is stable, re-establish the SRDF pair:</li>
+</ol>
+<pre><code class="language-bash"># Resync from R1 to R2 (R1 data is authoritative in this scenario)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resync -noprompt
+
+# Monitor until pair returns to Synchronized
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+</code></pre>
+<hr />
+<h2 id="pair-in-invalid-state">Pair in <code>Invalid</code> State<a class="headerlink" href="#pair-in-invalid-state" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Pair state shows <code>Invalid</code> — typically after an unresolved split or an earlier failover that was not cleanly restored.</p>
+<pre><code class="language-bash"># Check the event log for the event that caused the Invalid state
+symevent -sid &lt;r1_sid&gt; list -last 30 | grep -i &quot;SRDF\|Invalid\|failover&quot;
+</code></pre>
+<p><strong>Resolution (R1 is authoritative — no real failover occurred):</strong></p>
+<pre><code class="language-bash">symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resync -noprompt
+# Pushes R1 data to R2 and re-establishes sync
+</code></pre>
+<p><strong>Resolution (R2 has the latest data — a real failover occurred):</strong></p>
+<pre><code class="language-bash"># Confirm with application team that R2 has the correct data
+# Then fail back to R1
+symrdf -g &lt;dgname&gt; -sid &lt;r2_sid&gt; failback -noprompt
+</code></pre>
+<p><strong>Do not resync or restore without first confirming which side has the authoritative data.</strong> An incorrect resync will permanently overwrite data.</p>
+<hr />
+<h2 id="pair-in-split-state">Pair in <code>Split</code> State<a class="headerlink" href="#pair-in-split-state" title="Permanent link">&para;</a></h2>
+<p>A <code>Split</code> state means both R1 and R2 are R/W and data is diverging. This is normal during a planned failover but is an incident if unexpected.</p>
+<pre><code class="language-bash"># Check when the split occurred
+symevent -sid &lt;r1_sid&gt; list -last 24h | grep -i &quot;split\|SRDF&quot;
+
+# Identify which side has writes since the split
+symdev -sid &lt;r1_sid&gt; show &lt;dev_id&gt; | grep &quot;Modified&quot;
+symdev -sid &lt;r2_sid&gt; show &lt;dev_id&gt; | grep &quot;Modified&quot;
+</code></pre>
+<p><strong>Never re-establish a split pair without application team sign-off.</strong> Restoring R1 overwrites any R2 writes made during the split period and vice versa.</p>
+<hr />
+<h2 id="isl-fcip-link-failure">ISL / FCIP Link Failure<a class="headerlink" href="#isl-fcip-link-failure" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> SRDF link is down; pairs move to <code>Suspended</code> or <code>Write Disabled</code>.</p>
+<pre><code class="language-bash"># Check SRDF director port state
+symcfg -sid &lt;r1_sid&gt; list -dir all -v | grep -E &quot;RDF|Port|State&quot;
+
+# From SAN switch (Cisco MDS)
+show fcip session
+show port-channel summary  # if using port-channel
+show interface gigabitEthernet X/X
+
+# From Brocade
+portshow &lt;port&gt;
+portcfgshow  # check FCIP port config
+</code></pre>
+<p><strong>Recovery after link restoration:</strong></p>
+<pre><code class="language-bash"># Pair should auto-resume once link is restored (depending on configuration)
+# If pairs remain Suspended, manually resume:
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+
+# Verify Synchronized state is reached (may take time to fully sync)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+</code></pre>
+<hr />
+<h2 id="unintended-failover-during-maintenance">Unintended Failover During Maintenance<a class="headerlink" href="#unintended-failover-during-maintenance" title="Permanent link">&para;</a></h2>
+<p><strong>Cause:</strong> Maintenance was performed without declaring a maintenance window; SRDF monitors triggered automatic protection responses.</p>
+<p><strong>Prevention:</strong></p>
+<pre><code class="language-bash"># Before any maintenance that touches SRDF links, directors, or the arrays:
+# Step 1 — Suspend SRDF/S pair (converts to async temporarily)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
+
+# Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration
+
+# Step 3 — Perform maintenance
+
+# Step 4 — Resume and verify Synchronized state before re-enabling monitoring
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+</code></pre>
 
 
 

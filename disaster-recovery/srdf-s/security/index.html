@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#solutions-enabler-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solutions Enabler RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-accidental-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing Accidental Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fcip-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FCIP Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-fabric-zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Fabric Zoning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-api-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management API Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +797,94 @@
 
 
 <h1 id="srdfs-security">SRDF/S Security<a class="headerlink" href="#srdfs-security" title="Permanent link">&para;</a></h1>
-<p>Solutions Enabler RBAC controls which users and service accounts can execute SRDF operations; failover and resync commands should be restricted to a dedicated DR-operator role, separate from read-only monitoring accounts. SRDF/S port security is enforced via FCIP encryption (AES-256) and hard zoning on the FC fabric to prevent unauthorised array-to-array communication. All failover events generate entries in the array audit log, which must be retained for compliance purposes and forwarded to the SIEM.</p>
+<h2 id="solutions-enabler-rbac">Solutions Enabler RBAC<a class="headerlink" href="#solutions-enabler-rbac" title="Permanent link">&para;</a></h2>
+<p>Control who can execute SRDF failover and resync operations:</p>
+<pre><code class="language-bash"># List current user roles
+symauth -sid &lt;SID&gt; list
+
+# Add DR operator role — failover-capable, scoped to specific SRDF groups
+symauth -sid &lt;SID&gt; add -username svc_dr_ops -role StorageAdmin -scope rdfg:&lt;group_number&gt;
+
+# Add monitoring account — read-only
+symauth -sid &lt;SID&gt; add -username svc_monitoring -role StorageMonitor
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Allowed Commands</th>
+<th>Prohibited Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StorageAdmin</code></td>
+<td>symrdf failover, establish, split, suspend, set mode</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>StorageMonitor</code></td>
+<td>symrdf query, symcfg list</td>
+<td>All state-changing ops</td>
+</tr>
+</tbody>
+</table>
+<p>Never assign <code>StorageAdmin</code> to automated monitoring or backup accounts.</p>
+<h2 id="preventing-accidental-failover">Preventing Accidental Failover<a class="headerlink" href="#preventing-accidental-failover" title="Permanent link">&para;</a></h2>
+<p>SRDF/S failovers are zero-data-loss but cause site-wide impact. Guard against accidental execution:</p>
 <ul>
-<li><strong>RBAC roles</strong>: <code>StorageAdmin</code> (failover), <code>StorageMonitor</code> (read-only); never use root/admin for automation.</li>
-<li><strong>FCIP encryption</strong>: Enabled per SRDF group; verify with <code>symcfg list -rdfg -v | grep Encrypt</code>.</li>
-<li><strong>Fabric zoning</strong>: Hard zoning by WWPN between SRDF director ports; no soft-zone aliases for SRDF ports.</li>
-<li><strong>Management access</strong>: Solutions Enabler API gated by certificate-based auth; rotate service account credentials every 90 days.</li>
-<li><strong>Audit log forwarding</strong>: Array event log → syslog → SIEM; alert on <code>SRDF Failover</code> and <code>SRDF Split</code> event types.</li>
+<li>Require second-factor confirmation for <code>symrdf failover</code> in production:
+  <code>bash
+  export SYMCLI_CONFIRM=prompt    # Requires manual y/n before executing</code></li>
+<li>Implement a two-person rule: all production SRDF failovers require peer approval before execution</li>
+<li>Restrict <code>symrdf establish -full</code> (full resync) to break-glass account — this destroys R2 content</li>
 </ul>
+<h2 id="fcip-encryption">FCIP Encryption<a class="headerlink" href="#fcip-encryption" title="Permanent link">&para;</a></h2>
+<p>SRDF/E encrypts data over FCIP links using AES-256:</p>
+<pre><code class="language-bash"># Check encryption status per SRDF group
+symcfg list -rdfg -v | grep -E &quot;RDF Group|Encryption&quot;
+
+# Enable encryption on an existing group (requires group to be in Split state)
+symrdf -g &lt;rdfg&gt; split -noprompt
+symrdf -g &lt;rdfg&gt; set encrypt enable
+symrdf -g &lt;rdfg&gt; establish -noprompt
+</code></pre>
+<h2 id="fc-fabric-zoning">FC Fabric Zoning<a class="headerlink" href="#fc-fabric-zoning" title="Permanent link">&para;</a></h2>
+<p>SRDF director ports must be hard-zoned to prevent unauthorised array-to-array communication:</p>
+<ul>
+<li>Create dedicated SRDF zones containing only the SRDF director port WWPNs of the two arrays</li>
+<li>No other initiators/targets in SRDF zones</li>
+<li>Use hard zoning (WWPN-based) — soft zone aliases are acceptable for documentation only</li>
+<li>Zone naming: <code>SRDF_&lt;source_array_port&gt;_&lt;target_array_port&gt;</code></li>
+</ul>
+<p>Verify SRDF director port WWPNs:</p>
+<pre><code class="language-bash">symcfg list -rdfg &lt;rdfg&gt; -v | grep &quot;Director&quot;
+</code></pre>
+<h2 id="management-api-security">Management API Security<a class="headerlink" href="#management-api-security" title="Permanent link">&para;</a></h2>
+<p>The Unisphere REST API should be secured:</p>
+<ul>
+<li>Enable HTTPS only (disable HTTP on port 8080)</li>
+<li>Use client certificate authentication for service accounts</li>
+<li>Scope API accounts to minimum required capabilities</li>
+<li>Rotate service account certificates annually</li>
+</ul>
+<p>Verify TLS configuration:</p>
+<pre><code class="language-bash">curl -k https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
+# Production systems should use trusted CA cert (remove -k flag)
+</code></pre>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>All SRDF state changes are recorded in the PowerMax audit log:</p>
+<pre><code class="language-bash"># View recent RDF events
+symevent list -sid &lt;SID&gt; -type rdf -last 100
+
+# Export for SIEM ingest
+symevent list -sid &lt;SID&gt; -type rdf -output csv &gt; /tmp/rdf_events.csv
+</code></pre>
+<p>Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM. Alert on:
+- <code>SRDF Split</code> outside maintenance windows
+- <code>SRDF Failover</code> (any occurrence)
+- <code>SRDF Suspend</code> without corresponding maintenance ticket
+- <code>SRDF Invalid</code> (indicates device state inconsistency)</p>
 
 
 

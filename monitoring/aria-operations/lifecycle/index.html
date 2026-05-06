@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-procedure-via-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedure via LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-retention-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Retention Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-pack-version-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Pack Version Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +819,117 @@
 
 
 <h1 id="aria-operations-lifecycle">Aria Operations Lifecycle<a class="headerlink" href="#aria-operations-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Aria Operations follows VMware's standard product lifecycle, with upgrades delivered and orchestrated via Aria Suite Lifecycle Manager (LCM) — manual upgrades outside LCM are not supported in multi-node deployments. The default data retention period is 6 months; extending it requires additional data node capacity. Management pack compatibility must be verified against the target Aria Operations version before upgrade. EOL dates are tracked in the Broadcom Product Lifecycle Matrix.</p>
+<h2 id="upgrade-overview">Upgrade Overview<a class="headerlink" href="#upgrade-overview" title="Permanent link">&para;</a></h2>
+<p>All Aria Operations upgrades in multi-node deployments must be orchestrated via <strong>Aria Suite Lifecycle Manager (LCM)</strong>. Manual in-place upgrades on multi-node clusters are not supported and can leave the cluster in an inconsistent state.</p>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Review the <a href="https://interopmatrix.vmware.com">VMware Product Interoperability Matrix</a> to confirm the target Aria Operations version is compatible with the current vCenter, NSX, and management pack versions.</li>
+<li>Verify all management pack versions have a compatible release for the target Aria Operations version.</li>
+<li>Take a snapshot of the primary analytics node (and replica) before starting.</li>
+<li>Confirm available disk space on all nodes: LCM requires headroom during upgrade staging.</li>
+<li>Download the upgrade bundle to LCM from My VMware / Broadcom Support Portal.</li>
+<li>Notify operations team — collection may pause briefly during upgrade window.</li>
+</ol>
+<h2 id="upgrade-procedure-via-lcm">Upgrade Procedure via LCM<a class="headerlink" href="#upgrade-procedure-via-lcm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">1. Log into Aria Suite Lifecycle Manager
+2. Navigate to Environments &gt; [Your Environment]
+3. Select Aria Operations product tile
+4. Click Upgrade — select the downloaded product bundle
+5. LCM validates compatibility and pre-checks; resolve any failures before proceeding
+6. Confirm upgrade — LCM performs rolling node upgrade (replica first, then primary)
+7. Verify all nodes are Online in Admin &gt; Cluster Management post-upgrade
+8. Verify all adapters are Collecting in Admin &gt; Solutions
+</code></pre>
+<h2 id="vcenter-version-compatibility">vCenter Version Compatibility<a class="headerlink" href="#vcenter-version-compatibility" title="Permanent link">&para;</a></h2>
+<p>Always check the Interoperability Matrix before a vCenter upgrade, as newer vCenter versions may require a corresponding Aria Operations upgrade.</p>
 <table>
 <thead>
 <tr>
-<th>Activity</th>
-<th>Tool / Method</th>
+<th>Aria Operations Version</th>
+<th>Minimum vCenter Supported</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Upgrade</td>
-<td>Aria Suite Lifecycle Manager (LCM)</td>
+<td>8.16</td>
+<td>vCenter 7.0 U3+</td>
 </tr>
 <tr>
-<td>Node expansion</td>
-<td>LCM scale-out wizard</td>
+<td>8.14</td>
+<td>vCenter 7.0 U2+</td>
 </tr>
 <tr>
-<td>Data retention config</td>
-<td>Admin &gt; Global Settings &gt; Retention</td>
-</tr>
-<tr>
-<td>Management pack updates</td>
-<td>Admin &gt; Solutions &gt; Upgrade</td>
-</tr>
-<tr>
-<td>EOL tracking</td>
-<td>Broadcom Product Lifecycle Matrix</td>
-</tr>
-<tr>
-<td>Version compatibility</td>
-<td>VMware Interoperability Matrix</td>
+<td>8.12</td>
+<td>vCenter 7.0+</td>
 </tr>
 </tbody>
 </table>
+<p>Check the current Broadcom Interoperability Matrix for the latest version pairings.</p>
+<h2 id="data-retention-configuration">Data Retention Configuration<a class="headerlink" href="#data-retention-configuration" title="Permanent link">&para;</a></h2>
+<p>Navigate to <strong>Admin &gt; Global Settings &gt; Retention Policy</strong> to configure retention periods. Changes to retention that reduce the period will trigger a data purge.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metrics retention</td>
+<td>6 months</td>
+<td>Increase requires additional data node storage</td>
+</tr>
+<tr>
+<td>Policy data history</td>
+<td>6 months</td>
+<td>Matched to metrics retention</td>
+</tr>
+<tr>
+<td>Events/alerts history</td>
+<td>6 months</td>
+<td>Configurable independently</td>
+</tr>
+</tbody>
+</table>
+<h2 id="management-pack-version-management">Management Pack Version Management<a class="headerlink" href="#management-pack-version-management" title="Permanent link">&para;</a></h2>
+<p>Management packs have their own version lifecycle, independent of the Aria Operations platform version. Steps to update a management pack:</p>
+<pre><code class="language-text">1. Admin &gt; Solutions &gt; [Select Solution]
+2. Click Upgrade — upload new management pack PAK file
+3. Verify adapter instances reconnect successfully after upgrade
+4. Review adapter logs for errors (Admin &gt; Solutions &gt; [Adapter] &gt; Logs)
+</code></pre>
+<h2 id="backup">Backup<a class="headerlink" href="#backup" title="Permanent link">&para;</a></h2>
+<p>Aria Operations does not have a native backup tool. Use the following:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>What is Backed Up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM snapshot (via vCenter)</td>
+<td>Full appliance state — use before upgrades, not for operational backup</td>
+</tr>
+<tr>
+<td>File-level backup agent</td>
+<td>PostgreSQL data files + config (requires LCM configuration)</td>
+</tr>
+<tr>
+<td>LCM backup</td>
+<td>LCM configuration and product manifests</td>
+</tr>
+</tbody>
+</table>
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Broadcom Product Lifecycle Matrix: <a href="https://lifecycle.broadcom.com">lifecycle.broadcom.com</a></li>
+<li>Aria Suite Lifecycle Manager — check installed product versions against the matrix quarterly</li>
+<li>Aim to be no more than one major version behind the current release</li>
+</ul>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,119 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudiq-scg-inbound-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudIQ / SCG (Inbound Telemetry)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-itsm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow ITSM Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ServiceNow ITSM Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webhook-based-auto-ticketing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook-Based Auto-Ticketing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-and-webhook-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email and Webhook Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siem-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIEM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +836,58 @@
 
 
 <h1 id="dell-aiops-integration">Dell AIOps Integration<a class="headerlink" href="#dell-aiops-integration" title="Permanent link">&para;</a></h1>
-<p>CloudIQ is the primary telemetry source for Dell AIOps — all Dell storage systems must be registered in CloudIQ and reporting via the Secure Connect Gateway. ServiceNow integration creates change requests or incidents for high-priority AI recommendations, enabling ITSM workflow management. Aria Operations integration via the Dell CloudIQ management pack correlates storage health and anomaly data with VMware workload performance for end-to-end visibility. Email and webhook notifications are configured in CloudIQ for immediate alerting on Critical recommendations.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps is integrated into the broader operational toolchain via CloudIQ's notification and API layers. All telemetry flows inbound through the Secure Connect Gateway; alerts and recommendations flow outbound to ITSM, notification, and observability platforms.</p>
+<h2 id="cloudiq-scg-inbound-telemetry">CloudIQ / SCG (Inbound Telemetry)<a class="headerlink" href="#cloudiq-scg-inbound-telemetry" title="Permanent link">&para;</a></h2>
+<p>All Dell storage systems must be registered in CloudIQ via the SCG. This is the prerequisite for all AIOps capabilities — without SCG-connected telemetry, AIOps has no data source.</p>
+<pre><code class="language-text">Verify collection status:
+CloudIQ portal &gt; Assets &gt; [System] — check &quot;Last Seen&quot; timestamp
+SCG admin UI &gt; Systems &gt; [System] &gt; Connection Status
+</code></pre>
+<h2 id="servicenow-itsm-integration">ServiceNow ITSM Integration<a class="headerlink" href="#servicenow-itsm-integration" title="Permanent link">&para;</a></h2>
+<p>AIOps generates recommendations that may require infrastructure changes. ServiceNow integration automates incident and change request creation.</p>
+<h3 id="webhook-based-auto-ticketing">Webhook-Based Auto-Ticketing<a class="headerlink" href="#webhook-based-auto-ticketing" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
+- Trigger: Recommendation Severity = Critical OR High
+- Action: Webhook to ServiceNow
+- URL: https://&lt;instance&gt;.service-now.com/api/now/table/change_request
+- Auth: Basic Auth or OAuth token (service account: svc-cloudiq-snow)
+- Payload:
+  {
+    &quot;short_description&quot;: &quot;Dell AIOps {{recommendation.severity}}: {{recommendation.title}}&quot;,
+    &quot;description&quot;: &quot;System: {{system.name}}\nRecommendation: {{recommendation.description}}\nCloudIQ ID: {{recommendation.id}}&quot;,
+    &quot;category&quot;: &quot;Storage&quot;,
+    &quot;assignment_group&quot;: &quot;storage-ops&quot;
+  }
+</code></pre>
+<p>For Critical recommendations, target the <strong>incident</strong> table rather than change_request for immediate response.</p>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The Dell CloudIQ management pack for Aria Operations pulls AIOps health score and recommendation data into vROps, enabling correlated VMware + Dell storage views.</p>
+<pre><code class="language-text">Aria Operations &gt; Admin &gt; Solutions &gt; Dell CloudIQ Management Pack
+- API URL: https://api.cloudiq.dell.com
+- Client ID / Secret: (from CloudIQ API client — read-only)
+- Collection interval: 15 minutes
+</code></pre>
+<p>This integration allows correlating VM workload contention in Aria Operations with storage anomalies detected by Dell AIOps, enabling end-to-end root cause analysis across the VMware + Dell stack.</p>
+<h2 id="email-and-webhook-notifications">Email and Webhook Notifications<a class="headerlink" href="#email-and-webhook-notifications" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text"># Critical recommendations → PagerDuty
+CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-Critical
+- Trigger: Recommendation Severity = Critical
+- Action: Webhook (PagerDuty Events API v2)
+
+# High recommendations → Email + Teams
+CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-High
+- Trigger: Recommendation Severity = High
+- Action: Email (storage-ops@company.com) + Webhook (Teams channel)
+</code></pre>
+<h2 id="siem-integration">SIEM Integration<a class="headerlink" href="#siem-integration" title="Permanent link">&para;</a></h2>
+<p>AIOps audit events are available from the CloudIQ audit log. Export to SIEM for long-term retention and correlation with security events.</p>
+<pre><code class="language-text"># Automated audit log export (weekly):
+GET https://api.cloudiq.dell.com/cloudiq/rest/v1/audit-logs?filter=created_at gt &lt;timestamp&gt;
+Authorization: Bearer &lt;token&gt;
+</code></pre>
+<p>Forward the export to Splunk or Elastic via the existing log pipeline.</p>
+<h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -738,7 +900,7 @@
 <tr>
 <td>CloudIQ / SCG</td>
 <td>Inbound</td>
-<td>Storage telemetry and health data</td>
+<td>Storage telemetry and health data source</td>
 </tr>
 <tr>
 <td>ServiceNow ITSM</td>
@@ -756,12 +918,29 @@
 <td>Critical/High recommendation alerts</td>
 </tr>
 <tr>
-<td>Webhook (Teams/Slack)</td>
+<td>PagerDuty</td>
+<td>Outbound</td>
+<td>Critical recommendation on-call paging</td>
+</tr>
+<tr>
+<td>Teams / Slack Webhook</td>
 <td>Outbound</td>
 <td>Real-time recommendation notifications</td>
 </tr>
+<tr>
+<td>SIEM (Splunk/Elastic)</td>
+<td>Outbound</td>
+<td>Audit log forwarding for compliance</td>
+</tr>
 </tbody>
 </table>
+<h2 id="integration-health-checks">Integration Health Checks<a class="headerlink" href="#integration-health-checks" title="Permanent link">&para;</a></h2>
+<p>Verify all integrations are functional as part of the monthly ops review:</p>
+<pre><code class="language-text">- ServiceNow: trigger a test notification and confirm ticket creation
+- PagerDuty: verify the integration key is current and test alert fires correctly
+- Aria Operations CloudIQ MP: confirm adapter is in Collecting state
+- SIEM: confirm audit log export job completed successfully
+</code></pre>
 
 
 

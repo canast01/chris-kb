@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-site-recovery-manager-srm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Site Recovery Manager (SRM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-unisphere-and-srdfa-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell Unisphere and SRDF/A Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-for-storage-powermax-management-pack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations for Storage (PowerMax Management Pack)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-from-r2-srdfa-offload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup from R2 (SRDF/A Offload)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recoverpoint-co-existence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RecoverPoint Co-existence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#symcli-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SYMCLI Integration Points
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,86 @@
 
 
 <h1 id="srdfa-integration">SRDF/A Integration<a class="headerlink" href="#srdfa-integration" title="Permanent link">&para;</a></h1>
-<p>SRDF/A integrates with VMware Site Recovery Manager via the Dell EMC Storage Replication Adapter (SRA), enabling automated failover orchestration of SRDF-protected datastores. Aria Operations for Storage includes a PowerMax management pack that surfaces SRDF health, lag, and cycle state metrics. RecoverPoint can co-exist on the same PowerMax array using separate device groups, provided port zoning and volume assignments do not overlap.</p>
+<blockquote>
+<p>Part of the <a href="../">SRDF/A</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="vmware-site-recovery-manager-srm">VMware Site Recovery Manager (SRM)<a class="headerlink" href="#vmware-site-recovery-manager-srm" title="Permanent link">&para;</a></h2>
+<p>SRDF/A integrates with VMware SRM via the <strong>Dell EMC Storage Replication Adapter (SRA)</strong>, enabling automated orchestration of SRDF failover as part of SRM Recovery Plans.</p>
+<p><strong>Setup steps:</strong></p>
+<ol>
+<li>Install the Dell SRA on both protected-site and recovery-site SRM servers.</li>
+<li>In SRM, configure the array manager on both sites by providing PowerMax Unisphere credentials.</li>
+<li>SRM discovers SRDF groups via the SRA and lists available replicated datastores.</li>
+<li>Create <strong>Protection Groups</strong> in SRM — map each SRDF device group to an SRM protection group.</li>
+<li>Create a <strong>Recovery Plan</strong> that defines the power-on order, IP customisation rules, and pre/post scripts.</li>
+<li>Run <strong>Test Failover</strong> (non-disruptive — SRM creates a temporary snapshot on R2 and powers on VMs in a test bubble network).</li>
+</ol>
+<p><strong>Key operational notes:</strong></p>
 <ul>
-<li><strong>VMware SRM + Dell SRA</strong>: Register SRA on both SRM servers; map SRDF groups to SRM protection groups.</li>
-<li><strong>Aria Operations</strong>: PowerMax management pack provides SRDF/A lag alerts and consistency group dashboards.</li>
-<li><strong>RecoverPoint co-existence</strong>: Segregate RecoverPoint journal volumes from SRDF device groups.</li>
-<li><strong>DataDomain/backup integration</strong>: Target site SRDF replicas can be mounted read-only for backup offload using <code>symrdf -type R2</code> device access.</li>
+<li>SRM test failover uses SnapVX on the R2 devices — ensure SnapVX capacity exists on the DR array.</li>
+<li>SRM and SRDF/A must agree on which SRDF groups are protected — do not add or remove devices from an SRDF group while an SRM protection group references it without updating SRM.</li>
+<li>SRDF group suspension during maintenance should be coordinated with SRM — SRM health checks will alarm if the SRDF pair state is not "Consistent" or "Synchronized."</li>
 </ul>
+<hr />
+<h2 id="dell-unisphere-and-srdfa-monitoring">Dell Unisphere and SRDF/A Monitoring<a class="headerlink" href="#dell-unisphere-and-srdfa-monitoring" title="Permanent link">&para;</a></h2>
+<p>Unisphere for PowerMax provides the primary monitoring interface for SRDF/A health:</p>
+<ul>
+<li><strong>Storage → Replication → SRDF Groups</strong> — shows pair state, cycle time, and delta mark count per group.</li>
+<li><strong>Performance → SRDF</strong> — historical bandwidth and latency metrics.</li>
+<li><strong>Alerts</strong> — configure threshold alerts for:</li>
+<li>Cycle time exceeding the RPO target (e.g., &gt; 60s for a 30s cycle target)</li>
+<li>Delta mark count growing (indicates link cannot keep pace with writes)</li>
+<li>Pair state moving to Transmit Idle or Suspended</li>
+</ul>
+<hr />
+<h2 id="aria-operations-for-storage-powermax-management-pack">Aria Operations for Storage (PowerMax Management Pack)<a class="headerlink" href="#aria-operations-for-storage-powermax-management-pack" title="Permanent link">&para;</a></h2>
+<p>The Dell PowerMax management pack for Aria Operations surfaces SRDF/A metrics directly in the Aria dashboard:</p>
+<ul>
+<li>SRDF group health (consistent / degraded / failed)</li>
+<li>RPO lag in seconds</li>
+<li>Delta set queue depth</li>
+<li>WAN link utilisation</li>
+</ul>
+<p>Configure alerts in Aria to page on-call when the SRDF/A lag exceeds the agreed RPO threshold.</p>
+<hr />
+<h2 id="backup-from-r2-srdfa-offload">Backup from R2 (SRDF/A Offload)<a class="headerlink" href="#backup-from-r2-srdfa-offload" title="Permanent link">&para;</a></h2>
+<p>Rather than running backup agents against production (R1) volumes, backups can be taken from R2 (DR site) to avoid production I/O impact.</p>
+<p><strong>Approach using SnapVX on R2:</strong></p>
+<pre><code class="language-bash"># Create a consistent snapshot of all R2 devices in the device group
+symsnap -g &lt;dgname&gt; -sid &lt;r2_sid&gt; establish -name BACKUP_&lt;date&gt;
+
+# Mount the snapshot on a backup host (using symclone or direct mount)
+# Run the backup from the mounted snapshot
+# Terminate the snapshot after backup completes
+symsnap -g &lt;dgname&gt; -sid &lt;r2_sid&gt; terminate -name BACKUP_&lt;date&gt;
+</code></pre>
+<p>This pattern ensures production I/O is not affected by backup processing and provides a consistent point-in-time copy independent of the SRDF/A cycle boundary.</p>
+<p><strong>Important:</strong> Confirm the R2 SRDF/A pair is in a consistent state before creating the snapshot — taking a snapshot mid-cycle may capture a transitional state.</p>
+<hr />
+<h2 id="recoverpoint-co-existence">RecoverPoint Co-existence<a class="headerlink" href="#recoverpoint-co-existence" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint (RP) journaling and SRDF/A can co-exist on the same PowerMax array provided:</p>
+<ul>
+<li>RecoverPoint journal volumes are <strong>not in the same SRDF device groups</strong> as SRDF/A volumes.</li>
+<li>RP-protected LUNs use separate SRDF groups if they also require SRDF replication (cascaded protection).</li>
+<li>Zone isolation prevents RP I/O splitters from interfering with SRDF director ports.</li>
+</ul>
+<p>Consult Dell Professional Services before deploying RecoverPoint and SRDF/A on the same array if the configuration is non-trivial.</p>
+<hr />
+<h2 id="symcli-integration-points">SYMCLI Integration Points<a class="headerlink" href="#symcli-integration-points" title="Permanent link">&para;</a></h2>
+<p>SRDF/A can be scripted via SYMCLI for automated pre/post hooks in SRM and DR runbooks:</p>
+<pre><code class="language-bash"># Query all SRDF/A pairs for a device group
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+
+# Suspend SRDF/A before maintenance (pre-hook in SRM custom scripts)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
+
+# Resume after maintenance (post-hook)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+
+# Verify pair state after resume before confirming maintenance complete
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; verify -consistent
+</code></pre>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-layer-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Layer (vSAN)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Plane
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lifecycle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +808,146 @@
 
 
 <h1 id="vxrail-architecture">VxRail Architecture<a class="headerlink" href="#vxrail-architecture" title="Permanent link">&para;</a></h1>
-<p>VxRail is a hyper-converged appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN, where each node contributes compute, flash cache, and NVMe capacity storage to a unified cluster managed by VxRail Manager. Cluster topology supports 3 to 64 nodes with optional dedicated management domain nodes, and NSX-T handles software-defined networking across the fabric. VxRail Manager runs as a VM on the cluster itself and communicates with vCenter to orchestrate all lifecycle and configuration operations.</p>
+<blockquote>
+<p>Part of the <a href="../">VxRail</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Each node contributes local compute (CPU, RAM), NVMe flash cache, and capacity storage to a unified cluster. VxRail Manager orchestrates all lifecycle and configuration operations by communicating with vCenter.</p>
+<p>VxRail is sold exclusively as a pre-configured appliance and is managed as a system — firmware updates, vSphere upgrades, and vSAN configuration changes all go through the VxRail Manager lifecycle workflow, not independently.</p>
+<hr />
+<h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum cluster size</td>
+<td>3 nodes (FTT=1 vSAN RAID-1 or RAID-5 with 4+ nodes)</td>
+</tr>
+<tr>
+<td>Maximum cluster size</td>
+<td>64 nodes</td>
+</tr>
+<tr>
+<td>Node types</td>
+<td>All-flash, NVMe, hybrid (spinning + cache tier)</td>
+</tr>
+<tr>
+<td>Dedicated management nodes</td>
+<td>Optional — separate nodes for vCenter and management VMs</td>
+</tr>
+<tr>
+<td>Stretched cluster</td>
+<td>2 data sites + 1 witness; requires stretched vSAN</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="node-components">Node Components<a class="headerlink" href="#node-components" title="Permanent link">&para;</a></h2>
+<p>Each VxRail node is a PowerEdge server with:
+- CPU: Intel Xeon Scalable (generation dependent on appliance model)
+- RAM: Configurable per node SKU (256GB–6TB per node for high-end)
+- Cache tier: NVMe or SSD dedicated for vSAN cache
+- Capacity tier: NVMe or SSD for vSAN persistent storage
+- Network: Dual-port 10/25GbE or 100GbE (configurable per SKU)
+- Management: Dedicated iDRAC port</p>
+<hr />
+<h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
+<p>VxRail uses separate VMkernel adapters for each traffic type, typically on dedicated VLANs:</p>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>VMkernel</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>vmk0</td>
+<td>ESXi management, vCenter communication</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>vmk1</td>
+<td>Live VM migration between nodes</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>vmk2</td>
+<td>vSAN storage traffic between nodes</td>
+</tr>
+<tr>
+<td>VxRail Management</td>
+<td>vmk3</td>
+<td>VxRail Manager internal communication</td>
+</tr>
+<tr>
+<td>VM traffic</td>
+<td>Portgroups</td>
+<td>VM network connectivity (NSX overlay or standard VLANs)</td>
+</tr>
+</tbody>
+</table>
+<p>VxRail initially supports VDS (vSphere Distributed Switch) — all network configuration is managed through the VDS, not individual host vSwitches.</p>
+<hr />
+<h2 id="storage-layer-vsan">Storage Layer (vSAN)<a class="headerlink" href="#storage-layer-vsan" title="Permanent link">&para;</a></h2>
+<p>vSAN uses all nodes' local storage pooled into a distributed datastore:</p>
 <ul>
-<li><strong>Cluster size:</strong> 3–64 nodes (minimum 3 for FTT=1 vSAN policy)</li>
-<li><strong>Node roles:</strong> All-flash, hybrid, or NVMe; optional dedicated management nodes</li>
-<li><strong>Networking:</strong> Management, vMotion, vSAN, and VM traffic on separate VLANs</li>
-<li><strong>Storage:</strong> vSAN distributed datastore across all participating nodes</li>
-<li><strong>Management plane:</strong> VxRail Manager (appliance VM) + embedded vCenter or external vCenter</li>
+<li><strong>Disk groups:</strong> Each node has one or more disk groups (1 cache device + 1–7 capacity devices)</li>
+<li><strong>Storage policy:</strong> VMs are assigned a storage policy (FTT=1 for 1 failure tolerance, FTT=2 for 2)</li>
+<li><strong>Deduplication and compression:</strong> Optional cluster-wide; reduces effective capacity for deduplicated workloads</li>
+<li><strong>Encryption:</strong> vSAN data-at-rest encryption via external KMS integration (optional)</li>
 </ul>
+<p>vSAN Express Storage Architecture (ESA) is available on newer VxRail models — uses a single-tier NVMe design with improved performance and a simplified disk group model.</p>
+<hr />
+<h2 id="management-plane">Management Plane<a class="headerlink" href="#management-plane" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail Manager</td>
+<td>VM running on the cluster itself</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>Can be embedded (runs on VxRail) or external</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>External deployment recommended for production</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>External; connects via VxRail management pack</td>
+</tr>
+</tbody>
+</table>
+<p><strong>VxRail Manager</strong> runs as an appliance VM and communicates with:
+- Dell iDRAC for hardware health
+- vCenter for cluster inventory and lifecycle operations
+- Dell SRS/SupportAssist for automatic SR creation on hardware faults</p>
+<hr />
+<h2 id="lifecycle-management">Lifecycle Management<a class="headerlink" href="#lifecycle-management" title="Permanent link">&para;</a></h2>
+<p>All upgrades (vSphere, vSAN, VxRail Manager, firmware) are coordinated through VxRail Manager's <strong>LCM (Lifecycle Management)</strong> workflow:</p>
+<ol>
+<li>Upload the VxRail Composite Bundle (contains matched versions of all components) to VxRail Manager.</li>
+<li>VxRail Manager validates compatibility and generates an upgrade plan.</li>
+<li>Upgrade executes node-by-node (rolling update), placing each node in maintenance mode, upgrading, and then exiting maintenance before moving to the next.</li>
+<li>Full cluster upgrade time scales with number of nodes and workload evacuation time.</li>
+</ol>
+<p><strong>Never upgrade vSphere, vSAN, or firmware independently on VxRail</strong> — all component versions must remain within the tested and certified VxRail bundle matrix.</p>
 
 
 

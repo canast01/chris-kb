@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-platform-integrations-inbound-via-scg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Platform Integrations (Inbound via SCG)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slack-teams-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slack / Teams Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-access-for-splunk-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Access for Splunk / Grafana
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +819,117 @@
 
 
 <h1 id="cloudiq-integration">CloudIQ Integration<a class="headerlink" href="#cloudiq-integration" title="Permanent link">&para;</a></h1>
-<p>CloudIQ collects telemetry from all Dell platforms via Secure Connect Gateway. External integrations extend CloudIQ data and alerts into broader operational toolsets.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>CloudIQ collects telemetry natively from all Dell platforms via the Secure Connect Gateway. External integrations extend alert delivery and data access into broader operational toolsets including ITSM, observability platforms, and notification systems.</p>
+<h2 id="native-platform-integrations-inbound-via-scg">Native Platform Integrations (Inbound via SCG)<a class="headerlink" href="#native-platform-integrations-inbound-via-scg" title="Permanent link">&para;</a></h2>
+<p>All Dell storage and server platforms are registered in the SCG and data flows automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Connection Method</th>
+<th>Key Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerStore</td>
+<td>REST API from SCG</td>
+<td>Health score, capacity, performance, alerts</td>
+</tr>
+<tr>
+<td>PowerMax / VMAX</td>
+<td>REST API from SCG</td>
+<td>Health score, capacity, SRDF, performance</td>
+</tr>
+<tr>
+<td>PowerScale / Isilon</td>
+<td>REST API from SCG</td>
+<td>Health score, capacity, protocol throughput</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>REST API from SCG</td>
+<td>Health score, capacity, replication status</td>
+</tr>
+<tr>
+<td>Data Domain / PowerProtect</td>
+<td>REST API from SCG</td>
+<td>Dedup ratios, capacity, replication health</td>
+</tr>
+<tr>
+<td>PowerEdge (via iDRAC)</td>
+<td>iDRAC REST API from SCG</td>
+<td>Server health, firmware, hardware faults</td>
+</tr>
+</tbody>
+</table>
+<h2 id="servicenow-integration">ServiceNow Integration<a class="headerlink" href="#servicenow-integration" title="Permanent link">&para;</a></h2>
+<p>CloudIQ can auto-create ServiceNow incidents on CRITICAL alerts via webhook.</p>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook
+- URL: https://&lt;servicenow-instance&gt;/api/now/table/incident
+- Authentication: Basic or OAuth token
+- Payload: map alert object, description, severity to ServiceNow fields
+  {
+    &quot;short_description&quot;: &quot;{{alert.name}} on {{system.name}}&quot;,
+    &quot;severity&quot;: &quot;1&quot;,
+    &quot;assignment_group&quot;: &quot;storage-ops&quot;
+  }
+</code></pre>
+<p>Test the webhook using the <strong>Test Notification</strong> action before enabling in production.</p>
+<h2 id="email-alerts">Email Alerts<a class="headerlink" href="#email-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
+- Trigger: Alert Severity = WARNING
+- Action: Email
+- Recipients: storage-ops@company.com (distribution list)
+- Include: system name, health score, alert description
+</code></pre>
+<p>Separate notification rules for WARNING (email) and CRITICAL (PagerDuty/webhook) are recommended.</p>
+<h2 id="slack-teams-integration">Slack / Teams Integration<a class="headerlink" href="#slack-teams-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook
+- URL: &lt;Teams or Slack incoming webhook URL&gt;
+- Payload example (Teams adaptive card format):
+  {
+    &quot;type&quot;: &quot;message&quot;,
+    &quot;attachments&quot;: [{
+      &quot;contentType&quot;: &quot;application/vnd.microsoft.card.adaptive&quot;,
+      &quot;content&quot;: { &quot;body&quot;: [{&quot;type&quot;: &quot;TextBlock&quot;, &quot;text&quot;: &quot;{{alert.name}}&quot;}] }
+    }]
+  }
+</code></pre>
+<h2 id="rest-api-access-for-splunk-grafana">REST API Access for Splunk / Grafana<a class="headerlink" href="#rest-api-access-for-splunk-grafana" title="Permanent link">&para;</a></h2>
+<p>The CloudIQ REST API is used by Splunk Heavy Forwarders or Grafana data source plugins to pull fleet health and capacity data on a scheduled basis.</p>
+<pre><code class="language-python"># Example: fetch all systems and health scores
+import requests
+
+TOKEN_URL = &quot;https://api.cloudiq.dell.com/auth/oauth/v2/token&quot;
+API_BASE  = &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1&quot;
+
+def get_token(client_id, client_secret):
+    resp = requests.post(TOKEN_URL, data={
+        &quot;grant_type&quot;: &quot;client_credentials&quot;,
+        &quot;client_id&quot;: client_id,
+        &quot;client_secret&quot;: client_secret
+    })
+    return resp.json()[&quot;access_token&quot;]
+
+def list_systems(token):
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}
+    resp = requests.get(f&quot;{API_BASE}/systems&quot;, headers=headers)
+    return resp.json()[&quot;results&quot;]
+</code></pre>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The Dell CloudIQ management pack for Aria Operations pulls health score and alert data into vROps for correlated VMware + Dell storage dashboards.</p>
+<pre><code class="language-text">Aria Operations &gt; Admin &gt; Solutions &gt; Dell CloudIQ Management Pack
+- CloudIQ API URL: https://api.cloudiq.dell.com
+- Client ID / Secret: stored in Aria Operations credential store
+- Collection interval: 15 minutes
+</code></pre>
+<h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -736,7 +940,7 @@
 </thead>
 <tbody>
 <tr>
-<td>PowerMax, PowerStore, Unity, PowerScale, Data Domain</td>
+<td>PowerMax / PowerStore / PowerScale / Unity / DD</td>
 <td>SCG telemetry (native)</td>
 <td>Health, capacity, and performance data</td>
 </tr>

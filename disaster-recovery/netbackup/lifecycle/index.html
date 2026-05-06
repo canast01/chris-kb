@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#release-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eeb-emergency-engineering-binary-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EEB (Emergency Engineering Binary) Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-upgrade-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-physical-master-to-appliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration: Physical Master to Appliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +819,138 @@
 
 
 <h1 id="netbackup-lifecycle">NetBackup Lifecycle<a class="headerlink" href="#netbackup-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Veritas follows a major.minor release cadence for NetBackup, with Long-Term Support (LTS) releases receiving maintenance updates for three years post-GA. Upgrade order is strictly enforced: Master Server first, then Media Servers, then Clients — clients one version behind the master are supported but should be brought current within one maintenance cycle. Emergency Engineering Binaries (EEBs) must be tracked in a register alongside the version they target, as EEBs are superseded by the next maintenance release and must be re-validated after each upgrade.</p>
+<h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
+<p>Veritas releases NetBackup on a major.minor cadence, with Long-Term Support (LTS) releases receiving maintenance updates for three years post-GA.</p>
 <table>
 <thead>
 <tr>
 <th>Version</th>
 <th>Type</th>
-<th>EOS Date</th>
+<th>EOS (check Veritas SORT)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>10.x</td>
 <td>LTS</td>
-<td>Check Veritas SORT</td>
+<td>Check SORT tool</td>
 </tr>
 <tr>
 <td>9.1.x</td>
 <td>Standard</td>
-<td>Check Veritas SORT</td>
+<td>Check SORT tool</td>
 </tr>
 <tr>
 <td>8.3.x</td>
 <td>LTS (older)</td>
-<td>Review for EOL</td>
+<td>Likely at or near EOL — review</td>
 </tr>
 </tbody>
 </table>
+<p>Check lifecycle dates at: <a href="https://sort.veritas.com">sort.veritas.com</a> → EOL dates.</p>
+<h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
+<p><strong>Critical: always upgrade Master Server first.</strong></p>
+<ol>
+<li>
+<p><strong>Pre-upgrade</strong>: Run catalog backup; verify it completes successfully
+   <code>bash
+   bpbackup -i -h &lt;master_server&gt; -p NBU_Catalog_Backup   # Force catalog backup
+   bperror -r -backstat -l | head -20                        # Verify recent backup success</code></p>
+</li>
+<li>
+<p><strong>Upgrade Master Server</strong> — download installer from Veritas portal; run upgrade wizard</p>
+</li>
+<li>
+<p><strong>Upgrade Media Servers</strong> — one at a time; verify connectivity after each:
+   <code>bash
+   bpclntcmd -hn &lt;media_server&gt; -chk   # Verify after each media server upgrade</code></p>
+</li>
+<li>
+<p><strong>Upgrade Clients</strong> — deploy via push from NetBackup Admin Console or manual installation</p>
+</li>
+</ol>
+<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Supported?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client N-1 behind Master</td>
+<td>Supported — upgrade within next cycle</td>
+</tr>
+<tr>
+<td>Client N-2 behind Master</td>
+<td>Not supported — immediate upgrade required</td>
+</tr>
+<tr>
+<td>Media Server N-1 behind Master</td>
+<td>Supported</td>
+</tr>
+<tr>
+<td>OpsCenter different version from Master</td>
+<td>Not supported — must match</td>
+</tr>
+</tbody>
+</table>
+<h2 id="eeb-emergency-engineering-binary-tracking">EEB (Emergency Engineering Binary) Tracking<a class="headerlink" href="#eeb-emergency-engineering-binary-tracking" title="Permanent link">&para;</a></h2>
+<p>Maintain an EEB register:</p>
+<table>
+<thead>
+<tr>
+<th>EEB ID</th>
+<th>Version Targeted</th>
+<th>Issue Fixed</th>
+<th>Applied Date</th>
+<th>Superseded By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EEB-XXXXXX</td>
+<td>10.1</td>
+<td><description></td>
+<td><date></td>
+<td>MR10.1.1</td>
+</tr>
+</tbody>
+</table>
+<p>EEBs are not cumulative — re-apply after each maintenance release if not yet superseded.</p>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>NetBackup IT Analytics replaces OpsCenter for telemetry and reporting in newer deployments.</li>
-<li>Client version compatibility: one major version behind master is supported; two versions behind requires immediate upgrade planning.</li>
-<li>Migration from physical master to appliance (or vice versa) requires catalog migration procedure — do not upgrade and migrate simultaneously.</li>
+<li>[ ] All backup jobs complete (no active jobs)</li>
+<li>[ ] Full catalog backup completed and verified</li>
+<li>[ ] EEB register reviewed — note which EEBs will be superseded by this upgrade</li>
+<li>[ ] Compatibility confirmed for all integrated systems (vCenter version, Data Domain OS, OST plugin versions)</li>
+<li>[ ] Rollback plan: catalog backup can restore previous state if upgrade fails</li>
 </ul>
+<h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check NBU version across master and media servers
+bpclntcmd -self   # On each server
+/usr/openv/netbackup/bin/version   # Version file
+
+# Run test backup after upgrade
+bpbackup -p &lt;policy_name&gt; -s &lt;schedule_name&gt; -h &lt;client&gt;
+
+# Verify catalog integrity post-upgrade
+bpdbm -consistency_check   # Check for catalog corruption
+</code></pre>
+<h2 id="migration-physical-master-to-appliance">Migration: Physical Master to Appliance<a class="headerlink" href="#migration-physical-master-to-appliance" title="Permanent link">&para;</a></h2>
+<p>Migrating from physical NetBackup installation to a NetBackup appliance requires catalog migration — do NOT upgrade and migrate in the same maintenance window:</p>
+<ol>
+<li>Deploy appliance with matching NetBackup version</li>
+<li>Migrate catalog: run <code>nbcatutil</code> to export and import catalog</li>
+<li>Redirect media servers to new master</li>
+<li>Decommission old master only after 24-48 hours validation</li>
+</ol>
+<h2 id="license-lifecycle">License Lifecycle<a class="headerlink" href="#license-lifecycle" title="Permanent link">&para;</a></h2>
+<p>Track license types:
+- <strong>APTARE/IT Analytics licenses</strong>: annual subscription
+- <strong>Capacity-based licensing</strong>: TB under management; audit monthly
+- <strong>Veritas support contract</strong>: align renewal with SORT lifecycle dates</p>
 
 
 

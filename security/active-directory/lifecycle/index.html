@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#domain-and-forest-functional-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain and Forest Functional Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sysvol-frs-to-dfsr-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SYSVOL FRS to DFSR Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ad-schema-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD Schema Updates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsmo-role-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FSMO Role Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-decommission-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DC Decommission Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ad-recycle-bin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD Recycle Bin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +797,9 @@
 
 
 <h1 id="active-directory-lifecycle">Active Directory Lifecycle<a class="headerlink" href="#active-directory-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported; raising functional levels is a one-way operation and requires all DCs to run at least the corresponding Windows Server version. SYSVOL replication must be migrated from the legacy FRS mechanism to DFSR before the domain functional level can be raised to Windows Server 2008 R2 or higher. The DC retirement procedure involves transferring or seizing FSMO roles, demoting via <code>dcpromo</code> or <code>Uninstall-ADDSDomainController</code>, and removing metadata with <code>ntdsutil</code> for force-demoted DCs.</p>
+<p>Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported. Raising functional levels is a one-way operation and requires all DCs to run at least the corresponding Windows Server version. SYSVOL replication must be migrated from FRS to DFSR before the domain functional level can be raised to Windows Server 2008 R2 or higher.</p>
+<hr />
+<h2 id="domain-and-forest-functional-levels">Domain and Forest Functional Levels<a class="headerlink" href="#domain-and-forest-functional-levels" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -743,25 +817,110 @@
 <tr>
 <td>Windows Server 2019</td>
 <td>Server 2019</td>
-<td>n/a (feature parity)</td>
+<td>Feature parity with 2016</td>
 </tr>
 <tr>
 <td>Windows Server 2022</td>
 <td>Server 2022</td>
 <td>AES encryption improvements</td>
 </tr>
-<tr>
-<td>SYSVOL migration</td>
-<td>N/A</td>
-<td>FRS → DFSR via <code>dfsrmig</code></td>
-</tr>
-<tr>
-<td>AD Recycle Bin</td>
-<td>DFL 2008 R2+</td>
-<td>Object restore without authoritative restore</td>
-</tr>
 </tbody>
 </table>
+<p>Raise domain functional level after confirming all DCs are running the target OS version:</p>
+<pre><code class="language-powershell"># Verify all DC OS versions before raising DFL
+Get-ADDomainController -Filter * | Select-Object Name, OperatingSystem, OperatingSystemVersion
+
+# Raise domain functional level
+Set-ADDomainMode -Identity &quot;corp.example.com&quot; -DomainMode Windows2016Domain
+
+# Raise forest functional level (requires DFL to already be at target level)
+Set-ADForestMode -Identity &quot;example.com&quot; -ForestMode Windows2016Forest
+</code></pre>
+<hr />
+<h2 id="sysvol-frs-to-dfsr-migration">SYSVOL FRS to DFSR Migration<a class="headerlink" href="#sysvol-frs-to-dfsr-migration" title="Permanent link">&para;</a></h2>
+<p>Run from the PDC Emulator. Do not skip states — wait for convergence at each stage.</p>
+<pre><code class="language-powershell"># Check current SYSVOL replication state
+dfsrmig /GetMigrationState
+
+# Advance through migration states: Prepared -&gt; Redirected -&gt; Eliminated
+dfsrmig /SetGlobalState 1   # Prepared
+dfsrmig /SetGlobalState 2   # Redirected
+dfsrmig /SetGlobalState 3   # Eliminated
+
+# Verify completion
+dfsrmig /GetMigrationState
+</code></pre>
+<hr />
+<h2 id="ad-schema-updates">AD Schema Updates<a class="headerlink" href="#ad-schema-updates" title="Permanent link">&para;</a></h2>
+<p>Schema updates are required before adding the first DC of a new OS version. Run <code>adprep</code> from the media of the highest new OS version being introduced.</p>
+<pre><code class="language-powershell"># From Windows Server installation media, run on the Schema Master:
+adprep.exe /forestprep
+
+# Run on each domain that will contain the new OS DC:
+adprep.exe /domainprep
+
+# Verify schema version
+Get-ADObject (Get-ADRootDSE).schemaNamingContext -Property objectVersion |
+  Select-Object objectVersion
+</code></pre>
+<p>Schema version reference: Server 2016 = 87, Server 2019 = 88, Server 2022 = 91.</p>
+<hr />
+<h2 id="fsmo-role-management">FSMO Role Management<a class="headerlink" href="#fsmo-role-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Show current FSMO role holders
+netdom query fsmo
+
+# Transfer FSMO roles (preferred — run on the target DC)
+Move-ADDirectoryServerOperationMasterRole -Identity &quot;DC02&quot; -OperationMasterRole `
+  PDCEmulator, RIDMaster, InfrastructureMaster, SchemaMaster, DomainNamingMaster
+
+# Seize FSMO roles (only when old DC is permanently offline)
+ntdsutil
+  roles
+  connections
+    connect to server DC02
+    quit
+  seize PDC
+  seize RID master
+  quit
+quit
+</code></pre>
+<hr />
+<h2 id="dc-decommission-procedure">DC Decommission Procedure<a class="headerlink" href="#dc-decommission-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm target DC is not holding any FSMO roles (transfer first if it is).</li>
+<li>Confirm DNS and SYSVOL are healthy on remaining DCs.</li>
+<li>Demote the DC gracefully:</li>
+</ol>
+<pre><code class="language-powershell"># Graceful demotion via PowerShell (preferred)
+Uninstall-ADDSDomainController `
+  -DemoteOperationMasterRole:$true `
+  -RemoveDnsDelegation:$true `
+  -Credential (Get-Credential)
+</code></pre>
+<ol>
+<li>If the DC is offline and cannot be demoted, clean up AD metadata:</li>
+</ol>
+<pre><code class="language-cmd">ntdsutil
+  metadata cleanup
+  remove selected server CN=DC01,OU=Domain Controllers,DC=corp,DC=example,DC=com
+  quit
+quit
+</code></pre>
+<ol>
+<li>Remove the associated DNS records and computer account from AD after demotion.</li>
+</ol>
+<hr />
+<h2 id="ad-recycle-bin">AD Recycle Bin<a class="headerlink" href="#ad-recycle-bin" title="Permanent link">&para;</a></h2>
+<p>Enable once per forest; requires DFL 2008 R2 or higher. Cannot be disabled after enabling.</p>
+<pre><code class="language-powershell"># Enable AD Recycle Bin
+Enable-ADOptionalFeature 'Recycle Bin Feature' `
+  -Scope ForestOrConfigurationSet `
+  -Target &quot;example.com&quot;
+
+# Restore a deleted object (default tombstone lifetime: 180 days)
+Get-ADObject -Filter {DisplayName -eq &quot;John Smith&quot;} -IncludeDeletedObjects |
+  Restore-ADObject
+</code></pre>
 
 
 

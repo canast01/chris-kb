@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collecting-supportsave-diagnostic-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting supportsave (Diagnostic Bundle)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-information-for-sr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Information for SR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-contract-entitlement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Contract Entitlement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sannav-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SANnav Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +808,115 @@
 
 
 <h1 id="brocade-fabric-os-vendor-support">Brocade Fabric OS Vendor Support<a class="headerlink" href="#brocade-fabric-os-vendor-support" title="Permanent link">&para;</a></h1>
-<p>Support for Fabric OS is handled through the Broadcom Support Portal (support.broadcom.com), where service requests are opened against the relevant switch serial number and support contract. When opening a case, run <code>supportsave</code> on the affected switch to collect the full diagnostic bundle (logs, configs, port data, and event history), which is uploaded to the case. Required information includes the Fabric OS version (<code>version</code> command), fabric topology, zone count, and a description of the failure event with timestamps. Support contract entitlement is verified via the switch serial number on the Broadcom portal.</p>
-<ul>
-<li>Support portal: support.broadcom.com</li>
-<li>Diagnostic bundle: <code>supportsave</code> — generates a compressed archive to the configured FTP/SCP server</li>
-<li>Required for case: FOS version, fabric topology diagram, zone count, error log excerpts</li>
-<li>Serial number: <code>chassisshow</code> or label on switch chassis</li>
-<li>Entitlement check: serial number lookup on Broadcom portal</li>
-</ul>
+<h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
+<p>Support portal: <a href="https://support.broadcom.com">support.broadcom.com</a></p>
+<ol>
+<li>Log in with the team account</li>
+<li>Create Service Request → select Brocade SAN Switching as the product area</li>
+<li>Enter the switch serial number to link the SR to the support contract</li>
+<li>Upload the <code>supportsave</code> bundle (see below) immediately — dramatically speeds up triage</li>
+</ol>
+<h2 id="collecting-supportsave-diagnostic-bundle">Collecting supportsave (Diagnostic Bundle)<a class="headerlink" href="#collecting-supportsave-diagnostic-bundle" title="Permanent link">&para;</a></h2>
+<p>Run <code>supportsave</code> on the affected switch before opening the case:</p>
+<pre><code class="language-bash"># Configure FTP/SCP target first (if not already set)
+ssave --ftp &lt;ftp-server-ip&gt; &lt;username&gt; &lt;password&gt; &lt;path&gt;
+# Or SCP:
+ssave --scp &lt;username&gt;@&lt;scp-server-ip&gt;:&lt;path&gt;
+
+# Run supportsave (takes 2–5 minutes)
+supportsave
+
+# The output archive includes:
+# - Running configuration
+# - All logs (raslog, auditlog, switch event log)
+# - Fabric database (zone, device, routing)
+# - Port statistics
+# - SNMP trap history
+</code></pre>
+<p>Attach the generated <code>.tar.gz</code> to the support case.</p>
+<h2 id="required-information-for-sr">Required Information for SR<a class="headerlink" href="#required-information-for-sr" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Where to Find</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fabric OS version</td>
+<td><code>version</code> command on affected switch</td>
+</tr>
+<tr>
+<td>Switch serial number</td>
+<td><code>chassisshow</code> or chassis label</td>
+</tr>
+<tr>
+<td>Fabric topology</td>
+<td><code>fabricshow</code> — list of all switches in fabric</td>
+</tr>
+<tr>
+<td>Zone count</td>
+<td><code>zoneshow --count</code></td>
+</tr>
+<tr>
+<td>Error message / log excerpts</td>
+<td><code>rasshow -l 200</code> — last 200 RAS events</td>
+</tr>
+<tr>
+<td>Timestamps</td>
+<td>When the issue first occurred (timezone)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="severity-levels">Severity Levels<a class="headerlink" href="#severity-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Criteria</th>
+<th>Response Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Fabric-wide outage; production I/O impacted</td>
+<td>1–2 hours (24/7)</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Significant degradation; redundancy lost</td>
+<td>Same business day</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Non-critical issue; workaround available</td>
+<td>2–3 business days</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>Enhancement, cosmetic, how-to question</td>
+<td>Best effort</td>
+</tr>
+</tbody>
+</table>
+<h2 id="support-contract-entitlement">Support Contract Entitlement<a class="headerlink" href="#support-contract-entitlement" title="Permanent link">&para;</a></h2>
+<p>Verify support coverage before opening a case:
+- Serial number lookup: <a href="https://support.broadcom.com">support.broadcom.com</a> → Entitlement
+- <code>chassisshow</code> shows serial number; check against CMDB entry</p>
+<h2 id="common-escalation-path">Common Escalation Path<a class="headerlink" href="#common-escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Initial SR — Tier 1 support review</li>
+<li>No progress within SLA → comment "Request escalation to Tier 2 SAN engineering"</li>
+<li>For fabric-wide outage (P1): phone TAC directly; provide SR number from web submission</li>
+<li>For chronic issues: request TAC account manager involvement</li>
+</ol>
+<h2 id="sannav-support">SANnav Support<a class="headerlink" href="#sannav-support" title="Permanent link">&para;</a></h2>
+<p>For SANnav-related issues, open the SR against "Brocade Network Advisor / SANnav" product:</p>
+<pre><code class="language-bash"># Collect SANnav support bundle
+# SANnav UI → Administration → Support → Generate Support Bundle
+</code></pre>
 
 
 

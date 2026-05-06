@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retention-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retention Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-job-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ddb-deduplication-database-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DDB (Deduplication Database) Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-vsphere-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vSphere Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Standard
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,42 +797,179 @@
 
 
 <h1 id="commvault-standards">CommVault Standards<a class="headerlink" href="#commvault-standards" title="Permanent link">&para;</a></h1>
-<p>Storage policy names follow the convention <code>app-retention-tier</code> (e.g., <code>oracle-7yr-primary</code>, <code>vm-90d-secondary</code>) to make workload type, retention duration, and copy tier immediately identifiable. Subclient names should reflect the application and data scope (e.g., <code>oracle-prod-db01-full</code>). Schedule policies should be designed with a primary copy (disk/dedup) and a secondary copy (offsite or tape) in the same policy, so both copies are managed under one SLA. Deduplication databases must reside on SSD-backed storage with at least 20% free space headroom at all times.</p>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Retention Level</th>
-<th>Copy Type</th>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage Policy</td>
+<td><code>&lt;app&gt;-&lt;retention&gt;-&lt;tier&gt;</code></td>
+<td><code>oracle-7yr-primary</code>, <code>vm-90d-secondary</code></td>
+</tr>
+<tr>
+<td>Subclient</td>
+<td><code>&lt;app&gt;-&lt;env&gt;-&lt;host&gt;-&lt;type&gt;</code></td>
+<td><code>oracle-prod-db01-full</code></td>
+</tr>
+<tr>
+<td>Client Group</td>
+<td><code>&lt;env&gt;-&lt;os&gt;-&lt;tier&gt;</code></td>
+<td><code>prod-linux-db</code>, <code>dev-windows-app</code></td>
+</tr>
+<tr>
+<td>Schedule Policy</td>
+<td><code>&lt;frequency&gt;-&lt;retention&gt;</code></td>
+<td><code>daily-14d</code>, <code>weekly-8w</code></td>
+</tr>
+<tr>
+<td>MediaAgent</td>
+<td><code>&lt;site&gt;-ma-&lt;seq&gt;</code></td>
+<td><code>dc1-ma-01</code>, <code>dc2-ma-01</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="retention-schedule">Retention Schedule<a class="headerlink" href="#retention-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Copy</th>
 <th>Retention</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Daily</td>
-<td>Primary (disk)</td>
+<td>Primary (disk/dedup)</td>
 <td>14 days</td>
 </tr>
 <tr>
 <td>Weekly</td>
-<td>Primary (disk)</td>
+<td>Primary (disk/dedup)</td>
 <td>8 weeks</td>
 </tr>
 <tr>
 <td>Monthly</td>
-<td>Secondary (offsite)</td>
+<td>Secondary (offsite or cloud)</td>
 <td>12 months</td>
 </tr>
 <tr>
 <td>Yearly</td>
-<td>Secondary (tape/cloud)</td>
+<td>Secondary (tape or cloud archive)</td>
 <td>7 years</td>
 </tr>
 </tbody>
 </table>
+<p>Configure via SLA Plans in Command Center (preferred for FR32+) or directly in Storage Policy (legacy).</p>
+<h2 id="backup-job-design">Backup Job Design<a class="headerlink" href="#backup-job-design" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Encryption standard: AES-256 for any subclient covering PII or regulated data; cipher mode set at storage policy level.</li>
-<li>DDB placement: dedicated LUN on SSD; never co-locate DDB with backup data or OS.</li>
-<li>SLA plans in Command Center should be the single source of truth for all retention configurations in new deployments.</li>
+<li>Each Storage Policy must have:</li>
+<li>A primary copy (performance tier disk with dedup)</li>
+<li>A secondary copy (off-site or cloud, separate schedule) in the same policy</li>
+<li>Do not rely on manual auxiliary copy jobs — secondary copies should be scheduled automatically</li>
+<li>Synthetic full schedule recommended weekly (no additional storage reads from client)</li>
+</ul>
+<h2 id="ddb-deduplication-database-standards">DDB (Deduplication Database) Standards<a class="headerlink" href="#ddb-deduplication-database-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDB storage</td>
+<td>Dedicated SSD LUN — never share with OS or backup data</td>
+</tr>
+<tr>
+<td>DDB free space</td>
+<td>Minimum 20% free at all times; alert at 30%</td>
+</tr>
+<tr>
+<td>Single DDB capacity</td>
+<td>Maximum 60TB deduped data per DDB</td>
+</tr>
+<tr>
+<td>DDB backup</td>
+<td>Daily via CommServe backup job</td>
+</tr>
+<tr>
+<td>DDB validation</td>
+<td>Monthly integrity check via DDB Verification job</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Check DDB utilisation
+qoperation execute -af ListDDB.xml
+</code></pre>
+<h2 id="vmware-vsphere-standards">VMware vSphere Standards<a class="headerlink" href="#vmware-vsphere-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup proxy type</td>
+<td>Hot-add (SAN or VDDK) preferred over NBD</td>
+</tr>
+<tr>
+<td>Number of proxies</td>
+<td>Minimum 2 per site for redundancy</td>
+</tr>
+<tr>
+<td>VMware concurrent tasks per proxy</td>
+<td>Maximum 4 (adjust per MediaAgent CPU)</td>
+</tr>
+<tr>
+<td>VSA subclient granularity</td>
+<td>Per-datastore or per-folder; never entire vCenter in one subclient</td>
+</tr>
+<tr>
+<td>Application-aware backup</td>
+<td>Enabled for SQL Server, Oracle, Exchange VMs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="encryption-standard">Encryption Standard<a class="headerlink" href="#encryption-standard" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Classification</th>
+<th>Encryption Required</th>
+<th>Algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PII / Regulated</td>
+<td>Yes — mandatory</td>
+<td>AES-256, MediaAgent-side minimum</td>
+</tr>
+<tr>
+<td>Business-sensitive</td>
+<td>Yes — recommended</td>
+<td>AES-256</td>
+</tr>
+<tr>
+<td>Internal non-sensitive</td>
+<td>Optional</td>
+<td>Per policy decision</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Encryption keys: exported and stored in CyberArk or offline secure vault</li>
+<li>Loss of key = loss of backup data — key management is as critical as backup data itself</li>
 </ul>
 
 

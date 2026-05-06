@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collecting-show-tech-support-diagnostic-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting show tech-support (Diagnostic Bundle)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-frame-capture-for-io-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Frame Capture (for I/O issues)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-information-for-sr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Information for SR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-contract-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Contract Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +819,122 @@
 
 
 <h1 id="cisco-mds-vendor-support">Cisco MDS Vendor Support<a class="headerlink" href="#cisco-mds-vendor-support" title="Permanent link">&para;</a></h1>
-<p>MDS support cases are opened via the Cisco TAC portal (mycase.cisco.com) or by calling TAC, referencing the switch serial number and SmartNet contract. For NX-OS or hardware issues, collect <code>show tech-support</code> output and upload it to the case — this captures running config, logs, interface state, and fabric database. For FC frame-level issues, <code>ethanalyzer</code> can capture frames on the management interface; FC Analyzer or SPAN sessions can be used for data-plane capture. SmartNet contract coverage is validated via the Cisco Contract Center or the serial number lookup on cisco.com.</p>
-<ul>
-<li>TAC portal: mycase.cisco.com</li>
-<li>Diagnostic bundle: <code>show tech-support &gt; tech-support.txt</code> — upload to case</li>
-<li>FC frame capture: <code>ethanalyzer</code> (management plane), FC SPAN (data plane)</li>
-<li>Required for case: NX-OS version (<code>show version</code>), VSAN topology, error log excerpts, affected WWPNs</li>
-<li>Serial number: <code>show inventory</code> or chassis label</li>
-<li>Contract check: Cisco Contract Center — cisco.com/go/contractcenter</li>
-</ul>
+<h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
+<p>TAC portal: <a href="https://mycase.cisco.com">mycase.cisco.com</a></p>
+<p>Alternatively, call TAC for P1/P2 cases (number on your Cisco contract documentation).</p>
+<ol>
+<li>Select product: Cisco MDS 9000 Series</li>
+<li>Select NX-OS version and model</li>
+<li>Enter switch serial number to link to SmartNet contract</li>
+<li>Upload <code>show tech-support</code> output immediately (see below)</li>
+</ol>
+<h2 id="collecting-show-tech-support-diagnostic-bundle">Collecting show tech-support (Diagnostic Bundle)<a class="headerlink" href="#collecting-show-tech-support-diagnostic-bundle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Redirect output to a file (takes 5–10 minutes on a busy switch)
+show tech-support &gt; bootflash:tech-support-$(hostname)-$(date +%Y%m%d).txt
+
+# Copy to SCP server
+copy bootflash:tech-support-*.txt scp://&lt;username&gt;@&lt;scp-server&gt;/&lt;path&gt;
+
+# Or via TFTP
+copy bootflash:tech-support-*.txt tftp://&lt;tftp-server&gt;/&lt;path&gt;/
+</code></pre>
+<p>Contents of <code>show tech-support</code>:
+- Running and startup configuration
+- NX-OS version info, hardware inventory
+- Interface state, port statistics
+- VSAN database and zone configuration
+- FCNS (Name Server) entries
+- Syslog and error logs</p>
+<h2 id="fc-frame-capture-for-io-issues">FC Frame Capture (for I/O issues)<a class="headerlink" href="#fc-frame-capture-for-io-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Data-plane FC frame capture via SPAN
+monitor session 1 source interface fc1/1 rx
+monitor session 1 destination interface fc2/1   # Dedicated capture port
+no monitor suspend 1
+
+# Management-plane packet capture
+ethanalyzer local interface mgmt capture-filter &quot;host &lt;mgmt-ip&gt;&quot; write bootflash:capture.pcap
+</code></pre>
+<h2 id="required-information-for-sr">Required Information for SR<a class="headerlink" href="#required-information-for-sr" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Where to Find</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NX-OS version</td>
+<td><code>show version</code></td>
+</tr>
+<tr>
+<td>Serial number</td>
+<td><code>show inventory</code> or chassis label</td>
+</tr>
+<tr>
+<td>VSAN topology</td>
+<td><code>show vsan</code> + <code>show fcdomain vsan &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Error log excerpts</td>
+<td><code>show logging last 500</code></td>
+</tr>
+<tr>
+<td>Affected WWPNs</td>
+<td><code>show fcns database vsan &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Problem description</td>
+<td>Exact symptom, timestamps (with timezone), frequency</td>
+</tr>
+</tbody>
+</table>
+<h2 id="support-contract-verification">Support Contract Verification<a class="headerlink" href="#support-contract-verification" title="Permanent link">&para;</a></h2>
+<p>Check SmartNet coverage:
+- <a href="https://www.cisco.com/c/en/us/support/web/tools/contractor/main.html">cisco.com/go/contractcenter</a>
+- <code>show inventory</code> provides serial numbers for all modules</p>
+<h2 id="severity-levels">Severity Levels<a class="headerlink" href="#severity-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Criteria</th>
+<th>SLA (SmartNet)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Fabric-wide outage; production I/O impacted</td>
+<td>1 hour (24/7)</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Significant degradation; redundancy lost</td>
+<td>4 hours</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Non-critical; workaround available</td>
+<td>Next business day</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>How-to, enhancement request</td>
+<td>Best effort</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-escalation-path">Common Escalation Path<a class="headerlink" href="#common-escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open TAC case online (faster for P3/P4)</li>
+<li>Call TAC for P1/P2 to get immediate engineer assignment</li>
+<li>No progress within SLA → request Technical Support Manager involvement in case notes</li>
+<li>For firmware issues with known bugs: request upgrade to a specific recommended release</li>
+</ol>
+<h2 id="ndfc-support">NDFC Support<a class="headerlink" href="#ndfc-support" title="Permanent link">&para;</a></h2>
+<p>For issues with Nexus Dashboard Fabric Controller managing MDS switches, open SR against "Cisco Nexus Dashboard Fabric Controller (NDFC)" product and include NDFC support bundle:
+- NDFC UI → Operations → Tech Support → Download</p>
 
 
 

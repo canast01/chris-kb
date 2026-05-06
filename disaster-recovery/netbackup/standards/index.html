@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retention-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retention Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-unit-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Unit Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catalog-backup-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catalog Backup Standard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Standard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-restore-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Restore Standard
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,19 +808,56 @@
 
 
 <h1 id="netbackup-standards">NetBackup Standards<a class="headerlink" href="#netbackup-standards" title="Permanent link">&para;</a></h1>
-<p>Policy names follow the convention <code>app-os-frequency</code> (e.g., <code>oracle-linux-daily</code>, <code>mssql-win-weekly</code>) to make workload, platform, and schedule immediately identifiable. Schedule names append the retention level (e.g., <code>daily-14d</code>, <code>weekly-8w</code>) so retention intent is visible without opening the policy. Client-side or media-server-side encryption is mandatory for policies covering PII or regulated data. Catalog backups must run daily to a dedicated storage unit separate from standard backup targets.</p>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Retention Level</th>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Policy</td>
+<td><code>&lt;app&gt;-&lt;os&gt;-&lt;frequency&gt;</code></td>
+<td><code>oracle-linux-daily</code>, <code>mssql-win-weekly</code></td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td><code>&lt;type&gt;-&lt;retention&gt;</code></td>
+<td><code>full-14d</code>, <code>incr-7d</code>, <code>weekly-8w</code></td>
+</tr>
+<tr>
+<td>Storage Unit</td>
+<td><code>&lt;site&gt;-&lt;type&gt;-&lt;tier&gt;</code></td>
+<td><code>dc1-ostdd-primary</code>, <code>dc2-cloud-archive</code></td>
+</tr>
+<tr>
+<td>Media Server</td>
+<td><code>&lt;site&gt;-nbumedia-&lt;seq&gt;</code></td>
+<td><code>dc1-nbumedia-01</code></td>
+</tr>
+<tr>
+<td>Client Group</td>
+<td><code>&lt;env&gt;-&lt;os&gt;-&lt;tier&gt;</code></td>
+<td><code>prod-linux-db</code>, <code>prod-windows-app</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="retention-schedule">Retention Schedule<a class="headerlink" href="#retention-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
 <th>Schedule Type</th>
-<th>Retention Period</th>
+<th>Retention</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Daily</td>
-<td>Full or Incremental</td>
+<td>Incremental</td>
 <td>14 days</td>
 </tr>
 <tr>
@@ -757,10 +877,108 @@
 </tr>
 </tbody>
 </table>
+<p>Compliance requirements may extend yearly retention to 10 years for regulated data.</p>
+<h2 id="policy-design-rules">Policy Design Rules<a class="headerlink" href="#policy-design-rules" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Multiplexing limit: maximum 8 jobs per drive to avoid excessive fragmentation during restores.</li>
-<li>All policies require an explicitly named client list — wildcard client lists are not permitted in production.</li>
+<li><strong>Client list</strong>: Always use an explicitly named client list — wildcard client patterns are not permitted in production</li>
+<li><strong>Granularity</strong>: Separate policies per application type (Oracle, MSSQL, file system) — do not mix policy types</li>
+<li><strong>Application-aware</strong>: Enable application-consistent backup for Oracle (ORA policy type), MSSQL, and Exchange</li>
+<li><strong>VMware</strong>: Use tag-based or folder-based selection — never include entire vCenter as a single selection</li>
+<li><strong>Multiplexing</strong>: Limit to 8 jobs per drive to avoid excessive fragmentation during restores</li>
 </ul>
+<h2 id="storage-unit-standards">Storage Unit Standards<a class="headerlink" href="#storage-unit-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary storage (OST/DD)</td>
+<td>AdvancedDisk or OST on Data Domain; deduplicated</td>
+</tr>
+<tr>
+<td>Cloud storage (long-term)</td>
+<td>Cloud storage unit with S3-compatible target; Glacier-class after 90 days</td>
+</tr>
+<tr>
+<td>Tape (archival)</td>
+<td>LTO8/9 WORM for compliance workloads; separate tape pool per retention tier</td>
+</tr>
+<tr>
+<td>Storage unit load balancing</td>
+<td>Maximum concurrent jobs per storage unit = media server CPU core count / 2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="catalog-backup-standard">Catalog Backup Standard<a class="headerlink" href="#catalog-backup-standard" title="Permanent link">&para;</a></h2>
+<p>The catalog is the most critical data in a NetBackup domain — protect it rigorously:</p>
+<ul>
+<li>Catalog backup must run every 4–6 hours (not just daily)</li>
+<li>Store catalog backup on a separate storage unit from standard backups</li>
+<li>Keep a cold copy of the most recent catalog backup off-site or on a separate server</li>
+<li>Verify catalog backup is successful before proceeding with any infrastructure change</li>
+</ul>
+<pre><code class="language-bash"># Check catalog backup status
+bplist -S &lt;master_server&gt; -t 0 -policy NBU_Catalog -s -1d
+</code></pre>
+<h2 id="encryption-standard">Encryption Standard<a class="headerlink" href="#encryption-standard" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Classification</th>
+<th>Policy</th>
+<th>Algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PII / Regulated</td>
+<td>Mandatory</td>
+<td>AES-256</td>
+</tr>
+<tr>
+<td>Business-sensitive</td>
+<td>Required</td>
+<td>AES-256</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Optional</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<p>Key management: store encryption key files in CyberArk or an offline vault. Loss of key = unrecoverable backup data.</p>
+<h2 id="test-restore-standard">Test Restore Standard<a class="headerlink" href="#test-restore-standard" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Restore Type</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File-level restore test (non-critical VM)</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td>Full VM restore test</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td>Database restore test (Oracle/MSSQL)</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td>Catalog recovery test</td>
+<td>Annually</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#alert-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-policy-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Policy Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#super-metric-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Super Metric Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-group-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Group Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-schedules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report Schedules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#threshold-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +808,165 @@
 
 
 <h1 id="aria-operations-standards">Aria Operations Standards<a class="headerlink" href="#aria-operations-standards" title="Permanent link">&para;</a></h1>
-<p>Alert naming follows the pattern <code>ENV-OBJECT_TYPE-CONDITION</code> (e.g., <code>PROD-VM-CPU_CONTENTION</code>) to ensure consistent filtering and routing. Policy hierarchy is structured globally to specifically: a Global Default Policy sets baselines, Environment Policies (prod/non-prod) override thresholds, and Cluster Policies apply workload-specific tuning. Super metric names use the prefix <code>SM_</code> followed by a descriptive camel-case name. Custom groups are named by environment and object type, and dashboard names include the team owner prefix (e.g., <code>INFRA-Capacity-Overview</code>).</p>
+<h2 id="alert-naming-convention">Alert Naming Convention<a class="headerlink" href="#alert-naming-convention" title="Permanent link">&para;</a></h2>
+<p>Alerts follow the pattern <code>ENV-OBJECT_TYPE-CONDITION</code> to ensure consistent filtering and automated routing.</p>
+<p>Examples:
+- <code>PROD-VM-CPU_CONTENTION</code>
+- <code>PROD-HOST-MEMORY_BALLOON</code>
+- <code>NONPROD-DATASTORE-CAPACITY_WARN</code></p>
+<p>Alert names must be unique across all alert definitions. Use ALL_CAPS for the condition segment.</p>
+<h2 id="alert-policy-hierarchy">Alert Policy Hierarchy<a class="headerlink" href="#alert-policy-hierarchy" title="Permanent link">&para;</a></h2>
+<p>Policies are applied from broadest to most specific; the most specific policy wins.</p>
+<table>
+<thead>
+<tr>
+<th>Policy Level</th>
+<th>Scope</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global Default</td>
+<td>All objects, all environments</td>
+<td>Base CPU/memory thresholds</td>
+</tr>
+<tr>
+<td>Environment Policy</td>
+<td>Prod or non-prod object groups</td>
+<td>Tighter thresholds for PROD</td>
+</tr>
+<tr>
+<td>Cluster Policy</td>
+<td>Specific cluster or workload group</td>
+<td>DB cluster, VDI cluster</td>
+</tr>
+</tbody>
+</table>
+<p>Always document the rationale for any threshold that deviates from the Global Default policy.</p>
+<h2 id="super-metric-standards">Super Metric Standards<a class="headerlink" href="#super-metric-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Alert naming: <code>ENV-OBJECT_TYPE-CONDITION</code></li>
-<li>Policy hierarchy: Global → Environment → Cluster</li>
-<li>Super metric prefix: <code>SM_</code></li>
-<li>Custom group naming: <code>ENV-ObjectType</code></li>
-<li>Dashboard naming: <code>TEAM-Topic-Scope</code></li>
-<li>Report schedules aligned to operational cadence (daily, weekly, monthly)</li>
+<li>Prefix: <code>SM_</code> followed by a descriptive camelCase name</li>
+<li>Examples: <code>SM_AvgClusterCpuUsage</code>, <code>SM_VMStorageLatencyP95</code></li>
+<li>Super metrics must include a description field explaining the formula</li>
+<li>Review super metric accuracy after any vCenter or adapter upgrade</li>
 </ul>
+<h2 id="dashboard-naming-convention">Dashboard Naming Convention<a class="headerlink" href="#dashboard-naming-convention" title="Permanent link">&para;</a></h2>
+<p>Dashboards use the format <code>TEAM-Topic-Scope</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Rule</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TEAM</td>
+<td>Owning team prefix</td>
+<td><code>INFRA</code>, <code>DBA</code>, <code>NETWORK</code></td>
+</tr>
+<tr>
+<td>Topic</td>
+<td>Functional area</td>
+<td><code>Capacity</code>, <code>Performance</code>, <code>Alerts</code></td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Breadth of data</td>
+<td><code>Overview</code>, <code>Cluster</code>, <code>VM</code></td>
+</tr>
+</tbody>
+</table>
+<p>Examples:
+- <code>INFRA-Capacity-Overview</code>
+- <code>DBA-Performance-SQLCluster</code>
+- <code>NETWORK-Alerts-NSXEdge</code></p>
+<p>Shared dashboards visible to all users should be placed in the <strong>Shared</strong> folder. Team-specific dashboards go in the relevant team folder.</p>
+<h2 id="custom-group-naming">Custom Group Naming<a class="headerlink" href="#custom-group-naming" title="Permanent link">&para;</a></h2>
+<p>Custom groups follow <code>ENV-ObjectType</code>.</p>
+<ul>
+<li><code>PROD-ComputeCluster</code></li>
+<li><code>NONPROD-VM</code></li>
+<li><code>PROD-Datastore</code></li>
+</ul>
+<p>Dynamic groups should use membership criteria that automatically includes new objects (e.g., objects in a named vCenter folder or cluster).</p>
+<h2 id="report-schedules">Report Schedules<a class="headerlink" href="#report-schedules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Schedule</th>
+<th>Audience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capacity Overview</td>
+<td>Weekly, Monday 07:00</td>
+<td>Infra team</td>
+</tr>
+<tr>
+<td>Top-N VMs by Contention</td>
+<td>Weekly, Monday 07:00</td>
+<td>Infra + App teams</td>
+</tr>
+<tr>
+<td>Monthly Executive Capacity Summary</td>
+<td>Monthly, 1st working day</td>
+<td>Management</td>
+</tr>
+<tr>
+<td>Alert Trend Report</td>
+<td>Weekly</td>
+<td>Ops team</td>
+</tr>
+</tbody>
+</table>
+<p>Reports are distributed via email and archived in the shared drive capacity folder.</p>
+<h2 id="threshold-reference">Threshold Reference<a class="headerlink" href="#threshold-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM CPU Usage</td>
+<td>80%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>VM Memory Usage</td>
+<td>85%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>Host CPU Contention</td>
+<td>5%</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Host Memory Balloon</td>
+<td>1%</td>
+<td>5%</td>
+</tr>
+<tr>
+<td>Datastore Capacity Used</td>
+<td>75%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>Datastore Latency (ms)</td>
+<td>10</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage and Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-onefs-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported OneFS Versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +830,22 @@
 
 
 <h1 id="insightiq-architecture">InsightIQ Architecture<a class="headerlink" href="#insightiq-architecture" title="Permanent link">&para;</a></h1>
-<p>InsightIQ is a performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as a virtual appliance (OVA) or via a Linux installer on a dedicated VM. Metrics are collected from OneFS clusters via the InsightIQ data connector and stored in a local PostgreSQL database. The web-based dashboard presents throughput, latency, CPU, and protocol-level breakdowns, allowing capacity planners and storage administrators to trend performance over time. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
+<h2 id="deployment-architecture">Deployment Architecture<a class="headerlink" href="#deployment-architecture" title="Permanent link">&para;</a></h2>
+<pre><code>PowerScale Clusters                   InsightIQ Virtual Appliance
+┌────────────────────┐                ┌──────────────────────────────────┐
+│  Cluster A (Isilon) │──[REST pull]──►│  Data Collector                  │
+│  Cluster B (Isilon) │──[REST pull]──►│  (polls OneFS performance API)   │
+│  Cluster C (Isilon) │──[REST pull]──►│                                  │
+└────────────────────┘                │  PostgreSQL Database              │
+                                      │  (local — stores time-series data)│
+                                      │                                   │
+                                      │  Web Dashboard (HTTP/HTTPS)       │
+                                      │  (performance charts, reports)    │
+                                      └──────────────────────────────────┘
+</code></pre>
+<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -736,15 +856,15 @@
 <tbody>
 <tr>
 <td>Deployment</td>
-<td>OVA or Linux installer on dedicated VM</td>
+<td>OVA (VMware) or Linux installer on dedicated VM</td>
 </tr>
 <tr>
 <td>Database</td>
-<td>PostgreSQL (local to appliance)</td>
+<td>PostgreSQL (local to appliance — stores all collected metrics)</td>
 </tr>
 <tr>
 <td>Data Collection</td>
-<td>OneFS InsightIQ data connector (pull)</td>
+<td>OneFS InsightIQ data connector (REST API pull from cluster management IP)</td>
 </tr>
 <tr>
 <td>Presentation</td>
@@ -752,10 +872,128 @@
 </tr>
 <tr>
 <td>Multi-cluster</td>
-<td>Yes — multiple clusters per instance</td>
+<td>Yes — multiple clusters per instance; no per-cluster licensing constraints</td>
 </tr>
 </tbody>
 </table>
+<h2 id="data-collection">Data Collection<a class="headerlink" href="#data-collection" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Collection interval</strong>: configurable; default is 30-second samples aggregated to 5-minute buckets</li>
+<li><strong>Protocol</strong>: HTTPS REST API to OneFS management IP (port 8080)</li>
+<li><strong>Metrics collected</strong>: total throughput, per-protocol throughput (NFS/SMB/HTTP), CPU utilisation, disk I/O, node-level metrics, client IP activity</li>
+<li><strong>Authentication</strong>: dedicated read-only OneFS service account (<code>svc-insightiq</code>)</li>
+</ul>
+<h2 id="storage-and-retention">Storage and Retention<a class="headerlink" href="#storage-and-retention" title="Permanent link">&para;</a></h2>
+<p>InsightIQ stores all metrics in a local PostgreSQL database. Retention period is configured per cluster connection.</p>
+<table>
+<thead>
+<tr>
+<th>Retention Period</th>
+<th>Estimated Disk Usage (5 nodes, 30-day sample rate)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30 days</td>
+<td>~20 GB</td>
+</tr>
+<tr>
+<td>90 days (standard)</td>
+<td>~60 GB</td>
+</tr>
+<tr>
+<td>180 days</td>
+<td>~120 GB</td>
+</tr>
+<tr>
+<td>365 days</td>
+<td>~240 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Standard retention policy: <strong>90 days high-resolution</strong>. Extending retention requires additional disk capacity on the InsightIQ VM.</p>
+<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Minimum</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCPU</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>4 GB</td>
+<td>8 GB</td>
+</tr>
+<tr>
+<td>Disk (OS + application)</td>
+<td>40 GB</td>
+<td>80 GB</td>
+</tr>
+<tr>
+<td>Disk (data volume)</td>
+<td>200 GB / 5 clusters</td>
+<td>400 GB / 5 clusters</td>
+</tr>
+<tr>
+<td>Additional data disk</td>
+<td>Per retention requirements above</td>
+<td>Separate VMDK for data</td>
+</tr>
+</tbody>
+</table>
+<p>Allocate a separate VMDK for the PostgreSQL data directory to simplify capacity management.</p>
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>InsightIQ appliance</td>
+<td>OneFS cluster management IP</td>
+<td>TCP 8080</td>
+<td>Performance data collection</td>
+</tr>
+<tr>
+<td>Browser</td>
+<td>InsightIQ appliance</td>
+<td>TCP 80 / 443</td>
+<td>Web dashboard access</td>
+</tr>
+<tr>
+<td>InsightIQ appliance</td>
+<td>SMTP relay</td>
+<td>TCP 25 / 587</td>
+<td>Alert email delivery</td>
+</tr>
+<tr>
+<td>InsightIQ appliance</td>
+<td>Syslog / SIEM</td>
+<td>UDP/TCP 514</td>
+<td>Appliance event forwarding</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-onefs-versions">Supported OneFS Versions<a class="headerlink" href="#supported-onefs-versions" title="Permanent link">&para;</a></h2>
+<p>InsightIQ version compatibility with OneFS must be validated using the NetApp Interoperability Matrix Tool (IMT) before any OneFS upgrade. As of recent releases, InsightIQ supports OneFS 8.x and 9.x. For OneFS 9.5+, consider whether native OneFS performance views (via the OneFS web UI or CLI) may supplement InsightIQ for simpler use cases.</p>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<p>InsightIQ does not have native HA. Protect the appliance with:
+- Regular <code>pg_dump</code> database backups (automated daily cron job)
+- VM-level snapshots before upgrades
+- VM backup via vCenter backup agent to DR location</p>
 
 
 

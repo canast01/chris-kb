@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tagging-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagging Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-lock-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Lock Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approved-regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approved Regions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +797,184 @@
 
 
 <h1 id="azure-standards">Azure Standards<a class="headerlink" href="#azure-standards" title="Permanent link">&para;</a></h1>
-<p>Resource naming follows the pattern <code>env-region-service-suffix</code> in lowercase with hyphens (e.g., <code>prod-euw-vm-appserver-01</code>), using Azure abbreviations for resource types as documented in the Cloud Adoption Framework. All resources must carry four mandatory tags — Environment, Owner, CostCentre, and Application — enforced through Azure Policy deny assignments at the Management Group level. Production resource groups have Delete locks applied to prevent accidental removal, and all NSG rules must include a description field documenting the business justification.</p>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>Pattern: <code>&lt;type&gt;-&lt;env&gt;-&lt;region&gt;-&lt;name&gt;[-&lt;seq&gt;]</code> using CAF abbreviations:</p>
 <table>
 <thead>
 <tr>
-<th>Standard</th>
-<th>Requirement</th>
+<th>Resource</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Naming</td>
-<td><code>env-region-service-suffix</code>, lowercase, hyphens, CAF abbreviations</td>
+<td>Resource Group</td>
+<td><code>rg-prod-euw-network</code></td>
 </tr>
 <tr>
-<td>Tagging</td>
-<td>Environment, Owner, CostCentre, Application on all resources</td>
+<td>Virtual Network</td>
+<td><code>vnet-prod-euw-hub</code></td>
 </tr>
 <tr>
-<td>Azure Policy</td>
-<td>Deny: missing tags, public IP on VMs, non-approved regions, unencrypted disks</td>
+<td>Subnet</td>
+<td><code>snet-prod-euw-app</code></td>
 </tr>
 <tr>
-<td>Resource locks</td>
-<td>CanNotDelete lock on all production resource groups</td>
+<td>VM</td>
+<td><code>vm-prod-euw-appserver-01</code></td>
 </tr>
 <tr>
-<td>NSG rules</td>
-<td>Description field mandatory; allow rules reviewed quarterly</td>
+<td>NSG</td>
+<td><code>nsg-prod-euw-app</code></td>
 </tr>
 <tr>
-<td>Managed disks</td>
-<td>Minimum Premium SSD for production; ephemeral OS disk where supported</td>
+<td>Key Vault</td>
+<td><code>kv-prod-euw-secrets</code></td>
+</tr>
+<tr>
+<td>Storage Account</td>
+<td><code>stcorpprodeuwa01</code> (no hyphens — SA naming is strict)</td>
+</tr>
+<tr>
+<td>App Service</td>
+<td><code>app-prod-euw-apimain</code></td>
+</tr>
+<tr>
+<td>AKS Cluster</td>
+<td><code>aks-prod-euw-platform</code></td>
 </tr>
 </tbody>
 </table>
+<p>Region abbreviations: <code>euw</code> = West Europe, <code>eun</code> = North Europe, <code>use</code> = East US.</p>
+<p>Full CAF naming reference: <a href="https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming">aka.ms/caf/naming</a>.</p>
+<h2 id="tagging-policy">Tagging Policy<a class="headerlink" href="#tagging-policy" title="Permanent link">&para;</a></h2>
+<p>Mandatory tags enforced via Azure Policy deny assignments at Management Group level:</p>
+<table>
+<thead>
+<tr>
+<th>Tag Key</th>
+<th>Example</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Environment</code></td>
+<td><code>prod</code>, <code>staging</code>, <code>dev</code></td>
+<td>Required on all resources</td>
+</tr>
+<tr>
+<td><code>Owner</code></td>
+<td><code>infra-team</code></td>
+<td>Required on all resources</td>
+</tr>
+<tr>
+<td><code>CostCentre</code></td>
+<td><code>CC-1234</code></td>
+<td>Required on all resource groups</td>
+</tr>
+<tr>
+<td><code>Application</code></td>
+<td><code>erp-frontend</code></td>
+<td>Required on all resources</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Verify tag compliance
+az policy state list --resource-group &lt;rg&gt; \
+    --filter &quot;policyDefinitionId eq '/providers/Microsoft.Authorization/policyDefinitions/&lt;required-tags-id&gt;'&quot; \
+    --query &quot;[?complianceState=='NonCompliant']&quot;
+</code></pre>
+<h2 id="rbac-standards">RBAC Standards<a class="headerlink" href="#rbac-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Least privilege</td>
+<td>Use built-in roles where possible; custom roles when built-in too broad</td>
+</tr>
+<tr>
+<td>No Owner at subscription level for individuals</td>
+<td>Use PIM-activated Owner for break-glass only</td>
+</tr>
+<tr>
+<td>Service principals</td>
+<td>Use managed identities where supported; service principal OIDC for CI/CD</td>
+</tr>
+<tr>
+<td>Access reviews</td>
+<td>Quarterly review of Contributor+ role assignments in production</td>
+</tr>
+<tr>
+<td>PIM</td>
+<td>All privileged roles require PIM justification and approval</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># List role assignments in subscription
+az role assignment list --scope /subscriptions/&lt;sub-id&gt; --output table
+
+# Identify stale role assignments (users not in Entra ID)
+az role assignment list --scope /subscriptions/&lt;sub-id&gt; \
+    --query &quot;[?principalType=='User'].[principalId,roleDefinitionName]&quot;
+</code></pre>
+<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Defender for Cloud</td>
+<td>Enabled on all subscriptions; recommendations remediated to &lt; 10% unhealthy</td>
+</tr>
+<tr>
+<td>Azure Policy</td>
+<td>CIS Azure Benchmark conformance pack assigned at root Management Group</td>
+</tr>
+<tr>
+<td>Diagnostic settings</td>
+<td>All resources → Log Analytics; Key Vault, NSG, Firewall also to Event Hub</td>
+</tr>
+<tr>
+<td>VNet flow logs</td>
+<td>Enabled on all VNets; 90-day retention</td>
+</tr>
+<tr>
+<td>Key Vault</td>
+<td>Soft delete + purge protection enabled; private endpoint required for production</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>All disks CMK or PMK (minimum); storage SSE with Microsoft-managed keys minimum</td>
+</tr>
+<tr>
+<td>NSG rules</td>
+<td>Description field mandatory; inbound ANY:ANY from internet denied by default</td>
+</tr>
+</tbody>
+</table>
+<h2 id="resource-lock-standards">Resource Lock Standards<a class="headerlink" href="#resource-lock-standards" title="Permanent link">&para;</a></h2>
+<p>Apply locks to prevent accidental deletion of production infrastructure:</p>
+<pre><code class="language-bash"># Add delete lock to production resource group
+az lock create --name &quot;prod-rg-lock&quot; --resource-group &lt;rg&gt; --lock-type CanNotDelete
+
+# List locks
+az lock list --resource-group &lt;rg&gt;
+</code></pre>
+<h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
+<p>Azure resources may only be deployed in:
+- <code>westeurope</code> — primary
+- <code>northeurope</code> — secondary / DR</p>
+<p>Enforced via Azure Policy: <code>Allowed locations</code> assignment at root Management Group.</p>
 
 
 

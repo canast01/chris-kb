@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-storage-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Storage Policy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-vlan-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network VLAN Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-and-software-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware and Software Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cmdb-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMDB Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,45 +808,188 @@
 
 
 <h1 id="vxrail-standards">VxRail Standards<a class="headerlink" href="#vxrail-standards" title="Permanent link">&para;</a></h1>
-<p>Node naming follows the convention <code>site-vxr-NN</code> (e.g., <code>lon-vxr-01</code>) to ensure consistent identification across sites and CMDB records. Cluster sizing requires a minimum of 3 nodes to satisfy the FTT=1 vSAN storage policy, with 4 nodes recommended for maintenance window resilience. All firmware versions must align with the VxRail Hardware Compatibility List (HCL) before any lifecycle operation.</p>
+<blockquote>
+<p>Part of the <a href="../">VxRail</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
+<th>Item</th>
 <th>Standard</th>
-<th>Value</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Node naming</td>
-<td><code>site-vxr-NN</code></td>
+<td>Node hostname</td>
+<td><code>&lt;site&gt;-vxr-&lt;nn&gt;</code></td>
+<td><code>lon-vxr-01</code></td>
 </tr>
 <tr>
-<td>Minimum cluster size</td>
-<td>3 nodes (FTT=1)</td>
+<td>Cluster name</td>
+<td><code>&lt;site&gt;-vxr-cluster-&lt;nn&gt;</code></td>
+<td><code>lon-vxr-cluster-01</code></td>
 </tr>
 <tr>
-<td>Recommended minimum</td>
-<td>4 nodes (maintenance safety)</td>
+<td>vCenter datacenter</td>
+<td><code>&lt;site&gt;-dc</code></td>
+<td><code>lon-dc</code></td>
 </tr>
 <tr>
-<td>vSAN policy — production</td>
-<td>FTT=1 RAID-5 (capacity) or RAID-1 (performance)</td>
+<td>vSAN datastore</td>
+<td><code>vsanDatastore</code> (default) or <code>&lt;site&gt;-vsan-ds</code></td>
+<td><code>lon-vsan-ds</code></td>
 </tr>
 <tr>
-<td>vSAN policy — critical</td>
-<td>FTT=2 RAID-6</td>
-</tr>
-<tr>
-<td>Network VLANs</td>
-<td>Management, vMotion, vSAN, VM traffic (separate per VLAN design)</td>
-</tr>
-<tr>
-<td>Firmware baseline</td>
-<td>Must match VxRail HCL for current cluster version</td>
+<td>iDRAC DNS name</td>
+<td><code>&lt;node-hostname&gt;-idrac</code></td>
+<td><code>lon-vxr-01-idrac</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="cluster-sizing-standards">Cluster Sizing Standards<a class="headerlink" href="#cluster-sizing-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum cluster size</td>
+<td>3 nodes (satisfies FTT=1 vSAN)</td>
+</tr>
+<tr>
+<td>Recommended minimum (production)</td>
+<td>4 nodes (allows 1 node in maintenance with FTT=1 intact)</td>
+</tr>
+<tr>
+<td>Recommended for FTT=2</td>
+<td>6 nodes minimum</td>
+</tr>
+<tr>
+<td>Node SKU selection</td>
+<td>All nodes within a cluster must be the same SKU for supported operation</td>
+</tr>
+<tr>
+<td>Mixed-node clusters</td>
+<td>Not supported in standard VxRail; contact Dell for stretched/mixed configs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vsan-storage-policy-standards">vSAN Storage Policy Standards<a class="headerlink" href="#vsan-storage-policy-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Workload Type</th>
+<th>FTT</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production (capacity-optimised)</td>
+<td>Standard VMs</td>
+<td>FTT=1</td>
+<td>RAID-5 (requires 4+ nodes)</td>
+</tr>
+<tr>
+<td>Production (performance-optimised)</td>
+<td>Latency-sensitive VMs</td>
+<td>FTT=1</td>
+<td>RAID-1 (mirroring)</td>
+</tr>
+<tr>
+<td>Critical / high-value</td>
+<td>Databases, critical app tiers</td>
+<td>FTT=2</td>
+<td>RAID-6 (requires 6+ nodes)</td>
+</tr>
+<tr>
+<td>Swap / temp objects</td>
+<td>VM swap files</td>
+<td>FTT=1</td>
+<td>RAID-1</td>
+</tr>
+</tbody>
+</table>
+<p>Do not apply FTT=0 policies to production VMs — a single disk failure will cause data loss.</p>
+<hr />
+<h2 id="network-vlan-standards">Network VLAN Standards<a class="headerlink" href="#network-vlan-standards" title="Permanent link">&para;</a></h2>
+<p>Each traffic type must use a separate VLAN. Commingling traffic types on a single VLAN is not supported for production VxRail clusters.</p>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>VLAN Purpose</th>
+<th>MTU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>ESXi mgmt, vCenter communication</td>
+<td>1500</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>VM live migration</td>
+<td>9000 (jumbo)</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>vSAN storage traffic</td>
+<td>9000 (jumbo)</td>
+</tr>
+<tr>
+<td>VxRail Management</td>
+<td>VxRail Manager internal</td>
+<td>1500</td>
+</tr>
+<tr>
+<td>VM traffic</td>
+<td>Guest VM workload traffic</td>
+<td>Per application</td>
+</tr>
+</tbody>
+</table>
+<p>Jumbo frames (MTU 9000) must be configured end-to-end for vMotion and vSAN VLANs — including on the physical switch ports and uplinks.</p>
+<hr />
+<h2 id="firmware-and-software-standards">Firmware and Software Standards<a class="headerlink" href="#firmware-and-software-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All node firmware versions <strong>must</strong> match the VxRail Hardware Compatibility List (HCL) for the cluster's current VxRail bundle version.</li>
+<li>Firmware must not be updated independently of the VxRail LCM bundle — independent firmware updates break HCL alignment.</li>
+<li>vSphere, vSAN, and NSX component versions must match the VxRail Composite Bundle BOM exactly.</li>
+<li>Do not install additional VIBs or third-party software on VxRail ESXi nodes without Dell qualification.</li>
+</ul>
+<p><strong>Verify current bundle version:</strong></p>
+<pre><code>VxRail Manager → System → Software Versions → Current Bundle
+</code></pre>
+<hr />
+<h2 id="change-management-standards">Change Management Standards<a class="headerlink" href="#change-management-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All VxRail lifecycle operations (LCM upgrades, node additions, node replacements) require a change ticket.</li>
+<li>VxRail LCM upgrades must not be started during business hours — schedule for approved maintenance windows.</li>
+<li>Node additions require pre-validation in VxRail Manager before physical installation.</li>
+<li>Post-change: verify cluster health in VxRail Manager and vSAN Skyline Health before closing the change.</li>
+</ul>
+<hr />
+<h2 id="cmdb-standards">CMDB Standards<a class="headerlink" href="#cmdb-standards" title="Permanent link">&para;</a></h2>
+<p>Each VxRail node must be registered in the CMDB with:</p>
+<ul>
+<li>Node serial number and service tag</li>
+<li>Cluster membership</li>
+<li>vSAN disk group configuration</li>
+<li>iDRAC IP address</li>
+<li>Firmware version and VxRail bundle version</li>
+<li>Support contract expiry date</li>
+</ul>
 
 
 

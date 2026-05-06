@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-readiness-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Readiness Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,8 +808,22 @@
 
 
 <h1 id="superna-eyeglass-architecture">Superna Eyeglass Architecture<a class="headerlink" href="#superna-eyeglass-architecture" title="Permanent link">&para;</a></h1>
-<p>Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It is deployed as a virtual appliance pair — one at the primary site and one at the DR site — each running as an OVA on VMware or Hyper-V. Eyeglass continuously monitors SyncIQ replication policies and maintains a mirrored view of share, quota, and DNS configuration to enable orchestrated failover without manual reconfiguration steps.</p>
-<p>During a failover event, Eyeglass executes share and quota reconfiguration on the DR cluster and performs DNS cutover automatically, reducing RTO to minutes for PowerScale-hosted file services.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover.</p>
+<h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
+<pre><code>Primary Site                           DR Site
+┌─────────────────────┐               ┌─────────────────────┐
+│ PowerScale Cluster A │◄──SyncIQ────► PowerScale Cluster B │
+│                     │               │                     │
+│ Eyeglass Appliance  │◄──Eyeglass sync─► Eyeglass DR       │
+│ (Primary)           │               │ Appliance           │
+└─────────────────────┘               └─────────────────────┘
+         │                                      │
+         ▼                                      ▼
+  Primary DNS                             DR DNS
+  (Windows/BIND)                    (Windows/BIND)
+</code></pre>
+<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -738,17 +835,17 @@
 <tbody>
 <tr>
 <td>Eyeglass Primary Appliance</td>
-<td>Monitor SyncIQ, policy sync, orchestration control plane</td>
+<td>Monitor SyncIQ policies; sync share/quota config; DR orchestration control plane</td>
 <td>Primary site</td>
 </tr>
 <tr>
 <td>Eyeglass DR Appliance</td>
-<td>Standby orchestration node; takes over during failover</td>
+<td>Standby orchestration node; activates when primary site is unavailable</td>
 <td>DR site</td>
 </tr>
 <tr>
 <td>PowerScale SyncIQ</td>
-<td>Data replication engine (underlying replication)</td>
+<td>Underlying data replication engine</td>
 <td>Both sites</td>
 </tr>
 <tr>
@@ -758,8 +855,84 @@
 </tr>
 <tr>
 <td>Eyeglass Admin UI</td>
-<td>Web-based management, DR readiness dashboard, failover initiation</td>
+<td>Web-based management (port 443)</td>
 <td>Accessed from management network</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dr-readiness-dashboard">DR Readiness Dashboard<a class="headerlink" href="#dr-readiness-dashboard" title="Permanent link">&para;</a></h2>
+<p>Eyeglass continuously monitors and scores DR readiness:</p>
+<pre><code>DR Readiness Score = 100% when:
+  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
+  ✓ All SMB shares mirrored on DR cluster
+  ✓ All NFS exports mirrored on DR cluster
+  ✓ All quotas aligned between primary and DR cluster
+  ✓ DNS zones pre-configured for cutover
+  ✓ Both Eyeglass appliances healthy and communicating
+</code></pre>
+<p>Access readiness dashboard: <code>https://&lt;eyeglass-ip&gt;</code> → DR → Readiness.</p>
+<h2 id="failover-execution-flow">Failover Execution Flow<a class="headerlink" href="#failover-execution-flow" title="Permanent link">&para;</a></h2>
+<p>When a failover is triggered:</p>
+<ol>
+<li>Eyeglass breaks SyncIQ replication (makes DR cluster writable)</li>
+<li>Reconfigures SMB shares and NFS exports on DR cluster to match primary settings</li>
+<li>Applies quota policies on DR cluster</li>
+<li>Executes DNS zone cutover (delegate authority to DR DNS entries)</li>
+<li>Notifies operations via email/SNMP</li>
+</ol>
+<p>RTO: typically 5–15 minutes for file services, depending on share count.</p>
+<h2 id="appliance-sizing">Appliance Sizing<a class="headerlink" href="#appliance-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Eyeglass VM Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 500 shares</td>
+<td>4 vCPU, 8 GB RAM</td>
+</tr>
+<tr>
+<td>500–2,000 shares</td>
+<td>8 vCPU, 16 GB RAM</td>
+</tr>
+<tr>
+<td>&gt; 2,000 shares</td>
+<td>8 vCPU, 32 GB RAM (or contact Superna for sizing)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic</th>
+<th>Port</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eyeglass Admin UI</td>
+<td>443 (HTTPS)</td>
+<td>From management network</td>
+</tr>
+<tr>
+<td>PowerScale OneFS API</td>
+<td>8080 / 443</td>
+<td>From Eyeglass to each cluster</td>
+</tr>
+<tr>
+<td>Eyeglass appliance sync</td>
+<td>9000</td>
+<td>Between primary and DR Eyeglass appliances</td>
+</tr>
+<tr>
+<td>DNS management</td>
+<td>53, 445 (Windows DNS WMI)</td>
+<td>From Eyeglass to DNS servers</td>
 </tr>
 </tbody>
 </table>

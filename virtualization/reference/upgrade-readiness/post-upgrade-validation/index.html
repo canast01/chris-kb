@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#immediate-validation-within-15-minutes-of-upgrade-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate Validation (within 15 minutes of upgrade completion)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-ha-and-drs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster HA and DRS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-validation-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Validation (if applicable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-validation-if-nsx-was-upgraded-or-touched" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Validation (if NSX was upgraded or touched)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vxrail-validation-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VxRail Validation (if applicable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-suite-validation-if-lcm-managed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Suite Validation (if LCM-managed)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-record-closure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Record Closure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,19 +841,92 @@
 
 
 <h1 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h1>
+<p>Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Document evidence for the change record.</p>
+<h2 id="immediate-validation-within-15-minutes-of-upgrade-completion">Immediate Validation (within 15 minutes of upgrade completion)<a class="headerlink" href="#immediate-validation-within-15-minutes-of-upgrade-completion" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># 1. Confirm vCenter is reachable and version is correct
+(Get-View ServiceInstance).Content.About.Version
+(Get-View ServiceInstance).Content.About.Build
+
+# 2. All hosts connected
+Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
+
+# 3. No unexpected VM power state changes
+Get-VM | Where-Object {$_.PowerState -ne &quot;PoweredOn&quot; -and $_.PowerState -ne &quot;PoweredOff&quot;} | Select-Object Name, PowerState
+</code></pre>
+<h2 id="vcenter-health">vCenter Health<a class="headerlink" href="#vcenter-health" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm vCenter login</li>
-<li>Confirm all hosts connected</li>
-<li>Confirm HA and DRS health</li>
-<li>Confirm vSAN health</li>
-<li>Confirm NSX health if used</li>
-<li>Confirm VxRail Manager health if used</li>
-<li>Confirm Aria integrations</li>
-<li>Confirm backups</li>
-<li>Confirm monitoring</li>
-<li>Confirm application validation</li>
-<li>Check new alerts</li>
-<li>Capture final versions</li>
+<li>[ ] Login to vCenter with SSO admin credentials: <code>administrator@vsphere.local</code></li>
+<li>[ ] vCenter version shows target build number (Administration → About)</li>
+<li>[ ] vCenter services all running: Administration → Deployments → System Configuration → vCenter Server → Services</li>
+<li>[ ] Identity source connected: Administration → Single Sign On → Configuration → Identity Sources — <code>Connected</code></li>
+<li>[ ] vSphere Client loads without certificate errors</li>
+</ul>
+<h2 id="cluster-ha-and-drs">Cluster HA and DRS<a class="headerlink" href="#cluster-ha-and-drs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-Cluster | Select-Object Name, HAEnabled, HAAdmissionControlEnabled, DrsEnabled, DrsAutomationLevel
+</code></pre>
+<ul>
+<li>[ ] HA re-enabled and showing green</li>
+<li>[ ] DRS re-enabled in correct automation level</li>
+<li>[ ] No <code>HA error</code> events on any host (check host Events tab)</li>
+</ul>
+<h2 id="vsan-validation-if-applicable">vSAN Validation (if applicable)<a class="headerlink" href="#vsan-validation-if-applicable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># On any cluster host
+esxcli vsan health cluster list | grep -v Green    # Should return nothing
+esxcli vsan debug resync summary                   # Should show no active resync
+esxcli vsan debug object list | grep -v Healthy    # Should return nothing
+</code></pre>
+<h2 id="nsx-validation-if-nsx-was-upgraded-or-touched">NSX Validation (if NSX was upgraded or touched)<a class="headerlink" href="#nsx-validation-if-nsx-was-upgraded-or-touched" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to NSX Manager
+get cluster status        # STABLE
+get services              # All core services running
+get edge-clusters         # All edge clusters healthy
+
+# Verify edge BGP sessions
+get bgp neighbor summary  # All peers Established
+</code></pre>
+<h2 id="vxrail-validation-if-applicable">VxRail Validation (if applicable)<a class="headerlink" href="#vxrail-validation-if-applicable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># VxRail Manager
+# Log in to VxRail Manager → Cluster → Health
+# All nodes should show &quot;Healthy&quot;
+# VxRail version should reflect the upgrade target
+</code></pre>
+<h2 id="aria-suite-validation-if-lcm-managed">Aria Suite Validation (if LCM-managed)<a class="headerlink" href="#aria-suite-validation-if-lcm-managed" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Log in to LCM: all environments show green health</li>
+<li>[ ] Log in to Aria Operations: collection state <code>OK</code> for all adapters</li>
+<li>[ ] Log in to Aria Automation: service health page shows all services running</li>
+</ul>
+<h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check if backup jobs can still enumerate VMs (Veeam example)
+# Run a &quot;Quick Backup&quot; on a non-critical VM to confirm backup proxy connectivity is intact
+</code></pre>
+<ul>
+<li>[ ] Trigger a test backup of one non-critical VM — confirm it completes successfully</li>
+<li>[ ] Confirm monitoring agents are still collecting from all hosts</li>
+</ul>
+<h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
+<p>Capture post-upgrade versions for CMDB update and future reference:</p>
+<pre><code class="language-powershell"># Capture all component versions
+Get-VMHost | Select-Object Name, Version, Build | Sort-Object Name | Export-Csv -Path /tmp/host_versions_$(Get-Date -Format yyyyMMdd).csv
+
+# vCenter version
+(Get-View ServiceInstance).Content.About | Select-Object Version, Build
+
+# NSX version (SSH to NSX Manager)
+# get version
+</code></pre>
+<h2 id="change-record-closure">Change Record Closure<a class="headerlink" href="#change-record-closure" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All hosts connected: confirmed</li>
+<li>[ ] Target build numbers verified on all components</li>
+<li>[ ] HA/DRS re-enabled and healthy</li>
+<li>[ ] vSAN health green</li>
+<li>[ ] NSX cluster stable</li>
+<li>[ ] Test backup completed successfully</li>
+<li>[ ] Monitoring collecting data</li>
+<li>[ ] Application owner sign-off received</li>
+<li>[ ] Snapshots removed after 48-hour validation period (schedule snapshot deletion reminder)</li>
+<li>[ ] Component version table updated in CMDB</li>
 </ul>
 
 

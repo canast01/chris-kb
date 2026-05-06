@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory-integration-sssd-realmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration (SSSD / realmd)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sudo-configuration-for-ad-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sudo Configuration for AD Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-agent-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Agent Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iscsi-storage-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iSCSI Storage Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multipath-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,168 @@
 
 
 <h1 id="linux-integration">Linux Integration<a class="headerlink" href="#linux-integration" title="Permanent link">&para;</a></h1>
-<p>Linux servers integrate with Active Directory via SSSD and Kerberos for centralised authentication, enabling AD users to log in with domain credentials without local account provisioning. Backup agents (Veeam Agent for Linux or NetBackup client) are deployed via Ansible at provisioning time and registered to the backup server. Monitoring agents include Prometheus <code>node_exporter</code> for metrics and the VMware Aria Operations agent where applicable. Storage connectivity uses the iSCSI initiator (<code>iscsiadm</code>) with <code>multipathd</code> for multipath failover on shared LUNs.</p>
-<ul>
-<li>AD/SSSD: <code>sssd</code>, <code>realmd</code>, <code>adcli</code> — domain join and Kerberos ticket management</li>
-<li>Backup: Veeam Agent for Linux (RHEL/Ubuntu), NetBackup client</li>
-<li>Monitoring: <code>node_exporter</code> (port 9100), Aria agent</li>
-<li>Storage: <code>iscsiadm</code> for iSCSI, <code>multipathd</code> for multipath, <code>/etc/multipath.conf</code></li>
-</ul>
+<blockquote>
+<p>Part of the <a href="../">Linux</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="active-directory-integration-sssd-realmd">Active Directory Integration (SSSD / realmd)<a class="headerlink" href="#active-directory-integration-sssd-realmd" title="Permanent link">&para;</a></h2>
+<p>Linux servers join Active Directory using <code>realmd</code> and <code>sssd</code>, allowing AD users to authenticate with Kerberos credentials without local account provisioning.</p>
+<p><strong>Join a RHEL/Ubuntu server to AD:</strong></p>
+<pre><code class="language-bash"># Install required packages (RHEL)
+dnf install sssd realmd adcli krb5-workstation oddjob oddjob-mkhomedir
+
+# Install required packages (Ubuntu)
+apt install sssd realmd adcli krb5-user packagekit
+
+# Discover the domain
+realm discover &lt;ad-domain.fqdn&gt;
+
+# Join the domain (uses a privileged AD account)
+realm join --user=&lt;admin-account&gt; &lt;ad-domain.fqdn&gt;
+
+# Verify join status
+realm list
+id &lt;ad-user&gt;@&lt;domain&gt;
+
+# Allow AD users to log in (default: all domain users)
+realm permit --all
+
+# Restrict to specific AD groups
+realm permit -g &quot;Linux Admins&quot; -g &quot;Linux Users&quot;
+</code></pre>
+<p><strong>SSSD configuration is written to <code>/etc/sssd/sssd.conf</code> automatically by realm.</strong> Key settings to verify:</p>
+<pre><code class="language-ini"># /etc/sssd/sssd.conf
+[sssd]
+domains = ad-domain.fqdn
+services = nss, pam
+
+[domain/ad-domain.fqdn]
+id_provider = ad
+auth_provider = ad
+access_provider = ad
+ad_domain = ad-domain.fqdn
+krb5_realm = AD-DOMAIN.FQDN
+use_fully_qualified_names = True
+fallback_homedir = /home/%d/%u
+</code></pre>
+<p><strong>Troubleshoot AD authentication:</strong></p>
+<pre><code class="language-bash"># Test user lookup
+id &lt;user&gt;@&lt;domain&gt;
+getent passwd &lt;user&gt;@&lt;domain&gt;
+
+# Check SSSD logs
+journalctl -u sssd -n 100
+cat /var/log/sssd/sssd_&lt;domain&gt;.log | tail -100
+
+# Clear SSSD cache (forces re-fetch from AD)
+sss_cache -E
+systemctl restart sssd
+
+# Test Kerberos ticket acquisition
+kinit &lt;user&gt;@&lt;DOMAIN.FQDN&gt;
+klist
+</code></pre>
+<hr />
+<h2 id="sudo-configuration-for-ad-groups">Sudo Configuration for AD Groups<a class="headerlink" href="#sudo-configuration-for-ad-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># /etc/sudoers.d/ad-groups — allow AD group full sudo access
+%linux\ admins@domain.fqdn ALL=(ALL) ALL
+
+# Allow passwordless sudo for a specific AD group
+%linux\ ops@domain.fqdn ALL=(ALL) NOPASSWD: ALL
+</code></pre>
+<p>Note: AD group names with spaces require escaping the space with a backslash.</p>
+<hr />
+<h2 id="backup-agent-integration">Backup Agent Integration<a class="headerlink" href="#backup-agent-integration" title="Permanent link">&para;</a></h2>
+<p><strong>Veeam Agent for Linux:</strong></p>
+<pre><code class="language-bash"># Install Veeam Agent (RHEL — requires the Veeam repo added first)
+rpm --import https://www.veeam.com/downloads/public.key
+cat &gt; /etc/yum.repos.d/veeam.repo &lt;&lt; EOF
+[veeam]
+name=Veeam
+baseurl=https://repository.veeam.com/backup/linux/agent/rpm/rhel/x86_64/
+enabled=1
+gpgcheck=1
+gpgkey=https://www.veeam.com/downloads/public.key
+EOF
+dnf install veeam
+
+# Start and enable the Veeam agent service
+systemctl enable --now veeamagent
+
+# Check agent status
+veeam status
+</code></pre>
+<p>Registration to the Veeam Backup &amp; Replication server is done from the VBR console: Protection Groups → Add Group → select the server by hostname.</p>
+<hr />
+<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
+<p><strong>node_exporter (Prometheus metrics):</strong></p>
+<pre><code class="language-bash"># Install node_exporter (RHEL — via binary or package)
+dnf install golang-github-prometheus-node-exporter  # EPEL repo required
+
+# Or via binary
+useradd -r -s /bin/false node_exporter
+curl -L https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz | tar xz
+mv node_exporter-*/node_exporter /usr/local/bin/
+systemctl enable --now node_exporter
+
+# Default listen port
+ss -tlnp | grep 9100
+</code></pre>
+<p><strong>Verify Prometheus can scrape the node:</strong></p>
+<pre><code class="language-bash">curl http://&lt;server-ip&gt;:9100/metrics | head -20
+</code></pre>
+<hr />
+<h2 id="iscsi-storage-connectivity">iSCSI Storage Connectivity<a class="headerlink" href="#iscsi-storage-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Install iSCSI initiator (RHEL)
+dnf install iscsi-initiator-utils
+systemctl enable --now iscsid
+
+# Set initiator IQN (unique per server — set before first login)
+cat /etc/iscsi/initiatorname.iscsi
+# Format: InitiatorName=iqn.YYYY-MM.reverse-domain:unique-name
+
+# Discover targets on a storage portal
+iscsiadm --mode discovery --type sendtargets --portal &lt;storage-ip&gt;
+
+# Login to a specific target
+iscsiadm --mode node --targetname &lt;iqn&gt; --portal &lt;storage-ip&gt; --login
+
+# Check active sessions
+iscsiadm --mode session -P 3
+
+# Rescan for new LUNs
+iscsiadm --mode session --rescan
+</code></pre>
+<hr />
+<h2 id="multipath-configuration">Multipath Configuration<a class="headerlink" href="#multipath-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Install and enable multipathd (RHEL)
+dnf install device-mapper-multipath
+systemctl enable --now multipathd
+
+# Generate a default config (do not use defaults for production — review vendor recommendations)
+mpathconf --enable --with_multipathd y
+
+# Check multipath device map
+multipath -l
+multipath -ll  # verbose
+
+# Check path states
+multipath -v3 2&gt;&amp;1 | grep -E &quot;checker|faulty|active&quot;
+
+# Flush and reload multipath map
+multipath -F
+multipath -r
+</code></pre>
+<p>Key <code>/etc/multipath.conf</code> settings for Dell/EMC and Pure Storage:</p>
+<pre><code>defaults {
+    polling_interval     5
+    path_selector        &quot;round-robin 0&quot;
+    path_grouping_policy multibus
+    failback             immediate
+    no_path_retry        fail
+}
+</code></pre>
+<p>Consult the vendor's Linux Multipath Guide (Dell PowerMax, Pure Storage) for device-specific settings.</p>
 
 
 

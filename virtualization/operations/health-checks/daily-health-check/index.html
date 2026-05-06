@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-vcenter-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. vCenter Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-host-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Host Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cluster-ha-drs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cluster HA / DRS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-datastore-free-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Datastore Free Space
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-vsan-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. vSAN Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-critical-vm-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Critical VM Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-active-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Active Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-backup-job-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Backup Job Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-identity-source-sso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Identity Source / SSO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#daily-check-summary-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Summary Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,50 +841,137 @@
 
 
 <h1 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h1>
-<p>Daily checks should focus on items that can impact availability quickly.</p>
+<p>Morning checks covering all components that can silently degrade overnight. Target: complete in under 15 minutes.</p>
+<h2 id="1-vcenter-availability">1. vCenter Availability<a class="headerlink" href="#1-vcenter-availability" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Connect and verify vCenter services
+Connect-VIServer -Server vcenter.corp.local
+Get-View -ViewType ServiceInstance | Select-Object -ExpandProperty ServerClock
+
+# Check vCenter services from appliance shell
+service-control --status --all | grep -v stopped
+</code></pre>
+<p>Also check: VCSA VAMI at <code>https://vcenter:5480</code> — confirm appliance health, disk usage, and certificate expiry.</p>
+<h2 id="2-host-connectivity">2. Host Connectivity<a class="headerlink" href="#2-host-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All hosts should be Connected/PoweredOn
+Get-VMHost | Select-Object Name, ConnectionState, PowerState, OverallStatus |
+    Where-Object { $_.ConnectionState -ne &quot;Connected&quot; -or $_.PowerState -ne &quot;PoweredOn&quot; }
+
+# Any result here = action required
+</code></pre>
+<h2 id="3-cluster-ha-drs">3. Cluster HA / DRS<a class="headerlink" href="#3-cluster-ha-drs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check HA and DRS are enabled
+Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel
+
+# Check active HA errors
+Get-VIEvent -Types Error -MaxSamples 200 |
+    Where-Object { $_.FullFormattedMessage -match &quot;HA|DRS&quot; } |
+    Select-Object CreatedTime, FullFormattedMessage | Select-Object -First 10
+</code></pre>
+<h2 id="4-datastore-free-space">4. Datastore Free Space<a class="headerlink" href="#4-datastore-free-space" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Flag datastores below 20% free
+Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.20 } |
+    Select-Object Name,
+        @{N=&quot;FreeGB&quot;; E={ [math]::Round($_.FreeSpaceGB,1) }},
+        @{N=&quot;CapGB&quot;;  E={ [math]::Round($_.CapacityGB,1) }},
+        @{N=&quot;Free%&quot;;  E={ [math]::Round($_.FreeSpaceGB/$_.CapacityGB*100,1) }}
+</code></pre>
+<h2 id="5-vsan-health">5. vSAN Health<a class="headerlink" href="#5-vsan-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run on any ESXi host in the vSAN cluster
+esxcli vsan health cluster list | grep -v &quot;Green\|healthy&quot;
+
+# Check for resyncing objects
+esxcli vsan debug object list | grep -i &quot;Resyncing\|Degraded\|Absent&quot; | wc -l
+</code></pre>
+<h2 id="6-critical-vm-status">6. Critical VM Status<a class="headerlink" href="#6-critical-vm-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check VMs with PoweredOff state (expected list should be known)
+Get-VM | Where-Object { $_.PowerState -ne &quot;PoweredOn&quot; } |
+    Select-Object Name, PowerState, Guest
+
+# Check snapshots older than 3 days
+Get-VM | Get-Snapshot | Where-Object { $_.Created -lt (Get-Date).AddDays(-3) } |
+    Select-Object VM, Name, Created, SizeGB
+</code></pre>
+<h2 id="7-active-alarms">7. Active Alarms<a class="headerlink" href="#7-active-alarms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All triggered alarms at cluster and higher scope
+Get-Folder &quot;Datacenters&quot; | Get-View |
+    Select-Object -ExpandProperty TriggeredAlarmState |
+    ForEach-Object {
+        [PSCustomObject]@{
+            Entity = (Get-View $_.Entity).Name
+            Alarm  = (Get-View $_.Alarm).Info.Name
+            Status = $_.OverallStatus
+            Time   = $_.Time
+        }
+    } | Where-Object { $_.Status -ne &quot;green&quot; }
+</code></pre>
+<h2 id="8-backup-job-status">8. Backup Job Status<a class="headerlink" href="#8-backup-job-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Veeam — check last 24h job results
+Get-VBRJob | ForEach-Object {
+    $last = Get-VBRRestorePoint -Job $_ | Sort-Object CreationTime -Descending | Select-Object -First 1
+    [PSCustomObject]@{ Job = $_.Name; LastResult = $_.GetLastResult(); LastRun = $_.ScheduleOptions.LatestRunLocal }
+} | Where-Object { $_.LastResult -ne &quot;Success&quot; }
+</code></pre>
+<h2 id="9-identity-source-sso">9. Identity Source / SSO<a class="headerlink" href="#9-identity-source-sso" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Verify LDAP/AD identity source is reachable
+Get-SsoAuthenticationSource | Select-Object Name, Type, Enabled
+# Check for recent SSO errors in vCenter events
+Get-VIEvent -MaxSamples 100 | Where-Object { $_.FullFormattedMessage -match &quot;SSO\|identity\|LDAP&quot; } |
+    Select-Object -First 5 CreatedTime, FullFormattedMessage
+</code></pre>
+<h2 id="daily-check-summary-template">Daily Check Summary Template<a class="headerlink" href="#daily-check-summary-template" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Area</th>
-<th>Check</th>
+<th>Status</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>vCenter</td>
-<td>Confirm vCenter is reachable and services are healthy</td>
+<td>vCenter reachable</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>ESXi Hosts</td>
-<td>Confirm all hosts are connected</td>
+<td>All hosts connected</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Clusters</td>
-<td>Check HA, DRS, and admission control</td>
+<td>HA/DRS enabled</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Datastores</td>
-<td>Confirm free space and latency</td>
+<td>No datastores &lt; 20% free</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>vSAN</td>
-<td>Review Skyline Health, disk groups, resyncs, and object health</td>
+<td>vSAN health all green</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>VMs</td>
-<td>Check critical VM status, snapshots, and VMware Tools</td>
+<td>No critical VM alarms</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Alerts</td>
-<td>Review active critical and warning alarms</td>
+<td>No stale snapshots</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Backups</td>
-<td>Confirm backup jobs completed</td>
+<td>All backup jobs succeeded</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
-<td>Access</td>
-<td>Confirm admin login and identity source health</td>
+<td>Identity source healthy</td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>

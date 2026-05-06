@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>vSAN Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#vsan-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              vSAN Troubleshooting
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,97 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cluster-health-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Health Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-and-host-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk and Host Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resync-throttling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resync Throttling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,18 +813,98 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the vSAN reference.</p>
-</blockquote>
+<h1 id="vsan-troubleshooting">vSAN Troubleshooting<a class="headerlink" href="#vsan-troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Reference procedures for diagnosing vSAN issues.</p>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="resync-review/">
-  <strong>Resync Review</strong>
-  <span>Reviewing resync activity, object health, and assessing rebuild impact on cluster performance.</span>
-</a>
-
+<a class="kb-card" href="resync-review/"><strong>Resync Review</strong><span>Reviewing resync activity, object health, and assessing rebuild impact on cluster performance.</span></a>
 </div>
+
+<h2 id="quick-diagnostics">Quick Diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
+<h3 id="cluster-health-overview">Cluster Health Overview<a class="headerlink" href="#cluster-health-overview" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Via ESXi shell on any cluster host
+esxcli vsan cluster get            # Cluster UUID, membership
+esxcli vsan health cluster list    # List all health test results
+esxcli vsan health cluster get -t &quot;Overall cluster health&quot;
+</code></pre>
+<h3 id="object-health">Object Health<a class="headerlink" href="#object-health" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List unhealthy objects
+esxcli vsan debug object list | grep -v &quot;healthy&quot;
+
+# Get detail on a specific object
+esxcli vsan debug object get -u &lt;object-uuid&gt;
+
+# Check resync progress
+esxcli vsan debug resync list       # Current resync operations
+esxcli vsan debug resync summary    # Summary of resync bytes remaining
+</code></pre>
+<h3 id="disk-and-host-diagnostics">Disk and Host Diagnostics<a class="headerlink" href="#disk-and-host-diagnostics" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Check disk groups
+esxcli vsan storage list
+
+# Check disk health
+esxcli vsan storage check
+
+# Check network partition (all hosts must see all others)
+esxcli vsan network ip list
+esxcli vsan debug controller list
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>First Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN object degraded</td>
+<td>Host or disk failure</td>
+<td>vSAN Health → Disk Health</td>
+</tr>
+<tr>
+<td>High resync traffic</td>
+<td>Host just came back / disk replaced</td>
+<td><code>esxcli vsan debug resync summary</code></td>
+</tr>
+<tr>
+<td>vSAN latency elevated</td>
+<td>Disk congestion or network issue</td>
+<td>Aria Ops → vSAN → Disk Latency dashboard</td>
+</tr>
+<tr>
+<td>Cluster capacity low</td>
+<td>Thin provisioning over-allocation</td>
+<td>vSAN capacity widget; check slack space</td>
+</tr>
+<tr>
+<td>vSAN Health alarm: "Unicast agent unreachable"</td>
+<td>Network issue on vSAN VMkernel</td>
+<td>Ping vSAN VMK IPs between all hosts</td>
+</tr>
+<tr>
+<td>Policy compliance = 0%</td>
+<td>All required witnesses/replicas gone</td>
+<td>Check host count vs. FTT policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># vSAN observer / diagnostic bundle
+# vCenter UI → Cluster → Monitor → vSAN → Support → Generate Cluster Support Bundle
+
+# Live vSAN logs on ESXi host
+tail -f /var/run/log/vmkernel.log | grep -i vsan
+</code></pre>
+<h2 id="resync-throttling">Resync Throttling<a class="headerlink" href="#resync-throttling" title="Permanent link">&para;</a></h2>
+<p>During planned maintenance, throttle resync bandwidth to reduce impact on production workloads:</p>
+<pre><code class="language-bash"># On cluster hosts — throttle resync to 25% of max
+esxcli vsan debug resync throttle -p 25
+
+# Remove throttle when maintenance is complete
+esxcli vsan debug resync throttle -p 100
+</code></pre>
 
 
 

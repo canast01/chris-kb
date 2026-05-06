@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,119 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#policy-tree-naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Tree Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-algorithm-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Algorithm Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validity-period-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validity Period Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subject-and-san-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subject and SAN Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wildcard-certificate-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wildcard Certificate Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-request-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Request Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Request Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal-production-auto-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Production (Auto-Issue)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-public-manual-approval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Public (Manual Approval)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-key-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Key Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,42 +836,255 @@
 
 
 <h1 id="venafi-standards">Venafi Standards<a class="headerlink" href="#venafi-standards" title="Permanent link">&para;</a></h1>
-<p>The Venafi policy tree is structured as folders by environment (e.g., <code>\VED\Policy\Internal\Production</code>, <code>\VED\Policy\External\Public</code>), with consistent naming for policy folders and certificate objects using lowercase-hyphenated identifiers including environment, FQDN, and purpose. Validity period standards are 1–3 years for internal certificates and 1 year for external/public-facing certificates.</p>
-<p>Key algorithm requirements are RSA-4096 or ECDSA P-256 minimum. All certificates must include Subject Alternative Names (SANs); Common Name alone is not sufficient. Wildcards are permitted for internal domains but restricted for external certificates and must receive explicit policy approval.</p>
+<p>Certificate policy standards enforced through the Venafi policy tree. All certificates issued through Venafi must comply with these standards. Non-compliant requests are rejected at the policy folder level.</p>
+<hr />
+<h2 id="policy-tree-naming-conventions">Policy Tree Naming Conventions<a class="headerlink" href="#policy-tree-naming-conventions" title="Permanent link">&para;</a></h2>
+<p>Policy folders use lowercase-hyphenated names. Certificate objects (leaf nodes) use the FQDN as the object name.</p>
+<pre><code>\VED\Policy\
+├── internal\
+│   ├── production\          e.g., \VED\Policy\internal\production\servers\
+│   ├── non-production\
+│   └── infrastructure\
+│           ├── network\
+│           └── vmware\
+└── external\
+    └── public\
+</code></pre>
+<p>Certificate object naming within a folder: <code>&lt;fqdn&gt;</code> (e.g., <code>app01.corp.example.com</code>). For wildcard certificates: <code>wildcard.&lt;domain&gt;</code> (e.g., <code>wildcard.corp.example.com</code>). No spaces or special characters in object names.</p>
+<hr />
+<h2 id="key-algorithm-standards">Key Algorithm Standards<a class="headerlink" href="#key-algorithm-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Standard</th>
+<th>Usage</th>
+<th>Algorithm</th>
+<th>Minimum Key Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server / service certificates</td>
+<td>RSA</td>
+<td>4096 bits</td>
+</tr>
+<tr>
+<td>Server / service certificates</td>
+<td>ECDSA</td>
+<td>P-256 (NIST secp256r1)</td>
+</tr>
+<tr>
+<td>Code signing</td>
+<td>RSA</td>
+<td>4096 bits</td>
+</tr>
+<tr>
+<td>User / client certificates</td>
+<td>RSA</td>
+<td>2048 bits minimum; 4096 preferred</td>
+</tr>
+<tr>
+<td>CA certificates (Issuing CA)</td>
+<td>RSA</td>
+<td>4096 bits</td>
+</tr>
+<tr>
+<td>CA certificates (Root CA)</td>
+<td>RSA</td>
+<td>4096 bits</td>
+</tr>
+</tbody>
+</table>
+<p>RSA-2048 is accepted for user/client certificates only. RSA-2048 server certificates are rejected by Venafi policy for internal production and all external certificates.</p>
+<p>SHA-256 is the minimum hash algorithm. SHA-1 certificates are blocked at the policy level.</p>
+<hr />
+<h2 id="validity-period-standards">Validity Period Standards<a class="headerlink" href="#validity-period-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Certificate Type</th>
+<th>Maximum Validity</th>
+<th>Renewal Window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internal — Production</td>
+<td>2 years</td>
+<td>30 days before expiry</td>
+</tr>
+<tr>
+<td>Internal — Non-production</td>
+<td>3 years</td>
+<td>30 days before expiry</td>
+</tr>
+<tr>
+<td>External / Public-facing</td>
+<td>1 year</td>
+<td>30 days before expiry</td>
+</tr>
+<tr>
+<td>Internal CA (Issuing)</td>
+<td>10 years</td>
+<td>Renew 12 months before expiry</td>
+</tr>
+<tr>
+<td>Root CA</td>
+<td>20 years</td>
+<td>Renew 24 months before expiry</td>
+</tr>
+<tr>
+<td>Code signing</td>
+<td>1 year</td>
+<td>30 days before expiry</td>
+</tr>
+</tbody>
+</table>
+<p>Note: CA/Browser Forum mandates a maximum 398-day (roughly 13-month) validity for publicly trusted TLS certificates. Venafi policy enforces 365-day maximum for all external certificates to allow headroom.</p>
+<hr />
+<h2 id="subject-and-san-requirements">Subject and SAN Requirements<a class="headerlink" href="#subject-and-san-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
 <th>Requirement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Internal validity</td>
-<td>1–3 years</td>
+<td>Common Name (CN)</td>
+<td>Must be the primary FQDN or service name</td>
 </tr>
 <tr>
-<td>External validity</td>
-<td>1 year maximum</td>
-</tr>
-<tr>
-<td>Key algorithm</td>
-<td>RSA-4096 or ECDSA P-256</td>
-</tr>
-<tr>
-<td>Hash algorithm</td>
-<td>SHA-256 minimum</td>
-</tr>
-<tr>
-<td>SAN usage</td>
+<td>Subject Alternative Name</td>
 <td>Mandatory on all certificates</td>
 </tr>
 <tr>
-<td>Wildcards (external)</td>
-<td>Restricted — approval required</td>
+<td>CN must appear in SAN</td>
+<td>Yes — CN alone is not accepted by modern browsers/clients</td>
+</tr>
+<tr>
+<td>IP SANs</td>
+<td>Permitted for infrastructure; must be in addition to DNS SAN</td>
+</tr>
+<tr>
+<td>Email SANs</td>
+<td>Only for S/MIME or user certificates</td>
+</tr>
+<tr>
+<td>Organisation (O)</td>
+<td>Required for OV and EV certificates</td>
+</tr>
+<tr>
+<td>Country (C)</td>
+<td>Required for OV and EV certificates</td>
 </tr>
 </tbody>
 </table>
+<p>Venafi policy rejects CSRs where:
+- No SAN extension is present
+- The CN is not also listed as a DNS SAN
+- The SAN contains an internal hostname (<code>*.local</code>, <code>*.internal</code>) in an external policy folder</p>
+<hr />
+<h2 id="wildcard-certificate-policy">Wildcard Certificate Policy<a class="headerlink" href="#wildcard-certificate-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internal production</td>
+<td>Permitted with documented justification</td>
+</tr>
+<tr>
+<td>Internal non-production</td>
+<td>Permitted</td>
+</tr>
+<tr>
+<td>External / public-facing</td>
+<td>Restricted — explicit approval required</td>
+</tr>
+<tr>
+<td>External wildcard for <code>*.com</code> TLD</td>
+<td>Prohibited</td>
+</tr>
+</tbody>
+</table>
+<p>Wildcard approval process (external):
+1. Requestor submits a certificate request with business justification.
+2. Security team reviews and approves or rejects within 5 business days.
+3. Approved wildcards are subject to annual review.
+4. Approved wildcards must be onboarded to CyberArk for private key protection.</p>
+<hr />
+<h2 id="certificate-request-workflow">Certificate Request Workflow<a class="headerlink" href="#certificate-request-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="internal-production-auto-issue">Internal Production (Auto-Issue)<a class="headerlink" href="#internal-production-auto-issue" title="Permanent link">&para;</a></h3>
+<pre><code>Requestor submits CSR via Venafi UI or API
+         |
+         v
+Venafi validates against folder policy
+  (key size, hash, SAN, validity)
+         |
+    Pass: auto-submit to ADCS
+    Fail: reject with policy violation message
+         |
+         v
+ADCS issues certificate
+         |
+         v
+Venafi stores certificate, notifies requestor
+</code></pre>
+<h3 id="external-public-manual-approval">External Public (Manual Approval)<a class="headerlink" href="#external-public-manual-approval" title="Permanent link">&para;</a></h3>
+<pre><code>Requestor submits CSR via Venafi UI or API
+         |
+         v
+Venafi validates against folder policy
+         |
+         v
+Certificate request enters Approval Queue
+         |
+         v
+Security team reviews and approves/rejects
+         |
+    Approved: Venafi submits to DigiCert connector
+    Rejected: requestor notified with reason
+         |
+         v
+DigiCert performs DV/OV validation and issues
+         |
+         v
+Venafi stores certificate, notifies requestor
+</code></pre>
+<hr />
+<h2 id="private-key-handling">Private Key Handling<a class="headerlink" href="#private-key-handling" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key generated by requestor</td>
+<td>Private key stays on origin host; only CSR sent to Venafi</td>
+</tr>
+<tr>
+<td>Key generated by Venafi</td>
+<td>Venafi generates key, stores encrypted copy; key exported once to requestor</td>
+</tr>
+<tr>
+<td>Key export from Venafi</td>
+<td>Requires <code>Safe</code> permission level in Venafi RBAC; logged as audit event</td>
+</tr>
+<tr>
+<td>Production server keys</td>
+<td>Never exported or stored outside of the origin host and CyberArk (if applicable)</td>
+</tr>
+</tbody>
+</table>
+<p>Keys for high-value services (CA certificates, wildcard certificates, code signing) must be stored in an HSM or managed within CyberArk with controlled retrieval.</p>
 
 
 

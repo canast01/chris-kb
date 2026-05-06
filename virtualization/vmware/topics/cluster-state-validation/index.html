@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#healthy-state" class="md-nav__link">
+  <a href="#host-connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Healthy State
+        Host Connectivity
       
     </span>
   </a>
@@ -725,10 +723,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#unhealthy-indicators" class="md-nav__link">
+  <a href="#ha-and-drs-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Unhealthy Indicators
+        HA and DRS Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-cluster-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Cluster Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-utilisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Utilisation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drs-migration-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRS Migration Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#healthy-state-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Healthy State Checklist
       
     </span>
   </a>
@@ -755,16 +808,115 @@
 
 
 <h1 id="cluster-state-validation">Cluster State Validation<a class="headerlink" href="#cluster-state-validation" title="Permanent link">&para;</a></h1>
-<h2 id="healthy-state">Healthy State<a class="headerlink" href="#healthy-state" title="Permanent link">&para;</a></h2>
-<p>All hosts connected<br />
-No alarms<br />
-Datastores accessible<br />
-Network stable</p>
-<h2 id="unhealthy-indicators">Unhealthy Indicators<a class="headerlink" href="#unhealthy-indicators" title="Permanent link">&para;</a></h2>
-<p>Disconnected host<br />
-Storage warning<br />
-Network error<br />
-Capacity alert</p>
+<p>Quick checks to confirm a vSphere cluster is healthy before and after changes.</p>
+<h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># All hosts should show ConnectionState: Connected, PowerState: PoweredOn
+Get-VMHost -Location (Get-Cluster &quot;ClusterName&quot;) |
+    Select-Object Name, ConnectionState, PowerState, OverallStatus |
+    Sort-Object Name
+
+# Flag any non-Connected hosts
+Get-VMHost | Where-Object { $_.ConnectionState -ne &quot;Connected&quot; }
+</code></pre>
+<h2 id="ha-and-drs-status">HA and DRS Status<a class="headerlink" href="#ha-and-drs-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check HA and DRS are enabled and configured
+Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel
+
+# Check HA admission control
+Get-Cluster | Get-View | Select-Object -ExpandProperty Configuration |
+    Select-Object -ExpandProperty DasConfig |
+    Select-Object AdmissionControlEnabled, FailoverLevel
+</code></pre>
+<h2 id="active-alarms">Active Alarms<a class="headerlink" href="#active-alarms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all triggered alarms across the cluster
+$cluster = Get-Cluster &quot;ClusterName&quot;
+$alarms = $cluster | Get-View
+$alarms.TriggeredAlarmState | ForEach-Object {
+    [PSCustomObject]@{
+        Entity = (Get-View $_.Entity).Name
+        Alarm  = (Get-View $_.Alarm).Info.Name
+        Status = $_.OverallStatus
+        Time   = $_.Time
+    }
+}
+</code></pre>
+<h2 id="vsan-cluster-health">vSAN Cluster Health<a class="headerlink" href="#vsan-cluster-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># On any ESXi host in the cluster
+esxcli vsan cluster get
+esxcli vsan health cluster list
+
+# Check object health
+esxcli vsan debug object list | grep -i &quot;Degraded\|Absent&quot;
+</code></pre>
+<h2 id="resource-utilisation">Resource Utilisation<a class="headerlink" href="#resource-utilisation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># CPU and memory headroom per cluster
+Get-Cluster | ForEach-Object {
+    $c = $_
+    $hosts = Get-VMHost -Location $c
+    $cpuUsedGHz  = ($hosts | Measure-Object CpuUsageMhz -Sum).Sum / 1000
+    $cpuTotalGHz = ($hosts | Measure-Object CpuTotalMhz -Sum).Sum / 1000
+    $memUsedGB   = ($hosts | Measure-Object MemoryUsageGB -Sum).Sum
+    $memTotalGB  = ($hosts | Measure-Object MemoryTotalGB -Sum).Sum
+    [PSCustomObject]@{
+        Cluster      = $c.Name
+        &quot;CPU Used %&quot;  = [math]::Round($cpuUsedGHz / $cpuTotalGHz * 100, 1)
+        &quot;Mem Used %&quot;  = [math]::Round($memUsedGB / $memTotalGB * 100, 1)
+    }
+}
+</code></pre>
+<h2 id="drs-migration-recommendations">DRS Migration Recommendations<a class="headerlink" href="#drs-migration-recommendations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List pending DRS recommendations
+(Get-Cluster &quot;ClusterName&quot; | Get-View).GetRecommendation() |
+    Where-Object { $_.ReasonText -match &quot;DRS&quot; } |
+    Select-Object ReasonText, Rating
+</code></pre>
+<h2 id="healthy-state-checklist">Healthy State Checklist<a class="headerlink" href="#healthy-state-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All hosts ConnectionState</td>
+<td>Connected</td>
+</tr>
+<tr>
+<td>All hosts PowerState</td>
+<td>PoweredOn</td>
+</tr>
+<tr>
+<td>HA enabled</td>
+<td>True</td>
+</tr>
+<tr>
+<td>DRS automation</td>
+<td>FullyAutomated</td>
+</tr>
+<tr>
+<td>No triggered alarms</td>
+<td>0 critical/warning alarms</td>
+</tr>
+<tr>
+<td>vSAN health</td>
+<td>All green</td>
+</tr>
+<tr>
+<td>CPU utilisation</td>
+<td>&lt; 70% average</td>
+</tr>
+<tr>
+<td>Memory utilisation</td>
+<td>&lt; 80% average</td>
+</tr>
+<tr>
+<td>No active DRS recommendations</td>
+<td>0 pending</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vm-connectivity-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Connectivity Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsg-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSG Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-authentication-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure AD Authentication Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-storage-access-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Storage Access Denied
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks-pod-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS Pod Not Starting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#app-service-502503" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Service 502/503
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,43 +797,107 @@
 
 
 <h1 id="azure-troubleshooting">Azure Troubleshooting<a class="headerlink" href="#azure-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>VM connectivity failures are diagnosed by checking NSG inbound/outbound rules at the subnet and NIC level, effective routes on the NIC, and Azure Firewall or NVA policy if traffic traverses a hub network. Azure Storage access-denied errors require checking the storage account firewall (allowed VNets and IPs), the caller's RBAC role assignment, and whether a SAS token has expired or has insufficient permissions. App Service 502/503 errors are most commonly caused by the App Service Plan running at capacity, a failed health check probe, or a dependency (database, Key Vault) timing out.</p>
-<table>
-<thead>
-<tr>
-<th>Issue</th>
-<th>First checks</th>
-<th>Commands / Portal path</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM no connectivity</td>
-<td>NSG effective rules, effective routes, Azure Firewall logs</td>
-<td><code>az network nic show-effective-nsg</code>, <code>az network watcher packet-capture</code></td>
-</tr>
-<tr>
-<td>Storage Access Denied</td>
-<td>Storage firewall, RBAC role, SAS token expiry</td>
-<td><code>az storage account show --query networkRuleSet</code>, check IAM blade</td>
-</tr>
-<tr>
-<td>App Service 502/503</td>
-<td>App Service Plan CPU/memory, health check config, app logs</td>
-<td>App Service → Diagnose and solve problems → Availability</td>
-</tr>
-<tr>
-<td>Key Vault throttling</td>
-<td>Request rate (&gt; 2000/10s for secrets), check metrics</td>
-<td>Azure Monitor → Key Vault → Metrics → Service API hits</td>
-</tr>
-<tr>
-<td>AKS pod not starting</td>
-<td>Node resource pressure, image pull errors, NSG blocking egress</td>
-<td><code>kubectl describe pod</code>, <code>kubectl get events</code>, check ACR firewall</td>
-</tr>
-</tbody>
-</table>
+<h2 id="vm-connectivity-issues">VM Connectivity Issues<a class="headerlink" href="#vm-connectivity-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Check effective NSG rules on the NIC
+az network nic show-effective-nsg --name &lt;nic-name&gt; -g &lt;rg&gt; | \
+    jq '.effectiveNetworkSecurityGroups[].effectiveSecurityRules[] | select(.access==&quot;Deny&quot;)'
+
+# 2. Check effective routes on the NIC
+az network nic show-effective-route-table --name &lt;nic-name&gt; -g &lt;rg&gt;
+
+# 3. Use Network Watcher to test connectivity
+az network watcher test-connectivity \
+    --source-resource &lt;source-vm-id&gt; \
+    --dest-address &lt;destination-ip&gt; --dest-port 443
+
+# 4. Packet capture on NIC
+az network watcher packet-capture create \
+    --vm &lt;vm-name&gt; -g &lt;rg&gt; --name my-capture --storage-account &lt;sa&gt;
+</code></pre>
+<p>Common causes:
+- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
+- User-defined route sending traffic to wrong next hop
+- Azure Firewall blocking traffic between hub and spoke
+- Service endpoint not configured on subnet (for PaaS services)</p>
+<h2 id="nsg-troubleshooting">NSG Troubleshooting<a class="headerlink" href="#nsg-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check if traffic is allowed by NSG
+az network watcher check-nsg-flow --direction Inbound \
+    --protocol TCP --local 10.0.0.4 --local-port 443 \
+    --remote 10.1.0.10 --remote-port 52000 \
+    --nsg &lt;nsg-id&gt;
+# Output: access = Allow or Deny, with matching rule name
+
+# View NSG flow logs (query Log Analytics)
+# Workspace → Logs:
+AzureNetworkAnalytics_CL
+| where SubType_s == &quot;FlowLog&quot;
+| where FlowStatus_s == &quot;D&quot;   // Denied flows
+| where DestIP_s == &quot;&lt;target-ip&gt;&quot;
+| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
+</code></pre>
+<h2 id="azure-ad-authentication-errors">Azure AD Authentication Errors<a class="headerlink" href="#azure-ad-authentication-errors" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check token issuance via Entra ID sign-in logs
+az monitor activity-log list --correlation-id &lt;correlation-id&gt;
+
+# Via Entra ID portal: Monitor → Sign-in logs → filter by app/user
+# Look for: failure reason, conditional access policy that blocked sign-in
+
+# Check service principal credential expiry
+az ad sp credential list --id &lt;sp-object-id&gt;
+
+# If federated credential issue (OIDC):
+az ad app federated-credential list --id &lt;app-id&gt;
+</code></pre>
+<p>Common causes:
+- Conditional Access policy blocking (no MFA, non-compliant device, suspicious location)
+- Service principal client secret expired
+- Missing API permission or admin consent not granted</p>
+<h2 id="azure-storage-access-denied">Azure Storage Access Denied<a class="headerlink" href="#azure-storage-access-denied" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check storage firewall rules
+az storage account show -n &lt;storage-account&gt; --query 'networkRuleSet'
+
+# Check role assignments on storage account
+az role assignment list --scope &lt;storage-account-resource-id&gt;
+
+# Test access via SAS token
+az storage blob download --account-name &lt;sa&gt; --container-name &lt;container&gt; \
+    --name &lt;blob&gt; --file /tmp/test --sas-token &quot;&lt;sas&gt;&quot;
+
+# Check if data plane access uses Entra ID or key-based auth
+# Key-based access can be disabled in Shared Key authorization:
+az storage account show -n &lt;sa&gt; --query 'allowSharedKeyAccess'
+</code></pre>
+<h2 id="aks-pod-not-starting">AKS Pod Not Starting<a class="headerlink" href="#aks-pod-not-starting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Get pod description and events
+kubectl describe pod &lt;pod-name&gt; -n &lt;namespace&gt;
+kubectl get events -n &lt;namespace&gt; --sort-by='.lastTimestamp' | tail -20
+
+# Check node resource pressure
+kubectl describe node &lt;node-name&gt; | grep -A 5 &quot;Conditions:&quot;
+kubectl top nodes
+
+# Image pull error
+kubectl get events -n &lt;namespace&gt; | grep &quot;Failed to pull&quot;
+# Check Azure Container Registry firewall if using private ACR:
+az acr show --name &lt;acr-name&gt; --query 'networkRuleSet'
+
+# DNS resolution in pod (network policy blocking?)
+kubectl run test-pod --rm -i --image=busybox -- nslookup kubernetes.default
+</code></pre>
+<h2 id="app-service-502503">App Service 502/503<a class="headerlink" href="#app-service-502503" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Azure Portal → App Service → Diagnose and solve problems → Availability and Performance</li>
+<li>Check App Service Plan metrics: CPU %, Memory % (Metrics blade)</li>
+<li>Review application logs: App Service → App Service Logs → enable File System logging</li>
+<li>Check health probe configuration: App Service → Health Check — confirm probe returning 200</li>
+</ol>
+<pre><code class="language-bash"># Check App Service Plan scale out status
+az appservice plan show --name &lt;plan-name&gt; -g &lt;rg&gt; \
+    --query 'properties.numberOfWorkers'
+
+# Manual scale up (if throttled)
+az appservice plan update --name &lt;plan-name&gt; -g &lt;rg&gt; --sku P2V3
+</code></pre>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fleet-health-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fleet Health Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-alert-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Alert Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure1-meta-anomaly-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure1 Meta Anomaly Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exponential-backoff-for-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exponential Backoff for Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,8 +808,145 @@
 
 
 <h1 id="pure1-scripts">Pure1 Scripts<a class="headerlink" href="#pure1-scripts" title="Permanent link">&para;</a></h1>
-<p>Automation scripts use the Pure1 REST API with OAuth2 authentication. Scripts are maintained in the team scripts repository and scheduled via cron or CI pipeline for daily and weekly execution.</p>
-<p><strong>Available scripts:</strong></p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Pure1 REST API v1 uses RSA JWT authentication. The private key is stored in the secrets manager and loaded at runtime. Never store the private key in the repository or in plain text configuration files.</p>
+<pre><code class="language-python">import jwt, time, uuid, requests
+from cryptography.hazmat.primitives import serialization
+
+PURE1_API = &quot;https://api.pure1.purestorage.com/api/1.latest&quot;
+
+def get_pure1_token(client_id: str, key_id: str, private_key_pem: str) -&gt; str:
+    &quot;&quot;&quot;Obtain a Pure1 API access token using RSA private key.&quot;&quot;&quot;
+    private_key = serialization.load_pem_private_key(
+        private_key_pem.encode(), password=None
+    )
+    payload = {
+        &quot;iss&quot;: client_id, &quot;sub&quot;: client_id,
+        &quot;aud&quot;: &quot;pure1:auth:mfa&quot;,
+        &quot;iat&quot;: int(time.time()),
+        &quot;exp&quot;: int(time.time()) + 3600,
+        &quot;jti&quot;: str(uuid.uuid4())
+    }
+    id_token = jwt.encode(payload, private_key, algorithm=&quot;RS256&quot;,
+                          headers={&quot;kid&quot;: key_id})
+    resp = requests.post(
+        &quot;https://api.pure1.purestorage.com/oauth2/1.0/token&quot;,
+        data={
+            &quot;grant_type&quot;: &quot;urn:ietf:params:oauth:grant-type:token-exchange&quot;,
+            &quot;subject_token&quot;: id_token,
+            &quot;subject_token_type&quot;: &quot;urn:ietf:params:oauth:token-type:json_web_token&quot;
+        }
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+def pure1_get(path: str, token: str, params: dict = None) -&gt; dict:
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;, &quot;Accept&quot;: &quot;application/json&quot;}
+    resp = requests.get(f&quot;{PURE1_API}{path}&quot;, headers=headers, params=params)
+    resp.raise_for_status()
+    return resp.json()
+</code></pre>
+<h2 id="fleet-health-query">Fleet Health Query<a class="headerlink" href="#fleet-health-query" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def get_fleet_health(token: str) -&gt; list:
+    &quot;&quot;&quot;Return all arrays with name, model, OS, and version.&quot;&quot;&quot;
+    data = pure1_get(&quot;/arrays&quot;, token)
+    return [
+        {
+            &quot;name&quot;: a[&quot;name&quot;],
+            &quot;model&quot;: a.get(&quot;model&quot;),
+            &quot;os&quot;: a.get(&quot;os&quot;),
+            &quot;version&quot;: a.get(&quot;version&quot;),
+            &quot;id&quot;: a[&quot;id&quot;]
+        }
+        for a in data.get(&quot;items&quot;, [])
+    ]
+</code></pre>
+<h2 id="capacity-report">Capacity Report<a class="headerlink" href="#capacity-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import csv
+from datetime import datetime, timezone
+
+def capacity_report(token: str, output_file: str):
+    &quot;&quot;&quot;Export capacity data for all arrays.&quot;&quot;&quot;
+    arrays = pure1_get(&quot;/arrays&quot;, token).get(&quot;items&quot;, [])
+    metrics = pure1_get(&quot;/metrics/history&quot;, token, params={
+        &quot;names&quot;: &quot;array_total_capacity,array_used_space,array_data_reduction&quot;,
+        &quot;resolution&quot;: &quot;86400000&quot;,   # 1-day resolution (ms)
+        &quot;end_time&quot;: int(datetime.now(timezone.utc).timestamp() * 1000)
+    }).get(&quot;items&quot;, {})
+
+    with open(output_file, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            &quot;array_name&quot;, &quot;total_tb&quot;, &quot;used_tb&quot;, &quot;used_pct&quot;, &quot;data_reduction&quot;
+        ])
+        writer.writeheader()
+        for a in arrays:
+            m = metrics.get(a[&quot;id&quot;], {})
+            total = m.get(&quot;array_total_capacity&quot;, 0)
+            used  = m.get(&quot;array_used_space&quot;, 0)
+            dr    = m.get(&quot;array_data_reduction&quot;, 0)
+            writer.writerow({
+                &quot;array_name&quot;: a[&quot;name&quot;],
+                &quot;total_tb&quot;: round(total / 1e12, 2) if total else &quot;N/A&quot;,
+                &quot;used_tb&quot;:  round(used  / 1e12, 2) if used  else &quot;N/A&quot;,
+                &quot;used_pct&quot;: round((used / total * 100), 1) if total else &quot;N/A&quot;,
+                &quot;data_reduction&quot;: round(dr, 2) if dr else &quot;N/A&quot;
+            })
+    print(f&quot;Capacity report written to {output_file}&quot;)
+</code></pre>
+<h2 id="active-alert-export">Active Alert Export<a class="headerlink" href="#active-alert-export" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def export_alerts(token: str, output_file: str):
+    &quot;&quot;&quot;Export all active alerts to CSV.&quot;&quot;&quot;
+    data = pure1_get(&quot;/alerts&quot;, token, params={&quot;filter&quot;: &quot;state='open'&quot;})
+    alerts = data.get(&quot;items&quot;, [])
+    with open(output_file, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            &quot;id&quot;, &quot;summary&quot;, &quot;severity&quot;, &quot;array_name&quot;, &quot;created&quot;
+        ])
+        writer.writeheader()
+        for a in alerts:
+            writer.writerow({
+                &quot;id&quot;:         a[&quot;id&quot;],
+                &quot;summary&quot;:    a.get(&quot;summary&quot;),
+                &quot;severity&quot;:   a.get(&quot;severity&quot;),
+                &quot;array_name&quot;: a.get(&quot;arrays&quot;, [{}])[0].get(&quot;name&quot;, &quot;unknown&quot;),
+                &quot;created&quot;:    a.get(&quot;created&quot;)
+            })
+    print(f&quot;Exported {len(alerts)} alerts to {output_file}&quot;)
+</code></pre>
+<h2 id="pure1-meta-anomaly-query">Pure1 Meta Anomaly Query<a class="headerlink" href="#pure1-meta-anomaly-query" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def query_anomalies(token: str) -&gt; list:
+    &quot;&quot;&quot;Return active workload anomalies from Pure1 Meta.&quot;&quot;&quot;
+    data = pure1_get(&quot;/workloads&quot;, token,
+                     params={&quot;filter&quot;: &quot;anomaly_state='active'&quot;})
+    return [
+        {
+            &quot;workload_id&quot;: w[&quot;id&quot;],
+            &quot;array&quot;: w.get(&quot;array_name&quot;),
+            &quot;anomaly_type&quot;: w.get(&quot;anomaly_type&quot;),
+            &quot;detected&quot;: w.get(&quot;anomaly_detected_at&quot;)
+        }
+        for w in data.get(&quot;items&quot;, [])
+    ]
+</code></pre>
+<h2 id="exponential-backoff-for-rate-limiting">Exponential Backoff for Rate Limiting<a class="headerlink" href="#exponential-backoff-for-rate-limiting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import time, random
+
+def pure1_get_with_retry(path: str, token: str, max_retries: int = 5) -&gt; dict:
+    for attempt in range(max_retries):
+        resp = requests.get(
+            f&quot;{PURE1_API}{path}&quot;,
+            headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}
+        )
+        if resp.status_code == 429:
+            wait = (2 ** attempt) + random.uniform(0, 1)
+            print(f&quot;Rate limited — waiting {wait:.1f}s (attempt {attempt + 1})&quot;)
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        return resp.json()
+    raise RuntimeError(f&quot;Max retries exceeded for {path}&quot;)
+</code></pre>
+<h2 id="script-inventory">Script Inventory<a class="headerlink" href="#script-inventory" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -753,12 +973,17 @@
 </tr>
 <tr>
 <td><code>pure1_anomaly_query.py</code></td>
-<td>Query Pure1 Meta for workload anomaly detections</td>
+<td>Query Pure1 Meta for active workload anomaly detections</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td><code>pure1_tag_compliance.py</code></td>
+<td>Report arrays missing mandatory tags (Site, Environment, Owner)</td>
 <td>Weekly</td>
 </tr>
 </tbody>
 </table>
-<p>All scripts authenticate using a service account API key stored in the secrets manager. Implement exponential backoff for API rate limit handling (HTTP 429).</p>
+<p>Scripts are stored in <code>scripts/pure1/</code>. Load <code>client_id</code>, <code>key_id</code>, and <code>private_key_pem</code> from the secrets manager at runtime. Implement exponential backoff for HTTP 429 responses.</p>
 
 
 

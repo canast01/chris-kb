@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,169 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-connection-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Connection Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-review-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Review Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Review Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#daily-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol-throughput-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Throughput Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-clients-review-weekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top Clients Review (Weekly)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-review-weekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Review (Weekly)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-threshold-review-monthly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Threshold Review (Monthly)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#on-demand-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-Demand Report
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-report-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled Report Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monthly-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monthly Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,16 +886,129 @@
 
 
 <h1 id="insightiq-operations">InsightIQ Operations<a class="headerlink" href="#insightiq-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operational checks ensure all cluster connections are active and collecting data. Log into the InsightIQ web dashboard each morning, confirm all monitored clusters show a green connection status, and review latency and throughput trends for anomalies versus the previous 7-day baseline. Check disk usage on the InsightIQ appliance to ensure the PostgreSQL data volume is below 80% capacity. Weekly, generate a utilisation report per cluster for capacity planning review.</p>
-<p><strong>Daily Checklist</strong>
-- Log into InsightIQ web dashboard
-- Confirm all cluster connections are Active (green)
-- Review latency and throughput dashboards — flag anomalies vs. 7-day baseline
-- Check appliance disk usage (alert at 80%)</p>
-<p><strong>Weekly Tasks</strong>
-- Generate per-cluster utilisation report for capacity planning
-- Review top protocol clients for unexpected load patterns
-- Validate InsightIQ appliance backup completed successfully</p>
+<h2 id="daily-checklist">Daily Checklist<a class="headerlink" href="#daily-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Location</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster connection status</td>
+<td>Dashboard &gt; Clusters</td>
+<td>All clusters show Active (green)</td>
+</tr>
+<tr>
+<td>Appliance disk usage</td>
+<td>Administration &gt; System Status</td>
+<td>Data volume below 80% used</td>
+</tr>
+<tr>
+<td>Latest data collection timestamp</td>
+<td>Dashboard &gt; [Cluster] &gt; Overview</td>
+<td>Last data point within last 15 minutes</td>
+</tr>
+<tr>
+<td>Active alert review</td>
+<td>Administration &gt; Alerts &gt; Active Alerts</td>
+<td>No unacknowledged Critical latency or throughput alerts</td>
+</tr>
+</tbody>
+</table>
+<p>If a cluster shows as Disconnected or the last data point is stale (&gt; 30 minutes), investigate before stand-up.</p>
+<h2 id="cluster-connection-troubleshooting">Cluster Connection Troubleshooting<a class="headerlink" href="#cluster-connection-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Symptom: Cluster shows Disconnected or Missing in InsightIQ
+
+1. Test manual API connectivity from InsightIQ appliance:
+   curl -sk https://&lt;cluster-mgmt-ip&gt;:8080/platform/1/statistics/summary/drive -u svc-insightiq
+
+2. Check if the svc-insightiq account is active on the cluster:
+   (on OneFS CLI) isi auth users view svc-insightiq
+
+3. Verify network connectivity (TCP 8080):
+   telnet &lt;cluster-mgmt-ip&gt; 8080
+
+4. If password has been rotated: update credential in InsightIQ
+   Administration &gt; Clusters &gt; [Cluster] &gt; Edit &gt; Update Password
+
+5. Restart the InsightIQ collection service if credential fix doesn't resolve:
+   sudo systemctl restart iiq
+</code></pre>
+<h2 id="performance-review-process">Performance Review Process<a class="headerlink" href="#performance-review-process" title="Permanent link">&para;</a></h2>
+<h3 id="daily-review">Daily Review<a class="headerlink" href="#daily-review" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log into InsightIQ web dashboard</li>
+<li>Navigate to <strong>Dashboard &gt; [Cluster] &gt; Overview</strong></li>
+<li>Review the last 24-hour throughput chart — compare to previous 7-day baseline</li>
+<li>Flag any latency spikes exceeding the Warning threshold (5 ms for NFS/SMB)</li>
+<li>Check per-node throughput for uneven distribution (indicates possible node issues)</li>
+</ol>
+<h3 id="protocol-throughput-analysis">Protocol Throughput Analysis<a class="headerlink" href="#protocol-throughput-analysis" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">Dashboard &gt; [Cluster] &gt; Protocol Summary
+- Compare NFS vs. SMB vs. HTTP throughput
+- Flag unexpected protocol spikes (may indicate misbehaving clients)
+- Check top client IPs for unexpected load
+</code></pre>
+<h3 id="top-clients-review-weekly">Top Clients Review (Weekly)<a class="headerlink" href="#top-clients-review-weekly" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">Dashboard &gt; [Cluster] &gt; Top Clients
+- Review top 10 client IPs by throughput for the last 7 days
+- Investigate any new or unexpected high-traffic clients
+- Report to application team if a specific client is generating anomalous load
+</code></pre>
+<h2 id="capacity-review-weekly">Capacity Review (Weekly)<a class="headerlink" href="#capacity-review-weekly" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">1. Dashboard &gt; [Cluster] &gt; Capacity
+2. Review used capacity trend over the last 30 days
+3. Calculate growth rate: (current used - 30 days ago used) / 30 days
+4. Project capacity exhaustion: days until 85% used
+5. Flag clusters with &lt; 60 days to 85% threshold to capacity planning queue
+6. Include in weekly capacity report email
+</code></pre>
+<h2 id="appliance-health-checks">Appliance Health Checks<a class="headerlink" href="#appliance-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check InsightIQ service status
+sudo systemctl status iiq
+
+# Check PostgreSQL service
+sudo systemctl status postgresql
+
+# Check disk usage on data volume
+df -h /data
+
+# Review recent errors in InsightIQ logs
+sudo journalctl -u iiq --since &quot;24 hours ago&quot; | grep -i error
+
+# Check database size
+psql -U iiq -c &quot;SELECT pg_size_pretty(pg_database_size('iiq'));&quot;
+</code></pre>
+<h2 id="alert-threshold-review-monthly">Alert Threshold Review (Monthly)<a class="headerlink" href="#alert-threshold-review-monthly" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Review the past month's active alerts for noise patterns</li>
+<li>Adjust thresholds for workloads with known high baselines (document deviations from standard)</li>
+<li>Validate SNMP trap delivery to monitoring platform with a test trap</li>
+<li>Confirm SMTP alert emails are being delivered (check spam/junk filters)</li>
+</ul>
+<h2 id="report-generation">Report Generation<a class="headerlink" href="#report-generation" title="Permanent link">&para;</a></h2>
+<h3 id="on-demand-report">On-Demand Report<a class="headerlink" href="#on-demand-report" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">InsightIQ web UI &gt; Reports &gt; Custom Report
+- Select: Cluster, Time Range, Metrics (throughput, latency, CPU)
+- Format: PDF or CSV
+- Download or email directly
+</code></pre>
+<h3 id="scheduled-report-validation">Scheduled Report Validation<a class="headerlink" href="#scheduled-report-validation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">Administration &gt; Reports &gt; Scheduled Reports
+- Verify each scheduled report shows Last Run within expected window
+- If a report failed: check SMTP configuration and recipient list
+- Manually trigger to test: Actions &gt; Run Now
+</code></pre>
+<h2 id="monthly-tasks">Monthly Tasks<a class="headerlink" href="#monthly-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Generate monthly capacity planning report for all clusters and share with management</li>
+<li>Validate InsightIQ database backup is completing (check cron logs or backup target)</li>
+<li>Review InsightIQ appliance OS patches and schedule maintenance window if needed</li>
+<li>Review user accounts and remove stale accounts (Administration &gt; Users)</li>
+</ul>
 
 
 

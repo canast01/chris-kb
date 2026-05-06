@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,147 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ou-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OU Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computer-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computer Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Policy Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Group Policy Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gpo-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPO Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpo-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPO Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Policy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kerberos-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kerberos Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privileged-access-model-tiering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileged Access Model (Tiering)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,49 +864,269 @@
 
 
 <h1 id="active-directory-standards">Active Directory Standards<a class="headerlink" href="#active-directory-standards" title="Permanent link">&para;</a></h1>
-<p>OU structure follows a geographic or functional top-level layout (e.g., OU=Servers,OU=EMEA) to enable scoped GPO application and delegation. Group naming uses prefixes to indicate scope: <code>GG_</code> for Global groups, <code>DL_</code> for Domain Local groups, and <code>U_</code> for user accounts; service accounts follow the <code>svc-appname</code> convention. GPO names use the pattern <code>ENV-SCOPE-PURPOSE</code> (e.g., <code>PROD-SERVERS-SecBaseline</code>), and fine-grained Password Settings Objects (PSOs) override the domain default for privileged and service accounts.</p>
+<p>Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation complexity, enable scoped GPO application, and simplify access reviews.</p>
+<hr />
+<h2 id="ou-structure">OU Structure<a class="headerlink" href="#ou-structure" title="Permanent link">&para;</a></h2>
+<p>Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.</p>
+<pre><code>DC=corp,DC=example,DC=com
+├── OU=Servers
+│   ├── OU=EMEA
+│   ├── OU=APAC
+│   └── OU=AMER
+├── OU=Workstations
+│   ├── OU=EMEA
+│   └── OU=AMER
+├── OU=Users
+│   ├── OU=Staff
+│   ├── OU=Contractors
+│   └── OU=External
+├── OU=Groups
+│   ├── OU=Security
+│   └── OU=Distribution
+├── OU=Service Accounts
+│   └── OU=Managed
+└── OU=Admin
+    ├── OU=Tier0
+    ├── OU=Tier1
+    └── OU=PAW
+</code></pre>
+<p>Rules:
+- Computers must always be in the correct OU before GPO applies — do not leave in the default <code>CN=Computers</code> container.
+- User objects must not be placed in the <code>CN=Users</code> container.
+- The <code>OU=Admin</code> subtree is protected with <code>AdminSDHolder</code>-style ACL review and delegated only to Tier 0 admins.</p>
+<hr />
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<h3 id="user-accounts">User Accounts<a class="headerlink" href="#user-accounts" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Standard</th>
+<th>Type</th>
+<th>Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard user</td>
+<td><code>firstname.lastname</code></td>
+<td><code>john.smith</code></td>
+</tr>
+<tr>
+<td>Admin account (Tier 1)</td>
+<td><code>adm1-jsmith</code></td>
+<td><code>adm1-jsmith</code></td>
+</tr>
+<tr>
+<td>Admin account (Tier 0)</td>
+<td><code>adm0-jsmith</code></td>
+<td><code>adm0-jsmith</code></td>
+</tr>
+<tr>
+<td>Service account</td>
+<td><code>svc-&lt;appname&gt;</code></td>
+<td><code>svc-vcenter</code></td>
+</tr>
+<tr>
+<td>Generic / shared</td>
+<td><code>gen-&lt;purpose&gt;</code></td>
+<td><code>gen-monitoring</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="group-accounts">Group Accounts<a class="headerlink" href="#group-accounts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Prefix</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global group</td>
+<td><code>GG_</code></td>
+<td><code>GG_Server_Admins</code></td>
+</tr>
+<tr>
+<td>Domain Local group</td>
+<td><code>DL_</code></td>
+<td><code>DL_FileShare_HR_RW</code></td>
+</tr>
+<tr>
+<td>Universal group</td>
+<td><code>UG_</code></td>
+<td><code>UG_Enterprise_Admins</code></td>
+</tr>
+<tr>
+<td>Distribution list</td>
+<td><code>DL_DIST_</code></td>
+<td><code>DL_DIST_IT_Team</code></td>
+</tr>
+</tbody>
+</table>
+<p>Role-based access groups follow: <code>GG_&lt;System&gt;_&lt;Role&gt;</code> (e.g., <code>GG_vCenter_ReadOnly</code>, <code>GG_CyberArk_SafeOwners</code>).</p>
+<h3 id="computer-accounts">Computer Accounts<a class="headerlink" href="#computer-accounts" title="Permanent link">&para;</a></h3>
+<p>Format: <code>&lt;SITE&gt;&lt;TYPE&gt;&lt;NN&gt;</code> — e.g., <code>LDNDC01</code> (London Domain Controller 01), <code>NYCWS042</code> (New York Workstation 042).</p>
+<hr />
+<h2 id="group-policy-standards">Group Policy Standards<a class="headerlink" href="#group-policy-standards" title="Permanent link">&para;</a></h2>
+<h3 id="gpo-naming">GPO Naming<a class="headerlink" href="#gpo-naming" title="Permanent link">&para;</a></h3>
+<p>Pattern: <code>ENV-SCOPE-PURPOSE</code></p>
+<table>
+<thead>
+<tr>
+<th>Example GPO Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROD-SERVERS-SecBaseline</code></td>
+<td>Security baseline for production servers</td>
+</tr>
+<tr>
+<td><code>PROD-WORKSTATIONS-BitLocker</code></td>
+<td>BitLocker enforcement on all workstations</td>
+</tr>
+<tr>
+<td><code>PROD-DCs-AuditPolicy</code></td>
+<td>Advanced audit policy for Domain Controllers</td>
+</tr>
+<tr>
+<td><code>LAB-SERVERS-SecBaseline</code></td>
+<td>Security baseline for lab servers</td>
+</tr>
+<tr>
+<td><code>ALL-USERS-PasswordPolicy</code></td>
+<td>Password policy applied at domain level</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gpo-design-rules">GPO Design Rules<a class="headerlink" href="#gpo-design-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>One GPO, one purpose — do not combine unrelated settings in a single GPO.</li>
+<li>Never edit the <strong>Default Domain Policy</strong> or <strong>Default Domain Controllers Policy</strong> directly. Create new GPOs for any changes and link at the appropriate level.</li>
+<li>Use <strong>WMI filters</strong> or <strong>Security Filtering</strong> to target sub-populations rather than creating OUs for GPO scoping alone.</li>
+<li>All GPOs must have a comment describing their purpose and the date last reviewed.</li>
+</ul>
+<pre><code class="language-powershell"># Set a GPO description / comment
+Set-GPO -Name &quot;PROD-SERVERS-SecBaseline&quot; -Comment &quot;CIS L1 baseline. Last reviewed 2025-11-01. Owner: infra-sec.&quot;
+
+# Generate an HTML report for a GPO before changes
+Get-GPOReport -Name &quot;PROD-SERVERS-SecBaseline&quot; -ReportType Html -Path &quot;C:\Temp\pre-change-report.html&quot;
+</code></pre>
+<hr />
+<h2 id="password-policy-standards">Password Policy Standards<a class="headerlink" href="#password-policy-standards" title="Permanent link">&para;</a></h2>
+<p>Default domain policy and Fine-Grained Password Policies (PSOs):</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Min Length</th>
+<th>Max Age</th>
+<th>Complexity</th>
+<th>Applies To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain Default</td>
+<td>14 chars</td>
+<td>90 days</td>
+<td>Required</td>
+<td>All users</td>
+</tr>
+<tr>
+<td>PSO: Service Accounts</td>
+<td>20 chars</td>
+<td>90 days</td>
+<td>Required</td>
+<td><code>svc-*</code> accounts</td>
+</tr>
+<tr>
+<td>PSO: Admin Accounts</td>
+<td>20 chars</td>
+<td>60 days</td>
+<td>Required</td>
+<td><code>adm0-*</code>, <code>adm1-*</code></td>
+</tr>
+<tr>
+<td>PSO: CyberArk Managed</td>
+<td>30 chars</td>
+<td>Per CPM policy</td>
+<td>N/A</td>
+<td>Rotated by CPM</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># View existing PSOs
+Get-ADFineGrainedPasswordPolicy -Filter * | Select-Object Name, MinPasswordLength, MaxPasswordAge, Precedence
+
+# Apply a PSO to a group
+Add-ADFineGrainedPasswordPolicySubject -Identity &quot;PSO_ServiceAccounts&quot; -Subjects &quot;GG_ServiceAccounts&quot;
+</code></pre>
+<hr />
+<h2 id="kerberos-settings">Kerberos Settings<a class="headerlink" href="#kerberos-settings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
 <th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Service account prefix</td>
-<td><code>svc-appname</code></td>
-</tr>
-<tr>
-<td>Global group prefix</td>
-<td><code>GG_</code></td>
-</tr>
-<tr>
-<td>Domain local group prefix</td>
-<td><code>DL_</code></td>
-</tr>
-<tr>
-<td>GPO naming</td>
-<td><code>ENV-SCOPE-PURPOSE</code></td>
-</tr>
-<tr>
-<td>Domain default password min length</td>
-<td>14 characters</td>
-</tr>
-<tr>
-<td>Kerberos TGT lifetime</td>
+<td>TGT lifetime</td>
 <td>10 hours</td>
 </tr>
 <tr>
-<td>Kerberos max renewal</td>
+<td>Max renewal period</td>
 <td>7 days</td>
 </tr>
 <tr>
-<td>PSO for service accounts</td>
-<td>90-day max age, 20-char minimum</td>
+<td>Clock skew tolerance</td>
+<td>5 minutes</td>
+</tr>
+<tr>
+<td>Encryption types</td>
+<td>AES256-CTS-HMAC-SHA1-96, AES128; RC4 disabled via GPO</td>
 </tr>
 </tbody>
 </table>
+<p>Disable RC4 via GPO: <strong>Computer Config &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options &gt; Network security: Configure encryption types allowed for Kerberos</strong>.</p>
+<hr />
+<h2 id="privileged-access-model-tiering">Privileged Access Model (Tiering)<a class="headerlink" href="#privileged-access-model-tiering" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Scope</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 0</td>
+<td>AD, PKI, CyberArk Vault, DNS</td>
+<td><code>adm0-*</code> accounts; access from PAW only</td>
+</tr>
+<tr>
+<td>Tier 1</td>
+<td>Servers, hypervisors, storage</td>
+<td><code>adm1-*</code> accounts; access from jump server</td>
+</tr>
+<tr>
+<td>Tier 2</td>
+<td>Workstations, end-user devices</td>
+<td>Helpdesk accounts; local admin via LAPS</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Tier 0 accounts must not log on to Tier 1 or Tier 2 systems (enforced via logon restriction GPO and Authentication Policies).</li>
+<li>Privileged Access Workstations (PAWs) are dedicated hardened hosts for Tier 0 and Tier 1 administration.</li>
+<li>All Tier 0 and Tier 1 admin accounts are onboarded to CyberArk for credential management and session recording.</li>
+</ul>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,119 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#platform-update-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Update Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secure-connect-gateway-scg-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Connect Gateway (SCG) Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secure Connect Gateway (SCG) Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scg-version-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Version Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scg-upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Upgrade Procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scg-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arraysystem-onboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array/System Onboarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#array-decommission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Decommission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-token-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-notes-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Notes Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,37 +836,79 @@
 
 
 <h1 id="cloudiq-lifecycle">CloudIQ Lifecycle<a class="headerlink" href="#cloudiq-lifecycle" title="Permanent link">&para;</a></h1>
-<p>CloudIQ is a SaaS platform — Dell manages all updates and there is no customer-managed version to maintain. The Secure Connect Gateway (SCG) virtual appliance does have a version lifecycle and must be kept current for compatibility with new Dell platforms and CloudIQ features. SCG upgrades are performed in-place via the SCG admin UI.</p>
+<h2 id="platform-update-model">Platform Update Model<a class="headerlink" href="#platform-update-model" title="Permanent link">&para;</a></h2>
+<p>CloudIQ is a SaaS platform managed entirely by Dell. There is no customer-managed version to upgrade. Feature releases, AI model updates, and API changes are deployed by Dell and communicated via the CloudIQ release notes published in the CloudIQ portal under <strong>Settings &gt; Release Notes</strong>.</p>
+<p>Customer lifecycle responsibilities are limited to:
+1. Keeping the Secure Connect Gateway (SCG) current
+2. Onboarding newly deployed Dell systems
+3. Managing CloudIQ API token lifecycle
+4. Monitoring CloudIQ release notes for breaking API changes</p>
+<h2 id="secure-connect-gateway-scg-lifecycle">Secure Connect Gateway (SCG) Lifecycle<a class="headerlink" href="#secure-connect-gateway-scg-lifecycle" title="Permanent link">&para;</a></h2>
+<p>The SCG has its own version lifecycle and must be kept current for compatibility with new Dell platforms and CloudIQ features.</p>
+<h3 id="scg-version-check">SCG Version Check<a class="headerlink" href="#scg-version-check" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">1. Log into SCG admin UI: https://&lt;SCG-IP&gt;:9443
+2. Navigate to: System Settings &gt; About
+3. Note the current SCG version
+4. Compare against the latest available version in the Dell Support Portal
+</code></pre>
+<h3 id="scg-upgrade-procedure">SCG Upgrade Procedure<a class="headerlink" href="#scg-upgrade-procedure" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">1. Download the latest SCG upgrade package from:
+   support.dell.com &gt; CloudIQ &gt; Secure Connect Gateway &gt; Downloads
+2. Log into SCG admin UI: https://&lt;SCG-IP&gt;:9443
+3. Navigate to: System Settings &gt; Software Updates
+4. Upload the upgrade package and follow the upgrade wizard
+5. SCG will restart — collection will pause for approximately 10–15 minutes
+6. Verify SCG version post-upgrade in About page
+7. Confirm all systems return to Collecting status in CloudIQ dashboard (allow 30 minutes)
+</code></pre>
+<h3 id="scg-compatibility">SCG Compatibility<a class="headerlink" href="#scg-compatibility" title="Permanent link">&para;</a></h3>
+<p>Check the Dell Compatibility Matrix before upgrading SCG if you have recently deployed new array platforms. Not all CloudIQ features are available on older SCG versions.</p>
 <table>
 <thead>
 <tr>
-<th>Item</th>
-<th>Detail</th>
+<th>SCG Version</th>
+<th>Minimum for</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CloudIQ platform</td>
-<td>SaaS (Dell-managed, no customer upgrade required)</td>
+<td>5.x</td>
+<td>PowerStore 3.x, PowerScale 9.5</td>
 </tr>
 <tr>
-<td>SCG versioning</td>
-<td>Customer-managed; check Dell compatibility matrix</td>
-</tr>
-<tr>
-<td>SCG upgrade method</td>
-<td>In-place via SCG admin UI</td>
-</tr>
-<tr>
-<td>Platform firmware compatibility</td>
-<td>Check CloudIQ release notes for new platform support</td>
-</tr>
-<tr>
-<td>CloudIQ API lifecycle</td>
-<td>Versioned; deprecated endpoints published in release notes</td>
+<td>4.x</td>
+<td>PowerMax 10, Unity XT 5.3</td>
 </tr>
 </tbody>
 </table>
+<p>Refer to <a href="https://dell.com/support">dell.com/support</a> for the current matrix.</p>
+<h2 id="arraysystem-onboarding">Array/System Onboarding<a class="headerlink" href="#arraysystem-onboarding" title="Permanent link">&para;</a></h2>
+<p>When a new Dell system is deployed, it must be registered in CloudIQ via the SCG.</p>
+<pre><code class="language-text">1. SCG admin UI &gt; Systems &gt; Add System
+2. Enter the array management IP and credentials (read-only service account)
+3. CloudIQ will begin collecting within one collection cycle (~15 minutes)
+4. In CloudIQ dashboard: verify the new system appears under Assets with a health score
+5. Apply required tags (Site, Environment, Team) to the system in CloudIQ
+</code></pre>
+<h2 id="array-decommission">Array Decommission<a class="headerlink" href="#array-decommission" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">1. CloudIQ dashboard &gt; Assets &gt; [System] &gt; Remove System
+2. SCG admin UI &gt; Systems &gt; [System] &gt; Delete
+3. Update CloudIQ notification rules to remove the decommissioned system from alert scopes
+</code></pre>
+<h2 id="api-token-lifecycle">API Token Lifecycle<a class="headerlink" href="#api-token-lifecycle" title="Permanent link">&para;</a></h2>
+<p>CloudIQ REST API tokens use OAuth2 client credentials. Tokens should be rotated annually.</p>
+<pre><code class="language-text">Rotation procedure:
+1. CloudIQ portal &gt; Settings &gt; API Clients &gt; [Client] &gt; Rotate Secret
+2. Update the new client_secret in the team secrets manager
+3. Redeploy or restart any automation scripts that use the old secret
+4. Verify API scripts return HTTP 200 after rotation
+</code></pre>
+<h2 id="release-notes-review">Release Notes Review<a class="headerlink" href="#release-notes-review" title="Permanent link">&para;</a></h2>
+<p>Review CloudIQ release notes when notified by Dell (typically monthly). Check for:
+- New platform support (confirm newly deployed systems are supported)
+- API endpoint changes or deprecations
+- Feature changes that affect existing alert rules or notification configurations</p>
+<p><strong>Location</strong>: CloudIQ portal &gt; Settings &gt; Release Notes</p>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Upgrade Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configupload-configdownload-backup-and-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        configupload / configdownload (Backup and Restore)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-new-switch-to-the-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a New Switch to the Fabric
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switch-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Replacement
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,33 +786,132 @@
 
 
 <h1 id="brocade-fabric-os-lifecycle">Brocade Fabric OS Lifecycle<a class="headerlink" href="#brocade-fabric-os-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Fabric OS versions are tracked against Broadcom's published end-of-support schedule, with upgrade decisions driven by the HCL requirements of connected hosts and storage. Firmware upgrades use the non-disruptive <code>firmwaredownload</code> command, which stages the new image and activates it on the next reboot (HA chassis) or via a hitless upgrade (supported platforms). The HCL is verified before any firmware upgrade to confirm compatibility with connected host HBA drivers and storage array microcode. G-series and X-series platforms have separate version tracks and end-of-sale/end-of-support dates.</p>
+<blockquote>
+<p>Part of the <a href="../">Brocade Fabric OS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="version-tracking">Version Tracking<a class="headerlink" href="#version-tracking" title="Permanent link">&para;</a></h2>
+<p>Fabric OS versions are tracked against the Broadcom end-of-support schedule. Version selection is driven by:</p>
+<ul>
+<li>HCL requirements of connected host HBA drivers</li>
+<li>HCL requirements of connected storage arrays (PowerMax, Pure, NetApp)</li>
+<li>Broadcom recommended release for each platform</li>
+<li>End-of-sale / end-of-support dates</li>
+</ul>
 <table>
 <thead>
 <tr>
 <th>Platform</th>
-<th>Current FOS Track</th>
-<th>End-of-Support Notes</th>
+<th>FOS Track</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>G620 / G720</td>
 <td>FOS 9.x</td>
-<td>Check Broadcom portal for exact dates</td>
+<td>Current generation</td>
 </tr>
 <tr>
 <td>X7-4 / X7-8</td>
 <td>FOS 9.x</td>
-<td>Director-class, extended support window</td>
+<td>Director-class, extended support</td>
 </tr>
 <tr>
-<td>Legacy 6505/6510</td>
+<td>6505 / 6510</td>
 <td>FOS 8.x</td>
-<td>End-of-sale; plan migration</td>
+<td>End-of-sale — plan migration to G-series</td>
 </tr>
 </tbody>
 </table>
+<p>End-of-support dates are tracked in the CMDB. Alerts are triggered 18 months before end-of-support.</p>
+<hr />
+<h2 id="firmware-upgrade-procedure">Firmware Upgrade Procedure<a class="headerlink" href="#firmware-upgrade-procedure" title="Permanent link">&para;</a></h2>
+<p>Brocade firmware upgrades use the <code>firmwaredownload</code> command. For HA directors (X7 series), the upgrade is non-disruptive — the standby CP is upgraded first, then a failover occurs, and the other CP is upgraded.</p>
+<p><strong>Pre-upgrade checklist:</strong></p>
+<ul>
+<li>[ ] Current FOS version noted: <code>version</code></li>
+<li>[ ] Running config saved: <code>configupload</code> (backs up to FTP/SCP)</li>
+<li>[ ] HCL compatibility confirmed for target FOS version</li>
+<li>[ ] Fabric health confirmed: <code>fabricshow</code>, <code>porterrshow</code> clean</li>
+<li>[ ] ISLs are trunked and redundant — a reload on one switch should not impact fabric connectivity</li>
+<li>[ ] Change window scheduled and approved</li>
+</ul>
+<p><strong>Upgrade steps:</strong></p>
+<pre><code class="language-bash"># Step 1 — Upload the firmware image to an FTP/SCP server reachable from the switch
+
+# Step 2 — Start firmwaredownload (non-disruptive on directors; disruptive on fixed switches)
+firmwaredownload -s -b -n &lt;ftp-server&gt; &lt;path-to-image&gt; &lt;username&gt; &lt;password&gt;
+# -s = activate after download
+# -b = non-disruptive (HA chassis only)
+# -n = no auto-reboot (for manual activation control)
+
+# Step 3 — Monitor the upgrade progress
+firmwaredownloadstatus
+
+# Step 4 — On fixed switches (non-disruptive upgrade not available), the switch reboots
+# Monitor from SANnav or reconnect after ~3-5 minutes
+
+# Step 5 — Verify after upgrade
+version
+switchshow    # all ports up
+fabricshow    # fabric intact
+</code></pre>
+<hr />
+<h2 id="configupload-configdownload-backup-and-restore">configupload / configdownload (Backup and Restore)<a class="headerlink" href="#configupload-configdownload-backup-and-restore" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Backup the switch configuration to an SCP server
+configupload -all scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
+
+# Restore configuration (use during replacement or recovery)
+configdownload -all scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
+</code></pre>
+<p>Configurations should be backed up:
+- Before any firmware upgrade
+- Before any major zone change
+- On a scheduled basis (weekly minimum)</p>
+<hr />
+<h2 id="adding-a-new-switch-to-the-fabric">Adding a New Switch to the Fabric<a class="headerlink" href="#adding-a-new-switch-to-the-fabric" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Pre-configure the new switch: hostname, domain ID, NTP, AAA, SNMP, syslog.</li>
+<li>Set the domain ID statically before connecting ISLs to avoid domain ID conflict:</li>
+</ol>
+<pre><code class="language-bash">configure
+# Set Fabric Parameters → insistDomainId = 1
+# Set Domain ID to the assigned value from the SAN design register
+</code></pre>
+<ol>
+<li>Connect ISL cables to the edge ports of the core switch.</li>
+<li>Verify the new switch joins the fabric:</li>
+</ol>
+<pre><code class="language-bash">fabricshow     # New switch should appear
+topologyshow   # ISL path visible
+</code></pre>
+<ol>
+<li>Configure trunk groups on the ISL ports:</li>
+</ol>
+<pre><code class="language-bash"># Verify trunking formed automatically (requires same speed on both ends)
+trunkshow
+</code></pre>
+<ol>
+<li>Update CMDB and SAN design register with the new domain ID and port map.</li>
+</ol>
+<hr />
+<h2 id="switch-replacement">Switch Replacement<a class="headerlink" href="#switch-replacement" title="Permanent link">&para;</a></h2>
+<p>When replacing a failed switch with an identical model:</p>
+<ol>
+<li>Collect the config backup from the original switch (if available) or restore from the latest <code>configupload</code> backup.</li>
+<li>Apply the same static domain ID on the new switch before connecting to the fabric.</li>
+<li>Restore configuration: <code>configdownload</code></li>
+<li>Connect to the fabric and verify all devices re-login:</li>
+</ol>
+<pre><code class="language-bash">nsshow    # All devices logged in
+cfgshow   # Zone database present and correct
+</code></pre>
+<ol>
+<li>Activate the zone set if it was not restored automatically:</li>
+</ol>
+<pre><code class="language-bash">cfgenable &lt;zoneset-name&gt;
+</code></pre>
 
 
 

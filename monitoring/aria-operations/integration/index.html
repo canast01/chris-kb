@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-adapter-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Adapter Integrations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-integration-outbound-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Integration (Outbound Alerts)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slack-teams-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slack / Teams Webhooks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-logs-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Logs Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-management-pack-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-Party Management Pack Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +841,77 @@
 
 
 <h1 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h1>
-<p>The vCenter adapter is the primary integration source, providing VM, host, cluster, and datastore metrics. NSX management packs extend visibility to network overlays, logical routers, and edge nodes. Storage adapters (Pure Storage, Dell EMC, NetApp) bring array-level performance and capacity data into Aria Operations for correlated infrastructure views. Outbound integrations include ServiceNow for alert-to-ticket creation and Slack/Teams webhook notifications for critical alerts. Aria Logs integration enables log correlation alongside performance anomalies.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.</p>
+<h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
+<p>The vCenter adapter is the primary collection source and is configured during initial deployment.</p>
+<pre><code class="language-text">Admin &gt; Solutions &gt; VMware vCenter &gt; Configure
+- Hostname / IP: vCenter FQDN
+- Credential: read-only svc-ariaops service account
+- Collection interval: 5 minutes (default)
+- Advanced: enable object tagging collection for custom group membership
+</code></pre>
+<p>Verify the adapter is in <strong>Collecting</strong> state. If it shows <strong>No Data</strong>, check the credential and network connectivity on port TCP 443.</p>
+<h2 id="nsx-integration">NSX Integration<a class="headerlink" href="#nsx-integration" title="Permanent link">&para;</a></h2>
+<p>The NSX management pack extends visibility to NSX-T overlays, logical routers, transport nodes, and edge clusters.</p>
+<pre><code class="language-text">Admin &gt; Solutions &gt; VMware NSX-T Adapter &gt; Configure
+- NSX Manager FQDN / IP
+- Credential: read-only NSX service account
+</code></pre>
+<p>Key objects collected: Logical Routers, Transport Nodes, Edge Clusters, Tier-0/Tier-1 Gateways.</p>
+<h2 id="vsan-integration">vSAN Integration<a class="headerlink" href="#vsan-integration" title="Permanent link">&para;</a></h2>
+<p>vSAN monitoring is included in the vCenter adapter — enable vSAN collection in the adapter advanced settings. Metrics include disk group latency, resync throughput, capacity per datastore cluster, and component health.</p>
+<h2 id="storage-adapter-integrations">Storage Adapter Integrations<a class="headerlink" href="#storage-adapter-integrations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Configuration Location</th>
+<th>Key Metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pure Storage Management Pack</td>
+<td>Admin &gt; Solutions &gt; Pure Storage</td>
+<td>Array latency, IOPS, capacity per volume</td>
+</tr>
+<tr>
+<td>Dell EMC MP (PowerStore/PowerMax)</td>
+<td>Admin &gt; Solutions &gt; Dell EMC</td>
+<td>Array health, LUN latency, capacity</td>
+</tr>
+<tr>
+<td>NetApp MP</td>
+<td>Admin &gt; Solutions &gt; NetApp</td>
+<td>Volume latency, aggregate capacity</td>
+</tr>
+</tbody>
+</table>
+<p>All storage adapters require a service account on the array with read-only API access.</p>
+<h2 id="servicenow-integration-outbound-alerts">ServiceNow Integration (Outbound Alerts)<a class="headerlink" href="#servicenow-integration-outbound-alerts" title="Permanent link">&para;</a></h2>
+<p>Aria Operations can create ServiceNow incidents automatically via the outbound alert notification plugin.</p>
+<pre><code class="language-text">Admin &gt; Alerts &gt; Notification Plugins &gt; Add ServiceNow Plugin
+- ServiceNow instance URL
+- Username / password (or OAuth token)
+- Map alert severity to incident priority
+- Assign to: storage / infra assignment group
+</code></pre>
+<p>Test the integration using the <strong>Test Notification</strong> button after saving.</p>
+<h2 id="slack-teams-webhooks">Slack / Teams Webhooks<a class="headerlink" href="#slack-teams-webhooks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Admin &gt; Alerts &gt; Notification Plugins &gt; Add Webhook Plugin
+- Webhook URL: &lt;Teams/Slack incoming webhook URL&gt;
+- Alert filter: severity = Critical or Immediate
+- Payload template: include alert name, object, and description
+</code></pre>
+<p>Separate plugins are recommended per team channel for targeted routing.</p>
+<h2 id="aria-logs-integration">Aria Logs Integration<a class="headerlink" href="#aria-logs-integration" title="Permanent link">&para;</a></h2>
+<p>Aria Logs (log analytics) integrates bidirectionally — Aria Operations can launch log search in context from an alert, and Aria Logs can trigger alerts back into Aria Operations.</p>
+<pre><code class="language-text">Admin &gt; Global Settings &gt; Log Integration
+- Enable Aria Logs integration
+- Provide Aria Logs FQDN
+</code></pre>
+<h2 id="third-party-management-pack-summary">Third-Party Management Pack Summary<a class="headerlink" href="#third-party-management-pack-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -741,9 +927,14 @@
 <td>VM, host, cluster, datastore metrics</td>
 </tr>
 <tr>
-<td>NSX Management Pack</td>
+<td>NSX-T Management Pack</td>
 <td>Inbound</td>
 <td>Network overlay visibility</td>
+</tr>
+<tr>
+<td>vSAN (via vCenter)</td>
+<td>Inbound</td>
+<td>vSAN capacity and performance</td>
 </tr>
 <tr>
 <td>Pure Storage MP</td>
@@ -761,7 +952,7 @@
 <td>NetApp storage metrics</td>
 </tr>
 <tr>
-<td>ServiceNow</td>
+<td>ServiceNow Plugin</td>
 <td>Outbound</td>
 <td>Alert-to-incident ticketing</td>
 </tr>
@@ -777,6 +968,10 @@
 </tr>
 </tbody>
 </table>
+<h2 id="credential-management">Credential Management<a class="headerlink" href="#credential-management" title="Permanent link">&para;</a></h2>
+<p>All adapter credentials should use dedicated service accounts with read-only permissions. Store credentials in the team secrets manager, not in the Aria Operations credential store alone. Rotate adapter service account passwords on the standard 12-month schedule and update credentials under:</p>
+<pre><code class="language-text">Admin &gt; Credentials &gt; [Select Credential] &gt; Edit
+</code></pre>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Common Certificate Issues - Chris KB</title>
+        <title>Certificate Issues - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#common-certificate-issues" class="md-skip">
+        <a href="#certificate-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Common Certificate Issues
+              Certificate Issues
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-diagnosis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Diagnosis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#browser-certificate-warning-on-vcenter-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Browser Certificate Warning on vCenter Login
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#login-failure-after-certificate-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Failure After Certificate Renewal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-integration-broken-after-certificate-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product Integration Broken After Certificate Change
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-certificate-thumbprint-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Certificate Thumbprint Mismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esxi-host-certificate-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host Certificate Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,37 +807,147 @@
 
 
 
-<h1 id="common-certificate-issues">Common Certificate Issues<a class="headerlink" href="#common-certificate-issues" title="Permanent link">&para;</a></h1>
+<h1 id="certificate-issues">Certificate Issues<a class="headerlink" href="#certificate-issues" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">Troubleshooting</a> hub.</p>
+</blockquote>
+<hr />
+<h2 id="quick-diagnosis">Quick Diagnosis<a class="headerlink" href="#quick-diagnosis" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check vCenter certificate expiry (run from VCSA shell)
+for store in MACHINE_SSL_CERT VMCA_ROOT data-encipherment; do
+  echo &quot;=== $store ===&quot;
+  /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -E &quot;Subject:|Not After&quot;
+done
+
+# Check current Machine SSL cert expiry via OpenSSL
+openssl s_client -connect &lt;vcenter-fqdn&gt;:443 -showcerts &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -subject -dates
+</code></pre>
+<hr />
+<h2 id="browser-certificate-warning-on-vcenter-login">Browser Certificate Warning on vCenter Login<a class="headerlink" href="#browser-certificate-warning-on-vcenter-login" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Browser shows <code>NET::ERR_CERT_AUTHORITY_INVALID</code> or an untrusted certificate warning when opening the vCenter FQDN.</p>
+<p><strong>Likely cause:</strong> Machine SSL certificate is self-signed, expired, or the CA is not trusted by the browser.</p>
+<p><strong>Step 1 — Check expiry:</strong></p>
+<pre><code class="language-bash">openssl s_client -connect &lt;vcenter-fqdn&gt;:443 -showcerts &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -dates
+</code></pre>
+<p><strong>Step 2 — Renew via VAMI if expired:</strong></p>
+<ol>
+<li>Browse to <code>https://&lt;vcenter-fqdn&gt;:5480</code></li>
+<li>Go to <strong>Certificate Management</strong></li>
+<li>Under Machine SSL Certificate, click <strong>Renew</strong> (VMCA-signed certs) or <strong>Import and Replace</strong> (custom CA)</li>
+</ol>
+<p><strong>Step 3 — If using custom CA</strong>, push the trusted root to client browsers via GPO or add to the OS trust store.</p>
+<hr />
+<h2 id="login-failure-after-certificate-renewal">Login Failure After Certificate Renewal<a class="headerlink" href="#login-failure-after-certificate-renewal" title="Permanent link">&para;</a></h2>
+<p>Renewing the Machine SSL cert can break SSO if the STS (Security Token Service) certificate is also expired or not updated.</p>
+<pre><code class="language-bash"># Check STS signing certificate expiry
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS --text | grep &quot;Not After&quot;
+
+# Restart all vCenter services after cert changes
+service-control --stop --all &amp;&amp; service-control --start --all
+</code></pre>
+<p><strong>If STS cert is expired</strong> — this requires special remediation:</p>
+<ol>
+<li>Reference VMware KB 79248 for the <code>fixsts.sh</code> procedure.</li>
+<li>This requires SSH access to VCSA as root.</li>
+<li>The STS cert is replaced via LDAP update or the <code>fixsts.sh</code> script depending on vCenter version.</li>
+<li>After replacement, restart all vCenter services.</li>
+</ol>
+<hr />
+<h2 id="product-integration-broken-after-certificate-change">Product Integration Broken After Certificate Change<a class="headerlink" href="#product-integration-broken-after-certificate-change" title="Permanent link">&para;</a></h2>
+<p><strong>Affected integrations:</strong> Aria Operations, Aria Ops for Logs, Veeam, SRM, NSX, Horizon.</p>
+<p>When the Machine SSL cert is replaced, products registered against the old thumbprint will fail.</p>
+<p><strong>Step 1 — Get current cert thumbprint:</strong></p>
+<pre><code class="language-bash">openssl s_client -connect &lt;vcenter-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -fingerprint -sha256 -noout
+</code></pre>
+<p><strong>Step 2 — Re-register or accept the new certificate in each product:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to Check</th>
+<th>Product</th>
+<th>Where to update</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Browser certificate warning</td>
-<td>vCenter machine certificate</td>
+<td>Aria Operations</td>
+<td>Admin → Solutions → Cloud Accounts → Edit vCenter → Accept new certificate</td>
 </tr>
 <tr>
-<td>Login issues</td>
-<td>STS certificate, SSO service, identity source</td>
+<td>Veeam B&amp;R</td>
+<td>Managed Servers → vCenter → Rescan → accept new fingerprint</td>
 </tr>
 <tr>
-<td>Product integration broken</td>
-<td>Trusted root chain, expired certs</td>
+<td>SRM</td>
+<td>SRM plugin → re-pair sites → accept new certs on both sides</td>
 </tr>
 <tr>
-<td>Aria connection failure</td>
-<td>Endpoint certificate trust</td>
-</tr>
-<tr>
-<td>NSX registration issue</td>
-<td>Certificate thumbprint or trust relationship</td>
+<td>NSX</td>
+<td>Infrastructure → vCenter Server → Actions → Resync</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="nsx-certificate-thumbprint-mismatch">NSX Certificate Thumbprint Mismatch<a class="headerlink" href="#nsx-certificate-thumbprint-mismatch" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check compute manager status via NSX API
+GET /api/v1/fabric/compute-managers
+# Look for connection_status — should be &quot;UP&quot;
+</code></pre>
+<p>If the thumbprint mismatch persists after resync:
+1. Remove the compute manager from NSX Manager (Infrastructure → vCenter Server → Delete).
+2. Re-add it — NSX will prompt to accept the new certificate.
+3. Allow time for transport node re-sync before making any NSX fabric changes.</p>
+<hr />
+<h2 id="esxi-host-certificate-issues">ESXi Host Certificate Issues<a class="headerlink" href="#esxi-host-certificate-issues" title="Permanent link">&para;</a></h2>
+<p>ESXi host certificates can expire independently. An expired host cert causes vCenter warnings, breaks vSAN encryption, and can disrupt HA heartbeats.</p>
+<pre><code class="language-bash"># Check ESXi host cert expiry from the host CLI
+openssl s_client -connect &lt;esxi-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -dates
+</code></pre>
+<p><strong>Renew from vCenter UI:</strong>
+- Select host → Configure → Certificate → Renew</p>
+<p><strong>Bulk renewal via VCSA certificate-manager:</strong></p>
+<pre><code class="language-bash"># On VCSA — renew all host certificates (re-issues via VMCA)
+/usr/lib/vmware-vmca/bin/certificate-manager
+# Choose option 3 — Replace Machine SSL certificate with VMCA Certificate
+# Or option 8 — Reset all certificates (use only in break-glass scenarios)
+</code></pre>
+<hr />
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Key lead times:</p>
+<table>
+<thead>
+<tr>
+<th>Timeline</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>60 days out</td>
+<td>Plan renewal, raise change ticket</td>
+</tr>
+<tr>
+<td>30 days out</td>
+<td>Schedule maintenance window</td>
+</tr>
+<tr>
+<td>7 days out</td>
+<td>Treat as P2 — renew immediately</td>
+</tr>
+<tr>
+<td>Expired</td>
+<td>Emergency procedure — services may already be failing</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># PowerCLI — quick check on vCenter Machine SSL expiry
+$certBytes = (Connect-VIServer -Server &lt;vcenter-fqdn&gt;).ExtensionData.Config.Certificate
+$cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new([byte[]]$certBytes)
+$cert | Select Subject, NotBefore, NotAfter
+</code></pre>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>NSX Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#nsx-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              NSX Troubleshooting
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,86 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edge-node-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Node Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-node-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport Node Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nsx-manager-cluster-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Manager Cluster Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,18 +802,92 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the NSX-T reference.</p>
-</blockquote>
+<h1 id="nsx-troubleshooting">NSX Troubleshooting<a class="headerlink" href="#nsx-troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Reference procedures for diagnosing NSX-T issues.</p>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="edge-health/">
-  <strong>Edge Health</strong>
-  <span>NSX edge node health, transport connectivity, routing state, and service validation.</span>
-</a>
-
+<a class="kb-card" href="edge-health/"><strong>Edge Health</strong><span>NSX edge node health, transport connectivity, routing state, and service validation.</span></a>
 </div>
+
+<h2 id="quick-diagnostics">Quick Diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
+<h3 id="edge-node-health">Edge Node Health<a class="headerlink" href="#edge-node-health" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># On NSX Manager
+GET /api/v1/transport-nodes/&lt;edge-node-id&gt;/status
+
+# Via CLI on Edge node (SSH)
+get service router
+get bgp neighbor summary
+get logical-routers
+
+# Verify TEP connectivity
+ping ++netstack=vxlan &lt;remote-tep-ip&gt;
+</code></pre>
+<h3 id="transport-node-status">Transport Node Status<a class="headerlink" href="#transport-node-status" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all transport nodes and their connectivity state
+GET /api/v1/transport-nodes?transport_zone_id=&lt;tz-id&gt;
+
+# Check TEP assignment
+GET /api/v1/transport-nodes/&lt;node-id&gt;
+
+# Verify uplink connectivity
+esxcli network ip interface ipv4 get   # On ESXi host — confirm TEP IP assigned
+esxcli network ip route ipv4 list      # Confirm TEP traffic goes via correct uplink
+</code></pre>
+<h3 id="nsx-manager-cluster-health">NSX Manager Cluster Health<a class="headerlink" href="#nsx-manager-cluster-health" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># SSH to any NSX Manager node
+get cluster status          # All nodes should show &quot;STABLE&quot;
+get services                # All core services should show &quot;running&quot;
+get certificate cluster     # Certificates should not be expiring
+
+# Full cluster diagnostics
+GET /api/v1/cluster/status
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>First Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM cannot reach gateway</td>
+<td>Segment not connected to tier-1</td>
+<td>NSX Manager → Segments → check attachment</td>
+</tr>
+<tr>
+<td>BGP peer down on Edge</td>
+<td>Physical underlay connectivity issue</td>
+<td>Ping Edge uplink IP from router; check MTU</td>
+</tr>
+<tr>
+<td>TEP tunnel down</td>
+<td>VLAN mismatch or MTU below 1600</td>
+<td><code>esxcli network vswitch dvs vmware list</code></td>
+</tr>
+<tr>
+<td>NSX Manager unreachable</td>
+<td>Certificate expiry or disk full</td>
+<td>SSH to NSX Manager; <code>df -h</code>; <code>get certificate cluster</code></td>
+</tr>
+<tr>
+<td>DFW rule not applying</td>
+<td>Rule not in correct scope or disabled</td>
+<td>Check Rule → Applied To field; confirm rule is enabled</td>
+</tr>
+</tbody>
+</table>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NSX Manager logs
+tail -f /var/log/syslog | grep -i nsx
+
+# Edge node logs (SSH to Edge)
+get log-file syslog follow
+
+# ESXi NSX kernel module logs
+cat /var/log/vmkernel.log | grep -i vxlan
+</code></pre>
 
 
 

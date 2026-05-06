@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-triage-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Triage Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alert Triage Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#critical-or-high-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical or High Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anomaly-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly Investigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weekly-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monthly-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monthly Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-review-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Review Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-score-decline-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Score Decline Investigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,16 +825,106 @@
 
 
 <h1 id="dell-aiops-operations">Dell AIOps Operations<a class="headerlink" href="#dell-aiops-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operations focus on reviewing the AIOps recommendations dashboard for new Critical or High-priority recommendations and checking the active anomaly alerts panel for newly detected anomalies requiring investigation. Monitor infrastructure health score trends across the storage estate to identify systems with declining health scores before they generate incidents. Weekly, review all AI-generated capacity recommendations and action or defer any High-priority items in the recommendation queue, documenting the rationale for any deferrals.</p>
-<p><strong>Daily Checklist</strong>
-- AIOps Recommendations dashboard — review new Critical and High recommendations
-- Active Anomaly Alerts — investigate newly detected anomalies
-- Infrastructure health scores — flag systems with declining trends</p>
-<p><strong>Weekly Tasks</strong>
-- Review full recommendation queue — action High-priority items
-- Document deferrals with rationale in ITSM
-- Confirm all storage systems are reporting (check SCG collection status)
-- Review capacity trend charts for systems approaching thresholds</p>
+<h2 id="daily-checklist">Daily Checklist<a class="headerlink" href="#daily-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Location</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New Critical recommendations</td>
+<td>CloudIQ &gt; AIOps &gt; Recommendations</td>
+<td>No unacknowledged Critical recommendations</td>
+</tr>
+<tr>
+<td>Active anomaly alerts</td>
+<td>CloudIQ &gt; AIOps &gt; Anomalies</td>
+<td>Review any new anomalies; no unacknowledged Critical anomalies</td>
+</tr>
+<tr>
+<td>Infrastructure health scores</td>
+<td>CloudIQ &gt; Assets</td>
+<td>No systems below 60 health score</td>
+</tr>
+<tr>
+<td>SCG collection status</td>
+<td>SCG admin UI &gt; Systems</td>
+<td>All systems show last-seen within 30 minutes</td>
+</tr>
+<tr>
+<td>Notification delivery</td>
+<td>CloudIQ &gt; Settings &gt; Notifications &gt; Delivery Log</td>
+<td>No failed notification deliveries</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-triage-workflow">Alert Triage Workflow<a class="headerlink" href="#alert-triage-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="critical-or-high-recommendation">Critical or High Recommendation<a class="headerlink" href="#critical-or-high-recommendation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">1. Open CloudIQ &gt; AIOps &gt; Recommendations
+2. Click into the recommendation — review:
+   - Affected system and component
+   - Root cause analysis summary
+   - Recommended action(s)
+   - Time-to-impact estimate
+3. Determine if this requires an emergency change or a standard change:
+   - Days-to-impact &lt; 7 days OR hardware fault: emergency change process
+   - All other: standard change request
+4. Raise ServiceNow record (auto-created if webhook is configured)
+5. Acknowledge the recommendation in CloudIQ
+6. Action during approved change window
+7. Post-action: monitor health score for improvement over next 2–4 hours
+</code></pre>
+<h3 id="anomaly-investigation">Anomaly Investigation<a class="headerlink" href="#anomaly-investigation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">1. CloudIQ &gt; AIOps &gt; Anomalies &gt; [New Anomaly]
+2. Review:
+   - Affected metric (latency, IOPS, capacity growth rate)
+   - Time of anomaly detection vs. start of deviation
+   - Correlated events (firmware change, workload spike, replication event)
+3. Cross-reference with Aria Operations for correlated VM workload changes
+4. Determine root cause:
+   - Workload-driven: notify application team; no storage action required
+   - Storage-driven: investigate further; may require SCG-level diagnostics
+5. Annotate the anomaly in CloudIQ with findings
+6. If a storage-level issue is confirmed: raise ServiceNow incident
+</code></pre>
+<h2 id="weekly-tasks">Weekly Tasks<a class="headerlink" href="#weekly-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Review the full recommendation queue — action or defer all High-priority items with documented rationale</li>
+<li>Confirm all storage systems are reporting (last-seen &lt; 1 hour for all systems)</li>
+<li>Review capacity trend forecasts — flag systems with &lt; 45 days remaining to capacity threshold</li>
+<li>Check anomaly frequency by system — identify persistently noisy systems for threshold tuning</li>
+</ul>
+<h2 id="monthly-tasks">Monthly Tasks<a class="headerlink" href="#monthly-tasks" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Generate AIOps Recommendations Summary report and share in the monthly infrastructure review</li>
+<li>Review anomaly trend analysis — identify recurring anomaly patterns</li>
+<li>Audit open/deferred recommendations — escalate any that have been deferred more than twice</li>
+<li>Review and update notification rules for any changes in team structure or on-call rotation</li>
+<li>Verify SIEM audit log export completed for the month</li>
+</ul>
+<h2 id="capacity-review-process">Capacity Review Process<a class="headerlink" href="#capacity-review-process" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">1. CloudIQ &gt; Capacity &gt; [Select platform type: PowerStore / PowerScale / etc.]
+2. Review 90-day capacity forecast for each system
+3. Flag systems with:
+   - Current usage &gt; 70% (Warning) — track
+   - Days to threshold &lt; 45 (Warning) — add to capacity planning queue
+   - Days to threshold &lt; 15 (Critical) — raise immediate action item
+4. Document in the capacity planning register with planned expansion date
+</code></pre>
+<h2 id="health-score-decline-investigation">Health Score Decline Investigation<a class="headerlink" href="#health-score-decline-investigation" title="Permanent link">&para;</a></h2>
+<p>If a system's health score drops from the previous check:</p>
+<pre><code class="language-text">1. CloudIQ &gt; Assets &gt; [System] &gt; Health Score History
+   - Note when the decline started
+   - Check for correlation with maintenance, firmware upgrades, or workload changes
+2. Review associated AIOps recommendations for root cause
+3. Check active hardware faults: CloudIQ &gt; Assets &gt; [System] &gt; Faults
+4. If hardware fault: open Dell support case with system serial number and fault details
+5. Track health score recovery — confirm score improves after recommended action
+</code></pre>
 
 
 

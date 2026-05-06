@@ -21,7 +21,7 @@
     
     
       
-        <title>Common Datastore Issues - Chris KB</title>
+        <title>Datastore Issues - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#common-datastore-issues" class="md-skip">
+        <a href="#datastore-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Common Datastore Issues
+              Datastore Issues
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-inaccessible-apd-vs-pdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Inaccessible — APD vs PDL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Full
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-datastore-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Datastore Latency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmfs-lock-failed-to-lock-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMFS Lock — Failed to Lock the File
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-object-non-compliant-or-degraded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Object Non-Compliant or Degraded
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,34 +785,174 @@
 
 
 
-<h1 id="common-datastore-issues">Common Datastore Issues<a class="headerlink" href="#common-datastore-issues" title="Permanent link">&para;</a></h1>
+<h1 id="datastore-issues">Datastore Issues<a class="headerlink" href="#datastore-issues" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">Troubleshooting</a> hub.</p>
+</blockquote>
+<hr />
+<h2 id="datastore-inaccessible-apd-vs-pdl">Datastore Inaccessible — APD vs PDL<a class="headerlink" href="#datastore-inaccessible-apd-vs-pdl" title="Permanent link">&para;</a></h2>
+<p>An inaccessible datastore is either <strong>APD (All Paths Down)</strong> — temporary, paths may recover — or <strong>PDL (Permanent Device Loss)</strong> — the storage array has returned SCSI sense codes indicating the LUN is gone.</p>
+<pre><code class="language-bash"># From ESXi host — check path state for a specific device
+esxcli storage nmp device list
+esxcli storage nmp path list -d &lt;naa.xxxx&gt;
+
+# Check for APD/PDL events in vmkernel log
+grep -i &quot;APD\|PDL\|permanently&quot; /var/log/vmkernel.log | tail -50
+
+# Check datastore status from vCenter (PowerCLI)
+Get-Datastore | Where-Object {$_.State -ne &quot;Available&quot;} | Select Name, State
+</code></pre>
+<p><strong>APD resolution:</strong></p>
+<ol>
+<li>Identify which hosts report the datastore as inaccessible — if only some hosts, isolate to a specific fabric path or HBA.</li>
+<li>Check SAN switch for zoning errors and ISL state.</li>
+<li>Check storage array for controller failover, LUN masking, or port errors.</li>
+<li>Rescan storage adapters from all affected hosts:</li>
+</ol>
+<pre><code class="language-bash"># Rescan from ESXi CLI
+esxcli storage core adapter rescan -A all
+
+# Or from vCenter — right-click cluster → Storage → Rescan Storage
+</code></pre>
+<ol>
+<li>If paths recover, verify VMs resume I/O and check for filesystem consistency warnings.</li>
+</ol>
+<p><strong>PDL action:</strong></p>
+<ul>
+<li>Do NOT rescan repeatedly into a PDL — it can cause VM kernel panics.</li>
+<li>Confirm with the storage team whether the LUN was decommissioned or is experiencing a controller failure.</li>
+<li>If unintentional, escalate to the storage team for LUN restoration before taking any ESXi action.</li>
+</ul>
+<hr />
+<h2 id="datastore-full">Datastore Full<a class="headerlink" href="#datastore-full" title="Permanent link">&para;</a></h2>
+<p><strong>Step 1 — Identify top consumers from vCenter:</strong></p>
+<p>Right-click datastore → Browse → sort by file size. Or use PowerCLI:</p>
+<pre><code class="language-powershell"># Find all snapshots across all VMs consuming space on a datastore
+Get-VM | Get-Snapshot | Where-Object {$_.ExtensionData.Config.Files.SnapshotDirectory -like &quot;*DatastoreName*&quot;} |
+  Select VM, Name, Created, SizeGB | Sort-Object SizeGB -Descending
+</code></pre>
+<p><strong>Common culprits:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to Check</th>
+<th>Item</th>
+<th>Where to Check</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Datastore full</td>
-<td>Snapshots, ISO files, orphaned VMDKs, old templates</td>
+<td>Snapshots</td>
+<td>vCenter → VM → Snapshots</td>
+<td>Consolidate or delete stale snapshots</td>
 </tr>
 <tr>
-<td>High latency</td>
-<td>Array performance, queue depth, paths, congestion</td>
+<td>ISO files</td>
+<td>Datastore browser → ISO folder</td>
+<td>Move ISOs to a dedicated ISO datastore</td>
 </tr>
 <tr>
-<td>Datastore inaccessible</td>
-<td>SAN zoning, LUN masking, paths, storage controller</td>
+<td>Orphaned VMDKs</td>
+<td>Datastore browser — files with no associated VM</td>
+<td>Verify orphaned, then delete</td>
 </tr>
 <tr>
-<td>VMFS issue</td>
-<td>Locks, resignature, extent health</td>
+<td>Old templates</td>
+<td>vCenter inventory</td>
+<td>Remove stale or duplicate templates</td>
 </tr>
 <tr>
-<td>vSAN object warning</td>
-<td>Storage policy, resync, disk group, capacity</td>
+<td>Swap files (.vswp)</td>
+<td>One per powered-on VM</td>
+<td>Reduce memory overcommit or set swap to dedicated datastore</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2 — Snapshot cleanup:</strong></p>
+<pre><code class="language-powershell"># Find all snapshots older than 3 days
+Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)} |
+  Select VM, Name, Created, SizeGB | Sort-Object SizeGB -Descending
+
+# Remove a specific snapshot (verify with VM owner first)
+Get-VM &quot;VMName&quot; | Get-Snapshot -Name &quot;SnapshotName&quot; | Remove-Snapshot -RunAsync
+</code></pre>
+<p><strong>Step 3 — Check for delta VMDKs not visible in Snapshot Manager:</strong></p>
+<pre><code class="language-bash"># From ESXi — look for delta VMDKs that should have been committed
+find /vmfs/volumes/&lt;datastore-uuid&gt;/&lt;vmname&gt;/ -name &quot;*-delta.vmdk&quot; -o -name &quot;*-000*.vmdk&quot;
+# If delta files exist but no snapshot shows in vCenter, run VM → Consolidate
+</code></pre>
+<hr />
+<h2 id="high-datastore-latency">High Datastore Latency<a class="headerlink" href="#high-datastore-latency" title="Permanent link">&para;</a></h2>
+<p>Latency over 20ms for VMFS/SAN or 30ms for NFS is a concern. Over 50ms will impact most workloads.</p>
+<pre><code class="language-bash"># Check per-device latency from ESXi using esxtop
+esxtop
+# Press 'u' for storage device view — look at GAVG (guest average latency in ms)
+# KAVG = kernel latency, DAVG = device latency; GAVG = KAVG + DAVG
+</code></pre>
+<p><strong>Triage path:</strong></p>
+<ol>
+<li>Correlate the latency spike time — was a snapshot being committed, a backup running, or a replication cycle active?</li>
+<li>Check array-side performance counters (PowerMax Unisphere Performance, Pure1 Analytics, ONTAP Performance Manager).</li>
+<li>Check queue depth — if <code>QAVG</code> in esxtop is consistently high, the array is saturated:</li>
+</ol>
+<pre><code class="language-bash"># Check queue depth for a device
+esxcli storage core device list -d &lt;naa.xxxx&gt; | grep -i queue
+</code></pre>
+<ol>
+<li>Check for path imbalance — one path handling all I/O while others are idle.</li>
+</ol>
+<hr />
+<h2 id="vmfs-lock-failed-to-lock-the-file">VMFS Lock — Failed to Lock the File<a class="headerlink" href="#vmfs-lock-failed-to-lock-the-file" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> VM fails to power on with "Failed to lock the file" or "Unable to access a file since it is locked."</p>
+<pre><code class="language-bash"># Identify which host holds the lock
+vmkfstools -D /vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vmdk&gt;.vmdk
+# Output shows the MAC address of the locking host
+
+# Match MAC address to a hostname
+esxcli network nic list | grep &lt;mac-address&gt;
+</code></pre>
+<p>Once you identify the locking host:
+- If that host is not running the VM, restart its management agents (<code>/etc/init.d/hostd restart</code>)
+- If the locking host crashed, the lock is stale — power off the VM completely in vCenter, then power it back on</p>
+<hr />
+<h2 id="vsan-object-non-compliant-or-degraded">vSAN Object Non-Compliant or Degraded<a class="headerlink" href="#vsan-object-non-compliant-or-degraded" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check vSAN health from ESXi
+esxcli vsan health cluster list
+
+# Check object compliance
+esxcli vsan debug object list | grep -i &quot;non-compliant\|absent\|degraded&quot;
+
+# Check active resync
+esxcli vsan debug resync list
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-compliant</td>
+<td>Does not meet storage policy</td>
+<td>Check if a host or disk is offline; restore host to restore compliance</td>
+</tr>
+<tr>
+<td>Degraded</td>
+<td>A component is missing — fault tolerance is used up</td>
+<td>Restore the failed host/disk before another failure occurs</td>
+</tr>
+<tr>
+<td>Absent</td>
+<td>Component on a temporarily disconnected host</td>
+<td>Resync starts automatically after the host reconnects</td>
+</tr>
+<tr>
+<td>Inaccessible</td>
+<td>Quorum lost — cannot read the object</td>
+<td>Restore majority of cluster hosts; contact VMware GSS if unrecoverable</td>
 </tr>
 </tbody>
 </table>

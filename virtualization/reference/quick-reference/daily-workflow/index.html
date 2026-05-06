@@ -21,7 +21,7 @@
     
     
       
-        <title>Daily Workflow - Chris KB</title>
+        <title>Daily VMware Operations Workflow - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#daily-workflow" class="md-skip">
+        <a href="#daily-vmware-operations-workflow" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Daily Workflow
+              Daily VMware Operations Workflow
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-vcenter-alarm-triage-5-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — vCenter Alarm Triage (5 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-host-health-3-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Host Health (3 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-cluster-ha-and-drs-status-2-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Cluster HA and DRS Status (2 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-datastore-capacity-3-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Datastore Capacity (3 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-vsan-health-2-min-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — vSAN Health (2 min, if applicable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-review-failed-tasks-2-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Review Failed Tasks (2 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-backup-status-3-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Backup Status (3 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-monitoring-dashboard-2-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8 — Monitoring Dashboard (2 min)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-9-follow-up-on-repeat-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9 — Follow-Up on Repeat Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,19 +829,65 @@
 
 
 
-<h1 id="daily-workflow">Daily Workflow<a class="headerlink" href="#daily-workflow" title="Permanent link">&para;</a></h1>
-<ol>
-<li>Log into vCenter</li>
-<li>Check active alarms</li>
-<li>Confirm all hosts are connected</li>
-<li>Check cluster HA and DRS status</li>
-<li>Check datastore capacity</li>
-<li>Check vSAN health if used</li>
-<li>Review failed tasks</li>
-<li>Check backup status</li>
-<li>Review monitoring dashboards</li>
-<li>Follow up on repeat alerts</li>
-</ol>
+<h1 id="daily-vmware-operations-workflow">Daily VMware Operations Workflow<a class="headerlink" href="#daily-vmware-operations-workflow" title="Permanent link">&para;</a></h1>
+<p>A repeatable morning workflow to confirm the environment is healthy before the business day begins.</p>
+<h2 id="step-1-vcenter-alarm-triage-5-min">Step 1 — vCenter Alarm Triage (5 min)<a class="headerlink" href="#step-1-vcenter-alarm-triage-5-min" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Connect and get all triggered alarms
+Connect-VIServer -Server vcenter.corp.local
+Get-AlarmDefinition | Where-Object {$_.Enabled} | ForEach-Object {
+    Get-Alarm -Entity (Get-Datacenter) | Where-Object {$_.Status -ne &quot;Green&quot;}
+} | Select-Object Entity, AlarmDefinition, Status | Format-Table -AutoSize
+</code></pre>
+<ul>
+<li><strong>Red/critical</strong>: investigate immediately before proceeding</li>
+<li><strong>Yellow/warning</strong>: log for follow-up; assign owner if persistent</li>
+</ul>
+<h2 id="step-2-host-health-3-min">Step 2 — Host Health (3 min)<a class="headerlink" href="#step-2-host-health-3-min" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Any hosts not fully connected?
+Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
+
+# Any hosts in maintenance mode unexpectedly?
+Get-VMHost -State Maintenance | Select-Object Name, State
+</code></pre>
+<h2 id="step-3-cluster-ha-and-drs-status-2-min">Step 3 — Cluster HA and DRS Status (2 min)<a class="headerlink" href="#step-3-cluster-ha-and-drs-status-2-min" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, @{
+    N=&quot;DrsMode&quot;; E={$_.DrsAutomationLevel}
+} | Format-Table -AutoSize
+</code></pre>
+<p>Confirm: HA Enabled = True, DRS Enabled = True, DrsMode = FullyAutomated (or as per standard).</p>
+<h2 id="step-4-datastore-capacity-3-min">Step 4 — Datastore Capacity (3 min)<a class="headerlink" href="#step-4-datastore-capacity-3-min" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-Datastore | Select-Object Name, FreeSpaceGB, CapacityGB, @{
+    N=&quot;Used%&quot;; E={[math]::Round((1-($_.FreeSpaceGB/$_.CapacityGB))*100,1)}
+} | Where-Object {&quot;Used%&quot; -gt 75} | Sort-Object &quot;Used%&quot; -Descending
+</code></pre>
+<p>Any datastore &gt; 75% full: investigate and action.</p>
+<h2 id="step-5-vsan-health-2-min-if-applicable">Step 5 — vSAN Health (2 min, if applicable)<a class="headerlink" href="#step-5-vsan-health-2-min-if-applicable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to any cluster host, or use vCenter:
+# Cluster → Monitor → vSAN → Skyline Health
+esxcli vsan health cluster list | grep -v &quot;Green&quot;   # Should return nothing
+esxcli vsan debug resync summary                     # Confirm no unexpected resync in progress
+</code></pre>
+<h2 id="step-6-review-failed-tasks-2-min">Step 6 — Review Failed Tasks (2 min)<a class="headerlink" href="#step-6-review-failed-tasks-2-min" title="Permanent link">&para;</a></h2>
+<p>vCenter UI → Recent Tasks → filter by Status: Error → review last 24 hours.</p>
+<p>Key tasks to watch:
+- Snapshot creation failures (backup dependency)
+- VM migrate failures (DRS manual recommendations stuck)
+- Storage profile compliance failures</p>
+<h2 id="step-7-backup-status-3-min">Step 7 — Backup Status (3 min)<a class="headerlink" href="#step-7-backup-status-3-min" title="Permanent link">&para;</a></h2>
+<p>Check backup tool dashboard for jobs that ran overnight:
+- <strong>Veeam</strong>: Home → Last 24 Hours — any failures → investigate
+- <strong>CommVault</strong>: Command Center → Jobs → Failed Jobs
+- <strong>NetBackup</strong>: OpsCenter → Monitor → Jobs → Status: Failed</p>
+<h2 id="step-8-monitoring-dashboard-2-min">Step 8 — Monitoring Dashboard (2 min)<a class="headerlink" href="#step-8-monitoring-dashboard-2-min" title="Permanent link">&para;</a></h2>
+<p>Log in to Aria Operations:
+- Environment overview: all objects should show green or yellow (not red)
+- Confirm collection is running: <code>Collection State: OK</code> for all adapters
+- Review any new Immediate or Critical alert categories generated overnight</p>
+<h2 id="step-9-follow-up-on-repeat-alerts">Step 9 — Follow-Up on Repeat Alerts<a class="headerlink" href="#step-9-follow-up-on-repeat-alerts" title="Permanent link">&para;</a></h2>
+<p>Review alerts older than 24 hours that have not been acknowledged:
+- Assign each to an owner
+- Create a change or task for any alert that has appeared &gt; 3 consecutive days</p>
+<p>Total estimated time: <strong>~20 minutes</strong></p>
 
 
 

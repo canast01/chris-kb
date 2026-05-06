@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#three-tier-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three-Tier Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#master-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Master Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#media-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netbackup-appliance-52505350" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetBackup Appliance (5250/5350)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,7 @@
 
 
 <h1 id="netbackup-architecture">NetBackup Architecture<a class="headerlink" href="#netbackup-architecture" title="Permanent link">&para;</a></h1>
-<p>NetBackup uses a three-tier architecture: the Master Server handles policy management, scheduling, catalog maintenance, and job orchestration; Media Servers perform the actual data movement between clients and storage units; and Clients run the backup agents that stream data to media servers. Storage units include BasicDisk, AdvancedDisk, Cloud (S3-compatible), tape libraries via NDMP or SAN, and Dell Data Domain via OpenStorage Technology (OST) for deduplication. NetBackup Appliances (5250, 5350) combine master server, media server, and storage into a single integrated platform.</p>
+<h2 id="three-tier-architecture">Three-Tier Architecture<a class="headerlink" href="#three-tier-architecture" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -737,28 +820,135 @@
 <tbody>
 <tr>
 <td>Master Server</td>
-<td>Policy, catalog, scheduling</td>
+<td>Policy management, catalog, scheduling</td>
 <td>1 per domain (HA pair optional)</td>
 </tr>
 <tr>
 <td>Media Server</td>
-<td>Data movement, dedup</td>
+<td>Data movement, deduplication, storage writes</td>
 <td>Multiple, load-balanced</td>
 </tr>
 <tr>
 <td>Client</td>
-<td>Backup agent</td>
-<td>Per protected host</td>
+<td>Backup agent on protected host</td>
+<td>Per protected server/VM</td>
 </tr>
 <tr>
 <td>Storage Unit</td>
-<td>Target storage</td>
-<td>BasicDisk, AdvDisk, OST, Cloud, Tape</td>
+<td>Target storage for backup data</td>
+<td>BasicDisk, AdvancedDisk, OST, Cloud, Tape</td>
 </tr>
 <tr>
-<td>OpsCenter</td>
-<td>Reporting and monitoring</td>
-<td>Centralised, multi-domain</td>
+<td>OpsCenter / IT Analytics</td>
+<td>Centralised reporting and monitoring</td>
+<td>Separate server; multi-domain</td>
+</tr>
+</tbody>
+</table>
+<h2 id="master-server">Master Server<a class="headerlink" href="#master-server" title="Permanent link">&para;</a></h2>
+<p>The master server is the single most critical component — it holds the NetBackup catalog (file system and database tracking all backup images) and all policy definitions. Master server failure means no new jobs schedule.</p>
+<p>High availability:
+- <strong>NetBackup HA</strong> (clustering): Master server as Windows cluster or Linux active/passive
+- <strong>Catalog DR</strong>: Daily catalog backup to a separate media server; restore procedure documented in DR runbook</p>
+<p>Verify catalog backup is running:</p>
+<pre><code class="language-bash">bplist -S &lt;master_server&gt; -t 0 -policy NBU_Catalog_Backup -s -7d   # Jobs in last 7 days
+</code></pre>
+<h2 id="media-server">Media Server<a class="headerlink" href="#media-server" title="Permanent link">&para;</a></h2>
+<p>Media servers perform data movement and can host Data Domain OST deduplication:</p>
+<pre><code class="language-bash"># List media servers and their status
+nbemmcmd -lisths -machinetype media
+
+# Check media server connectivity
+bpclntcmd -hn &lt;media_server&gt; -chk
+</code></pre>
+<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<pre><code>Client (backup agent) → TCP 13782
+    │
+    ▼
+Media Server (reads client data, deduplicates if OST, writes to storage unit)
+    │
+    ├── AdvancedDisk/BasicDisk (local disk storage units)
+    ├── OpenStorage (Data Domain OST)
+    └── Cloud Storage Unit (S3, Azure Blob)
+    │
+Master Server (catalogs image metadata, orchestrates scheduling)
+</code></pre>
+<h2 id="storage-units">Storage Units<a class="headerlink" href="#storage-units" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use Case</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BasicDisk</td>
+<td>Simple disk storage</td>
+<td>No dedup; good for short-term</td>
+</tr>
+<tr>
+<td>AdvancedDisk</td>
+<td>Disk with load balancing</td>
+<td>Multiple paths; auto-selection of best path</td>
+</tr>
+<tr>
+<td>OpenStorage (OST)</td>
+<td>Dell Data Domain</td>
+<td>Inline dedup; DD Boost protocol; AIR replication</td>
+</tr>
+<tr>
+<td>Cloud Storage Unit</td>
+<td>S3 / Azure</td>
+<td>Long-term retention; high latency — not for fast restore</td>
+</tr>
+<tr>
+<td>MSDP (Media Server Dedup Pool)</td>
+<td>Native NetBackup dedup</td>
+<td>No external appliance needed</td>
+</tr>
+<tr>
+<td>Tape</td>
+<td>Archival</td>
+<td>LTO8/9; WORM media for compliance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="netbackup-appliance-52505350">NetBackup Appliance (5250/5350)<a class="headerlink" href="#netbackup-appliance-52505350" title="Permanent link">&para;</a></h2>
+<p>Integrated master + media + storage in a single platform:
+- Pre-configured, hardened OS (NetBackup Appliance OS)
+- Managed via NetBackup Appliance Shell Menu (CLISH) or Appliance Management Console (AMC)
+- Scale-out by adding additional appliances to the domain</p>
+<h2 id="key-ports">Key Ports<a class="headerlink" href="#key-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1556</td>
+<td>TCP</td>
+<td>vnetd (BPRD) — main communication</td>
+</tr>
+<tr>
+<td>13724</td>
+<td>TCP</td>
+<td>bpcd — client daemon</td>
+</tr>
+<tr>
+<td>13782</td>
+<td>TCP</td>
+<td>bpbrm — backup/restore manager</td>
+</tr>
+<tr>
+<td>13785</td>
+<td>TCP</td>
+<td>bpdbm — database manager (master)</td>
 </tr>
 </tbody>
 </table>

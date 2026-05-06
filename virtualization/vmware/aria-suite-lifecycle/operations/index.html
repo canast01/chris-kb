@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-a-new-aria-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy a New Aria Product
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trigger-a-product-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger a Product Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-upgrade-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Upgrade Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management-via-locker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management via Locker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-lcm-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting LCM Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +808,90 @@
 
 
 <h1 id="aria-suite-lifecycle-operations">Aria Suite Lifecycle Operations<a class="headerlink" href="#aria-suite-lifecycle-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operational checks should begin with the LCM dashboard's Environment Health view, which aggregates product health status across all managed environments and surfaces certificate expiry warnings, failed services, and sync errors. Disk usage on the LCM appliance must be monitored — the <code>/data</code> partition (NFS-backed binary repo) and <code>/</code> (OS) should stay below 80% utilisation; a full <code>/data</code> partition will prevent bundle downloads and upgrades. Certificate expiry alerts are visible under Locker &gt; Certificates and should be reviewed weekly, with renewals initiated at least 30 days before expiry.</p>
-<p><strong>Daily checks:</strong>
-- LCM dashboard: verify all environment cards show green health
-- Locker &gt; Certificates: check for entries expiring within 30 days
-- LCM appliance: <code>df -h</code> — confirm <code>/</code>, <code>/data</code>, <code>/tmp</code> below 80%
-- Review LCM sync schedule (Settings &gt; System Details) — confirm last sync succeeded
-- Check LCM service status: <code>systemctl status lcm</code>
-- Review <code>/var/log/lcm/lcm-app.log</code> for ERROR or WARN entries from the past 24 h</p>
+<h2 id="daily-health-checks">Daily Health Checks<a class="headerlink" href="#daily-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. LCM appliance disk usage — keep /data (NFS) and / below 80%
+df -h
+
+# 2. LCM service status
+systemctl status lcm
+
+# 3. Check recent log errors
+grep -E &quot;ERROR|WARN&quot; /var/log/lcm/lcm-app.log | tail -50
+
+# 4. Verify NFS mount is healthy
+mount | grep /data
+ls /data/ | head
+</code></pre>
+<p>In the LCM UI:
+- <strong>Lifecycle Operations → Environments</strong>: all environment cards should show green health indicators
+- <strong>Locker → Certificates</strong>: check for certificates expiring within 30 days
+- <strong>Settings → My VMware</strong>: verify bundle sync schedule last ran successfully</p>
+<h2 id="deploy-a-new-aria-product">Deploy a New Aria Product<a class="headerlink" href="#deploy-a-new-aria-product" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → select or create environment</li>
+<li>Click "Add Product"</li>
+<li>Select product (e.g., Aria Operations), version, and deployment size (Medium/Large)</li>
+<li>Provide:</li>
+<li>vCenter target: cluster, datastore, network</li>
+<li>IP addresses / hostnames</li>
+<li>Admin password (stored in LCM Locker)</li>
+<li>LCM runs pre-checks (DNS, NTP, vCenter connectivity) — all must pass</li>
+<li>Click Deploy — monitor via the workflow progress screen</li>
+<li>Post-deployment: validate product UI is accessible and health shows green in LCM</li>
+</ol>
+<h2 id="trigger-a-product-upgrade">Trigger a Product Upgrade<a class="headerlink" href="#trigger-a-product-upgrade" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → click the product</li>
+<li>Click "Upgrade" — LCM presents compatible target versions</li>
+<li>Review pre-checks: all must pass before proceeding</li>
+<li>Click "Start Upgrade" — LCM takes snapshots, performs upgrade, validates post-state</li>
+<li>Monitor: Lifecycle Operations → Requests — expand the active upgrade task</li>
+</ol>
+<p>If upgrade fails mid-way, LCM provides a "Rollback" option that reverts from snapshots.</p>
+<h2 id="check-upgrade-status">Check Upgrade Status<a class="headerlink" href="#check-upgrade-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Via LCM API
+curl -k -u admin:password https://lcm.corp.local/lcm/lcops/api/v2/requests | python3 -m json.tool
+
+# Via LCM appliance logs
+tail -f /var/log/lcm/lcm-app.log | grep -E &quot;upgrade|UPGRADE|task&quot;
+</code></pre>
+<p>Via UI: Lifecycle Operations → Requests → filter by type "Upgrade" — shows step-by-step progress.</p>
+<h2 id="certificate-management-via-locker">Certificate Management via Locker<a class="headerlink" href="#certificate-management-via-locker" title="Permanent link">&para;</a></h2>
+<p>To replace a certificate on a managed product:</p>
+<ol>
+<li>LCM → Locker → Certificates → Add Certificate (import PEM + private key)</li>
+<li>LCM → Lifecycle Operations → Environments → select product → Replace Certificate</li>
+<li>Select the new certificate from Locker → proceed through wizard</li>
+<li>LCM restarts product services to apply the new certificate</li>
+</ol>
+<p><strong>Never replace certificates directly on appliances</strong> — LCM loses track of the certificate and future upgrades may fail.</p>
+<h2 id="storage-management">Storage Management<a class="headerlink" href="#storage-management" title="Permanent link">&para;</a></h2>
+<p>Monitor NFS binary repository usage:</p>
+<pre><code class="language-bash"># Available space per product
+du -sh /data/wp-content/downloads/*
+
+# Clean up old binaries no longer needed (after upgrade is validated)
+# LCM UI → Settings → Binary Mapping → select old version → Delete
+</code></pre>
+<p>Keep at minimum: current version + one previous version of each managed product.</p>
+<h2 id="troubleshooting-lcm-issues">Troubleshooting LCM Issues<a class="headerlink" href="#troubleshooting-lcm-issues" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Restart LCM service (if UI unresponsive)
+systemctl restart lcm
+systemctl status lcm
+
+# Check LCM API health
+curl -k https://localhost/lcm/lcops/api/v2/ping
+
+# Full log capture for support SR
+tar -czf /tmp/lcm-logs-$(date +%Y%m%d).tar.gz /var/log/lcm/
+</code></pre>
+<p>Common issues:
+| Symptom | Likely Cause | Fix |
+|---|---|---|
+| Product shows "Out of Sync" | LCM cannot reach product | Verify network connectivity and credentials |
+| Upgrade pre-check fails — NTP | Time drift &gt; 5 seconds | Fix NTP on target appliance |
+| Upgrade fails at "Backup" step | vCenter connectivity lost | Verify vCenter credentials in LCM |
+| Certificate shows expired in Locker | Not renewed before expiry | Import new certificate; replace on product |</p>
 
 
 

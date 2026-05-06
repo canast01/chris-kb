@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-hardened-repository-immutable-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Hardened Repository (Immutable Backups)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cyberark-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CyberArk Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-factor-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-Factor Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Trail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,17 +819,134 @@
 
 
 <h1 id="commvault-security">CommVault Security<a class="headerlink" href="#commvault-security" title="Permanent link">&para;</a></h1>
-<p>CommVault RBAC is implemented through User Groups mapped to roles (Master, Tenant Admin, Operator, End User) with permissions scoped to specific client groups, storage policies, or subclients — enabling least-privilege access for different teams without sharing admin credentials. All backup data encryption is configured at the storage policy level using AES-256; options include client-side encryption (CPU overhead on client), MediaAgent-side (off-client), and at-rest encryption in the storage library. DDB encryption is a separate option that encrypts the deduplication database itself.</p>
-<p><strong>Security checklist</strong></p>
+<h2 id="rbac-roles">RBAC Roles<a class="headerlink" href="#rbac-roles" title="Permanent link">&para;</a></h2>
+<p>CommVault roles are assigned through User Groups scoped to specific Client Groups, Storage Policies, or Subclients:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Master</td>
+<td>Full CommCell administration</td>
+</tr>
+<tr>
+<td>Tenant Admin</td>
+<td>Manage users and jobs within assigned tenant</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>Start/stop jobs; no configuration changes</td>
+</tr>
+<tr>
+<td>End User</td>
+<td>Self-service restore of own data only</td>
+</tr>
+<tr>
+<td>View Only</td>
+<td>Read-only — view jobs and configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Assign roles in Command Center: Manage → Security → User Groups.</p>
+<p><strong>Never share admin accounts</strong> — create individual named accounts for each operator; map AD groups to CommVault roles.</p>
+<h2 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h2>
+<p>Configure per Storage Policy (Command Center: Storage → Storage Policies):</p>
+<table>
+<thead>
+<tr>
+<th>Encryption Option</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client-side (BlowFish/AES-256)</td>
+<td>Maximum protection; CPU overhead on client</td>
+</tr>
+<tr>
+<td>MediaAgent-side (AES-256)</td>
+<td>Off-client encryption; no client CPU impact</td>
+</tr>
+<tr>
+<td>Storage-level encryption</td>
+<td>If storage supports hardware encryption (not CommVault-managed)</td>
+</tr>
+</tbody>
+</table>
+<p>Mandate for:
+- [ ] Policies covering PII or regulated data → AES-256, MediaAgent-side minimum
+- [ ] Cloud and off-site copy targets → always encrypted
+- [ ] DDB encryption: enable for dedup pools storing sensitive workloads</p>
+<h2 id="linux-hardened-repository-immutable-backups">Linux Hardened Repository (Immutable Backups)<a class="headerlink" href="#linux-hardened-repository-immutable-backups" title="Permanent link">&para;</a></h2>
+<p>Protect against ransomware using immutability:</p>
+<pre><code class="language-bash"># On Linux hardened repository server
+# CommVault sets immutable flag automatically via chattr +i
+# Verify:
+lsattr /path/to/backup/files | grep '\-i\-'
+</code></pre>
+<p>Configure via VBR Repository settings: enable "Immutable" with retention period matching recovery requirements.</p>
+<h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
+<p>CommVault supports CyberArk Central Credential Provider (CCP) for runtime password retrieval:</p>
+<ol>
+<li>Command Center: Manage → Security → Credential Manager</li>
+<li>Add credential → select CyberArk CCP as vault type</li>
+<li>Configure: CCP URL, app ID, safe name, object name</li>
+</ol>
+<p>Service account passwords never stored in CommVault config — retrieved from CyberArk at job runtime.</p>
+<h2 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Purpose</th>
+<th>Restriction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8400/TCP</td>
+<td>CommServe communication</td>
+<td>Restrict to admin management subnets</td>
+</tr>
+<tr>
+<td>8403/TCP</td>
+<td>MediaAgent data movement</td>
+<td>Allow from client subnets to MediaAgent IPs only</td>
+</tr>
+<tr>
+<td>443/HTTPS</td>
+<td>Command Center web UI</td>
+<td>Restrict to admin subnets</td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-factor-authentication">Two-Factor Authentication<a class="headerlink" href="#two-factor-authentication" title="Permanent link">&para;</a></h2>
+<p>Enable 2FA for Command Center:
+- Manage → Security → Identity Providers → configure SAML or TOTP
+- Require MFA for all admin-level accounts
+- Exempt automated service accounts (use dedicated service account with IP restriction instead)</p>
+<h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># View CommVault audit log
+qoperation execscript -sn GetAuditLog -si starttime=&lt;timestamp&gt;
+</code></pre>
+<p>Forward audit logs to SIEM via syslog:
+- Command Center: Manage → Alerts → configure syslog destination
+- Alert on: admin account creation, policy modifications, job deletion, encryption key access</p>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] RBAC: all user access scoped to minimum required entity groups</li>
-<li>[ ] No shared admin accounts — individual named accounts for each operator</li>
-<li>[ ] Encryption enabled on storage policies covering PII or regulated data (AES-256)</li>
-<li>[ ] DDB encryption enabled for any DDB storing sensitive workload data</li>
-<li>[ ] Two-factor authentication (2FA) enabled for Command Center web login</li>
-<li>[ ] Audit trail: CommServe audit log reviewed monthly; forwarded to SIEM via syslog</li>
-<li>[ ] CyberArk integration: CommVault service account passwords managed via CCP</li>
-<li>[ ] CommServe access: management ports (8400, 8403) restricted to admin subnets via firewall</li>
+<li>[ ] RBAC configured — all users assigned to roles via AD groups</li>
+<li>[ ] No shared admin credentials</li>
+<li>[ ] Encryption enabled for all regulated data policies</li>
+<li>[ ] DDB encryption enabled</li>
+<li>[ ] 2FA enabled for Command Center</li>
+<li>[ ] CommServe management ports (8400, 8403) firewall-restricted</li>
+<li>[ ] CyberArk integration active for service account passwords</li>
+<li>[ ] Audit log forwarded to SIEM; alerts configured</li>
+<li>[ ] CommServe OS and SQL Server on supported, patched versions</li>
 </ul>
 
 

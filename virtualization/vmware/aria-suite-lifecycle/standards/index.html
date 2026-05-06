@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-deployment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Deployment Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-size-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Size Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-sequence-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Sequence Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-matrix-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Matrix Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +797,179 @@
 
 
 <h1 id="aria-suite-lifecycle-standards">Aria Suite Lifecycle Standards<a class="headerlink" href="#aria-suite-lifecycle-standards" title="Permanent link">&para;</a></h1>
-<p>All LCM-managed appliances must follow a consistent naming scheme: <code>&lt;product&gt;-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;</code> (e.g. <code>lcm-prod-01.corp.local</code>). The pre-deployment checklist must confirm DNS forward/reverse resolution, NTP reachability, NFS mount availability, and proxy exclusions for all management-network CIDRs before running the Easy Installer. Certificates imported into the Locker must be SHA-256 signed with a minimum 2048-bit RSA key and include the full SAN list; wildcard certificates are supported but discouraged for individual product nodes.</p>
-<p><strong>Pre-deployment checklist:</strong>
-- DNS A and PTR records for all appliance FQDNs
-- NTP reachable and time delta &lt; 5 seconds
-- NFS export accessible with read/write from the LCM appliance IP
-- Proxy configured with bypass for <code>*.corp.local</code> and vCenter/NSX FQDNs
-- Password complexity: minimum 15 characters, upper + lower + digit + special
-- CA certificate chain (root + intermediates) uploaded to LCM Locker before deployment</p>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>All LCM-managed appliances follow:</p>
+<pre><code>&lt;product-short&gt;-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Short Name</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Suite Lifecycle</td>
+<td>lcm</td>
+<td><code>lcm-prod-01.corp.local</code></td>
+</tr>
+<tr>
+<td>Workspace ONE Access</td>
+<td>vidm</td>
+<td><code>vidm-prod-01.corp.local</code></td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>vrops</td>
+<td><code>vrops-prod-01.corp.local</code></td>
+</tr>
+<tr>
+<td>Aria Automation</td>
+<td>vra</td>
+<td><code>vra-prod-01.corp.local</code></td>
+</tr>
+<tr>
+<td>Aria Log Insight</td>
+<td>vrli</td>
+<td><code>vrli-prod-01.corp.local</code></td>
+</tr>
+</tbody>
+</table>
+<p>Node numbering: <code>-01</code>, <code>-02</code>, <code>-03</code> for clustered deployments.</p>
+<h2 id="pre-deployment-checklist">Pre-Deployment Checklist<a class="headerlink" href="#pre-deployment-checklist" title="Permanent link">&para;</a></h2>
+<p>Before running Easy Installer or deploying any managed product:</p>
+<ul>
+<li>[ ] DNS A record created for each appliance FQDN — verify: <code>nslookup &lt;fqdn&gt;</code></li>
+<li>[ ] DNS PTR record created for each appliance IP — verify: <code>nslookup &lt;ip&gt;</code></li>
+<li>[ ] NTP reachable from appliance subnet; time delta &lt; 5 seconds — verify: <code>chronyc tracking</code></li>
+<li>[ ] NFS export accessible with read/write from LCM appliance IP</li>
+<li>[ ] NFS export size: minimum 200 GB per major product version to be stored</li>
+<li>[ ] Proxy configured with bypass for all management FQDNs (<code>*.corp.local</code>, vCenter, NSX)</li>
+<li>[ ] CA certificate chain (root + intermediates) ready for upload to Locker</li>
+<li>[ ] Static IP addresses reserved and documented in IPAM</li>
+<li>[ ] vCenter cluster has sufficient resources for target deployment size</li>
+</ul>
+<h2 id="deployment-size-reference">Deployment Size Reference<a class="headerlink" href="#deployment-size-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+<th>Environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extra Small (XS)</td>
+<td>4</td>
+<td>16 GB</td>
+<td>250 GB</td>
+<td>Lab / PoC</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>8</td>
+<td>24 GB</td>
+<td>250 GB</td>
+<td>Dev / Pre-Prod</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>16</td>
+<td>32 GB</td>
+<td>250 GB</td>
+<td>Production &lt; 500 nodes</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>24</td>
+<td>48 GB</td>
+<td>500 GB</td>
+<td>Production 500–2,000 nodes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-standards">Certificate Standards<a class="headerlink" href="#certificate-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Algorithm</td>
+<td>RSA 4096-bit (minimum RSA 2048-bit)</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>SHA-256</td>
+</tr>
+<tr>
+<td>SAN entries</td>
+<td>Product FQDN + load-balancer VIP (if applicable)</td>
+</tr>
+<tr>
+<td>Validity</td>
+<td>Maximum 2 years; 1 year preferred</td>
+</tr>
+<tr>
+<td>CA</td>
+<td>Internal PKI CA or public CA</td>
+</tr>
+<tr>
+<td>Wildcard</td>
+<td>Permitted for lab; not recommended for production nodes</td>
+</tr>
+</tbody>
+</table>
+<p>Import full chain (leaf + intermediate + root) into Locker.</p>
+<h2 id="upgrade-sequence-rules">Upgrade Sequence Rules<a class="headerlink" href="#upgrade-sequence-rules" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM before all products — without exception</li>
+<li>Workspace ONE Access before all Aria products</li>
+<li>Never upgrade two products simultaneously in the same environment</li>
+<li>Validate product health after each upgrade step before proceeding to the next</li>
+<li>VM snapshots must be taken before each upgrade; snapshots must be present for rollback</li>
+</ol>
+<h2 id="version-matrix-compliance">Version Matrix Compliance<a class="headerlink" href="#version-matrix-compliance" title="Permanent link">&para;</a></h2>
+<p>Maintain a version compliance table in CMDB:</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Deployed Version</th>
+<th>Latest Available</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Suite Lifecycle</td>
+<td>8.x.y</td>
+<td><check Broadcom></td>
+<td>Current / Update Needed</td>
+</tr>
+<tr>
+<td>Workspace ONE Access</td>
+<td>3.3.x</td>
+<td><check Broadcom></td>
+<td>Current / Update Needed</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>8.x.y</td>
+<td><check Broadcom></td>
+<td>Current / Update Needed</td>
+</tr>
+</tbody>
+</table>
+<p>Review and update this table after every upgrade cycle and monthly for new releases.</p>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delta-set-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delta Set Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-group-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Group Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram-logical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram (Logical)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +819,159 @@
 
 
 <h1 id="srdfa-architecture">SRDF/A Architecture<a class="headerlink" href="#srdfa-architecture" title="Permanent link">&para;</a></h1>
-<p>SRDF/A is Dell EMC's asynchronous replication technology for PowerMax. Data is written to the source and acknowledged to the host before being transmitted to the target in delta sets (cycles). RPO is defined by cycle time, typically ranging from 30 seconds to several minutes depending on configuration and WAN capacity. Requires Symmetrix Remote Data Facility licenses on both source and target arrays.</p>
+<blockquote>
+<p>Part of the <a href="../">SRDF/A</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission, so host write latency is not directly affected by WAN latency — this is the key difference from SRDF/S.</p>
+<p><strong>RPO</strong> is determined by cycle time (default 30 seconds). If the WAN link fails, the R1 (source) continues accepting writes while the R2 (target) falls behind; RPO exposure equals the time since the last successful cycle completed at the target.</p>
+<hr />
+<h2 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1 device</td>
+<td>Source (production) SRDF device</td>
+</tr>
+<tr>
+<td>R2 device</td>
+<td>Target (DR) SRDF device</td>
+</tr>
+<tr>
+<td>RDF group</td>
+<td>Logical pairing of R1 and R2 devices sharing cycle boundaries</td>
+</tr>
+<tr>
+<td>Delta set</td>
+<td>Set of writes captured during one cycle interval</td>
+</tr>
+<tr>
+<td>SRDF director</td>
+<td>PowerMax back-end port handling SRDF I/O over FCIP or FC</td>
+</tr>
+<tr>
+<td>MSC (Min Cycle Time)</td>
+<td>Minimum cycle time before a new delta set can be transmitted</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="delta-set-mechanics">Delta Set Mechanics<a class="headerlink" href="#delta-set-mechanics" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Host writes to R1 go into the <strong>active delta set</strong> for the current cycle.</li>
+<li>At the end of the cycle interval, the active delta set is <strong>closed</strong> and queued for transmission.</li>
+<li>A new delta set opens for the next cycle.</li>
+<li>The closed delta set is transmitted to R2 in sequence — each delta set is applied in order, maintaining consistency.</li>
+<li>When R2 confirms receipt, the cycle is complete and RPO resets.</li>
+</ol>
+<p>Two delta sets are maintained simultaneously: one being transmitted (transmit delta set) and one accepting new writes (active delta set). A third set (overflow) is used when the transmit delta set is not clearing fast enough.</p>
+<hr />
+<h2 id="srdf-group-design">SRDF Group Design<a class="headerlink" href="#srdf-group-design" title="Permanent link">&para;</a></h2>
+<p>An SRDF group (RDF group) is a logical container for R1/R2 device pairs. All pairs in a group share the same cycle boundary, meaning they are consistent with each other at failover.</p>
 <ul>
-<li><strong>Delta sets</strong>: Captured changes are grouped per cycle and transmitted in order, maintaining write consistency across the group.</li>
-<li><strong>Cycle time</strong>: Configurable interval (default 30s); shorter cycles reduce RPO but increase WAN bandwidth demand.</li>
-<li><strong>SRDF groups</strong>: Logical groupings of device pairs sharing cycle boundaries for consistency.</li>
-<li><strong>Connectivity</strong>: Typically FCIP over WAN or dark fibre between PowerMax backend directors.</li>
+<li>All devices representing a single application or workload should be in the <strong>same SRDF group</strong> to guarantee write-order consistency.</li>
+<li>Multiple SRDF groups can exist between the same two arrays, but each has independent cycle timers.</li>
+<li>Device group (<code>symdg</code>) is the management boundary for controlling replication (<code>symrdf -g &lt;dgname&gt;</code>).</li>
 </ul>
+<hr />
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<p>SRDF/A transmits over:</p>
+<table>
+<thead>
+<tr>
+<th>Link Type</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FCIP (FC over IP)</td>
+<td>Most common — FC-to-IP gateway over a WAN</td>
+</tr>
+<tr>
+<td>Dark fibre (FC)</td>
+<td>Short distances only — adds no additional latency</td>
+</tr>
+<tr>
+<td>iSLR (IP Short Range)</td>
+<td>Newer PowerMax connectivity via IP directors</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bandwidth sizing:</strong> The required bandwidth equals the average write I/O rate × average block size × replication overhead (~1.1–1.2x). For SRDF/A, bandwidth headroom above the average is also needed to handle peak delta set sizes without cycle delay.</p>
+<hr />
+<h2 id="pair-states">Pair States<a class="headerlink" href="#pair-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Normal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synchronized</td>
+<td>R2 is up to date; no active delta sets pending</td>
+<td>Yes — for SRDF/S only</td>
+</tr>
+<tr>
+<td>Consistent</td>
+<td>R2 is consistent and receiving cycles; the latest cycle is applied</td>
+<td>Yes — normal SRDF/A state</td>
+</tr>
+<tr>
+<td>SyncInProg</td>
+<td>Synchronisation in progress after resume</td>
+<td>Transient</td>
+</tr>
+<tr>
+<td>Transmit Idle</td>
+<td>No data being transmitted — link idle, no new writes, or link saturation</td>
+<td>Investigate if unexpected</td>
+</tr>
+<tr>
+<td>Suspended</td>
+<td>Replication manually suspended</td>
+<td>Expected if a suspension was performed</td>
+</tr>
+<tr>
+<td>Failed Over</td>
+<td>R1 devices are read-only; R2 devices are R/W</td>
+<td>Active failover underway</td>
+</tr>
+<tr>
+<td>Split</td>
+<td>Devices are split — both R1 and R2 are R/W (data diverges from this point)</td>
+<td>Only for planned operations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>SRDF/A requires:
+- <strong>SRDF/A license</strong> on both source and target PowerMax arrays
+- SRDF port licenses on the directors used for replication
+- Optional: <strong>TimeFinder/SnapVX</strong> on the target to create local snapshots of R2 devices for backup offload</p>
+<hr />
+<h2 id="architecture-diagram-logical">Architecture Diagram (Logical)<a class="headerlink" href="#architecture-diagram-logical" title="Permanent link">&para;</a></h2>
+<pre><code>Production Site                           DR Site
+┌──────────────────────┐                 ┌──────────────────────┐
+│  Host writes         │                 │                      │
+│      ↓               │   FCIP/WAN      │                      │
+│  PowerMax R1  ──────────────────────►  PowerMax R2            │
+│  (active delta set)  │  (delta sets    │  (R2 receives        │
+│                      │   transmitted)  │   cycles in order)   │
+└──────────────────────┘                 └──────────────────────┘
+        RPO = time since last completed cycle (default: ~30s)
+</code></pre>
 
 
 

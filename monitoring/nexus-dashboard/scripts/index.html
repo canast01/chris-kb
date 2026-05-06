@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nexus-dashboard-api-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nexus Dashboard API Auth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aci-apic-api-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACI APIC API Auth
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nd-cluster-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Cluster Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-fault-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Fault Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aci-fault-summary-via-apic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACI Fault Summary (via APIC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-p1p2-faults-to-servicenow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward P1/P2 Faults to ServiceNow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +825,160 @@
 
 
 <h1 id="nexus-dashboard-scripts">Nexus Dashboard Scripts<a class="headerlink" href="#nexus-dashboard-scripts" title="Permanent link">&para;</a></h1>
-<p>Automation scripts interact with the Nexus Dashboard REST API, NDFC API, and ACI APIC REST API using Python. Scripts are stored in the team repository under <code>scripts/nexus-dashboard/</code>.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard REST API uses OAuth2 token authentication. ACI APIC uses cookie-based authentication. Scripts load credentials from the secrets manager at runtime.</p>
+<h3 id="nexus-dashboard-api-auth">Nexus Dashboard API Auth<a class="headerlink" href="#nexus-dashboard-api-auth" title="Permanent link">&para;</a></h3>
+<pre><code class="language-python">import requests
+
+ND_BASE = &quot;https://&lt;nd-vip&gt;&quot;
+
+def nd_login(username: str, password: str) -&gt; str:
+    &quot;&quot;&quot;Obtain ND API token.&quot;&quot;&quot;
+    resp = requests.post(f&quot;{ND_BASE}/login&quot;, json={
+        &quot;userName&quot;: username,
+        &quot;userPasswd&quot;: password,
+        &quot;domain&quot;: &quot;local&quot;   # or LDAP domain name
+    }, verify=True)
+    resp.raise_for_status()
+    return resp.json()[&quot;token&quot;]
+
+def nd_get(path: str, token: str, params: dict = None) -&gt; dict:
+    headers = {&quot;Authorization&quot;: token, &quot;Content-Type&quot;: &quot;application/json&quot;}
+    resp = requests.get(f&quot;{ND_BASE}{path}&quot;, headers=headers,
+                        params=params, verify=True)
+    resp.raise_for_status()
+    return resp.json()
+</code></pre>
+<h3 id="aci-apic-api-auth">ACI APIC API Auth<a class="headerlink" href="#aci-apic-api-auth" title="Permanent link">&para;</a></h3>
+<pre><code class="language-python">APIC_BASE = &quot;https://&lt;apic-vip&gt;&quot;
+
+def apic_login(username: str, password: str) -&gt; requests.Session:
+    &quot;&quot;&quot;Obtain authenticated APIC session.&quot;&quot;&quot;
+    session = requests.Session()
+    resp = session.post(f&quot;{APIC_BASE}/api/aaaLogin.json&quot;, json={
+        &quot;aaaUser&quot;: {&quot;attributes&quot;: {&quot;name&quot;: username, &quot;pwd&quot;: password}}
+    }, verify=True)
+    resp.raise_for_status()
+    return session   # session cookie is set automatically
+
+def apic_get(session: requests.Session, path: str) -&gt; dict:
+    resp = session.get(f&quot;{APIC_BASE}{path}&quot;, verify=True)
+    resp.raise_for_status()
+    return resp.json()
+</code></pre>
+<h2 id="nd-cluster-health-check">ND Cluster Health Check<a class="headerlink" href="#nd-cluster-health-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def nd_cluster_health(token: str) -&gt; list:
+    &quot;&quot;&quot;Return node status for all cluster nodes.&quot;&quot;&quot;
+    data = nd_get(&quot;/nexus/infra/nodes&quot;, token)
+    nodes = []
+    for node in data.get(&quot;nodes&quot;, []):
+        nodes.append({
+            &quot;name&quot;: node[&quot;name&quot;],
+            &quot;status&quot;: node[&quot;status&quot;],
+            &quot;role&quot;: node.get(&quot;role&quot;),
+            &quot;ip&quot;: node.get(&quot;management_ip&quot;)
+        })
+    return nodes
+
+if __name__ == &quot;__main__&quot;:
+    token = nd_login(&quot;svc-nd-script&quot;, &quot;&lt;password&gt;&quot;)
+    for node in nd_cluster_health(token):
+        status = &quot;OK&quot; if node[&quot;status&quot;] == &quot;active&quot; else &quot;ALERT&quot;
+        print(f&quot;[{status}] {node['name']} ({node['ip']}) — {node['status']}&quot;)
+</code></pre>
+<h2 id="fabric-fault-export">Fabric Fault Export<a class="headerlink" href="#fabric-fault-export" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import csv
+
+def export_fabric_faults(token: str, min_severity: str, output_file: str):
+    &quot;&quot;&quot;Export active fabric faults filtered by severity.&quot;&quot;&quot;
+    data = nd_get(&quot;/nexus/infra/faults&quot;, token,
+                  params={&quot;severity&quot;: min_severity, &quot;state&quot;: &quot;active&quot;})
+    faults = data.get(&quot;faults&quot;, [])
+    with open(output_file, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            &quot;id&quot;, &quot;title&quot;, &quot;severity&quot;, &quot;fabric&quot;, &quot;node&quot;, &quot;created_at&quot;
+        ])
+        writer.writeheader()
+        for fault in faults:
+            writer.writerow({
+                &quot;id&quot;: fault[&quot;id&quot;],
+                &quot;title&quot;: fault.get(&quot;title&quot;),
+                &quot;severity&quot;: fault.get(&quot;severity&quot;),
+                &quot;fabric&quot;: fault.get(&quot;fabric_name&quot;),
+                &quot;node&quot;: fault.get(&quot;node_name&quot;),
+                &quot;created_at&quot;: fault.get(&quot;created_at&quot;)
+            })
+    print(f&quot;Exported {len(faults)} faults to {output_file}&quot;)
+</code></pre>
+<h2 id="aci-fault-summary-via-apic">ACI Fault Summary (via APIC)<a class="headerlink" href="#aci-fault-summary-via-apic" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def apic_fault_summary(session: requests.Session) -&gt; dict:
+    &quot;&quot;&quot;Return fault counts by severity from APIC.&quot;&quot;&quot;
+    data = apic_get(session, &quot;/api/class/faultSummary.json&quot;)
+    summary = {&quot;critical&quot;: 0, &quot;major&quot;: 0, &quot;minor&quot;: 0, &quot;warning&quot;: 0}
+    for fault in data.get(&quot;imdata&quot;, []):
+        attrs = fault[&quot;faultSummary&quot;][&quot;attributes&quot;]
+        sev = attrs.get(&quot;severity&quot;, &quot;&quot;).lower()
+        if sev in summary:
+            summary[sev] += int(attrs.get(&quot;count&quot;, 0))
+    return summary
+</code></pre>
+<h2 id="forward-p1p2-faults-to-servicenow">Forward P1/P2 Faults to ServiceNow<a class="headerlink" href="#forward-p1p2-faults-to-servicenow" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import os
+
+SNOW_URL  = os.environ[&quot;SNOW_URL&quot;]
+SNOW_AUTH = (os.environ[&quot;SNOW_USER&quot;], os.environ[&quot;SNOW_PASSWORD&quot;])
+
+def create_incident(fault: dict) -&gt; str:
+    priority = &quot;1&quot; if fault[&quot;severity&quot;] in (&quot;critical&quot;,) else &quot;2&quot;
+    payload = {
+        &quot;short_description&quot;: f&quot;Cisco ND Fault: {fault['title']} — {fault.get('fabric')}&quot;,
+        &quot;description&quot;: f&quot;Severity: {fault['severity']}\nFabric: {fault.get('fabric')}\nNode: {fault.get('node')}\nND Fault ID: {fault['id']}&quot;,
+        &quot;severity&quot;: priority,
+        &quot;assignment_group&quot;: &quot;network-ops&quot;
+    }
+    resp = requests.post(f&quot;{SNOW_URL}/api/now/table/incident&quot;,
+                         auth=SNOW_AUTH, json=payload)
+    resp.raise_for_status()
+    return resp.json()[&quot;result&quot;][&quot;number&quot;]
+</code></pre>
+<h2 id="script-inventory">Script Inventory<a class="headerlink" href="#script-inventory" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Script</th>
 <th>Purpose</th>
+<th>Schedule</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>nd_health_check.py</code></td>
-<td>Query ND REST API for cluster node health and service status, alert on failures</td>
+<td>Query ND REST API for cluster node health and service status</td>
+<td>Daily</td>
 </tr>
 <tr>
 <td><code>fabric_fault_export.py</code></td>
-<td>Export active fabric faults to CSV, filtered by severity and fabric</td>
+<td>Export active fabric faults to CSV (filtered by severity and fabric)</td>
+<td>Daily</td>
 </tr>
 <tr>
 <td><code>ndfc_compliance_report.py</code></td>
 <td>Generate policy compliance report for all NDFC-managed fabrics</td>
+<td>Weekly</td>
 </tr>
 <tr>
 <td><code>alert_to_servicenow.py</code></td>
-<td>Forward P1/P2 fabric faults to ServiceNow via REST API to create incidents</td>
+<td>Forward P1/P2 fabric faults to ServiceNow</td>
+<td>Event-driven</td>
 </tr>
 <tr>
 <td><code>apic_fault_summary.py</code></td>
-<td>Query ACI APIC REST API for current fault counts by severity and category</td>
+<td>Query ACI APIC REST API for fault counts by severity and category</td>
+<td>Daily</td>
 </tr>
 </tbody>
 </table>
-<p>Scripts authenticate to ND using OAuth2 client credentials. ACI APIC scripts use cookie-based authentication via the APIC REST API <code>/api/aaaLogin.json</code> endpoint.</p>
+<p>Scripts are stored in <code>scripts/nexus-dashboard/</code>. Load all credentials from the secrets manager. Use <code>verify=True</code> for all HTTPS calls (add internal CA bundle path if required: <code>verify="/path/to/ca-bundle.crt"</code>).</p>
 
 
 

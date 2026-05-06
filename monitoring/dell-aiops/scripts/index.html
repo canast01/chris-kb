@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-active-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Active Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anomaly-trend-analysis-30-day-rolling-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly Trend Analysis (30-Day Rolling Window)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-critical-recommendations-to-servicenow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward Critical Recommendations to ServiceNow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weekly-health-score-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Health Score Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,34 +797,140 @@
 
 
 <h1 id="dell-aiops-scripts">Dell AIOps Scripts<a class="headerlink" href="#dell-aiops-scripts" title="Permanent link">&para;</a></h1>
-<p>Automation scripts interact with the CloudIQ REST API using Python and the <code>requests</code> library. OAuth2 client credentials are stored in a secrets manager and loaded at runtime. Scripts are stored in the team repository under <code>scripts/dell-aiops/</code>.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps is accessed via the CloudIQ REST API using OAuth2 client credentials. All scripts load credentials from the secrets manager at runtime.</p>
+<pre><code class="language-python">import requests, os
+
+TOKEN_URL = &quot;https://api.cloudiq.dell.com/auth/oauth/v2/token&quot;
+API_BASE  = &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1&quot;
+
+def get_token(client_id: str, client_secret: str) -&gt; str:
+    resp = requests.post(TOKEN_URL, data={
+        &quot;grant_type&quot;: &quot;client_credentials&quot;,
+        &quot;client_id&quot;: client_id,
+        &quot;client_secret&quot;: client_secret
+    })
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+def api_get(path: str, token: str, params: dict = None) -&gt; dict:
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;, &quot;Accept&quot;: &quot;application/json&quot;}
+    resp = requests.get(f&quot;{API_BASE}{path}&quot;, headers=headers, params=params)
+    resp.raise_for_status()
+    return resp.json()
+</code></pre>
+<h2 id="export-active-recommendations">Export Active Recommendations<a class="headerlink" href="#export-active-recommendations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import csv
+
+def export_recommendations(token: str, output_file: str):
+    data = api_get(&quot;/recommendations&quot;, token,
+                   params={&quot;filter&quot;: &quot;state eq 'ACTIVE'&quot;})
+    recs = data.get(&quot;results&quot;, [])
+    with open(output_file, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            &quot;id&quot;, &quot;title&quot;, &quot;severity&quot;, &quot;system_id&quot;,
+            &quot;system_name&quot;, &quot;recommended_action&quot;, &quot;created_at&quot;
+        ])
+        writer.writeheader()
+        for r in recs:
+            writer.writerow({
+                &quot;id&quot;: r[&quot;id&quot;],
+                &quot;title&quot;: r.get(&quot;title&quot;),
+                &quot;severity&quot;: r.get(&quot;severity&quot;),
+                &quot;system_id&quot;: r.get(&quot;system_id&quot;),
+                &quot;system_name&quot;: r.get(&quot;system_name&quot;),
+                &quot;recommended_action&quot;: r.get(&quot;recommended_action&quot;),
+                &quot;created_at&quot;: r.get(&quot;created_at&quot;)
+            })
+    print(f&quot;Exported {len(recs)} recommendations to {output_file}&quot;)
+</code></pre>
+<h2 id="anomaly-trend-analysis-30-day-rolling-window">Anomaly Trend Analysis (30-Day Rolling Window)<a class="headerlink" href="#anomaly-trend-analysis-30-day-rolling-window" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">from datetime import datetime, timedelta, timezone
+
+def anomaly_trend(token: str) -&gt; dict:
+    &quot;&quot;&quot;Count anomalies per system over a rolling 30-day window.&quot;&quot;&quot;
+    since = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+    data = api_get(&quot;/anomalies&quot;, token,
+                   params={&quot;filter&quot;: f&quot;created_at gt '{since}'&quot;})
+    counts = {}
+    for a in data.get(&quot;results&quot;, []):
+        system = a.get(&quot;system_name&quot;, &quot;unknown&quot;)
+        counts[system] = counts.get(system, 0) + 1
+    return dict(sorted(counts.items(), key=lambda x: x[1], reverse=True))
+</code></pre>
+<h2 id="forward-critical-recommendations-to-servicenow">Forward Critical Recommendations to ServiceNow<a class="headerlink" href="#forward-critical-recommendations-to-servicenow" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">SNOW_URL  = os.environ[&quot;SNOW_URL&quot;]
+SNOW_AUTH = (os.environ[&quot;SNOW_USER&quot;], os.environ[&quot;SNOW_PASSWORD&quot;])
+
+def create_snow_change(rec: dict) -&gt; str:
+    payload = {
+        &quot;short_description&quot;: f&quot;Dell AIOps {rec['severity']}: {rec['title']}&quot;,
+        &quot;description&quot;: (
+            f&quot;System: {rec.get('system_name')}\n&quot;
+            f&quot;Recommended Action: {rec.get('recommended_action')}\n&quot;
+            f&quot;CloudIQ Recommendation ID: {rec['id']}&quot;
+        ),
+        &quot;category&quot;: &quot;Storage&quot;,
+        &quot;assignment_group&quot;: &quot;storage-ops&quot;,
+        &quot;type&quot;: &quot;emergency&quot; if rec[&quot;severity&quot;] == &quot;Critical&quot; else &quot;normal&quot;
+    }
+    resp = requests.post(f&quot;{SNOW_URL}/api/now/table/change_request&quot;,
+                         auth=SNOW_AUTH, json=payload)
+    resp.raise_for_status()
+    return resp.json()[&quot;result&quot;][&quot;number&quot;]
+
+def process_critical_recommendations(token: str):
+    data = api_get(&quot;/recommendations&quot;, token,
+                   params={&quot;filter&quot;: &quot;severity eq 'Critical' and state eq 'ACTIVE'&quot;})
+    for rec in data.get(&quot;results&quot;, []):
+        ticket = create_snow_change(rec)
+        print(f&quot;Created ServiceNow ticket {ticket} for recommendation {rec['id']}&quot;)
+</code></pre>
+<h2 id="weekly-health-score-report">Weekly Health Score Report<a class="headerlink" href="#weekly-health-score-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def health_score_report(token: str, threshold: int = 80) -&gt; list:
+    &quot;&quot;&quot;Return systems with health score below threshold.&quot;&quot;&quot;
+    systems = api_get(&quot;/systems&quot;, token).get(&quot;results&quot;, [])
+    below_threshold = [
+        {&quot;name&quot;: s[&quot;name&quot;], &quot;type&quot;: s[&quot;type&quot;], &quot;health_score&quot;: s.get(&quot;health_score&quot;)}
+        for s in systems
+        if s.get(&quot;health_score&quot;) is not None and s[&quot;health_score&quot;] &lt; threshold
+    ]
+    below_threshold.sort(key=lambda x: x[&quot;health_score&quot;])
+    return below_threshold
+</code></pre>
+<h2 id="script-inventory">Script Inventory<a class="headerlink" href="#script-inventory" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Script</th>
 <th>Purpose</th>
+<th>Schedule</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>export_recommendations.py</code></td>
-<td>Export all active AIOps recommendations to CSV with severity, system, and recommended action</td>
+<td>Export all active AIOps recommendations to CSV</td>
+<td>Daily</td>
 </tr>
 <tr>
 <td><code>anomaly_trend.py</code></td>
-<td>Analyse anomaly frequency by system over a rolling 30-day window to identify persistently noisy systems</td>
+<td>Anomaly frequency by system — rolling 30-day window</td>
+<td>Weekly</td>
 </tr>
 <tr>
 <td><code>recommendation_to_itsm.py</code></td>
-<td>Forward Critical and High recommendations to ServiceNow via REST API to create change requests</td>
+<td>Forward Critical/High recommendations to ServiceNow</td>
+<td>Event-driven</td>
 </tr>
 <tr>
 <td><code>health_score_report.py</code></td>
-<td>Generate weekly health score report across all storage systems, flagging systems below threshold</td>
+<td>Weekly health score report — flag systems below threshold</td>
+<td>Weekly</td>
 </tr>
 </tbody>
 </table>
-<p>All scripts require a <code>config.json</code> with <code>client_id</code> and <code>client_secret</code> for CloudIQ OAuth2 authentication. Token refresh is handled automatically within the script session.</p>
+<p>Scripts are stored in <code>scripts/dell-aiops/</code>. Load <code>client_id</code> and <code>client_secret</code> from the secrets manager — never commit credentials to the repository.</p>
 
 
 

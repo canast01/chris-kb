@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rollback-planning-should-include" class="md-nav__link">
+  <a href="#rollback-readiness-by-component" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rollback Planning Should Include
+        Rollback Readiness by Component
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-rollback-file-based-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Rollback (File-Based Backup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esxi-bootbank-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Bootbank Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-backup-before-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Backup Before Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-product-rollback-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Product Rollback (Snapshots)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-no-go-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go / No-Go Decision Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Communication
       
     </span>
   </a>
@@ -744,19 +808,155 @@
 
 
 <h1 id="rollback-planning">Rollback Planning<a class="headerlink" href="#rollback-planning" title="Permanent link">&para;</a></h1>
-<p>Rollback depends on the product being upgraded. Some upgrades cannot be easily rolled back without restore or redeploy.</p>
-<h2 id="rollback-planning-should-include">Rollback Planning Should Include<a class="headerlink" href="#rollback-planning-should-include" title="Permanent link">&para;</a></h2>
-<ul>
-<li>vCenter file-based backup</li>
-<li>Snapshot guidance if supported</li>
-<li>ESXi bootbank rollback option</li>
-<li>VxRail support guidance</li>
-<li>NSX backup</li>
-<li>Aria product backup</li>
-<li>Database backup if applicable</li>
-<li>Clear go/no-go decision point</li>
-<li>Vendor escalation path</li>
-</ul>
+<p>Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident.</p>
+<h2 id="rollback-readiness-by-component">Rollback Readiness by Component<a class="headerlink" href="#rollback-readiness-by-component" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Rollback Method</th>
+<th>Practical Rollback?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter VCSA</td>
+<td>File-based backup restore</td>
+<td>Yes</td>
+<td>Restore takes 30–60 min; restores to pre-upgrade state</td>
+</tr>
+<tr>
+<td>ESXi host</td>
+<td>Boot from previous bootbank</td>
+<td>Yes</td>
+<td><code>esxcfg-bootcfg --server</code> or BIOS boot order</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>NSX backup + restore</td>
+<td>Partial</td>
+<td>NSX restore is complex; plan for 2–4h</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>No direct rollback</td>
+<td>No</td>
+<td>ESXi rollback covers vSAN; test object health post-upgrade</td>
+</tr>
+<tr>
+<td>VxRail</td>
+<td>VxRail support-assisted</td>
+<td>Vendor-only</td>
+<td>Dell must be engaged for any VxRail rollback</td>
+</tr>
+<tr>
+<td>Aria LCM / Products</td>
+<td>Snapshot before upgrade</td>
+<td>Yes (if snapped)</td>
+<td>Requires snapshot taken on appliance before upgrade starts</td>
+</tr>
+<tr>
+<td>SRM</td>
+<td>SRM backup + redeploy</td>
+<td>Partial</td>
+<td>Site pair must be broken and re-established if SRM is redeployed</td>
+</tr>
+<tr>
+<td>VMware Tools</td>
+<td>Automatic downgrade via vCenter</td>
+<td>Yes</td>
+<td>Tools version can be pinned</td>
+</tr>
+<tr>
+<td>VM Hardware</td>
+<td>No rollback</td>
+<td>No</td>
+<td>Hardware version upgrades are permanent</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vcenter-rollback-file-based-backup">vCenter Rollback (File-Based Backup)<a class="headerlink" href="#vcenter-rollback-file-based-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify backup exists (VAMI → Backup → show recent backups)
+# Backup location: defined at backup job configuration time
+
+# To restore: boot VCSA installer ISO → choose Restore
+# Provide backup file path (FTP/HTTP/SCP/SMB) and SSO admin credentials
+# Restoration process: ~45 minutes + replication sync time
+</code></pre>
+<p><strong>Before upgrade:</strong>
+1. Confirm a file-based backup completed within 24 hours of the maintenance window.
+2. Verify the backup is accessible from the restore location.
+3. Document the current vCenter build number: <code>Get-View ServiceInstance | Select-Object -ExpandProperty ServerVersion</code>.</p>
+<h2 id="esxi-bootbank-rollback">ESXi Bootbank Rollback<a class="headerlink" href="#esxi-bootbank-rollback" title="Permanent link">&para;</a></h2>
+<p>ESXi maintains two bootbanks — the active one and the previous version:</p>
+<pre><code class="language-bash"># SSH to ESXi host — check bootbank contents
+esxcli system version get
+ls /bootbank /altbootbank
+
+# Switch to previous bootbank (requires reboot)
+nextbootdir=/altbootbank
+# Or via Host Client: Manage → System → Boot Options → select previous
+</code></pre>
+<p>This works immediately post-upgrade before any configuration changes are made. After hosts are rejoined to vCenter and NSX re-prepared, bootbank rollback becomes impractical.</p>
+<h2 id="nsx-backup-before-upgrade">NSX Backup Before Upgrade<a class="headerlink" href="#nsx-backup-before-upgrade" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trigger NSX Manager backup via API
+POST https://nsxmanager/api/v1/cluster/backups?action=start
+
+# Verify backup completed
+GET https://nsxmanager/api/v1/cluster/backups/history
+
+# Backup stored to external SFTP target (configured in NSX → Backup &amp; Restore)
+</code></pre>
+<h2 id="aria-product-rollback-snapshots">Aria Product Rollback (Snapshots)<a class="headerlink" href="#aria-product-rollback-snapshots" title="Permanent link">&para;</a></h2>
+<p>Snapshot all Aria appliances before upgrade via LCM or directly:</p>
+<pre><code class="language-powershell"># Snapshot all Aria appliances before upgrade
+$ariaVMs = @(&quot;aria-ops-01&quot;,&quot;aria-auto-01&quot;,&quot;aria-li-01&quot;,&quot;aria-lcm-01&quot;)
+foreach ($vm in $ariaVMs) {
+    New-Snapshot -VM $vm -Name &quot;pre-upgrade-$(Get-Date -Format 'yyyyMMdd')&quot; -Memory $false -Quiesce $false
+}
+
+# After upgrade validation — delete snapshots (performance impact)
+foreach ($vm in $ariaVMs) {
+    Get-VM $vm | Get-Snapshot | Where-Object { $_.Name -match &quot;pre-upgrade&quot; } | Remove-Snapshot -Confirm:$false
+}
+</code></pre>
+<h2 id="go-no-go-decision-framework">Go / No-Go Decision Framework<a class="headerlink" href="#go-no-go-decision-framework" title="Permanent link">&para;</a></h2>
+<p>Define a decision point at the end of the upgrade window:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All hosts connected, all VMs running, no critical alarms</td>
+<td>Go — close window</td>
+</tr>
+<tr>
+<td>1–2 non-critical issues, workarounds available</td>
+<td>Go with action items</td>
+</tr>
+<tr>
+<td>Core service degraded (vSAN, NSX DFW, vMotion broken)</td>
+<td>No-Go — assess rollback</td>
+</tr>
+<tr>
+<td>Production VMs inaccessible</td>
+<td>No-Go — initiate rollback immediately</td>
+</tr>
+</tbody>
+</table>
+<p>Document decision and rationale in the change record.</p>
+<h2 id="rollback-communication">Rollback Communication<a class="headerlink" href="#rollback-communication" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Declare rollback decision in the change record and notify change bridge.</li>
+<li>Engage vendor support proactively (VMware/Broadcom, Dell) — have SR open before initiating rollback.</li>
+<li>Communicate estimated recovery time to application owners.</li>
+<li>Post-rollback: do not close the change — open a problem record and replan upgrade.</li>
+</ol>
 
 
 

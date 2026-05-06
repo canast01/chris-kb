@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-rbac-for-dr-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter RBAC for DR Operators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#site-pair-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Pair Service Account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-failover-network-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover Network Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,101 @@
 
 
 <h1 id="srm-security">SRM Security<a class="headerlink" href="#srm-security" title="Permanent link">&para;</a></h1>
-<p>SRM access is controlled via vCenter RBAC; a dedicated <code>DR-Operator</code> role should be defined with permissions scoped to SRM actions only, preventing DR operators from having broad vCenter administrative access. Site pair credentials are stored encrypted within SRM and should use a dedicated service account with the minimum required permissions on each vCenter. Recovery plan execution is logged in both SRM and vCenter audit logs, which must be retained and forwarded to SIEM.</p>
+<h2 id="vcenter-rbac-for-dr-operators">vCenter RBAC for DR Operators<a class="headerlink" href="#vcenter-rbac-for-dr-operators" title="Permanent link">&para;</a></h2>
+<p>Define a dedicated <code>DR-Operator</code> role in vCenter with only the privileges required for SRM operations:</p>
+<pre><code>Privileges to include:
+  Site Recovery Manager:
+    - Site Recovery.Manage
+    - Site Recovery.Test
+    - Site Recovery.Recovery
+  Datastore:
+    - Datastore.AllocateSpace
+  Network:
+    - Network.Assign (for network customisation)
+  Virtual Machine:
+    - Virtual Machine.Provisioning.* (for recovery)
+</code></pre>
+<p>Assign the role at the SRM inventory root — do not grant broad vCenter Admin privileges to DR operators.</p>
+<h2 id="site-pair-service-account">Site Pair Service Account<a class="headerlink" href="#site-pair-service-account" title="Permanent link">&para;</a></h2>
+<p>The SRM site pair connection uses a service account on each vCenter:</p>
+<pre><code>Account: svc-srm-pair@domain.local
+Privileges: SRM plug-in permissions + read access to vCenter inventory
+</code></pre>
 <ul>
-<li><strong>vCenter RBAC</strong>: Define <code>DR-Operator</code> role with <code>Site Recovery</code> privilege set; assign at the SRM inventory root.</li>
-<li><strong>Site pair credentials</strong>: Use dedicated <code>svc-srm-pair@domain</code> account; restrict account to SRM-required permissions only.</li>
-<li><strong>Test failover isolation</strong>: Test recovery always runs in a network bubble (isolated port group); confirm no routing to production exists.</li>
-<li><strong>Certificate management</strong>: SRM and vCenter use TLS certificates for mutual authentication; replace default self-signed certs with CA-signed certs in production.</li>
-<li><strong>Audit logging</strong>: SRM logs every recovery plan start, test, stop, and cleanup; forward to SIEM; alert on unscheduled plan executions.</li>
+<li>Do not use a named personal account — must survive staff changes</li>
+<li>Rotate password every 90 days (coordinate rotation on both sites simultaneously to avoid pair disconnect)</li>
+<li>Document the account in the service account inventory in CMDB</li>
+</ul>
+<p>To update credentials after rotation: SRM UI → Site Recovery → Sites → Edit Site Pair Credentials</p>
+<h2 id="test-failover-network-isolation">Test Failover Network Isolation<a class="headerlink" href="#test-failover-network-isolation" title="Permanent link">&para;</a></h2>
+<p>Recovery plan tests must never reach production networks. Enforce this:</p>
+<ol>
+<li>Create an isolated port group on the recovery site ESXi cluster: <code>vPG-SRM-Test-Bubble</code> (no uplinks)</li>
+<li>Configure network mapping in SRM: source production network → <code>vPG-SRM-Test-Bubble</code></li>
+<li>Verify no routing exists from the test bubble to production VLANs</li>
+<li>If using NSX: create a dedicated overlay segment with no uplink for test failover</li>
+</ol>
+<pre><code class="language-powershell"># Verify test network mapping
+Get-SrmRecoveryPlan | Get-SrmNetworkMapping | Select Name, RecoveryNetwork
+</code></pre>
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>Replace default self-signed certificates in production deployments:</p>
+<ol>
+<li>Generate CSR on SRM server</li>
+<li>Sign with internal CA (or public CA for partner-site connections)</li>
+<li>Install certificate: SRM → vCenter → Site Recovery → Certificates → Replace</li>
+</ol>
+<p>Certificates used by SRM:
+- SRM ↔ vCenter: VMCA-issued or custom
+- SRM ↔ SRM (inter-site): Must be mutually trusted (both sites' CAs in trust stores)
+- SRM ↔ SRA: Inherits SRM trust store</p>
+<p>Track expiry dates in certificate inventory; SRM stops functioning if certificates expire.</p>
+<h2 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server</td>
+<td>vCenter</td>
+<td>443</td>
+<td>vSphere API</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>Remote SRM Server</td>
+<td>443, 8095</td>
+<td>Site pair communication</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>Array/SRA</td>
+<td>443, 9090</td>
+<td>SRA API calls</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>Remote vSphere Replication</td>
+<td>44046</td>
+<td>Replication traffic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>SRM logs all recovery plan events. Ensure logs are forwarded to SIEM:</p>
+<ul>
+<li>SRM logs location: <code>C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\</code></li>
+<li>Forward using a log collector agent (Filebeat, Splunk UF) on the SRM server</li>
+<li>SIEM alert rules:</li>
+<li>Recovery plan started outside business hours or without change ticket</li>
+<li>Recovery plan started on production (non-test) mode</li>
+<li>Failed recovery plan steps (suggests misconfiguration before actual DR event)</li>
 </ul>
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-frequency-and-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Frequency and Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sra-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-mapping-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Mapping Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,45 +808,153 @@
 
 
 <h1 id="srm-standards">SRM Standards<a class="headerlink" href="#srm-standards" title="Permanent link">&para;</a></h1>
-<p>Protection groups follow the naming convention <code>PG-&lt;tier&gt;-&lt;site-pair&gt;</code> (e.g., <code>PG-DB-DC1DC2</code>) and are scoped to a single application tier per group to enable independent failover. Recovery plans are named <code>RP-&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;</code> and tiered by business priority (P1 critical, P2 standard, P3 batch). Test failovers must be executed at minimum quarterly and results documented in the change record system.</p>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Standard</th>
-<th>Value</th>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Protection group naming</td>
+<td>Protection Group</td>
 <td><code>PG-&lt;tier&gt;-&lt;site-pair&gt;</code></td>
+<td><code>PG-DB-DC1DC2</code></td>
 </tr>
 <tr>
-<td>Recovery plan naming</td>
-<td><code>RP-&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;</code></td>
+<td>Recovery Plan</td>
+<td><code>RP-P&lt;priority&gt;-&lt;tier&gt;-&lt;site-pair&gt;</code></td>
+<td><code>RP-P1-DB-DC1DC2</code></td>
 </tr>
 <tr>
-<td>Test failover frequency</td>
-<td>Quarterly minimum</td>
+<td>vSphere Replication group</td>
+<td><code>VR-&lt;app&gt;-&lt;env&gt;</code></td>
+<td><code>VR-ERP-PROD</code></td>
 </tr>
 <tr>
-<td>RPO target — Tier 1</td>
-<td>0 (SRDF/S)</td>
-</tr>
-<tr>
-<td>RPO target — Tier 2</td>
-<td>≤30 min (SRDF/A or vSphere Replication)</td>
-</tr>
-<tr>
-<td>IP customisation</td>
-<td>Mandatory; define per-VM network mapping rules</td>
-</tr>
-<tr>
-<td>Datastore mapping</td>
-<td>Pre-validated; source ↔ recovery datastore pairs documented</td>
+<td>Test network (bubble)</td>
+<td><code>vPG-SRM-Test-Bubble</code></td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
+<h2 id="priority-tiers">Priority Tiers<a class="headerlink" href="#priority-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Application Class</th>
+<th>RPO</th>
+<th>RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Mission-critical (financial, ERP core)</td>
+<td>0 (SRDF/S)</td>
+<td>&lt; 15 min</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Business-critical (standard apps)</td>
+<td>≤ 30 min</td>
+<td>&lt; 1 hour</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Non-critical (dev mirror, reporting)</td>
+<td>≤ 4 hours</td>
+<td>&lt; 4 hours</td>
+</tr>
+</tbody>
+</table>
+<h2 id="protection-group-design">Protection Group Design<a class="headerlink" href="#protection-group-design" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One protection group per application tier — do not mix DB and APP VMs in the same group</li>
+<li>Consistency groups: group all VMs of a multi-tier application across their respective PGs under a single recovery plan</li>
+<li>Maximum recommended VMs per protection group: 250 (above this, SRM recalculation times increase)</li>
+</ul>
+<h2 id="recovery-plan-design">Recovery Plan Design<a class="headerlink" href="#recovery-plan-design" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Power-on sequence is mandatory: infrastructure VMs (DC, DNS) → DB tier → APP tier → WEB tier</li>
+<li>Each step must include a health check (custom script or vSphere Replication quiescing check)</li>
+<li>IP customisation rules must be configured for every VM in a non-same-subnet recovery design</li>
+<li>Boot dependencies: set appropriate per-step delays (e.g., wait 120 seconds after DB server boot before starting APP servers)</li>
+</ul>
+<h2 id="test-frequency-and-documentation">Test Frequency and Documentation<a class="headerlink" href="#test-frequency-and-documentation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Minimum Frequency</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovery plan test (non-disruptive)</td>
+<td>Quarterly</td>
+<td>Change record + test report</td>
+</tr>
+<tr>
+<td>Live failover drill (maintenance window)</td>
+<td>Annually</td>
+<td>Post-incident review document</td>
+</tr>
+<tr>
+<td>Failback validation after drill</td>
+<td>After each live drill</td>
+<td>Separate change record</td>
+</tr>
+</tbody>
+</table>
+<p>Test reports must include:
+1. Date, time, and personnel involved
+2. RTO achieved vs. target
+3. Any failed steps and root cause
+4. Outstanding action items with owners and due dates</p>
+<h2 id="sra-standards">SRA Standards<a class="headerlink" href="#sra-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Storage Platform</th>
+<th>SRA</th>
+<th>Minimum Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dell PowerMax</td>
+<td>Dell SRA for PowerMax</td>
+<td>v5.0+</td>
+</tr>
+<tr>
+<td>Pure FlashArray</td>
+<td>Pure Storage SRA</td>
+<td>v3.0+</td>
+</tr>
+<tr>
+<td>NetApp ONTAP</td>
+<td>NetApp SRA</td>
+<td>v4.0+</td>
+</tr>
+<tr>
+<td>VMware vSphere Replication</td>
+<td>Built-in (no SRA needed)</td>
+<td>VR 8.x</td>
+</tr>
+</tbody>
+</table>
+<p>Install SRA on both SRM servers (protected and recovery site). Re-scan array managers after SRA update.</p>
+<h2 id="datastore-mapping-standards">Datastore Mapping Standards<a class="headerlink" href="#datastore-mapping-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Every source datastore must have a recovery-site counterpart documented in the SRM datastore mapping</li>
+<li>Datastore mappings must be validated as part of quarterly test (verify VMs register on correct datastores post-test)</li>
+<li>Placeholder VMs: SRM creates placeholder VMs on recovery-site datastores; ensure recovery datastores have adequate free space for placeholders plus recovered VMs</li>
+</ul>
 
 
 

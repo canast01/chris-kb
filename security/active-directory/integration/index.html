@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-account-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-vcenter-ldap-ad-sso-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vCenter LDAP / AD SSO Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-t-ldap-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX-T LDAP Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-sssd-pam-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux SSSD / PAM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldaps-certificate-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAPS Certificate Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splunk-universal-forwarder-on-domain-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splunk Universal Forwarder on Domain Controllers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,9 @@
 
 
 <h1 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h1>
-<p>Active Directory serves as the central identity provider for the enterprise, with integrations spanning hybrid cloud, Linux systems, network infrastructure, security tools, and SIEM platforms. Azure AD Connect synchronises on-premises AD objects to Entra ID for hybrid identity, supporting password hash sync, pass-through authentication, or federation. Linux systems authenticate via SSSD with the <code>ad</code> provider, joining the domain with <code>realm join</code> and applying access control via <code>ad_access_filter</code>.</p>
+<p>Active Directory serves as the central identity provider for the enterprise. Integrations span VMware infrastructure, Linux systems, network devices, security tooling, and SIEM platforms.</p>
+<hr />
+<h2 id="integration-overview">Integration Overview<a class="headerlink" href="#integration-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -747,7 +832,7 @@
 </tr>
 <tr>
 <td>Cisco switches / MDS</td>
-<td>TACACS+ / RADIUS to AD via NPS</td>
+<td>TACACS+ / RADIUS via NPS</td>
 <td>NPS Network Policy maps AD groups to privilege levels</td>
 </tr>
 <tr>
@@ -756,22 +841,144 @@
 <td>vCenter joined to AD domain; AD groups mapped to vCenter roles</td>
 </tr>
 <tr>
-<td>CyberArk</td>
-<td>LDAP bind to AD</td>
-<td>CyberArk authenticates users via AD LDAP; safe access mapped to AD groups</td>
+<td>VxRail / HCI</td>
+<td>AD via vCenter SSO</td>
+<td>Inherits vCenter AD integration; no separate join required</td>
 </tr>
 <tr>
-<td>Venafi</td>
+<td>NSX-T</td>
+<td>AD via LDAP</td>
+<td>NSX Manager integrates directly via LDAPS for role assignment</td>
+</tr>
+<tr>
+<td>SRM</td>
+<td>AD via vCenter SSO</td>
+<td>SRM uses vCenter SSO; no additional AD configuration required</td>
+</tr>
+<tr>
+<td>CyberArk</td>
+<td>LDAP bind from PVWA</td>
+<td>Users authenticate via AD; safe access driven by AD group membership</td>
+</tr>
+<tr>
+<td>Venafi TPP</td>
 <td>LDAP / AD group membership</td>
-<td>Venafi TPP uses AD groups for RBAC role assignment</td>
+<td>AD groups mapped to Venafi RBAC roles</td>
 </tr>
 <tr>
 <td>Splunk (SIEM)</td>
 <td>Windows Event Log forwarding</td>
-<td>Universal Forwarder on DCs ships Security log to Splunk; AD audit events 4624/4625/4740</td>
+<td>UF on DCs ships Security log; audit events 4624/4625/4740 indexed</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="service-account-standards">Service Account Standards<a class="headerlink" href="#service-account-standards" title="Permanent link">&para;</a></h2>
+<p>All service accounts must follow these standards before being integrated with any platform:</p>
+<ul>
+<li><strong>Naming:</strong> <code>svc-&lt;appname&gt;</code> (e.g., <code>svc-vcenter</code>, <code>svc-cyberark-ldap</code>)</li>
+<li><strong>OU placement:</strong> <code>OU=Service Accounts,OU=Managed,DC=corp,DC=example,DC=com</code></li>
+<li><strong>Password:</strong> Minimum 30 characters; managed by CyberArk or a Fine-Grained Password Policy (PSO)</li>
+<li><strong>Kerberos delegation:</strong> Disabled unless explicitly required; use constrained delegation only</li>
+<li><strong>SPNs:</strong> Set explicitly with <code>setspn</code>; never use <code>setspn -A</code> without checking for conflicts</li>
+</ul>
+<pre><code class="language-powershell"># Create a service account with a strong random password
+$pwd = ConvertTo-SecureString (New-Guid).Guid -AsPlainText -Force
+New-ADUser -Name &quot;svc-vcenter&quot; `
+  -SamAccountName &quot;svc-vcenter&quot; `
+  -UserPrincipalName &quot;svc-vcenter@corp.example.com&quot; `
+  -Path &quot;OU=Service Accounts,OU=Managed,DC=corp,DC=example,DC=com&quot; `
+  -AccountPassword $pwd `
+  -Enabled $true `
+  -PasswordNeverExpires $false `
+  -CannotChangePassword $true
+
+# Check for duplicate SPNs before setting
+setspn -Q &quot;ldap/vcenter.corp.example.com&quot;
+setspn -S &quot;ldap/vcenter.corp.example.com&quot; svc-vcenter
+</code></pre>
+<hr />
+<h2 id="vmware-vcenter-ldap-ad-sso-integration">VMware vCenter LDAP / AD SSO Integration<a class="headerlink" href="#vmware-vcenter-ldap-ad-sso-integration" title="Permanent link">&para;</a></h2>
+<p>vCenter uses the vSphere SSO domain (<code>vsphere.local</code>) as its primary identity source; AD is added as an additional identity source.</p>
+<ol>
+<li>Navigate to <strong>Administration &gt; Single Sign On &gt; Configuration &gt; Identity Sources</strong>.</li>
+<li>Add source type: <strong>Active Directory (Integrated Windows Authentication)</strong> or <strong>LDAP</strong>.</li>
+<li>For LDAPS, import the AD Domain Controller certificate into the vCenter trusted certificate store first.</li>
+<li>Map AD groups to vCenter roles:</li>
+</ol>
+<pre><code class="language-powershell"># Verify LDAP connectivity from vCenter to AD (run on vCenter appliance)
+ldapsearch -H ldaps://dc01.corp.example.com:636 \
+  -D &quot;svc-vcenter@corp.example.com&quot; \
+  -w '&lt;password&gt;' \
+  -b &quot;DC=corp,DC=example,DC=com&quot; \
+  &quot;(sAMAccountName=testuser)&quot; cn
+</code></pre>
+<hr />
+<h2 id="nsx-t-ldap-integration">NSX-T LDAP Integration<a class="headerlink" href="#nsx-t-ldap-integration" title="Permanent link">&para;</a></h2>
+<p>NSX Manager connects to AD via LDAPS for user authentication and role mapping.</p>
+<ol>
+<li>In NSX Manager, go to <strong>System &gt; User Management &gt; LDAP</strong>.</li>
+<li>Add LDAP server with LDAPS (port 636); provide bind DN as <code>svc-nsx@corp.example.com</code>.</li>
+<li>Test connection before saving.</li>
+<li>Assign AD groups to NSX roles under <strong>Role Assignments</strong>.</li>
+</ol>
+<p>Ensure the NSX service account has <code>Read</code> access to the domain and is placed in the service accounts OU.</p>
+<hr />
+<h2 id="linux-sssd-pam-integration">Linux SSSD / PAM Integration<a class="headerlink" href="#linux-sssd-pam-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Install required packages (RHEL/CentOS)
+yum install -y sssd sssd-ad realmd adcli oddjob oddjob-mkhomedir
+
+# Join the domain (prompts for AD credentials with domain join rights)
+realm join -U svc-linux-join corp.example.com
+
+# Verify join
+realm list
+
+# Restrict login to a specific AD group
+realm permit -g &quot;Linux_Admins@corp.example.com&quot;
+</code></pre>
+<p>Key <code>/etc/sssd/sssd.conf</code> settings:</p>
+<pre><code class="language-ini">[domain/corp.example.com]
+id_provider        = ad
+auth_provider      = ad
+access_provider    = ad
+ad_domain          = corp.example.com
+ad_server          = dc01.corp.example.com, dc02.corp.example.com
+ad_access_filter   = memberOf=CN=Linux_Admins,OU=Groups,DC=corp,DC=example,DC=com
+fallback_homedir   = /home/%u
+use_fully_qualified_names = False
+</code></pre>
+<hr />
+<h2 id="ldaps-certificate-requirements">LDAPS Certificate Requirements<a class="headerlink" href="#ldaps-certificate-requirements" title="Permanent link">&para;</a></h2>
+<p>All integrations using LDAPS (port 636) require the following:</p>
+<ul>
+<li>The DC certificate must be issued by an internal CA trusted by the connecting system.</li>
+<li>The certificate Subject or SAN must match the DC hostname used in the LDAPS URI.</li>
+<li>Export the issuing CA certificate and import it into the trust store of each platform:</li>
+</ul>
+<pre><code class="language-bash"># Import CA cert into system trust store (RHEL/CentOS)
+cp corp-issuing-ca.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust
+
+# Test LDAPS connectivity
+openssl s_client -connect dc01.corp.example.com:636 -showcerts
+</code></pre>
+<hr />
+<h2 id="splunk-universal-forwarder-on-domain-controllers">Splunk Universal Forwarder on Domain Controllers<a class="headerlink" href="#splunk-universal-forwarder-on-domain-controllers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-ini"># inputs.conf snippet for Security event log collection
+[WinEventLog://Security]
+disabled = 0
+index = wineventlog
+renderXml = true
+
+# Recommended event IDs to index for AD monitoring:
+# 4624 - Successful logon
+# 4625 - Failed logon
+# 4740 - Account lockout
+# 4720 - User account created
+# 4726 - User account deleted
+# 4728/4732/4756 - Member added to security group
+</code></pre>
 
 
 

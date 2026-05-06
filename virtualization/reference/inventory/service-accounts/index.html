@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#review-process" class="md-nav__link">
+  <a href="#account-register" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Review Process
+        Account Register
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#permission-role-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Role Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-service-account-in-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Service Account in AD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assigning-a-custom-vcenter-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assigning a Custom vCenter Role
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quarterly-review-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Review Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detecting-orphaned-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detecting Orphaned Accounts
       
     </span>
   </a>
@@ -744,69 +797,180 @@
 
 
 <h1 id="vmware-service-account-inventory">VMware Service Account Inventory<a class="headerlink" href="#vmware-service-account-inventory" title="Permanent link">&para;</a></h1>
+<p>Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.</p>
+<h2 id="account-register">Account Register<a class="headerlink" href="#account-register" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Account Name</th>
+<th>Account</th>
 <th>Purpose</th>
-<th>System</th>
+<th>Target System</th>
 <th>Permission Level</th>
 <th>Owner</th>
-<th>Password Rotation</th>
-<th>Vault Managed</th>
+<th>Rotation</th>
+<th>Vault Path</th>
 <th>Last Reviewed</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>svc-vcenter</td>
-<td>vCenter API access</td>
-<td>Backup platform</td>
-<td>Read-only + snapshot</td>
+<td>svc-vcenter-backup</td>
+<td>Backup job access</td>
+<td>vCenter</td>
+<td>Backup role (no config)</td>
 <td>infra-team</td>
 <td>90 days</td>
-<td>Yes</td>
+<td>kv/infra/vcenter/svc-vcenter-backup</td>
 <td>YYYY-MM-DD</td>
 </tr>
 <tr>
-<td>svc-aria-ops</td>
-<td>Aria Operations integration</td>
+<td>svc-vcenter-aria</td>
+<td>Aria Operations collection</td>
 <td>vCenter</td>
 <td>Read-only</td>
 <td>infra-team</td>
 <td>90 days</td>
-<td>Yes</td>
+<td>kv/infra/vcenter/svc-vcenter-aria</td>
 <td>YYYY-MM-DD</td>
 </tr>
 <tr>
-<td>svc-backup</td>
-<td>Backup job account</td>
-<td>vCenter, Datastores</td>
-<td>Backup role</td>
+<td>svc-vcenter-nsx</td>
+<td>NSX Manager ↔ vCenter</td>
+<td>vCenter + NSX</td>
+<td>Administrator</td>
 <td>infra-team</td>
 <td>90 days</td>
-<td>Yes</td>
+<td>kv/infra/vcenter/svc-vcenter-nsx</td>
 <td>YYYY-MM-DD</td>
 </tr>
 <tr>
-<td>svc-nsx</td>
-<td>NSX-vCenter integration</td>
-<td>NSX Manager</td>
-<td>Admin</td>
+<td>svc-vcenter-srm</td>
+<td>SRM site pair</td>
+<td>vCenter (both sites)</td>
+<td>SRM-specific role</td>
 <td>infra-team</td>
 <td>90 days</td>
-<td>Yes</td>
+<td>kv/infra/vcenter/svc-vcenter-srm</td>
+<td>YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>svc-vcenter-rp</td>
+<td>RecoverPoint vCenter plugin</td>
+<td>vCenter</td>
+<td>RecoverPoint role</td>
+<td>infra-team</td>
+<td>90 days</td>
+<td>kv/infra/vcenter/svc-vcenter-rp</td>
+<td>YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>svc-vcenter-veeam</td>
+<td>Veeam proxy and API</td>
+<td>vCenter</td>
+<td>Veeam role</td>
+<td>infra-team</td>
+<td>90 days</td>
+<td>kv/infra/vcenter/svc-vcenter-veeam</td>
+<td>YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>svc-esxi-mgmt</td>
+<td>Ansible ESXi host tasks</td>
+<td>ESXi hosts</td>
+<td>Host admin (restricted)</td>
+<td>infra-team</td>
+<td>90 days</td>
+<td>kv/infra/esxi/svc-esxi-mgmt</td>
+<td>YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>svc-aria-lcm</td>
+<td>LCM deployment account</td>
+<td>vCenter + LCM</td>
+<td>Administrator</td>
+<td>infra-team</td>
+<td>90 days</td>
+<td>kv/infra/aria/svc-aria-lcm</td>
 <td>YYYY-MM-DD</td>
 </tr>
 </tbody>
 </table>
-<h2 id="review-process">Review Process<a class="headerlink" href="#review-process" title="Permanent link">&para;</a></h2>
+<h2 id="permission-role-definitions">Permission Role Definitions<a class="headerlink" href="#permission-role-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup role</td>
+<td>Snapshot create/delete, VM power state read, datastore browse</td>
+</tr>
+<tr>
+<td>Read-only</td>
+<td>View-only across all objects; no write access</td>
+</tr>
+<tr>
+<td>RecoverPoint role</td>
+<td>Snapshot, datastore, network — minimum for RP operations</td>
+</tr>
+<tr>
+<td>Veeam role</td>
+<td>Snapshot, power ops, datastore, VIX API for guest interaction</td>
+</tr>
+<tr>
+<td>SRM-specific role</td>
+<td>Protect/recover operations, no infrastructure changes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creating-a-service-account-in-ad">Creating a Service Account in AD<a class="headerlink" href="#creating-a-service-account-in-ad" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Create service account
+New-ADUser -Name &quot;svc-vcenter-backup&quot; `
+    -SamAccountName &quot;svc-vcenter-backup&quot; `
+    -UserPrincipalName &quot;svc-vcenter-backup@corp.local&quot; `
+    -Path &quot;OU=ServiceAccounts,OU=Infra,DC=corp,DC=local&quot; `
+    -PasswordNeverExpires $true `
+    -AccountPassword (ConvertTo-SecureString &quot;InitialP@ss&quot; -AsPlainText -Force) `
+    -Enabled $true
+
+# Then rotate via CyberArk and store in vault
+</code></pre>
+<h2 id="assigning-a-custom-vcenter-role">Assigning a Custom vCenter Role<a class="headerlink" href="#assigning-a-custom-vcenter-role" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Create a custom role
+New-VIRole -Name &quot;Backup-Role&quot; -Privilege (
+    Get-VIPrivilege -Id &quot;VirtualMachine.State.CreateSnapshot&quot;,
+                         &quot;VirtualMachine.State.RemoveSnapshot&quot;,
+                         &quot;VirtualMachine.State.RenameSnapshot&quot;,
+                         &quot;Datastore.Browse&quot;,
+                         &quot;Global.ManageCustomFields&quot;
+)
+
+# Assign to account at cluster level
+New-VIPermission -Entity (Get-Cluster &quot;Cluster01&quot;) `
+    -Principal &quot;CORP\svc-vcenter-backup&quot; `
+    -Role &quot;Backup-Role&quot; `
+    -Propagate $true
+</code></pre>
+<h2 id="quarterly-review-checklist">Quarterly Review Checklist<a class="headerlink" href="#quarterly-review-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review the service account inventory quarterly</li>
-<li>Remove or disable accounts for decommissioned tools</li>
-<li>Confirm password rotation is current</li>
-<li>Confirm vault or credential management is in place for all accounts</li>
+<li>[ ] Confirm all accounts are in the register</li>
+<li>[ ] Verify each account maps to an active integration (remove if tool is decommissioned)</li>
+<li>[ ] Confirm last rotation date — flag if overdue</li>
+<li>[ ] Confirm vault path is accessible and credential is current</li>
+<li>[ ] Verify account permissions have not been elevated beyond required role</li>
+<li>[ ] Check AD account is not locked or expired</li>
+<li>[ ] Update "Last Reviewed" date in this register</li>
 </ul>
+<h2 id="detecting-orphaned-accounts">Detecting Orphaned Accounts<a class="headerlink" href="#detecting-orphaned-accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all vCenter local and AD-sourced permissions
+Get-VIPermission | Select-Object Entity, Principal, Role, Propagate |
+    Where-Object { $_.Principal -match &quot;svc-&quot; } |
+    Sort-Object Principal
+</code></pre>
+<p>Compare output against the register table — any <code>svc-</code> account not in the register is a candidate for removal.</p>
 
 
 

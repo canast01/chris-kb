@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,147 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#red-hat-rhel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Red Hat (RHEL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Red Hat (RHEL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collecting-the-sosreport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting the sosreport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-subscription-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Subscription Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rhel-lifecycle-dates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RHEL Lifecycle Dates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical (Ubuntu)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canonical (Ubuntu)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opening-a-support-case_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collecting-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ubuntu-lts-support-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ubuntu LTS Support Timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crash-dump-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crash Dump Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,16 +864,144 @@
 
 
 <h1 id="linux-vendor-support">Linux Vendor Support<a class="headerlink" href="#linux-vendor-support" title="Permanent link">&para;</a></h1>
-<p>Red Hat support cases are opened via the Red Hat Customer Portal (access.redhat.com) using the team's subscription account. Ubuntu/Canonical support is accessed through Ubuntu Advantage (ubuntu.com/advantage). When opening a case, collect a <code>sosreport</code> on RHEL (<code>sosreport</code> command, output in <code>/var/tmp/</code>) or use <code>ubuntu-bug</code> on Ubuntu for automated data collection. Kernel crash dump analysis requires <code>kdump</code> to be configured and crash dumps available in <code>/var/crash/</code>. Support entitlement can be verified with <code>subscription-manager status</code> (RHEL) or <code>ua status</code> (Ubuntu).</p>
-<ul>
-<li>RHEL: Red Hat Customer Portal — access.redhat.com</li>
-<li>Ubuntu: Ubuntu Advantage — ubuntu.com/advantage</li>
-<li>Diagnostic bundle (RHEL): <code>sosreport</code> → <code>/var/tmp/sosreport-*.tar.xz</code></li>
-<li>Diagnostic bundle (Ubuntu): <code>ubuntu-bug</code> or <code>apport-collect</code></li>
-<li>Entitlement check (RHEL): <code>subscription-manager status</code></li>
-<li>Entitlement check (Ubuntu): <code>ua status</code></li>
-<li>Crash dump: <code>kdump</code> service, dumps in <code>/var/crash/</code></li>
-</ul>
+<h2 id="red-hat-rhel">Red Hat (RHEL)<a class="headerlink" href="#red-hat-rhel" title="Permanent link">&para;</a></h2>
+<h3 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h3>
+<p>Support portal: <a href="https://access.redhat.com">access.redhat.com</a></p>
+<ol>
+<li>Log in with the team's Red Hat account</li>
+<li>Support → Open a Support Case</li>
+<li>Select: Product = Red Hat Enterprise Linux, Version = deployed RHEL version</li>
+<li>Describe the issue with: hostname, RHEL version, kernel version, and sosreport</li>
+</ol>
+<h3 id="collecting-the-sosreport">Collecting the sosreport<a class="headerlink" href="#collecting-the-sosreport" title="Permanent link">&para;</a></h3>
+<p>Always collect a sosreport before opening an SR:</p>
+<pre><code class="language-bash"># Generate sosreport
+sosreport
+
+# Output: /var/tmp/sosreport-&lt;hostname&gt;-&lt;timestamp&gt;.tar.xz
+# Attach to the Red Hat support case via the portal
+</code></pre>
+<p>If the system is non-interactive (no TTY), use:</p>
+<pre><code class="language-bash">sosreport --batch --all-logs
+</code></pre>
+<h3 id="checking-subscription-status">Checking Subscription Status<a class="headerlink" href="#checking-subscription-status" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">subscription-manager status
+subscription-manager list --installed   # Verify products are registered
+subscription-manager list --consumed    # Verify entitlements consumed
+</code></pre>
+<p>If entitlement shows <code>Invalid</code>: run <code>subscription-manager refresh</code> and check the RH portal.</p>
+<h3 id="rhel-lifecycle-dates">RHEL Lifecycle Dates<a class="headerlink" href="#rhel-lifecycle-dates" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Full Support EOL</th>
+<th>Maintenance Support EOL</th>
+<th>Extended Life (RHEL ELS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RHEL 9</td>
+<td>May 2027</td>
+<td>May 2032</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>RHEL 8</td>
+<td>May 2024</td>
+<td>May 2029</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>RHEL 7</td>
+<td>August 2019</td>
+<td>June 2024</td>
+<td>Available until June 2028</td>
+</tr>
+</tbody>
+</table>
+<p>Track lifecycle in CMDB — alert 90 days before Full Support EOL to initiate leapp upgrade.</p>
+<h2 id="canonical-ubuntu">Canonical (Ubuntu)<a class="headerlink" href="#canonical-ubuntu" title="Permanent link">&para;</a></h2>
+<h3 id="opening-a-support-case_1">Opening a Support Case<a class="headerlink" href="#opening-a-support-case_1" title="Permanent link">&para;</a></h3>
+<p>Support portal: <a href="https://ubuntu.com/advantage">ubuntu.com/advantage</a> (Ubuntu Pro)</p>
+<pre><code class="language-bash"># Check Ubuntu Pro status
+pro status
+pro attach &lt;token&gt;   # If not yet attached
+</code></pre>
+<h3 id="collecting-diagnostics">Collecting Diagnostics<a class="headerlink" href="#collecting-diagnostics" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Ubuntu Pro apport-collect for kernel/package issues
+ubuntu-bug linux   # Interactive — opens Launchpad by default
+# For non-interactive collection:
+apport-collect --output /tmp/ubuntu-diag.tgz
+</code></pre>
+<h3 id="ubuntu-lts-support-timeline">Ubuntu LTS Support Timeline<a class="headerlink" href="#ubuntu-lts-support-timeline" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Standard Support</th>
+<th>Ubuntu Pro (LTS)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ubuntu 24.04 LTS</td>
+<td>April 2029</td>
+<td>April 2034</td>
+<td>Current LTS</td>
+</tr>
+<tr>
+<td>Ubuntu 22.04 LTS</td>
+<td>April 2027</td>
+<td>April 2032</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Ubuntu 20.04 LTS</td>
+<td>April 2025</td>
+<td>April 2030</td>
+<td>ESM only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="escalation">Escalation<a class="headerlink" href="#escalation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel panic / hang</td>
+<td>Collect crash dump (<code>/var/crash/</code>) + sosreport; open Sev 1 SR</td>
+</tr>
+<tr>
+<td>Data corruption</td>
+<td>Do not run fsck without vendor guidance; open SR first</td>
+</tr>
+<tr>
+<td>Security vulnerability (CVE)</td>
+<td>Check Red Hat Security Advisories; apply errata; open SR if patch unavailable</td>
+</tr>
+<tr>
+<td>Subscription/licensing</td>
+<td>Contact Red Hat account team or use portal chat</td>
+</tr>
+</tbody>
+</table>
+<h2 id="crash-dump-configuration">Crash Dump Configuration<a class="headerlink" href="#crash-dump-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RHEL — verify kdump is configured
+systemctl status kdump
+cat /etc/kdump.conf | grep path   # Default: /var/crash
+
+# Test kdump is enabled
+cat /proc/cmdline | grep crashkernel   # Should include crashkernel=auto or explicit value
+</code></pre>
+<p>Crash dumps must be available before opening a kernel-related SR.</p>
 
 
 

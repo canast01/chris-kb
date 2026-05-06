@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-failure-vmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Failure (VMware)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proxy-timeout-network-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy Timeout / Network Error
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-out-of-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Out of Space
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instant-vm-recovery-vm-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant VM Recovery — VM Not Starting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vbr-service-crash-instability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VBR Service Crash / Instability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-copy-job-never-completes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Copy Job Never Completes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#surebackup-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SureBackup Fails
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,59 +808,127 @@
 
 
 <h1 id="veeam-troubleshooting">Veeam Troubleshooting<a class="headerlink" href="#veeam-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam service instability. The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files. Veeam logs are written to <code>C:\ProgramData\Veeam\Backup\</code> on the Backup Server and <code>C:\ProgramData\Veeam\Backup\</code> (or Linux equivalent) on proxies.</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Remediation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Job fails at "Creating snapshot"</td>
-<td>VMware snapshot quiesce failure</td>
-<td>Check VMware Tools version; disable application-aware processing temporarily to isolate</td>
-</tr>
-<tr>
-<td>Job fails at "Committing snapshot"</td>
-<td>VMware snapshot stuck</td>
-<td>Remove stale snapshots via vCenter; check vSphere task log</td>
-</tr>
-<tr>
-<td>Repository out of space</td>
-<td>SOBR capacity tier offload not running</td>
-<td>Check capacity tier offload policy; manually trigger offload</td>
-</tr>
-<tr>
-<td>Proxy timeout</td>
-<td>Network congestion or proxy resource exhaustion</td>
-<td>Increase proxy task timeout; check proxy CPU/RAM; add proxy</td>
-</tr>
-<tr>
-<td>VBR service crash</td>
-<td>Software bug or corrupt config DB</td>
-<td>Check Windows Event Log (Application); review <code>C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log</code></td>
-</tr>
-<tr>
-<td>Backup copy job never completes</td>
-<td>WAN link saturation or copy target unavailable</td>
-<td>Check WAN Accelerator stats; verify target repo reachability</td>
-</tr>
-<tr>
-<td>SureBackup fails</td>
-<td>Lab network misconfiguration</td>
-<td>Check virtual lab network mapping; verify test credentials</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key log locations</strong></p>
+<blockquote>
+<p>Part of the <a href="../">Veeam</a> reference.</p>
+</blockquote>
+<p>Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam service instability. The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.</p>
+<p><strong>Log locations:</strong></p>
 <ul>
 <li>VBR service log: <code>C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log</code></li>
 <li>Job session logs: <code>C:\ProgramData\Veeam\Backup\Job_&lt;JobName&gt;\</code></li>
 <li>Proxy logs: <code>C:\ProgramData\Veeam\Backup\</code> on each proxy server</li>
+<li>Linux agent logs: <code>/var/log/veeam/</code></li>
 </ul>
+<hr />
+<h2 id="snapshot-failure-vmware">Snapshot Failure (VMware)<a class="headerlink" href="#snapshot-failure-vmware" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Job fails at "Creating snapshot" or "Committing snapshot."</p>
+<p><strong>Creating snapshot fails:</strong></p>
+<pre><code class="language-powershell"># Check VMware Tools version on the VM — outdated Tools causes quiesce failures
+Get-VM &quot;VMName&quot; | Select Name, @{N=&quot;ToolsVersion&quot;;E={$_.ExtensionData.Guest.ToolsVersion}}
+
+# Disable application-aware processing temporarily to isolate quiesce vs non-quiesce failure
+# In Veeam: Job settings → Guest Processing → disable Application-Aware Image Processing
+</code></pre>
+<p>Common causes: VMware Tools not installed, VSS writer error inside the guest, services not quiescing in time.</p>
+<p><strong>Committing snapshot fails / snapshot stuck:</strong></p>
+<ol>
+<li>Open vCenter → the VM → Snapshots — look for a snapshot that was not removed.</li>
+<li>If the snapshot is present, check the vSphere task log for consolidation errors.</li>
+<li>If consolidation fails from vCenter, check datastore space — delta files need space to consolidate.</li>
+<li>As a last resort, shut down the VM and consolidate from a maintenance window.</li>
+</ol>
+<hr />
+<h2 id="proxy-timeout-network-error">Proxy Timeout / Network Error<a class="headerlink" href="#proxy-timeout-network-error" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Job fails with "connection refused," "timed out," or "network error" during data transfer.</p>
+<p><strong>Triage:</strong></p>
+<pre><code class="language-powershell"># From VBR console — Infrastructure → Backup Proxies → check proxy status
+# Or via PowerShell
+Get-VBRViProxy | Select Name, Host, MaxTasksCount, IsDisabled
+</code></pre>
+<pre><code class="language-cmd"># Test connectivity between VBR server and proxy (run on VBR server)
+Test-NetConnection -ComputerName &lt;proxy-hostname&gt; -Port 2500
+
+# Test proxy to repository connectivity
+Test-NetConnection -ComputerName &lt;repo-hostname&gt; -Port 2500
+</code></pre>
+<p>Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories. Any firewall blocking this range will cause timeout failures.</p>
+<p><strong>Check proxy resource exhaustion:</strong> if the proxy CPU or RAM is at capacity, tasks queue and eventually time out. Increase max concurrent tasks or add a proxy.</p>
+<hr />
+<h2 id="repository-out-of-space">Repository Out of Space<a class="headerlink" href="#repository-out-of-space" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Job fails with "not enough free disk space on the repository" or "Veeam backup files have been detected outside of the quota."</p>
+<pre><code class="language-powershell"># Check repository free space
+Get-VBRBackupRepository | Select Name, FriendlyPath, Path,
+  @{N=&quot;FreeMB&quot;;E={[math]::Round($_.GetContainer().CachedFreeSpace / 1MB)}}
+</code></pre>
+<p><strong>Immediate remediation:</strong></p>
+<ol>
+<li>Check if SOBR capacity tier offload is configured and working — manually trigger offload if needed.</li>
+<li>Identify large backup chains that can be reduced:</li>
+</ol>
+<pre><code class="language-powershell"># Find largest backup chains
+Get-VBRBackup | Select JobName, @{N=&quot;SizeGB&quot;;E={[math]::Round(($_.GetStorageFiles() | Measure-Object -Property Stats -Sum).Sum.DataSize / 1GB, 1)}} | Sort-Object SizeGB -Descending
+</code></pre>
+<ol>
+<li>Reduce retention policy on some jobs to free space sooner.</li>
+<li>Delete orphaned backup files (Backups → Orphaned → Remove from disk).</li>
+</ol>
+<hr />
+<h2 id="instant-vm-recovery-vm-not-starting">Instant VM Recovery — VM Not Starting<a class="headerlink" href="#instant-vm-recovery-vm-not-starting" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Instant recovery completes but the recovered VM does not boot, cannot be accessed over the network, or vNIC is not working.</p>
+<p><strong>Check in order:</strong></p>
+<ol>
+<li><strong>Datastore access from recovery proxy</strong> — the proxy needs direct access to the backup repository to mount the NFS datastore used for instant recovery.</li>
+<li><strong>Network configuration of the recovered VM</strong> — Instant Recovery places the VM in a publish network by default. Verify it is connected to the correct port group.</li>
+<li><strong>Veeam vPower NFS service</strong> — if the NFS service is not running on the proxy, the virtual disk cannot be mounted:</li>
+</ol>
+<pre><code class="language-cmd"># On the Veeam proxy — check the vPower NFS service
+Get-Service -Name VeeamVssProvider
+Get-Service -Name VeeamNFSSvc
+</code></pre>
+<ol>
+<li><strong>Finalize to production</strong> — if the VM stays in instant recovery state for too long, Veeam will not free the backup chain. Migrate the disk to a production datastore once the VM is confirmed working.</li>
+</ol>
+<hr />
+<h2 id="vbr-service-crash-instability">VBR Service Crash / Instability<a class="headerlink" href="#vbr-service-crash-instability" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Jobs fail to start, Veeam console cannot connect, or the VBR service restarts repeatedly.</p>
+<pre><code class="language-cmd"># Check Windows Event Log on the VBR server
+Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
+
+# Check Veeam service log
+Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
+</code></pre>
+<p>Common causes:
+- Veeam configuration database (PostgreSQL or SQL Server) connection failure
+- Insufficient disk space on the VBR server's OS drive
+- Memory leak after extended uptime (schedule a service restart during off-peak)
+- Corrupt job metadata (identified by error mentioning a specific job ID)</p>
+<p><strong>Restart the VBR service:</strong></p>
+<pre><code class="language-cmd"># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
+net stop &quot;Veeam Backup Service&quot;
+net start &quot;Veeam Backup Service&quot;
+</code></pre>
+<hr />
+<h2 id="backup-copy-job-never-completes">Backup Copy Job Never Completes<a class="headerlink" href="#backup-copy-job-never-completes" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> The backup copy job runs continuously, never reaching a "Success" state, or transfers a tiny amount of data each cycle.</p>
+<p><strong>Check:</strong></p>
+<ol>
+<li><strong>WAN Accelerator stats</strong> — if using WAN Acceleration, check if the cache is populated and the source/target accelerators are connected.</li>
+<li><strong>Target repository reachability</strong> — test port 2500–3300 from the source repository server to the target.</li>
+<li><strong>Retention difference</strong> — the copy job may be waiting for a full restore point that matches the target retention window.</li>
+<li><strong>Seeding</strong> — for a new backup copy job over a slow WAN, seed the initial full backup locally and ship it to the remote site (Veeam seeding procedure).</li>
+</ol>
+<hr />
+<h2 id="surebackup-fails">SureBackup Fails<a class="headerlink" href="#surebackup-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> SureBackup verification job reports "VM failed to start" or "application test script failed."</p>
+<pre><code class="language-powershell"># Check virtual lab network mapping
+Get-VBRVirtualLab | Select Name, Platform, Description
+</code></pre>
+<ol>
+<li>Verify the <strong>virtual lab network mapping</strong> — the VLan used inside the isolated lab must be mapped to a real port group.</li>
+<li>Check <strong>test credentials</strong> — SureBackup uses guest credentials to run verification scripts; confirm they are correct and the account is not locked.</li>
+<li>For application-aware tests (SQL, Exchange), confirm the VM's application services started within the timeout window (default 2 minutes; increase if needed for slow VMs).</li>
+<li>Check the SureBackup session log for the specific task that failed — it lists which VM and which test step failed.</li>
+</ol>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tagging-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagging Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Policy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approved-regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approved Regions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +808,216 @@
 
 
 <h1 id="aws-standards">AWS Standards<a class="headerlink" href="#aws-standards" title="Permanent link">&para;</a></h1>
-<p>All AWS resources must carry four mandatory tags — Environment, Owner, CostCentre, and Application — enforced via AWS Config rules and SCPs that deny resource creation on non-compliant requests. Resource naming follows the pattern <code>env-region-service-name</code> (e.g., <code>prod-euw1-rds-orders</code>), and default VPCs are deleted from every new account at provisioning time. CloudTrail must be enabled in all regions with logs centralised to the log-archive account, and every S3 bucket must have a deny-public-access bucket policy applied as a baseline.</p>
+<h2 id="tagging-policy">Tagging Policy<a class="headerlink" href="#tagging-policy" title="Permanent link">&para;</a></h2>
+<p>All AWS resources must carry these mandatory tags (enforced via AWS Config + SCPs):</p>
 <table>
 <thead>
 <tr>
+<th>Tag Key</th>
+<th>Example Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Environment</code></td>
+<td><code>prod</code>, <code>staging</code>, <code>dev</code></td>
+<td>Lowercase; no abbreviations</td>
+</tr>
+<tr>
+<td><code>Owner</code></td>
+<td><code>infra-team</code></td>
+<td>Team name, not individual</td>
+</tr>
+<tr>
+<td><code>CostCentre</code></td>
+<td><code>CC-1234</code></td>
+<td>Finance cost centre code</td>
+</tr>
+<tr>
+<td><code>Application</code></td>
+<td><code>erp-frontend</code></td>
+<td>Application or service name</td>
+</tr>
+</tbody>
+</table>
+<p>AWS Config rule <code>required-tags</code> flags non-compliant resources. SCP denies creation of EC2, RDS, S3 without tags.</p>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>Pattern: <code>&lt;env&gt;-&lt;region&gt;-&lt;service&gt;-&lt;name&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 Instance</td>
+<td><code>prod-euw1-ec2-appserver-01</code></td>
+</tr>
+<tr>
+<td>RDS Instance</td>
+<td><code>prod-euw1-rds-orders</code></td>
+</tr>
+<tr>
+<td>S3 Bucket</td>
+<td><code>corp-prod-euw1-app-assets</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>prod-euw1-vpc</code></td>
+</tr>
+<tr>
+<td>Security Group</td>
+<td><code>prod-euw1-sg-alb-inbound</code></td>
+</tr>
+<tr>
+<td>IAM Role</td>
+<td><code>prod-ec2-role-appserver</code></td>
+</tr>
+</tbody>
+</table>
+<p>Region abbreviations: <code>euw1</code> = eu-west-1, <code>use1</code> = us-east-1, <code>apse1</code> = ap-southeast-1.</p>
+<h2 id="iam-policy-standards">IAM Policy Standards<a class="headerlink" href="#iam-policy-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
 <th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No long-lived access keys</td>
+<td>Humans use IAM Identity Center (SSO); machines use IAM Roles</td>
+</tr>
+<tr>
+<td>Least privilege</td>
+<td>All IAM policies scoped to minimum required actions and resources</td>
+</tr>
+<tr>
+<td>No wildcard <code>*</code> on actions</td>
+<td>Exception: read-only roles; document justification</td>
+</tr>
+<tr>
+<td>SCP guardrails</td>
+<td>Deny: root access without MFA, actions outside approved regions, disabling CloudTrail</td>
+</tr>
+<tr>
+<td>Permission boundary</td>
+<td>Apply to all IAM roles created by automation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s3-standards">S3 Standards<a class="headerlink" href="#s3-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
 <th>Requirement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Tagging</td>
-<td>Environment, Owner, CostCentre, Application on all resources</td>
+<td>Block Public Access</td>
+<td>Enabled on all buckets (account-level + bucket-level)</td>
 </tr>
 <tr>
-<td>Naming</td>
-<td><code>env-region-service-name</code> lowercase, hyphens only</td>
+<td>Server-side encryption</td>
+<td>SSE-S3 minimum; SSE-KMS for sensitive data</td>
+</tr>
+<tr>
+<td>Versioning</td>
+<td>Enabled on all buckets containing production data</td>
+</tr>
+<tr>
+<td>MFA delete</td>
+<td>Enabled on backup/compliance buckets</td>
+</tr>
+<tr>
+<td>Lifecycle rules</td>
+<td>Transition to S3-IA after 30 days, Glacier after 90 days (for archival buckets)</td>
+</tr>
+<tr>
+<td>Bucket policy</td>
+<td>Deny HTTP (require HTTPS); deny cross-account unless explicitly required</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudTrail</td>
+<td>All-region trail in all accounts; logs to centralised S3 in log-archive account</td>
+</tr>
+<tr>
+<td>Config</td>
+<td>Enabled in all regions; conformance pack with CIS AWS Foundations Benchmark</td>
+</tr>
+<tr>
+<td>GuardDuty</td>
+<td>Enabled in all accounts via Organizations; alert forwarded to Security Tooling account</td>
+</tr>
+<tr>
+<td>Security Hub</td>
+<td>Enabled org-wide; aggregate to Security Tooling account</td>
+</tr>
+<tr>
+<td>VPC Flow Logs</td>
+<td>Enabled on all VPCs; logs to S3 or CloudWatch</td>
 </tr>
 <tr>
 <td>Default VPC</td>
 <td>Deleted from all regions on account creation</td>
 </tr>
+</tbody>
+</table>
+<h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
+<p>AWS resources may only be deployed in approved regions (enforced via SCP):
+- <code>eu-west-1</code> (Dublin) — primary
+- <code>eu-west-2</code> (London) — secondary
+- <code>us-east-1</code> — if required for global AWS services</p>
+<p>Deploying to other regions requires an exception approved by InfoSec.</p>
+<h2 id="network-standards">Network Standards<a class="headerlink" href="#network-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
 <tr>
-<td>CloudTrail</td>
-<td>All-regions trail, logs to centralised log-archive S3 bucket</td>
+<th>Setting</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC CIDR</td>
+<td>/16 per account per region; no overlapping CIDRs across accounts</td>
 </tr>
 <tr>
-<td>S3 baseline</td>
-<td>Block Public Access enabled; server-side encryption (SSE-S3 minimum)</td>
+<td>Subnet sizing</td>
+<td>/24 per AZ per tier</td>
 </tr>
 <tr>
-<td>AWS Config</td>
-<td>Required rules: required-tags, restricted-ssh, s3-bucket-public-read-prohibited, root-mfa-enabled</td>
+<td>NAT Gateway</td>
+<td>One per AZ (not one per VPC)</td>
+</tr>
+<tr>
+<td>Security Groups</td>
+<td>Stateful; deny all inbound by default; explicit allow rules only</td>
+</tr>
+<tr>
+<td>NACLs</td>
+<td>Stateless; use as additional layer for subnet boundaries</td>
+</tr>
+<tr>
+<td>Flow Logs</td>
+<td>Enabled on all VPCs; ALL traffic, not REJECT only</td>
 </tr>
 </tbody>
 </table>

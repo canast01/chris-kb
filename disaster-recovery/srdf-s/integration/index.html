@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,97 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-srm-dell-sra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware SRM + Dell SRA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VMware SRM + Dell SRA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protection-group-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-metro-storage-cluster-vmsc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Metro Storage Cluster (vMSC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions-enabler-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solutions Enabler REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-from-r2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup from R2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +814,67 @@
 
 
 <h1 id="srdfs-integration">SRDF/S Integration<a class="headerlink" href="#srdfs-integration" title="Permanent link">&para;</a></h1>
-<p>SRDF/S integrates with VMware SRM via the Dell EMC Storage Replication Adapter to enable automated planned migration and disaster recovery of synchronously replicated datastores. For zero-downtime stretch cluster designs, vSphere Metro Storage Cluster (vMSC) can use SRDF/S as the underlying replication layer, with vSphere HA restarting VMs at the surviving site on storage failure. The Solutions Enabler REST API enables programmatic pair management from orchestration platforms such as Ansible or Terraform.</p>
+<h2 id="vmware-srm-dell-sra">VMware SRM + Dell SRA<a class="headerlink" href="#vmware-srm-dell-sra" title="Permanent link">&para;</a></h2>
+<p>The Dell Storage Replication Adapter (SRA) enables Site Recovery Manager to discover and manage SRDF/S replicated datastores for automated failover.</p>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download the Dell SRA for PowerMax from dell.com/support — install on each SRM server (protected and recovery site)</li>
+<li>In vCenter → SRM → Array Managers → Add:</li>
+<li>Array Manager Name: <code>PowerMax-&lt;SID&gt;</code></li>
+<li>Manager type: Dell EMC PowerMax/VMAX</li>
+<li>Unisphere URL: <code>https://&lt;unisphere-ip&gt;:8443</code></li>
+<li>Username/password: dedicated svc_srm account with <code>StorageAdmin</code> role</li>
+</ol>
+<h3 id="protection-group-configuration">Protection Group Configuration<a class="headerlink" href="#protection-group-configuration" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Verify SRM can discover SRDF groups
+# In SRM: Array Managers → Rescan Devices
+# All SRDF/S groups should appear as replication candidates
+</code></pre>
+<p>Map each protection group to an SRDF group:
+- One protection group per SRDF group (one per application tier)
+- Include all datastores in the consistency group within a single protection group</p>
+<h2 id="vsphere-metro-storage-cluster-vmsc">vSphere Metro Storage Cluster (vMSC)<a class="headerlink" href="#vsphere-metro-storage-cluster-vmsc" title="Permanent link">&para;</a></h2>
+<p>SRDF/S supports vMSC configurations with RPO=0 for stretched clusters:</p>
 <ul>
-<li><strong>SRM + Dell SRA</strong>: Register SRA v5.x+ on both SRM servers; configure SRDF group-to-protection-group mapping.</li>
-<li><strong>vMSC with SRDF/S</strong>: Both sites present volumes to ESXi hosts; vSphere HA uses SRDF/S RPO=0 guarantee for zero-data-loss VM restart.</li>
-<li><strong>Aria Operations</strong>: PowerMax management pack surfaces SRDF/S pair state, write latency impact, and link health dashboards.</li>
-<li><strong>Solutions Enabler REST API</strong>: Authenticate via <code>/univmax/restapi</code>; use <code>POST /replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume</code> for programmatic pair management.</li>
+<li>Both sites present the same SRDF/S volumes to ESXi hosts via separate fabric paths</li>
+<li>vSphere HA configured with <code>vm.minLastFailoverTime = 0</code> for immediate failover</li>
+<li>vSAN witness appliance in a third site (or substitute with PDL handling policies)</li>
+<li>Host affinity rules keep VMs at their preferred site under normal operation</li>
 </ul>
+<p>Verify vMSC readiness:</p>
+<pre><code class="language-bash">esxcli storage nmp path list | grep -i powermax   # Confirm paths at both sites
+</code></pre>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The PowerMax management pack surfaces SRDF/S health in Aria Ops dashboards:</p>
+<ul>
+<li>SRDF pair state (<code>Synchronized</code>, <code>SyncInProg</code>, <code>Split</code>)</li>
+<li>Write latency penalty imposed by synchronous replication</li>
+<li>Link health and director port errors</li>
+<li>Cycle time trends for capacity planning</li>
+</ul>
+<p>Install the management pack from Aria Marketplace → search "PowerMax" → Deploy.</p>
+<h2 id="solutions-enabler-rest-api">Solutions Enabler REST API<a class="headerlink" href="#solutions-enabler-rest-api" title="Permanent link">&para;</a></h2>
+<p>The Unisphere REST API enables programmatic SRDF/S pair management from Ansible or Terraform:</p>
+<pre><code class="language-bash"># Authenticate
+curl -k -u svc_api:password https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
+
+# List SRDF groups
+GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group
+
+# Get pair state
+GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume/{devId}
+
+# Split pair (planned failover)
+PUT /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume
+Body: {&quot;action&quot;: &quot;Split&quot;, &quot;executionOption&quot;: &quot;SYNCHRONOUS&quot;}
+</code></pre>
+<h2 id="backup-from-r2">Backup from R2<a class="headerlink" href="#backup-from-r2" title="Permanent link">&para;</a></h2>
+<p>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:</p>
+<pre><code class="language-bash">symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; create -name BACKUP_$(date +%Y%m%d) -ttl 3
+# Mount the linked copy to a backup proxy server
+symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; link -name BACKUP_$(date +%Y%m%d) -lnsg &lt;proxy_sg&gt;
+</code></pre>
+<p>Note: always snapshot the R2 while it is in <code>Synchronized</code> state to ensure consistency.</p>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Common Network Issues - Chris KB</title>
+        <title>Network Connectivity Issues - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#common-network-issues" class="md-skip">
+        <a href="#network-connectivity-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Common Network Issues
+              Network Connectivity Issues
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vmotion-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vMotion Fails
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-network-outage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Network Outage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-management-network-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Management Network Issue
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packet-loss-on-a-vm-or-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packet Loss on a VM or Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,34 +785,160 @@
 
 
 
-<h1 id="common-network-issues">Common Network Issues<a class="headerlink" href="#common-network-issues" title="Permanent link">&para;</a></h1>
+<h1 id="network-connectivity-issues">Network Connectivity Issues<a class="headerlink" href="#network-connectivity-issues" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">Troubleshooting</a> hub.</p>
+</blockquote>
+<hr />
+<h2 id="vmotion-fails">vMotion Fails<a class="headerlink" href="#vmotion-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Step 1 — Check the VMkernel adapter tagged for vMotion:</strong></p>
+<pre><code class="language-bash"># From ESXi — verify VMkernel adapters and their tags
+esxcli network ip interface list
+esxcli network ip interface tag get -i vmk1  # vmk1 is typically the vMotion vmk
+
+# Check vMotion is enabled on the vmk
+esxcli network ip interface list | grep -A5 vmk1
+</code></pre>
+<p><strong>Step 2 — Verify MTU consistency</strong> — vMotion requires jumbo frames (MTU 9000) if configured; a mismatch between the VMkernel adapter, vSwitch, and physical switch will cause failures:</p>
+<pre><code class="language-bash"># Check VMkernel MTU
+esxcli network ip interface list | grep -E &quot;Name|MTU&quot;
+
+# Test vMotion network reachability with correct MTU
+vmkping -I vmk1 -d -s 8972 &lt;destination-esxi-vmotion-ip&gt;
+# -d = don't fragment, -s 8972 = payload size (8972 + 28 byte header = 9000 MTU)
+</code></pre>
+<p><strong>Step 3 — Check error details in vCenter Tasks:</strong></p>
+<ul>
+<li>"The migration was not attempted because no valid network is available" → No vMotion vmk on the destination</li>
+<li>"The host is not licensed for vMotion" → Check host licensing</li>
+<li>"EVC mismatch" → CPU feature compatibility; EVC cluster mode may need updating</li>
+<li>"The VM is using a device or file that is not accessible on the target host" → Local VMDK, local ISO, or CD-ROM still attached</li>
+</ul>
+<hr />
+<h2 id="vm-network-outage">VM Network Outage<a class="headerlink" href="#vm-network-outage" title="Permanent link">&para;</a></h2>
+<p><strong>Step 1 — Confirm the VM can ping its gateway</strong> from inside the guest. If not, check the virtual NIC is still connected:</p>
+<pre><code class="language-powershell"># PowerCLI — check VM network adapter connection state
+Get-VM &quot;VMName&quot; | Get-NetworkAdapter | Select Name, NetworkName, ConnectionState
+</code></pre>
+<p><strong>Step 2 — Check the port group:</strong></p>
+<pre><code class="language-bash"># From ESXi — list port groups and VLAN IDs
+esxcli network vswitch standard portgroup list
+esxcli network vswitch dvs vmware portgroup list  # For distributed vSwitch
+</code></pre>
+<p>Confirm the port group VLAN ID matches the upstream switch configuration. A recent switch-side VLAN change will strand all VMs on that port group.</p>
+<p><strong>Step 3 — Check physical uplinks:</strong></p>
+<pre><code class="language-bash"># Check vmnic link state
+esxcli network nic list | grep -E &quot;Name|Link&quot;
+
+# Check which vmnics back the vSwitch
+esxcli network vswitch standard list
+</code></pre>
+<p><strong>Step 4 — Check NIC teaming policy</strong> — if an uplink failed and the teaming policy does not failover correctly:</p>
+<pre><code class="language-bash">esxcli network vswitch standard policy failover get -v vSwitch0
+</code></pre>
+<hr />
+<h2 id="host-management-network-issue">Host Management Network Issue<a class="headerlink" href="#host-management-network-issue" title="Permanent link">&para;</a></h2>
+<p>If the host management network goes down, vCenter loses the host and SSH stops working.</p>
+<p><strong>Recovery path using DCUI (Direct Console User Interface):</strong></p>
+<ol>
+<li>Connect to iDRAC/iLO virtual console → open host console.</li>
+<li>Press F2 to enter DCUI.</li>
+<li>Go to <strong>Configure Management Network</strong> → verify IP, subnet, gateway, DNS.</li>
+<li>Press <strong>Escape</strong> and select "Test Management Network" — this runs ping and DNS tests from the host.</li>
+<li>If the configuration was changed, confirm the management VLAN setting on the physical switch port.</li>
+</ol>
+<pre><code class="language-bash"># Once SSH access is restored — verify management vmk
+esxcli network ip interface ipv4 get -i vmk0
+esxcli network ip route list
+</code></pre>
+<hr />
+<h2 id="nsx-issues">NSX Issues<a class="headerlink" href="#nsx-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Symptom</th>
-<th>What to Check</th>
+<th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>vMotion fails</td>
-<td>VMkernel adapter, MTU, VLAN, routing, license</td>
+<td>VMs on NSX segments cannot communicate</td>
+<td>TEP (Tunnel Endpoint) connectivity; VTEP MTU</td>
 </tr>
 <tr>
-<td>VM network outage</td>
-<td>Port group, VLAN, physical uplink, NIC teaming</td>
+<td>Edge gateway unreachable</td>
+<td>Edge node health; BGP peering state</td>
 </tr>
 <tr>
-<td>Host management issue</td>
-<td>vmk0, gateway, DNS, management VLAN</td>
+<td>Distributed firewall blocking unexpected traffic</td>
+<td>DFW rule order; service tag definitions</td>
 </tr>
 <tr>
-<td>NSX issue</td>
-<td>TEP status, transport nodes, edges, segments</td>
+<td>Transport node status red in NSX Manager</td>
+<td>Host preparation state; NSX agent on the ESXi host</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># From ESXi — check NSX VTEP interface
+esxcli network ip interface list | grep vmk
+
+# Check TEP ping between two hosts
+vmkping -I vmk10 -d -s 1572 &lt;remote-tep-ip&gt;
+
+# Check NSX agent status on ESXi host
+/etc/init.d/nsx-opsagent status
+/etc/init.d/nsx-mpa status
+</code></pre>
+<p>From NSX Manager UI:
+- System → Fabric → Hosts — check each transport node status
+- System → Fabric → Edges — check edge node status and tunnel state
+- Networking → Tier-0 Gateways → check BGP neighbor state</p>
+<hr />
+<h2 id="packet-loss-on-a-vm-or-host">Packet Loss on a VM or Host<a class="headerlink" href="#packet-loss-on-a-vm-or-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From ESXi — check vmnic error counters
+esxcli network nic stats get -n vmnic0
+# Look for: rx_errors, tx_errors, rx_dropped, tx_dropped
+
+# Check for CRC errors on physical switch port (from switch CLI)
+# Cisco: show interface GigabitEthernetX/X counters errors
+
+# Test with vmkping to rule out congestion vs physical errors
+vmkping -I vmk0 -c 100 &lt;destination-ip&gt;
+</code></pre>
+<p>Common causes:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Indicator</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Duplex mismatch</td>
+<td>Incrementing rx/tx errors on vmnic</td>
+<td>Force speed/duplex on switch port to match NIC; or set both to auto</td>
 </tr>
 <tr>
-<td>Packet loss</td>
-<td>Physical switch, NIC, MTU, congestion</td>
+<td>MTU mismatch</td>
+<td>Large packets dropped silently</td>
+<td>Set MTU consistently end-to-end</td>
+</tr>
+<tr>
+<td>Physical cable / transceiver</td>
+<td>CRC errors on switch</td>
+<td>Reseat or replace cable/SFP</td>
+</tr>
+<tr>
+<td>NIC teaming imbalance</td>
+<td>One vmnic handling all traffic</td>
+<td>Review load balancing policy (Route Based on IP hash requires LACP)</td>
+</tr>
+<tr>
+<td>Congestion on shared path</td>
+<td>High latency and drops under load</td>
+<td>Check QoS settings; consider storage traffic isolation to a separate vmnic</td>
 </tr>
 </tbody>
 </table>

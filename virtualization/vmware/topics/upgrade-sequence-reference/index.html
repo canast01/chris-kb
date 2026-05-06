@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#typical-order" class="md-nav__link">
+  <a href="#correct-upgrade-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Typical Order
+        Correct Upgrade Order
       
     </span>
   </a>
@@ -729,6 +727,50 @@
     <span class="md-ellipsis">
       
         Why Order Matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcf-vmware-cloud-foundation-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VCF (VMware Cloud Foundation) Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-matrix-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility Matrix References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-version-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Version Constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-window-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance Window Planning
       
     </span>
   </a>
@@ -755,16 +797,137 @@
 
 
 <h1 id="upgrade-sequence-reference">Upgrade Sequence Reference<a class="headerlink" href="#upgrade-sequence-reference" title="Permanent link">&para;</a></h1>
-<h2 id="typical-order">Typical Order<a class="headerlink" href="#typical-order" title="Permanent link">&para;</a></h2>
-<ol>
-<li>vCenter</li>
-<li>ESXi</li>
-<li>vSAN</li>
-<li>NSX</li>
-<li>Tools / hardware firmware</li>
-</ol>
+<h2 id="correct-upgrade-order">Correct Upgrade Order<a class="headerlink" href="#correct-upgrade-order" title="Permanent link">&para;</a></h2>
+<p>Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:</p>
+<pre><code>1. Aria Suite Lifecycle (LCM)        ← Always first if LCM is used
+2. Workspace ONE Access (VIDM)       ← Must precede Aria product upgrades
+3. vCenter Server                    ← Must precede ESXi upgrades
+4. NSX Manager                       ← Before ESXi if NSX version requires new kernel modules
+5. ESXi hosts                        ← One at a time, rolling through maintenance mode
+6. vSAN (on-disk format)             ← After all ESXi hosts at target version
+7. VM hardware / VMware Tools        ← After ESXi upgrades (non-disruptive, schedule separately)
+8. Aria Operations                   ← After vCenter is at target version
+9. Aria Automation                   ← After Aria Operations
+10. Aria Log Insight                 ← After VIDM
+11. VxRail Manager + LCM             ← Managed via VxRail LCM (separate from Aria LCM)
+12. SRM + vSphere Replication        ← After vCenter
+</code></pre>
 <h2 id="why-order-matters">Why Order Matters<a class="headerlink" href="#why-order-matters" title="Permanent link">&para;</a></h2>
-<p>Dependency failures occur if sequence is incorrect.</p>
+<table>
+<thead>
+<tr>
+<th>Wrong Order</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi upgraded before vCenter</td>
+<td>vCenter plugin API mismatch; host management may fail</td>
+</tr>
+<tr>
+<td>NSX upgraded after ESXi</td>
+<td>Kernel module incompatibility if NSX requires specific ESXi build</td>
+</tr>
+<tr>
+<td>Aria Operations before vCenter</td>
+<td>vCenter adapter may fail to connect post-vCenter upgrade</td>
+</tr>
+<tr>
+<td>LCM not upgraded first</td>
+<td>Product upgrade wizard blocked — LCM refuses to upgrade products without being current</td>
+</tr>
+<tr>
+<td>vSAN format before all hosts upgraded</td>
+<td>Mixed-version nodes during format upgrade may cause object inaccessibility</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vcf-vmware-cloud-foundation-sequence">VCF (VMware Cloud Foundation) Sequence<a class="headerlink" href="#vcf-vmware-cloud-foundation-sequence" title="Permanent link">&para;</a></h2>
+<p>In a VCF environment, SDDC Manager controls the upgrade sequence — do not manually upgrade components:</p>
+<pre><code>1. SDDC Manager        ← Upgrade via SDDC Manager UI
+2. VCF bundles downloaded
+3. vCenter (orchestrated by SDDC Manager)
+4. NSX (orchestrated by SDDC Manager)
+5. ESXi (orchestrated by SDDC Manager — host-by-host)
+6. vSAN (on-disk format, if applicable)
+</code></pre>
+<p>Follow the VCF LCM upgrade wizard — it enforces the correct order and blocks incorrect sequences.</p>
+<h2 id="compatibility-matrix-references">Compatibility Matrix References<a class="headerlink" href="#compatibility-matrix-references" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Matrix to Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter + ESXi version pairing</td>
+<td><a href="https://interopmatrix.vmware.com">VMware Product Interoperability Matrix</a></td>
+</tr>
+<tr>
+<td>NSX + vCenter compatibility</td>
+<td><a href="https://docs.vmware.com/en/VMware-NSX">NSX-T Release Notes</a></td>
+</tr>
+<tr>
+<td>ESXi + hardware (HBA, NIC)</td>
+<td><a href="https://www.vmware.com/resources/compatibility">VMware Compatibility Guide</a></td>
+</tr>
+<tr>
+<td>Aria product compatibility</td>
+<td><a href="https://interopmatrix.vmware.com">Aria Interoperability Matrix</a></td>
+</tr>
+<tr>
+<td>VxRail version support</td>
+<td><a href="https://dl.dell.com/content/manual36428085-vxrail-compatibility-guide.pdf">VxRail Compatibility Matrix</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-version-constraints">Key Version Constraints<a class="headerlink" href="#key-version-constraints" title="Permanent link">&para;</a></h2>
+<ul>
+<li>ESXi must be within N-2 of vCenter major version (e.g., vCenter 8.0 supports ESXi 7.0 and 8.0)</li>
+<li>NSX-T: each NSX release certifies specific vCenter and ESXi versions — check release notes</li>
+<li>SRM must match vCenter version exactly (same major.minor)</li>
+<li>VxRail LCM bundles are tested against specific VCF/vSphere versions — only upgrade via VxRail LCM</li>
+</ul>
+<h2 id="maintenance-window-planning">Maintenance Window Planning<a class="headerlink" href="#maintenance-window-planning" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Estimated Downtime</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter</td>
+<td>None (management plane only)</td>
+<td>vCenter HA: &lt; 5 minutes</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>None (data plane survives)</td>
+<td>Management plane unavailable during upgrade</td>
+</tr>
+<tr>
+<td>ESXi host (each)</td>
+<td>None (VMs migrated by DRS)</td>
+<td>Allow 20–40 min per host for EVA migration + upgrade</td>
+</tr>
+<tr>
+<td>vSAN on-disk format</td>
+<td>None</td>
+<td>Background operation; monitor with <code>esxcli vsan upgrade status</code></td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>None (monitoring gap)</td>
+<td>~30 min collection gap per node</td>
+</tr>
+</tbody>
+</table>
 
 
 

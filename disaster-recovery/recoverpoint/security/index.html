@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role-Based Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#journal-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Journal Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +808,113 @@
 
 
 <h1 id="recoverpoint-security">RecoverPoint Security<a class="headerlink" href="#recoverpoint-security" title="Permanent link">&para;</a></h1>
-<p>RecoverPoint cluster access is role-based, with admin and monitor roles assigned through the management console; admin access should be restricted to named accounts and not shared. API token management is required for any automation integrating with the RecoverPoint REST API; tokens should be rotated on a defined schedule and scoped to minimum required permissions. SSH access to RPA appliances is hardened by disabling root login, restricting access to management jump hosts, and ensuring SSH host keys are documented in the configuration record.</p>
+<h2 id="role-based-access-control">Role-Based Access Control<a class="headerlink" href="#role-based-access-control" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint has three built-in roles. Use individual named accounts, never shared credentials:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>Full configuration, failover, and system management</td>
+</tr>
+<tr>
+<td>Security Officer</td>
+<td>User management, audit log access — cannot change replication config</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>Read-only; can view CG status, RPA health, and lag metrics</td>
+</tr>
+</tbody>
+</table>
+<p>Create accounts via RecoverPoint Management Console → System Settings → Users:</p>
+<pre><code class="language-bash"># Via RecoverPoint CLI
+add_user -u svc_monitoring -r monitor -p '&lt;password&gt;'
+add_user -u svc_srm_integration -r admin -p '&lt;password&gt;'
+</code></pre>
+<h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
+<p>For automation accounts using the REST API, use token-based auth rather than username/password in scripts:</p>
+<pre><code class="language-bash"># Create session token
+curl -k -u admin:password -X POST https://&lt;rpa-ip&gt;/rest/users/sessions
+# Response includes: {&quot;sessionId&quot;: &quot;&lt;token&gt;&quot;}
+
+# Use token in subsequent calls
+curl -k -H &quot;Authorization: Bearer &lt;token&gt;&quot; https://&lt;rpa-ip&gt;/rest/consistency_groups
+</code></pre>
 <ul>
-<li><strong>RBAC:</strong> Admin and monitor roles; no shared credentials; individual accounts mapped to roles</li>
-<li><strong>API tokens:</strong> Generated per integration; stored in secrets vault (e.g., CyberArk or HashiCorp Vault); rotated quarterly</li>
-<li><strong>Journal encryption:</strong> At-rest encryption for journal volumes configured at the storage array level</li>
-<li><strong>Network segmentation:</strong> Production-to-replica replication traffic isolated on dedicated VLAN or WAN circuit; management traffic separate</li>
-<li><strong>SSH hardening:</strong> Root login disabled; SSH access restricted to bastion/jump host source IPs; idle session timeout configured</li>
-<li><strong>Certificate management:</strong> Management console certificate replaced with CA-signed certificate; renewal tracked in certificate inventory</li>
+<li>Store API tokens in CyberArk or HashiCorp Vault — never hard-code in scripts</li>
+<li>Rotate tokens quarterly or on personnel change</li>
+<li>Scope dedicated API accounts to the minimum required role (Monitor for observability, Admin only for failover automation)</li>
 </ul>
+<h2 id="journal-encryption">Journal Encryption<a class="headerlink" href="#journal-encryption" title="Permanent link">&para;</a></h2>
+<p>Journal volumes hold continuous copies of production data — protect them:</p>
+<ul>
+<li>At-rest encryption is managed at the storage array level (not in RecoverPoint itself)</li>
+<li>Ensure journal volume LUNs are on encrypted arrays or datastores</li>
+<li>For PowerMax: verify journal vols are in an encrypted Storage Group</li>
+<li>For vSphere (RP4VM): place journal VMDKs on vSAN encrypted datastore or array-encrypted NFS</li>
+</ul>
+<h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Recommended Isolation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production-to-replica replication</td>
+<td>Dedicated WAN circuit or MPLS path; no internet traversal</td>
+</tr>
+<tr>
+<td>RPA management</td>
+<td>Dedicated management VLAN, accessible only from management jump hosts</td>
+</tr>
+<tr>
+<td>RPA-to-array communication</td>
+<td>SAN fabric or dedicated NFS management network</td>
+</tr>
+<tr>
+<td>SRM ↔ RecoverPoint SRA</td>
+<td>Management network; port 7225</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify root login is disabled
+grep PermitRootLogin /etc/ssh/sshd_config    # Should show: no
+
+# Restrict SSH to management jump hosts only (RecoverPoint CLI)
+set_system_ssh_restrictions -allow &lt;jump_host_ip&gt;/32
+</code></pre>
+<ul>
+<li>SSH idle session timeout: 10 minutes (TMOUT=600 in /etc/profile)</li>
+<li>SSH host keys: document fingerprints in the CMDB entry for each RPA node</li>
+</ul>
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>Replace the default self-signed management certificate:</p>
+<ol>
+<li>Generate CSR on each RPA node</li>
+<li>Sign with internal CA</li>
+<li>Import via Management Console → System Settings → TLS Certificates</li>
+</ol>
+<p>Track certificate expiry — RecoverPoint management console becomes inaccessible if the cert expires.</p>
+<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint maintains a system audit log of all user actions:</p>
+<pre><code class="language-bash"># View audit log (RecoverPoint CLI)
+get_audit_log -last 100
+get_audit_log -from_date &quot;2026-01-01&quot; -to_date &quot;2026-01-31&quot;
+</code></pre>
+<p>Forward to SIEM via syslog: Management Console → System Settings → Syslog Notifications. Alert on:
+- Any admin account login outside business hours
+- <code>enable_image_access</code> events (indicates failover test or actual DR)
+- User account creation or role changes</p>
 
 
 

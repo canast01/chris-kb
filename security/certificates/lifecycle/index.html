@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,164 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lifecycle-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csr-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSR Generation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-issuance-internal-adcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Issuance (Internal ADCS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiry Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expiry Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#venafi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Venafi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-monitoring-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Monitoring Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Renewal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Renewal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#renewing-a-ca-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renewing a CA Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Revocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Revocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#revoke-via-adcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revoke via ADCS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-revocation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Revocation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +881,16 @@
 
 
 <h1 id="certificates-lifecycle">Certificates Lifecycle<a class="headerlink" href="#certificates-lifecycle" title="Permanent link">&para;</a></h1>
-<p>The certificate lifecycle spans six stages: enrolment (request generation and submission), issuance (CA signs and returns the certificate), installation (deploy to the target service), monitoring (track validity and upcoming expiry), renewal (re-issue before expiry — triggered at 80% of validity period), and revocation (invalidate before expiry when compromise or decommission occurs). Auto-renewal should be configured wherever possible via Venafi, ACME, or cert-manager.</p>
-<p>CA certificate renewal requires coordinating with all relying parties before the old CA certificate expires. Root CA key ceremonies must follow a formal procedure with witnessed key generation, HSM escrow, and cross-signing if replacing a Root CA.</p>
+<p>The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured wherever possible (Venafi, ACME, cert-manager). Manual processes are a fallback only.</p>
+<hr />
+<h2 id="lifecycle-overview">Lifecycle Overview<a class="headerlink" href="#lifecycle-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Stage</th>
 <th>Trigger</th>
 <th>Owner</th>
+<th>Target SLA</th>
 </tr>
 </thead>
 <tbody>
@@ -740,34 +898,186 @@
 <td>Enrolment</td>
 <td>Service provisioning or renewal request</td>
 <td>Application / infra team</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Issuance</td>
 <td>CA receives valid CSR</td>
 <td>CA (automated or manual)</td>
+<td>&lt; 1 hour (internal), same day (external)</td>
 </tr>
 <tr>
 <td>Installation</td>
 <td>Certificate issued</td>
 <td>Application / infra team</td>
+<td>Same day</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Continuous</td>
+<td>Venafi / monitoring team</td>
+<td>Alert at 30 days, escalate at 7 days</td>
 </tr>
 <tr>
 <td>Renewal</td>
 <td>80% of validity elapsed</td>
 <td>Automated (Venafi / ACME)</td>
+<td>Before expiry</td>
 </tr>
 <tr>
 <td>Revocation</td>
 <td>Compromise, decommission, or policy violation</td>
 <td>Certificate owner + CA admin</td>
-</tr>
-<tr>
-<td>CA renewal</td>
-<td>Before CA cert expiry</td>
-<td>PKI team</td>
+<td>Immediate for key compromise</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="csr-generation">CSR Generation<a class="headerlink" href="#csr-generation" title="Permanent link">&para;</a></h2>
+<p>Always generate the key pair on the target host or in an HSM — never send private keys over the network.</p>
+<pre><code class="language-bash"># Generate a 4096-bit RSA key and CSR (Linux)
+openssl req -new -newkey rsa:4096 -nodes \
+  -keyout server.key \
+  -out server.csr \
+  -subj &quot;/CN=app.corp.example.com/O=Example Corp/C=GB&quot;
+
+# Generate with SANs using a config file
+cat &gt; san.cnf &lt;&lt;EOF
+[req]
+distinguished_name = req_distinguished_name
+req_extensions     = v3_req
+prompt             = no
+
+[req_distinguished_name]
+CN = app.corp.example.com
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = app.corp.example.com
+DNS.2 = app-internal.corp.example.com
+IP.1  = 10.10.10.50
+EOF
+
+openssl req -new -newkey rsa:4096 -nodes \
+  -keyout server.key -out server.csr -config san.cnf
+</code></pre>
+<pre><code class="language-powershell"># Generate CSR on Windows using certreq
+# 1. Create request INF
+$inf = @&quot;
+[NewRequest]
+Subject       = &quot;CN=app.corp.example.com, O=Example Corp, C=GB&quot;
+KeyAlgorithm  = RSA
+KeyLength     = 4096
+HashAlgorithm = SHA256
+Exportable    = FALSE
+MachineKeySet = TRUE
+
+[Extensions]
+2.5.29.17 = &quot;{text}dns=app.corp.example.com&amp;dns=app-internal.corp.example.com&quot;
+&quot;@
+$inf | Out-File &quot;C:\Temp\request.inf&quot; -Encoding ASCII
+
+# 2. Generate CSR
+certreq -new &quot;C:\Temp\request.inf&quot; &quot;C:\Temp\request.csr&quot;
+</code></pre>
+<hr />
+<h2 id="certificate-issuance-internal-adcs">Certificate Issuance (Internal ADCS)<a class="headerlink" href="#certificate-issuance-internal-adcs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Submit CSR to internal ADCS CA and retrieve certificate
+certreq -submit -attrib &quot;CertificateTemplate:WebServer-Internal&quot; `
+  &quot;C:\Temp\request.csr&quot; &quot;C:\Temp\issued.cer&quot;
+
+# If pending (requires manager approval), retrieve after approval
+certreq -retrieve &lt;RequestID&gt; &quot;C:\Temp\issued.cer&quot;
+
+# Install the issued certificate
+certreq -accept &quot;C:\Temp\issued.cer&quot;
+</code></pre>
+<hr />
+<h2 id="certificate-installation">Certificate Installation<a class="headerlink" href="#certificate-installation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify certificate and key match before installation
+openssl x509 -noout -modulus -in server.crt | md5sum
+openssl rsa  -noout -modulus -in server.key | md5sum
+# Output must match
+
+# Combine into PEM bundle (cert + intermediates)
+cat server.crt intermediate-ca.crt &gt; bundle.pem
+
+# Verify the full chain
+openssl verify -CAfile root-ca.crt -untrusted intermediate-ca.crt server.crt
+</code></pre>
+<hr />
+<h2 id="expiry-monitoring">Expiry Monitoring<a class="headerlink" href="#expiry-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="venafi">Venafi<a class="headerlink" href="#venafi" title="Permanent link">&para;</a></h3>
+<p>Venafi TPP monitors all managed certificates automatically. Set email alerts at 30-day and 7-day thresholds in the policy folder settings. See the <a href="../../venafi/lifecycle/">Venafi Lifecycle page</a> for details.</p>
+<h3 id="manual-monitoring-scripts">Manual Monitoring Scripts<a class="headerlink" href="#manual-monitoring-scripts" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># Scan local machine certificate store for certificates expiring within 30 days
+$warnDays = 30
+Get-ChildItem Cert:\LocalMachine\My |
+  Where-Object { $_.NotAfter -lt (Get-Date).AddDays($warnDays) } |
+  Select-Object Subject, NotAfter, Thumbprint, @{N=&quot;DaysLeft&quot;; E={($_.NotAfter - (Get-Date)).Days}} |
+  Sort-Object NotAfter
+</code></pre>
+<pre><code class="language-bash"># Check expiry of a remote TLS certificate
+echo | openssl s_client -connect app.corp.example.com:443 -servername app.corp.example.com 2&gt;/dev/null |
+  openssl x509 -noout -enddate
+
+# Bulk check a list of hostnames
+while IFS= read -r host; do
+  expiry=$(echo | openssl s_client -connect &quot;$host:443&quot; -servername &quot;$host&quot; 2&gt;/dev/null |
+    openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
+  echo &quot;$host: $expiry&quot;
+done &lt; hosts.txt
+</code></pre>
+<hr />
+<h2 id="certificate-renewal">Certificate Renewal<a class="headerlink" href="#certificate-renewal" title="Permanent link">&para;</a></h2>
+<p>Renewal should be initiated at 80% of the certificate's validity period (e.g., for a 2-year certificate, renew after ~20 months).</p>
+<pre><code class="language-powershell"># Trigger auto-enrollment renewal on a Windows host
+certutil -pulse
+
+# Force renewal of a specific certificate (using Venafi API — see Venafi lifecycle page)
+# Or: request a new certificate using the same template and replace the binding
+</code></pre>
+<h3 id="renewing-a-ca-certificate">Renewing a CA Certificate<a class="headerlink" href="#renewing-a-ca-certificate" title="Permanent link">&para;</a></h3>
+<p>CA certificate renewal is a planned event requiring co-ordination with all relying parties:</p>
+<ol>
+<li>Generate a new key pair and CSR on the CA.</li>
+<li>Have the parent CA (or Root CA key ceremony) sign the new CA certificate.</li>
+<li>Publish the new CA certificate to AD (auto-distributes to domain members via GPO):</li>
+</ol>
+<pre><code class="language-powershell"># Publish new Issuing CA certificate to AD
+certutil -dspublish -f IssuingCA.cer SubCA
+</code></pre>
+<ol>
+<li>Update CDP and AIA extensions to reference the new certificate.</li>
+<li>Update any trust stores that reference the CA certificate explicitly (non-domain systems, network devices, Java keystores).</li>
+</ol>
+<hr />
+<h2 id="certificate-revocation">Certificate Revocation<a class="headerlink" href="#certificate-revocation" title="Permanent link">&para;</a></h2>
+<h3 id="revoke-via-adcs">Revoke via ADCS<a class="headerlink" href="#revoke-via-adcs" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># Revoke a certificate by serial number
+$serial = &quot;1f2e3d4c5b6a7988&quot;
+certutil -revoke $serial 3   # Reason code 3 = Key Compromise
+
+# Publish a new CRL immediately after revocation
+certutil -CRL
+
+# Verify the revoked certificate appears in the CRL
+certutil -verify -urlfetch &lt;revoked-cert.cer&gt;
+</code></pre>
+<p>Reason codes: 0 = Unspecified, 1 = Key Compromise, 2 = CA Compromise, 3 = Affiliation Changed, 4 = Superseded, 5 = Cessation of Operation.</p>
+<h3 id="emergency-revocation-checklist">Emergency Revocation Checklist<a class="headerlink" href="#emergency-revocation-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Revoke certificate via ADCS or vendor portal</li>
+<li>[ ] Publish updated CRL immediately</li>
+<li>[ ] Notify service owner to replace certificate</li>
+<li>[ ] Verify revocation propagated to OCSP responder</li>
+<li>[ ] Audit which services were using the revoked certificate</li>
+<li>[ ] Generate and install replacement certificate</li>
+<li>[ ] Verify replacement is correctly installed and trusted</li>
+<li>[ ] Document incident with timeline and root cause</li>
+</ul>
 
 
 

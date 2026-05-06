@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,141 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aiops-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AIOps Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AIOps Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anomaly-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-cause-analysis-rca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis (RCA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capacity-forecasting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Forecasting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#telemetry-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telemetry Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saas-delivery-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SaaS Delivery Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +858,20 @@
 
 
 <h1 id="dell-aiops-architecture">Dell AIOps Architecture<a class="headerlink" href="#dell-aiops-architecture" title="Permanent link">&para;</a></h1>
-<p>Dell AIOps (formerly APEX AIOps) is Dell's AI-driven IT operations platform integrated with CloudIQ and the Apex Console, providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. Telemetry is collected from on-premises Dell storage arrays via the Secure Connect Gateway (SCG), which forwards data to Dell's cloud AI pipeline for processing. The AI models analyse telemetry streams to surface anomalies and generate prioritised recommendations without requiring on-premises AI infrastructure. The platform is fully SaaS-delivered, with no customer-managed compute components beyond the SCG.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operations platform providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. The platform is fully SaaS-delivered with no customer-managed AI compute components. Telemetry is collected on-premises by the Secure Connect Gateway (SCG) and processed by Dell's cloud AI pipeline.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre><code>On-Premises                              Dell Cloud AI Pipeline
+┌──────────────────────────┐             ┌──────────────────────────────────┐
+│  Dell Storage Arrays      │             │  Anomaly Detection Engine         │
+│  (PowerStore, PowerMax,   │──[SCG]─────►│  Root Cause Analysis (RCA)        │
+│   PowerScale, Unity XT)   │  HTTPS      │  Capacity Forecasting (ML models) │
+│                           │  443        │  Recommendation Generator         │
+│  Secure Connect Gateway   │             │                                   │
+│  (On-premises OVA)        │             │  CloudIQ / APEX Console (Web UI)  │
+└──────────────────────────┘             └──────────────────────────────────┘
+</code></pre>
+<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -735,23 +881,107 @@
 </thead>
 <tbody>
 <tr>
-<td>CloudIQ / Apex Console</td>
-<td>SaaS portal — recommendations, anomaly dashboard, health scores</td>
+<td>CloudIQ / APEX Console</td>
+<td>SaaS portal — surfacing recommendations, anomaly dashboard, health scores</td>
 </tr>
 <tr>
 <td>Secure Connect Gateway (SCG)</td>
-<td>On-premises telemetry collection and secure forwarding agent</td>
+<td>On-premises telemetry collection and secure forwarding agent (customer-managed)</td>
 </tr>
 <tr>
 <td>Dell AI Pipeline (cloud)</td>
-<td>Anomaly detection and root cause analysis (Dell-managed)</td>
+<td>Anomaly detection, root cause analysis, and capacity forecasting (Dell-managed)</td>
 </tr>
 <tr>
 <td>Storage Arrays</td>
-<td>Data sources: PowerStore, PowerMax, PowerScale, Unity XT, etc.</td>
+<td>Telemetry data sources: PowerStore, PowerMax, PowerScale, Unity XT, Data Domain</td>
 </tr>
 </tbody>
 </table>
+<h2 id="aiops-capabilities">AIOps Capabilities<a class="headerlink" href="#aiops-capabilities" title="Permanent link">&para;</a></h2>
+<h3 id="anomaly-detection">Anomaly Detection<a class="headerlink" href="#anomaly-detection" title="Permanent link">&para;</a></h3>
+<p>Dell AIOps analyses rolling telemetry baselines for each array and surfaces anomalies when metrics deviate significantly from the learned pattern. Anomalies are categorised by:</p>
+<ul>
+<li><strong>Performance anomalies</strong>: unexpected latency or IOPS deviations</li>
+<li><strong>Capacity anomalies</strong>: faster-than-expected capacity growth</li>
+<li><strong>Configuration drift</strong>: changes from a known-good configuration state</li>
+</ul>
+<h3 id="root-cause-analysis-rca">Root Cause Analysis (RCA)<a class="headerlink" href="#root-cause-analysis-rca" title="Permanent link">&para;</a></h3>
+<p>When an anomaly or health score degradation is detected, AIOps cross-correlates telemetry across the stack to identify likely root causes and generates a ranked list of contributing factors. This reduces manual investigation time for storage incidents.</p>
+<h3 id="capacity-forecasting">Capacity Forecasting<a class="headerlink" href="#capacity-forecasting" title="Permanent link">&para;</a></h3>
+<p>ML-based capacity models predict when a system will reach capacity thresholds based on current growth trends. Forecasts cover:
+- Days until raw capacity threshold (configured at 85%)
+- Projected capacity at 30, 60, and 90 days
+- Recommended actions (expand, thin provision, tier, etc.)</p>
+<h3 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h3>
+<p>AIOps generates prioritised recommendations in four severity categories:</p>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Imminent capacity exhaustion, hardware fault requiring immediate action</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Performance degradation root cause identified, firmware vulnerability</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Sub-optimal configuration, approaching threshold</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Best-practice suggestion, non-urgent tuning</td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry-sources">Telemetry Sources<a class="headerlink" href="#telemetry-sources" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Metrics Collected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerStore</td>
+<td>IOPS, latency, throughput, capacity, hardware faults</td>
+</tr>
+<tr>
+<td>PowerMax</td>
+<td>SRDF replication lag, cache hit rates, capacity, performance</td>
+</tr>
+<tr>
+<td>PowerScale (Isilon)</td>
+<td>Protocol throughput, CPU, capacity, SmartPools usage</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>LUN performance, capacity, replication health</td>
+</tr>
+<tr>
+<td>Data Domain</td>
+<td>Dedup ratio, capacity, replication</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>SCG polls each array's management API at regular intervals (typically every 5 minutes)</li>
+<li>SCG encrypts and forwards telemetry to Dell's cloud AI pipeline over HTTPS</li>
+<li>Dell AI models process telemetry against learned baselines and generate anomaly/recommendation events</li>
+<li>Recommendations and anomaly events appear in the CloudIQ APEX Console within 15–30 minutes of detection</li>
+<li>Notification rules in CloudIQ deliver alerts to configured channels (PagerDuty, email, webhooks)</li>
+</ol>
+<h2 id="saas-delivery-model">SaaS Delivery Model<a class="headerlink" href="#saas-delivery-model" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps requires no customer-managed AI compute. The only customer-managed component is the SCG virtual appliance. AI model updates, algorithm improvements, and new recommendation types are deployed by Dell without customer action.</p>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,119 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key API Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key API Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-aiops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations (AIOps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anomalies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomalies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoint-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoint Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-and-pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering and Pagination
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +836,69 @@
 
 
 <h1 id="dell-aiops-cli-reference">Dell AIOps CLI Reference<a class="headerlink" href="#dell-aiops-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Dell AIOps does not have a dedicated CLI — all interaction is via the CloudIQ web portal or REST API. The CloudIQ REST API uses OAuth2 client credentials authentication and provides programmatic access to recommendations, anomalies, and system health data.</p>
-<p><strong>Authentication</strong></p>
-<pre><code class="language-bash"># Obtain OAuth2 access token (client credentials flow)
-POST https://api.cloudiq.dell.com/auth/oauth/v2/token
-Content-Type: application/x-www-form-urlencoded
-
-grant_type=client_credentials&amp;client_id=&lt;CLIENT_ID&gt;&amp;client_secret=&lt;CLIENT_SECRET&gt;
+<p>Dell AIOps does not provide a dedicated CLI tool. All interaction is via the CloudIQ web portal or CloudIQ REST API. This page documents the key REST API endpoints used for AIOps operations.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>All API requests require an OAuth2 Bearer token obtained via the client credentials flow.</p>
+<pre><code class="language-bash"># Obtain access token
+curl -s -X POST &quot;https://api.cloudiq.dell.com/auth/oauth/v2/token&quot; \
+  -H &quot;Content-Type: application/x-www-form-urlencoded&quot; \
+  -d &quot;grant_type=client_credentials&amp;client_id=${CLIENT_ID}&amp;client_secret=${CLIENT_SECRET}&quot; \
+  | jq -r '.access_token'
 </code></pre>
-<p><strong>Key REST API Endpoints</strong></p>
+<p>Store the token in a variable for subsequent calls:</p>
+<pre><code class="language-bash">TOKEN=$(curl -s -X POST &quot;https://api.cloudiq.dell.com/auth/oauth/v2/token&quot; \
+  -d &quot;grant_type=client_credentials&amp;client_id=${CLIENT_ID}&amp;client_secret=${CLIENT_SECRET}&quot; \
+  | jq -r '.access_token')
+</code></pre>
+<h2 id="key-api-endpoints">Key API Endpoints<a class="headerlink" href="#key-api-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="systems">Systems<a class="headerlink" href="#systems" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all monitored systems with health scores
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/systems&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; \
+  -H &quot;Accept: application/json&quot; | jq '.results[] | {name,type,health_score}'
+
+# Get a specific system by ID
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq .
+</code></pre>
+<h3 id="recommendations-aiops">Recommendations (AIOps)<a class="headerlink" href="#recommendations-aiops" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all active recommendations
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?filter=state%20eq%20'ACTIVE'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {id,title,severity,system_name}'
+
+# Filter by severity
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?filter=severity%20eq%20'Critical'%20and%20state%20eq%20'ACTIVE'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {id,title,recommended_action}'
+
+# Get a specific recommendation
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations/${REC_ID}&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq .
+</code></pre>
+<h3 id="anomalies">Anomalies<a class="headerlink" href="#anomalies" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List active anomalies
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=state%20eq%20'ACTIVE'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {id,system_name,metric,detected_at}'
+
+# Anomalies in last 24 hours
+SINCE=$(date -u -v-1d +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=created_at%20gt%20'${SINCE}'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results | length'
+</code></pre>
+<h3 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all active alerts
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20'ACTIVE'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {id,name,severity,system_name}'
+
+# Alerts for a specific system
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=system_id%20eq%20'${SYSTEM_ID}'&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {name,severity,created_at}'
+</code></pre>
+<h3 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Capacity data for a specific system
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}/capacity&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '{used_bytes,total_bytes,days_until_full}'
+</code></pre>
+<h2 id="endpoint-summary">Endpoint Summary<a class="headerlink" href="#endpoint-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -744,9 +909,29 @@ grant_type=client_credentials&amp;client_id=&lt;CLIENT_ID&gt;&amp;client_secret=
 </thead>
 <tbody>
 <tr>
+<td><code>/cloudiq/rest/v1/systems</code></td>
+<td>GET</td>
+<td>List all monitored systems</td>
+</tr>
+<tr>
+<td><code>/cloudiq/rest/v1/systems/{id}</code></td>
+<td>GET</td>
+<td>System detail and health score</td>
+</tr>
+<tr>
+<td><code>/cloudiq/rest/v1/systems/{id}/capacity</code></td>
+<td>GET</td>
+<td>Capacity data and forecast</td>
+</tr>
+<tr>
 <td><code>/cloudiq/rest/v1/recommendations</code></td>
 <td>GET</td>
-<td>List all AI-generated recommendations</td>
+<td>List AI-generated recommendations</td>
+</tr>
+<tr>
+<td><code>/cloudiq/rest/v1/recommendations/{id}</code></td>
+<td>GET</td>
+<td>Recommendation detail</td>
 </tr>
 <tr>
 <td><code>/cloudiq/rest/v1/anomalies</code></td>
@@ -754,23 +939,29 @@ grant_type=client_credentials&amp;client_id=&lt;CLIENT_ID&gt;&amp;client_secret=
 <td>List detected anomalies</td>
 </tr>
 <tr>
-<td><code>/cloudiq/rest/v1/systems</code></td>
-<td>GET</td>
-<td>List all monitored storage systems</td>
-</tr>
-<tr>
-<td><code>/cloudiq/rest/v1/systems/{id}/health</code></td>
-<td>GET</td>
-<td>Health score for a specific system</td>
-</tr>
-<tr>
 <td><code>/cloudiq/rest/v1/alerts</code></td>
 <td>GET</td>
 <td>List active alerts</td>
 </tr>
+<tr>
+<td><code>/cloudiq/rest/v1/audit-logs</code></td>
+<td>GET</td>
+<td>Audit log entries</td>
+</tr>
 </tbody>
 </table>
-<p>All API requests include <code>Authorization: Bearer &lt;token&gt;</code> and <code>Content-Type: application/json</code> headers. The CloudIQ API base URL is <code>https://api.cloudiq.dell.com</code>.</p>
+<h2 id="filtering-and-pagination">Filtering and Pagination<a class="headerlink" href="#filtering-and-pagination" title="Permanent link">&para;</a></h2>
+<p>The CloudIQ API supports OData-style filters and pagination via <code>limit</code> and <code>offset</code> parameters:</p>
+<pre><code class="language-bash"># Paginated request — first 50 results
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?limit=50&amp;offset=0&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '{total: .total_results, count: (.results | length)}'
+
+# Combined filter
+curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?\
+filter=severity%20eq%20'High'%20and%20state%20eq%20'ACTIVE'&amp;limit=100&quot; \
+  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq '.results[] | {id,title,system_name}'
+</code></pre>
+<p>Full API documentation: <a href="https://developer.dell.com/cloudiq">developer.dell.com/cloudiq</a></p>
 
 
 

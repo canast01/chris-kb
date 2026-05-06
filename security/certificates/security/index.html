@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificates Security - Chris KB</title>
+        <title>Certificate Security - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#certificates-security" class="md-skip">
+        <a href="#certificate-security" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificates Security
+              Certificate Security
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ca-key-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CA Key Protection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-ca-offline-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root CA Offline Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-transparency-ct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Transparency (CT)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ocsp-stapling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCSP Stapling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crl-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRL Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-pinning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Pinning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revocation-emergency-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revocation Emergency Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,47 +829,156 @@
 
 
 
-<h1 id="certificates-security">Certificates Security<a class="headerlink" href="#certificates-security" title="Permanent link">&para;</a></h1>
-<p>Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys. The Root CA must remain offline and air-gapped, powered on only for the specific purpose of issuing or renewing subordinate CA certificates. Certificate pinning implementations must be carefully managed to avoid service disruptions during certificate renewal.</p>
-<p>All publicly trusted certificates must be submitted to Certificate Transparency (CT) logs as required by CA/Browser Forum rules. OCSP stapling should be enforced on all TLS endpoints to avoid privacy leakage via OCSP queries and to improve client connection performance. CRL Distribution Points must remain highly available — their unavailability can cause soft-fail clients to proceed with revoked certificates.</p>
+<h1 id="certificate-security">Certificate Security<a class="headerlink" href="#certificate-security" title="Permanent link">&para;</a></h1>
+<h2 id="ca-key-protection">CA Key Protection<a class="headerlink" href="#ca-key-protection" title="Permanent link">&para;</a></h2>
+<p>Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.</p>
 <table>
 <thead>
 <tr>
-<th>Control</th>
-<th>Detail</th>
+<th>CA Tier</th>
+<th>Key Storage Requirement</th>
+<th>Online Status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CA key protection</td>
-<td>HSM required for Root and Issuing CA private keys</td>
+<td>Root CA</td>
+<td>HSM (FIPS 140-2 Level 3 minimum)</td>
+<td>Offline / air-gapped</td>
 </tr>
 <tr>
-<td>Root CA offline policy</td>
-<td>Powered on only for subordinate CA issuance events</td>
+<td>Issuing CA</td>
+<td>HSM or TPM-backed key</td>
+<td>Online — issues end-entity certs</td>
 </tr>
 <tr>
-<td>CT log submission</td>
-<td>Mandatory for all publicly trusted certificates</td>
-</tr>
-<tr>
-<td>OCSP stapling</td>
-<td>Enforce on all public TLS endpoints</td>
-</tr>
-<tr>
-<td>CRL availability</td>
-<td>CRL Distribution Points must be HA — monitor freshness</td>
-</tr>
-<tr>
-<td>Certificate pinning</td>
-<td>Document all pinned certificates; coordinate renewal carefully</td>
-</tr>
-<tr>
-<td>Audit logging</td>
-<td>All CA issuance and revocation events forwarded to SIEM</td>
+<td>End-entity cert</td>
+<td>Software key acceptable</td>
+<td>Per-application</td>
 </tr>
 </tbody>
 </table>
+<pre><code class="language-powershell"># Verify ADCS CA uses HSM-backed key (look for CSP = Microsoft Smart Card or nCipher)
+certutil -getreg CA\CSP\Provider
+# Desired: hardware CSP listed (e.g., &quot;nFast RSA and DH&quot; or &quot;SafeNet&quot;)
+
+# Check CA key protection on the issuing CA
+certutil -store My | findstr /i &quot;provider\|key&quot;
+</code></pre>
+<h2 id="root-ca-offline-procedure">Root CA Offline Procedure<a class="headerlink" href="#root-ca-offline-procedure" title="Permanent link">&para;</a></h2>
+<p>The Root CA is powered on only for these specific events:
+1. Issuing a new Subordinate/Issuing CA certificate
+2. Renewing the Root CA certificate itself
+3. Updating the CRL (if Root CA issues CRL directly)</p>
+<pre><code class="language-powershell"># On Root CA — issue a subordinate CA certificate from a PKCS#10 CSR
+certreq -submit -attrib &quot;CertificateTemplate:SubCA&quot; SubCA-Request.req SubCA-Certificate.cer
+
+# After signing, power down Root CA immediately
+Stop-Computer -Force
+</code></pre>
+<h2 id="certificate-transparency-ct">Certificate Transparency (CT)<a class="headerlink" href="#certificate-transparency-ct" title="Permanent link">&para;</a></h2>
+<p>All publicly trusted certificates must be submitted to CT logs (required by CA/Browser Forum Baseline Requirements).</p>
+<pre><code class="language-bash"># Verify a certificate has SCT (Signed Certificate Timestamps) embedded
+openssl x509 -in cert.pem -noout -text | grep -A 10 &quot;CT Precertificate SCTs&quot;
+
+# Check certificate in public CT logs
+# https://crt.sh/?q=&lt;hostname&gt; — search by domain
+# curl example:
+curl -s &quot;https://crt.sh/?q=corp.example.com&amp;output=json&quot; | jq '.[0:5] | .[] | {id, issuer_name, not_before, not_after}'
+</code></pre>
+<h2 id="ocsp-stapling">OCSP Stapling<a class="headerlink" href="#ocsp-stapling" title="Permanent link">&para;</a></h2>
+<p>Enforce OCSP stapling on all public TLS endpoints to avoid privacy leakage and improve connection performance.</p>
+<pre><code class="language-nginx"># nginx — OCSP stapling configuration
+ssl_stapling on;
+ssl_stapling_verify on;
+ssl_trusted_certificate /etc/ssl/certs/chain.pem;
+resolver 8.8.8.8 valid=300s;
+resolver_timeout 5s;
+</code></pre>
+<pre><code class="language-bash"># Verify OCSP stapling is working
+openssl s_client -connect host.corp.example.com:443 -status -tlsextdebug 2&gt;&amp;1 | \
+  grep -i &quot;OCSP Response&quot;
+# Should show: OCSP Response Status: successful (0x0)
+</code></pre>
+<h2 id="crl-availability">CRL Availability<a class="headerlink" href="#crl-availability" title="Permanent link">&para;</a></h2>
+<p>CRL Distribution Points must remain highly available — unavailability can cause soft-fail clients to proceed with revoked certificates.</p>
+<pre><code class="language-bash"># Test CRL download
+curl -I http://crl.corp.local/IssuingCA.crl
+# Verify: HTTP 200, Content-Type: application/pkix-crl
+
+# Check CRL freshness (nextUpdate)
+openssl crl -in IssuingCA.crl -inform DER -noout -text | grep &quot;Next Update&quot;
+# CRL should be published at least 2x before expiry (overlap period)
+</code></pre>
+<pre><code class="language-powershell"># Monitor CRL validity from ADCS CA
+Get-ItemProperty -Path &quot;HKLM:\System\CurrentControlSet\Services\CertSvc\Configuration\IssuingCA&quot; |
+    Select-Object CRLPeriodUnits, CRLPeriod, CRLDeltaPeriodUnits, CRLDeltaPeriod
+</code></pre>
+<h2 id="certificate-pinning">Certificate Pinning<a class="headerlink" href="#certificate-pinning" title="Permanent link">&para;</a></h2>
+<p>Document all pinned certificates — coordinate renewals carefully to avoid breaking pinned connections.</p>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Pinned To</th>
+<th>Renewal Coordination Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mobile app</td>
+<td>Issuing CA public key</td>
+<td>Yes — app release required</td>
+</tr>
+<tr>
+<td>Internal service</td>
+<td>Leaf certificate</td>
+<td>Yes — both sides must update together</td>
+</tr>
+<tr>
+<td>HSTS preload</td>
+<td>Root CA</td>
+<td>Rare — only at root rotation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Enable ADCS audit logging (on Issuing CA)
+auditpol /set /subcategory:&quot;Certification Services&quot; /success:enable /failure:enable
+
+# View CA audit events (Event ID 4870 = cert revoked, 4886 = cert requested, 4887 = cert issued)
+Get-WinEvent -ComputerName issuingca -FilterHashtable @{
+    LogName='Security'; Id=4886,4887,4870
+} -MaxEvents 200 | Select-Object TimeCreated, Id, Message | Format-List
+</code></pre>
+<h2 id="security-checklist">Security Checklist<a class="headerlink" href="#security-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Root CA is offline and air-gapped</li>
+<li>[ ] Root CA key stored on HSM (FIPS 140-2 Level 3)</li>
+<li>[ ] Issuing CA key stored on HSM or equivalent</li>
+<li>[ ] ADCS audit logging enabled (event IDs 4886/4887 forwarded to SIEM)</li>
+<li>[ ] CRL published with adequate overlap (republish at 50% of validity)</li>
+<li>[ ] OCSP stapling enforced on all public endpoints</li>
+<li>[ ] CT log submission verified for public certificates</li>
+<li>[ ] Certificate pinning registry maintained and up to date</li>
+<li>[ ] Weak algorithm certs (SHA-1, RSA-1024) identified and replaced</li>
+<li>[ ] Venafi TPP expiry alerting configured for all managed certificates</li>
+<li>[ ] Emergency revocation procedure documented and tested annually</li>
+</ul>
+<h2 id="revocation-emergency-procedure">Revocation Emergency Procedure<a class="headerlink" href="#revocation-emergency-procedure" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Revoke a certificate on ADCS Issuing CA
+# Get the certificate serial number first
+certutil -view -restrict &quot;RequesterName=CORP\compromised-user&quot; | findstr &quot;Serial&quot;
+
+# Revoke
+certutil -revoke &lt;SerialNumber&gt; 1   # 1 = Key Compromise reason code
+
+# Publish updated CRL immediately
+certutil -CRL
+
+# Notify Venafi to update its records
+# Venafi API: POST /vedsdk/certificates/revoke
+</code></pre>
 
 
 

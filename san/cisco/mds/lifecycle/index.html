@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Methods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-procedure-install-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedure (install all)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#epld-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EPLD Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-new-switch-to-the-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a New Switch to the Fabric
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,33 +797,129 @@
 
 
 <h1 id="cisco-mds-lifecycle">Cisco MDS Lifecycle<a class="headerlink" href="#cisco-mds-lifecycle" title="Permanent link">&para;</a></h1>
-<p>NX-OS versions for MDS 9000 are tracked on the Cisco Software Advisor and aligned with the HCL requirements of connected hosts and storage arrays. EPLD (FPGA) firmware is updated separately from NX-OS and is required when upgrading across certain major NX-OS versions. Upgrades can use the <code>install all</code> command for a controlled upgrade (reloads the switch) or ISSU (In-Service Software Upgrade) on director platforms meeting the ISSU prerequisites. End-of-sale and end-of-support dates are tracked in the CMDB with alerts triggered 18 months before end-of-support.</p>
+<blockquote>
+<p>Part of the <a href="../">Cisco MDS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="version-tracking">Version Tracking<a class="headerlink" href="#version-tracking" title="Permanent link">&para;</a></h2>
+<p>NX-OS versions for MDS 9000 are tracked on the Cisco Software Advisor. Version selection is driven by:</p>
+<ul>
+<li>HCL requirements of connected host HBA drivers</li>
+<li>HCL requirements of connected storage array microcode (PowerMax, Pure, NetApp)</li>
+<li>Cisco TAC recommended releases (listed per platform on the software download page)</li>
+<li>End-of-support dates for the current NX-OS train</li>
+</ul>
+<p>End-of-sale and end-of-support dates are tracked in the CMDB. Alerts are triggered 18 months before end-of-support to allow adequate planning.</p>
+<hr />
+<h2 id="upgrade-methods">Upgrade Methods<a class="headerlink" href="#upgrade-methods" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Upgrade Method</th>
+<th>Method</th>
 <th>Applicability</th>
-<th>Notes</th>
+<th>Disruption</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>install all</code></td>
 <td>All platforms</td>
-<td>Reloads switch; plan maintenance window</td>
+<td>Reloads the switch — disruptive</td>
 </tr>
 <tr>
 <td>ISSU</td>
-<td>Director (9706/9710)</td>
-<td>Non-disruptive; strict prerequisites apply</td>
+<td>Directors (9706/9710)</td>
+<td>Non-disruptive if prerequisites met</td>
 </tr>
 <tr>
 <td>EPLD upgrade</td>
 <td>All platforms</td>
-<td>Required for some NX-OS major version jumps</td>
+<td>Separate from NX-OS; may require reload</td>
 </tr>
 </tbody>
 </table>
+<p><strong>ISSU prerequisites (9706/9710):</strong></p>
+<ul>
+<li>Dual supervisors must be installed and in sync</li>
+<li>Both supervisors must be running the same NX-OS version</li>
+<li>No ongoing configuration sessions</li>
+<li>No in-service diagnostics running</li>
+<li>No ports in error-disabled state on the upgrade path</li>
+</ul>
+<p>If ISSU prerequisites are not met, fall back to <code>install all</code> in a maintenance window.</p>
+<hr />
+<h2 id="upgrade-procedure-install-all">Upgrade Procedure (<code>install all</code>)<a class="headerlink" href="#upgrade-procedure-install-all" title="Permanent link">&para;</a></h2>
+<p><strong>Pre-upgrade checklist:</strong></p>
+<ul>
+<li>[ ] Current NX-OS version noted: <code>show version</code></li>
+<li>[ ] Running config saved: <code>copy running-config startup-config</code></li>
+<li>[ ] Config backed up off-switch via SCP</li>
+<li>[ ] HCL compatibility confirmed for target NX-OS version</li>
+<li>[ ] EPLD upgrade required? Check Cisco release notes for the target version</li>
+<li>[ ] Maintenance window booked — <code>install all</code> reloads the switch</li>
+<li>[ ] Dual-fabric confirmed — the other fabric will carry all I/O during the reload</li>
+</ul>
+<p><strong>Upgrade steps:</strong></p>
+<pre><code># Step 1 — Copy the target NX-OS image to the switch bootflash
+copy scp://&lt;server&gt;/&lt;path&gt;/nxos.bin bootflash:
+
+# Step 2 — Verify the image MD5 checksum
+show file bootflash:nxos.bin md5sum
+
+# Step 3 — Run the install all pre-check (non-disruptive)
+install all nxos bootflash:nxos.bin
+
+# Review the pre-check output — confirm no blocking issues
+
+# Step 4 — Confirm and proceed (switch will reload)
+# The install all command prompts for confirmation before rebooting
+
+# Step 5 — After reload, verify
+show version
+show interface brief   # all ports up
+show vsan             # all VSANs active
+show zoneset active   # zoning intact
+</code></pre>
+<hr />
+<h2 id="epld-upgrade">EPLD Upgrade<a class="headerlink" href="#epld-upgrade" title="Permanent link">&para;</a></h2>
+<p>EPLD (FPGA firmware) upgrades are required for some major NX-OS version transitions and for hardware compatibility.</p>
+<pre><code># Check current EPLD versions
+show version module all  # includes module EPLD version
+
+# Upgrade EPLD (requires switch reload)
+upgrade epld bootflash:&lt;epld-image&gt;.img module all
+</code></pre>
+<p>EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.</p>
+<hr />
+<h2 id="adding-a-new-switch-to-the-fabric">Adding a New Switch to the Fabric<a class="headerlink" href="#adding-a-new-switch-to-the-fabric" title="Permanent link">&para;</a></h2>
+<p>When adding a new MDS switch to an existing fabric:</p>
+<ol>
+<li>Configure the new switch with a unique domain ID before connecting ISLs.</li>
+<li>Pre-configure NTP, AAA (TACACS+/RADIUS), SNMP, and syslog from the baseline template.</li>
+<li>Connect the ISL — the new switch will join the fabric.</li>
+<li>Verify the new switch appears in <code>show topology</code>:</li>
+</ol>
+<pre><code>show topology
+show fcdomain domain-list vsan 10
+</code></pre>
+<ol>
+<li>Configure VSANs on the ISL trunk port to allow only the required VSANs.</li>
+<li>Update CMDB and SAN design register with the new switch domain ID and port allocation.</li>
+</ol>
+<hr />
+<h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
+<p>When removing a switch from the fabric:</p>
+<pre><code># Step 1 — Move all host and storage ports to other switches
+# Step 2 — Disable the ISL port-channels to isolate the switch from the fabric
+interface port-channel1
+  shutdown
+
+# Step 3 — Confirm no devices are still logged in
+show flogi database
+
+# Step 4 — Physically remove the switch
+# Step 5 — Update CMDB and domain ID register
+</code></pre>
 
 
 

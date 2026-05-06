@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dell-data-domain-ost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell Data Domain (OST)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-vsphere-vadp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vSphere (VADP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure-flasharray-snapshot-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure FlashArray (Snapshot Client)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-s3-cloud-storage-unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS S3 Cloud Storage Unit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siem-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIEM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cyberark-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CyberArk Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opscenter-it-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpsCenter / IT Analytics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,53 +808,87 @@
 
 
 <h1 id="netbackup-integration">NetBackup Integration<a class="headerlink" href="#netbackup-integration" title="Permanent link">&para;</a></h1>
-<p>NetBackup integrates with a wide range of infrastructure platforms via supported agents and APIs. Dell Data Domain integration uses the OpenStorage Technology (OST) plugin installed on media servers, enabling inline deduplication and replication directly between Data Domain appliances. VMware integration leverages the NetBackup for VMware agent and VMware VADP (vStorage APIs for Data Protection) for agentless snapshot-based backups of VMs without guest-level agents.</p>
-<table>
-<thead>
-<tr>
-<th>Integration</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dell Data Domain</td>
-<td>OST plugin on media server</td>
-<td>Enables dedup, DD Boost, AIR replication</td>
-</tr>
-<tr>
-<td>VMware vSphere</td>
-<td>NBU for VMware agent, VADP</td>
-<td>Agentless; vCenter credentials required</td>
-</tr>
-<tr>
-<td>Pure FlashArray</td>
-<td>NetBackup Snapshot Client + Pure plugin</td>
-<td>Hardware snapshot integration for near-zero RPO</td>
-</tr>
-<tr>
-<td>AWS S3</td>
-<td>Cloud storage unit (CSU)</td>
-<td>Long-term retention tier; configure lifecycle rules</td>
-</tr>
-<tr>
-<td>Azure Blob</td>
-<td>Cloud storage unit (CSU)</td>
-<td>Requires Azure credentials stored in NBU</td>
-</tr>
-<tr>
-<td>SIEM (Splunk, etc.)</td>
-<td>Audit log export / syslog</td>
-<td>Configure <code>/usr/openv/netbackup/logs/audit/</code> forwarding</td>
-</tr>
-<tr>
-<td>CyberArk</td>
-<td>AAM / Central Credential Provider</td>
-<td>Service account passwords retrieved at runtime</td>
-</tr>
-</tbody>
-</table>
+<h2 id="dell-data-domain-ost">Dell Data Domain (OST)<a class="headerlink" href="#dell-data-domain-ost" title="Permanent link">&para;</a></h2>
+<p>The OpenStorage Technology (OST) plugin enables inline deduplication and DD Boost protocol between NetBackup media servers and Data Domain appliances:</p>
+<ol>
+<li>
+<p>Install the Dell OST plugin on each media server:
+   <code>bash
+   # Linux media server
+   rpm -ivh NetBackup_&lt;version&gt;_DataDomain_OST_plugin.rpm</code></p>
+</li>
+<li>
+<p>Add Data Domain as a storage server:
+   <code>bash
+   # Create OST storage server
+   nbdevconfig -creatests -stype DataDomain -storage_server &lt;dd_hostname&gt; -media_server &lt;media_server&gt;
+   # Enter DD credentials when prompted</code></p>
+</li>
+<li>
+<p>Create disk pool and storage unit:
+   <code>bash
+   nbdevconfig -createdp -stype DataDomain -storage_server &lt;dd_hostname&gt; -dp &lt;pool_name&gt;
+   nbdevconfig -createstu -stype DataDomain -dp &lt;pool_name&gt; -stu &lt;stu_name&gt;</code></p>
+</li>
+</ol>
+<p>For AIR (Automatic Image Replication) between Data Domain systems: configure DD Boost managed file replication on the Data Domain appliances.</p>
+<h2 id="vmware-vsphere-vadp">VMware vSphere (VADP)<a class="headerlink" href="#vmware-vsphere-vadp" title="Permanent link">&para;</a></h2>
+<p>NetBackup for VMware uses VMware VADP for agentless VM backups:</p>
+<ol>
+<li>Add vCenter as credential: NetBackup Admin Console → Credentials → Virtual Machine Servers</li>
+<li>Create VMware backup policy:</li>
+<li>Policy type: <code>VMware</code></li>
+<li>Client: vCenter FQDN</li>
+<li>Backup selections: tag-based or folder-based VM selection</li>
+<li>Configure backup host (media server or dedicated proxy):</li>
+<li>Use hot-add transport for SAN-attached datastores</li>
+<li>Use NBD for NFS datastores</li>
+</ol>
+<pre><code class="language-bash"># List VMs detected by NetBackup from vCenter
+bpvmutil -disco -server &lt;vcenter_fqdn&gt;
+</code></pre>
+<h2 id="pure-flasharray-snapshot-client">Pure FlashArray (Snapshot Client)<a class="headerlink" href="#pure-flasharray-snapshot-client" title="Permanent link">&para;</a></h2>
+<p>Use NetBackup Snapshot Client with the Pure Storage plug-in for near-zero RPO application-consistent backups:</p>
+<ol>
+<li>Install Pure FlashArray Snapshot Client plugin on media server</li>
+<li>Configure array credentials: <code>nbdevconfig -liststs</code> to verify array visibility</li>
+<li>Create policy with snapshot method: <code>puredisk_instant_recovery</code></li>
+</ol>
+<h2 id="aws-s3-cloud-storage-unit">AWS S3 Cloud Storage Unit<a class="headerlink" href="#aws-s3-cloud-storage-unit" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create cloud storage server
+nbdevconfig -creatests -stype CloudStorage -storage_server amazon.com -media_server &lt;media_server&gt;
+
+# Provide AWS credentials when prompted
+# Create cloud storage unit
+nbdevconfig -createstu -stype CloudStorage -storage_server amazon.com -stu S3_LongTerm
+</code></pre>
+<p>Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.</p>
+<h2 id="siem-integration">SIEM Integration<a class="headerlink" href="#siem-integration" title="Permanent link">&para;</a></h2>
+<p>Forward NetBackup audit logs to SIEM:</p>
+<pre><code class="language-bash"># Audit log location
+/usr/openv/netbackup/logs/audit/
+
+# Configure syslog forwarding for NetBackup events
+/usr/openv/netbackup/bin/nblog -syslog enable -syslog_host &lt;siem_ip&gt; -syslog_port 514
+</code></pre>
+<p>Alert on: <code>backup failed</code>, <code>policy modified</code>, <code>client deleted</code>, <code>catalog backup failed</code>.</p>
+<h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
+<p>NetBackup retrieves service account passwords from CyberArk at runtime:</p>
+<ol>
+<li>Install CyberArk AAM (Application Access Manager) agent on master and media servers</li>
+<li>Configure NetBackup to use CyberArk: Credentials → enable CyberArk CCP integration</li>
+<li>Create application credential in CyberArk safe mapped to NetBackup service account</li>
+</ol>
+<h2 id="opscenter-it-analytics">OpsCenter / IT Analytics<a class="headerlink" href="#opscenter-it-analytics" title="Permanent link">&para;</a></h2>
+<p>Connect OpsCenter to the master server for centralised reporting:</p>
+<pre><code class="language-bash"># Verify master server is connected to OpsCenter
+/opt/SYMCOpsCenterServer/bin/opscenteragent status
+</code></pre>
+<p>Key reports:
+- Job success rate by policy
+- Backup window utilisation
+- Storage unit fill levels
+- Client backup age (identify clients not backed up recently)</p>
 
 
 

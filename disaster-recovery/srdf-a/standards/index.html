@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rpo-and-cycle-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPO and Cycle Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-group-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Group Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-group-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Group Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-group-number-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Group Number Allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consistency-group-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Group Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandwidth-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +808,103 @@
 
 
 <h1 id="srdfa-standards">SRDF/A Standards<a class="headerlink" href="#srdfa-standards" title="Permanent link">&para;</a></h1>
-<p>SRDF group naming follows the convention <code>RDFG-&lt;site-pair&gt;-&lt;app-tier&gt;-&lt;seq&gt;</code> (e.g., <code>RDFG-DC1DC2-DB-01</code>). Cycle time defaults to 30 seconds and must be aligned with the agreed RPO SLA per application class. WAN link bandwidth must be sized as: peak change rate (MB/s) × (cycle frequency per second), with a 20% headroom buffer.</p>
+<h2 id="rpo-and-cycle-time">RPO and Cycle Time<a class="headerlink" href="#rpo-and-cycle-time" title="Permanent link">&para;</a></h2>
+<p>SRDF/A cycle time defines the maximum data age (RPO) when a failure occurs mid-cycle. Default cycle time is 30 seconds; the maximum acceptable lag is negotiated per application class.</p>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Standard Value</th>
+<th>Application Class</th>
+<th>Target RPO</th>
+<th>Cycle Time</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Default cycle time</td>
-<td>30 seconds</td>
+<td>Tier 1 (financial, critical DB)</td>
+<td>≤ 30s</td>
+<td>30s</td>
+<td>Default</td>
 </tr>
 <tr>
-<td>Max delta set size</td>
-<td>Align with WAN throughput</td>
+<td>Tier 2 (business apps)</td>
+<td>≤ 60s</td>
+<td>60s</td>
+<td>Allowed if WAN constrained</td>
 </tr>
 <tr>
-<td>Target volume sizing</td>
-<td>1:1 with source (no thin over-subscription)</td>
-</tr>
-<tr>
-<td>Consistency group design</td>
-<td>One SRDF group per application tier</td>
-</tr>
-<tr>
-<td>Bandwidth headroom</td>
-<td>20% above peak calculated load</td>
-</tr>
-<tr>
-<td>SRDF license</td>
-<td>Required on both source and target arrays</td>
+<td>Tier 3 (dev/test replication)</td>
+<td>≤ 300s</td>
+<td>300s</td>
+<td>Batch workloads</td>
 </tr>
 </tbody>
 </table>
+<p>Monitor actual achieved RPO — it is always ≤ cycle time in normal operation:</p>
+<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; query -v | grep &quot;Minimum Cycle Time&quot;
+</code></pre>
+<h2 id="srdf-group-naming-convention">SRDF Group Naming Convention<a class="headerlink" href="#srdf-group-naming-convention" title="Permanent link">&para;</a></h2>
+<pre><code>RDFG-&lt;site-pair&gt;-&lt;app-tier&gt;-&lt;seq&gt;
+</code></pre>
+<p>Examples:
+- <code>RDFG-DC1DC2-DB-01</code> — first DB-tier group between DC1 and DC2
+- <code>RDFG-DC1DC2-APP-01</code> — application tier
+- <code>RDFG-DC1DC3-ARCHIVE-01</code> — archival replication to tertiary site</p>
+<h2 id="device-group-naming">Device Group Naming<a class="headerlink" href="#device-group-naming" title="Permanent link">&para;</a></h2>
+<pre><code>DG-&lt;env&gt;-&lt;app&gt;-&lt;site&gt;-&lt;seq&gt;
+</code></pre>
+<p>Examples:
+- <code>DG-PROD-ERP-DC1-01</code>
+- <code>DG-PROD-DB-DC1-01</code></p>
+<h2 id="srdf-group-number-allocation">SRDF Group Number Allocation<a class="headerlink" href="#srdf-group-number-allocation" title="Permanent link">&para;</a></h2>
+<p>Maintain an SRDF group number allocation register in CMDB. Ranges:</p>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1–50</td>
+<td>Tier 1 production sync/async groups</td>
+</tr>
+<tr>
+<td>51–100</td>
+<td>Tier 2 business apps</td>
+</tr>
+<tr>
+<td>101–150</td>
+<td>DR testing and pre-production</td>
+</tr>
+<tr>
+<td>151–200</td>
+<td>Reserved for future expansion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consistency-group-design-rules">Consistency Group Design Rules<a class="headerlink" href="#consistency-group-design-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One SRDF group per application tier (DB, APP, WEB) — never mix tiers in a single group</li>
+<li>Group all volumes of a multi-volume application into one consistency group to ensure write-order fidelity</li>
+<li>Do not exceed 2,048 devices per SRDF group</li>
+<li>Test consistency at minimum quarterly during DR tests</li>
+</ul>
+<h2 id="bandwidth-sizing">Bandwidth Sizing<a class="headerlink" href="#bandwidth-sizing" title="Permanent link">&para;</a></h2>
+<pre><code>Required bandwidth (MB/s) = peak_change_rate_MB_per_cycle / cycle_time_s × 1.20
+</code></pre>
+<p>Where 1.20 = 20% headroom for burst absorption. Measure peak change rate with:</p>
+<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; query -v | grep &quot;MBs Written&quot;
+</code></pre>
+<h2 id="device-sizing">Device Sizing<a class="headerlink" href="#device-sizing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>R2 (target) volumes must be equal in size to R1 (source) — no thin over-subscription on R2</li>
+<li>R2 volumes must be formatted identically (track type, emulation) as R1</li>
+<li>Verify before establishing:</li>
+</ul>
+<pre><code class="language-bash">symdev show -sid &lt;target_SID&gt; &lt;dev_id&gt; | grep -E &quot;Size|Track&quot;
+</code></pre>
 
 
 

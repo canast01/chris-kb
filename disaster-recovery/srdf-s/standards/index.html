@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rtt-and-latency-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTT and Latency Budget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-group-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Group Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandwidth-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#target-volume-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Volume Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Frequency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-time-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Time Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +797,129 @@
 
 
 <h1 id="srdfs-standards">SRDF/S Standards<a class="headerlink" href="#srdfs-standards" title="Permanent link">&para;</a></h1>
-<p>SRDF/S groups are designed one per application tier to isolate failure domains and simplify failover scoping. Site RTT must be validated and documented prior to production enablement; any link upgrade or re-route must trigger an RTT re-validation. Bandwidth is sized at peak write IOPS × average block size, with 25% headroom to absorb burst I/O without impacting host write latency.</p>
+<h2 id="rtt-and-latency-budget">RTT and Latency Budget<a class="headerlink" href="#rtt-and-latency-budget" title="Permanent link">&para;</a></h2>
+<p>SRDF/S commits every host write synchronously across the replication link. The host write RTT equals local storage latency + 2× WAN latency. Document and enforce maximum RTT before production enablement.</p>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Standard Value</th>
+<th>Site Distance</th>
+<th>Typical RTT</th>
+<th>Max Acceptable</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SRDF group design</td>
-<td>One group per application tier</td>
+<td>Campus / same campus</td>
+<td>&lt; 1ms</td>
+<td>2ms</td>
+<td>Ideal for SRDF/S</td>
 </tr>
 <tr>
-<td>Maximum site RTT</td>
-<td>5ms round-trip</td>
+<td>Metro (≤ 100km dark fibre)</td>
+<td>1–5ms</td>
+<td>5ms</td>
+<td>Within spec</td>
 </tr>
 <tr>
-<td>Bandwidth sizing</td>
-<td>Peak write throughput × 1.25</td>
+<td>Metro (&gt; 100km)</td>
+<td>5–10ms</td>
+<td>≤ 10ms</td>
+<td>Borderline — test under peak load</td>
 </tr>
 <tr>
-<td>Target volume sizing</td>
-<td>1:1 with source</td>
+<td>WAN (&gt; 200km)</td>
+<td>&gt; 10ms</td>
+<td>Not recommended</td>
+<td>Use SRDF/A instead</td>
+</tr>
+</tbody>
+</table>
+<p>Validate RTT from each PowerMax director port:</p>
+<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; query -v | grep -E &quot;RTT|Latency&quot;
+</code></pre>
+<h2 id="srdf-group-design-rules">SRDF Group Design Rules<a class="headerlink" href="#srdf-group-design-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One SRDF/S group per application tier — isolate DB, APP, and WEB tiers</li>
+<li>Never mix tiers in a single consistency group</li>
+<li>Maximum 2,048 devices per SRDF group</li>
+<li>Three-site design: SRDF/S to secondary (RPO=0), SRDF/A to tertiary (RPO=30s)</li>
+</ul>
+<pre><code>RDFG-S-&lt;site-pair&gt;-&lt;tier&gt;-&lt;seq&gt;
+</code></pre>
+<p>Examples:
+- <code>RDFG-S-DC1DC2-DB-01</code>
+- <code>RDFG-S-DC1DC2-APP-01</code>
+- <code>RDFG-S-DC1DC2-WEB-01</code></p>
+<h2 id="bandwidth-sizing">Bandwidth Sizing<a class="headerlink" href="#bandwidth-sizing" title="Permanent link">&para;</a></h2>
+<p>Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.</p>
+<pre><code>Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
+</code></pre>
+<p>Where 1.25 = 25% headroom for burst absorption.</p>
+<p>Measure peak write throughput:</p>
+<pre><code class="language-bash">symstat -sid &lt;SID&gt; -type rdf -i 5 -c 12   # 5-second samples, 12 cycles = 1 minute
+</code></pre>
+<p>Sizing must be validated at peak (end-of-month batch, backup window) — not average load.</p>
+<h2 id="target-volume-standards">Target Volume Standards<a class="headerlink" href="#target-volume-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>R2 volumes must be identical in size to R1 — no thin over-subscription on R2</li>
+<li>R2 emulation and track format must match R1 exactly</li>
+<li>R2 volumes should not be presented to hosts except during planned failover or DR test</li>
+</ul>
+<p>Verify before establishing:</p>
+<pre><code class="language-bash">symdev show -sid &lt;target_SID&gt; &lt;dev_id&gt; | grep -E &quot;Size|Emulation|Track&quot;
+</code></pre>
+<h2 id="test-frequency">Test Frequency<a class="headerlink" href="#test-frequency" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Minimum Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-disruptive pair state verification</td>
+<td>Monthly</td>
 </tr>
 <tr>
-<td>Consistency group naming</td>
-<td><code>RDFG-S-&lt;site-pair&gt;-&lt;tier&gt;-&lt;seq&gt;</code></td>
+<td>SRM recovery plan test (non-production)</td>
+<td>Quarterly</td>
 </tr>
 <tr>
-<td>Three-site cascade</td>
-<td>SRDF/S → primary, SRDF/A → tertiary</td>
+<td>Full failover test (maintenance window)</td>
+<td>Annually</td>
+</tr>
+<tr>
+<td>RTT re-validation after WAN changes</td>
+<td>After every network change affecting SRDF links</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recovery-time-standards">Recovery Time Standards<a class="headerlink" href="#recovery-time-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>RTO Category</th>
+<th>Target</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planned failover (SRM automated)</td>
+<td>&lt; 15 minutes</td>
+<td>Per recovery plan</td>
+</tr>
+<tr>
+<td>Unplanned failover (manual)</td>
+<td>&lt; 30 minutes</td>
+<td>DR runbook execution</td>
+</tr>
+<tr>
+<td>Post-failover data validation</td>
+<td>&lt; 60 minutes</td>
+<td>Application-level check</td>
 </tr>
 </tbody>
 </table>

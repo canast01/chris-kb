@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-product-interoperability-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Product Interoperability Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-party-tool-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third-Party Tool Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-tools-and-vm-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Tools and VM Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-review-sign-off-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility Review Sign-Off Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,20 +797,153 @@
 
 
 <h1 id="compatibility-review">Compatibility Review<a class="headerlink" href="#compatibility-review" title="Permanent link">&para;</a></h1>
-<p>Compatibility should be checked for:</p>
-<ul>
-<li>vCenter version</li>
-<li>ESXi version</li>
-<li>vSAN version</li>
-<li>NSX version</li>
-<li>VxRail version</li>
-<li>Aria product versions</li>
-<li>Backup software</li>
-<li>Monitoring tools</li>
-<li>Storage arrays</li>
-<li>Server firmware</li>
-<li>NIC and HBA drivers</li>
-</ul>
+<p>Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.</p>
+<h2 id="vmware-product-interoperability-matrix">VMware Product Interoperability Matrix<a class="headerlink" href="#vmware-product-interoperability-matrix" title="Permanent link">&para;</a></h2>
+<p>Primary source: <a href="https://interopmatrix.vmware.com/">VMware Product Interoperability Matrix</a></p>
+<p>Required checks:
+- vCenter ↔ ESXi (vCenter must be ≥ ESXi version)
+- vCenter ↔ NSX (see NSX install guide for exact vCenter version)
+- vCenter ↔ SRM + vSphere Replication
+- vSAN ↔ ESXi (same version as ESXi)
+- VxRail ↔ vCenter / ESXi / vSAN (VxRail owns this combination — check VxRail release notes)
+- Aria LCM ↔ all Aria products (Ops, Automation, Log Insight, vRNI)</p>
+<h2 id="hardware-compatibility">Hardware Compatibility<a class="headerlink" href="#hardware-compatibility" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check current ESXi version on all hosts
+Get-VMHost | Select-Object Name, Version, Build |
+    Sort-Object Version
+
+# Get NIC and HBA driver/firmware versions on a host
+esxcli software vib list | grep -i &quot;net-\|scsi-\|nfnic\|lpfc\|bnx&quot;
+</code></pre>
+<p>Check <a href="https://www.vmware.com/resources/compatibility/search.php">VMware HCL</a> for:
+- Server model + ESXi target version
+- NIC model + driver version
+- HBA model + driver/firmware version
+- Storage array (array model, VAAI support, multipath plugin version)</p>
+<h2 id="third-party-tool-compatibility">Third-Party Tool Compatibility<a class="headerlink" href="#third-party-tool-compatibility" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Compatibility Check Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Veeam</td>
+<td><a href="https://www.veeam.com/kb2443">Veeam compatibility matrix</a></td>
+</tr>
+<tr>
+<td>Commvault</td>
+<td>Commvault Feature Release notes</td>
+</tr>
+<tr>
+<td>Veritas NetBackup</td>
+<td><a href="https://sort.veritas.com/">Veritas SORT</a></td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>Aria Ops release notes + interop matrix</td>
+</tr>
+<tr>
+<td>CrowdStrike / AV agents</td>
+<td>Vendor ESXi support matrix</td>
+</tr>
+<tr>
+<td>Dell VxRail</td>
+<td>VxRail release notes (VxRail owns ESXi + vCenter + vSAN versions)</td>
+</tr>
+<tr>
+<td>RecoverPoint</td>
+<td>EMC support matrix for RP + vCenter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vmware-tools-and-vm-hardware">VMware Tools and VM Hardware<a class="headerlink" href="#vmware-tools-and-vm-hardware" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># VMs with VMware Tools older than target version
+Get-VM | Where-Object { $_.Guest.ToolsVersionStatus -eq &quot;guestToolsNeedUpgrade&quot; } |
+    Select-Object Name, @{N=&quot;ToolsVersion&quot;; E={ $_.Guest.ToolsVersion }} |
+    Measure-Object | Select-Object Count
+
+# VMs with hardware version below target
+$targetHWVersion = 19   # vSphere 7.0 U3+ = HW19, vSphere 8 = HW21
+Get-VM | Where-Object { ($_.HardwareVersion -replace &quot;vmx-&quot;, &quot;&quot;) -lt $targetHWVersion } |
+    Measure-Object | Select-Object Count
+</code></pre>
+<p>VMware Tools and VM hardware upgrades are independent of ESXi upgrade — schedule separately after host upgrade.</p>
+<h2 id="certificate-compatibility">Certificate Compatibility<a class="headerlink" href="#certificate-compatibility" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check VMCA certificate expiry before upgrade (VMCA certs expire 2 years from issuance)
+Get-VIObject -MoRef (Get-View ServiceInstance).Content.CertificateManager |
+    Invoke-Method -Name QueryCertificates
+</code></pre>
+<p>Also verify: custom certificates on VCSA, NSX Manager, and Aria products have not expired.</p>
+<h2 id="compatibility-review-sign-off-checklist">Compatibility Review Sign-Off Checklist<a class="headerlink" href="#compatibility-review-sign-off-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Verified By</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter ↔ ESXi interop confirmed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>NSX ↔ vCenter interop confirmed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>VxRail release compatibility confirmed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HCL check: server model</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HCL check: NIC drivers</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HCL check: HBA drivers</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HCL check: storage array</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Veeam compatibility confirmed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aria LCM interop confirmed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>VM Tools count (plan upgrade schedule)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Certificates valid through upgrade window</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
 
 

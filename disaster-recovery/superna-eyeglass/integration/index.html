@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#netapp-powerscale-synciq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetApp PowerScale (SyncIQ)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bind-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BIND DNS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations / SNMP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-siem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog / SIEM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,49 +808,74 @@
 
 
 <h1 id="superna-eyeglass-integration">Superna Eyeglass Integration<a class="headerlink" href="#superna-eyeglass-integration" title="Permanent link">&para;</a></h1>
-<p>Eyeglass's primary integration is with NetApp PowerScale SyncIQ — it uses the OneFS REST API to discover, monitor, and orchestrate SyncIQ replication policies. Active Directory integration is required to ensure shares on the DR cluster are accessible to the correct AD security groups immediately after failover, without manual re-permission steps.</p>
-<p>DNS server integration enables automated zone cutover during failover. Eyeglass supports Windows DNS (via WMI/DNS API) and BIND for this purpose. Monitoring integration via syslog or SNMP allows Eyeglass events and alerts to flow into Aria Operations, Splunk, or other SIEM/monitoring platforms.</p>
-<table>
-<thead>
-<tr>
-<th>Integration</th>
-<th>Method</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NetApp PowerScale SyncIQ</td>
-<td>OneFS REST API</td>
-<td>Policy discovery, monitoring, failover orchestration</td>
-</tr>
-<tr>
-<td>Active Directory</td>
-<td>LDAP / AD APIs</td>
-<td>Share authentication after failover (no re-permissioning)</td>
-</tr>
-<tr>
-<td>Windows DNS</td>
-<td>WMI / DNS server API</td>
-<td>Automated DNS zone cutover during failover</td>
-</tr>
-<tr>
-<td>BIND DNS</td>
-<td>DNS zone transfer / nsupdate</td>
-<td>Automated DNS cutover for Linux DNS environments</td>
-</tr>
-<tr>
-<td>Aria Operations</td>
-<td>SNMP / syslog</td>
-<td>Eyeglass health and DR readiness alerts</td>
-</tr>
-<tr>
-<td>Splunk</td>
-<td>Syslog forwarding</td>
-<td>Centralised event log and failover audit trail</td>
-</tr>
-</tbody>
-</table>
+<h2 id="netapp-powerscale-synciq">NetApp PowerScale (SyncIQ)<a class="headerlink" href="#netapp-powerscale-synciq" title="Permanent link">&para;</a></h2>
+<p>Eyeglass uses the OneFS REST API to discover and monitor SyncIQ replication policies:</p>
+<ol>
+<li>Add the PowerScale cluster in Eyeglass Admin UI: Configuration → Cluster → Add Cluster</li>
+<li>Provide:</li>
+<li>Cluster management IP or SmartConnect zone FQDN</li>
+<li>Service account credentials (svc_eyeglass with minimum required role)</li>
+<li>Site designation: Primary or DR</li>
+</ol>
+<p>Required PowerScale permissions for the Eyeglass service account:</p>
+<pre><code class="language-bash"># On PowerScale: create dedicated role for Eyeglass
+isi auth roles create --name EyeglassIntegration --description &quot;Superna Eyeglass service account&quot;
+isi auth roles modify EyeglassIntegration --add-priv ISI_PRIV_READ_FILE_POLICIES
+isi auth roles modify EyeglassIntegration --add-priv ISI_PRIV_READ_NETWORK
+isi auth roles modify EyeglassIntegration --add-priv ISI_PRIV_SYNC
+isi auth users modify svc_eyeglass --add-role EyeglassIntegration
+</code></pre>
+<p>Verify Eyeglass can see SyncIQ policies: DR → Replication Policies — all SyncIQ policies should appear.</p>
+<h2 id="active-directory">Active Directory<a class="headerlink" href="#active-directory" title="Permanent link">&para;</a></h2>
+<p>AD integration ensures SMB shares on the DR cluster inherit correct AD security principals after failover — no manual re-permissioning required:</p>
+<ol>
+<li>Eyeglass Admin UI: Configuration → Active Directory → Add Domain</li>
+<li>Provide domain FQDN and credentials for a domain account with read access</li>
+<li>Eyeglass maps AD users/groups from the primary share ACLs to the DR share configuration</li>
+</ol>
+<p>Verify: DR → Shares — each share should show "AD Mapped: Yes".</p>
+<h2 id="windows-dns">Windows DNS<a class="headerlink" href="#windows-dns" title="Permanent link">&para;</a></h2>
+<p>Windows DNS integration enables automated zone cutover:</p>
+<ol>
+<li>Eyeglass Admin UI: Configuration → DNS → Add DNS Server</li>
+<li>Select type: Windows DNS</li>
+<li>Provide DNS server IP and a service account with DNS Administrator role</li>
+<li>Define zone cutover rules: which DNS zones/records to update on failover</li>
+</ol>
+<p>Test DNS integration without failover: DR → DNS Preview — shows what records Eyeglass will update.</p>
+<h2 id="bind-dns">BIND DNS<a class="headerlink" href="#bind-dns" title="Permanent link">&para;</a></h2>
+<p>For Linux-based DNS (BIND):</p>
+<ol>
+<li>Configure <code>nsupdate</code> credentials on the BIND server</li>
+<li>Eyeglass Admin UI: Configuration → DNS → Add DNS Server → type: BIND</li>
+<li>Provide TSIG key name and key material</li>
+</ol>
+<h2 id="aria-operations-snmp">Aria Operations / SNMP<a class="headerlink" href="#aria-operations-snmp" title="Permanent link">&para;</a></h2>
+<p>Forward Eyeglass alerts to monitoring:</p>
+<ol>
+<li>Eyeglass Admin UI: Configuration → Notifications → SNMP</li>
+<li>Provide SNMP trap destination (Aria Operations collector IP), community string or v3 credentials</li>
+<li>Import Eyeglass SNMP MIB into Aria Operations or network management system</li>
+</ol>
+<p>Key traps to monitor:
+- <code>eyeglassDRReadinessChanged</code> — readiness score drops below 100%
+- <code>eyeglassSyncIQLagAlarm</code> — RPO threshold breached
+- <code>eyeglassFailoverStarted</code> / <code>eyeglassFailoverCompleted</code></p>
+<h2 id="syslog-siem">Syslog / SIEM<a class="headerlink" href="#syslog-siem" title="Permanent link">&para;</a></h2>
+<p>Forward Eyeglass audit trail to SIEM:</p>
+<ol>
+<li>Eyeglass Admin UI: Configuration → Syslog</li>
+<li>Enter SIEM IP, port 514 (UDP) or 6514 (TLS)</li>
+</ol>
+<p>Alert in SIEM on:
+- Failover initiated (any event)
+- DR readiness score &lt; 100% for &gt; 15 minutes
+- Eyeglass appliance unreachable</p>
+<h2 id="email-notifications">Email Notifications<a class="headerlink" href="#email-notifications" title="Permanent link">&para;</a></h2>
+<p>Eyeglass Admin UI: Configuration → Notifications → Email:
+- Configure SMTP relay
+- Add distribution lists for DR team and on-call
+- Enable notifications for: failover events, readiness changes, SyncIQ policy errors</p>
 
 
 

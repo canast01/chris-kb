@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vm-not-in-protection-group-not-ready-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Not in Protection Group / Not Ready State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-fails-at-network-mapping-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Fails at Network Mapping Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sra-communication-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Communication Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-stuck-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Stuck Running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#site-pair-shows-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Pair Shows Error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-bundle-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Bundle Collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,48 +825,87 @@
 
 
 <h1 id="srm-troubleshooting">SRM Troubleshooting<a class="headerlink" href="#srm-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>SRM issues commonly involve protection group state errors, recovery plan failures at specific steps, or SRA communication problems. Always collect the SRM support bundle from vCenter before engaging Broadcom support. Logs are located on the SRM server at <code>C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\</code> (Windows) or via <code>vim-cmd vmsvc/get.summary</code> on vCenter.</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Diagnostic Steps</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM not in protection group / <code>Not Ready</code></td>
-<td>vSphere Replication sync error</td>
-<td>Check vSphere Replication status for the VM; confirm replication appliance health</td>
-</tr>
-<tr>
-<td>Recovery plan fails at network step</td>
-<td>Network mapping incorrect or port group missing on recovery site</td>
-<td>Verify network mappings in SRM UI; confirm port groups exist on recovery site ESXi hosts</td>
-</tr>
-<tr>
-<td>SRA communication failure</td>
-<td>Array credential mismatch or SRA service stopped</td>
-<td>Check SRM UI → Array Managers; verify SRA service is running; re-enter array credentials</td>
-</tr>
-<tr>
-<td>Test failover VMs not accessible</td>
-<td>Bubble network misconfigured</td>
-<td>Confirm test network port group is created and mapped; check VM IP customisation rules</td>
-</tr>
-<tr>
-<td>Recovery plan stuck <code>Running</code></td>
-<td>Custom script step timeout</td>
-<td>Check script log output in SRM task details; increase step timeout or fix script</td>
-</tr>
-<tr>
-<td>Site Pair shows <code>Error</code></td>
-<td>Certificate mismatch or vCenter connectivity issue</td>
-<td>Verify vCenter FQDN resolution from SRM server; check certificate trust between sites</td>
-</tr>
-</tbody>
-</table>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<pre><code>Windows SRM Server:
+  C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-dr.log
+  C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-drconfig.log
+
+Linux SRM Appliance (8.8+):
+  /var/log/vmware/dr/vmware-dr.log
+
+vSphere Replication Appliance:
+  /var/log/vmware/hbr/
+
+SRA logs (Dell PowerMax SRA example):
+  C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\dell-emc-srm\logs\
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h3 id="vm-not-in-protection-group-not-ready-state">VM Not in Protection Group / <code>Not Ready</code> State<a class="headerlink" href="#vm-not-in-protection-group-not-ready-state" title="Permanent link">&para;</a></h3>
+<pre><code>Cause: vSphere Replication synchronisation error or initial sync not complete
+</code></pre>
+<ol>
+<li>vSphere Client → Site Recovery → Replications → find the VM → check status</li>
+<li>If status is <code>Error</code>: click the VM → History tab → view error detail</li>
+<li>Common sub-causes:</li>
+<li>Insufficient disk space on recovery datastore</li>
+<li>RPO set too aggressively for available bandwidth</li>
+<li>vSphere Replication appliance connectivity issue</li>
+</ol>
+<pre><code class="language-bash"># Check VR appliance is reachable from recovery site ESXi
+ping &lt;vr-appliance-ip&gt;
+# Check VR port 31031 is open (replication traffic)
+nc -zv &lt;vr-appliance-recovery-ip&gt; 31031
+</code></pre>
+<h3 id="recovery-plan-fails-at-network-mapping-step">Recovery Plan Fails at Network Mapping Step<a class="headerlink" href="#recovery-plan-fails-at-network-mapping-step" title="Permanent link">&para;</a></h3>
+<ol>
+<li>SRM UI → Recovery Plans → select plan → Recent Tasks → view failed step</li>
+<li>Verify network mappings: SRM → Configure → Network Mappings — ensure every source network has a target mapping</li>
+<li>Confirm target port groups exist on recovery site ESXi cluster</li>
+<li>For NSX: confirm overlay segment exists at recovery site</li>
+</ol>
+<h3 id="sra-communication-failure">SRA Communication Failure<a class="headerlink" href="#sra-communication-failure" title="Permanent link">&para;</a></h3>
+<pre><code>Symptom: Array Manager shows &quot;Error&quot; or &quot;Unknown&quot; state in SRM UI
+</code></pre>
+<ol>
+<li>SRM → Configure → Array Managers → check status</li>
+<li>Verify SRA service is running:
+   <code>powershell
+   Get-Service vmware-sra-*   # Windows SRM</code></li>
+<li>Re-test array credentials: Array Manager → Edit → Test Connection</li>
+<li>Check SRA log for specific error (Dell SRA logs: see above path)</li>
+<li>Verify Unisphere/FlashArray/ONTAP API is accessible from SRM server:
+   <code>powershell
+   Invoke-WebRequest -Uri "https://&lt;array-ip&gt;/univmax/restapi/system/version" -SkipCertificateCheck</code></li>
+</ol>
+<h3 id="recovery-plan-stuck-running">Recovery Plan Stuck <code>Running</code><a class="headerlink" href="#recovery-plan-stuck-running" title="Permanent link">&para;</a></h3>
+<pre><code>Cause: Custom script step timed out, or a VM failed to power on
+</code></pre>
+<ol>
+<li>SRM → Recovery Plans → running plan → Steps tab — identify which step is stuck</li>
+<li>If a custom script step: check the script exit code in task details; a non-zero exit causes indefinite wait</li>
+<li>If a VM power-on step: check vCenter tasks for that VM — may have a configuration issue (missing network, snapshot)</li>
+<li>As a last resort (during actual DR): manually advance the plan past the stuck step using "Force Next Step"</li>
+</ol>
+<h3 id="site-pair-shows-error">Site Pair Shows <code>Error</code><a class="headerlink" href="#site-pair-shows-error" title="Permanent link">&para;</a></h3>
+<pre><code>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
+</code></pre>
+<ol>
+<li>From SRM server, verify vCenter is reachable:
+   <code>powershell
+   Test-NetConnection -ComputerName &lt;vcenter-fqdn&gt; -Port 443</code></li>
+<li>Check certificate validity:
+   <code>powershell
+   $cert = [Net.ServicePointManager]::ServerCertificateValidationCallback
+   Invoke-WebRequest "https://&lt;vcenter-fqdn&gt;" -UseBasicParsing</code></li>
+<li>Re-enter site pair credentials: SRM → Sites → Edit Credentials</li>
+</ol>
+<h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
+<p>Collect before opening a Broadcom support ticket:</p>
+<pre><code class="language-powershell"># Trigger SRM support bundle collection
+# SRM UI → Help → Collect Support Bundle
+# Or via API:
+Invoke-WebRequest -Uri &quot;https://&lt;srm-appliance&gt;:443/api/v1/support-bundle&quot; -Method POST
+</code></pre>
 
 
 

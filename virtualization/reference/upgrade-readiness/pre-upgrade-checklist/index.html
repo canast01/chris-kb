@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#backup-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-and-capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk and Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-and-ntp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS and NTP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-and-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access and Credentials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,19 +830,87 @@
 
 
 <h1 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h1>
+<p>Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX).</p>
+<h2 id="backup-and-recovery">Backup and Recovery<a class="headerlink" href="#backup-and-recovery" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm vCenter backup</li>
-<li>Confirm configuration backup</li>
-<li>Confirm no critical alerts</li>
-<li>Confirm no failed vSAN objects</li>
-<li>Confirm no active resyncs if avoidable</li>
-<li>Confirm datastore free space</li>
-<li>Confirm cluster HA and DRS health</li>
-<li>Confirm DNS and NTP</li>
-<li>Confirm certificates are valid</li>
-<li>Confirm admin access</li>
-<li>Confirm support bundle collection if required</li>
-<li>Confirm rollback steps</li>
+<li>[ ] vCenter appliance backup completed and verified (VAMI → Backup → Run Now; confirm backup file exists)</li>
+<li>[ ] Configuration backup for NSX Manager: NSX Manager → System → Backup → Backup Now</li>
+<li>[ ] SDDC Manager backup (VCF): <code>lcm-tools backup</code></li>
+<li>[ ] Aria Suite Lifecycle snapshot taken (for LCM-managed environments)</li>
+<li>[ ] VM snapshots taken of: vCenter, NSX Manager nodes, Platform Services Controllers (if separate)</li>
+<li>[ ] Verify snapshots are visible in vCenter inventory before proceeding</li>
+</ul>
+<pre><code class="language-powershell"># Confirm vCenter snapshot exists
+Get-VM -Name vcenter-prod-01 | Get-Snapshot | Select-Object Name, Created, SizeMB
+</code></pre>
+<h2 id="environment-health">Environment Health<a class="headerlink" href="#environment-health" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Zero critical or red alarms in vCenter (investigate and resolve all before proceeding)</li>
+<li>[ ] All hosts: <code>ConnectionState = Connected</code></li>
+<li>[ ] All clusters: HA Enabled, DRS Enabled</li>
+<li>[ ] vSAN health: no failed disks, no degraded objects, no active resyncs</li>
+<li>[ ] All datastores accessible (no APD/PDL)</li>
+<li>[ ] NSX Manager cluster status: <code>STABLE</code> (if NSX deployed)</li>
+<li>[ ] All VMs in expected power state (no stuck power operations in recent tasks)</li>
+</ul>
+<pre><code class="language-powershell"># Quick health check
+Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
+Get-Datastore | Where-Object {$_.State -ne &quot;Available&quot;} | Select-Object Name, State
+</code></pre>
+<h2 id="compatibility-verification">Compatibility Verification<a class="headerlink" href="#compatibility-verification" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Product Interoperability Matrix checked: <a href="https://interopmatrix.vmware.com">interopmatrix.vmware.com</a></li>
+<li>Target vCenter version compatible with current ESXi versions?</li>
+<li>Target ESXi version compatible with current hardware (HCL)?</li>
+<li>NSX version compatible with target vCenter version?</li>
+<li>[ ] Driver and firmware versions on all hosts are on the VCG (vSphere Compatibility Guide)</li>
+<li>[ ] Third-party solutions checked: backup agents, monitoring agents, SAN multipath drivers</li>
+</ul>
+<h2 id="disk-and-capacity">Disk and Capacity<a class="headerlink" href="#disk-and-capacity" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] vCenter appliance: VAMI → Monitor → Storage — all partitions &lt; 70% full</li>
+<li>[ ] Datastore hosting vCenter VM: &gt; 100 GB free</li>
+<li>[ ] ESXi host scratch partition: &gt; 5 GB free per host (<code>df -h</code> on each host's <code>/scratch</code>)</li>
+</ul>
+<h2 id="dns-and-ntp">DNS and NTP<a class="headerlink" href="#dns-and-ntp" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] DNS: forward and reverse resolution for all component FQDNs confirmed
+  <code>bash
+  for fqdn in vcenter.corp.local nsx.corp.local esxi01.corp.local; do
+      nslookup $fqdn; nslookup $(nslookup $fqdn | grep Address | tail -1 | awk '{print $2}')
+  done</code></li>
+<li>[ ] NTP: time drift &lt; 5 seconds between all components
+  <code>bash
+  # On each ESXi host
+  esxcli system time get</code></li>
+</ul>
+<h2 id="certificates">Certificates<a class="headerlink" href="#certificates" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] vCenter Machine SSL certificate not expiring within 30 days</li>
+<li>[ ] NSX Manager cluster certificates not expiring within 30 days</li>
+<li>[ ] STS (Lookup Service) certificate valid
+  <code>bash
+  # Check vCenter cert expiry
+  openssl s_client -connect vcenter.corp.local:443 -showcerts 2&gt;/dev/null | openssl x509 -noout -dates</code></li>
+</ul>
+<h2 id="access-and-credentials">Access and Credentials<a class="headerlink" href="#access-and-credentials" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Admin credentials confirmed working (vCenter SSO admin, NSX admin, SDDC Manager admin)</li>
+<li>[ ] Break-glass access procedures documented and tested</li>
+<li>[ ] Service account credentials valid (vcenter → AD authentication test passed)</li>
+</ul>
+<h2 id="rollback-plan">Rollback Plan<a class="headerlink" href="#rollback-plan" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Rollback steps documented and reviewed with team</li>
+<li>[ ] Rollback window agreed (minimum 2 hours after upgrade window)</li>
+<li>[ ] Snapshots confirmed available as rollback point</li>
+<li>[ ] Contact list prepared: vendor support numbers, internal escalation path</li>
+</ul>
+<h2 id="change-management">Change Management<a class="headerlink" href="#change-management" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Change record approved with correct implementation window</li>
+<li>[ ] Application owner notification sent</li>
+<li>[ ] On-call engineer identified for duration of change window</li>
 </ul>
 
 

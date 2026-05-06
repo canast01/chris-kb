@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,157 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-srdfs-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily SRDF/S Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-states-and-what-they-mean-for-srdfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair States and What They Mean for SRDF/S
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wan-latency-impact-on-write-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAN Latency Impact on Write Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist-before-maintenance-on-srdfs-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist Before Maintenance on SRDF/S Arrays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#converting-srdfs-to-srdfa-temporarily-during-array-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Converting SRDF/S to SRDF/A Temporarily During Array Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suspending-and-resuming-srdfs-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suspending and Resuming SRDF/S Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-failover-procedure-for-srdfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover Procedure for SRDF/S
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unplanned-failover-procedure-for-srdfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unplanned Failover Procedure for SRDF/S
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resync-after-maintenance-induced-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resync After Maintenance-Induced Split
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-after-planned-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback After Planned Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-integration-automated-vs-manual-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Integration: Automated vs Manual Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-call-triage-srdfs-lag-alert-or-pair-state-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-Call Triage: SRDF/S Lag Alert or Pair State Change
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +874,584 @@
 
 
 <h1 id="srdfs-operations">SRDF/S Operations<a class="headerlink" href="#srdfs-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operations for SRDF/S focus on confirming all pairs remain in <code>Synchronized</code> state and that write response times have not degraded. Use <code>symrdf query</code> as the primary health command and set alerting thresholds on pair state transitions in Aria Operations or equivalent monitoring. Any pair entering a non-synchronized state during business hours should be treated as a P2 incident until root cause is confirmed.</p>
-<p><strong>Daily checks:</strong></p>
+<blockquote>
+<p>Part of the <a href="../">SRDF/S</a> reference.</p>
+</blockquote>
+<hr />
+<p>SRDF/S (Synchronous) replication provides zero-RPO protection by holding every host write until it has been committed at both the R1 (primary) and R2 (secondary) site. The synchronous acknowledgement model means WAN latency is directly visible to applications as additional write response time. Daily operations therefore have two equal concerns: confirming replication health and confirming that write latency has not degraded beyond the application baseline.</p>
+<hr />
+<h2 id="daily-srdfs-health-check">Daily SRDF/S Health Check<a class="headerlink" href="#daily-srdfs-health-check" title="Permanent link">&para;</a></h2>
+<p>Run these checks at the start of each shift and before any planned changes. All commands are executed from a Solutions Enabler (SE) host with gatekeeper access to the R1 array unless noted.</p>
+<pre><code class="language-bash"># 1. Confirm pair states for all devices in the primary SRDF group
+symrdf query -g &lt;dgname&gt;
+
+# 2. List all SRDF groups and inspect for any non-Synchronized entries
+symrdf list -v
+
+# 3. Confirm SRDF group port and link state — look for Online on all ports
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;rdf_group_number&gt;
+
+# 4. Show group-level detail including mode, link ports, and pair count
+symcfg -sid &lt;r1_sid&gt; show -rdfgrp &lt;rdf_group_number&gt;
+
+# 5. Verify all pairs report Synchronized (exits non-zero if any pair differs)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# 6. Check R2 side — run from an SE host connected to the R2 array
+symrdf query -g &lt;dgname&gt; -sid &lt;r2_sid&gt;
+
+# 7. Check WAN RTT between sites (run from a host at the primary site)
+ping -c 20 &lt;dr_site_gateway_or_storage_ip&gt;
+
+# 8. Pull write latency metrics from Unisphere Performance
+# Aria Operations / Unisphere: confirm write I/O response time is within baseline ±10%
+</code></pre>
+<p><strong>Checklist items to confirm:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Check</th>
-<th>Command</th>
-<th>Expected Result</th>
+<th>Expected</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pair state</td>
-<td><code>symrdf query -g &lt;group&gt;</code></td>
+<td>All pairs in <code>Synchronized</code> state</td>
+<td>No <code>Invalid</code>, <code>Split</code>, <code>Write Disabled</code>, or <code>Mixed</code> entries</td>
+</tr>
+<tr>
+<td>SRDF group port state</td>
+<td>All ports <code>Online</code> on both R1 and R2</td>
+</tr>
+<tr>
+<td>WAN RTT to DR site</td>
+<td>Within agreed latency budget (typically ≤5 ms RTT)</td>
+</tr>
+<tr>
+<td>Write I/O response time</td>
+<td>Within application baseline ±10%</td>
+</tr>
+<tr>
+<td>No pairs transitioning (SyncInProg) without a known cause</td>
+<td>Confirm against open change tickets</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="pair-states-and-what-they-mean-for-srdfs">Pair States and What They Mean for SRDF/S<a class="headerlink" href="#pair-states-and-what-they-mean-for-srdfs" title="Permanent link">&para;</a></h2>
+<p>Unlike SRDF/A, SRDF/S has no cycle buffer — every write is held until both sides acknowledge. The pair states therefore reflect whether the synchronous commitment chain is intact.</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Synchronized</code></td>
+<td>R1 and R2 contain identical data; all writes are being acknowledged at both sites</td>
+<td>None — normal operating state</td>
+</tr>
+<tr>
+<td><code>SyncInProg</code></td>
+<td>Initial synchronisation or resync is in progress; R2 is behind R1</td>
+<td>Monitor progress; do not failover until complete</td>
+</tr>
+<tr>
+<td><code>Write Disabled</code></td>
+<td>R2 volumes are not accepting writes; typically set during planned failover or maintenance</td>
+<td>Expected after failover; investigate if unexpected</td>
+</tr>
+<tr>
+<td><code>Invalid</code></td>
+<td>R2 data is not consistent with R1 — link failure caused writes to complete at R1 without R2</td>
+<td>Treat as a P1; confirm WAN health; resync required before R2 can be used</td>
+</tr>
+<tr>
+<td><code>Split</code></td>
+<td>Replication has been administratively stopped; R1 and R2 are diverging</td>
+<td>Expected during maintenance if deliberately split; treat as incident if unexpected</td>
+</tr>
+<tr>
+<td><code>Failed Over</code></td>
+<td>R2 is now the active side; R1 is suspended</td>
+<td>Expected after planned or unplanned failover</td>
+</tr>
+<tr>
+<td><code>Suspended</code></td>
+<td>Replication paused administratively (e.g., for array maintenance)</td>
+<td>Confirm suspension was planned; resume as soon as maintenance is complete</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Any state other than <code>Synchronized</code> or <code>SyncInProg</code> during a planned maintenance window should be recorded in the change ticket. Any unexpected state change outside a change window is a P2 or higher incident.</p>
+</blockquote>
+<hr />
+<h2 id="wan-latency-impact-on-write-performance">WAN Latency Impact on Write Performance<a class="headerlink" href="#wan-latency-impact-on-write-performance" title="Permanent link">&para;</a></h2>
+<p>SRDF/S adds one WAN round trip to every host write. The relationship is approximately:</p>
+<pre><code>Effective write latency = local array write time + (WAN RTT / 2) + remote commit time
+</code></pre>
+<p><strong>What to monitor:</strong></p>
+<pre><code class="language-bash"># Continuous WAN RTT check from primary site to DR site storage port
+ping -i 5 -c 60 &lt;dr_storage_port_ip&gt; | tee /tmp/srdf_rtt_$(date +%Y%m%d).log
+
+# Check SRDF link bandwidth utilisation via Unisphere REST API
+UNISPHERE=&quot;https://unisphere.example.com:8443/univmax/restapi&quot;
+SID=&quot;000123456789&quot;
+RDFG=10
+AUTH=&quot;-u smc:password --insecure&quot;
+
+curl -s $AUTH \
+  &quot;$UNISPHERE/performance/RDFGroup/metrics&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &quot;{
+    \&quot;symmetrixId\&quot;: \&quot;${SID}\&quot;,
+    \&quot;rdfgNumber\&quot;: ${RDFG},
+    \&quot;dataFormat\&quot;: \&quot;Average\&quot;,
+    \&quot;metrics\&quot;: [\&quot;MBSentPerSec\&quot;,\&quot;MBReceivedPerSec\&quot;,\&quot;WriteResponseTime\&quot;,\&quot;AvgIOServiceTime\&quot;]
+  }&quot; | python3 -m json.tool
+
+# From SE host: check SRDF group statistics
+symstat -sid 000123456789 -type rdfg -rdfg 10
+
+# Monitor write latency continuously at 60-second intervals
+watch -n 60 'symrdf -sid 000123456789 -rdfg 10 list -v | grep -E &quot;Latency|WriteResp|State&quot;'
+</code></pre>
+<p><strong>Thresholds:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Normal</th>
+<th>Investigate</th>
+<th>Escalate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAN RTT (ping)</td>
+<td>≤5 ms</td>
+<td>5–10 ms</td>
+<td>&gt;10 ms</td>
+</tr>
+<tr>
+<td>Write response time vs baseline</td>
+<td>±10%</td>
+<td>+10–25%</td>
+<td>&gt;25% or application SLA breach</td>
+</tr>
+<tr>
+<td>SRDF link utilisation</td>
+<td>&lt;70%</td>
+<td>70–85%</td>
+<td>&gt;85%</td>
+</tr>
+</tbody>
+</table>
+<p>A sustained WAN RTT increase of more than 2 ms above baseline should be reported to the network team before it impacts application SLAs.</p>
+<hr />
+<h2 id="pre-change-checklist-before-maintenance-on-srdfs-arrays">Pre-Change Checklist Before Maintenance on SRDF/S Arrays<a class="headerlink" href="#pre-change-checklist-before-maintenance-on-srdfs-arrays" title="Permanent link">&para;</a></h2>
+<p>Complete this checklist and record results in the change ticket before any maintenance that touches R1 or R2 array hardware, firmware, or SRDF configuration.</p>
+<pre><code class="language-bash"># Capture baseline state before the window
+symrdf query -g &lt;dgname&gt; &gt; /tmp/srdf_s_prechange_$(date +%Y%m%d_%H%M).txt
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;rdf_group_number&gt; &gt;&gt; /tmp/srdf_s_prechange_$(date +%Y%m%d_%H%M).txt
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+echo &quot;Baseline captured at $(date)&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All SRDF/S pairs are <code>Synchronized</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>WAN RTT is within baseline (≤5 ms)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SRDF link ports are <code>Online</code> on R1 and R2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SYMCLI access confirmed on both R1 and R2 SE hosts</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>RDF group number, R1 SID, R2 SID documented</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Application owners notified of potential write latency impact</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DR site team is available and contactable during the window</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Rollback plan documented (what to do if maintenance causes pair to go <code>Invalid</code>)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pre-change pair state baseline captured to file</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Change ticket number recorded</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="converting-srdfs-to-srdfa-temporarily-during-array-maintenance">Converting SRDF/S to SRDF/A Temporarily During Array Maintenance<a class="headerlink" href="#converting-srdfs-to-srdfa-temporarily-during-array-maintenance" title="Permanent link">&para;</a></h2>
+<p>When array maintenance on R1 or R2 will cause extended WAN disruption (e.g., firmware upgrades, controller failover tests, port quiescing), temporarily converting the SRDF group to asynchronous mode removes the write-penalty impact on application hosts during the window. Convert back to synchronous after maintenance is complete.</p>
+<blockquote>
+<p>Only attempt this procedure if your SRDF group licences include SRDF/A capability. Confirm with the array team before converting.</p>
+</blockquote>
+<p><strong>Convert R1 RDF group from SRDF/S to SRDF/A:</strong></p>
+<pre><code class="language-bash"># Step 1: Confirm current mode and capture baseline
+symcfg -sid &lt;r1_sid&gt; show -rdfgrp &lt;rdf_group_number&gt;
+
+# Step 2: Suspend the SRDF group cleanly before mode change
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; suspend
+
+# Confirm pairs are Suspended
+symrdf query -g &lt;dgname&gt;
+
+# Step 3: Set the RDF group mode to Asynchronous (SRDF/A)
+# Note: mode change is performed via Unisphere GUI or SE set command
+# Via SYMCLI (SE 9.x+):
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; set mode async
+
+# Step 4: Resume replication in async mode
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume
+
+# Confirm pairs are now replicating in Asynchronous mode
+symcfg -sid &lt;r1_sid&gt; show -rdfgrp &lt;rdf_group_number&gt; | grep -i mode
+symrdf query -g &lt;dgname&gt;
+</code></pre>
+<p><strong>Perform array maintenance.</strong> Then convert back to SRDF/S:</p>
+<pre><code class="language-bash"># Step 1: Suspend async replication cleanly
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; suspend
+
+# Step 2: Set mode back to Synchronous (SRDF/S)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; set mode sync
+
+# Step 3: Resume — replication will resync and return to Synchronized state
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume
+
+# Step 4: Monitor resync progress (SyncInProg is expected until complete)
+watch -n 30 'symrdf query -g &lt;dgname&gt; | grep -v Synchronized'
+
+# Step 5: Confirm all pairs are Synchronized before declaring maintenance complete
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+</code></pre>
+<hr />
+<h2 id="suspending-and-resuming-srdfs-replication">Suspending and Resuming SRDF/S Replication<a class="headerlink" href="#suspending-and-resuming-srdfs-replication" title="Permanent link">&para;</a></h2>
+<p>Use suspend when maintenance requires the R2 array to be temporarily unavailable (e.g., controller failover, port maintenance). Keep the suspension window as short as possible — every write during the suspension creates divergence that must be resynced.</p>
+<pre><code class="language-bash"># Step 1: Confirm all pairs are Synchronized before suspending
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# Step 2: Suspend SRDF/S replication for the device group
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; suspend
+
+# Confirm pairs are now Suspended (R1 continues I/O; R2 is held)
+symrdf query -g &lt;dgname&gt;
+
+# -- Perform maintenance --
+
+# Step 3: Resume replication after maintenance
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume
+
+# Step 4: Monitor resync — SyncInProg expected; watch until Synchronized
+watch -n 30 'symrdf query -g &lt;dgname&gt;'
+
+# Step 5: Verify full synchronisation before closing the change ticket
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+</code></pre>
+<hr />
+<h2 id="planned-failover-procedure-for-srdfs">Planned Failover Procedure for SRDF/S<a class="headerlink" href="#planned-failover-procedure-for-srdfs" title="Permanent link">&para;</a></h2>
+<p>A planned failover is initiated when the primary site is taken offline deliberately (e.g., planned maintenance, site power work, or a DR test). Because SRDF/S is synchronous, R2 is always current at the point of failover.</p>
+<pre><code class="language-bash"># Step 1: Quiesce applications on the primary site
+# -- Application owner confirms quiesce --
+
+# Step 2: Confirm all pairs are Synchronized
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# Step 3: Capture pre-failover state baseline
+symrdf query -g &lt;dgname&gt; &gt; /tmp/srdf_s_failover_prestate_$(date +%Y%m%d_%H%M).txt
+
+# Step 4: Initiate planned failover (R1 suspended, R2 write-enabled)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failover
+
+# Confirm pair state shows Failed Over / Write Disabled on R1
+symrdf query -g &lt;dgname&gt;
+symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; query -g &lt;dgname&gt;
+
+# Step 5: Present R2 volumes to DR site hosts
+# -- Storage team enables host access to R2 LUNs --
+
+# Step 6: DR site application team mounts volumes and starts applications
+# -- DR team confirms applications are running at DR site --
+</code></pre>
+<hr />
+<h2 id="unplanned-failover-procedure-for-srdfs">Unplanned Failover Procedure for SRDF/S<a class="headerlink" href="#unplanned-failover-procedure-for-srdfs" title="Permanent link">&para;</a></h2>
+<p>An unplanned failover occurs when the primary site fails without a clean shutdown. Because SRDF/S is synchronous, R2 is consistent with the last successfully committed write — no data is lost for writes that received application acknowledgement.</p>
+<pre><code class="language-bash"># Step 1: Confirm primary site is unreachable and an outage decision has been made
+# -- Management authorisation required before proceeding --
+
+# Step 2: From the DR site SE host, check R2 pair state
+symrdf query -g &lt;dgname&gt; -sid &lt;r2_sid&gt;
+
+# Expected state: Invalid or Suspended (link dropped; R2 data is consistent)
+
+# Step 3: Initiate failover from R2 side (force flag required without R1 connectivity)
+symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failover -force
+
+# Step 4: Confirm R2 pairs are now Write Disabled → R2 side should be writable
+symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; query -g &lt;dgname&gt;
+
+# Step 5: Present R2 volumes to DR hosts and start applications
+# -- Storage and application teams confirm --
+
+# Step 6: Document the failover time, last known sync state, and any data exposure window
+</code></pre>
+<blockquote>
+<p>For unplanned failovers, open an incident ticket immediately and engage the vendor (Dell Technologies support) if pair state is <code>Invalid</code> and there is any question about R2 data consistency.</p>
+</blockquote>
+<hr />
+<h2 id="resync-after-maintenance-induced-split">Resync After Maintenance-Induced Split<a class="headerlink" href="#resync-after-maintenance-induced-split" title="Permanent link">&para;</a></h2>
+<p>After a suspension or split during maintenance, pairs must be resynced before SRDF/S protection is restored. Resync sends only the changed tracks (dirty tracks) from R1 to R2.</p>
+<pre><code class="language-bash"># Step 1: Confirm R1 is the current active side and both arrays are accessible
+symcfg list
+symrdf query -g &lt;dgname&gt;
+
+# Step 2: Initiate resync (re-establish synchronous pairing from R1 to R2)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; establish
+
+# Alternative if pairs are in Split state:
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume
+
+# Step 3: Monitor progress — pairs will show SyncInProg until dirty tracks are cleared
+watch -n 30 'symrdf query -g &lt;dgname&gt;'
+
+# Check the number of invalid tracks remaining (decreasing count = progress)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; list -v | grep -i &quot;invalid\|track&quot;
+
+# Step 4: Confirm all pairs are Synchronized
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# Step 5: Record resync completion time in the change ticket
+echo &quot;Resync completed at $(date)&quot;
+</code></pre>
+<p>Resync duration depends on the volume of data that changed during the suspension window and available SRDF link bandwidth. For large volumes with high write rates during suspension, estimate 1–4 hours for full resync.</p>
+<hr />
+<h2 id="failback-after-planned-failover">Failback After Planned Failover<a class="headerlink" href="#failback-after-planned-failover" title="Permanent link">&para;</a></h2>
+<p>Failback returns replication to the original direction (R1 as source, R2 as target) after production has been running at the DR site.</p>
+<pre><code class="language-bash"># Step 1: Quiesce DR site applications
+# -- DR application team confirms quiesce --
+
+# Step 2: From DR SE host — confirm current pair state (should be Failed Over)
+symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; query -g &lt;dgname&gt;
+
+# Step 3: Initiate failback (resync R1 from R2, then restore original direction)
+symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failback
+
+# Step 4: Monitor until pairs reach Synchronized state in original direction
+watch -n 30 'symrdf query -g &lt;dgname&gt; -sid &lt;r1_sid&gt;'
+
+# Step 5: Confirm R1 is now the active R1 side (Synchronized, not Write Disabled)
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# Step 6: Re-present R1 volumes to primary site hosts and restart applications
+# -- Application team confirms production is running at primary site --
+
+# Step 7: Confirm R2 is again the synchronous DR target (Write Disabled on R2)
+symrdf query -g &lt;dgname&gt; -sid &lt;r2_sid&gt;
+</code></pre>
+<hr />
+<h2 id="srm-integration-automated-vs-manual-failover">SRM Integration: Automated vs Manual Failover<a class="headerlink" href="#srm-integration-automated-vs-manual-failover" title="Permanent link">&para;</a></h2>
+<p>SRDF/S is registered with VMware Site Recovery Manager (SRM) via the Dell EMC Storage Replication Adapter (SRA). SRM drives SRDF/S failover as part of recovery plan execution and handles storage steps automatically.</p>
+<p><strong>When SRM drives failover:</strong></p>
+<ol>
+<li>SRM executes the recovery plan on the DR SRM server.</li>
+<li>SRM calls the Dell SRA, which issues <code>symrdf failover</code> against the mapped SRDF group on behalf of SRM.</li>
+<li>SRA confirms pair state transitions before SRM proceeds to datastore resignaturing and VM registration.</li>
+<li>SRM powers on VMs at the DR site in the order defined by the recovery plan.</li>
+</ol>
+<p><strong>When manual SYMCLI failover is used instead:</strong></p>
+<p>Use manual SYMCLI failover when:
+- SRM is unavailable or has lost connectivity to the SRA.
+- The failure affects SRM infrastructure at the primary site.
+- DR testing is being performed outside SRM (e.g., storage-only validation).</p>
+<p>In manual failover, you must replicate the steps SRM would have taken:</p>
+<pre><code class="language-bash"># 1. Failover SRDF/S group
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failover
+
+# 2. Present R2 LUNs to ESXi hosts at DR site (zoning / masking)
+# -- Storage team action --
+
+# 3. Resignature VMFS datastores at DR site (if not SRM-managed)
+# esxcli storage vmfs snapshot list
+# esxcli storage vmfs snapshot resignature -l &lt;label&gt;
+
+# 4. Register and power on VMs manually in vCenter at DR site
+# -- VMware team action --
+</code></pre>
+<p><strong>SRM test failover vs live failover:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>SRDF/S Impact</th>
+<th>R1 Data Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM test failover</td>
+<td>R2 snapshot presented; no SRDF/S pair state change</td>
+<td>None — production continues unaffected</td>
+</tr>
+<tr>
+<td>SRM planned migration</td>
+<td>Clean failover; pairs transition to <code>Failed Over</code></td>
+<td>R1 suspended; R2 becomes active</td>
+</tr>
+<tr>
+<td>SRM disaster recovery</td>
+<td>Force failover; pairs transition from <code>Invalid</code> to <code>Failed Over</code></td>
+<td>R1 offline; R2 becomes active</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="on-call-triage-srdfs-lag-alert-or-pair-state-change">On-Call Triage: SRDF/S Lag Alert or Pair State Change<a class="headerlink" href="#on-call-triage-srdfs-lag-alert-or-pair-state-change" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Step 1: Identify current pair states
+symrdf query -g &lt;dgname&gt;
+
+# Step 2: Check SRDF group port and link state
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;rdf_group_number&gt;
+
+# Step 3: Check WAN RTT to DR site
+ping -c 10 &lt;dr_site_ip&gt;
+
+# Step 4: Check for any pairs that are not Synchronized
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; list -v | grep -v Synchronized
+
+# Step 5: Pull write latency metrics from Unisphere for the past hour
+# (Unisphere GUI: Performance &gt; RDF Group &gt; select group &gt; Write Response Time)
+</code></pre>
+<p><strong>Triage decision table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Immediate Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pairs go <code>Invalid</code></td>
+<td>WAN link dropped; R1 writes completed without R2 commitment</td>
+<td>Check inter-site network; engage network team; do not failover until decision made by management</td>
+</tr>
+<tr>
+<td>Pairs go <code>SyncInProg</code> unexpectedly</td>
+<td>Brief link interruption resolved; resync in progress</td>
+<td>Monitor progress — no action if trending toward <code>Synchronized</code> within 30 min</td>
+</tr>
+<tr>
+<td>Write latency spike with pairs still <code>Synchronized</code></td>
+<td>WAN RTT increase; link congestion</td>
+<td>Check ping RTT; engage network team; monitor application SLA thresholds</td>
+</tr>
+<tr>
+<td>Pairs go <code>Suspended</code> unexpectedly</td>
+<td>Manual or automated suspension triggered without change ticket</td>
+<td>Identify who suspended; confirm whether intentional; resume if safe</td>
+</tr>
+<tr>
+<td>SRDF group port goes <code>Offline</code></td>
+<td>Physical link failure or port fault</td>
+<td>Engage storage and network teams; check array event log: <code>symev -sid &lt;sid&gt; list -v</code></td>
+</tr>
+<tr>
+<td>Pairs go <code>Split</code> unexpectedly</td>
+<td>Administrative split without authorisation or automation error</td>
+<td>Identify cause; issue <code>symrdf resume</code> once link is confirmed healthy</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>If primary site connectivity is lost entirely and a failover decision is required, escalate to the DR decision authority. Do not initiate unplanned failover without management authorisation except when automated SRM recovery plans have been pre-approved for automatic execution.</p>
+</blockquote>
+<hr />
+<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm all pairs are Synchronized
+symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify -synchronized
+
+# Confirm group port states are Online
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;rdf_group_number&gt;
+
+# Confirm WAN RTT is within baseline
+ping -c 10 &lt;dr_site_ip&gt;
+
+# Capture post-change state for the change ticket
+symrdf query -g &lt;dgname&gt; &gt; /tmp/srdf_s_postchange_$(date +%Y%m%d_%H%M).txt
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Validation Item</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td>All pairs <code>Synchronized</code></td>
+<td>Yes — no exceptions</td>
 </tr>
 <tr>
-<td>Group list</td>
-<td><code>symrdf list -v</code></td>
-<td>No <code>Invalid</code> or <code>Split</code> entries</td>
+<td>Group ports <code>Online</code> on R1 and R2</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td>Link connectivity</td>
-<td><code>symcfg list -rdfg</code></td>
-<td>Port state <code>Online</code></td>
+<td>WAN RTT within baseline (≤5 ms)</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td>Write response time</td>
-<td>Aria Operations / Unisphere</td>
-<td>Within baseline ±10%</td>
+<td>Write I/O response time within baseline ±10%</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td>Site latency</td>
-<td>Network monitoring</td>
-<td>≤5ms RTT</td>
+<td>No open alerts in Aria Operations / Unisphere</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Post-change state baseline captured to file</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>

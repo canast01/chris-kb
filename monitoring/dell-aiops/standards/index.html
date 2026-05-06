@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-tagging-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Tagging Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation-priority-and-response-sla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation Priority and Response SLA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deferral-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferral Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sensitivity-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensitivity Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-forecast-alert-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Forecast Alert Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +819,180 @@
 
 
 <h1 id="dell-aiops-standards">Dell AIOps Standards<a class="headerlink" href="#dell-aiops-standards" title="Permanent link">&para;</a></h1>
-<p>CloudIQ tagging should be aligned with organisational standards: every storage system must be tagged with <code>site</code>, <code>environment</code> (prod/non-prod), and <code>tier</code> (tier1/tier2/tier3) for effective recommendation filtering and reporting. Alert routing rules are configured per recommendation severity: Critical and High recommendations trigger immediate notifications; Medium and Low are reviewed in the weekly operational queue. AI-generated recommendations that require infrastructure changes must follow the standard change management approval workflow before action is taken. Integration with the ITSM system ensures all actioned recommendations are tracked as change records.</p>
+<h2 id="system-tagging-requirements">System Tagging Requirements<a class="headerlink" href="#system-tagging-requirements" title="Permanent link">&para;</a></h2>
+<p>Every storage system managed by Dell AIOps must carry the three mandatory tags. Tags are applied in CloudIQ and propagate to AIOps recommendation filtering and reporting.</p>
+<table>
+<thead>
+<tr>
+<th>Tag Key</th>
+<th>Required</th>
+<th>Example Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>site</code></td>
+<td>Yes</td>
+<td><code>dc1</code>, <code>dc2</code>, <code>dr</code></td>
+</tr>
+<tr>
+<td><code>environment</code></td>
+<td>Yes</td>
+<td><code>prod</code>, <code>non-prod</code>, <code>dev</code></td>
+</tr>
+<tr>
+<td><code>tier</code></td>
+<td>Yes</td>
+<td><code>tier1</code>, <code>tier2</code>, <code>tier3</code></td>
+</tr>
+</tbody>
+</table>
+<p>Untagged systems must be remediated within 48 hours. Monthly tag compliance report: filter untagged assets in CloudIQ &gt; Assets.</p>
+<h2 id="recommendation-priority-and-response-sla">Recommendation Priority and Response SLA<a class="headerlink" href="#recommendation-priority-and-response-sla" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Examples</th>
+<th>Response SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Imminent capacity exhaustion, active hardware fault</td>
+<td>Acknowledge within 15 min; action same business day</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Performance root cause identified, firmware vulnerability</td>
+<td>Review within 4 hours; action within next change window</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Approaching threshold, sub-optimal configuration</td>
+<td>Review in weekly ops queue</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Best-practice suggestion, non-urgent tuning</td>
+<td>Review in monthly review</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-routing">Alert Routing<a class="headerlink" href="#alert-routing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Notification Channel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>PagerDuty (on-call rotation)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Email to storage-ops + Slack/Teams channel</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Email to storage-ops weekly digest</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>CloudIQ portal only</td>
+</tr>
+</tbody>
+</table>
+<p>Alert routing rules are configured in <strong>CloudIQ portal &gt; Settings &gt; Notifications</strong>. Each rule must be owned and reviewed by the storage operations team lead.</p>
+<h2 id="change-management-requirements">Change Management Requirements<a class="headerlink" href="#change-management-requirements" title="Permanent link">&para;</a></h2>
+<p>All AIOps recommendations that require changes to production infrastructure must follow the standard change management process:</p>
+<ol>
+<li>Raise a ServiceNow change request, referencing the CloudIQ recommendation ID</li>
+<li>Include the recommended action, affected system, and risk assessment</li>
+<li>Obtain change advisory board (CAB) or standard change approval as appropriate</li>
+<li>Action the change during the approved window</li>
+<li>Close the change record with outcome and post-change health score</li>
+</ol>
+<p>Recommendations that involve emergency changes (Critical priority, imminent failure) may use the emergency change process — document after the fact.</p>
+<h2 id="deferral-policy">Deferral Policy<a class="headerlink" href="#deferral-policy" title="Permanent link">&para;</a></h2>
+<p>If a High or Critical recommendation cannot be actioned within the SLA:</p>
+<ol>
+<li>Document the deferral rationale in the ServiceNow change/incident record</li>
+<li>Note the deferred recommendation ID and target date in the weekly ops notes</li>
+<li>Re-review at the next weekly ops meeting</li>
+<li>Escalate to management if a High recommendation has been deferred more than twice</li>
+</ol>
+<h2 id="sensitivity-configuration">Sensitivity Configuration<a class="headerlink" href="#sensitivity-configuration" title="Permanent link">&para;</a></h2>
+<p>AIOps anomaly detection sensitivity can be tuned in CloudIQ to reduce noise from known workload patterns.</p>
 <ul>
-<li>Required tags: <code>site</code>, <code>environment</code>, <code>tier</code></li>
-<li>Alert routing: Critical/High → immediate notification; Medium/Low → weekly review queue</li>
-<li>Recommendation action: requires change management approval for infrastructure changes</li>
-<li>ITSM tracking: all actioned recommendations logged as change records</li>
+<li>Default sensitivity level: Medium (recommended starting point)</li>
+<li>For stable, predictable workloads: reduce sensitivity to Low to reduce false positives</li>
+<li>For tier-1 workloads with strict SLAs: increase sensitivity to High for earlier detection</li>
+<li>Changes to sensitivity settings must be reviewed quarterly</li>
 </ul>
+<h2 id="capacity-forecast-alert-thresholds">Capacity Forecast Alert Thresholds<a class="headerlink" href="#capacity-forecast-alert-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Days until capacity threshold</td>
+<td>45 days</td>
+<td>15 days</td>
+</tr>
+<tr>
+<td>Capacity used (usable)</td>
+<td>70%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>Data reduction ratio decline</td>
+<td>&gt; 20% below 30-day baseline</td>
+<td>&gt; 30% decline</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reporting-cadence">Reporting Cadence<a class="headerlink" href="#reporting-cadence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Schedule</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIOps Recommendations Summary</td>
+<td>Weekly (Mondays)</td>
+<td>Storage ops lead</td>
+</tr>
+<tr>
+<td>Anomaly Trend Analysis</td>
+<td>Monthly</td>
+<td>Storage ops lead</td>
+</tr>
+<tr>
+<td>Capacity Forecast Review</td>
+<td>Monthly</td>
+<td>Storage team + capacity planner</td>
+</tr>
+<tr>
+<td>Recommendation Backlog Status</td>
+<td>Weekly ops meeting</td>
+<td>Storage ops team</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-sddc-manager-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC — SDDC Manager Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging-and-siem-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging and SIEM Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-access-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Access Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,17 +808,186 @@
 
 
 <h1 id="vmware-cloud-foundation-security">VMware Cloud Foundation Security<a class="headerlink" href="#vmware-cloud-foundation-security" title="Permanent link">&para;</a></h1>
-<p>VCF credential rotation is managed centrally through SDDC Manager's Password Management feature, which rotates passwords for ESXi, vCenter, NSX, and SDDC Manager service accounts on a configurable schedule (recommended: 90-day maximum). SDDC Manager RBAC provides three built-in roles — <code>ADMIN</code>, <code>OPERATOR</code>, and <code>VIEWER</code> — which should be mapped to AD groups rather than local accounts; local accounts should be reserved for break-glass access only and their passwords stored in an enterprise vault. All audit events for SDDC Manager operations are logged to <code>/var/log/vmware/vcf/sddc-manager/</code> and should be forwarded to a SIEM via syslog for retention and alerting.</p>
-<p><strong>Security hardening checklist:</strong>
-- [ ] All default passwords rotated via SDDC Manager Password Management at first use
-- [ ] Password rotation schedule set to 90 days or per organisation policy
-- [ ] SDDC Manager RBAC roles mapped to AD groups; local <code>admin</code> account locked post-setup
-- [ ] TLS 1.2 minimum enforced on all VCF component endpoints (verify via SDDC Manager UI)
-- [ ] Certificate replacement for all VCF components performed via SDDC Manager Certificate Management
-- [ ] Syslog forwarding to SIEM configured: SDDC Manager &gt; Administration &gt; Syslog
-- [ ] Network access to SDDC Manager UI (443) restricted to management jump-host CIDR
-- [ ] vSAN data-at-rest encryption enabled for workload domains containing sensitive workloads
-- [ ] Review SDDC Manager audit logs monthly for privilege escalation or unexpected API calls</p>
+<blockquote>
+<p>Part of the <a href="../">VCF</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All default passwords rotated via SDDC Manager Password Management at first use</li>
+<li>[ ] Password rotation schedule configured to 90 days (or per policy)</li>
+<li>[ ] SDDC Manager RBAC roles mapped to AD groups — no shared local accounts for day-to-day operations</li>
+<li>[ ] Local <code>admin</code> and <code>vcf</code> accounts locked after initial deployment; passwords stored in vault</li>
+<li>[ ] TLS 1.2 minimum enforced on all VCF component endpoints (verify via SDDC Manager Security UI)</li>
+<li>[ ] Certificates for all components replaced with CA-signed certificates via SDDC Manager Certificate Management</li>
+<li>[ ] Syslog forwarding to SIEM configured under Administration → Syslog</li>
+<li>[ ] Network access to SDDC Manager UI (TCP 443) restricted to management jump-host CIDR via firewall</li>
+<li>[ ] vSAN data-at-rest encryption enabled for workload domains handling sensitive data</li>
+<li>[ ] SDDC Manager audit logs reviewed monthly for privilege escalation or unexpected API activity</li>
+</ul>
+<hr />
+<h2 id="rbac-sddc-manager-roles">RBAC — SDDC Manager Roles<a class="headerlink" href="#rbac-sddc-manager-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADMIN</td>
+<td>Full access — lifecycle, security, credential rotation</td>
+</tr>
+<tr>
+<td>OPERATOR</td>
+<td>Day-to-day operations — health, tasks, monitoring; no credential access</td>
+</tr>
+<tr>
+<td>VIEWER</td>
+<td>Read-only dashboards and health views</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Assign roles to AD groups:</strong></p>
+<ol>
+<li>SDDC Manager → Administration → Single Sign-On → add Active Directory identity source</li>
+<li>Administration → Users and Groups → assign roles to AD groups</li>
+<li>Remove direct user-level assignments — group-based assignment is auditable and survives staff changes</li>
+</ol>
+<hr />
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>All VCF component certificates are managed through SDDC Manager's Certificate Management workflow. Do not replace certificates directly through component UIs (vCenter VAMI, NSX Manager) — SDDC Manager will lose track of the state.</p>
+<pre><code>SDDC Manager → Security → Certificate Management
+</code></pre>
+<p><strong>Replacement procedure:</strong></p>
+<ol>
+<li>Generate CSR in SDDC Manager for the target component</li>
+<li>Submit CSR to internal CA and receive the signed certificate + CA chain</li>
+<li>Import the signed cert and chain back into SDDC Manager</li>
+<li>SDDC Manager installs the certificate on the component and restarts affected services</li>
+</ol>
+<p><strong>Check certificate expiry from the appliance:</strong></p>
+<pre><code class="language-bash"># SDDC Manager certificate
+openssl s_client -connect &lt;sddc-manager-ip&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -subject -dates
+
+# NSX Manager certificate
+openssl s_client -connect &lt;nsx-mgr-ip&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -subject -dates
+
+# vCenter certificate
+openssl s_client -connect &lt;vcenter-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -subject -dates
+</code></pre>
+<p><strong>Lead times:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Timeline</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>60 days</td>
+<td>Plan renewal — raise change ticket</td>
+</tr>
+<tr>
+<td>30 days</td>
+<td>Schedule maintenance window</td>
+</tr>
+<tr>
+<td>7 days</td>
+<td>Treat as P2 — renew immediately</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
+<pre><code>SDDC Manager → Security → Password Management
+</code></pre>
+<ul>
+<li>View current password state for all managed accounts</li>
+<li>Rotate individual accounts or schedule bulk rotation</li>
+<li>Password rotation log shows last rotated timestamp per account</li>
+</ul>
+<p><strong>Break-glass rotation procedure (manual):</strong></p>
+<ol>
+<li>Retrieve the break-glass account password from the enterprise vault</li>
+<li>Rotate the password in SDDC Manager → Password Management</li>
+<li>Update the vault entry with the new password immediately</li>
+<li>Log the rotation in the change management system</li>
+</ol>
+<hr />
+<h2 id="audit-logging-and-siem-forwarding">Audit Logging and SIEM Forwarding<a class="headerlink" href="#audit-logging-and-siem-forwarding" title="Permanent link">&para;</a></h2>
+<pre><code>SDDC Manager → Administration → Syslog → Add Syslog Server
+</code></pre>
+<ul>
+<li>Protocol: TLS recommended for production (port 6514); UDP/TCP 514 also supported</li>
+<li>Test: perform a UI action after configuring and verify the event appears in the SIEM</li>
+</ul>
+<p><strong>SDDC Manager audit log locations (SSH access):</strong></p>
+<pre><code class="language-bash">/var/log/vmware/vcf/sddc-manager/sddc-manager.log   # API and UI actions
+/var/log/vmware/vcf/lcm/lcm.log                     # Lifecycle operations
+/var/log/vmware/vcf/domainmanager/domainmanager.log  # Domain management events
+</code></pre>
+<hr />
+<h2 id="network-access-controls">Network Access Controls<a class="headerlink" href="#network-access-controls" title="Permanent link">&para;</a></h2>
+<p>Firewall rules for SDDC Manager management plane:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management jump-host CIDR</td>
+<td>SDDC Manager IP</td>
+<td>TCP 443</td>
+<td>SDDC Manager UI/API</td>
+</tr>
+<tr>
+<td>SDDC Manager</td>
+<td>vCenter IPs</td>
+<td>TCP 443</td>
+<td>Component management</td>
+</tr>
+<tr>
+<td>SDDC Manager</td>
+<td>NSX Manager IPs</td>
+<td>TCP 443</td>
+<td>NSX API</td>
+</tr>
+<tr>
+<td>SDDC Manager</td>
+<td>ESXi management IPs</td>
+<td>TCP 443, 902</td>
+<td>Host management</td>
+</tr>
+<tr>
+<td>SDDC Manager</td>
+<td>SIEM IP</td>
+<td>UDP/TCP 514 or TLS 6514</td>
+<td>Syslog</td>
+</tr>
+</tbody>
+</table>
+<p>Block direct access from workstation VLANs to SDDC Manager — all access goes through the management jump host.</p>
+<hr />
+<h2 id="vsan-encryption">vSAN Encryption<a class="headerlink" href="#vsan-encryption" title="Permanent link">&para;</a></h2>
+<p>For workload domains handling sensitive data:</p>
+<ol>
+<li>Deploy and configure a KMS (Key Management Server) — SDDC Manager supports vSphere native KMS.</li>
+<li>In vCenter for the workload domain: Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enable.</li>
+<li>Define a key rotation schedule (annual minimum or per policy) and document the rotation procedure.</li>
+<li>Ensure the KMS is highly available — KMS loss makes the vSAN datastore inaccessible.</li>
+</ol>
+<p>Key rotation is performed through vCenter → vSAN → Key Management → Rotate Keys. This is a live operation and does not require downtime.</p>
 
 
 

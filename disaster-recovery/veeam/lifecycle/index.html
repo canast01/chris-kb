@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#release-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,8 @@
 
 
 <h1 id="veeam-lifecycle">Veeam Lifecycle<a class="headerlink" href="#veeam-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Veeam releases major versions annually (e.g., VBR 12, 12.1, 12.2) with cumulative patches (P-releases) throughout the year. N-1 minor version support means a VBR 12.0 proxy is supported when the Backup Server runs 12.1, but N-2 is not supported and will produce upgrade warnings. Veeam ONE must match the VBR major version. Upgrade order: Veeam Backup Server first, then Backup Proxies, then Repository agents (Veeam Agent for Linux/Windows on managed repositories).</p>
+<h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
+<p>Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.</p>
 <table>
 <thead>
 <tr>
@@ -742,26 +826,119 @@
 </tr>
 <tr>
 <td>Veeam ONE</td>
-<td>2nd (if deployed)</td>
-<td>Must match VBR major version</td>
+<td>2nd</td>
+<td>Must match VBR major version — upgrade immediately after VBR</td>
 </tr>
 <tr>
 <td>Backup Proxies</td>
 <td>3rd</td>
-<td>Managed via VBR console</td>
+<td>Managed via VBR console; can be pushed remotely</td>
 </tr>
 <tr>
 <td>Repository Agents</td>
 <td>4th</td>
-<td>Linux/Windows agents updated via VBR</td>
+<td>Veeam Agent for Linux/Windows on managed repos</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>License model: per-socket (legacy) or Veeam Universal License (VUL) per-workload — track consumed instances vs purchased in the VBR license report.</li>
-<li>EOL versions: check veeam.com/product-lifecycle for the current support matrix.</li>
-<li>Config DB backup: run <code>Veeam Backup &amp; Replication &gt; Main Menu &gt; Export Configuration</code> before every upgrade.</li>
-</ul>
+<p>Check EOL dates: <a href="https://www.veeam.com/product-lifecycle.html">veeam.com/product-lifecycle</a></p>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># 1. Export VBR configuration backup before any upgrade
+# Main Menu → Configuration Backup → Backup Now
+# Verify backup location: C:\VBR\Config\ (default)
+
+# 2. Check no active jobs are running
+# Home → Jobs → Active Jobs — must be empty
+
+# 3. Verify SQL Server version compatibility
+# VBR 12.x requires SQL Server 2016 or later
+</code></pre>
+<p>Additional checks:
+- [ ] Veeam ONE version is compatible with target VBR version
+- [ ] vCenter version supported by target VBR version
+- [ ] Proxy and repository OS versions supported (Windows Server 2016+ or supported Linux)</p>
+<h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Backup server upgrade</strong>: Run the VBR installer — it performs a pre-upgrade compatibility check, backs up the config DB, and upgrades in-place</p>
+</li>
+<li>
+<p><strong>Veeam ONE upgrade</strong> (if deployed): Run the Veeam ONE installer on the Veeam ONE server</p>
+</li>
+<li>
+<p><strong>Push proxy upgrades</strong>: VBR console → Backup Infrastructure → Backup Proxies → right-click each proxy → Upgrade</p>
+</li>
+<li>
+<p><strong>Update repositories</strong>: VBR console → Backup Infrastructure → Backup Repositories → right-click Linux repos → Upgrade</p>
+</li>
+<li>
+<p><strong>Post-upgrade validation</strong>: Run a test backup on a non-critical VM</p>
+</li>
+</ol>
+<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Supported?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proxy N-1 minor behind Backup Server</td>
+<td>Supported — upgrade within next cycle</td>
+</tr>
+<tr>
+<td>Proxy N-2 behind Backup Server</td>
+<td>Not supported — upgrade immediately</td>
+</tr>
+<tr>
+<td>Veeam ONE different major version</td>
+<td>Not supported — must match VBR major</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>License Model</th>
+<th>Tracking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Veeam Universal License (VUL)</td>
+<td>Per-workload; check consumed vs. licensed monthly</td>
+</tr>
+<tr>
+<td>Per-socket (legacy)</td>
+<td>Per vSphere socket; count sockets in vCenter</td>
+</tr>
+<tr>
+<td>Rental/subscription</td>
+<td>Annual renewal; Veeam licensing portal</td>
+</tr>
+</tbody>
+</table>
+<p>Check licence utilisation: Veeam Backup console → Main Menu → License.</p>
+<p>Alert at 90% utilisation — procurement lead time can be 2–4 weeks.</p>
+<h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
+<p>Run a configuration backup before every change and on a scheduled daily basis:</p>
+<pre><code class="language-powershell"># VBR config backup — always run before upgrades
+# Main Menu → Configuration Backup → Backup Now
+
+# Verify backup exists
+Get-ChildItem &quot;C:\VBR\Config\&quot; | Sort-Object LastWriteTime -Descending | Select-Object -First 5
+</code></pre>
+<p>Store the config backup off the Backup Server — it is useless if the server hosting it is lost.</p>
+<h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
+<p>When retiring a Veeam Backup Server:
+1. Export and archive all backup job configuration
+2. Migrate retention-period backups to a new repository or archive
+3. Un-register all proxies and repositories
+4. Deregister vCenter credentials
+5. Update CMDB to reflect decommission</p>
 
 
 

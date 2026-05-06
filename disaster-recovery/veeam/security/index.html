@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,130 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role-Based Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#immutable-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immutable Backups
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Immutable Backups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-hardened-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Hardened Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s3-object-lock-sobr-capacity-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 Object Lock (SOBR Capacity Tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cyberark-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CyberArk Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-factor-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Factor Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,17 +847,128 @@
 
 
 <h1 id="veeam-security">Veeam Security<a class="headerlink" href="#veeam-security" title="Permanent link">&para;</a></h1>
-<p>Veeam implements role-based access control through five built-in roles: Veeam Backup Administrator (full control), Veeam Backup Operator (run jobs), Veeam Restore Operator (restore only), Veeam Backup Viewer (read-only), and Veeam Tape Operator. Roles are assigned to AD users or groups in the VBR console under Users and Roles. Immutable backups are achieved via Linux hardened repositories (using <code>chattr +i</code> on backup files) or S3 Object Lock — both prevent deletion or modification for the configured immutability period, protecting against ransomware.</p>
-<p><strong>Security checklist</strong></p>
+<h2 id="role-based-access-control">Role-Based Access Control<a class="headerlink" href="#role-based-access-control" title="Permanent link">&para;</a></h2>
+<p>Veeam has five built-in roles — assign via AD groups, not individual users:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Veeam Backup Administrator</td>
+<td>Full VBR administration — assign sparingly</td>
+</tr>
+<tr>
+<td>Veeam Backup Operator</td>
+<td>Start/stop jobs, perform restores; no configuration changes</td>
+</tr>
+<tr>
+<td>Veeam Restore Operator</td>
+<td>Restore data only — no backup job management</td>
+</tr>
+<tr>
+<td>Veeam Backup Viewer</td>
+<td>Read-only — view jobs, reports, and configuration</td>
+</tr>
+<tr>
+<td>Veeam Tape Operator</td>
+<td>Tape library and vault management</td>
+</tr>
+</tbody>
+</table>
+<p>Configure: VBR console → Users and Roles → Add.</p>
+<h2 id="immutable-backups">Immutable Backups<a class="headerlink" href="#immutable-backups" title="Permanent link">&para;</a></h2>
+<p>Protect against ransomware by making backup files immutable:</p>
+<h3 id="linux-hardened-repository">Linux Hardened Repository<a class="headerlink" href="#linux-hardened-repository" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Verify immutability is active on backup files
+# (Veeam sets this automatically via chattr on the repository)
+lsattr /mnt/backup/ | head -20
+# Look for 'i' flag: ----i----------- ./backup.vbk
+
+# The VBR service account must be non-root on the hardened repo
+# VBR connects with a limited account; root SSH login should be disabled
+grep PermitRootLogin /etc/ssh/sshd_config   # Must show: no
+</code></pre>
+<h3 id="s3-object-lock-sobr-capacity-tier">S3 Object Lock (SOBR Capacity Tier)<a class="headerlink" href="#s3-object-lock-sobr-capacity-tier" title="Permanent link">&para;</a></h3>
+<p>Configure Object Lock in <code>Compliance</code> mode:
+- VBR console → SOBR → Capacity Tier → Enable immutability
+- Set immutability period = retention period + 10 days buffer
+- Compliance mode: even bucket owner cannot delete during immutability period</p>
+<h2 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h2>
+<p>Enable AES-256 encryption per backup job:</p>
+<pre><code class="language-powershell"># VBR console: Job Properties → Storage → Enable backup file encryption
+# Enter encryption password — stored in VBR config DB
+# Export encryption keys after creation: Main Menu → Manage Passwords → Export
+</code></pre>
+<p><strong>Key management is critical</strong>: loss of the encryption key = unrecoverable backup data.
+Store exported keys in CyberArk or an offline safe, separate from the VBR server.</p>
+<h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
+<p>VBR can retrieve infrastructure credentials from CyberArk at runtime:</p>
+<ol>
+<li>VBR console → Credentials → Add → CyberArk</li>
+<li>Configure CCP (Central Credential Provider) URL, application ID, and safe name</li>
+<li>Credentials retrieved at job runtime — never stored in VBR config DB</li>
+</ol>
+<h2 id="multi-factor-authentication">Multi-Factor Authentication<a class="headerlink" href="#multi-factor-authentication" title="Permanent link">&para;</a></h2>
+<p>For Veeam Backup Enterprise Manager (if deployed):
+- Enable MFA under Settings → Users → configure TOTP or SAML provider
+- Require MFA for all administrative accounts</p>
+<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Audit log location on Windows VBR server
+Get-Content &quot;C:\ProgramData\Veeam\Backup\Audit.log&quot; | Select-String &quot;Login|Modify|Delete&quot;
+
+# Review monthly and on any security incident
+</code></pre>
+<p>Forward to SIEM using a log forwarder (Filebeat, Splunk UF) on the VBR server. Alert on:
+- Failed login attempts
+- Job deletion or modification outside maintenance windows
+- Encryption key management operations</p>
+<h2 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Purpose</th>
+<th>Restriction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9392/TCP</td>
+<td>VBR console communication</td>
+<td>Restrict to admin management subnets</td>
+</tr>
+<tr>
+<td>2500–3300/TCP</td>
+<td>Data transfer (proxy)</td>
+<td>Open between proxies and repositories only</td>
+</tr>
+<tr>
+<td>443/TCP</td>
+<td>vCenter API</td>
+<td>VBR to vCenter</td>
+</tr>
+<tr>
+<td>6160/TCP</td>
+<td>Veeam Installer Service</td>
+<td>Between VBR server and managed components</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] RBAC: operators mapped to AD groups — no shared service account logins to console</li>
-<li>[ ] Encryption enabled on all jobs writing to cloud or off-site repositories (AES-256)</li>
-<li>[ ] Linux hardened repository: VBR connects as a non-root user; <code>su</code> disabled</li>
-<li>[ ] S3 Object Lock (if using object storage capacity tier): <code>Compliance</code> mode with retention period matching policy</li>
-<li>[ ] MFA enabled for Veeam Backup Enterprise Manager (if deployed)</li>
-<li>[ ] Audit log: review <code>C:\ProgramData\Veeam\Backup\Audit.log</code> monthly</li>
-<li>[ ] CyberArk integration: Veeam service account and infrastructure credentials retrieved via CCP</li>
-<li>[ ] Veeam Backup Server: Windows Firewall restricts management port (9392) to admin subnets only</li>
+<li>[ ] RBAC configured with AD groups — no shared admin logins</li>
+<li>[ ] Encryption enabled on all jobs writing to cloud or off-site targets</li>
+<li>[ ] Linux hardened repository deployed for immutable local backups</li>
+<li>[ ] S3 Object Lock in Compliance mode for cloud capacity tier</li>
+<li>[ ] Encryption keys exported and stored in CyberArk/offline vault</li>
+<li>[ ] VBR console port (9392) restricted to admin subnets via firewall</li>
+<li>[ ] CyberArk integration active for infrastructure credentials</li>
+<li>[ ] Audit log forwarded to SIEM; alerts configured</li>
+<li>[ ] Veeam ONE alert for any backup job failing &gt; 2 consecutive times</li>
 </ul>
 
 

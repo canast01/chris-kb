@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-collectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Collectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-pack-adapter-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Pack (Adapter) Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +819,9 @@
 
 
 <h1 id="aria-operations-architecture">Aria Operations Architecture<a class="headerlink" href="#aria-operations-architecture" title="Permanent link">&para;</a></h1>
-<p>VMware Aria Operations (formerly vROps) is built on an Analytics Cluster comprising primary and replica nodes, with an optional Data Node cluster for scale-out collection and storage. Remote Collectors are deployed at distributed sites to reduce WAN collection overhead and isolate data collection from the analytics tier. Metrics are ingested from vCenter, NSX, storage adapters, and custom endpoints via management packs. Deployment options include OVA-based on-premises clusters or the SaaS offering (Aria Operations Cloud).</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.</p>
+<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -736,23 +832,170 @@
 <tbody>
 <tr>
 <td>Primary Analytics Node</td>
-<td>Hosts UI, analytics engine, and master services</td>
+<td>Hosts UI, analytics engine, and master cluster services</td>
 </tr>
 <tr>
 <td>Replica Analytics Node</td>
-<td>Provides HA failover for the primary node</td>
+<td>Provides HA failover for the primary; promotes automatically on primary failure</td>
 </tr>
 <tr>
 <td>Data Nodes</td>
-<td>Scale-out storage and indexing tier</td>
+<td>Scale-out storage and indexing tier for large environments</td>
 </tr>
 <tr>
 <td>Remote Collectors</td>
-<td>Distributed collection agents, no local analytics</td>
+<td>Lightweight collection agents deployed at distributed sites; no local analytics</td>
 </tr>
 <tr>
 <td>Management Packs</td>
-<td>Adapter plugins for third-party integrations</td>
+<td>Adapter plugins that connect Aria Operations to third-party platforms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment-sizing">Deployment Sizing<a class="headerlink" href="#deployment-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>Nodes</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small (xSmall)</td>
+<td>1 node</td>
+<td>Lab / proof-of-concept</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Primary + Replica</td>
+<td>Up to ~3,000 VMs</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>Primary + Replica + 2–4 Data Nodes</td>
+<td>Up to ~10,000 VMs</td>
+</tr>
+<tr>
+<td>Extra Large</td>
+<td>Primary + Replica + 4+ Data Nodes</td>
+<td>Enterprise fleet</td>
+</tr>
+</tbody>
+</table>
+<p>Consult the VMware Aria Operations Sizing Guide for current VM/object count thresholds per node size.</p>
+<h2 id="remote-collectors">Remote Collectors<a class="headerlink" href="#remote-collectors" title="Permanent link">&para;</a></h2>
+<p>Remote Collectors are deployed at branch or remote sites where WAN collection would create latency or bandwidth concerns. They do not perform analytics — all processed data lives on the analytics cluster.</p>
+<ul>
+<li>Deployed as OVA</li>
+<li>Network requirements: TCP 443 outbound to analytics cluster; TCP 443/ICMP to monitored endpoints</li>
+<li>Resource sizing: 2 vCPU / 4 GB RAM (small), 4 vCPU / 8 GB RAM (large)</li>
+<li>Configure under: Admin &gt; Environment &gt; Remote Collectors</li>
+</ul>
+<h2 id="data-retention">Data Retention<a class="headerlink" href="#data-retention" title="Permanent link">&para;</a></h2>
+<p>Default retention is 6 months. Extending retention requires additional data node storage.</p>
+<table>
+<thead>
+<tr>
+<th>Retention Period</th>
+<th>Additional Storage Estimate per 1,000 VMs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6 months (default)</td>
+<td>~2 TB per data node</td>
+</tr>
+<tr>
+<td>12 months</td>
+<td>~4 TB per data node</td>
+</tr>
+<tr>
+<td>24 months</td>
+<td>~8 TB per data node</td>
+</tr>
+</tbody>
+</table>
+<p>Retention configuration: <strong>Admin &gt; Global Settings &gt; Retention Policy</strong></p>
+<h2 id="management-pack-adapter-architecture">Management Pack (Adapter) Architecture<a class="headerlink" href="#management-pack-adapter-architecture" title="Permanent link">&para;</a></h2>
+<p>Management packs extend collection beyond native vSphere objects. Each adapter instance is assigned to a collector node (analytics node or remote collector). Key adapters:</p>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Source Platform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter Adapter</td>
+<td>VMware vCenter (VMs, hosts, clusters, datastores)</td>
+</tr>
+<tr>
+<td>NSX-T Adapter</td>
+<td>NSX overlays, logical routers, edges</td>
+</tr>
+<tr>
+<td>Pure Storage Adapter</td>
+<td>Pure FlashArray/FlashBlade</td>
+</tr>
+<tr>
+<td>Dell EMC Adapter</td>
+<td>PowerStore, PowerMax, Unity</td>
+</tr>
+<tr>
+<td>Aria Operations for Logs</td>
+<td>Log Intelligence integration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Cluster failover: automatic promotion of Replica node if Primary becomes unavailable</li>
+<li>Remote Collectors: deploy at least 2 per site for collector HA; assign each adapter instance to both collectors for redundancy</li>
+<li>Minimum RPO/RTO for HA failover: typically under 5 minutes for UI and collection resumption</li>
+</ul>
+<h2 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td>Analytics Node VIP</td>
+<td>TCP 443</td>
+<td>Web UI</td>
+</tr>
+<tr>
+<td>Analytics Node</td>
+<td>vCenter</td>
+<td>TCP 443</td>
+<td>Collection</td>
+</tr>
+<tr>
+<td>Remote Collector</td>
+<td>Analytics Node</td>
+<td>TCP 443</td>
+<td>Data forwarding</td>
+</tr>
+<tr>
+<td>Remote Collector</td>
+<td>vCenter / adapters</td>
+<td>TCP 443</td>
+<td>Collection</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>ServiceNow</td>
+<td>TCP 443</td>
+<td>Alert outbound</td>
 </tr>
 </tbody>
 </table>

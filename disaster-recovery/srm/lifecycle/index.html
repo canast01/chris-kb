@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-from-array-replication-to-vsphere-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating from Array Replication to vSphere Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-appliance-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Appliance Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +797,93 @@
 
 
 <h1 id="srm-lifecycle">SRM Lifecycle<a class="headerlink" href="#srm-lifecycle" title="Permanent link">&para;</a></h1>
-<p>SRM version must be aligned with the deployed vCenter version; Broadcom publishes a compatibility matrix that must be checked before any upgrade. vSphere Replication version must also match within the supported range for the SRM release in use. SRM licenses are per-VM and must be inventoried against the protected VM count; growth planning should trigger license reviews at 80% utilisation.</p>
-<ul>
-<li><strong>Upgrade sequence</strong>: Upgrade vCenter → upgrade SRM Server → upgrade vSphere Replication appliance → update SRA plugins.</li>
-<li><strong>Compatibility matrix</strong>: Check VMware Product Interoperability Matrix at interopmatrix.vmware.com before any upgrade.</li>
-<li><strong>License model</strong>: Per protected VM; perpetual with SnS or subscription via Broadcom Advantage portal.</li>
-<li><strong>EOL tracking</strong>: SRM 8.x aligned to vSphere 8 lifecycle; track EOS dates in CMDB.</li>
-<li><strong>Migration — array to vSphere Replication</strong>: Remove array-based protection group → create vSphere Replication group → re-add VMs; plan for initial sync window.</li>
-</ul>
+<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
+<p>SRM version must match vCenter version. Always check the Broadcom Product Interoperability Matrix before any upgrade.</p>
+<table>
+<thead>
+<tr>
+<th>SRM Version</th>
+<th>vCenter Version</th>
+<th>vSphere Replication</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM 8.8</td>
+<td>vCenter 8.0 U3</td>
+<td>VR 8.8</td>
+<td>Current</td>
+</tr>
+<tr>
+<td>SRM 8.7</td>
+<td>vCenter 8.0 U2</td>
+<td>VR 8.7</td>
+<td>Supported</td>
+</tr>
+<tr>
+<td>SRM 8.6</td>
+<td>vCenter 8.0 U1</td>
+<td>VR 8.6</td>
+<td>Check EOS</td>
+</tr>
+<tr>
+<td>SRM 8.4</td>
+<td>vCenter 7.0 U3</td>
+<td>VR 8.4</td>
+<td>vSphere 7 era</td>
+</tr>
+</tbody>
+</table>
+<h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
+<p><strong>Critical: always upgrade in this order to avoid compatibility breaks.</strong></p>
+<ol>
+<li><strong>Upgrade vCenter</strong> to target version; verify plugins load correctly post-upgrade</li>
+<li><strong>Upgrade SRM Server</strong> — download installer from Broadcom portal, run upgrade wizard on both protected-site and recovery-site SRM servers</li>
+<li><strong>Upgrade vSphere Replication appliance</strong> — upgrade via VAMI (<code>https://&lt;vr-appliance&gt;:5480</code>)</li>
+<li><strong>Update SRA plugins</strong> on both SRM servers — Dell SRA, Pure SRA, NetApp SRA as applicable</li>
+</ol>
+<pre><code class="language-powershell"># Verify SRM version post-upgrade (run on SRM server)
+Get-Item &quot;C:\Program Files\VMware\VMware vCenter Site Recovery Manager\bin\vmware-dr.exe&quot; | Select-Object VersionInfo
+</code></pre>
+<p>Validate all protection groups show <code>OK</code> and all VMs show <code>Protected</code> after each upgrade step before proceeding.</p>
+<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
+<p>SRM licenses are per protected VM:
+- <strong>Perpetual + SnS</strong>: Annual renewal of Support and Subscription
+- <strong>Subscription</strong>: Monthly or annual via Broadcom Advantage portal
+- <strong>License compliance threshold</strong>: Review at 80% utilisation; initiate procurement at 90%</p>
+<p>Check current protected VM count:
+- SRM UI → Inventory → Virtual Machines → Protected (count in top bar)</p>
+<p>Track in CMDB:
+| Field | Value |
+|---|---|
+| License type | Perpetual / Subscription |
+| Licensed VM count | <number> |
+| Current protected VM count | <number from SRM UI> |
+| Renewal date | <date> |</p>
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<p>SRM lifecycle is tied to vSphere:
+- SRM 8.x aligned to vSphere 8.x lifecycle
+- vSphere 7.x general support ended: October 2025
+- Track End of General Support and End of Technical Guidance dates in CMDB</p>
+<h2 id="migrating-from-array-replication-to-vsphere-replication">Migrating from Array Replication to vSphere Replication<a class="headerlink" href="#migrating-from-array-replication-to-vsphere-replication" title="Permanent link">&para;</a></h2>
+<p>When decommissioning array-based SRA in favour of vSphere Replication:</p>
+<ol>
+<li>Document all VMs in array-based protection groups</li>
+<li>Create new vSphere Replication-based protection group</li>
+<li>Enable vSphere Replication on each VM (configure RPO)</li>
+<li>Wait for initial sync to complete</li>
+<li>Remove VMs from old array-based protection group</li>
+<li>Retire old protection group and delete SRA configuration</li>
+<li>Deregister old array manager in SRM → Array Managers</li>
+</ol>
+<p>Expect initial sync to take hours to days depending on VMDK size and link bandwidth.</p>
+<h2 id="srm-appliance-backup">SRM Appliance Backup<a class="headerlink" href="#srm-appliance-backup" title="Permanent link">&para;</a></h2>
+<p>Back up the SRM configuration database daily:</p>
+<pre><code class="language-powershell"># Windows-based SRM: back up via SQL Server or embedded DB backup
+# Linux-based SRM (8.8+): use VAMI backup or API
+Invoke-WebRequest -Uri &quot;https://&lt;srm-appliance&gt;:5480/api/v1/config/export&quot; -OutFile srm-config-backup.zip
+</code></pre>
 
 
 

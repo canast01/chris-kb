@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#coverage-review" class="md-nav__link">
+  <a href="#coverage-register" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coverage Review
+        Coverage Register
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criticality-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criticality Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage-review-checklist-monthly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage Review Checklist (Monthly)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unprotected-vms-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unprotected VMs Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-test-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Test Log
       
     </span>
   </a>
@@ -744,13 +786,16 @@
 
 
 <h1 id="vmware-backup-coverage-inventory">VMware Backup Coverage Inventory<a class="headerlink" href="#vmware-backup-coverage-inventory" title="Permanent link">&para;</a></h1>
+<p>Live register of all VMs, their backup policy, and last verified restore test. Review monthly.</p>
+<h2 id="coverage-register">Coverage Register<a class="headerlink" href="#coverage-register" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>VM Name</th>
 <th>Application Owner</th>
 <th>Criticality</th>
-<th>Backup Policy</th>
+<th>Backup Tool</th>
+<th>Policy</th>
 <th>Schedule</th>
 <th>Retention</th>
 <th>Last Successful</th>
@@ -765,16 +810,30 @@
 <td>Critical</td>
 <td>File-based (VAMI)</td>
 <td>Daily</td>
+<td>02:00</td>
 <td>7 copies</td>
 <td>YYYY-MM-DD</td>
 <td>YYYY-MM-DD</td>
-<td>—</td>
+<td>VAMI built-in backup</td>
 </tr>
 <tr>
-<td>app-prod-01</td>
-<td>app-team</td>
+<td>nsx-mgr-01</td>
+<td>infra-team</td>
 <td>Critical</td>
-<td>Daily image</td>
+<td>NSX built-in backup + Veeam</td>
+<td>Daily</td>
+<td>03:00</td>
+<td>7 days</td>
+<td>YYYY-MM-DD</td>
+<td>YYYY-MM-DD</td>
+<td>Separate NSX backup + VM snapshot</td>
+</tr>
+<tr>
+<td>aria-ops-01</td>
+<td>infra-team</td>
+<td>High</td>
+<td>Veeam VBR</td>
+<td>prod-infra-daily</td>
 <td>Daily</td>
 <td>30 days</td>
 <td>YYYY-MM-DD</td>
@@ -782,24 +841,136 @@
 <td>App-aware</td>
 </tr>
 <tr>
+<td>app-prod-01</td>
+<td>app-team</td>
+<td>Critical</td>
+<td>Veeam VBR</td>
+<td>prod-vm-daily</td>
+<td>Daily</td>
+<td>30 days</td>
+<td>YYYY-MM-DD</td>
+<td>YYYY-MM-DD</td>
+<td>App-aware, SQL</td>
+</tr>
+<tr>
 <td>app-dev-01</td>
 <td>app-team</td>
 <td>Standard</td>
-<td>Weekly image</td>
+<td>Veeam VBR</td>
+<td>dev-vm-weekly</td>
 <td>Weekly</td>
 <td>14 days</td>
 <td>YYYY-MM-DD</td>
 <td>Never</td>
-<td>—</td>
+<td>Dev — lower priority</td>
 </tr>
 </tbody>
 </table>
-<h2 id="coverage-review">Coverage Review<a class="headerlink" href="#coverage-review" title="Permanent link">&para;</a></h2>
+<h2 id="criticality-definitions">Criticality Definitions<a class="headerlink" href="#criticality-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Definition</th>
+<th>Backup Minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Business stops without this VM</td>
+<td>Daily backup; quarterly restore test</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Significant impact if lost</td>
+<td>Daily backup; bi-annual restore test</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>Recoverable within hours from build runbook</td>
+<td>Weekly backup; annual restore test</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Easily rebuilt from scratch</td>
+<td>Weekly backup; no restore test required</td>
+</tr>
+</tbody>
+</table>
+<h2 id="coverage-review-checklist-monthly">Coverage Review Checklist (Monthly)<a class="headerlink" href="#coverage-review-checklist-monthly" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review backup coverage monthly</li>
-<li>Confirm no critical VMs are unprotected</li>
-<li>Confirm retention meets business or compliance requirements</li>
+<li>[ ] Run a report of all protected VMs from backup tool</li>
+<li>[ ] Compare against vCenter VM inventory — identify any unprotected VMs
+  <code>powershell
+  # List all VMs (PowerCLI)
+  Get-VM | Select-Object Name, PowerState | Sort-Object Name | Export-Csv /tmp/all_vms.csv
+  # Compare against Veeam/CommVault/NBU job report for protected VMs</code></li>
+<li>[ ] For any unprotected VM: check with application owner — intentional or oversight?</li>
+<li>[ ] Confirm all critical VMs have had a successful backup in the last 24 hours</li>
+<li>[ ] Confirm restore tests are not overdue (per criticality schedule above)</li>
 </ul>
+<h2 id="unprotected-vms-log">Unprotected VMs Log<a class="headerlink" href="#unprotected-vms-log" title="Permanent link">&para;</a></h2>
+<p>If a VM is intentionally not backed up (ephemeral workload, easily rebuilt), document it here:</p>
+<table>
+<thead>
+<tr>
+<th>VM Name</th>
+<th>Reason Not Backed Up</th>
+<th>Owner</th>
+<th>Review Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>build-agent-01</td>
+<td>Ephemeral CI/CD runner — rebuilt daily</td>
+<td>devops-team</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td>temp-test-vm</td>
+<td>Temporary test VM — approved for deletion by EOQ</td>
+<td>dev-team</td>
+<td>2026-06-30</td>
+</tr>
+</tbody>
+</table>
+<h2 id="restore-test-log">Restore Test Log<a class="headerlink" href="#restore-test-log" title="Permanent link">&para;</a></h2>
+<p>Record evidence of restore tests to satisfy audit requirements:</p>
+<table>
+<thead>
+<tr>
+<th>VM Name</th>
+<th>Test Date</th>
+<th>Restore Type</th>
+<th>RTO Achieved</th>
+<th>Tester</th>
+<th>Result</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app-prod-01</td>
+<td>YYYY-MM-DD</td>
+<td>Full VM restore to isolated network</td>
+<td>12 min</td>
+<td>user@corp</td>
+<td>Pass</td>
+<td>DB came up clean</td>
+</tr>
+<tr>
+<td>vcenter-prod-01</td>
+<td>YYYY-MM-DD</td>
+<td>VAMI restore to alternate host</td>
+<td>35 min</td>
+<td>user@corp</td>
+<td>Pass</td>
+<td>vCenter fully functional after restore</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principal-switch-and-domain-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principal Switch and Domain ID
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zoning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +808,163 @@
 
 
 <h1 id="brocade-fabric-os-architecture">Brocade Fabric OS Architecture<a class="headerlink" href="#brocade-fabric-os-architecture" title="Permanent link">&para;</a></h1>
-<p>Fabric OS runs on Brocade/Broadcom SAN switches including the G620, G720, and X7 director platforms. Fabrics are deployed in a core-edge topology with ISLs connecting edge switches to core directors, providing scalable FC connectivity for hosts and storage. One switch per fabric is elected as the principal switch, which owns the fabric name server and manages domain ID assignments. Port types include E_Port (ISL), F_Port (fabric/host-facing), and N_Port (node/initiator-facing), with FCIDs assigned by the principal switch upon fabric login.</p>
+<blockquote>
+<p>Part of the <a href="../">Brocade Fabric OS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Fabric OS (FOS) runs on Brocade/Broadcom SAN switches. Fabrics are deployed in a core-edge topology with ISLs (trunked) connecting edge switches to core directors. One switch per fabric is elected as the <strong>principal switch</strong>, which owns the fabric name server and manages domain ID assignments.</p>
+<hr />
+<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Component</th>
+<th>Platform</th>
+<th>Type</th>
+<th>Max Ports</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G620</td>
+<td>Fixed</td>
+<td>64x 32G FC</td>
+<td>Mid-range</td>
+</tr>
+<tr>
+<td>G720</td>
+<td>Fixed</td>
+<td>64x 64G FC</td>
+<td>High-performance fixed</td>
+</tr>
+<tr>
+<td>X7-4</td>
+<td>Director</td>
+<td>Up to 192 FC</td>
+<td>4-slot director</td>
+</tr>
+<tr>
+<td>X7-8</td>
+<td>Director</td>
+<td>Up to 384 FC</td>
+<td>8-slot director</td>
+</tr>
+<tr>
+<td>6510</td>
+<td>Fixed</td>
+<td>48x 16G FC</td>
+<td>End-of-sale — plan migration</td>
+</tr>
+</tbody>
+</table>
+<p>Directors (X7-4 / X7-8) support non-disruptive firmware upgrades (HA chassis with dual CPs).</p>
+<hr />
+<h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
+<p>Standard dual-fabric design:</p>
+<pre><code>Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
+Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
+</code></pre>
+<p>Each fabric is independent. ISLs form trunk groups between switches within a fabric — not between Fabric A and Fabric B.</p>
+<p><strong>Trunk groups:</strong> Brocade ISL trunks group multiple physical ISL links into a single logical ISL for bandwidth aggregation and resilience. All links in a trunk must be same speed and between the same pair of switches.</p>
+<hr />
+<h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port Type</th>
 <th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Principal switch</td>
-<td>Fabric name server, domain ID assignment</td>
-</tr>
-<tr>
 <td>E_Port</td>
-<td>Inter-switch link (ISL)</td>
+<td>ISL — connects to another switch</td>
 </tr>
 <tr>
 <td>F_Port</td>
-<td>Fabric port — connects to host HBAs or storage</td>
+<td>Fabric port — connects to host HBA or storage target</td>
 </tr>
 <tr>
 <td>N_Port</td>
-<td>Node port — on the host or storage side</td>
+<td>Node port — on the host or storage device</td>
 </tr>
 <tr>
-<td>Domain ID</td>
-<td>Unique switch identifier within the fabric (1–239)</td>
+<td>D_Port</td>
+<td>Diagnostic port — used for link health tests</td>
 </tr>
 <tr>
-<td>FCID</td>
-<td>3-byte address assigned per device at FLOGI</td>
+<td>EX_Port</td>
+<td>Extended E_Port — used for FC Routing between fabrics</td>
 </tr>
 </tbody>
 </table>
+<pre><code class="language-bash"># Check port type and state
+portshow &lt;port-number&gt;
+
+# Check all ports
+switchshow
+
+# Show detailed port statistics
+portstatsshow &lt;port-number&gt;
+</code></pre>
+<hr />
+<h2 id="principal-switch-and-domain-id">Principal Switch and Domain ID<a class="headerlink" href="#principal-switch-and-domain-id" title="Permanent link">&para;</a></h2>
+<p>One switch per fabric is the principal switch, elected by lowest WWN (by default) or by priority setting.</p>
+<pre><code class="language-bash"># Show current principal switch
+fabricshow
+# The principal switch has a &quot;&gt;&quot; marker
+
+# Show domain ID assignment
+switchshow | grep Domain
+
+# Show all switches in the fabric with domain IDs
+fabricshow
+</code></pre>
+<p>Domain IDs are unique per switch within a fabric (1–239). They are assigned dynamically unless statically configured. Static domain IDs are strongly recommended for production fabrics to prevent reconfiguration after a fabric partition and rejoin.</p>
+<pre><code class="language-bash"># Set a static domain ID (requires fabric re-segmentation momentarily)
+configure
+# At &quot;Domain:&quot; prompt, enter the desired domain ID
+# At &quot;Fabric parameters&quot; prompt, set &quot;insistDomainId&quot; to 1
+</code></pre>
+<hr />
+<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
+<p>Zoning controls initiator-to-target access. Best practice: <strong>single-initiator / single-target</strong> zones.</p>
+<pre><code class="language-bash"># Show active zone configuration
+cfgshow      # Full zone database (all zones, zone sets)
+zoneshow     # Active zone configuration only
+
+# Check if a specific WWPN is zoned
+zoneshow | grep &lt;wwpn&gt;
+
+# Show all aliases
+alishow
+
+# Show zone database size (relevant for large fabrics)
+cfgsave      # Saves zone database to persistent storage
+cfgsize      # Shows current zone database size vs limit
+</code></pre>
+<p>Activating a zone set replaces the currently active zone set on the fabric — always verify before activating to avoid removing existing zones.</p>
+<hr />
+<h2 id="fabric-health-checks">Fabric Health Checks<a class="headerlink" href="#fabric-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall fabric health
+fabricshow
+
+# Port error summary (check for CRC, loss of sync, etc.)
+porterrshow
+
+# Show fabric routing table
+topologyshow
+
+# Show name server (all logged-in devices)
+nsshow
+
+# Check switch temperature and hardware health
+sensorshow
+tempshow
+psshow   # Power supply status
+fanshow  # Fan status
+</code></pre>
 
 
 

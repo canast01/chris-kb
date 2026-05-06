@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-in-flight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption In-Flight
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions-enabler-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solutions Enabler RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-accidental-resync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing Accidental Resync
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-port-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Port Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,95 @@
 
 
 <h1 id="srdfa-security">SRDF/A Security<a class="headerlink" href="#srdfa-security" title="Permanent link">&para;</a></h1>
-<p>SRDF link encryption is available via the SRDF/E option, which encrypts data in-flight over FCIP using AES-256. Solutions Enabler RBAC restricts SRDF operations to authorised roles; automation accounts running SYMCLI commands should follow the least-privilege principle, holding only the <code>StorageAdmin</code> role scoped to relevant SRDF groups. All failover events are recorded in the array audit log, which should be forwarded to a central SIEM.</p>
+<h2 id="encryption-in-flight">Encryption In-Flight<a class="headerlink" href="#encryption-in-flight" title="Permanent link">&para;</a></h2>
+<p>SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:</p>
+<pre><code class="language-bash">symcfg list -rdfg -v | grep -i encrypt
+# Output should show: Encryption: Enabled
+</code></pre>
+<p>Enable SRDF/E on an existing SRDF group:</p>
+<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; set encrypt enable
+symcfg list -rdfg &lt;rdfg&gt; -v        # Verify Encryption: Enabled
+</code></pre>
+<h2 id="solutions-enabler-rbac">Solutions Enabler RBAC<a class="headerlink" href="#solutions-enabler-rbac" title="Permanent link">&para;</a></h2>
+<p>Solutions Enabler v9+ enforces role-based access at the array scope. Roles for SRDF operations:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permitted Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StorageAdmin</code></td>
+<td>symrdf failover, establish, split, suspend</td>
+</tr>
+<tr>
+<td><code>StorageMonitor</code></td>
+<td>symrdf query, list — read-only</td>
+</tr>
+<tr>
+<td><code>Audit</code></td>
+<td>Read-only access to audit logs</td>
+</tr>
+</tbody>
+</table>
+<p>Create a dedicated service account per automation system; never use the root Solutions Enabler account:</p>
+<pre><code class="language-bash">symauth -sid &lt;SID&gt; add -username svc_dr_automation -role StorageAdmin -scope rdfg:&lt;group_number&gt;
+</code></pre>
+<h2 id="preventing-accidental-resync">Preventing Accidental Resync<a class="headerlink" href="#preventing-accidental-resync" title="Permanent link">&para;</a></h2>
+<p>For async operations, accidentally re-syncing from target to source (after a failover test) destroys production data. Guard against this:</p>
 <ul>
-<li><strong>SRDF/E encryption</strong>: AES-256 in-flight encryption over FCIP; verify with <code>symcfg list -rdfg -v</code> for encryption status.</li>
-<li><strong>Solutions Enabler RBAC</strong>: Define separate roles for read-only monitoring vs. failover execution.</li>
-<li><strong>Automation accounts</strong>: Dedicated service account per automation system; rotate credentials quarterly.</li>
-<li><strong>Network ACLs</strong>: Restrict SRDF FCIP (TCP 3260/custom) and iSCSI ports to known array management IPs only.</li>
-<li><strong>Audit logging</strong>: Array audit logs retained for ≥90 days; forward to SIEM for failover event alerting.</li>
+<li>Set SYMCLI session to confirm mode for destructive operations: <code>SYMCLI_CONFIRM=prompt</code></li>
+<li>Restrict <code>symrdf restore</code> and <code>symrdf establish -full</code> to a separate break-glass account</li>
+<li>Implement a peer-review process for any SRDF failover in production</li>
+</ul>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>All SRDF operations generate entries in the PowerMax audit log:</p>
+<pre><code class="language-bash">symevent list -sid &lt;SID&gt; -type rdf         # List all RDF events
+symevent show -sid &lt;SID&gt; -event_id &lt;ID&gt;    # Detail on specific event
+</code></pre>
+<p>Forward to SIEM via syslog:
+- Configure Unisphere: Settings → Notifications → Syslog → add SIEM IP, port 514 (UDP) or 6514 (TLS)
+- Alert on event types: <code>SRDF Split</code>, <code>SRDF Failover</code>, <code>SRDF Suspend</code>, <code>SRDF Establish</code></p>
+<h2 id="network-port-requirements">Network Port Requirements<a class="headerlink" href="#network-port-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3260</td>
+<td>TCP</td>
+<td>iSCSI (if used for management)</td>
+</tr>
+<tr>
+<td>5000</td>
+<td>TCP</td>
+<td>Solutions Enabler SYMAPI</td>
+</tr>
+<tr>
+<td>443</td>
+<td>HTTPS</td>
+<td>Unisphere REST API</td>
+</tr>
+<tr>
+<td>Custom</td>
+<td>FCIP</td>
+<td>SRDF replication over IP (configurable per director)</td>
+</tr>
+</tbody>
+</table>
+<p>Restrict FCIP and Solutions Enabler API ports to array management IPs only using firewall ACLs.</p>
+<h2 id="credential-rotation">Credential Rotation<a class="headerlink" href="#credential-rotation" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Solutions Enabler service accounts: rotate passwords every 90 days</li>
+<li>Unisphere API tokens: rotate client certificates annually or on personnel change</li>
+<li>Verify no shared credentials between monitoring and DR automation accounts</li>
 </ul>
 
 

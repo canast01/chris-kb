@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-account-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Account Queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#group-membership-audits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Membership Audits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stale-and-locked-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stale and Locked Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expiring-passwords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiring Passwords
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpo-backup-and-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPO Backup and Reporting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +808,140 @@
 
 
 <h1 id="active-directory-scripts">Active Directory Scripts<a class="headerlink" href="#active-directory-scripts" title="Permanent link">&para;</a></h1>
-<p>The scripts below are PowerShell automation tools for routine Active Directory health and audit tasks. Each script should be run from a host with the ActiveDirectory PowerShell module installed, using an account with at minimum Read access to the domain (audit scripts) or Domain Admin rights (replication and GPO tasks).</p>
-<table>
-<thead>
-<tr>
-<th>Script</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Get-DCReplicationHealth.ps1</code></td>
-<td>Runs <code>Get-ADReplicationFailure -Scope Forest</code> and outputs a formatted report of all replication errors with DC name, partner, and failure count</td>
-</tr>
-<tr>
-<td><code>Find-AccountLockoutSource.ps1</code></td>
-<td>Queries Security event logs (4740) across all DCs to identify the originating machine for a locked-out account</td>
-</tr>
-<tr>
-<td><code>Get-StaleComputerAccounts.ps1</code></td>
-<td>Reports computer accounts where <code>LastLogonDate</code> is older than 90 days and <code>Enabled -eq $true</code></td>
-</tr>
-<tr>
-<td><code>Get-GroupMembershipAudit.ps1</code></td>
-<td>Exports all members of specified privileged groups (Domain Admins, Schema Admins, Enterprise Admins) to CSV</td>
-</tr>
-<tr>
-<td><code>Get-ExpiringPasswords.ps1</code></td>
-<td>Reports users whose passwords expire within 14 days, filtered by OU scope</td>
-</tr>
-<tr>
-<td><code>Backup-AllGPOs.ps1</code></td>
-<td>Uses <code>Backup-GPO -All -Path &lt;path&gt;</code> to export all GPOs to a timestamped folder; intended for pre-change and scheduled weekly backups</td>
-</tr>
-</tbody>
-</table>
+<p>PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the <code>ActiveDirectory</code> PowerShell module installed. Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Install RSAT AD tools on Windows 10/11 or Server Core
+Add-WindowsCapability -Online -Name &quot;Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0&quot;
+
+# Import the module
+Import-Module ActiveDirectory
+
+# Verify connectivity
+Get-ADDomain
+</code></pre>
+<hr />
+<h2 id="user-account-queries">User Account Queries<a class="headerlink" href="#user-account-queries" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Get full details for a specific user
+Get-ADUser -Identity &quot;jsmith&quot; -Properties * |
+  Select-Object SamAccountName, DisplayName, Title, Department,
+                Enabled, PasswordLastSet, PasswordExpired, LockedOut, LastLogonDate
+
+# Find all disabled accounts in a specific OU
+Get-ADUser -Filter {Enabled -eq $false} `
+  -SearchBase &quot;OU=Staff,DC=corp,DC=example,DC=com&quot; |
+  Select-Object SamAccountName, DisplayName
+
+# Report users with passwords that never expire
+Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} |
+  Select-Object SamAccountName, DisplayName | Export-Csv &quot;NoExpiry_Users.csv&quot; -NoTypeInformation
+
+# Find accounts expiring within 14 days
+$threshold = (Get-Date).AddDays(14)
+Get-ADUser -Filter {Enabled -eq $true -and AccountExpirationDate -le $threshold -and AccountExpirationDate -gt &quot;01/01/1900&quot;} |
+  Select-Object SamAccountName, AccountExpirationDate | Sort-Object AccountExpirationDate
+</code></pre>
+<hr />
+<h2 id="group-membership-audits">Group Membership Audits<a class="headerlink" href="#group-membership-audits" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Export members of privileged groups to CSV
+$privilegedGroups = @(&quot;Domain Admins&quot;,&quot;Schema Admins&quot;,&quot;Enterprise Admins&quot;,&quot;Group Policy Creator Owners&quot;)
+$report = foreach ($group in $privilegedGroups) {
+    Get-ADGroupMember -Identity $group -Recursive | ForEach-Object {
+        [PSCustomObject]@{
+            Group      = $group
+            Name       = $_.Name
+            SamAccount = $_.SamAccountName
+            ObjectType = $_.objectClass
+        }
+    }
+}
+$report | Export-Csv &quot;PrivilegedGroup_Audit.csv&quot; -NoTypeInformation
+
+# List all groups a user belongs to (including nested)
+(Get-ADUser &quot;jsmith&quot; -Properties MemberOf).MemberOf |
+  Get-ADGroup | Select-Object Name, GroupScope, GroupCategory
+</code></pre>
+<hr />
+<h2 id="stale-and-locked-accounts">Stale and Locked Accounts<a class="headerlink" href="#stale-and-locked-accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Stale computer accounts: enabled, not logged in for 90+ days
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADComputer -Filter {Enabled -eq $true -and LastLogonDate -lt $cutoff} `
+  -Properties LastLogonDate |
+  Select-Object Name, LastLogonDate, OperatingSystem |
+  Export-Csv &quot;Stale_Computers.csv&quot; -NoTypeInformation
+
+# Stale user accounts: enabled, not logged in for 90+ days
+Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -lt $cutoff} `
+  -Properties LastLogonDate, Department |
+  Select-Object SamAccountName, DisplayName, LastLogonDate, Department |
+  Export-Csv &quot;Stale_Users.csv&quot; -NoTypeInformation
+
+# Find all currently locked out accounts
+Search-ADAccount -LockedOut |
+  Select-Object SamAccountName, DisplayName, LockedOut, LastLogonDate
+
+# Unlock a specific account
+Unlock-ADAccount -Identity &quot;jsmith&quot;
+
+# Find account lockout source: query Security event 4740 across all DCs
+$lockedUser = &quot;jsmith&quot;
+Get-ADDomainController -Filter * | ForEach-Object {
+    Get-WinEvent -ComputerName $_.HostName -FilterHashtable @{
+        LogName   = &quot;Security&quot;
+        Id        = 4740
+    } -ErrorAction SilentlyContinue |
+    Where-Object { $_.Properties[0].Value -eq $lockedUser } |
+    Select-Object TimeCreated,
+      @{N=&quot;CallerComputer&quot;; E={$_.Properties[1].Value}},
+      @{N=&quot;DC&quot;; E={$_.MachineName}}
+}
+</code></pre>
+<hr />
+<h2 id="expiring-passwords">Expiring Passwords<a class="headerlink" href="#expiring-passwords" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Report users whose passwords expire within 14 days
+$maxPwdAge = (Get-ADDefaultDomainPasswordPolicy).MaxPasswordAge.Days
+$warnDays  = 14
+$now       = Get-Date
+
+Get-ADUser -Filter {Enabled -eq $true -and PasswordNeverExpires -eq $false} `
+  -Properties PasswordLastSet |
+  Select-Object SamAccountName, DisplayName, PasswordLastSet,
+    @{N=&quot;ExpiresOn&quot;; E={ $_.PasswordLastSet.AddDays($maxPwdAge) }} |
+  Where-Object { $_.ExpiresOn -gt $now -and $_.ExpiresOn -le $now.AddDays($warnDays) } |
+  Sort-Object ExpiresOn
+</code></pre>
+<hr />
+<h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Get replication failures across the forest
+Get-ADReplicationFailure -Scope Forest |
+  Select-Object Server, Partner, FirstFailureTime, FailureCount, FailureType |
+  Sort-Object FailureCount -Descending
+
+# Check replication queue length on all DCs
+Get-ADDomainController -Filter * | ForEach-Object {
+    repadmin /showrepl $_.HostName /errorsonly
+}
+
+# Force replication from all partners
+repadmin /syncall /AdeP
+</code></pre>
+<hr />
+<h2 id="gpo-backup-and-reporting">GPO Backup and Reporting<a class="headerlink" href="#gpo-backup-and-reporting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Backup all GPOs to a timestamped folder
+$backupPath = &quot;D:\GPO_Backups\$(Get-Date -Format 'yyyyMMdd_HHmmss')&quot;
+New-Item -ItemType Directory -Path $backupPath | Out-Null
+Backup-GPO -All -Path $backupPath
+Write-Host &quot;GPOs backed up to $backupPath&quot;
+
+# Generate HTML report for a specific GPO
+Get-GPOReport -Name &quot;PROD-SERVERS-SecBaseline&quot; -ReportType Html -Path &quot;C:\Temp\GPO_Report.html&quot;
+
+# List all GPOs with their link targets
+Get-GPO -All | ForEach-Object {
+    $links = (Get-GPOReport -Guid $_.Id -ReportType Xml) -match '&lt;SOMPath&gt;(.+)&lt;/SOMPath&gt;'
+    [PSCustomObject]@{ Name = $_.DisplayName; Links = $Matches[1] }
+}
+</code></pre>
 
 
 

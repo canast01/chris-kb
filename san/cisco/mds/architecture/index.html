@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zoning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +808,21 @@
 
 
 <h1 id="cisco-mds-architecture">Cisco MDS Architecture<a class="headerlink" href="#cisco-mds-architecture" title="Permanent link">&para;</a></h1>
-<p>Cisco MDS 9000 series switches run NX-OS and support both Fibre Channel and FCoE, providing scalable SAN fabric services for enterprise environments. VSANs (Virtual SANs) are the core isolation mechanism, allowing multiple logical fabrics to share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Common models include the MDS 9132T and 9148T (fixed configuration), 9396T (high-density), and 9706/9710 directors for large-scale deployments. FC services include FCNS (name server), FLOGI/PLOGI database tracking, and port-channel ISLs for redundant inter-switch connectivity.</p>
+<blockquote>
+<p>Part of the <a href="../">Cisco MDS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC) and FCoE. The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
+<hr />
+<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Model</th>
 <th>Type</th>
-<th>Max Ports</th>
+<th>Max FC Ports</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
@@ -739,29 +830,176 @@
 <td>MDS 9132T</td>
 <td>Fixed</td>
 <td>32x 32G FC</td>
+<td>Entry/mid-range</td>
 </tr>
 <tr>
 <td>MDS 9148T</td>
 <td>Fixed</td>
 <td>48x 32G FC</td>
+<td>Mid-range</td>
 </tr>
 <tr>
 <td>MDS 9396T</td>
 <td>Fixed</td>
 <td>96x 32G FC</td>
+<td>High-density fixed</td>
 </tr>
 <tr>
 <td>MDS 9706</td>
 <td>Director</td>
-<td>Up to 384 FC ports</td>
+<td>Up to 384 FC</td>
+<td>Modular director</td>
 </tr>
 <tr>
 <td>MDS 9710</td>
 <td>Director</td>
-<td>Up to 576 FC ports</td>
+<td>Up to 576 FC</td>
+<td>Large-scale director</td>
 </tr>
 </tbody>
 </table>
+<p>Directors (9706/9710) support ISSU (In-Service Software Upgrade), making them the preferred platform for environments requiring zero-downtime maintenance.</p>
+<hr />
+<h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
+<p>Typical enterprise deployment uses a <strong>dual-fabric</strong> architecture:</p>
+<pre><code>Fabric A:  Host HBA Port 0 → MDS-SW01 → Storage Target Port (Fabric A)
+Fabric B:  Host HBA Port 1 → MDS-SW02 → Storage Target Port (Fabric B)
+</code></pre>
+<p>Each fabric is completely independent — a failure of one fabric does not impact the other. All hosts and storage targets are connected to both fabrics for redundancy.</p>
+<p><strong>ISLs (Inter-Switch Links):</strong> Used when multiple MDS switches form a fabric. ISLs are configured as port-channel trunks (minimum 2 links). All VSANs allowed on the ISL must be explicitly permitted.</p>
+<hr />
+<h2 id="vsan-design">VSAN Design<a class="headerlink" href="#vsan-design" title="Permanent link">&para;</a></h2>
+<p>VSANs segment the fabric logically. Common VSAN allocation:</p>
+<table>
+<thead>
+<tr>
+<th>VSAN</th>
+<th>Purpose</th>
+<th>Fabric A</th>
+<th>Fabric B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>ESXi hosts → storage</td>
+<td>10</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>SRDF/A or SnapMirror</td>
+<td>20</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Out-of-band fabric mgmt</td>
+<td>99</td>
+<td>99</td>
+</tr>
+</tbody>
+</table>
+<p>Each VSAN has its own:
+- FC Name Server (FCNS)
+- Domain ID space
+- Zone database
+- FLOGI/PLOGI table</p>
+<p>VSAN 1 is the default VSAN — do not use VSAN 1 for production; all production traffic should be in dedicated VSANs.</p>
+<hr />
+<h2 id="fc-services">FC Services<a class="headerlink" href="#fc-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FCNS (Name Server)</td>
+<td>Registers all devices (hosts and storage) that FLOGI into the fabric</td>
+</tr>
+<tr>
+<td>FSPF</td>
+<td>Fabric Shortest Path First — routing protocol for FC fabrics</td>
+</tr>
+<tr>
+<td>FLOGI DB</td>
+<td>Records all fabric login events (WWN, FCID, port)</td>
+</tr>
+<tr>
+<td>Zoning</td>
+<td>Controls which initiators can communicate with which targets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key commands:</strong></p>
+<pre><code># Show all devices logged into a VSAN
+show fcns database vsan 10
+
+# Show all FLOGI entries
+show flogi database
+
+# Show fabric shortest path
+show fspf database vsan 10
+
+# Show port status
+show interface fc1/1
+</code></pre>
+<hr />
+<h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F_Port</td>
+<td>Connects to a host HBA or storage target port</td>
+</tr>
+<tr>
+<td>E_Port</td>
+<td>ISL — connects to another switch</td>
+</tr>
+<tr>
+<td>TE_Port</td>
+<td>Trunking E_Port — carries multiple VSANs over an ISL trunk</td>
+</tr>
+<tr>
+<td>NP_Port</td>
+<td>N_Port Proxy — used in NPV mode</td>
+</tr>
+<tr>
+<td>SD_Port</td>
+<td>SPAN Destination Port — used for FC traffic capture</td>
+</tr>
+</tbody>
+</table>
+<pre><code># Check port type and state
+show interface fc1/1
+
+# Set a port to F_Port mode (override auto-negotiation)
+interface fc1/1
+  switchport mode F
+  no shutdown
+</code></pre>
+<hr />
+<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
+<p>Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is <strong>single-initiator / single-target</strong> zones — one zone per host-port-to-storage-port pair.</p>
+<pre><code># Show active zone set for a VSAN
+show zoneset active vsan 10
+
+# Show all zones (active and inactive)
+show zone vsan 10
+
+# Check if a specific WWPN is zoned
+show zone member wwn &lt;wwpn&gt; vsan 10
+</code></pre>
+<p>Zone sets must be <strong>activated</strong> for zoning to take effect. An inactive zone set change is not applied to the fabric.</p>
 
 
 

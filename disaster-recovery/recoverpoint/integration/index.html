@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,119 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recoverpoint-for-vms-rp4vm-vcenter-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RecoverPoint for VMs (RP4VM) — vCenter Plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RecoverPoint for VMs (RP4VM) — vCenter Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consistency-group-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Group Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-replication-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Replication State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vplex-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPLEX Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-srm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware SRM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-array-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Array Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +836,98 @@
 
 
 <h1 id="recoverpoint-integration">RecoverPoint Integration<a class="headerlink" href="#recoverpoint-integration" title="Permanent link">&para;</a></h1>
-<p>RecoverPoint for VMs (RP4VM) integrates with vCenter as a plugin, enabling per-VM replication policy assignment and consistency group management directly from the vSphere Client. VPLEX integration enables distributed consistency groups that span metro storage fabrics, providing continuous replication across sites without requiring a dedicated replication network. VMware Site Recovery Manager (SRM) integrates with RecoverPoint to orchestrate automated failover and failback workflows, replacing manual CG image access steps with runbook-driven recovery plans.</p>
+<h2 id="recoverpoint-for-vms-rp4vm-vcenter-plugin">RecoverPoint for VMs (RP4VM) — vCenter Plugin<a class="headerlink" href="#recoverpoint-for-vms-rp4vm-vcenter-plugin" title="Permanent link">&para;</a></h2>
+<p>RP4VM integrates directly with vCenter, installing a vSphere plugin and a splitter component that intercepts VM writes at the VMDK level.</p>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Deploy the RP4VM OVA to each vCenter (protected and recovery sites)</li>
+<li>Log in to the RP4VM appliance VAMI → register the vCenter</li>
+<li>Install the vSphere Client plugin (deployed automatically after vCenter registration)</li>
+<li>Create a consistency group (CG) via the vSphere Client → RecoverPoint → New Consistency Group</li>
+</ol>
+<h3 id="consistency-group-configuration">Consistency Group Configuration<a class="headerlink" href="#consistency-group-configuration" title="Permanent link">&para;</a></h3>
+<pre><code>CG settings:
+  - Production volumes: select VMDKs or datastores to protect
+  - Replica volumes: select equivalent capacity at recovery site
+  - Journal volumes: minimum 10GB per volume pair (size for required retention window)
+  - Target RPO: continuous (near-zero) or user-defined bookmarks
+</code></pre>
+<h3 id="verify-replication-state">Verify Replication State<a class="headerlink" href="#verify-replication-state" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Via RecoverPoint CLI (SSH to RPA)
+get_group_info -g &quot;&lt;CG_name&gt;&quot;    # Full CG status
+monitor_group -g &quot;&lt;CG_name&gt;&quot;     # Live lag monitor
+</code></pre>
+<h2 id="vplex-integration">VPLEX Integration<a class="headerlink" href="#vplex-integration" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint splitter on VPLEX director enables distributed CGs spanning VPLEX metro/geo fabrics:</p>
 <ul>
-<li><strong>RP4VM (vCenter plugin):</strong> vSphere replication splitter intercepts writes at the VMDK level; managed through vCenter plugin</li>
-<li><strong>VPLEX integration:</strong> Distributed CGs span VPLEX metro/geo fabrics; RecoverPoint splitter installed on VPLEX director</li>
-<li><strong>Dell PowerMax/Unity:</strong> Registered as production or replica volumes; array-based splitter (XIO/SRDF) or fabric splitter used</li>
-<li><strong>SRM integration:</strong> RecoverPoint SRA (Site Recovery Adapter) installed on SRM server; recovery plans reference RecoverPoint CGs</li>
-<li><strong>Aria Operations:</strong> RecoverPoint management pack collects RPA health, CG lag, journal utilization, and link state metrics</li>
+<li>Splitter installed on VPLEX director (not on ESXi hosts)</li>
+<li>Supports metro (synchronous) and geo (asynchronous) configurations</li>
+<li>Mixed topologies: VPLEX Metro + RecoverPoint → three-site continuous replication</li>
 </ul>
+<p>Configure VPLEX splitter via RecoverPoint CLI:</p>
+<pre><code class="language-bash">add_splitter_vplex -site production -vplex_ip &lt;vplex_mgmt_ip&gt;
+</code></pre>
+<h2 id="vmware-srm-integration">VMware SRM Integration<a class="headerlink" href="#vmware-srm-integration" title="Permanent link">&para;</a></h2>
+<p>The RecoverPoint SRA enables SRM to use RecoverPoint consistency groups as protection sources:</p>
+<ol>
+<li>Download RecoverPoint SRA from Dell support portal</li>
+<li>Install on each SRM server (both sites)</li>
+<li>Register in SRM → Array Managers:</li>
+<li>Manager type: EMC RecoverPoint</li>
+<li>Management IP: <code>&lt;rpa-cluster-ip&gt;</code></li>
+<li>Username/password: dedicated svc_srm account</li>
+</ol>
+<p>SRM recovery plans reference RecoverPoint CGs — failover steps include:
+1. Enabling image access on the RecoverPoint CG (exposes the replica copy)
+2. Registering VMs at the recovery site
+3. Powering on VMs
+4. Finalising the recovery (disabling image access, making replica writable)</p>
+<h2 id="storage-array-integration">Storage Array Integration<a class="headerlink" href="#storage-array-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Array</th>
+<th>Splitter Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dell PowerMax</td>
+<td>Array-based (XtremIO or SRDF co-existence)</td>
+<td>Integrates via Unisphere</td>
+</tr>
+<tr>
+<td>Dell Unity</td>
+<td>Array-based splitter</td>
+<td>Native Unity support</td>
+</tr>
+<tr>
+<td>VMware vSphere</td>
+<td>Software splitter (RP4VM)</td>
+<td>VMDK-level — no array integration needed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The RecoverPoint management pack surfaces:
+- RPA health (CPU, memory, link state)
+- CG lag per consistency group
+- Journal fill level and utilisation
+- Transfer rate and bandwidth utilisation</p>
+<p>Install from Aria Marketplace: Solutions → Browse → "RecoverPoint" → Deploy.</p>
+<h2 id="api-integration">API Integration<a class="headerlink" href="#api-integration" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint REST API for automation:</p>
+<pre><code class="language-bash"># Authenticate
+curl -k -u admin:password -X POST https://&lt;rpa-ip&gt;/rest/users/sessions
+
+# List consistency groups
+GET /rest/consistency_groups
+
+# Enable image access (for test failover)
+PUT /rest/consistency_groups/{id}/clusters/{clusterId}/image_access/enable
+Body: {&quot;scenario&quot;: &quot;LOGGED_ACCESS&quot;, &quot;consistency&quot;: &quot;CRASH_CONSISTENT&quot;}
+</code></pre>
 
 
 

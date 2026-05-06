@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Policy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aaa-sso-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AAA / SSO Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-monitoring-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Monitoring Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +830,181 @@
 
 
 <h1 id="nexus-dashboard-standards">Nexus Dashboard Standards<a class="headerlink" href="#nexus-dashboard-standards" title="Permanent link">&para;</a></h1>
-<p>The standard ND cluster size is 3 nodes for production environments; 5-node clusters are required when hosting multiple services (e.g., NDFC + NDI) at scale. Node hostnames follow the convention <code>nd-&lt;site&gt;-&lt;number&gt;</code> (e.g., <code>nd-dc1-01</code>). Fabrics onboarded to ND use the naming format <code>&lt;site&gt;-&lt;fabric-type&gt;-&lt;number&gt;</code> (e.g., <code>dc1-aci-01</code>). Alert policy priority tiers align with the operational severity model: P1 (Critical), P2 (Major), P3 (Minor), P4 (Warning). RBAC roles are scoped by function: Fabric Operators have write access to assigned fabrics; ReadOnly users have view-only access across all fabrics.</p>
+<h2 id="cluster-sizing-standards">Cluster Sizing Standards<a class="headerlink" href="#cluster-sizing-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Nodes</th>
+<th>Services</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production (single service)</td>
+<td>3</td>
+<td>NDFC or NDI (not both at scale)</td>
+</tr>
+<tr>
+<td>Production (multi-service)</td>
+<td>5</td>
+<td>NDFC + NDI at production scale</td>
+</tr>
+<tr>
+<td>Non-production / lab</td>
+<td>3</td>
+<td>Any combination</td>
+</tr>
+</tbody>
+</table>
+<p>Do not run single-node ND clusters in production — a 3-node cluster is the minimum for fault tolerance.</p>
+<h2 id="node-naming-convention">Node Naming Convention<a class="headerlink" href="#node-naming-convention" title="Permanent link">&para;</a></h2>
+<p>Nodes are named using the format: <code>nd-&lt;site&gt;-&lt;number&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nd-dc1-01</code></td>
+<td>First ND node at DC1</td>
+</tr>
+<tr>
+<td><code>nd-dc1-02</code></td>
+<td>Second ND node at DC1</td>
+</tr>
+<tr>
+<td><code>nd-dc2-01</code></td>
+<td>First ND node at DC2 (disaster recovery)</td>
+</tr>
+</tbody>
+</table>
+<p>Hostnames must be resolvable via DNS and stable — avoid IP-only configurations.</p>
+<h2 id="fabric-naming-convention">Fabric Naming Convention<a class="headerlink" href="#fabric-naming-convention" title="Permanent link">&para;</a></h2>
+<p>Fabrics onboarded to Nexus Dashboard use the format: <code>&lt;site&gt;-&lt;fabric-type&gt;-&lt;number&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dc1-aci-01</code></td>
+<td>First ACI fabric at DC1</td>
+</tr>
+<tr>
+<td><code>dc1-nxos-01</code></td>
+<td>First NX-OS fabric at DC1</td>
+</tr>
+<tr>
+<td><code>dc2-aci-01</code></td>
+<td>ACI fabric at DC2</td>
+</tr>
+</tbody>
+</table>
+<p>Fabric names are used in dashboards, reports, and alert routing — keep names consistent with network topology documentation.</p>
+<h2 id="alert-policy-standards">Alert Policy Standards<a class="headerlink" href="#alert-policy-standards" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard alert priorities align with the operational severity model:</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Label</th>
+<th>Examples</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Critical</td>
+<td>Node unreachable, fabric partition, APIC unreachable</td>
+<td>Immediate — wake on-call; raise incident</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Major</td>
+<td>Interface error rate high, BGP session down, hardware fault</td>
+<td>Acknowledge within 30 minutes; raise incident</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Minor</td>
+<td>Sub-optimal path, syslog threshold, interface flap</td>
+<td>Review in next 4-hour window</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>Warning</td>
+<td>Configuration compliance deviation, minor health score drop</td>
+<td>Review in daily ops check</td>
+</tr>
+</tbody>
+</table>
+<p>Alert policies are configured in <strong>NDI &gt; Assurance &gt; Policies &gt; Alert Policies</strong>.</p>
+<h2 id="rbac-standards">RBAC Standards<a class="headerlink" href="#rbac-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Scope</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nexus Dashboard Admin</td>
+<td>Full platform admin</td>
+<td>Platform administrators only</td>
+</tr>
+<tr>
+<td>Fabric Operator</td>
+<td>Write access to assigned fabrics</td>
+<td>NOC / engineers managing specific fabrics</td>
+</tr>
+<tr>
+<td>ReadOnly</td>
+<td>View-only across all fabrics and services</td>
+<td>Operations staff, capacity planners</td>
+</tr>
+</tbody>
+</table>
+<p>Apply the principle of least privilege. Fabric Operator roles should be scoped to specific sites/fabrics where possible.</p>
+<h2 id="aaa-sso-integration">AAA / SSO Integration<a class="headerlink" href="#aaa-sso-integration" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard supports LDAP, TACACS+, and RADIUS for authentication and authorisation.</p>
+<pre><code class="language-text">Admin &gt; Authentication &gt; Remote Login Domains &gt; Add
+- Type: LDAP (or TACACS+ / RADIUS)
+- Server: ldaps://&lt;AD-DC&gt;:636
+- Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
+- Role mapping: LDAP group → ND role
+</code></pre>
+<p>SSO (SAML 2.0) is supported on newer ND versions. Enable SSO for simplified enterprise identity integration.</p>
+<h2 id="fabric-monitoring-standards">Fabric Monitoring Standards<a class="headerlink" href="#fabric-monitoring-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Cluster size: 3 nodes standard, 5 nodes for HA/scale</li>
-<li>Node naming: <code>nd-&lt;site&gt;-&lt;number&gt;</code></li>
-<li>Fabric naming: <code>&lt;site&gt;-&lt;fabric-type&gt;-&lt;number&gt;</code></li>
-<li>Alert priority tiers: P1 Critical / P2 Major / P3 Minor / P4 Warning</li>
-<li>RBAC: Fabric Operator (scoped write), ReadOnly (global view)</li>
+<li>All fabrics must have NDI health scoring enabled within 24 hours of onboarding</li>
+<li>NDI compliance checking must be run against a defined baseline configuration snapshot</li>
+<li>Flow telemetry (if licensed) is enabled on tier-1 production fabrics only</li>
+<li>Minimum NTP sync validation: all fabric nodes must sync to the same NTP source as ND nodes</li>
 </ul>
+<h2 id="change-management">Change Management<a class="headerlink" href="#change-management" title="Permanent link">&para;</a></h2>
+<p>All configuration changes to production fabrics via NDFC must be tracked as ServiceNow change records. Emergency changes may use the emergency change process, with documentation filed within 24 hours.</p>
+<h2 id="backup-standards">Backup Standards<a class="headerlink" href="#backup-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>ND cluster backup: weekly, automated via Admin &gt; Backup and Restore</li>
+<li>Backup files stored on external NFS or SFTP target</li>
+<li>NDFC configuration backup: weekly</li>
+<li>Backup retention: 4 weeks minimum</li>
+</ul>
+<pre><code class="language-text">Admin &gt; Backup and Restore &gt; Backup
+- Destination: SFTP or NFS
+- Schedule: weekly (Sunday 02:00)
+- Retention: 4 backups
+</code></pre>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Upgrade Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-devices-to-an-srdf-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Devices to an SRDF Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-devices-from-an-srdf-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing Devices from an SRDF Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-and-platform-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL and Platform Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdfa-to-srdfs-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/A to SRDF/S Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,109 @@
 
 
 <h1 id="srdfa-lifecycle">SRDF/A Lifecycle<a class="headerlink" href="#srdfa-lifecycle" title="Permanent link">&para;</a></h1>
-<p>SRDF/A feature availability is tied to the HYPERMAX OS version running on each PowerMax array; always verify compatibility before upgrading either site. The SRDF license is node-locked to the array serial number and must be re-applied after a controller board replacement. Firmware upgrades for arrays with active SRDF/A pairs require pausing replication, performing the non-disruptive upgrade (NDU), and then resuming — consistency groups must be validated after resumption.</p>
-<ul>
-<li><strong>Version matrix</strong>: Confirm HYPERMAX OS parity (or supported mixed versions) between source and target arrays.</li>
-<li><strong>Upgrade procedure</strong>: Pause SRDF/A → NDU on source → NDU on target → resume → validate cycle state.</li>
-<li><strong>EOL tracking</strong>: VMAX3/All-Flash families reached EOS; PowerMax 2000/8000 generation is current.</li>
-<li><strong>Consistency group migration</strong>: Plan device group migration during low-change-rate windows to minimise initial sync time.</li>
-</ul>
+<blockquote>
+<p>Part of the <a href="../">SRDF/A</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="version-compatibility">Version Compatibility<a class="headerlink" href="#version-compatibility" title="Permanent link">&para;</a></h2>
+<p>SRDF/A feature availability is tied to the HYPERMAX OS version running on each PowerMax array. Both source and target arrays must run a mutually supported version — check the <strong>Dell EMC Simple Support Matrix</strong> before any firmware upgrade.</p>
+<p>For mixed-version environments (e.g., during staged upgrades), confirm the specific SRDF/A features in use (cascade, adaptive copy, SRDF/Metro) are supported across both array OS versions.</p>
+<hr />
+<h2 id="firmware-upgrade-procedure">Firmware Upgrade Procedure<a class="headerlink" href="#firmware-upgrade-procedure" title="Permanent link">&para;</a></h2>
+<p>Active SRDF/A pairs must be handled carefully during array firmware upgrades (Non-Disruptive Upgrades — NDU).</p>
+<p><strong>Standard procedure:</strong></p>
+<pre><code class="language-bash"># Step 1 — Suspend SRDF/A replication on the device group
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
+
+# Step 2 — Verify pair state is Suspended
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+
+# Step 3 — Perform NDU on source array (via Unisphere or Dell support)
+# NDU on PowerMax is non-disruptive to host I/O — suspension is only for SRDF/A cycle management
+
+# Step 4 — Perform NDU on target array
+
+# Step 5 — Resume SRDF/A replication
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+
+# Step 6 — Verify pair state returns to Consistent
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+# Wait for SyncInProg → Consistent transition before closing the change window
+</code></pre>
+<p><strong>Important:</strong> After resume, monitor the delta set queue — a large backlog accumulated during suspension will flush over the WAN link and may saturate bandwidth temporarily.</p>
+<hr />
+<h2 id="adding-new-devices-to-an-srdf-group">Adding New Devices to an SRDF Group<a class="headerlink" href="#adding-new-devices-to-an-srdf-group" title="Permanent link">&para;</a></h2>
+<p>When new volumes need SRDF/A protection:</p>
+<pre><code class="language-bash"># Create a new device pair and add to an existing device group
+# Step 1 — Ensure the R2 device is created and unformatted on the target array
+# Step 2 — Create the SRDF pair (establishes initial sync)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; establish -noprompt -type RDF/A
+
+# Step 3 — Monitor sync progress
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+# State will show SyncInProg until initial full sync completes, then Consistent
+
+# Step 4 — Verify the new device pair before handing to the application team
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; verify -consistent
+</code></pre>
+<p>Initial synchronisation copies the full volume from R1 to R2. Schedule this during low-write periods to avoid saturating the WAN link and delaying existing SRDF/A cycles.</p>
+<hr />
+<h2 id="removing-devices-from-an-srdf-group">Removing Devices from an SRDF Group<a class="headerlink" href="#removing-devices-from-an-srdf-group" title="Permanent link">&para;</a></h2>
+<p>Decommission procedure for SRDF/A-protected volumes:</p>
+<pre><code class="language-bash"># Step 1 — Quiesce host I/O on the R1 devices (application-level)
+# Step 2 — Split the pair (R1 and R2 become independent)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; split -noprompt
+
+# Step 3 — Verify both sides are Split and independent
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+
+# Step 4 — Remove the pair from the device group
+symdg -g &lt;dgname&gt; -type RDF1 remove dev &lt;dev_id&gt; -noprompt
+
+# Step 5 — Remove the device from the SRDF group (RDF group)
+symrdf -rdfg &lt;group_num&gt; -sid &lt;r1_sid&gt; -dev &lt;dev_id&gt; remove
+
+# Step 6 — Decommission the R2 device on the target array (or repurpose)
+</code></pre>
+<hr />
+<h2 id="eol-and-platform-tracking">EOL and Platform Tracking<a class="headerlink" href="#eol-and-platform-tracking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VMAX3 (950F/850F)</td>
+<td>End of Service Life — no new SRDF features; firmware-only support</td>
+</tr>
+<tr>
+<td>PowerMax 2000</td>
+<td>Current — supported with latest HYPERMAX OS</td>
+</tr>
+<tr>
+<td>PowerMax 8000</td>
+<td>Current — supported with latest HYPERMAX OS</td>
+</tr>
+<tr>
+<td>PowerMax 9500</td>
+<td>Current — newest generation</td>
+</tr>
+</tbody>
+</table>
+<p>Track array firmware versions and SRDF license expiry dates in the CMDB. SRDF licenses are array-bound (node-locked to serial number); a controller board replacement requires license re-application via Dell Support.</p>
+<hr />
+<h2 id="srdfa-to-srdfs-migration">SRDF/A to SRDF/S Migration<a class="headerlink" href="#srdfa-to-srdfs-migration" title="Permanent link">&para;</a></h2>
+<p>Migrating an existing SRDF/A group to synchronous (SRDF/S) requires:</p>
+<ol>
+<li>Confirming the WAN link RTT is ≤5ms sustained.</li>
+<li>Suspending the existing SRDF/A pair.</li>
+<li>Converting the RDF group type to synchronous via Unisphere (requires brief application outage or scheduled maintenance).</li>
+<li>Resuming and verifying the pair enters <code>Synchronized</code> state.</li>
+</ol>
+<p>Consult Dell Professional Services before converting production SRDF groups between async and sync modes.</p>
 
 
 

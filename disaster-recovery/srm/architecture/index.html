@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#site-pair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Pair
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-replication-adapters-sras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Replication Adapters (SRAs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,12 +808,147 @@
 
 
 <h1 id="srm-architecture">SRM Architecture<a class="headerlink" href="#srm-architecture" title="Permanent link">&para;</a></h1>
-<p>VMware Site Recovery Manager is a DR orchestration platform deployed as a vCenter Server plugin on both the protected site and recovery site. Key components are: SRM Server (orchestration engine), vSphere Replication appliance or array-based Storage Replication Adapters (SRAs), a Site Pair (trust relationship between two SRM instances), Protection Groups (sets of VMs or datastores), and Recovery Plans (ordered failover workflows). SRM coordinates failover of VMs across vCenter instances without requiring manual intervention at the storage or compute layer.</p>
+<blockquote>
+<p>Part of the <a href="../">SRM</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer.</p>
+<hr />
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server</td>
+<td>Orchestration engine; deployed as a plugin on each vCenter</td>
+</tr>
+<tr>
+<td>Site Pair</td>
+<td>Bidirectional trust relationship between two SRM instances</td>
+</tr>
+<tr>
+<td>Protection Group</td>
+<td>Set of VMs or datastores to be failed over together</td>
+</tr>
+<tr>
+<td>Recovery Plan</td>
+<td>Ordered workflow defining failover steps, power-on sequence, and customisations</td>
+</tr>
+<tr>
+<td>SRA (Storage Replication Adapter)</td>
+<td>Vendor-supplied plugin translating SRM commands to array APIs</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>Built-in per-VM replication engine (alternative to array-based SRAs)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="site-pair">Site Pair<a class="headerlink" href="#site-pair" title="Permanent link">&para;</a></h2>
+<p>The site pair establishes a trust relationship between the protected site SRM and recovery site SRM. Both SRM servers must be able to reach each other on:</p>
 <ul>
-<li><strong>Site Pair</strong>: Bidirectional trust between two SRM servers; requires vCenter-to-vCenter connectivity on port 443.</li>
-<li><strong>Protection Groups</strong>: Array-based (datastore-level) or vSphere Replication-based (per-VM granularity).</li>
-<li><strong>Recovery Plans</strong>: Ordered steps including storage presentation, VM power-on sequence, IP customisation, and custom scripts.</li>
-<li><strong>SRA</strong>: Vendor-supplied adapter translating SRM storage commands to array-specific APIs (e.g., Dell EMC SRA for PowerMax).</li>
+<li><strong>TCP 443</strong> — vCenter and SRM API communication</li>
+<li><strong>TCP 8095</strong> — SRM server-to-server communication (SRM API)</li>
+<li><strong>TCP 9086</strong> — vSphere Replication data channel (if using vSphere Replication)</li>
+</ul>
+<p>Each site pair maps a vCenter on the protected side to a vCenter on the recovery side. The pair is configured under SRM → Configure → Site Pair.</p>
+<hr />
+<h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Granularity</th>
+<th>Replication Backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Array-based</td>
+<td>Datastore (all VMs on the datastore)</td>
+<td>SRA (vendor-specific)</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>Per-VM</td>
+<td>Built-in vSphere Replication appliance</td>
+</tr>
+</tbody>
+</table>
+<p>Array-based protection groups are more efficient for large numbers of VMs sharing the same datastore but lack per-VM RPO control. vSphere Replication allows RPO configuration per VM (5 minutes minimum) but requires more network bandwidth between sites.</p>
+<hr />
+<h2 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h2>
+<p>A Recovery Plan defines what happens when failover is triggered (test or actual):</p>
+<ol>
+<li><strong>Storage presentation</strong> — SRA or vSphere Replication exposes the replica datastores to the recovery site hosts</li>
+<li><strong>VM re-registration</strong> — SRM registers VMs from the failed-over datastores onto the recovery vCenter</li>
+<li><strong>Power-on sequencing</strong> — VMs power on in a defined order (e.g., domain controllers first, then application servers, then web tier)</li>
+<li><strong>IP customisation</strong> — Network settings are adjusted using customisation specs or SRM IP customisation rules</li>
+<li><strong>Custom steps</strong> — Scripts or manual approval steps can be inserted at any point in the sequence</li>
+</ol>
+<p><strong>Test vs. Actual failover:</strong></p>
+<ul>
+<li><strong>Test:</strong> SRM creates a temporary snapshot of R2 devices (array-based) or a point-in-time copy (vSphere Replication) and powers on VMs in an isolated test network. Production replication continues. Test cleanup removes the snapshot.</li>
+<li><strong>Planned migration:</strong> Orderly shutdown of protected site VMs, final sync, then power-on at recovery site. Used for scheduled DR tests or planned site migrations.</li>
+<li><strong>Unplanned failover:</strong> Protected site is unavailable; SRM fails over using the most recent replicated state (last consistent checkpoint). VMs are powered on at the recovery site.</li>
+</ul>
+<hr />
+<h2 id="storage-replication-adapters-sras">Storage Replication Adapters (SRAs)<a class="headerlink" href="#storage-replication-adapters-sras" title="Permanent link">&para;</a></h2>
+<p>SRAs are vendor-supplied adapters installed on both SRM servers. They translate SRM storage operations (discover, test, failover, reprotect) into vendor-specific array commands.</p>
+<table>
+<thead>
+<tr>
+<th>Vendor</th>
+<th>SRA</th>
+<th>Supported Replication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dell EMC</td>
+<td>Dell EMC SRA for PowerMax</td>
+<td>SRDF/A, SRDF/S</td>
+</tr>
+<tr>
+<td>Pure Storage</td>
+<td>Pure Storage SRA</td>
+<td>ActiveCluster (sync), async replication</td>
+</tr>
+<tr>
+<td>NetApp</td>
+<td>NetApp SRA for ONTAP</td>
+<td>SnapMirror (async), SnapMirror Synchronous</td>
+</tr>
+<tr>
+<td>HPE</td>
+<td>HPE 3PAR / Primera SRA</td>
+<td>Remote Copy (async and sync)</td>
+</tr>
+</tbody>
+</table>
+<p>SRAs must be installed on both sites and must match the same major version.</p>
+<hr />
+<h2 id="vsphere-replication-architecture">vSphere Replication Architecture<a class="headerlink" href="#vsphere-replication-architecture" title="Permanent link">&para;</a></h2>
+<p>vSphere Replication does not use an SRA. The replication engine is embedded in the vSphere Replication appliance (one per site).</p>
+<pre><code>Protected VM (ESXi)
+      ↓ [vSphere Replication agent in hypervisor]
+vSphere Replication Appliance (source site)
+      ↓ [TCP 44046 — replication traffic]
+vSphere Replication Appliance (recovery site)
+      ↓
+Replicated datastore (recovery site)
+</code></pre>
+<ul>
+<li>RPO: 5 minutes minimum</li>
+<li>Consistency: crash-consistent by default; application-consistent with quiescing enabled</li>
+<li>Bandwidth: compressed and deduplicated; can be throttled per-VM</li>
 </ul>
 
 

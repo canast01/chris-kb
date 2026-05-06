@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Automation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-federation-multi-site-vcf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Federation (Multi-Site VCF)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siem-and-syslog-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIEM and Syslog Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,11 @@
 
 
 <h1 id="vmware-cloud-foundation-integration">VMware Cloud Foundation Integration<a class="headerlink" href="#vmware-cloud-foundation-integration" title="Permanent link">&para;</a></h1>
-<p>VCF integrates natively with Aria Operations (formerly vRealize Operations) through the VCF Management Pack, which provides topology views of management and workload domains, vSAN health dashboards, and capacity analytics scoped to VCF constructs. Aria Automation integrates with VCF workload domains as cloud accounts, enabling infrastructure-as-code provisioning on top of SDDC Manager-managed clusters. NSX Federation is used when multiple VCF instances span sites and require a unified NSX policy plane across locations.</p>
+<blockquote>
+<p>Part of the <a href="../">VCF</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -737,7 +824,7 @@
 <tbody>
 <tr>
 <td>Aria Operations</td>
-<td>Management Pack for VCF</td>
+<td>VCF Management Pack</td>
 <td>Install MP on Aria Ops; add SDDC Manager as source</td>
 </tr>
 <tr>
@@ -748,25 +835,115 @@
 <tr>
 <td>NSX Federation</td>
 <td>Global Manager</td>
-<td>Cross-site: deploy Global Manager outside VCF lifecycle</td>
-</tr>
-<tr>
-<td>Third-party SIEM</td>
-<td>Syslog from SDDC Manager</td>
-<td>Configure under SDDC Manager &gt; Administration &gt; Syslog</td>
+<td>Cross-site; deploy Global Manager outside VCF lifecycle</td>
 </tr>
 <tr>
 <td>Active Directory</td>
-<td>SDDC Manager Identity</td>
-<td>Add AD/LDAP under SDDC Manager &gt; Administration &gt; SSO</td>
+<td>SDDC Manager Identity Source</td>
+<td>LDAP/LDAPS under Administration → Single Sign-On</td>
 </tr>
 <tr>
-<td>Backup Tools</td>
+<td>SIEM / Syslog</td>
+<td>Syslog from SDDC Manager</td>
+<td>Configure under Administration → Syslog</td>
+</tr>
+<tr>
+<td>Backup tools</td>
 <td>VM-level via vCenter</td>
-<td>VCF management VMs backed up at vCenter level (no native integration)</td>
+<td>No native VCF backup integration — use Veeam/NetBackup via vCenter</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="aria-operations">Aria Operations<a class="headerlink" href="#aria-operations" title="Permanent link">&para;</a></h2>
+<p>The VCF Management Pack for Aria Operations provides topology views, vSAN health, and capacity analytics scoped to VCF domain constructs.</p>
+<p><strong>Setup:</strong></p>
+<ol>
+<li>Download the VCF Management Pack from VMware Solution Exchange.</li>
+<li>Aria Operations → Administration → Solutions → Import Management Pack.</li>
+<li>Add a VCF account: provide SDDC Manager FQDN and admin credentials.</li>
+<li>Aria Operations discovers vCenter, NSX, and vSAN components from SDDC Manager automatically.</li>
+</ol>
+<p><strong>What it surfaces:</strong></p>
+<ul>
+<li>Domain health rollup per workload domain</li>
+<li>vSAN capacity and performance per cluster</li>
+<li>Certificate expiry across all managed components</li>
+<li>LCM compliance — which domains have pending bundle updates</li>
+</ul>
+<hr />
+<h2 id="aria-automation">Aria Automation<a class="headerlink" href="#aria-automation" title="Permanent link">&para;</a></h2>
+<p>Aria Automation connects to VCF workload domains as cloud accounts, enabling IaC VM provisioning on SDDC Manager-managed clusters.</p>
+<p><strong>Setup:</strong></p>
+<ol>
+<li>Aria Automation → Infrastructure → Cloud Accounts → Add → vCenter (or VCF).</li>
+<li>Provide the workload domain vCenter FQDN and a service account with the vCenter Admin or CloudAdmin role.</li>
+<li>Add the NSX-T Manager for the domain to enable network provisioning.</li>
+<li>Create a Cloud Zone scoped to the workload domain clusters.</li>
+</ol>
+<p><strong>Service account minimum permissions:</strong></p>
+<ul>
+<li>vCenter: <code>CloudAdmin</code> role on the relevant cluster(s)</li>
+<li>NSX: <code>Enterprise Admin</code> or a scoped role with segment and security group create/delete rights</li>
+</ul>
+<hr />
+<h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager uses AD for operator authentication. Each workload domain vCenter is also typically joined to the same AD identity source.</p>
+<p><strong>Add AD identity source to SDDC Manager:</strong></p>
+<pre><code>SDDC Manager → Administration → Single Sign-On
+→ Add Identity Source → Active Directory over LDAP
+→ Enter domain FQDN, LDAPS server, bind account DN and password
+→ Test connection → Save
+</code></pre>
+<p><strong>Assign roles to AD groups:</strong></p>
+<pre><code>SDDC Manager → Administration → Users and Groups
+→ Add → enter AD group name → assign ADMIN / OPERATOR / VIEWER role
+</code></pre>
+<p><strong>Test AD connectivity from SDDC Manager appliance:</strong></p>
+<pre><code class="language-bash">ldapsearch -H ldaps://&lt;dc-ip&gt;:636 -x -D &quot;&lt;bind-account-dn&gt;&quot; -W \
+  -b &quot;dc=domain,dc=com&quot; &quot;(sAMAccountName=&lt;test-user&gt;)&quot;
+</code></pre>
+<hr />
+<h2 id="nsx-federation-multi-site-vcf">NSX Federation (Multi-Site VCF)<a class="headerlink" href="#nsx-federation-multi-site-vcf" title="Permanent link">&para;</a></h2>
+<p>NSX Federation allows a single NSX policy plane to span multiple VCF instances across sites via a Global Manager (GM).</p>
+<p><strong>Key design points:</strong></p>
+<ul>
+<li>The Global Manager is deployed outside VCF LCM — it is not upgraded via SDDC Manager.</li>
+<li>Local NSX Managers in each VCF instance handle data-plane operations.</li>
+<li>Stretched segments, global gateway policies, and security policies are defined at the GM level.</li>
+<li>GM upgrade is planned separately from each VCF site's NSX upgrade cycle.</li>
+</ul>
+<hr />
+<h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
+<p>VCF does not provide a native VM backup solution. VM backup is handled at the vCenter layer per workload domain.</p>
+<p><strong>Veeam B&amp;R:</strong></p>
+<ol>
+<li>Add each workload domain vCenter as a Managed Server in Veeam.</li>
+<li>VMs appear in Veeam inventory as standard vSphere VMs.</li>
+<li>Ensure backup proxies have access to vSAN datastores in each domain.</li>
+</ol>
+<p><strong>SDDC Manager configuration backup</strong> (separate from VM data backup):</p>
+<pre><code>SDDC Manager → Administration → Backup → Configure
+→ Set SFTP target → schedule daily → retain 7+ restore points
+</code></pre>
+<hr />
+<h2 id="siem-and-syslog-integration">SIEM and Syslog Integration<a class="headerlink" href="#siem-and-syslog-integration" title="Permanent link">&para;</a></h2>
+<pre><code>SDDC Manager → Administration → Syslog → Add Syslog Server
+→ Protocol: TLS (recommended) or UDP/TCP → Port: 6514 or 514
+</code></pre>
+<p><strong>Verify forwarding is working:</strong></p>
+<ol>
+<li>Perform a test action in SDDC Manager (e.g., browse a domain, rotate a password).</li>
+<li>Confirm the event appears in the SIEM within a few minutes.</li>
+<li>Check that the SIEM source IP matches the SDDC Manager appliance IP.</li>
+</ol>
+<p><strong>vCenter syslog per workload domain (PowerCLI):</strong></p>
+<pre><code class="language-powershell"># Configure syslog forwarding on all ESXi hosts in a cluster
+Get-Cluster &quot;ClusterName&quot; | Get-VMHost | ForEach-Object {
+  Set-VMHostSysLogServer -VMHost $_ -SysLogServer &quot;udp://&lt;siem-ip&gt;:514&quot;
+  Restart-VMHostService -VMHost $_ -Key &quot;syslog&quot; -Confirm:$false
+}
+</code></pre>
 
 
 

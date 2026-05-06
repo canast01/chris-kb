@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expressroute-vpn-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExpressRoute + VPN Gateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-connect-hybrid-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure AD Connect (Hybrid Identity)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-monitor-siem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Monitor → SIEM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-actions-oidc-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Actions + OIDC Federation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform-remote-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Remote State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-vault-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Vault Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,48 +808,99 @@
 
 
 <h1 id="azure-integration">Azure Integration<a class="headerlink" href="#azure-integration" title="Permanent link">&para;</a></h1>
-<p>On-premises connectivity to Azure is delivered via ExpressRoute for dedicated private circuits or VPN Gateway as a backup path, with BGP route exchange into the hub Virtual Network. Hybrid identity is synchronised from on-premises Active Directory to Entra ID using Azure AD Connect, with Password Hash Sync or Pass-Through Authentication depending on the security requirements. GitHub Actions pipelines authenticate to Azure using OIDC federation with a service principal or managed identity, eliminating the need for long-lived client secrets, and Terraform remote state is stored in Azure Blob Storage with state-file locking via blob leases.</p>
-<table>
-<thead>
-<tr>
-<th>Integration</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>On-premises network</td>
-<td>ExpressRoute (primary) + VPN Gateway (failover)</td>
-<td>BGP into hub VNet via Virtual Network Gateway</td>
-</tr>
-<tr>
-<td>Active Directory</td>
-<td>Azure AD Connect with PHS or PTA</td>
-<td>Seamless SSO enabled for domain-joined devices</td>
-</tr>
-<tr>
-<td>Monitoring</td>
-<td>Azure Monitor + Log Analytics → Sentinel or Splunk</td>
-<td>Diagnostic settings on all resources; DCR-based collection</td>
-</tr>
-<tr>
-<td>CI/CD</td>
-<td>GitHub Actions + OIDC → Azure service principal</td>
-<td>Federated credentials; no client secret rotation required</td>
-</tr>
-<tr>
-<td>Terraform</td>
-<td>Remote state in Azure Blob Storage (backend "azurerm")</td>
-<td>Separate storage account per environment; versioning enabled</td>
-</tr>
-<tr>
-<td>Backup</td>
-<td>Azure Backup with Recovery Services vault</td>
-<td>Cross-region restore enabled for production vaults</td>
-</tr>
-</tbody>
-</table>
+<h2 id="expressroute-vpn-gateway">ExpressRoute + VPN Gateway<a class="headerlink" href="#expressroute-vpn-gateway" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check ExpressRoute circuit status
+az network express-route show --name &lt;circuit-name&gt; -g &lt;rg&gt; \
+    --query '{CircuitProvisioningState:circuitProvisioningState,ServiceProviderProvisioningState:serviceProviderProvisioningState}'
+
+# Check ExpressRoute peering state
+az network express-route peering show --circuit-name &lt;circuit-name&gt; -g &lt;rg&gt; --name AzurePrivatePeering \
+    --query 'state'
+
+# VPN Gateway status (backup path)
+az network vnet-gateway show -n &lt;vpn-gw-name&gt; -g &lt;rg&gt; --query 'provisioningState'
+</code></pre>
+<p>BGP routes from on-premises should appear in all spoke VNet effective routes:</p>
+<pre><code class="language-bash">az network nic show-effective-route-table -n &lt;nic-name&gt; -g &lt;rg&gt; | jq '.value[] | select(.source==&quot;VpnGateway&quot;)'
+</code></pre>
+<h2 id="azure-ad-connect-hybrid-identity">Azure AD Connect (Hybrid Identity)<a class="headerlink" href="#azure-ad-connect-hybrid-identity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check AD Connect sync status
+Import-Module ADSync
+Get-ADSyncScheduler           # Verify SyncCycleEnabled = True
+Get-ADSyncConnectorRunStatus  # Last sync status
+</code></pre>
+<p>Verify sync health in Entra ID admin center: Identity → Hybrid management → Azure AD Connect.</p>
+<p>If sync fails:</p>
+<pre><code class="language-powershell">Start-ADSyncSyncCycle -PolicyType Delta   # Force delta sync
+Start-ADSyncSyncCycle -PolicyType Initial # Full sync (slow — only if required)
+</code></pre>
+<h2 id="azure-monitor-siem">Azure Monitor → SIEM<a class="headerlink" href="#azure-monitor-siem" title="Permanent link">&para;</a></h2>
+<p>Configure diagnostic settings to send to Log Analytics and Event Hub:</p>
+<pre><code class="language-bash"># Enable diagnostic settings on a resource (example: NSG)
+az monitor diagnostic-settings create --name &quot;to-log-analytics&quot; \
+    --resource &lt;nsg-resource-id&gt; \
+    --workspace &lt;log-analytics-workspace-id&gt; \
+    --logs '[{&quot;category&quot;: &quot;NetworkSecurityGroupEvent&quot;, &quot;enabled&quot;: true}]'
+
+# Stream to Splunk/Elastic via Event Hub
+az eventhubs eventhub create --name azure-logs --namespace-name &lt;ns&gt; -g &lt;rg&gt;
+# Configure Splunk Add-on for Microsoft Cloud Services to pull from Event Hub
+</code></pre>
+<h2 id="github-actions-oidc-federation">GitHub Actions + OIDC Federation<a class="headerlink" href="#github-actions-oidc-federation" title="Permanent link">&para;</a></h2>
+<p>No client secrets — use OIDC:</p>
+<pre><code class="language-bash"># Create federated credential on service principal
+az ad app federated-credential create --id &lt;app-id&gt; --parameters '{
+  &quot;name&quot;: &quot;github-actions-main&quot;,
+  &quot;issuer&quot;: &quot;https://token.actions.githubusercontent.com&quot;,
+  &quot;subject&quot;: &quot;repo:org/repo:ref:refs/heads/main&quot;,
+  &quot;audiences&quot;: [&quot;api://AzureADTokenExchange&quot;]
+}'
+</code></pre>
+<pre><code class="language-yaml"># .github/workflows/deploy.yml
+- uses: azure/login@v2
+  with:
+    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+</code></pre>
+<h2 id="terraform-remote-state">Terraform Remote State<a class="headerlink" href="#terraform-remote-state" title="Permanent link">&para;</a></h2>
+<pre><code class="language-hcl">terraform {
+  backend &quot;azurerm&quot; {
+    resource_group_name  = &quot;rg-terraform-state&quot;
+    storage_account_name = &quot;corpterraformstateprod&quot;
+    container_name       = &quot;tfstate&quot;
+    key                  = &quot;prod/vnet/terraform.tfstate&quot;
+  }
+}
+</code></pre>
+<p>State storage account standards:
+- Versioning enabled
+- Soft delete enabled (30-day retention)
+- Network access restricted to Terraform runner IPs</p>
+<h2 id="azure-backup">Azure Backup<a class="headerlink" href="#azure-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List recovery vaults
+az backup vault list --output table
+
+# List protected items in vault
+az backup item list --vault-name &lt;vault&gt; -g &lt;rg&gt; --output table
+
+# Trigger ad-hoc backup
+az backup protection backup-now --vault-name &lt;vault&gt; -g &lt;rg&gt; \
+    --item-name &lt;vm-name&gt; --container-name &lt;container&gt; \
+    --backup-management-type AzureIaasVM --retain-until 2026-12-31
+</code></pre>
+<h2 id="key-vault-integration">Key Vault Integration<a class="headerlink" href="#key-vault-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify Key Vault is accessible
+az keyvault show --name &lt;kv-name&gt; --query 'properties.provisioningState'
+
+# Grant access to a managed identity
+az keyvault set-policy --name &lt;kv-name&gt; \
+    --object-id &lt;managed-identity-object-id&gt; \
+    --secret-permissions get list
+
+# Test secret retrieval
+az keyvault secret show --vault-name &lt;kv-name&gt; --name &lt;secret-name&gt;
+</code></pre>
 
 
 

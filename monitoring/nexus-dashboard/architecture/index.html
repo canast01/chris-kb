@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#services-on-nexus-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services on Nexus Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aci-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACI Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nx-os-ndfc-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NX-OS / NDFC Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Communication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,37 +819,161 @@
 
 
 <h1 id="nexus-dashboard-architecture">Nexus Dashboard Architecture<a class="headerlink" href="#nexus-dashboard-architecture" title="Permanent link">&para;</a></h1>
-<p>Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS fabrics, providing a unified management plane for fabric visibility, health monitoring, and policy orchestration. A standard ND cluster consists of 3 nodes (physical or virtual) for production deployments; 5 nodes are required for higher availability or scale. Services — including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) — run as microservices on top of the ND platform, independently licensed and deployed. Nodes communicate over a dedicated cluster network and present a single virtual IP for management access.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS data centre fabrics. It provides unified management, health monitoring, policy orchestration, and network insights through a microservices-based architecture. Services including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) run on top of the ND platform and are independently licensed and deployed.</p>
+<h2 id="cluster-architecture">Cluster Architecture<a class="headerlink" href="#cluster-architecture" title="Permanent link">&para;</a></h2>
+<p>A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point regardless of which node the client connects to.</p>
+<pre><code>          ┌─────────────────────────────────────────┐
+          │          Management VIP                  │
+          └────────────┬────────────────────────────┘
+                       │
+          ┌────────────┼──────────────┐
+     ND Node 01    ND Node 02    ND Node 03
+   (Master)      (Worker)       (Worker)
+   [API GW]      [Services]    [Services]
+   [UI]          [NDFC]        [NDI]
+</code></pre>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Role</th>
+<th>Cluster Size</th>
+<th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ND Master Node</td>
-<td>Cluster management, API gateway, UI</td>
+<td>3 nodes</td>
+<td>Standard production deployment (NDFC or NDI, not both at scale)</td>
 </tr>
 <tr>
-<td>ND Worker Nodes</td>
-<td>Workload distribution for ND services</td>
+<td>5 nodes</td>
+<td>High availability / multi-service deployment (NDFC + NDI at scale)</td>
 </tr>
 <tr>
-<td>NDFC (Fabric Controller)</td>
-<td>Fabric policy management, provisioning (replaces DCNM)</td>
-</tr>
-<tr>
-<td>NDI (Insights)</td>
-<td>Fabric health, anomaly detection, flow telemetry</td>
-</tr>
-<tr>
-<td>ACI APIC</td>
-<td>Integrated controller for ACI fabric policy</td>
+<td>1 node</td>
+<td>Lab or development only — not supported for production</td>
 </tr>
 </tbody>
 </table>
+<h2 id="deployment-modes">Deployment Modes<a class="headerlink" href="#deployment-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Platform</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical (Cisco UCS / Nexus Dashboard appliance)</td>
+<td>Dedicated Cisco hardware</td>
+<td>Highest performance; recommended for large fabrics</td>
+</tr>
+<tr>
+<td>Virtual (VMware ESXi)</td>
+<td>vSphere VM</td>
+<td>Supported for production; check Cisco sizing guide</td>
+</tr>
+<tr>
+<td>On-premises SaaS</td>
+<td>Cisco managed</td>
+<td>Available for some ND services</td>
+</tr>
+<tr>
+<td>Cloud (AWS/Azure)</td>
+<td>Hosted VM</td>
+<td>Supported for hybrid use cases</td>
+</tr>
+</tbody>
+</table>
+<h2 id="services-on-nexus-dashboard">Services on Nexus Dashboard<a class="headerlink" href="#services-on-nexus-dashboard" title="Permanent link">&para;</a></h2>
+<p>Services are installed on top of the base ND platform as microservice bundles.</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nexus Dashboard Fabric Controller (NDFC)</td>
+<td>Replaces DCNM; manages NX-OS fabric provisioning, VXLAN BGP-EVPN, and IP Fabric for Media</td>
+</tr>
+<tr>
+<td>Nexus Dashboard Insights (NDI)</td>
+<td>Fabric health scoring, anomaly detection, flow telemetry, compliance checking</td>
+</tr>
+<tr>
+<td>Nexus Dashboard Orchestrator (NDO)</td>
+<td>Multi-site ACI policy orchestration</td>
+</tr>
+</tbody>
+</table>
+<p>Services are installed and managed from <strong>Admin &gt; App Store</strong> or via a downloaded service image.</p>
+<h2 id="aci-integration">ACI Integration<a class="headerlink" href="#aci-integration" title="Permanent link">&para;</a></h2>
+<p>For ACI fabrics, the ACI APIC cluster is added to Nexus Dashboard as a managed site. ND communicates with APIC via its northbound REST API.</p>
+<pre><code class="language-text">Admin &gt; Sites &gt; Add Site
+- Site type: ACI
+- APIC address: &lt;APIC-cluster-VIP&gt;
+- Username/password: (read-only for monitoring, admin for NDFC/NDO)
+</code></pre>
+<h2 id="nx-os-ndfc-integration">NX-OS / NDFC Integration<a class="headerlink" href="#nx-os-ndfc-integration" title="Permanent link">&para;</a></h2>
+<p>For NX-OS fabrics managed by NDFC, switches are discovered and onboarded via NDFC's fabric creation workflow. NDFC communicates with switches via SSH and SNMP.</p>
+<h2 id="node-communication">Node Communication<a class="headerlink" href="#node-communication" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ND cluster nodes (internal)</td>
+<td>HTTPS</td>
+<td>TCP 2379, 2380, 9200</td>
+<td>etcd / Elasticsearch cluster</td>
+</tr>
+<tr>
+<td>Browser → ND VIP</td>
+<td>HTTPS</td>
+<td>TCP 443</td>
+<td>Web UI and REST API</td>
+</tr>
+<tr>
+<td>ND → ACI APIC</td>
+<td>HTTPS</td>
+<td>TCP 443</td>
+<td>Policy management</td>
+</tr>
+<tr>
+<td>ND → NX-OS switches</td>
+<td>SSH</td>
+<td>TCP 22</td>
+<td>Configuration and telemetry</td>
+</tr>
+<tr>
+<td>ND → NX-OS switches</td>
+<td>SNMP</td>
+<td>UDP 161/162</td>
+<td>Fault and telemetry</td>
+</tr>
+<tr>
+<td>ND → Syslog target</td>
+<td>Syslog</td>
+<td>UDP/TCP 514</td>
+<td>Event forwarding</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-interfaces">Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permanent link">&para;</a></h2>
+<p>Each ND node requires two network interfaces:
+- <strong>Management interface</strong>: used for admin access and communication with managed devices
+- <strong>Data / cluster interface</strong>: used for inter-node cluster communication (dedicated subnet recommended)</p>
 
 
 

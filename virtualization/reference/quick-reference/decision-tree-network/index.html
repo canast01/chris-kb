@@ -21,7 +21,7 @@
     
     
       
-        <title>Network Issue Decision Tree - Chris KB</title>
+        <title>Decision Tree: VM Network Issue - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#network-issue-decision-tree" class="md-skip">
+        <a href="#decision-tree-vm-network-issue" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Network Issue Decision Tree
+              Decision Tree: VM Network Issue
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#first-decision" class="md-nav__link">
+  <a href="#step-1-basic-connectivity-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        First Decision
+        Step 1 — Basic Connectivity Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-vlan-segment-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — VLAN / Segment Issue
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-mtu-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — MTU Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-routing-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Routing Issue
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-nsx-distributed-firewall-dfw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — NSX Distributed Firewall (DFW)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-packet-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Packet Capture
       
     </span>
   </a>
@@ -743,13 +796,73 @@
 
 
 
-<h1 id="network-issue-decision-tree">Network Issue Decision Tree<a class="headerlink" href="#network-issue-decision-tree" title="Permanent link">&para;</a></h1>
-<h2 id="first-decision">First Decision<a class="headerlink" href="#first-decision" title="Permanent link">&para;</a></h2>
-<p>Can VM ping gateway?</p>
-<p>No → Check VLAN or segment</p>
-<p>Yes → Check routing</p>
-<p>If routing OK → Check firewall</p>
-<p>If firewall OK → Check packet loss</p>
+<h1 id="decision-tree-vm-network-issue">Decision Tree: VM Network Issue<a class="headerlink" href="#decision-tree-vm-network-issue" title="Permanent link">&para;</a></h1>
+<p>Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.</p>
+<h2 id="step-1-basic-connectivity-test">Step 1 — Basic Connectivity Test<a class="headerlink" href="#step-1-basic-connectivity-test" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From within the VM
+ping -c 4 &lt;gateway-ip&gt;
+ping -c 4 8.8.8.8
+traceroute &lt;destination&gt;
+</code></pre>
+<p><strong>Cannot ping gateway</strong> → Step 2 (L2/VLAN issue)
+<strong>Can ping gateway, not destination</strong> → Step 4 (routing/firewall issue)</p>
+<h2 id="step-2-vlan-segment-issue">Step 2 — VLAN / Segment Issue<a class="headerlink" href="#step-2-vlan-segment-issue" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check VM's port group assignment
+Get-VM -Name &lt;vm_name&gt; | Get-NetworkAdapter | Select-Object NetworkName, ConnectionState
+
+# Check port group VLAN ID (for standard/distributed vSwitch)
+Get-VDPortgroup -Name &lt;portgroup&gt; | Select-Object Name, VlanConfiguration
+</code></pre>
+<p>For NSX overlay segments:</p>
+<pre><code class="language-bash"># Check segment exists and is connected to the correct tier-1
+GET /api/v1/logical-switches?display_name=&lt;segment-name&gt;
+# Verify attached to correct tier-1 gateway
+</code></pre>
+<p><strong>Port group/segment misconfigured</strong> → Correct assignment and re-test.</p>
+<h2 id="step-3-mtu-check">Step 3 — MTU Check<a class="headerlink" href="#step-3-mtu-check" title="Permanent link">&para;</a></h2>
+<p>VM-to-gateway communication failures can be caused by MTU mismatch (especially in NSX environments where the recommended MTU is 1600+):</p>
+<pre><code class="language-bash"># From VM — test with large packet (NSX requires MTU ≥ 1600 on uplinks)
+ping -M do -s 1500 &lt;gateway-ip&gt;   # Linux
+ping -f -l 1472 &lt;gateway-ip&gt;      # Windows (1472 + 28 headers = 1500 bytes)
+
+# On ESXi host — check vmnic MTU
+esxcfg-nics -l | grep -E &quot;Name|MTU&quot;
+</code></pre>
+<p><strong>Packet loss on large packets</strong> → MTU mismatch on physical switch, dvSwitch, or NSX TEP VLAN.</p>
+<h2 id="step-4-routing-issue">Step 4 — Routing Issue<a class="headerlink" href="#step-4-routing-issue" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From VM
+ip route show   # Confirm default gateway is correct
+route print     # Windows
+
+# From a Linux jump host on the same segment
+traceroute &lt;destination&gt;   # Where does it drop?
+</code></pre>
+<p>If traffic drops at the tier-0 edge:
+- Check BGP peer state on the edge node:
+  <code>bash
+  get bgp neighbor summary   # All peers should be Established</code>
+- Verify edge uplink connectivity to the physical router</p>
+<h2 id="step-5-nsx-distributed-firewall-dfw">Step 5 — NSX Distributed Firewall (DFW)<a class="headerlink" href="#step-5-nsx-distributed-firewall-dfw" title="Permanent link">&para;</a></h2>
+<p>If L2 and routing are confirmed working:</p>
+<pre><code class="language-bash"># Check DFW rules applied to the VM — from ESXi host where VM runs
+vsipioctl getrules -f &lt;filter-name&gt;   # Get filter name from VM's vmx file
+
+# Get VM's DFW filter name
+summarize-dvfilter | grep -A 5 &lt;vm-name&gt;
+</code></pre>
+<p>Look for DENY rules matching the traffic flow. Check in NSX Manager:
+- Policy → Security → Gateway Firewall and Distributed Firewall
+- Use "Trace Flow" to simulate a specific flow and see which rule handles it:
+  NSX Manager → Plan &amp; Troubleshoot → Traffic Analysis</p>
+<h2 id="step-6-packet-capture">Step 6 — Packet Capture<a class="headerlink" href="#step-6-packet-capture" title="Permanent link">&para;</a></h2>
+<p>If still unresolved, capture on the relevant interface:</p>
+<pre><code class="language-bash"># Capture on VM's vNIC from ESXi host
+pktcap-uw --switchport &lt;port-id&gt; --proto 0x0800 -o /tmp/capture.pcap
+
+# Get port ID
+net-dvs -l | grep -A 10 &lt;vm-name&gt;
+</code></pre>
+<p>Analyse with Wireshark: download from <code>/tmp/capture.pcap</code> via SCP.</p>
 
 
 

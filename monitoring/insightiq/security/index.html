@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,130 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap-active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP / Active Directory Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-dashboard-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Dashboard Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-access-restriction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Access Restriction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onefs-service-account-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OneFS Service Account Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +847,106 @@
 
 
 <h1 id="insightiq-security">InsightIQ Security<a class="headerlink" href="#insightiq-security" title="Permanent link">&para;</a></h1>
-<p>InsightIQ access is controlled via local admin accounts or LDAP integration for centralised identity management. HTTPS should be enforced for all web dashboard access; HTTP access should be disabled or redirected. An audit log of admin actions (cluster adds/removes, user changes, configuration modifications) is maintained within the appliance. The PostgreSQL database backup files should be encrypted at rest and stored in a secured backup location. Network access to the InsightIQ management interface should be restricted to the operations management subnet via firewall rules.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>InsightIQ supports local accounts and LDAP/Active Directory integration. LDAP integration is strongly preferred for production environments to enable centralised account management and audit.</p>
+<h3 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h3>
+<p>Local accounts should be limited to:
+- The initial admin account used during deployment
+- A break-glass account in case LDAP is unavailable</p>
+<p>Do not use local accounts for day-to-day operations.</p>
+<h3 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">InsightIQ web UI &gt; Administration &gt; Authentication &gt; LDAP
+- LDAP server: ldaps://&lt;DC-FQDN&gt;:636 (use LDAPS — not plain LDAP)
+- Bind DN: CN=svc-iiq-ldap,OU=ServiceAccounts,DC=company,DC=com
+- Base DN: OU=StorageTeam,DC=company,DC=com
+- Group attribute: memberOf
+- Admin group → InsightIQ Administrator role
+- Viewer group → InsightIQ ReadOnly role
+</code></pre>
+<p>LDAP bind account credentials are stored in the team secrets manager. Rotate annually.</p>
+<h2 id="web-dashboard-access">Web Dashboard Access<a class="headerlink" href="#web-dashboard-access" title="Permanent link">&para;</a></h2>
+<p><strong>HTTPS-only policy</strong>: HTTP access must be disabled. Replace the self-signed certificate with one signed by the internal CA.</p>
+<pre><code class="language-bash"># On InsightIQ appliance — replace TLS certificate
+# Place the certificate and key in /etc/iiq/ssl/
+cp company-ca-signed.crt /etc/iiq/ssl/iiq.crt
+cp iiq.key /etc/iiq/ssl/iiq.key
+
+# Restart InsightIQ to apply
+sudo systemctl restart iiq
+</code></pre>
+<p>Enforce HTTPS redirect: configure the InsightIQ web server to redirect HTTP (port 80) to HTTPS (port 443).</p>
+<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
+<p>InsightIQ has two access levels:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>Full access: cluster management, configuration, user management, report creation, alert configuration</td>
+</tr>
+<tr>
+<td>ReadOnly (Viewer)</td>
+<td>View dashboards, run reports, view cluster performance data — no configuration changes</td>
+</tr>
+</tbody>
+</table>
+<p>Assign ReadOnly to all operations staff who need dashboard access but do not manage the appliance. Restrict Administrator to designated InsightIQ administrators.</p>
+<h2 id="network-access-restriction">Network Access Restriction<a class="headerlink" href="#network-access-restriction" title="Permanent link">&para;</a></h2>
+<p>InsightIQ management should only be accessible from the operations management subnet.</p>
+<pre><code class="language-bash"># Example: iptables rule to restrict web UI access
+iptables -A INPUT -p tcp --dport 443 -s &lt;mgmt-subnet&gt;/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j DROP
+
+# Restrict SSH access to ops management subnet
+iptables -A INPUT -p tcp --dport 22 -s &lt;mgmt-subnet&gt;/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+</code></pre>
+<p>Ensure these rules are persistent across reboots (via iptables-save or firewalld).</p>
+<h2 id="onefs-service-account-security">OneFS Service Account Security<a class="headerlink" href="#onefs-service-account-security" title="Permanent link">&para;</a></h2>
+<p>The <code>svc-insightiq</code> service account on OneFS must be read-only and scoped to the minimum required privileges.</p>
+<pre><code class="language-bash"># Verify the InsightIQ service account privileges on OneFS
+isi auth roles list | grep IIQ
+isi auth roles view IIQ_ReadOnly
+
+# Confirm the account is not in any admin group
+isi auth users view svc-insightiq
+</code></pre>
+<p>Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.</p>
+<h2 id="database-backup-encryption">Database Backup Encryption<a class="headerlink" href="#database-backup-encryption" title="Permanent link">&para;</a></h2>
+<p>InsightIQ database backups contain performance data and should be encrypted at rest.</p>
+<pre><code class="language-bash"># Encrypted backup using GPG
+pg_dump -U iiq iiq | gzip | gpg --cipher-algo AES256 \
+  --compress-algo none --symmetric \
+  --batch --passphrase-fd 0 &gt; /backup/iiq_$(date +%Y%m%d).sql.gz.gpg &lt;&lt;&lt; &quot;$BACKUP_PASSPHRASE&quot;
+</code></pre>
+<p>Store the backup passphrase in the secrets manager. Backup files should be stored on an encrypted backup target or an encrypted datastore.</p>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>InsightIQ logs admin actions (user logins, configuration changes, cluster add/remove) in the appliance logs. Forward to SIEM via syslog.</p>
+<pre><code class="language-bash"># /etc/rsyslog.d/insightiq.conf
+*.* @@&lt;SIEM-IP&gt;:514    # TCP syslog to SIEM
+
+sudo systemctl restart rsyslog
+</code></pre>
+<p>Key events to monitor in SIEM:
+- User login failures
+- Admin configuration changes
+- Cluster connection changes</p>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Authentication: local accounts or LDAP integration</li>
-<li>Access: HTTPS-only (disable HTTP)</li>
-<li>Audit log: retained on appliance, export periodically to SIEM</li>
-<li>Database backups: encrypted at rest</li>
-<li>Network restriction: limit access to ops management subnet</li>
-<li>Cluster credentials: dedicated read-only OneFS service account (<code>svc-insightiq</code>)</li>
+<li>[ ] LDAP/AD integration enabled; local accounts disabled for non-break-glass users</li>
+<li>[ ] HTTPS enforced; internal CA-signed certificate in place</li>
+<li>[ ] Network access restricted to ops management subnet</li>
+<li>[ ] <code>svc-insightiq</code> service account is read-only; password in secrets manager</li>
+<li>[ ] Database backups encrypted at rest and stored on external backup target</li>
+<li>[ ] Syslog forwarding to SIEM configured</li>
+<li>[ ] NTP configured (prevents certificate errors)</li>
+<li>[ ] Stale user accounts removed (monthly review)</li>
+<li>[ ] InsightIQ OS and packages patched on standard patch cycle</li>
 </ul>
 
 

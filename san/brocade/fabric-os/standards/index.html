@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#switch-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-id-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain ID Allocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-and-alias-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone and Alias Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-fabric-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN / Fabric Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +808,146 @@
 
 
 <h1 id="brocade-fabric-os-standards">Brocade Fabric OS Standards<a class="headerlink" href="#brocade-fabric-os-standards" title="Permanent link">&para;</a></h1>
-<p>Switch naming follows the convention <code>&lt;site&gt;-san-sw&lt;nn&gt;</code> (e.g., <code>lon-san-sw01</code>), with fabric A and fabric B distinguished by odd/even numbering. Domain IDs are allocated per fabric from a predefined range documented in the SAN design register, with production Fabric A using 1–20 and Fabric B using 21–40. Zone names use the format <code>&lt;hostname&gt;_&lt;hba_port&gt;-&lt;arrayname&gt;_&lt;target_port&gt;</code> (e.g., <code>web01_0-netapp01_0a</code>), and aliases follow the same naming fields individually. ISL trunks are configured between all core-edge switch pairs, and SNMP community strings are managed via the secrets vault with quarterly rotation.</p>
+<h2 id="switch-naming">Switch Naming<a class="headerlink" href="#switch-naming" title="Permanent link">&para;</a></h2>
+<pre><code>&lt;site&gt;-san-sw&lt;nn&gt;
+</code></pre>
 <table>
 <thead>
 <tr>
-<th>Item</th>
+<th>Site</th>
+<th>Fabric A</th>
+<th>Fabric B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DC1</td>
+<td><code>dc1-san-sw01</code>, <code>dc1-san-sw03</code></td>
+<td><code>dc1-san-sw02</code>, <code>dc1-san-sw04</code></td>
+</tr>
+<tr>
+<td>DC2</td>
+<td><code>dc2-san-sw01</code>, <code>dc2-san-sw03</code></td>
+<td><code>dc2-san-sw02</code>, <code>dc2-san-sw04</code></td>
+</tr>
+</tbody>
+</table>
+<p>Convention: Fabric A = odd switch numbers, Fabric B = even. This makes fabric membership immediately identifiable from the hostname.</p>
+<h2 id="domain-id-allocation">Domain ID Allocation<a class="headerlink" href="#domain-id-allocation" title="Permanent link">&para;</a></h2>
+<p>Domain IDs must be unique within a fabric and allocated from a predefined range:</p>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Fabric</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1–20</td>
+<td>Production Fabric A</td>
+<td>Allocated from SAN design register</td>
+</tr>
+<tr>
+<td>21–40</td>
+<td>Production Fabric B</td>
+<td>Separate range prevents conflicts</td>
+</tr>
+<tr>
+<td>41–60</td>
+<td>Replication Fabric</td>
+<td>SRDF or RecoverPoint fabrics</td>
+</tr>
+<tr>
+<td>61–80</td>
+<td>DR Site Fabric A/B</td>
+<td>Keep separate from production</td>
+</tr>
+</tbody>
+</table>
+<p>Document domain ID assignments in the SAN design register in CMDB.</p>
+<h2 id="zone-and-alias-naming">Zone and Alias Naming<a class="headerlink" href="#zone-and-alias-naming" title="Permanent link">&para;</a></h2>
+<pre><code>Zone:   &lt;hostname&gt;_&lt;hba_port&gt;-&lt;arrayname&gt;_&lt;target_port&gt;
+Alias:  &lt;hostname&gt;_&lt;hba_port&gt;   or   &lt;arrayname&gt;_&lt;target_port&gt;
+</code></pre>
+<p>Examples:
+- Zone: <code>db01_0a-powermax01_0a</code> — host DB01 HBA0 port A to PowerMax array port 0A
+- Alias: <code>db01_0a</code> (alias for the initiator WWPN), <code>powermax01_0a</code> (alias for target port)</p>
+<p>Rules:
+- One initiator per zone — never put two host WWPNs in the same zone
+- Zones should contain: one host HBA port + required array target ports
+- No single-target zones without a matching initiator (orphan cleanup)</p>
+<h2 id="vsan-fabric-design">VSAN / Fabric Design<a class="headerlink" href="#vsan-fabric-design" title="Permanent link">&para;</a></h2>
+<p>For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
+- Production Fabric A: all switches in fabric A connected via ISLs
+- Production Fabric B: all switches in fabric B — completely separate cable plant
+- Switches must never be cabled between Fabric A and Fabric B</p>
+<h2 id="isl-standards">ISL Standards<a class="headerlink" href="#isl-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
 <th>Standard</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Switch name</td>
-<td><code>&lt;site&gt;-san-sw&lt;nn&gt;</code></td>
+<td>Minimum ISLs per switch pair</td>
+<td>2 (trunk group)</td>
 </tr>
 <tr>
-<td>Domain ID range (Fabric A)</td>
-<td>1–20</td>
+<td>ISL speed</td>
+<td>Equal to or greater than connected host/array port speed</td>
 </tr>
 <tr>
-<td>Domain ID range (Fabric B)</td>
-<td>21–40</td>
+<td>Trunk group configuration</td>
+<td><code>porttrunkarea</code> configured on ISL ports</td>
 </tr>
 <tr>
-<td>Zone name format</td>
-<td><code>&lt;host&gt;_&lt;hba&gt;-&lt;array&gt;_&lt;port&gt;</code></td>
-</tr>
-<tr>
-<td>ISL configuration</td>
-<td>Trunk groups, minimum 2 ISLs per pair</td>
-</tr>
-<tr>
-<td>SNMP</td>
-<td>Vault-managed, quarterly rotation</td>
+<td>FSPF cost</td>
+<td>Default (auto) unless explicit traffic engineering is required</td>
 </tr>
 </tbody>
 </table>
+<p>Verify trunk status:</p>
+<pre><code class="language-bash">trunkshow   # All ISL trunks and member ports
+islshow     # ISL utilisation
+</code></pre>
+<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNMP</td>
+<td>SNMPv3 only; community strings in vault; quarterly rotation</td>
+</tr>
+<tr>
+<td>Management access</td>
+<td>SSH only; Telnet disabled; <code>sshutil disable telnet</code></td>
+</tr>
+<tr>
+<td>RADIUS/TACACS+</td>
+<td>All fabrics must use central AAA; local accounts for break-glass only</td>
+</tr>
+<tr>
+<td>Audit logging</td>
+<td><code>auditcfg --set 1</code> — all logins and config changes logged</td>
+</tr>
+</tbody>
+</table>
+<h2 id="firmware-standards">Firmware Standards<a class="headerlink" href="#firmware-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All switches in a fabric must run the same Fabric OS version (FOS)</li>
+<li>New FOS versions applied to Fabric B first, validated, then Fabric A</li>
+<li>Minimum: stay within 1 major FOS version of Broadcom's current release</li>
+<li>Check FOS EOL: <a href="https://support.broadcom.com">support.broadcom.com</a> → Product Lifecycle</li>
+</ul>
 
 
 

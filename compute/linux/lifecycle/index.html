@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#os-support-timelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OS Support Timelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patching-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patching Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernel-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernel Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-provisioning-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Provisioning Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rhel-subscription-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RHEL Subscription Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-place-upgrade-rhel-8-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Upgrade (RHEL 8 → 9)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +808,18 @@
 
 
 <h1 id="linux-lifecycle">Linux Lifecycle<a class="headerlink" href="#linux-lifecycle" title="Permanent link">&para;</a></h1>
-<p>RHEL follows a 10-year lifecycle: RHEL 8 reaches end of maintenance in 2029, RHEL 9 in 2032. Ubuntu LTS releases receive 5 years of standard support (extendable to 10 years with Ubuntu Pro/ESM). EOL tracking is maintained in the CMDB with automated alerts raised 12 months before support expiry. Kernel updates are applied monthly during patching windows; major OS migrations are planned 18 months in advance and follow a build-new/decommission-old approach.</p>
+<blockquote>
+<p>Part of the <a href="../">Linux</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="os-support-timelines">OS Support Timelines<a class="headerlink" href="#os-support-timelines" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>OS</th>
 <th>Version</th>
-<th>EOM/EOL</th>
+<th>End of Maintenance</th>
+<th>Extended (ESM/ELS)</th>
 </tr>
 </thead>
 <tbody>
@@ -739,24 +827,139 @@
 <td>RHEL</td>
 <td>8</td>
 <td>May 2029</td>
+<td>May 2031 (ELS)</td>
 </tr>
 <tr>
 <td>RHEL</td>
 <td>9</td>
 <td>May 2032</td>
+<td>May 2034 (ELS)</td>
 </tr>
 <tr>
 <td>Ubuntu LTS</td>
 <td>22.04</td>
-<td>Apr 2027 (std) / Apr 2032 (ESM)</td>
+<td>Apr 2027</td>
+<td>Apr 2032 (Ubuntu Pro)</td>
 </tr>
 <tr>
 <td>Ubuntu LTS</td>
 <td>24.04</td>
-<td>Apr 2029 (std) / Apr 2034 (ESM)</td>
+<td>Apr 2029</td>
+<td>Apr 2034 (Ubuntu Pro)</td>
 </tr>
 </tbody>
 </table>
+<p>EOL tracking is maintained in the CMDB. Alerts are raised 12 months before support expiry to allow planned migration.</p>
+<hr />
+<h2 id="patching-procedure">Patching Procedure<a class="headerlink" href="#patching-procedure" title="Permanent link">&para;</a></h2>
+<p><strong>RHEL / Rocky Linux:</strong></p>
+<pre><code class="language-bash"># Check available updates
+dnf check-update
+
+# Apply all security updates only
+dnf update --security -y
+
+# Apply all updates
+dnf update -y
+
+# Check if a reboot is required
+needs-restarting -r    # exits 1 if reboot required, 0 if not
+dnf needs-restarting   # also lists which services need restart (no reboot)
+
+# Verify installed kernel versions
+rpm -q kernel | sort -V
+uname -r   # currently running kernel
+</code></pre>
+<p><strong>Ubuntu:</strong></p>
+<pre><code class="language-bash"># Check available updates
+apt list --upgradable
+
+# Apply all updates
+apt update &amp;&amp; apt upgrade -y
+
+# Security updates only (via unattended-upgrades)
+unattended-upgrade --dry-run
+unattended-upgrade -v
+
+# Check if reboot is required
+cat /var/run/reboot-required
+</code></pre>
+<hr />
+<h2 id="kernel-management">Kernel Management<a class="headerlink" href="#kernel-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List installed kernels (RHEL)
+rpm -q kernel | sort -V
+
+# Set default kernel (RHEL/GRUB2)
+grub2-set-default 0    # 0 = latest; run grubby --info=ALL to list entries
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# List installed kernels (Ubuntu)
+dpkg --list | grep linux-image
+
+# Remove old kernels (Ubuntu — keeps current + 1 previous)
+apt autoremove --purge
+</code></pre>
+<hr />
+<h2 id="server-provisioning-checklist">Server Provisioning Checklist<a class="headerlink" href="#server-provisioning-checklist" title="Permanent link">&para;</a></h2>
+<p>After a new RHEL/Ubuntu server is deployed from template:</p>
+<ul>
+<li>[ ] Set hostname: <code>hostnamectl set-hostname &lt;fqdn&gt;</code></li>
+<li>[ ] Verify DNS forward and reverse resolution: <code>dig &lt;fqdn&gt;</code> and <code>dig -x &lt;ip&gt;</code></li>
+<li>[ ] Configure NTP: <code>chronyc sources -v</code> — confirm active sync</li>
+<li>[ ] Join Active Directory: <code>realm join &lt;domain&gt;</code> (see <a href="../integration/">Integration</a>)</li>
+<li>[ ] Apply all available patches before production use</li>
+<li>[ ] Install backup agent and register to backup server</li>
+<li>[ ] Install monitoring agent (node_exporter, Aria agent)</li>
+<li>[ ] Configure <code>/etc/sudoers.d/</code> entries for admin AD groups</li>
+<li>[ ] Confirm firewalld rules allow required traffic only</li>
+<li>[ ] Update CMDB with hardware, OS version, owner, and backup policy</li>
+</ul>
+<hr />
+<h2 id="decommission-checklist">Decommission Checklist<a class="headerlink" href="#decommission-checklist" title="Permanent link">&para;</a></h2>
+<p>Before removing a server:</p>
+<ul>
+<li>[ ] Confirm with the service owner that the server is no longer in use</li>
+<li>[ ] Remove from load balancer pool / DNS entries</li>
+<li>[ ] Remove from monitoring (Prometheus, Aria)</li>
+<li>[ ] Remove backup jobs from Veeam or NetBackup and delete restore points after retention</li>
+<li>[ ] Unjoin from Active Directory: <code>realm leave</code></li>
+<li>[ ] Remove from Ansible inventory</li>
+<li>[ ] Update CMDB state to Retired</li>
+<li>[ ] If VM: remove from vCenter and delete VMDK files</li>
+<li>[ ] If physical: initiate hardware decommission process</li>
+</ul>
+<hr />
+<h2 id="rhel-subscription-management">RHEL Subscription Management<a class="headerlink" href="#rhel-subscription-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check subscription status
+subscription-manager status
+subscription-manager list --consumed
+
+# Register a new system
+subscription-manager register --username &lt;rhn-user&gt; --password &lt;rhn-pass&gt;
+subscription-manager attach --auto
+
+# Check available repos
+subscription-manager repos --list-enabled
+
+# Enable a specific repo
+subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+</code></pre>
+<hr />
+<h2 id="in-place-upgrade-rhel-8-9">In-Place Upgrade (RHEL 8 → 9)<a class="headerlink" href="#in-place-upgrade-rhel-8-9" title="Permanent link">&para;</a></h2>
+<p>In-place RHEL upgrades use the <code>leapp</code> tool and require a maintenance window. Not all workloads support in-place upgrade — validate application vendor support first.</p>
+<pre><code class="language-bash"># Install leapp
+dnf install leapp-upgrade
+
+# Pre-upgrade assessment (does not make changes)
+leapp preupgrade
+
+# Review inhibitors in /var/log/leapp/leapp-report.txt
+cat /var/log/leapp/leapp-report.txt | grep -A5 &quot;inhibitor&quot;
+
+# Perform the upgrade (server will reboot multiple times)
+leapp upgrade
+</code></pre>
+<p>Take a VM snapshot or backup before starting the upgrade. A rollback after the upgrade completes requires restoring from the snapshot.</p>
 
 
 

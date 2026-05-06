@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Password
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management-via-locker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management via Locker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +797,90 @@
 
 
 <h1 id="aria-suite-lifecycle-security">Aria Suite Lifecycle Security<a class="headerlink" href="#aria-suite-lifecycle-security" title="Permanent link">&para;</a></h1>
-<p>Certificate rotation for LCM-managed products is performed through the Locker, which stores certificates and private keys encrypted at rest; certificates should be replaced via LCM (not directly on appliances) to ensure consistent tracking and avoid configuration drift. LCM RBAC defines two primary roles — <code>LCM Admin</code> (full access including product deployment and upgrades) and <code>LCM Content Developer</code> (read-only plus content library access) — and roles are assigned via Workspace ONE Access groups rather than individual user accounts. SSH access to the LCM appliance should be restricted to jump-host source IPs via firewall rules, and root login should be audited through a PAM-based session logger or a bastion host with session recording.</p>
-<p><strong>Security hardening checklist:</strong>
-- [ ] Default <code>admin</code> password changed at first login; stored in enterprise password vault
-- [ ] Locker master password set and documented in vault — loss requires full re-import of all certs
-- [ ] SSH restricted to management jump-host CIDR via host firewall (<code>/etc/sysconfig/iptables</code> or NSX micro-segmentation)
-- [ ] LCM RBAC roles assigned to AD/LDAP groups, not individual accounts
-- [ ] Audit log retention: configure syslog forwarding to SIEM under LCM Settings &gt; Log Management
-- [ ] Certificate private keys never exported outside LCM Locker except for documented break-glass scenarios
-- [ ] Review LCM access logs monthly: <code>/var/log/lcm/access.log</code></p>
+<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
+<p>LCM roles are assigned via Workspace ONE Access (VIDM) groups — never assign to individual accounts:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LCM Admin</td>
+<td>Full access: deploy products, run upgrades, manage Locker</td>
+</tr>
+<tr>
+<td>LCM Content Developer</td>
+<td>Read-only + content library (package management); no upgrades</td>
+</tr>
+<tr>
+<td>Viewer</td>
+<td>Read-only dashboard access</td>
+</tr>
+</tbody>
+</table>
+<p>Configure RBAC:
+1. LCM → Settings → Access Control → Add Role Assignment
+2. Select role → assign to AD group (synced via VIDM)</p>
+<h2 id="default-password">Default Password<a class="headerlink" href="#default-password" title="Permanent link">&para;</a></h2>
+<p>Change the default <code>admin</code> password immediately after deployment:
+1. LCM → Settings → Local Users → admin → Change Password
+2. Store the new password in CyberArk or enterprise vault</p>
+<p><strong>Locker Master Password</strong>: set during initial LCM configuration. If lost, all certificates and passwords in the Locker become inaccessible — requires re-import. Store securely in an offline vault.</p>
+<h2 id="certificate-management-via-locker">Certificate Management via Locker<a class="headerlink" href="#certificate-management-via-locker" title="Permanent link">&para;</a></h2>
+<p>All product certificates should be managed through the Locker — not by direct file replacement on appliances:</p>
+<pre><code class="language-bash"># Import a certificate into Locker (via UI)
+# LCM → Locker → Certificates → Import Certificate
+# Required: PEM certificate (with full chain), PEM private key
+
+# Verify certificate in Locker
+# LCM → Locker → Certificates → click certificate → view details
+</code></pre>
+<p>Security rules:
+- Private keys must never be exported from the Locker except for documented break-glass scenarios
+- All certificates must be SHA-256 signed, minimum 2048-bit RSA (4096-bit preferred)
+- Include full SAN list: product FQDN + any load-balancer VIP FQDNs
+- Wildcard certificates are supported but discouraged for individual product nodes</p>
+<h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Restrict SSH on LCM appliance to management jump-host CIDR
+# /etc/sysconfig/iptables (or firewalld)
+iptables -A INPUT -p tcp --dport 22 -s &lt;mgmt-jump-cidr&gt; -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+
+# Or via NSX micro-segmentation — create DFW rule allowing port 22 from jump host group only
+
+# Verify root login is permitted via key-only (for initial access), then disable
+grep PermitRootLogin /etc/ssh/sshd_config
+</code></pre>
+<h2 id="audit-log-forwarding">Audit Log Forwarding<a class="headerlink" href="#audit-log-forwarding" title="Permanent link">&para;</a></h2>
+<p>Configure syslog forwarding to SIEM:
+1. LCM → Settings → Log Management → Syslog
+2. Enter SIEM collector IP, port 514 (UDP) or 6514 (TLS)
+3. Select log level: Info or above</p>
+<p>Log files on LCM appliance:</p>
+<pre><code class="language-bash">/var/log/lcm/lcm-app.log        # Application operations
+/var/log/lcm/access.log         # UI/API access log
+/var/log/lcm/upgrade-runner.log # Upgrade workflow details
+</code></pre>
+<p>Alert in SIEM on:
+- Admin login outside business hours
+- Certificate private key access (export events)
+- Product upgrade initiations
+- RBAC role changes</p>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Default admin password changed; stored in vault</li>
+<li>[ ] Locker master password documented in offline vault</li>
+<li>[ ] SSH restricted to management jump-host CIDR</li>
+<li>[ ] RBAC roles assigned to AD groups (not individuals)</li>
+<li>[ ] All product certificates managed via Locker (not manual replacement)</li>
+<li>[ ] Syslog forwarding configured to SIEM</li>
+<li>[ ] NFS binary repository accessible only from LCM appliance IP (NFS export restriction)</li>
+<li>[ ] Unused default accounts removed or disabled in VIDM</li>
+<li>[ ] Regular review of Locker certificate expiry (weekly)</li>
+</ul>
 
 
 

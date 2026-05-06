@@ -21,7 +21,7 @@
     
     
       
-        <title>Access Checks - Chris KB</title>
+        <title>Management Access Check - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#access-checks" class="md-skip">
+        <a href="#management-access-check" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Access Checks
+              Management Access Check
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-manager-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Manager Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-access-vcf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager Access (VCF)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adldap-identity-source-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD/LDAP Identity Source Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-control-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failed-login-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Login Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,17 +818,70 @@
 
 
 
-<h1 id="access-checks">Access Checks<a class="headerlink" href="#access-checks" title="Permanent link">&para;</a></h1>
+<h1 id="management-access-check">Management Access Check<a class="headerlink" href="#management-access-check" title="Permanent link">&para;</a></h1>
+<p>Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.</p>
+<h2 id="connectivity-checks">Connectivity Checks<a class="headerlink" href="#connectivity-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify DNS resolution for management FQDNs
+for fqdn in vcenter.corp.local nsx.corp.local sddc-manager.corp.local aria-ops.corp.local; do
+    result=$(nslookup $fqdn 2&gt;/dev/null | grep &quot;Address:&quot; | tail -1)
+    echo &quot;$fqdn → $result&quot;
+done
+
+# Verify HTTPS reachability
+for url in https://vcenter.corp.local https://nsx.corp.local; do
+    code=$(curl -sk -o /dev/null -w &quot;%{http_code}&quot; &quot;$url&quot;)
+    echo &quot;$url → HTTP $code&quot;
+done
+</code></pre>
+<h2 id="vcenter-access">vCenter Access<a class="headerlink" href="#vcenter-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Verify vCenter login (PowerCLI)
+Connect-VIServer -Server vcenter.corp.local -Credential $cred
+if ($?) { Write-Host &quot;vCenter: OK&quot; } else { Write-Host &quot;vCenter: FAIL&quot; }
+
+# Check vCenter certificate validity
+$cert = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
+$expiry = (Invoke-WebRequest -Uri &quot;https://vcenter.corp.local&quot; -UseBasicParsing).Headers
+</code></pre>
+<p>Checks to perform in vCenter UI:
+- [ ] vCenter SSO Health: Administration → Single Sign On → Diagnostics → Diagnostic Site Connectivity
+- [ ] Identity sources: Administration → Single Sign On → Configuration → Identity Sources — all should show Connected
+- [ ] System health: Administration → Deployments → System Configuration — all services green</p>
+<h2 id="nsx-manager-access">NSX Manager Access<a class="headerlink" href="#nsx-manager-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify NSX Manager cluster health (SSH to NSX Manager)
+get cluster status   # Should show: STABLE
+get services         # All critical services should show: running
+</code></pre>
+<h2 id="sddc-manager-access-vcf">SDDC Manager Access (VCF)<a class="headerlink" href="#sddc-manager-access-vcf" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SDDC Manager API health check
+curl -k -u admin@local:password https://sddc-manager.corp.local/v1/health-summary | python3 -m json.tool
+</code></pre>
+<h2 id="aria-operations-access">Aria Operations Access<a class="headerlink" href="#aria-operations-access" title="Permanent link">&para;</a></h2>
+<p>Confirm Aria Ops is receiving telemetry:
+1. Log in to <code>https://aria-ops.corp.local</code>
+2. Environment → Object Browser → confirm vCenter adapter shows <code>Collection State: OK</code>
+3. Check last collection time — should be within the last 5 minutes</p>
+<h2 id="adldap-identity-source-health">AD/LDAP Identity Source Health<a class="headerlink" href="#adldap-identity-source-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test LDAP connectivity (run from a Linux admin host)
+ldapsearch -H ldaps://dc1.corp.local:636 -D &quot;cn=svc_vcenter,ou=service_accounts,dc=corp,dc=local&quot; \
+    -w '&lt;password&gt;' -b &quot;dc=corp,dc=local&quot; &quot;(sAMAccountName=admin)&quot; sAMAccountName
+# Should return at least one result
+</code></pre>
+<h2 id="access-control-review">Access Control Review<a class="headerlink" href="#access-control-review" title="Permanent link">&para;</a></h2>
+<p>Run monthly (in addition to weekly connectivity checks):</p>
 <ul>
-<li>Review local administrator access</li>
-<li>Review vCenter roles and permissions</li>
-<li>Confirm AD/LDAP identity source health</li>
-<li>Remove stale accounts</li>
-<li>Validate service accounts</li>
-<li>Confirm MFA or privileged access controls if used</li>
-<li>Monitor failed logins</li>
-<li>Protect break-glass accounts</li>
+<li>[ ] Review stale user accounts: Administration → Users and Groups — remove leavers</li>
+<li>[ ] Review service account usage: confirm all service accounts still needed</li>
+<li>[ ] Verify MFA is enforced for admin console access (via SSO policy or Workspace ONE Access)</li>
+<li>[ ] Review vCenter role assignments: Administration → Access Control → Roles</li>
+<li>[ ] Confirm no direct permission grants to individual users (should be via group memberships)</li>
+<li>[ ] Check break-glass accounts: password still in vault; access log reviewed</li>
 </ul>
+<h2 id="failed-login-monitoring">Failed Login Monitoring<a class="headerlink" href="#failed-login-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check vCenter SSO audit log for failed logins
+# /storage/log/vmware/sso/vmware-sts-idmd.log on vCenter appliance
+grep &quot;AuthenticationException\|failed.*login\|InvalidCredentials&quot; /var/log/vmware/sso/vmware-sts-idmd.log | tail -20
+</code></pre>
+<p>Alert on &gt; 5 failed logins for any account in a 15-minute window.</p>
 
 
 

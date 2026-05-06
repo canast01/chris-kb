@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fetch-all-systems-and-health-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetch All Systems and Health Scores
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-active-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Active Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-trend-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Trend Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-servicenow-incident-on-critical-alert-event-driven" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create ServiceNow Incident on CRITICAL Alert (Event-Driven)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#script-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,91 @@
 
 
 <h1 id="cloudiq-scripts">CloudIQ Scripts<a class="headerlink" href="#cloudiq-scripts" title="Permanent link">&para;</a></h1>
-<p>Automation scripts use the CloudIQ REST API with OAuth2 client credentials authentication. Scripts are stored in the team repository and run on a scheduled basis.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>CloudIQ REST API uses OAuth2 client credentials. All scripts load <code>client_id</code> and <code>client_secret</code> from the secrets manager at runtime.</p>
+<pre><code class="language-python">import requests
+
+TOKEN_URL = &quot;https://api.cloudiq.dell.com/auth/oauth/v2/token&quot;
+API_BASE  = &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1&quot;
+
+def get_token(client_id: str, client_secret: str) -&gt; str:
+    resp = requests.post(TOKEN_URL, data={
+        &quot;grant_type&quot;: &quot;client_credentials&quot;,
+        &quot;client_id&quot;: client_id,
+        &quot;client_secret&quot;: client_secret
+    })
+    resp.raise_for_status()
+    return resp.json()[&quot;access_token&quot;]
+
+def api_get(path: str, token: str, params: dict = None) -&gt; dict:
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;, &quot;Accept&quot;: &quot;application/json&quot;}
+    resp = requests.get(f&quot;{API_BASE}{path}&quot;, headers=headers, params=params)
+    resp.raise_for_status()
+    return resp.json()
+</code></pre>
+<h2 id="fetch-all-systems-and-health-scores">Fetch All Systems and Health Scores<a class="headerlink" href="#fetch-all-systems-and-health-scores" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def get_fleet_health(token: str) -&gt; list:
+    &quot;&quot;&quot;Return list of all systems with name, type, and health score.&quot;&quot;&quot;
+    data = api_get(&quot;/systems&quot;, token)
+    return [
+        {
+            &quot;id&quot;: s[&quot;id&quot;],
+            &quot;name&quot;: s[&quot;name&quot;],
+            &quot;type&quot;: s[&quot;type&quot;],
+            &quot;health_score&quot;: s.get(&quot;health_score&quot;, &quot;N/A&quot;),
+            &quot;last_seen&quot;: s.get(&quot;last_seen&quot;)
+        }
+        for s in data.get(&quot;results&quot;, [])
+    ]
+</code></pre>
+<h2 id="export-active-alerts">Export Active Alerts<a class="headerlink" href="#export-active-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import csv, datetime
+
+def export_alerts(token: str, output_file: str):
+    data = api_get(&quot;/alerts&quot;, token, params={&quot;filter&quot;: &quot;state eq 'ACTIVE'&quot;})
+    alerts = data.get(&quot;results&quot;, [])
+    with open(output_file, &quot;w&quot;, newline=&quot;&quot;) as f:
+        writer = csv.DictWriter(f, fieldnames=[&quot;id&quot;, &quot;name&quot;, &quot;severity&quot;,
+                                                &quot;system_id&quot;, &quot;created_at&quot;])
+        writer.writeheader()
+        for a in alerts:
+            writer.writerow({
+                &quot;id&quot;: a[&quot;id&quot;],
+                &quot;name&quot;: a.get(&quot;name&quot;),
+                &quot;severity&quot;: a.get(&quot;severity&quot;),
+                &quot;system_id&quot;: a.get(&quot;system_id&quot;),
+                &quot;created_at&quot;: a.get(&quot;created_at&quot;)
+            })
+    print(f&quot;Exported {len(alerts)} alerts to {output_file}&quot;)
+</code></pre>
+<h2 id="capacity-trend-query">Capacity Trend Query<a class="headerlink" href="#capacity-trend-query" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">def get_capacity(token: str, system_id: str) -&gt; dict:
+    &quot;&quot;&quot;Return capacity data for a specific system.&quot;&quot;&quot;
+    return api_get(f&quot;/systems/{system_id}/capacity&quot;, token)
+</code></pre>
+<h2 id="create-servicenow-incident-on-critical-alert-event-driven">Create ServiceNow Incident on CRITICAL Alert (Event-Driven)<a class="headerlink" href="#create-servicenow-incident-on-critical-alert-event-driven" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">import os
+
+SNOW_URL      = os.environ[&quot;SNOW_INSTANCE_URL&quot;]
+SNOW_USER     = os.environ[&quot;SNOW_USER&quot;]
+SNOW_PASSWORD = os.environ[&quot;SNOW_PASSWORD&quot;]
+
+def create_snow_incident(alert: dict):
+    payload = {
+        &quot;short_description&quot;: f&quot;CloudIQ CRITICAL: {alert['name']} on {alert.get('system_name', 'unknown')}&quot;,
+        &quot;severity&quot;: &quot;1&quot;,
+        &quot;assignment_group&quot;: &quot;storage-ops&quot;,
+        &quot;description&quot;: f&quot;Alert ID: {alert['id']}\nSeverity: {alert['severity']}\nCreated: {alert['created_at']}&quot;
+    }
+    resp = requests.post(
+        f&quot;{SNOW_URL}/api/now/table/incident&quot;,
+        auth=(SNOW_USER, SNOW_PASSWORD),
+        json=payload
+    )
+    resp.raise_for_status()
+    return resp.json()[&quot;result&quot;][&quot;number&quot;]
+</code></pre>
+<h2 id="script-inventory">Script Inventory<a class="headerlink" href="#script-inventory" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -762,7 +929,24 @@
 </tr>
 </tbody>
 </table>
-<p>All scripts authenticate via client_id and client_secret stored in the secrets manager. Credentials must be updated in the secrets manager when rotated.</p>
+<p>Scripts are stored in <code>scripts/cloudiq/</code> in the team repository. A <code>config.json.template</code> is provided — populate <code>client_id</code> and <code>client_secret</code> from the secrets manager at runtime. Never commit secrets to the repository.</p>
+<h2 id="rate-limiting">Rate Limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">&para;</a></h2>
+<p>CloudIQ REST API enforces rate limits. Implement retry with exponential backoff for HTTP 429 responses:</p>
+<pre><code class="language-python">import time
+
+def api_get_with_retry(path, token, max_retries=3):
+    for attempt in range(max_retries):
+        resp = requests.get(f&quot;{API_BASE}{path}&quot;,
+                            headers={&quot;Authorization&quot;: f&quot;Bearer {token}&quot;})
+        if resp.status_code == 429:
+            wait = 2 ** attempt
+            print(f&quot;Rate limited — waiting {wait}s before retry&quot;)
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        return resp.json()
+    raise RuntimeError(f&quot;Max retries exceeded for {path}&quot;)
+</code></pre>
 
 
 

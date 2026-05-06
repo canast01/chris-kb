@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-collection-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Collection Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-server-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Server Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extended-security-updates-esu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extended Security Updates (ESU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issue-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issue Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,18 +797,172 @@
 
 
 <h1 id="windows-server-vendor-support">Windows Server Vendor Support<a class="headerlink" href="#windows-server-vendor-support" title="Permanent link">&para;</a></h1>
-<p>Microsoft support for Windows Server is accessed through the Microsoft admin portal or Azure portal, with support tickets created under the appropriate subscription or support plan. Before opening a case, collect a System Information report (<code>msinfo32 /report</code>), relevant Event Log exports, and output from <code>sfc /scannow</code> and <code>DISM /Online /Cleanup-Image /CheckHealth</code>. Premier/Unified support customers have access to designated support engineers and faster SLAs than standard pay-per-incident support.</p>
-<ul>
-<li><strong>Support portal:</strong> <a href="https://support.microsoft.com">support.microsoft.com</a> or Microsoft 365 Admin Center</li>
-<li><strong>Ticket creation:</strong> Requires subscription ID or support contract number; select Windows Server product area</li>
-<li><strong>Diagnostic data to collect:</strong></li>
-<li><code>msinfo32 /report msinfo.txt</code> — system configuration snapshot</li>
-<li>Event Logs: System, Application, Security (exported as .evtx)</li>
-<li><code>sfc /scannow</code> — system file integrity check</li>
-<li><code>DISM /Online /Cleanup-Image /ScanHealth</code> — image health check</li>
-<li><strong>Support tiers:</strong> Standard (pay-per-incident), Developer, Professional Direct, Unified (Premier)</li>
-<li><strong>ESU:</strong> Extended Security Updates available for Windows Server 2012/2012 R2 and 2016 post-mainstream EOL; requires ESU license and MAK key or Azure Arc enrollment</li>
-</ul>
+<h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
+<p>Microsoft support portal: <a href="https://support.microsoft.com">support.microsoft.com</a></p>
+<p>For enterprise customers with Unified/Premier support: <a href="https://admin.microsoft.com">admin.microsoft.com</a> → Support → New Service Request</p>
+<ol>
+<li>Select product: Windows Server</li>
+<li>Select version and problem type</li>
+<li>Provide: hostname, OS version, event log exports, and diagnostic data (see below)</li>
+<li>For Sev A (production down): phone support is faster — call number on Unified support portal</li>
+</ol>
+<h2 id="pre-collection-diagnostics">Pre-Collection Diagnostics<a class="headerlink" href="#pre-collection-diagnostics" title="Permanent link">&para;</a></h2>
+<p>Always collect before opening a case — dramatically reduces time to resolution:</p>
+<pre><code class="language-powershell"># System information snapshot
+msinfo32 /report C:\Temp\msinfo.txt
+
+# System file integrity check
+sfc /scannow
+
+# Component store health
+DISM /Online /Cleanup-Image /ScanHealth
+DISM /Online /Cleanup-Image /CheckHealth
+
+# Export relevant event logs
+wevtutil epl System C:\Temp\System.evtx
+wevtutil epl Application C:\Temp\Application.evtx
+wevtutil epl Security C:\Temp\Security.evtx /q:&quot;*[System[(Level&lt;=3)]]&quot;   # Warning+ only
+
+# Network diagnostics
+netsh trace start capture=yes tracefile=C:\Temp\NetTrace.etl
+# ... reproduce issue ...
+netsh trace stop
+
+# Windows Performance Recorder for performance issues
+wpr -start GeneralProfile -filemode
+# ... reproduce issue (30 seconds) ...
+wpr -stop C:\Temp\trace.etl
+</code></pre>
+<h2 id="support-tiers">Support Tiers<a class="headerlink" href="#support-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Access</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard (pay-per-incident)</td>
+<td>Web + phone per incident</td>
+<td>Business hours</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>For development scenarios</td>
+<td>Business hours</td>
+</tr>
+<tr>
+<td>Professional Direct</td>
+<td>Proactive services + faster response</td>
+<td>1 business hour for Sev A</td>
+</tr>
+<tr>
+<td>Unified (formerly Premier)</td>
+<td>Designated Support Engineer + advisory</td>
+<td>&lt; 1 hour for Sev A</td>
+</tr>
+</tbody>
+</table>
+<h2 id="windows-server-lifecycle">Windows Server Lifecycle<a class="headerlink" href="#windows-server-lifecycle" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Mainstream EOL</th>
+<th>Extended Support EOL</th>
+<th>ESU Available</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows Server 2025</td>
+<td>October 2029</td>
+<td>October 2034</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Windows Server 2022</td>
+<td>October 2026</td>
+<td>October 2031</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Windows Server 2019</td>
+<td>January 2024</td>
+<td>January 2029</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Windows Server 2016</td>
+<td>January 2022</td>
+<td>January 2027</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Windows Server 2012 R2</td>
+<td>October 2018</td>
+<td>October 2023</td>
+<td>Via Azure Arc or ESU MAK</td>
+</tr>
+</tbody>
+</table>
+<p>Track EOL dates in CMDB — alert 12 months before Extended Support ends.</p>
+<h2 id="extended-security-updates-esu">Extended Security Updates (ESU)<a class="headerlink" href="#extended-security-updates-esu" title="Permanent link">&para;</a></h2>
+<p>For servers running Windows Server 2012/2012 R2 past EOL:</p>
+<pre><code class="language-powershell"># Option 1: Enroll via Azure Arc (no additional cost)
+# Install Azure Arc agent, server auto-enrolls for ESU
+
+# Option 2: Purchase ESU MAK key and activate
+slmgr /ipk &lt;ESU-MAK-KEY&gt;
+slmgr /ato
+
+# Verify ESU activation
+slmgr /dlv   # Should show &quot;Extended Security Update&quot; license
+</code></pre>
+<h2 id="common-issue-reference">Common Issue Reference<a class="headerlink" href="#common-issue-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Diagnostic Tool</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BSOD / crash</td>
+<td>WinDbg + crash dump</td>
+<td>Collect from <code>%SystemRoot%\Minidump\</code></td>
+</tr>
+<tr>
+<td>High CPU</td>
+<td>PerfMon, WPR</td>
+<td>Capture 30-second trace at peak</td>
+</tr>
+<tr>
+<td>Memory leak</td>
+<td>Task Manager + PerfMon</td>
+<td>Monitor "Private Bytes" per process over time</td>
+</tr>
+<tr>
+<td>Slow logon</td>
+<td>DCDiag, <code>gpresult /h</code></td>
+<td>Check DC connectivity and GPO application time</td>
+</tr>
+<tr>
+<td>Windows Update failure</td>
+<td><code>%SystemRoot%\Logs\CBS\CBS.log</code></td>
+<td>Look for "FAIL" entries</td>
+</tr>
+<tr>
+<td>DNS resolution</td>
+<td><code>Resolve-DnsName</code>, <code>nslookup</code></td>
+<td>Check DNS suffix search order</td>
+</tr>
+</tbody>
+</table>
 
 
 

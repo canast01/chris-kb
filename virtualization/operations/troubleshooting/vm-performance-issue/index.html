@@ -21,7 +21,7 @@
     
     
       
-        <title>Common VM Issues - Chris KB</title>
+        <title>VM Performance Issues - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#common-vm-issues" class="md-skip">
+        <a href="#vm-performance-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Common VM Issues
+              VM Performance Issues
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vm-will-not-power-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Will Not Power On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-is-slow-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Is Slow — CPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-is-slow-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Is Slow — Memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-is-slow-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Is Slow — Disk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-lost-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Lost Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-disk-full-guest-os-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Disk Full (Guest OS Level)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-tools-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Tools Warning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,37 +807,173 @@
 
 
 
-<h1 id="common-vm-issues">Common VM Issues<a class="headerlink" href="#common-vm-issues" title="Permanent link">&para;</a></h1>
+<h1 id="vm-performance-issues">VM Performance Issues<a class="headerlink" href="#vm-performance-issues" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">Troubleshooting</a> hub.</p>
+</blockquote>
+<hr />
+<h2 id="vm-will-not-power-on">VM Will Not Power On<a class="headerlink" href="#vm-will-not-power-on" title="Permanent link">&para;</a></h2>
+<p><strong>Step 1 — Check the error message in vCenter Tasks</strong> — it usually tells you exactly what failed.</p>
+<p>Common errors and resolutions:</p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to Check</th>
+<th>Error</th>
+<th>Cause</th>
+<th>Resolution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>VM will not power on</td>
-<td>Host resources, datastore space, lock files, HA status</td>
+<td>Insufficient disk space on datastore</td>
+<td>Datastore full or thin disk cannot expand</td>
+<td>Free space on the datastore</td>
 </tr>
 <tr>
-<td>VM is slow</td>
-<td>CPU ready, memory ballooning, datastore latency, snapshots</td>
+<td>Failed to lock the file</td>
+<td>Another host holds a stale lock on a VMDK</td>
+<td>Identify the locking host with <code>vmkfstools -D</code>; restart hostd there</td>
 </tr>
 <tr>
-<td>VM lost network</td>
-<td>Port group, VLAN, VMXNET3 adapter, VMware Tools</td>
+<td>No compatible host found</td>
+<td>DRS cannot place the VM (HA, resource reservation, affinity rules)</td>
+<td>Check cluster resources; check affinity/anti-affinity rules</td>
 </tr>
 <tr>
-<td>VM disk full</td>
-<td>Guest OS disk usage, snapshots, thin disk growth</td>
+<td>Configuration file not found</td>
+<td>VMX file missing or datastore inaccessible</td>
+<td>Check datastore health; re-register the VM from its VMX file</td>
 </tr>
 <tr>
-<td>VMware Tools warning</td>
-<td>Tools version, guest OS support, pending reboot</td>
+<td>Cannot open the disk — SCSI device busy</td>
+<td>Snapshot delta VMDK held by another process</td>
+<td>Run VM consolidation first</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Step 2 — Check the host where the VM is being placed</strong> for resource availability:</p>
+<pre><code class="language-powershell"># PowerCLI — check host CPU and memory
+Get-VMHost | Select Name, CpuUsageMhz, CpuTotalMhz, MemoryUsageGB, MemoryTotalGB
+</code></pre>
+<hr />
+<h2 id="vm-is-slow-cpu">VM Is Slow — CPU<a class="headerlink" href="#vm-is-slow-cpu" title="Permanent link">&para;</a></h2>
+<p><strong>CPU Ready</strong> is the key metric. It measures how long a vCPU was ready to run but waiting for a physical CPU.</p>
+<ul>
+<li>Under 5% — normal</li>
+<li>5–10% — investigate; may impact latency-sensitive workloads</li>
+<li>Over 10% — significant contention; action required</li>
+</ul>
+<pre><code class="language-bash"># Check CPU ready from esxtop
+esxtop
+# Press 'c' for CPU view — look at %RDY column per VM/vCPU
+</code></pre>
+<p><strong>Resolutions:</strong></p>
+<ul>
+<li>Reduce vCPU count on oversized VMs (a 16-vCPU VM may schedule worse than an 8-vCPU VM on a 20-core host)</li>
+<li>Check NUMA topology — a VM spanning NUMA nodes suffers remote memory access latency</li>
+<li>Migrate the VM off a saturated host via vMotion</li>
+</ul>
+<hr />
+<h2 id="vm-is-slow-memory">VM Is Slow — Memory<a class="headerlink" href="#vm-is-slow-memory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># esxtop memory view
+esxtop
+# Press 'm' for memory — look at MCTLSZ (balloon), SWCUR (swap current), LLSWR (swap read rate)
+</code></pre>
+<p>Key indicators:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCTLSZ &gt; 0</td>
+<td>VMware balloon driver is reclaiming memory from the VM</td>
+</tr>
+<tr>
+<td>SWCUR &gt; 0</td>
+<td>VM memory is being swapped to disk — severe performance impact</td>
+</tr>
+<tr>
+<td>LLSWR &gt; 0</td>
+<td>Active swap reads from disk — immediate impact on all VM operations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resolutions:</strong></p>
+<ul>
+<li>If SWAP is active: the host is severely memory-overcommitted — migrate VMs to a less loaded host</li>
+<li>If BALLOON is active: consider adding memory to the host or reducing VM memory reservations</li>
+<li>Check if VMware Tools is installed — balloon driver requires VMware Tools</li>
+</ul>
+<hr />
+<h2 id="vm-is-slow-disk">VM Is Slow — Disk<a class="headerlink" href="#vm-is-slow-disk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># esxtop storage view
+esxtop
+# Press 'u' for storage — look at GAVG (guest average latency in ms)
+# KAVG (kernel queue latency) + DAVG (device latency) = GAVG
+</code></pre>
+<ul>
+<li>Under 10ms GAVG — normal for most workloads</li>
+<li>10–20ms — acceptable for non-latency-sensitive workloads</li>
+<li>Over 20ms — investigate array-side performance</li>
+</ul>
+<p>Also check for snapshots — even a single large snapshot delta can cause significant I/O overhead during commit operations:</p>
+<pre><code class="language-powershell"># Find VMs with snapshots
+Get-VM | Get-Snapshot | Select VM, Name, Created, SizeGB
+</code></pre>
+<hr />
+<h2 id="vm-lost-network">VM Lost Network<a class="headerlink" href="#vm-lost-network" title="Permanent link">&para;</a></h2>
+<p><strong>Step 1 — Confirm from inside the guest</strong> that the NIC is up and has an IP:</p>
+<pre><code class="language-cmd"># Windows guest
+ipconfig /all
+ping &lt;gateway&gt;
+
+# Linux guest
+ip addr show
+ping &lt;gateway&gt;
+</code></pre>
+<p><strong>Step 2 — Check the virtual NIC in vCenter</strong> — is it connected?</p>
+<pre><code class="language-powershell">Get-VM &quot;VMName&quot; | Get-NetworkAdapter | Select Name, NetworkName, ConnectionState, MacAddress
+</code></pre>
+<p><strong>Step 3 — Check the port group</strong> — has the VLAN ID changed or has the port group been removed?</p>
+<pre><code class="language-bash"># From ESXi
+esxcli network vswitch dvs vmware portgroup list | grep -A5 &quot;PortgroupName&quot;
+</code></pre>
+<p><strong>Step 4 — Check for MAC address conflict</strong> — duplicate MAC addresses on the same VLAN will cause flapping.</p>
+<hr />
+<h2 id="vm-disk-full-guest-os-level">VM Disk Full (Guest OS Level)<a class="headerlink" href="#vm-disk-full-guest-os-level" title="Permanent link">&para;</a></h2>
+<p>This is a guest OS issue, but often manifests as VM slowness first (writes begin failing, applications error).</p>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell"># Find large files (run inside the guest)
+Get-ChildItem C:\ -Recurse -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select -First 20 FullName, Length
+</code></pre>
+<p>Common causes: IIS log files, Windows Update cache (<code>C:\Windows\SoftwareDistribution</code>), application logs, user profile data.</p>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash"># Find top disk consumers
+du -sh /* 2&gt;/dev/null | sort -rh | head -20
+du -sh /var/log/* | sort -rh | head -10
+</code></pre>
+<p><strong>Extending the VMDK (hot-extend):</strong></p>
+<pre><code class="language-powershell"># Extend VMDK from vCenter (PowerCLI) — VM does not need to be powered off for thin disks
+Get-VM &quot;VMName&quot; | Get-HardDisk -Name &quot;Hard disk 1&quot; | Set-HardDisk -CapacityGB &lt;new-size&gt; -Confirm:$false
+</code></pre>
+<p>After extending the VMDK, the guest OS disk partition also needs to be extended:
+- <strong>Windows:</strong> Disk Management → Extend Volume, or <code>diskpart</code>
+- <strong>Linux:</strong> <code>growpart /dev/sda 1</code> then <code>resize2fs /dev/sda1</code> (ext4) or <code>xfs_growfs /</code> (XFS)</p>
+<hr />
+<h2 id="vmware-tools-warning">VMware Tools Warning<a class="headerlink" href="#vmware-tools-warning" title="Permanent link">&para;</a></h2>
+<p>Outdated or missing VMware Tools causes: balloon driver not working (memory management fails), quiesced snapshots fail, VM network adapter type warnings, and vCenter console slowness.</p>
+<pre><code class="language-powershell"># Check VMware Tools status across all VMs
+Get-VM | Select Name, @{N=&quot;ToolsStatus&quot;;E={$_.ExtensionData.Guest.ToolsStatus}},
+  @{N=&quot;ToolsVersion&quot;;E={$_.ExtensionData.Guest.ToolsVersion}} |
+  Where-Object {$_.ToolsStatus -ne &quot;toolsOk&quot;}
+</code></pre>
+<p>Update VMware Tools:
+- <strong>Windows:</strong> Right-click VM in vCenter → Guest OS → Install/Upgrade VMware Tools → follow the wizard
+- <strong>Linux:</strong> <code>vmware-toolsd --version</code> then update via package manager (open-vm-tools) or VMware installer</p>
 
 
 

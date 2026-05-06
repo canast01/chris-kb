@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#account-onboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account Onboarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safe-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpm-rotation-status-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPM Rotation Status Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-recording-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Recording Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failed-rotation-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Rotation Alert
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,37 +808,161 @@
 
 
 <h1 id="cyberark-scripts">CyberArk Scripts<a class="headerlink" href="#cyberark-scripts" title="Permanent link">&para;</a></h1>
-<p>The scripts below use the <code>psPAS</code> PowerShell module and the PVWA REST API to automate routine CyberArk operational and audit tasks. All scripts require a PVWA service account with appropriate safe-level and administrative permissions; avoid using a personal admin account for scheduled automation.</p>
-<table>
-<thead>
-<tr>
-<th>Script</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Get-RotationStatusReport.ps1</code></td>
-<td>Queries all accounts via <code>Get-PASAccount</code> and flags those with <code>CPMStatus -ne "success"</code> or last rotation older than policy threshold; exports to CSV</td>
-</tr>
-<tr>
-<td><code>Get-SafeMembershipAudit.ps1</code></td>
-<td>Iterates all safes via <code>Get-PASSafe</code> and exports each safe's members with permission level using <code>Get-PASSafeMember</code>; used for quarterly access review</td>
-</tr>
-<tr>
-<td><code>Send-FailedRotationAlert.ps1</code></td>
-<td>Runs on schedule; calls PVWA API to detect failed CPM rotation jobs and sends email alert with account name, safe, and failure reason</td>
-</tr>
-<tr>
-<td><code>Add-AccountOnboarding.ps1</code></td>
-<td>Automates account onboarding via <code>Add-PASAccount</code> with standard platform, safe, and policy settings; validates safe exists before creating account</td>
-</tr>
-<tr>
-<td><code>Get-SessionRecordingInventory.ps1</code></td>
-<td>Lists all PSM recordings via <code>Get-PASRecording</code> for a specified date range, exports to CSV including user, target, duration, and safe</td>
-</tr>
-</tbody>
-</table>
+<p>PowerShell automation using the <code>psPAS</code> module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Install psPAS module
+Install-Module psPAS -Scope CurrentUser
+
+# Authenticate to PVWA (CyberArk authentication)
+$credential = Get-Credential  # svc-cyberark-api
+New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type CyberArk
+
+# Authenticate using LDAP / AD credentials
+New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type LDAP
+
+# Close session when done
+Close-PASSession
+</code></pre>
+<hr />
+<h2 id="account-onboarding">Account Onboarding<a class="headerlink" href="#account-onboarding" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Onboard a single account
+$params = @{
+    userName     = &quot;svc-app01&quot;
+    address      = &quot;db01.corp.example.com&quot;
+    accountName  = &quot;db01-svc-app01&quot;
+    platformID   = &quot;WinServerLocal&quot;
+    SafeName     = &quot;APP-DB01-Accounts&quot;
+    secret       = (ConvertTo-SecureString &quot;InitialPassword123!&quot; -AsPlainText -Force)
+    automaticManagementEnabled = $true
+}
+Add-PASAccount @params
+
+# Bulk onboard from CSV
+# CSV columns: userName, address, accountName, platformID, SafeName, secret
+Import-Csv &quot;accounts_to_onboard.csv&quot; | ForEach-Object {
+    Add-PASAccount `
+        -userName $_.userName `
+        -address $_.address `
+        -accountName $_.accountName `
+        -platformID $_.platformID `
+        -SafeName $_.SafeName `
+        -secret (ConvertTo-SecureString $_.secret -AsPlainText -Force) `
+        -automaticManagementEnabled $true
+    Write-Host &quot;Onboarded: $($_.accountName)&quot;
+}
+</code></pre>
+<hr />
+<h2 id="password-retrieval">Password Retrieval<a class="headerlink" href="#password-retrieval" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Retrieve a password (check-out) — used in automation only, not for interactive retrieval
+$account = Get-PASAccount -SafeName &quot;APP-DB01-Accounts&quot; -Keywords &quot;svc-app01&quot;
+$cred    = Get-PASAccountPassword -AccountID $account.id
+
+# Use the retrieved password in a script
+$securePassword = ConvertTo-SecureString $cred.Password -AsPlainText -Force
+$psCredential   = New-Object System.Management.Automation.PSCredential($account.userName, $securePassword)
+
+# Invoke-Command using retrieved credentials
+Invoke-Command -ComputerName &quot;db01.corp.example.com&quot; -Credential $psCredential -ScriptBlock {
+    # task here
+}
+</code></pre>
+<hr />
+<h2 id="safe-management">Safe Management<a class="headerlink" href="#safe-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Create a new safe
+Add-PASSafe -SafeName &quot;APP-NEWAPP-Accounts&quot; `
+  -Description &quot;Managed accounts for NewApp&quot; `
+  -ManagingCPM &quot;PasswordManager&quot; `
+  -NumberOfVersionsRetention 5
+
+# Add a safe member with specific permissions
+Add-PASSafeMember -SafeName &quot;APP-NEWAPP-Accounts&quot; `
+  -MemberName &quot;GG_CyberArk_NewApp_Owners&quot; `
+  -UseAccounts $true `
+  -RetrieveAccounts $true `
+  -ListAccounts $true `
+  -AddAccounts $true `
+  -UpdateAccountContent $true `
+  -UpdateAccountProperties $true `
+  -InitiateCPMAccountManagementOperations $true
+
+# List all safes
+Get-PASSafe | Select-Object SafeName, Description, ManagingCPM | Sort-Object SafeName
+
+# Export safe membership audit (all safes, all members)
+$report = Get-PASSafe | ForEach-Object {
+    $safeName = $_.SafeName
+    Get-PASSafeMember -SafeName $safeName | ForEach-Object {
+        [PSCustomObject]@{
+            Safe   = $safeName
+            Member = $_.MemberName
+            Type   = $_.MemberType
+            UseAccounts = $_.Permissions.useAccounts
+            RetrieveAccounts = $_.Permissions.retrieveAccounts
+        }
+    }
+}
+$report | Export-Csv &quot;SafeMembership_Audit.csv&quot; -NoTypeInformation
+</code></pre>
+<hr />
+<h2 id="cpm-rotation-status-report">CPM Rotation Status Report<a class="headerlink" href="#cpm-rotation-status-report" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Report accounts with failed rotation or rotation overdue
+$accounts = Get-PASAccount -search &quot;*&quot; | Where-Object {
+    $_.secretManagement.status -ne &quot;success&quot; -or
+    $_.secretManagement.lastModifiedTime -lt ((Get-Date).AddDays(-90).ToUnixTime())
+}
+
+$report = $accounts | Select-Object `
+    @{N=&quot;AccountName&quot;;    E={$_.name}},
+    @{N=&quot;Safe&quot;;           E={$_.safeName}},
+    @{N=&quot;Address&quot;;        E={$_.address}},
+    @{N=&quot;CPMStatus&quot;;      E={$_.secretManagement.status}},
+    @{N=&quot;LastRotation&quot;;   E={[DateTimeOffset]::FromUnixTimeSeconds($_.secretManagement.lastModifiedTime).LocalDateTime}}
+
+$report | Export-Csv &quot;CPM_RotationStatus.csv&quot; -NoTypeInformation
+$report | Where-Object { $_.CPMStatus -ne &quot;success&quot; }
+</code></pre>
+<hr />
+<h2 id="session-recording-inventory">Session Recording Inventory<a class="headerlink" href="#session-recording-inventory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List PSM recordings for a date range
+$from = (Get-Date).AddDays(-7)
+$to   = Get-Date
+
+Get-PASRecording -FromTime $from.ToUnixTime() -ToTime $to.ToUnixTime() |
+  Select-Object `
+    @{N=&quot;User&quot;;     E={$_.User}},
+    @{N=&quot;Target&quot;;   E={$_.Target}},
+    @{N=&quot;Safe&quot;;     E={$_.Safe}},
+    @{N=&quot;Start&quot;;    E={[DateTimeOffset]::FromUnixTimeSeconds($_.Start).LocalDateTime}},
+    @{N=&quot;Duration&quot;; E={$_.Duration}} |
+  Export-Csv &quot;PSM_Recordings_$(Get-Date -Format 'yyyyMMdd').csv&quot; -NoTypeInformation
+</code></pre>
+<hr />
+<h2 id="failed-rotation-alert">Failed Rotation Alert<a class="headerlink" href="#failed-rotation-alert" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Send email alert for any accounts with CPM failure (run as scheduled task)
+Import-Module psPAS
+$credential = Import-Clixml &quot;C:\Scripts\CyberArk\svc-cyberark-api.cred&quot;
+New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type CyberArk
+
+$failed = Get-PASAccount -search &quot;*&quot; |
+  Where-Object { $_.secretManagement.status -eq &quot;failure&quot; }
+
+if ($failed.Count -gt 0) {
+    $body = $failed | Select-Object name, safeName, address,
+      @{N=&quot;Status&quot;; E={$_.secretManagement.status}} |
+      ConvertTo-Html -Fragment
+
+    Send-MailMessage `
+        -To &quot;infra-sec@corp.example.com&quot; `
+        -From &quot;noreply-cyberark@corp.example.com&quot; `
+        -Subject &quot;CyberArk: $($failed.Count) CPM Rotation Failure(s)&quot; `
+        -Body &quot;&lt;html&gt;&lt;body&gt;$body&lt;/body&gt;&lt;/html&gt;&quot; `
+        -BodyAsHtml `
+        -SmtpServer &quot;smtp.corp.example.com&quot;
+}
+
+Close-PASSession
+</code></pre>
 
 
 

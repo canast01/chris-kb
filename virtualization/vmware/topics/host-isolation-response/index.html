@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -714,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
+  <a href="#isolation-response-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options
+        Isolation Response Options
       
     </span>
   </a>
@@ -725,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommended" class="md-nav__link">
+  <a href="#recommended-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended
+        Recommended Configuration
       
     </span>
   </a>
@@ -736,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#risk" class="md-nav__link">
+  <a href="#datastore-heartbeating" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Risk
+        Datastore Heartbeating
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#split-brain-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split-Brain Risk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-vm-override" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-VM Override
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-isolation-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Isolation Events
       
     </span>
   </a>
@@ -766,14 +797,95 @@
 
 
 <h1 id="host-isolation-response">Host Isolation Response<a class="headerlink" href="#host-isolation-response" title="Permanent link">&para;</a></h1>
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<p>Leave powered on<br />
-Power off<br />
-Shutdown</p>
-<h2 id="recommended">Recommended<a class="headerlink" href="#recommended" title="Permanent link">&para;</a></h2>
-<p>Leave powered on</p>
-<h2 id="risk">Risk<a class="headerlink" href="#risk" title="Permanent link">&para;</a></h2>
-<p>Powering off VMs can cause unnecessary downtime.</p>
+<p>vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running.</p>
+<h2 id="isolation-response-options">Isolation Response Options<a class="headerlink" href="#isolation-response-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Behaviour</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leave Powered On (default)</td>
+<td>VMs keep running on the isolated host</td>
+<td>Shared storage; HA can restart on another host if datastore heartbeat confirms isolation</td>
+</tr>
+<tr>
+<td>Power Off</td>
+<td>VMs are immediately powered off; HA restarts on other hosts</td>
+<td>When guest OS can tolerate abrupt power-off; fastest VM restart</td>
+</tr>
+<tr>
+<td>Shut Down</td>
+<td>VMware Tools sends a graceful shutdown; HA restarts on other hosts</td>
+<td>Guest-OS-sensitive workloads; slower than power-off</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>No action taken; VMs stay running indefinitely</td>
+<td>Not recommended — risk of split-brain</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommended-configuration">Recommended Configuration<a class="headerlink" href="#recommended-configuration" title="Permanent link">&para;</a></h2>
+<p><strong>Leave Powered On</strong> is the correct default for most environments with shared storage:</p>
+<ol>
+<li>The isolated host checks datastore heartbeat — if VMs are still accessible, they stay running.</li>
+<li>If a peer host detects the VMs are inaccessible (no datastore heartbeat from isolated host), HA restarts them.</li>
+<li>Reduces unnecessary downtime from transient network glitches.</li>
+</ol>
+<pre><code class="language-powershell"># Check current isolation response setting
+Get-Cluster | Get-View | ForEach-Object {
+    [PSCustomObject]@{
+        Cluster           = $_.Name
+        IsolationResponse = $_.Configuration.DasConfig.DefaultVmSettings.IsolationResponse
+    }
+}
+
+# Set isolation response via PowerCLI
+$spec = New-Object VMware.Vim.ClusterConfigSpecEx
+$spec.DasConfig = New-Object VMware.Vim.ClusterDasConfigInfo
+$spec.DasConfig.DefaultVmSettings = New-Object VMware.Vim.ClusterDasVmSettings
+$spec.DasConfig.DefaultVmSettings.IsolationResponse = &quot;none&quot;   # none = Leave Powered On
+(Get-Cluster &quot;ClusterName&quot; | Get-View).ReconfigureComputeResource($spec, $true)
+</code></pre>
+<h2 id="datastore-heartbeating">Datastore Heartbeating<a class="headerlink" href="#datastore-heartbeating" title="Permanent link">&para;</a></h2>
+<p>HA uses datastore heartbeats to distinguish true host failure from network isolation:</p>
+<pre><code class="language-powershell"># Check heartbeat datastores configured
+Get-Cluster | Get-View | Select-Object -ExpandProperty Configuration |
+    Select-Object -ExpandProperty DasConfig |
+    Select-Object HeartbeatDatastore, HBDatastoreCandidatePolicy
+
+# Minimum 2 heartbeat datastores recommended
+# vCenter auto-selects unless overridden
+</code></pre>
+<h2 id="split-brain-risk">Split-Brain Risk<a class="headerlink" href="#split-brain-risk" title="Permanent link">&para;</a></h2>
+<p>If isolation response is set to Shut Down or Power Off:</p>
+<ul>
+<li>Ensure shared storage is not accessible from the isolated host during isolation — otherwise the VM may be running on both the isolated host and the HA-restarted copy.</li>
+<li>Datastores with SCSI reservations or VMFS locking prevent split-brain; NFS datastores without file locking are higher risk.</li>
+</ul>
+<h2 id="per-vm-override">Per-VM Override<a class="headerlink" href="#per-vm-override" title="Permanent link">&para;</a></h2>
+<p>Isolation response can be overridden per VM for mixed workloads:</p>
+<pre><code class="language-powershell"># Set isolation response for a specific VM
+$vm = Get-VM &quot;db-prod-01&quot;
+$spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+$haOverride = New-Object VMware.Vim.ClusterDasVmConfigSpec
+$haOverride.Info = New-Object VMware.Vim.ClusterDasVmConfigInfo
+$haOverride.Info.Key = ($vm | Get-View).MoRef
+$haOverride.Info.DasSettings = New-Object VMware.Vim.ClusterDasVmSettings
+$haOverride.Info.DasSettings.IsolationResponse = &quot;shutdown&quot;
+</code></pre>
+<h2 id="troubleshooting-isolation-events">Troubleshooting Isolation Events<a class="headerlink" href="#troubleshooting-isolation-events" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check HA events for isolation activity
+Get-VIEvent -Types Warning,Error -MaxSamples 500 |
+    Where-Object { $_.FullFormattedMessage -match &quot;isolated\|isolation&quot; } |
+    Select-Object CreatedTime, Host, FullFormattedMessage
+</code></pre>
+<p>Log location on host: <code>/var/log/fdm.log</code> — search for <code>isolation</code> events with timestamps.</p>
 
 
 

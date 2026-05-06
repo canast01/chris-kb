@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-array-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Array Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pagerduty-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PagerDuty Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-alert-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Alert Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration-pure-storage-management-pack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration (Pure Storage Management Pack)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splunk-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splunk Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +819,94 @@
 
 
 <h1 id="pure1-integration">Pure1 Integration<a class="headerlink" href="#pure1-integration" title="Permanent link">&para;</a></h1>
-<p>Pure1 integrates natively with all Pure FlashArray and FlashBlade systems via outbound telemetry over HTTPS. External platform integrations extend Pure1 data into broader operational tooling.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Pure1 integrates natively with all Pure Storage FlashArray and FlashBlade systems via outbound telemetry. External integrations extend Pure1 data and alerts into ITSM, observability, on-call, and notification platforms.</p>
+<h2 id="native-array-integration">Native Array Integration<a class="headerlink" href="#native-array-integration" title="Permanent link">&para;</a></h2>
+<p>All Pure arrays connect to Pure1 automatically over outbound HTTPS. No on-premises collector is required.</p>
+<pre><code class="language-bash"># Verify array connectivity from Purity CLI
+purearray list --connection
+# Expected: pure1.purestorage.com connected
+
+# Check array network configuration
+purearray list --network
+
+# Set proxy if needed
+purearray set --proxy https://&lt;proxy-host&gt;:&lt;port&gt;
+</code></pre>
+<h2 id="servicenow-integration">ServiceNow Integration<a class="headerlink" href="#servicenow-integration" title="Permanent link">&para;</a></h2>
+<p>Pure1 creates ServiceNow incidents on CRITICAL alerts via webhook notification rules.</p>
+<pre><code class="language-text">Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook
+- URL: https://&lt;instance&gt;.service-now.com/api/now/table/incident
+- Auth: Basic (svc-pure1-snow service account)
+- Payload:
+  {
+    &quot;short_description&quot;: &quot;Pure1 CRITICAL: {{alert.summary}} — {{array.name}}&quot;,
+    &quot;severity&quot;: &quot;1&quot;,
+    &quot;assignment_group&quot;: &quot;storage-ops&quot;,
+    &quot;description&quot;: &quot;Array: {{array.name}}\nSerial: {{array.serial}}\nAlert: {{alert.description}}\nPure1 ID: {{alert.id}}&quot;
+  }
+</code></pre>
+<p>Test the webhook before enabling: <strong>Notifications &gt; [Rule] &gt; Test</strong>.</p>
+<h2 id="pagerduty-integration">PagerDuty Integration<a class="headerlink" href="#pagerduty-integration" title="Permanent link">&para;</a></h2>
+<p>For CRITICAL alerts requiring immediate on-call response:</p>
+<pre><code class="language-text">Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
+- Trigger: Alert Severity = CRITICAL
+- Action: Webhook (PagerDuty Events API v2)
+- URL: https://events.pagerduty.com/v2/enqueue
+- Payload:
+  {
+    &quot;routing_key&quot;: &quot;&lt;PagerDuty integration key&gt;&quot;,
+    &quot;event_action&quot;: &quot;trigger&quot;,
+    &quot;payload&quot;: {
+      &quot;summary&quot;: &quot;Pure1 CRITICAL: {{alert.summary}}&quot;,
+      &quot;severity&quot;: &quot;critical&quot;,
+      &quot;source&quot;: &quot;{{array.name}}&quot;
+    }
+  }
+</code></pre>
+<h2 id="email-alert-integration">Email Alert Integration<a class="headerlink" href="#email-alert-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Pure1 &gt; Administration &gt; Notifications &gt; Add Rule
+- Trigger: Alert Severity = WARNING
+- Action: Email
+- Recipients: storage-ops@company.com
+- Include: array name, health score, alert description
+</code></pre>
+<p>Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.</p>
+<h2 id="aria-operations-integration-pure-storage-management-pack">Aria Operations Integration (Pure Storage Management Pack)<a class="headerlink" href="#aria-operations-integration-pure-storage-management-pack" title="Permanent link">&para;</a></h2>
+<p>The Pure Storage Management Pack for Aria Operations pulls FlashArray metrics into vROps for correlated VMware + storage dashboards.</p>
+<pre><code class="language-text">Aria Operations &gt; Admin &gt; Solutions &gt; Pure Storage Management Pack
+- Pure1 API endpoint: https://api.pure1.purestorage.com
+- API key / private key: (service account key from Pure1)
+- Collection interval: 5 minutes
+</code></pre>
+<p>Key metrics available in Aria Operations from this integration:
+- Array IOPS, throughput, latency
+- Volume-level performance
+- Array capacity used / available / data reduction ratio</p>
+<h2 id="splunk-integration">Splunk Integration<a class="headerlink" href="#splunk-integration" title="Permanent link">&para;</a></h2>
+<p>A Splunk Heavy Forwarder or a scheduled script pulls Pure1 API data for fleet health and capacity dashboards in Splunk.</p>
+<pre><code class="language-python"># Example: scheduled Pure1 API pull for Splunk index
+# Runs every 15 minutes via Splunk scripted input or cron
+
+import requests, json, time
+
+# Auth using Pure1 RSA private key (see scripts/pure1/authentication.py)
+headers = {&quot;Authorization&quot;: f&quot;Bearer {get_pure1_token()}&quot;}
+resp    = requests.get(&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;,
+                       headers=headers)
+for array in resp.json()[&quot;items&quot;]:
+    event = {
+        &quot;source&quot;: &quot;pure1&quot;,
+        &quot;name&quot;: array[&quot;name&quot;],
+        &quot;os&quot;: array.get(&quot;os&quot;),
+        &quot;version&quot;: array.get(&quot;version&quot;),
+        &quot;time&quot;: int(time.time())
+    }
+    print(json.dumps(event))  # Splunk scripted input reads stdout
+</code></pre>
+<h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -736,13 +917,13 @@
 </thead>
 <tbody>
 <tr>
-<td>Pure FlashArray / FlashBlade</td>
-<td>Outbound HTTPS telemetry (native)</td>
-<td>Fleet health, capacity, performance data</td>
+<td>FlashArray / FlashBlade</td>
+<td>Outbound HTTPS (native — Purity)</td>
+<td>Fleet health, capacity, performance telemetry</td>
 </tr>
 <tr>
 <td>Aria Operations</td>
-<td>Pure Storage management pack</td>
+<td>Pure Storage Management Pack</td>
 <td>vROps dashboards with Pure array data</td>
 </tr>
 <tr>
@@ -752,13 +933,23 @@
 </tr>
 <tr>
 <td>ServiceNow</td>
-<td>Pure1 alert webhooks</td>
+<td>Pure1 alert webhook</td>
 <td>Auto-ticket creation on CRITICAL alerts</td>
 </tr>
 <tr>
-<td>Slack</td>
-<td>Webhook from Pure1 alert rules</td>
+<td>PagerDuty</td>
+<td>Pure1 alert webhook</td>
+<td>On-call notification for CRITICAL alerts</td>
+</tr>
+<tr>
+<td>Slack / Teams</td>
+<td>Pure1 alert webhook</td>
 <td>Real-time alert notifications to ops channel</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Pure1 notification rules</td>
+<td>WARNING alert distribution</td>
 </tr>
 </tbody>
 </table>

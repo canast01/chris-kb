@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,164 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Discovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Discovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-certificate-store-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Certificate Store Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renewal-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renewal Automation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Renewal Automation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-renewal-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Renewal Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expiry-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiry Alerting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tpp-upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TPP Upgrade Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TPP Upgrade Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tpp-to-vaas-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TPP to VaaS Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +881,169 @@
 
 
 <h1 id="venafi-lifecycle">Venafi Lifecycle<a class="headerlink" href="#venafi-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Venafi TPP follows a version matrix that must be validated against CA integration compatibility and supported OneFlow / REST API versions before each upgrade. The upgrade procedure is: take a full database backup, upgrade the primary Policy Server, validate functionality, then upgrade the secondary. Edge versioning is managed separately and must remain compatible with the TPP version in use.</p>
-<p>EOL tracking should be maintained against Venafi's published support lifecycle. Migration from TPP to TLS Protect Cloud (VaaS) requires policy tree export, CA re-integration, and re-enrolment of managed certificates in the cloud platform.</p>
+<p>Venafi TPP manages the full certificate lifecycle — discovery, policy enforcement, issuance, renewal automation, and expiry alerting. This page covers operational lifecycle procedures including upgrades and migration to TLS Protect Cloud (VaaS).</p>
+<hr />
+<h2 id="certificate-discovery">Certificate Discovery<a class="headerlink" href="#certificate-discovery" title="Permanent link">&para;</a></h2>
+<p>Venafi Discovery scans the network for certificates on well-known TLS endpoints, Windows certificate stores, and F5/network devices. Discovery is the first step in bringing unmanaged certificates under Venafi control.</p>
+<h3 id="network-discovery">Network Discovery<a class="headerlink" href="#network-discovery" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In Venafi TPP, go to <strong>Discovery &gt; Network Discovery</strong>.</li>
+<li>Create a scan job targeting an IP range or CIDR block.</li>
+<li>Set target ports: 443, 8443, 636, 3389, and any other TLS ports in use.</li>
+<li>Schedule scans to run nightly.</li>
+<li>After scan, review discovered certificates in <strong>Certificates &gt; Certificate Discovery</strong>.</li>
+<li>Move discovered certificates to the appropriate policy folder to bring them under management.</li>
+</ol>
+<h3 id="windows-certificate-store-discovery">Windows Certificate Store Discovery<a class="headerlink" href="#windows-certificate-store-discovery" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Deploy the Venafi Agent (or use agentless WMI scan) on target Windows hosts.</li>
+<li>Agent reports all certificates from <code>LocalMachine\My</code>, <code>LocalMachine\WebHosting</code>, and <code>LocalMachine\CA</code> stores.</li>
+<li>Discovered certificates appear in the Venafi inventory and can be associated with a policy folder.</li>
+</ol>
+<hr />
+<h2 id="policy-enforcement">Policy Enforcement<a class="headerlink" href="#policy-enforcement" title="Permanent link">&para;</a></h2>
+<p>Policy enforcement ensures all certificates in a folder meet the defined standards before issuance.</p>
+<p>Key policy controls (configured per policy folder):</p>
 <table>
 <thead>
 <tr>
-<th>Stage</th>
-<th>Action</th>
+<th>Control</th>
+<th>Typical Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pre-upgrade</td>
-<td>Full DB backup, CA integration compatibility check</td>
+<td>Allowed CA</td>
+<td>Internal ADCS or DigiCert (not both)</td>
 </tr>
 <tr>
-<td>Upgrade</td>
-<td>Primary Policy Server → validate → secondary</td>
+<td>Key algorithm</td>
+<td>RSA-4096 or ECDSA P-256 minimum</td>
 </tr>
 <tr>
-<td>Post-upgrade</td>
-<td>Validate certificate workflows, CA connectivity, Edge Proxy registration</td>
+<td>Hash algorithm</td>
+<td>SHA-256 minimum</td>
 </tr>
 <tr>
-<td>EOL tracking</td>
-<td>Review Venafi support lifecycle quarterly</td>
+<td>Minimum validity</td>
+<td>30 days</td>
 </tr>
 <tr>
-<td>TPP → VaaS migration</td>
-<td>Policy export, CA re-integration, certificate re-enrolment</td>
+<td>Maximum validity</td>
+<td>2 years (internal), 1 year (external)</td>
+</tr>
+<tr>
+<td>SANs required</td>
+<td>Yes — CN alone rejected</td>
+</tr>
+<tr>
+<td>Wildcard allowed</td>
+<td>Internal: yes with approval; External: no</td>
+</tr>
+<tr>
+<td>Auto-issuance</td>
+<td>Internal Production: yes; External: manual approval</td>
 </tr>
 </tbody>
 </table>
+<p>Policy violations are surfaced in the Venafi UI and via API. Non-compliant certificates generate alerts and block automated renewal until the violation is resolved.</p>
+<hr />
+<h2 id="renewal-automation">Renewal Automation<a class="headerlink" href="#renewal-automation" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP monitors certificate validity and triggers renewal at the configured renewal window (typically 30 days before expiry). Renewal can be fully automated or require approval.</p>
+<h3 id="automated-renewal-flow">Automated Renewal Flow<a class="headerlink" href="#automated-renewal-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Venafi detects a certificate within the renewal window.</li>
+<li>Venafi generates a new CSR using the stored key algorithm settings.</li>
+<li>CSR submitted to the configured CA connector.</li>
+<li>CA issues the new certificate.</li>
+<li>Venafi stores the new certificate and (if an agent/driver is configured) pushes the certificate to the target system automatically.</li>
+<li>If automatic installation is not configured, a notification is sent to the certificate owner.</li>
+</ol>
+<pre><code class="language-powershell"># Trigger an immediate renewal via REST API
+$apiKey = &quot;&lt;your-api-key&gt;&quot;
+$certDN = &quot;\\VED\\Policy\\Internal\\Production\\Servers\\app01.corp.example.com&quot;
+
+$body = @{ CertificateDN = $certDN } | ConvertTo-Json
+Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates/Renew&quot; `
+  -Headers @{ &quot;X-Venafi-API-Key&quot; = $apiKey } `
+  -Method Post -ContentType &quot;application/json&quot; -Body $body
+</code></pre>
+<hr />
+<h2 id="expiry-alerting">Expiry Alerting<a class="headerlink" href="#expiry-alerting" title="Permanent link">&para;</a></h2>
+<p>Venafi sends email notifications to certificate contacts at configurable thresholds.</p>
+<p>Default alert schedule (configured in Administration &gt; Notification Rules):
+- 30 days before expiry: notification to certificate owner
+- 14 days before expiry: escalation to team DL
+- 7 days before expiry: escalation to manager + security team
+- Day of expiry: critical alert</p>
+<pre><code class="language-powershell"># Query certificates expiring within 30 days via REST API
+$body = @{
+    Limit  = 200
+    Filter = @{
+        ValidTo = @{
+            Value    = (Get-Date).AddDays(30).ToString(&quot;yyyy-MM-ddTHH:mm:ss&quot;)
+            Operator = &quot;Less&quot;
+        }
+    }
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates&quot; `
+  -Headers @{ &quot;X-Venafi-API-Key&quot; = $apiKey } `
+  -Method Post -ContentType &quot;application/json&quot; -Body $body |
+  Select-Object -ExpandProperty Certificates |
+  Select-Object DN, CN, ValidTo, Issuer |
+  Sort-Object ValidTo
+</code></pre>
+<hr />
+<h2 id="tpp-upgrade-procedure">TPP Upgrade Procedure<a class="headerlink" href="#tpp-upgrade-procedure" title="Permanent link">&para;</a></h2>
+<p>Venafi upgrades must be tested in a non-production environment first. Check the Venafi compatibility matrix for supported SQL Server, Windows Server, and CA integration versions before upgrading.</p>
+<h3 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Review Venafi release notes and compatibility matrix</li>
+<li>[ ] Take full SQL Server database backup</li>
+<li>[ ] Take VM snapshot of both TPP nodes</li>
+<li>[ ] Verify CA connector compatibility with new TPP version</li>
+<li>[ ] Notify certificate owners of maintenance window</li>
+</ul>
+<h3 id="upgrade-steps">Upgrade Steps<a class="headerlink" href="#upgrade-steps" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># 1. Stop Venafi services on the secondary node first
+Stop-Service -Name &quot;Venafi*&quot; -Force  # run on secondary TPP node
+
+# 2. Run the installer on the primary node
+# (Download from Venafi support portal; run as Administrator)
+
+# 3. Validate primary node after upgrade
+# - Log in to TPP UI
+# - Check CA connector health
+# - Issue a test certificate
+
+# 4. Upgrade the secondary node
+# Run installer on secondary node
+
+# 5. Verify load balancer routes to both nodes
+# Test-NetConnection -ComputerName venafi-vip.corp.example.com -Port 443
+</code></pre>
+<p>Post-upgrade validation:
+- Validate all CA connectors (Administration &gt; CA Templates)
+- Trigger a manual renewal on a test certificate
+- Verify Edge Proxy re-registers after upgrade
+- Check syslog/SIEM event forwarding is intact</p>
+<hr />
+<h2 id="tpp-to-vaas-migration">TPP to VaaS Migration<a class="headerlink" href="#tpp-to-vaas-migration" title="Permanent link">&para;</a></h2>
+<p>Migration from on-premises TPP to Venafi as a Service (TLS Protect Cloud) is a significant project. High-level steps:</p>
+<ol>
+<li>Export policy tree configuration from TPP.</li>
+<li>Re-create policy folders and CA integrations in VaaS.</li>
+<li>Re-onboard managed certificates to VaaS (via discovery or bulk import).</li>
+<li>Update automation integrations (REST API base URL changes from TPP to VaaS endpoint).</li>
+<li>Decommission TPP after all certificates are confirmed managed in VaaS.</li>
+</ol>
+<p>Refer to Venafi Professional Services for migration tooling and assistance.</p>
+<hr />
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<p>Review the Venafi support lifecycle page quarterly:
+<code>https://support.venafi.com/hc/en-us/articles/360024784232</code></p>
+<p>Plan upgrades at least 6 months before the current version reaches End of Standard Support. Versions on Extended Support receive security fixes only.</p>
 
 
 

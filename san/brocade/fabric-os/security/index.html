@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disable-unused-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Unused Protocols
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#radius-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RADIUS Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipfilter-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPfilter Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-v3-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP v3 Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +808,143 @@
 
 
 <h1 id="brocade-fabric-os-security">Brocade Fabric OS Security<a class="headerlink" href="#brocade-fabric-os-security" title="Permanent link">&para;</a></h1>
-<p>Switch access is hardened by disabling Telnet and HTTP, leaving SSH and HTTPS as the only management protocols. RBAC is enforced using built-in Fabric OS roles: <code>admin</code> for full access, <code>switchadmin</code> for switch-level operations, <code>zoneadmin</code> for zoning-only changes, and <code>operator</code> for read-only monitoring. Active Directory authentication is configured via RADIUS, with local accounts retained only as a break-glass fallback. All configuration changes are logged via <code>auditlog</code> and forwarded to the SIEM via secure syslog. IPfilter policies restrict management plane access to approved management network subnets only.</p>
+<blockquote>
+<p>Part of the <a href="../">Brocade Fabric OS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Telnet and HTTP disabled; SSH and HTTPS only</li>
+<li>[ ] Root account password changed; stored in vault; break-glass use only</li>
+<li>[ ] RADIUS configured pointing to Active Directory; local accounts as fallback only</li>
+<li>[ ] RBAC roles assigned — <code>switchadmin</code> for ops, <code>zoneadmin</code> for zoning-only changes</li>
+<li>[ ] IPfilter policy restricting management plane access to approved management subnet</li>
+<li>[ ] SNMP v3 configured; default community strings removed</li>
+<li>[ ] Audit logging (<code>auditlog</code>) enabled and forwarded to SIEM</li>
+<li>[ ] NTP configured and synced (required for log correlation and certificate-based auth)</li>
+<li>[ ] Password policy enforced: minimum length, complexity, expiry</li>
+</ul>
+<hr />
+<h2 id="disable-unused-protocols">Disable Unused Protocols<a class="headerlink" href="#disable-unused-protocols" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Disable Telnet
+portdisable telnet
+# Or via configure
+configure
+# At &quot;Secure mode&quot; prompt: enable
+
+# Disable HTTP (enable HTTPS only)
+httpd --disable   # Disables the web server
+httpcfg --set -https 1  # Enable HTTPS
+
+# Verify active services
+portshow   # Review management service ports
+</code></pre>
+<hr />
+<h2 id="radius-authentication">RADIUS Authentication<a class="headerlink" href="#radius-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Configure RADIUS server
+aaaconfig --add &lt;radius-server-ip&gt; -conf radius -p &lt;port&gt; -s &lt;shared-secret&gt;
+
+# Set authentication order: RADIUS primary, local fallback
+aaaconfig --authorder RADIUS;LOCAL
+
+# Verify RADIUS is configured
+aaaconfig --show
+
+# Test RADIUS authentication
+aaaconfig --validate -user &lt;test-user&gt;
+</code></pre>
+<p><strong>Local fallback account</strong> — retain the local <code>admin</code> account as break-glass. Store the password in the enterprise vault.</p>
+<hr />
+<h2 id="rbac-roles">RBAC Roles<a class="headerlink" href="#rbac-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Control</th>
-<th>Implementation</th>
+<th>Role</th>
+<th>Access</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Management protocols</td>
-<td>SSH, HTTPS only (Telnet/HTTP disabled)</td>
+<td>admin</td>
+<td>Full switch access — config, firmware, certificates</td>
 </tr>
 <tr>
-<td>RBAC</td>
-<td>FOS built-in roles (admin, switchadmin, zoneadmin, operator)</td>
+<td>switchadmin</td>
+<td>Switch operations — port management, diagnostics</td>
 </tr>
 <tr>
-<td>Authentication</td>
-<td>RADIUS to Active Directory; local break-glass account</td>
+<td>zoneadmin</td>
+<td>Zoning changes only — cannot modify switch config</td>
 </tr>
 <tr>
-<td>Audit logging</td>
-<td><code>auditlog</code> — all config changes logged</td>
+<td>fabricadmin</td>
+<td>Fabric-level operations</td>
 </tr>
 <tr>
-<td>Syslog</td>
-<td>Secure syslog to SIEM</td>
+<td>operator</td>
+<td>Read-only — show commands only</td>
 </tr>
 <tr>
-<td>IP access control</td>
-<td>IPfilter policy — management subnet only</td>
+<td>user</td>
+<td>Very limited view access</td>
 </tr>
 </tbody>
 </table>
+<pre><code class="language-bash"># Assign a role to a local user
+userconfig --add &lt;username&gt; -r zoneadmin -p &lt;password&gt;
+
+# View current user accounts and roles
+userconfig --show
+</code></pre>
+<p>RADIUS-authenticated users receive their role from the RADIUS server via the <code>Foundry-User-Priv</code> AV-pair or the configured role-mapping on the switch.</p>
+<hr />
+<h2 id="ipfilter-policy">IPfilter Policy<a class="headerlink" href="#ipfilter-policy" title="Permanent link">&para;</a></h2>
+<p>IPfilter restricts which source IP addresses can connect to the switch management plane.</p>
+<pre><code class="language-bash"># Create an IPfilter policy
+ipfilter --create mgmt_policy -type ipv4
+
+# Add rules to allow management subnet only
+ipfilter --addrule mgmt_policy -sip &lt;mgmt-subnet&gt;/&lt;prefix&gt; -dp 22 -proto tcp -act permit    # SSH
+ipfilter --addrule mgmt_policy -sip &lt;mgmt-subnet&gt;/&lt;prefix&gt; -dp 443 -proto tcp -act permit   # HTTPS
+ipfilter --addrule mgmt_policy -sip &lt;snmp-server-ip&gt;/32 -dp 161 -proto udp -act permit      # SNMP
+ipfilter --addrule mgmt_policy -sip 0.0.0.0/0 -dp 0 -proto any -act deny                   # Default deny
+
+# Save and activate the policy
+ipfilter --save mgmt_policy
+ipfilter --activate mgmt_policy
+
+# Verify
+ipfilter --show mgmt_policy
+</code></pre>
+<hr />
+<h2 id="snmp-v3-configuration">SNMP v3 Configuration<a class="headerlink" href="#snmp-v3-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Configure SNMP v3 interactively
+snmpconfig --set mibCapability
+# Follow prompts to configure:
+# - User name
+# - Authentication type: SHA
+# - Authentication password
+# - Privacy type: AES-128
+# - Privacy password
+# - Access level: readOnly or readWrite
+
+# Verify SNMP configuration
+snmpconfig --show
+</code></pre>
+<hr />
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable audit logging
+auditcfg --class 1,2,3,4   # Log zone changes (3), security events (2), firmware (4), fabric (1)
+
+# View recent audit log entries
+auditlog --show
+
+# Forward audit log via syslog
+syslogadmin --add -ip &lt;siem-ip&gt;
+
+# Verify syslog configuration
+syslogadmin --show
+</code></pre>
 
 
 

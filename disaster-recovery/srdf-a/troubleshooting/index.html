@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#srdfa-link-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/A Link Down
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cycle-time-increasing-rpo-growing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cycle Time Increasing / RPO Growing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consistency-group-suspended-automatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Group Suspended Automatically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#target-volume-capacity-mismatch-thin-pool-exhaustion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Volume Capacity Mismatch / Thin Pool Exhaustion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invalid-pair-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invalid Pair State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-call-triage-srdfa-lag-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-Call Triage — SRDF/A Lag Alert
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,43 +797,139 @@
 
 
 <h1 id="srdfa-troubleshooting">SRDF/A Troubleshooting<a class="headerlink" href="#srdfa-troubleshooting" title="Permanent link">&para;</a></h1>
-<p>Common SRDF/A issues include link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches between source and target arrays. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and <code>symcfg list -v</code> output before engaging Dell support. Correlate array event logs with network monitoring timestamps to distinguish storage-side from WAN-side causes.</p>
+<blockquote>
+<p>Part of the <a href="../">SRDF/A</a> reference.</p>
+</blockquote>
+<p>Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.</p>
+<hr />
+<h2 id="srdfa-link-down">SRDF/A Link Down<a class="headerlink" href="#srdfa-link-down" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Pairs move to <code>Transmit Idle</code> or <code>Suspended</code>; no delta sets completing.</p>
+<pre><code class="language-bash"># Check SRDF group and pair states
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+
+# Check SRDF group connectivity
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v
+
+# Check SRDF director port state on R1 array
+symcfg -sid &lt;r1_sid&gt; list -dir all -v | grep -E &quot;RDF|Port&quot;
+</code></pre>
+<p><strong>Triage path:</strong></p>
+<ol>
+<li>Check SAN switch ISL counters — is the FCIP tunnel or dark fibre link up?</li>
+<li>Check FCIP session state from both switches (Cisco MDS: <code>show fcip session</code>; Brocade: <code>portshow fcipport</code>).</li>
+<li>If the link is physically up but SRDF shows no traffic, check SRDF director port zoning.</li>
+<li>If the link is down, escalate to network team with the affected FCIP tunnel endpoints.</li>
+</ol>
+<p>Once the link is restored:</p>
+<pre><code class="language-bash"># Resume SRDF/A after link restoration
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+
+# Monitor delta set queue flushing — expect high bandwidth burst as backlog clears
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+</code></pre>
+<hr />
+<h2 id="cycle-time-increasing-rpo-growing">Cycle Time Increasing / RPO Growing<a class="headerlink" href="#cycle-time-increasing-rpo-growing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>symrdf query</code> shows cycle time significantly above the configured interval; RPO alerts fire.</p>
+<pre><code class="language-bash"># Check current cycle time and delta set state
+symrdf list -sid &lt;r1_sid&gt; -rdfg &lt;group_num&gt; -type RDF/A
+
+# Check delta set size and transmit queue
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v | grep -E &quot;Delta|Cycle|Transmit&quot;
+</code></pre>
+<p><strong>Root causes:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>First Steps</th>
+<th>Cause</th>
+<th>Indicator</th>
+<th>Remediation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SRDF/A link down</td>
-<td>ISL failure or FCIP port error</td>
-<td>Check switch ISL state, verify FCIP tunnel, review SRDF group state with <code>symrdf list</code></td>
-</tr>
-<tr>
-<td>Cycle time increasing</td>
 <td>WAN bandwidth saturation</td>
-<td>Check delta set size via <code>symcfg list -v</code>, review WAN utilisation graphs</td>
+<td>Delta set queue growing; utilisation at 100%</td>
+<td>Contact network team to increase WAN bandwidth or implement QoS</td>
 </tr>
 <tr>
-<td>Consistency group suspended</td>
-<td>Host I/O spike exceeds delta set capacity</td>
-<td>Review change rate, consider increasing cycle time temporarily</td>
+<td>Write I/O spike</td>
+<td>Delta set size abnormally large</td>
+<td>Identify the high-write workload; schedule heavy batch jobs for off-peak</td>
 </tr>
 <tr>
-<td>Target volume capacity mismatch</td>
-<td>Thin pool exhaustion on target</td>
-<td>Expand target thin pool or add devices to the pool</td>
+<td>Array backend congestion</td>
+<td>R1 or R2 performance counters showing latency</td>
+<td>Check array Unisphere performance; review storage pool or disk group health</td>
 </tr>
 <tr>
-<td><code>Invalid</code> pair state</td>
-<td>Prior failover not cleanly resolved</td>
-<td>Run <code>symrdf restore</code> or <code>symrdf resync</code> after confirming data validity</td>
+<td>FCIP GRE overhead miscalculation</td>
+<td>MTU issues causing fragmentation</td>
+<td>Verify FCIP MTU settings on switches; test with <code>ping -M do -s 1400</code></td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="consistency-group-suspended-automatically">Consistency Group Suspended Automatically<a class="headerlink" href="#consistency-group-suspended-automatically" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> SRDF/A pair automatically suspends; state moves to <code>Suspended</code> without manual intervention.</p>
+<p>This occurs when the delta set grows beyond the array's ability to manage it — the array protects itself by suspending to prevent memory exhaustion.</p>
+<pre><code class="language-bash"># Confirm the suspension and check reason
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v
+
+# Review array events for the suspension trigger
+symevent -sid &lt;r1_sid&gt; list -last 30 | grep -i &quot;SRDF\|suspend&quot;
+</code></pre>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Identify and resolve the cause (WAN congestion, write storm) before resuming.</li>
+<li>If the cause is resolved, resume and monitor cycle time closely:</li>
+</ol>
+<pre><code class="language-bash">symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
+# Watch for immediate re-suspension — if it re-suspends, the root cause is not resolved
+</code></pre>
+<hr />
+<h2 id="target-volume-capacity-mismatch-thin-pool-exhaustion">Target Volume Capacity Mismatch / Thin Pool Exhaustion<a class="headerlink" href="#target-volume-capacity-mismatch-thin-pool-exhaustion" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Replication fails with errors related to target volume space or thin pool.</p>
+<pre><code class="language-bash"># Check target array thin pool utilisation
+symcfg -sid &lt;r2_sid&gt; list -pool -thin -v | grep -E &quot;Pool|Used|Free&quot;
+
+# Check individual device capacity on R2
+symdev -sid &lt;r2_sid&gt; show &lt;dev_id&gt; | grep -E &quot;Emulation|Capacity|Pool&quot;
+</code></pre>
+<p><strong>Remediation:</strong></p>
+<ul>
+<li>Expand the thin pool on the R2 array (add more capacity devices via Unisphere).</li>
+<li>If the R2 thin pool is shared with other workloads, review which volumes are consuming the most space.</li>
+</ul>
+<hr />
+<h2 id="invalid-pair-state"><code>Invalid</code> Pair State<a class="headerlink" href="#invalid-pair-state" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>symrdf query</code> shows one or more pairs in <code>Invalid</code> state.</p>
+<p>This typically follows an unclean failover, a host that wrote to both R1 and R2 simultaneously (split scenario), or a prior <code>symrdf split</code> that was not properly resolved.</p>
+<pre><code class="language-bash"># Identify which pairs are in Invalid state
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query | grep Invalid
+
+# Check which side has the authoritative data
+# If R1 is authoritative (normal scenario — no actual failover occurred)
+symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resync -noprompt
+# This pushes R1 data to R2 and re-establishes replication
+
+# If R2 has the latest data (after a real failover — confirm with the application team)
+symrdf -g &lt;dgname&gt; -sid &lt;r2_sid&gt; failback -noprompt
+</code></pre>
+<p><strong>Do not run <code>resync</code> or <code>restore</code> without confirming which side has the correct data.</strong> An incorrect resync will overwrite valid data on the target side.</p>
+<hr />
+<h2 id="on-call-triage-srdfa-lag-alert">On-Call Triage — SRDF/A Lag Alert<a class="headerlink" href="#on-call-triage-srdfa-lag-alert" title="Permanent link">&para;</a></h2>
+<p>When an SRDF/A lag alert fires:</p>
+<ol>
+<li>SSH to a host with SYMCLI access and run <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> — confirm current pair state.</li>
+<li>Check if the WAN link is up (network team or monitoring dashboard).</li>
+<li>Identify whether this is a transient spike or sustained lag:</li>
+<li>Transient (&lt; 5 minutes, recovering) — monitor and document.</li>
+<li>Sustained (&gt; 10 minutes, growing delta queue) — engage storage and network teams.</li>
+<li>If RPO has breached the agreed threshold, escalate to the change/incident management process.</li>
+<li>Document the lag window, peak RPO exposure, and resolution in the incident ticket.</li>
+</ol>
 
 
 

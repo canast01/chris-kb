@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idrac-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iDRAC Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esxi-lockdown-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Lockdown Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +808,148 @@
 
 
 <h1 id="vxrail-security">VxRail Security<a class="headerlink" href="#vxrail-security" title="Permanent link">&para;</a></h1>
-<p>BIOS and iDRAC hardening is applied per Dell PowerEdge security baseline, including disabling unused boot devices, enforcing iDRAC access controls, and enabling Secure Boot where supported. ESXi lockdown mode restricts direct host access and forces all management through vCenter, while vSAN data-at-rest encryption uses the vCenter Key Management Server (KMS) integration to protect stored data. Certificate management for VxRail Manager and ESXi hosts is handled through VxRail Manager's certificate workflow, replacing self-signed certificates with CA-signed ones during or after initial deployment.</p>
+<blockquote>
+<p>Part of the <a href="../">VxRail</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>BIOS/iDRAC:</strong> Disable unused ports, enforce strong iDRAC credentials, enable iDRAC audit logging</li>
-<li><strong>ESXi lockdown mode:</strong> Normal or strict lockdown enforced on all cluster nodes</li>
-<li><strong>vSAN encryption:</strong> Data-at-rest encryption enabled via KMS; key rotation schedule defined</li>
-<li><strong>Certificate management:</strong> VxRail Manager orchestrates ESXi and VxRail Manager certificate replacement</li>
-<li><strong>vCenter RBAC:</strong> Dedicated VxRail operator role scoped to the VxRail cluster; no shared admin credentials</li>
+<li>[ ] All iDRAC default credentials changed; iDRAC access restricted to management VLAN</li>
+<li>[ ] iDRAC audit logging enabled on all nodes</li>
+<li>[ ] Secure Boot enabled on all nodes (where supported by node generation)</li>
+<li>[ ] ESXi lockdown mode enabled (Normal minimum; Strict for high-security environments)</li>
+<li>[ ] ESXi root password changed from default; stored in vault; local access via break-glass only</li>
+<li>[ ] vSAN data-at-rest encryption enabled for clusters handling sensitive data</li>
+<li>[ ] VxRail Manager and ESXi certificates replaced with CA-signed certs via VxRail Manager workflow</li>
+<li>[ ] vCenter RBAC scoped — VxRail operator role mapped to an AD group; no shared admin credentials</li>
+<li>[ ] SNMP community strings managed via vault; v3 preferred over v2c</li>
+<li>[ ] Syslog forwarding from ESXi hosts to SIEM configured</li>
 </ul>
+<hr />
+<h2 id="idrac-hardening">iDRAC Hardening<a class="headerlink" href="#idrac-hardening" title="Permanent link">&para;</a></h2>
+<p>Each VxRail node has a dedicated iDRAC management interface. Harden at deployment:</p>
+<pre><code class="language-bash"># From iDRAC RACADM CLI — set a strong password for the root account
+racadm set iDRAC.Users.2.Password &lt;new-password&gt;
+
+# Disable unused interfaces (serial, local RACADM if not required)
+racadm set iDRAC.LocalSecurity.LocalConfig 0
+
+# Enable iDRAC audit logging
+racadm set iDRAC.AuditLog.Enable 1
+
+# Restrict iDRAC to management network subnet (IP filter)
+racadm set iDRAC.IPBlocking.BlockEnable 1
+racadm set iDRAC.IPBlocking.RangeAddr &lt;mgmt-subnet&gt;
+racadm set iDRAC.IPBlocking.RangeMask &lt;subnet-mask&gt;
+</code></pre>
+<hr />
+<h2 id="esxi-lockdown-mode">ESXi Lockdown Mode<a class="headerlink" href="#esxi-lockdown-mode" title="Permanent link">&para;</a></h2>
+<p>Lockdown mode forces all ESXi management through vCenter, preventing direct host access.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal lockdown</td>
+<td>Direct API and SSH access disabled; DCUI still accessible</td>
+</tr>
+<tr>
+<td>Strict lockdown</td>
+<td>DCUI also disabled; only vCenter can manage the host</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Enable via PowerCLI:</strong></p>
+<pre><code class="language-powershell"># Enable Normal lockdown on all hosts in a cluster
+Get-Cluster &quot;VxRailCluster&quot; | Get-VMHost | ForEach-Object {
+  ($_ | Get-View).EnterLockdownMode()
+}
+
+# Check lockdown state
+Get-VMHost | Select Name, @{N=&quot;Lockdown&quot;;E={$_.ExtensionData.Config.LockdownMode}}
+</code></pre>
+<p><strong>Exception list</strong> (accounts that can access even in lockdown mode):</p>
+<pre><code class="language-powershell"># View exception users
+Get-VMHost &quot;vxr-host&quot; | Get-View | Select -ExpandProperty Config | Select -ExpandProperty LockdownExceptionUsers
+</code></pre>
+<hr />
+<h2 id="vsan-encryption">vSAN Encryption<a class="headerlink" href="#vsan-encryption" title="Permanent link">&para;</a></h2>
+<p>For workload domains with sensitive data requirements:</p>
+<ol>
+<li>Deploy and configure a KMS (Key Management Server) — the KMS must be HA-redundant.</li>
+<li>In vCenter → Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enable.</li>
+<li>Accept the warning about re-formatting disk groups (initial enablement triggers a rolling disk group reformat — plan for resync time).</li>
+<li>Configure key rotation schedule per policy.</li>
+</ol>
+<p><strong>Verify encryption is active:</strong></p>
+<pre><code class="language-bash"># From ESXi on a VxRail node
+esxcli vsan debug object list | grep -i &quot;encrypt&quot;
+
+# PowerCLI
+Get-Cluster | Get-View | Select -ExpandProperty ConfigurationEx | Select -ExpandProperty VsanConfigInfo
+</code></pre>
+<hr />
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>VxRail Manager orchestrates certificate replacement for both ESXi hosts and VxRail Manager itself.</p>
+<pre><code>VxRail Manager UI → System → Certificates → Replace Certificate
+</code></pre>
+<p><strong>ESXi host certificate renewal:</strong></p>
+<ul>
+<li>This is done via VxRail Manager, not directly through vCenter.</li>
+<li>VxRail Manager will push the certificate to all nodes in the cluster.</li>
+<li>Schedule during a low-risk window — the certificate replacement causes a brief disruption to the vCenter-host connection.</li>
+</ul>
+<p><strong>VxRail Manager certificate renewal:</strong></p>
+<ol>
+<li>Generate a CSR from VxRail Manager → System → Certificates → Generate CSR.</li>
+<li>Submit to internal CA and receive the signed cert.</li>
+<li>Import via VxRail Manager → System → Certificates → Upload Certificate.</li>
+</ol>
+<hr />
+<h2 id="vcenter-rbac">vCenter RBAC<a class="headerlink" href="#vcenter-rbac" title="Permanent link">&para;</a></h2>
+<p>VxRail does not require vCenter Admin on the cluster for routine operations — scope access appropriately.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Scope</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail Administrator</td>
+<td>VxRail cluster object</td>
+<td>Full VxRail Manager and LCM operations</td>
+</tr>
+<tr>
+<td>vCenter Administrator</td>
+<td>Management domain vCenter</td>
+<td>Break-glass only</td>
+</tr>
+<tr>
+<td>Read-Only</td>
+<td>VxRail cluster</td>
+<td>Monitoring-only access</td>
+</tr>
+</tbody>
+</table>
+<p>Map these roles to AD groups — avoid assigning roles to individual AD user accounts.</p>
+<hr />
+<h2 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Configure syslog forwarding on all VxRail ESXi hosts
+Get-Cluster &quot;VxRailCluster&quot; | Get-VMHost | ForEach-Object {
+  Set-VMHostSysLogServer -VMHost $_ -SysLogServer &quot;udp://&lt;siem-ip&gt;:514&quot;
+  Restart-VMHostService -VMHost $_ -Key &quot;syslog&quot; -Confirm:$false
+}
+
+# Verify syslog is configured
+Get-VMHost | Get-VMHostSysLogServer
+</code></pre>
 
 
 

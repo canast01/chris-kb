@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#account-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +797,113 @@
 
 
 <h1 id="aws-architecture">AWS Architecture<a class="headerlink" href="#aws-architecture" title="Permanent link">&para;</a></h1>
-<p>AWS account structure is built on AWS Organizations with a management account at the root, Service Control Policies (SCPs) enforcing guardrails, and member accounts segregated by environment (dev, staging, production). Core services include VPC for network isolation, EC2 for compute workloads, S3 for object storage, RDS for managed relational databases, and IAM for identity and access management. High availability is achieved through Multi-AZ deployments within a region, while disaster recovery leverages multi-region replication and failover patterns.</p>
+<h2 id="account-structure">Account Structure<a class="headerlink" href="#account-structure" title="Permanent link">&para;</a></h2>
+<p>AWS Organizations with a management account at the root; all production workloads in member accounts:</p>
+<pre><code>Management Account (root — SCPs and billing only)
+├── Platform OU
+│   ├── Log Archive Account      (centralised CloudTrail and Config logs)
+│   └── Security Tooling Account (Security Hub, GuardDuty, IAM Access Analyzer)
+├── Workloads OU
+│   ├── Production Account
+│   ├── Staging Account
+│   └── Development Account
+└── Shared Services Account      (shared VPCs, DNS, AD, CI/CD)
+</code></pre>
 <ul>
-<li><strong>Management account</strong>: root of the Organization, hosts SCPs and consolidated billing only — no workloads</li>
-<li><strong>Member accounts</strong>: one per environment (dev, staging, prod) plus shared-services and log-archive accounts</li>
-<li><strong>Networking</strong>: hub-and-spoke via Transit Gateway; each VPC has public, private, and isolated subnet tiers</li>
-<li><strong>HA pattern</strong>: Multi-AZ for all stateful services (RDS, ElastiCache, EFS); ALB across AZs for compute</li>
-<li><strong>DR pattern</strong>: S3 cross-region replication, RDS automated backups to secondary region, Route 53 health-check failover</li>
+<li>Management account hosts no workloads — only SCPs and consolidated billing</li>
+<li>SCPs enforce guardrails: deny root access, enforce encryption, restrict regions to approved list</li>
+</ul>
+<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
+<p>Hub-and-spoke via Transit Gateway:</p>
+<pre><code>On-Premises ←→ Direct Connect ←→ Transit Gateway
+                                        │
+              ┌─────────────────────────┼─────────────────────────┐
+              ▼                         ▼                         ▼
+      Shared Services VPC         Production VPC            Dev/Staging VPC
+      (10.0.0.0/16)               (10.1.0.0/16)             (10.2.0.0/16)
+      ├── Public Subnet           ├── Public Subnet (ALB)
+      ├── Private Subnet          ├── Private Subnet (EC2, RDS)
+      └── Isolated Subnet         └── Isolated Subnet (DB, no internet)
+</code></pre>
+<p>Subnet tiers per VPC:
+- <strong>Public</strong>: ALB, NAT Gateway — no EC2 instances
+- <strong>Private</strong>: EC2, ECS, Lambda — internet via NAT Gateway
+- <strong>Isolated</strong>: RDS, ElastiCache — no internet access</p>
+<h2 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 (Auto Scaling Groups)</td>
+<td>Stateful apps, legacy workloads</td>
+</tr>
+<tr>
+<td>ECS (Fargate)</td>
+<td>Containerised microservices</td>
+</tr>
+<tr>
+<td>Lambda</td>
+<td>Event-driven functions, short-lived tasks</td>
+</tr>
+<tr>
+<td>EKS</td>
+<td>Kubernetes workloads requiring fine-grained node control</td>
+</tr>
+</tbody>
+</table>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All stateful services deployed Multi-AZ: RDS, ElastiCache, EFS, ELB</li>
+<li>EC2 in Auto Scaling Groups spanning ≥ 2 AZs</li>
+<li>ALB with target group health checks; unhealthy instances replaced automatically</li>
+</ul>
+<h2 id="disaster-recovery">Disaster Recovery<a class="headerlink" href="#disaster-recovery" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Services</th>
+<th>RPO / RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-region S3 replication</td>
+<td>S3 CRR</td>
+<td>Near-zero RPO</td>
+</tr>
+<tr>
+<td>RDS automated backups</td>
+<td>RDS automated backup to secondary region</td>
+<td>&lt; 1 hour RPO</td>
+</tr>
+<tr>
+<td>Route 53 health-check failover</td>
+<td>Route 53 + secondary ALB</td>
+<td>&lt; 5 minutes RTO</td>
+</tr>
+</tbody>
+</table>
+<h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
+<pre><code>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
+    │
+    ▼
+IAM Identity Center (SSO) — maps AD groups to permission sets
+    │
+    ▼
+IAM Roles (assumed by EC2, Lambda, ECS, CI/CD pipelines)
+    │
+No long-lived IAM user access keys in production
+</code></pre>
+<ul>
+<li>Humans: IAM Identity Center (SSO) — no direct IAM users</li>
+<li>Machines: IAM Roles with instance profiles or OIDC federation</li>
+<li>Emergency: break-glass IAM user in management account; credentials in CyberArk</li>
 </ul>
 
 

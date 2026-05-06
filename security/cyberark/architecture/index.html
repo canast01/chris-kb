@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#digital-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Digital Vault
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#central-policy-manager-cpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Central Policy Manager (CPM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privileged-session-manager-psm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileged Session Manager (PSM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pvwa-password-vault-web-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PVWA (Password Vault Web Access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-and-dr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability and DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +808,9 @@
 
 
 <h1 id="cyberark-architecture">CyberArk Architecture<a class="headerlink" href="#cyberark-architecture" title="Permanent link">&para;</a></h1>
-<p>CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted, hardened credential store that is the sole authoritative source for managed passwords and SSH keys. The Central Policy Manager (CPM) connects to target systems to rotate credentials automatically on schedule or on-demand, while the Privileged Session Manager (PSM) proxies and records privileged sessions without exposing credentials to the user. Password Vault Web Access (PVWA) provides the web UI and REST API gateway; in enterprise deployments the Vault runs as an HA pair with a Disaster Recovery (DR) vault replica for business continuity.</p>
+<p>CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys. The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.</p>
+<hr />
+<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -761,12 +846,142 @@
 <td>1–2 per site</td>
 </tr>
 <tr>
-<td>CyberArk SaaS (PAM – Self-Hosted vs. Cloud)</td>
-<td>Managed SaaS alternative to on-prem Vault</td>
-<td>N/A</td>
+<td>DR Vault</td>
+<td>Asynchronous replication replica of Vault</td>
+<td>1 per DR site</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
+<pre><code>[Admin workstation / PAW]
+         |
+         | HTTPS (443)
+         v
+[PVWA (load-balanced pair)]  &lt;-- AD LDAP/LDAPS (389/636)
+         |
+         | Vault SDK (1858)
+         v
+[Digital Vault (primary)]  &lt;--&gt; [DR Vault]
+         |                      (replication: 1858)
+         |
+    +---------+----------+
+    |                    |
+[CPM]                 [PSM (load-balanced)]
+    |                    |
+    | (target protocols) | RDP/SSH (through session)
+    v                    v
+[Target systems]     [Target systems]
+</code></pre>
+<p>Key ports:
+- PVWA → Vault: TCP 1858
+- CPM → Vault: TCP 1858
+- PSM → Vault: TCP 1858
+- Admin → PVWA: TCP 443
+- PSM → Targets: TCP 22 (SSH), TCP 3389 (RDP), TCP 1521 (Oracle), TCP 1433 (MSSQL)
+- PSMP → Targets: TCP 22</p>
+<hr />
+<h2 id="digital-vault">Digital Vault<a class="headerlink" href="#digital-vault" title="Permanent link">&para;</a></h2>
+<p>The Vault runs on a hardened Windows Server — only the CyberArk Vault service and required OS components are present. No other roles are installed.</p>
+<ul>
+<li>All credentials stored encrypted with AES-256</li>
+<li>Vault OS hardened per CyberArk Vault Hardening Guide (firewall restricts all traffic except port 1858 from CPM/PSM/PVWA and replication to DR Vault)</li>
+<li>Vault event logs forwarded to SIEM via syslog</li>
+</ul>
+<pre><code class="language-powershell"># Check Vault service health (run locally on Vault server)
+Get-Service -Name &quot;CyberArk Vault&quot;
+
+# View Vault operational logs
+Get-Content &quot;C:\Program Files (x86)\PrivateArk\Server\Logs\vault.log&quot; -Tail 100
+
+# Check replication status to DR Vault
+Get-Content &quot;C:\Program Files (x86)\PrivateArk\Server\Logs\dbsync.log&quot; -Tail 50
+</code></pre>
+<hr />
+<h2 id="central-policy-manager-cpm">Central Policy Manager (CPM)<a class="headerlink" href="#central-policy-manager-cpm" title="Permanent link">&para;</a></h2>
+<p>CPM connects to target systems on schedule or on-demand to rotate passwords. Each CPM instance handles a partition of accounts determined by safe assignment.</p>
+<pre><code class="language-powershell"># Check CPM service health
+Get-Service -Name &quot;CyberArk Central Policy Manager Scanner&quot;
+
+# View CPM operational logs
+Get-Content &quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\pm.log&quot; -Tail 100
+
+# Find accounts with failed rotation (via PVWA REST API — see scripts page)
+# Or: In PVWA -&gt; Reports -&gt; CPM Status Report
+</code></pre>
+<p>Common CPM failure reasons:
+- Target host unreachable (firewall / network change)
+- Credentials already changed manually (out-of-sync)
+- Account locked by CPM rotation attempt
+- Platform plugin misconfiguration</p>
+<hr />
+<h2 id="privileged-session-manager-psm">Privileged Session Manager (PSM)<a class="headerlink" href="#privileged-session-manager-psm" title="Permanent link">&para;</a></h2>
+<p>PSM proxies privileged sessions — the user connects to the PSM, which then connects to the target using the managed credential. The user never sees the password.</p>
+<ul>
+<li>Sessions are recorded as video files and stored in the Vault.</li>
+<li>Session isolation: PSM uses a Windows Server with AppLocker and restricted user profile.</li>
+<li>PSM nodes are load-balanced; session stickiness is not required (each session is independent).</li>
+</ul>
+<pre><code class="language-powershell"># Check PSM service health
+Get-Service -Name &quot;Cyber-Ark Privileged Session Manager&quot;
+
+# View PSM connection logs
+Get-Content &quot;C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log&quot; -Tail 100
+
+# List active sessions (via PVWA REST API)
+$headers = @{ Authorization = &quot;Bearer $token&quot; }
+Invoke-RestMethod -Uri &quot;https://pvwa.corp.example.com/PasswordVault/API/LiveSessions&quot; `
+  -Headers $headers -Method Get
+</code></pre>
+<hr />
+<h2 id="pvwa-password-vault-web-access">PVWA (Password Vault Web Access)<a class="headerlink" href="#pvwa-password-vault-web-access" title="Permanent link">&para;</a></h2>
+<p>PVWA is the primary interface for users and administrators. It provides:
+- Account credential retrieval and check-out
+- PSM session launch
+- Safe and account management
+- REST API gateway for automation</p>
+<p>PVWA is deployed as an IIS application on Windows Server, behind a load balancer.</p>
+<pre><code class="language-powershell"># Check PVWA IIS application pool health
+Get-WebConfiguration -Filter &quot;system.applicationHost/applicationPools/add[@name='DefaultAppPool']&quot;
+Get-WebApplication -Site &quot;Default Web Site&quot; -Name &quot;PasswordVault&quot;
+
+# Verify PVWA can reach the Vault (from PVWA server)
+Test-NetConnection -ComputerName vault01.corp.example.com -Port 1858
+</code></pre>
+<hr />
+<h2 id="high-availability-and-dr">High Availability and DR<a class="headerlink" href="#high-availability-and-dr" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Recovery Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary Vault hardware failure</td>
+<td>Activate DR Vault; reconfigure CPM/PSM/PVWA to point to DR Vault</td>
+</tr>
+<tr>
+<td>PVWA node failure</td>
+<td>Load balancer removes failed node; remaining node serves traffic</td>
+</tr>
+<tr>
+<td>CPM failure</td>
+<td>Accounts queue for rotation; failover CPM picks up queue on restart</td>
+</tr>
+<tr>
+<td>PSM node failure</td>
+<td>Active sessions on failed node terminate; load balancer routes new sessions to healthy node</td>
+</tr>
+</tbody>
+</table>
+<p>DR Vault activation procedure:
+1. Stop replication on the DR Vault: <code>C:\Program Files (x86)\PrivateArk\Server\dbsync.exe</code> — stop the sync service.
+2. Change DR Vault to standalone mode via PrivateArk Client.
+3. Update CPM, PSM, and PVWA <code>vault.ini</code> to point to the DR Vault IP.
+4. Restart CyberArk services on CPM, PSM, PVWA.
+5. Validate connectivity and test a credential retrieval.</p>
 
 
 

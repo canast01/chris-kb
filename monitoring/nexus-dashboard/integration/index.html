@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aci-apic-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACI APIC Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-nx-os-fabric-controller-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC (NX-OS Fabric Controller) Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dcnm-migration-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DCNM Migration Note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siem-integration-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIEM Integration (Syslog)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-itsm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow ITSM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aaa-ldap-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AAA / LDAP Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smtp-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMTP Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +841,80 @@
 
 
 <h1 id="nexus-dashboard-integration">Nexus Dashboard Integration<a class="headerlink" href="#nexus-dashboard-integration" title="Permanent link">&para;</a></h1>
-<p>Cisco ACI APIC integration is the primary use case, providing policy management, fabric health, and fault visibility for ACI-based data centre fabrics. NX-OS fabrics are managed via NDFC, which replaces DCNM as the fabric controller. Fabric events and faults are forwarded to Splunk via syslog for security correlation and long-term retention. ServiceNow ITSM integration creates incidents for P1/P2 faults automatically. The Aria Operations Cisco management pack correlates fabric health with the broader VMware infrastructure view. Syslog forwarding to SIEM captures all ND admin and policy change events.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its core data sources, and extends to ITSM, SIEM, notification, and AAA platforms for operational workflows.</p>
+<h2 id="aci-apic-integration">ACI APIC Integration<a class="headerlink" href="#aci-apic-integration" title="Permanent link">&para;</a></h2>
+<p>The ACI APIC cluster is the primary integration for ACI-based fabrics. NDFC and NDI use the APIC REST API for policy management, fabric visibility, and health data.</p>
+<pre><code class="language-text">Admin &gt; Sites &gt; Add Site
+- Site type: ACI
+- APIC IP / hostname: &lt;APIC-cluster-VIP&gt;
+- Username: (use dedicated service account — svc-nd-apic)
+- Password: stored in secrets manager
+- For NDO (multi-site): add all APIC clusters across all sites
+</code></pre>
+<p>Verify site connectivity: <strong>Admin &gt; Sites &gt; [Site] &gt; Status = Connected</strong></p>
+<h2 id="ndfc-nx-os-fabric-controller-integration">NDFC (NX-OS Fabric Controller) Integration<a class="headerlink" href="#ndfc-nx-os-fabric-controller-integration" title="Permanent link">&para;</a></h2>
+<p>NDFC manages NX-OS fabric switches directly. Switches are discovered and onboarded via NDFC fabric creation.</p>
+<pre><code class="language-text">NDFC &gt; Fabric Builder &gt; [Fabric] &gt; Actions &gt; Add Switches
+- Switch IP range or individual management IPs
+- Discovery credentials (read-write for provisioning; read-only for monitoring)
+- SNMP community / v3 credentials
+</code></pre>
+<p>NDFC communicates with switches via SSH (provisioning) and SNMP (telemetry/faults).</p>
+<h2 id="dcnm-migration-note">DCNM Migration Note<a class="headerlink" href="#dcnm-migration-note" title="Permanent link">&para;</a></h2>
+<p>NDFC replaces Cisco DCNM (Data Center Network Manager). If your environment still runs DCNM, plan migration to NDFC as DCNM has reached EOS. NDFC is backward-compatible with existing VXLAN BGP-EVPN fabric policies from DCNM.</p>
+<h2 id="siem-integration-syslog">SIEM Integration (Syslog)<a class="headerlink" href="#siem-integration-syslog" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard forwards fabric faults and system events to the enterprise SIEM via syslog.</p>
+<pre><code class="language-text">Admin &gt; System Settings &gt; Syslog
+- Destination IP: &lt;SIEM-collector-IP&gt;
+- Port: UDP 514 or TCP 514
+- Severity: select minimum severity (Warning or above for production)
+- Format: RFC 5424
+</code></pre>
+<p>For ACI fabrics, configure APIC syslog forwarding separately (APIC also generates fabric events):</p>
+<pre><code class="language-text">APIC &gt; Admin &gt; External Data Collectors &gt; Monitoring Destinations &gt; Syslog &gt; Add
+</code></pre>
+<h2 id="servicenow-itsm-integration">ServiceNow ITSM Integration<a class="headerlink" href="#servicenow-itsm-integration" title="Permanent link">&para;</a></h2>
+<p>P1/P2 fabric faults auto-create incidents in ServiceNow via the ND alert notification webhook.</p>
+<pre><code class="language-text">Admin &gt; Notifications &gt; Create Notification
+- Trigger: NDI Fault severity = Critical or Major
+- Action: Webhook
+- URL: https://&lt;instance&gt;.service-now.com/api/now/table/incident
+- Auth: Basic (svc-nd-snow service account)
+- Payload:
+  {
+    &quot;short_description&quot;: &quot;Cisco ND P1 Fault: {{fault.title}} — {{fabric.name}}&quot;,
+    &quot;severity&quot;: &quot;1&quot;,
+    &quot;assignment_group&quot;: &quot;network-ops&quot;,
+    &quot;description&quot;: &quot;{{fault.description}}\nFabric: {{fabric.name}}\nNode: {{node.name}}&quot;
+  }
+</code></pre>
+<h2 id="aaa-ldap-integration">AAA / LDAP Integration<a class="headerlink" href="#aaa-ldap-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Admin &gt; Authentication &gt; Remote Login Domains &gt; Add
+- Protocol: LDAP (LDAPS recommended)
+- Server: ldaps://&lt;AD-DC&gt;:636
+- Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
+- Search base: OU=Network,DC=company,DC=com
+- Role mapping:
+  - AD group: ND_Admins → Nexus Dashboard Admin
+  - AD group: ND_Operators → Fabric Operator
+  - AD group: ND_ReadOnly → ReadOnly
+</code></pre>
+<p>Set the default login domain to LDAP and retain a local break-glass admin account.</p>
+<h2 id="smtp-notifications">SMTP Notifications<a class="headerlink" href="#smtp-notifications" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Admin &gt; System Settings &gt; SMTP
+- SMTP server: relay.company.com
+- Port: 587 (STARTTLS)
+- From: nexus-dashboard-alerts@company.com
+</code></pre>
+<p>Create notification rules to email specific distribution lists for P2/P3 faults.</p>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The Cisco Network Insights management pack for Aria Operations imports NDI fabric health data into vROps for correlation with VMware workload metrics.</p>
+<pre><code class="language-text">Aria Operations &gt; Admin &gt; Solutions &gt; Cisco Network Insights MP
+- Nexus Dashboard API URL: https://&lt;ND-VIP&gt;
+- Username / password: (read-only service account)
+</code></pre>
+<h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -738,17 +927,17 @@
 <tr>
 <td>ACI APIC</td>
 <td>Inbound</td>
-<td>Policy management and fabric visibility</td>
+<td>Policy management and ACI fabric visibility</td>
 </tr>
 <tr>
 <td>NX-OS / NDFC</td>
 <td>Inbound</td>
-<td>NX-OS fabric management</td>
+<td>NX-OS fabric management and telemetry</td>
 </tr>
 <tr>
-<td>Splunk</td>
+<td>SIEM (syslog)</td>
 <td>Outbound</td>
-<td>Fabric event forwarding via syslog</td>
+<td>Fabric fault and admin event forwarding</td>
 </tr>
 <tr>
 <td>ServiceNow ITSM</td>
@@ -756,14 +945,19 @@
 <td>P1/P2 fault ticketing</td>
 </tr>
 <tr>
-<td>Aria Operations</td>
-<td>Outbound</td>
-<td>Correlated VMware + Cisco visibility</td>
+<td>LDAP / AAA</td>
+<td>Inbound</td>
+<td>Centralised user authentication and RBAC</td>
 </tr>
 <tr>
-<td>SIEM (syslog)</td>
+<td>SMTP</td>
 <td>Outbound</td>
-<td>Admin and policy change audit events</td>
+<td>Alert email notifications</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>Outbound</td>
+<td>Correlated VMware + Cisco fabric visibility</td>
 </tr>
 </tbody>
 </table>

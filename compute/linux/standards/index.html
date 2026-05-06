@@ -21,7 +21,7 @@
     
     
       
-        <title>Linux Standards - Chris KB</title>
+        <title>Linux Build Standards - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#linux-standards" class="md-skip">
+        <a href="#linux-build-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Linux Standards
+              Linux Build Standards
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#os-build-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OS Build Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-repository-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Repository Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-installation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Installation Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,38 +818,145 @@
 
 
 
-<h1 id="linux-standards">Linux Standards<a class="headerlink" href="#linux-standards" title="Permanent link">&para;</a></h1>
-<p>Hostnames follow the convention <code>&lt;site&gt;-&lt;role&gt;-&lt;nn&gt;</code> (e.g., <code>lon-app-01</code>), assigned at provisioning and never changed post-deployment. All servers use a standard partition layout with dedicated volumes for <code>/</code>, <code>/var</code>, <code>/tmp</code>, <code>/home</code>, and swap, managed via LVM to allow future resizing. Package management uses <code>dnf</code>/<code>yum</code> on RHEL and <code>apt</code> on Ubuntu, with repositories locked to approved mirrors. SSH is configured for key-based authentication only (<code>PasswordAuthentication no</code>), NTP is configured against internal time servers, and syslog is forwarded to the central logging platform.</p>
+<h1 id="linux-build-standards">Linux Build Standards<a class="headerlink" href="#linux-build-standards" title="Permanent link">&para;</a></h1>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<pre><code>&lt;site&gt;-&lt;role&gt;-&lt;nn&gt;
+</code></pre>
+<p>Examples:
+- <code>dc1-app-01</code> — first application server at DC1
+- <code>dc1-db-01</code> — first database server at DC1
+- <code>dc2-mon-01</code> — monitoring server at DC2
+- <code>dc1-ansible-01</code> — Ansible control node</p>
+<p>Hostnames are set at provisioning and never changed post-deployment. DNS A and PTR records created before the server is joined to AD.</p>
+<h2 id="os-build-standards">OS Build Standards<a class="headerlink" href="#os-build-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Item</th>
+<th>Requirement</th>
 <th>Standard</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Hostname format</td>
-<td><code>&lt;site&gt;-&lt;role&gt;-&lt;nn&gt;</code></td>
+<td>Supported distributions</td>
+<td>RHEL 8/9 (production), Ubuntu 22.04 LTS (monitoring/automation)</td>
 </tr>
 <tr>
-<td>Auth method</td>
-<td>SSH key only</td>
+<td>OS lifecycle</td>
+<td>In-support releases only; track EOL in CMDB</td>
 </tr>
 <tr>
-<td>NTP</td>
-<td>Internal NTP servers</td>
+<td>Kernel</td>
+<td>Distribution default; no custom kernel builds</td>
 </tr>
 <tr>
-<td>Syslog</td>
-<td>Forward to central syslog</td>
+<td>Init system</td>
+<td>systemd — no legacy SysV init scripts</td>
 </tr>
 <tr>
-<td>Package repos</td>
-<td>Approved internal mirrors</td>
+<td>Locale</td>
+<td>en_US.UTF-8</td>
+</tr>
+<tr>
+<td>Timezone</td>
+<td>UTC (application-layer handles local time display)</td>
 </tr>
 </tbody>
 </table>
+<h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
+<p>Standard LVM layout applied at provisioning:</p>
+<table>
+<thead>
+<tr>
+<th>Mountpoint</th>
+<th>Size</th>
+<th>Filesystem</th>
+<th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/boot</code></td>
+<td>512 MB</td>
+<td>xfs</td>
+<td>separate partition</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>20 GB</td>
+<td>xfs</td>
+<td></td>
+</tr>
+<tr>
+<td><code>/var</code></td>
+<td>20 GB</td>
+<td>xfs</td>
+<td></td>
+</tr>
+<tr>
+<td><code>/tmp</code></td>
+<td>5 GB</td>
+<td>xfs</td>
+<td><code>noexec,nosuid,nodev</code></td>
+</tr>
+<tr>
+<td><code>/home</code></td>
+<td>5 GB</td>
+<td>xfs</td>
+<td></td>
+</tr>
+<tr>
+<td>swap</td>
+<td>= RAM (max 16 GB)</td>
+<td>swap</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Application data in a separate VG (<code>vg_data</code>) — sized per role.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH key-based authentication only
+# /etc/ssh/sshd_config enforced via Ansible
+PasswordAuthentication no
+PermitRootLogin no
+ChallengeResponseAuthentication no
+PubkeyAuthentication yes
+</code></pre>
+<p>Sudo access granted via AD group membership:</p>
+<pre><code class="language-bash"># /etc/sudoers.d/infra-admins
+%infra_admins ALL=(ALL) ALL
+# No NOPASSWD — all privileged operations require password confirmation
+</code></pre>
+<h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># /etc/chrony.conf (RHEL)
+server ntp1.corp.local iburst
+server ntp2.corp.local iburst
+makestep 1.0 3
+rtcsync
+</code></pre>
+<p>Verify: <code>chronyc tracking</code> — <code>System time</code> offset should be &lt; 1ms.</p>
+<h2 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># /etc/rsyslog.d/00-forward.conf
+*.info @siem.corp.local:514
+# Or TLS:
+*.info @@siem.corp.local:6514
+</code></pre>
+<h2 id="package-repository-policy">Package Repository Policy<a class="headerlink" href="#package-repository-policy" title="Permanent link">&para;</a></h2>
+<p>Production servers point only to approved internal mirrors:</p>
+<pre><code class="language-bash"># RHEL: subscription-manager repos — configure approved repos only
+subscription-manager repos --disable=&quot;*&quot; --enable=rhel-9-for-x86_64-baseos-rpms --enable=rhel-9-for-x86_64-appstream-rpms
+
+# Ubuntu: /etc/apt/sources.list — point to internal mirror
+deb http://mirror.corp.local/ubuntu jammy main restricted universe
+</code></pre>
+<p>No direct internet access from production servers — all package traffic via mirror.</p>
+<h2 id="software-installation-policy">Software Installation Policy<a class="headerlink" href="#software-installation-policy" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All packages installed from approved repositories only</li>
+<li>No manual compilation from source in production</li>
+<li>Third-party RPMs/DEBs signed and hosted in the internal repository</li>
+<li>Package additions require a change record</li>
+</ul>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificates Integration - Chris KB</title>
+        <title>Certificate Lifecycle Integration - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#certificates-integration" class="md-skip">
+        <a href="#certificate-lifecycle-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificates Integration
+              Certificate Lifecycle Integration
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#venafi-tpp-adcs-ca-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Venafi TPP — ADCS CA Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hashicorp-vault-pki" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HashiCorp Vault PKI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-cert-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes cert-manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-encrypt-acme-dns-01-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Let's Encrypt ACME (DNS-01 Challenge)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-approval-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Approval Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expiry-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiry Alerting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,47 +807,141 @@
 
 
 
-<h1 id="certificates-integration">Certificates Integration<a class="headerlink" href="#certificates-integration" title="Permanent link">&para;</a></h1>
-<p>Venafi TPP or TLS Protect Cloud provides centralised lifecycle automation across all certificate types, acting as the policy and workflow layer above individual CAs. Microsoft ADCS serves as the enterprise CA backend for internal certificates. HashiCorp Vault PKI secrets engine issues short-lived certificates for service-to-service authentication in zero-trust architectures.</p>
-<p>Kubernetes cert-manager automates certificate issuance and renewal for in-cluster workloads, integrating with ADCS, Vault, or Let's Encrypt as issuers. Let's Encrypt ACME handles automated issuance for public-facing services. ServiceNow manages certificate request approval workflows. Monitoring integrations (Datadog, Prometheus, Aria Operations) provide expiry alerting dashboards.</p>
+<h1 id="certificate-lifecycle-integration">Certificate Lifecycle Integration<a class="headerlink" href="#certificate-lifecycle-integration" title="Permanent link">&para;</a></h1>
+<p>Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA backend for internal certificates.</p>
+<h2 id="integration-map">Integration Map<a class="headerlink" href="#integration-map" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Integration</th>
 <th>Purpose</th>
+<th>Protocol</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Venafi TPP / VaaS</td>
-<td>Centralised lifecycle automation and policy enforcement</td>
+<td>Venafi TPP ↔ ADCS</td>
+<td>Issue internal certs via Microsoft CA</td>
+<td>DCOM / RPC</td>
 </tr>
 <tr>
-<td>Microsoft ADCS</td>
-<td>Internal enterprise CA backend</td>
+<td>Venafi TPP ↔ vSphere</td>
+<td>Auto-enrol and renew vCenter/ESXi certs</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>Venafi TPP ↔ F5 / NetScaler</td>
+<td>LB certificate deployment automation</td>
+<td>REST + credential objects</td>
+</tr>
+<tr>
+<td>Venafi TPP ↔ ServiceNow</td>
+<td>Certificate request approval workflow</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>Venafi TPP ↔ SIEM</td>
+<td>Issuance, renewal, revocation events</td>
+<td>Syslog</td>
 </tr>
 <tr>
 <td>HashiCorp Vault PKI</td>
 <td>Short-lived certs for service-to-service mTLS</td>
+<td>REST (Vault API)</td>
 </tr>
 <tr>
-<td>Kubernetes cert-manager</td>
-<td>In-cluster automated certificate management</td>
+<td>cert-manager ↔ ADCS / Vault</td>
+<td>Kubernetes in-cluster cert automation</td>
+<td>ACME / Vault issuer</td>
 </tr>
 <tr>
 <td>Let's Encrypt ACME</td>
-<td>Public-facing service certificate automation</td>
-</tr>
-<tr>
-<td>ServiceNow</td>
-<td>Certificate request approval workflow</td>
-</tr>
-<tr>
-<td>Monitoring (Datadog / Prometheus)</td>
-<td>Expiry alerting and compliance dashboards</td>
+<td>Public-facing service certificates</td>
+<td>ACME (RFC 8555)</td>
 </tr>
 </tbody>
 </table>
+<h2 id="venafi-tpp-adcs-ca-integration">Venafi TPP — ADCS CA Integration<a class="headerlink" href="#venafi-tpp-adcs-ca-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># On the Venafi server — verify CA connector is reachable
+# TPP UI → Configuration → Certificate Authorities → Test Connection
+
+# ADCS template must have &quot;Enroll&quot; permission granted to the Venafi service account
+# Certificate Templates → Right-click → Properties → Security → Add svc-venafi → Enroll
+</code></pre>
+<h2 id="hashicorp-vault-pki">HashiCorp Vault PKI<a class="headerlink" href="#hashicorp-vault-pki" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable PKI secrets engine
+vault secrets enable -path=pki pki
+vault secrets tune -max-lease-ttl=87600h pki
+
+# Generate or import CA
+vault write pki/root/generate/internal common_name=&quot;corp.local Internal CA&quot; ttl=87600h
+
+# Create a role for issuing certs
+vault write pki/roles/internal-services \
+    allowed_domains=&quot;corp.local,svc.cluster.local&quot; \
+    allow_subdomains=true \
+    max_ttl=720h
+
+# Issue a certificate
+vault write pki/issue/internal-services common_name=&quot;myservice.svc.cluster.local&quot; ttl=168h
+</code></pre>
+<h2 id="kubernetes-cert-manager">Kubernetes cert-manager<a class="headerlink" href="#kubernetes-cert-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-yaml"># ClusterIssuer pointing at Vault PKI
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: vault-issuer
+spec:
+  vault:
+    server: https://vault.corp.local:8200
+    path: pki/sign/internal-services
+    auth:
+      kubernetes:
+        role: cert-manager
+        mountPath: /v1/auth/kubernetes
+        serviceAccountRef:
+          name: cert-manager
+</code></pre>
+<pre><code class="language-bash"># Check certificate status in cluster
+kubectl get certificates -A
+kubectl describe certificate &lt;name&gt; -n &lt;namespace&gt;
+
+# Check cert-manager logs for issuance errors
+kubectl logs -n cert-manager deploy/cert-manager | tail -50
+</code></pre>
+<h2 id="lets-encrypt-acme-dns-01-challenge">Let's Encrypt ACME (DNS-01 Challenge)<a class="headerlink" href="#lets-encrypt-acme-dns-01-challenge" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Using certbot with Route53 DNS-01 challenge
+certbot certonly \
+  --dns-route53 \
+  -d &quot;*.corp.example.com&quot; \
+  --email certs@corp.example.com \
+  --agree-tos \
+  --non-interactive
+
+# Auto-renewal via cron (certbot renew checks expiry &lt; 30 days)
+0 3 * * * /usr/bin/certbot renew --quiet --post-hook &quot;systemctl reload nginx&quot;
+</code></pre>
+<h2 id="servicenow-approval-workflow">ServiceNow Approval Workflow<a class="headerlink" href="#servicenow-approval-workflow" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP can trigger a ServiceNow workflow for certificates that require business approval:</p>
+<ol>
+<li>Certificate request submitted via Venafi self-service portal or API.</li>
+<li>TPP policy engine evaluates request — if approval required, raises a ServiceNow change/task.</li>
+<li>Approver approves via ServiceNow → TPP receives callback → certificate issued.</li>
+<li>Certificate deployed to target system via TPP driver.</li>
+</ol>
+<h2 id="expiry-alerting">Expiry Alerting<a class="headerlink" href="#expiry-alerting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check certificate expiry on a remote host
+echo | openssl s_client -connect host.corp.local:443 2&gt;/dev/null | \
+  openssl x509 -noout -dates
+
+# Bulk expiry scan (Bash loop)
+for host in vcenter nsxmgr aria-ops aria-auto; do
+  expiry=$(echo | openssl s_client -connect ${host}.corp.local:443 2&gt;/dev/null | \
+    openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
+  echo &quot;${host}: ${expiry}&quot;
+done
+</code></pre>
+<p>Venafi TPP / Aria Operations integrations provide dashboard-level expiry visibility — raw CLI checks above are for ad-hoc verification.</p>
 
 
 

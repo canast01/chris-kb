@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-password-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager Password Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lifecycle-management-patching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Management (Patching)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operational-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operational Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,15 +797,162 @@
 
 
 <h1 id="vmware-cloud-foundation-operations">VMware Cloud Foundation Operations<a class="headerlink" href="#vmware-cloud-foundation-operations" title="Permanent link">&para;</a></h1>
-<p>Daily operational checks for VCF begin in the SDDC Manager dashboard, which surfaces domain health, certificate status, and component alerts across the management and workload domains. NSX overlay health — including BGP adjacency state, edge cluster status, and tunnel endpoint reachability — should be verified via NSX Manager each morning, as VCF does not surface all NSX fabric events in SDDC Manager. vSAN cluster health can be reviewed via the vCenter Skyline Health plugin or the <code>RVC</code> utility, and any failed disk or resync events must be investigated before initiating any lifecycle operations.</p>
-<p><strong>Daily check runbook:</strong>
-- SDDC Manager &gt; Dashboard: all workload domains show "Healthy"
-- SDDC Manager &gt; Security &gt; Certificates: no certificates expiring within 60 days
-- NSX Manager &gt; System &gt; Fabric &gt; Nodes: all hosts "Up"; transport nodes healthy
-- NSX Manager &gt; Networking &gt; Tier-0 Gateways: BGP neighbours established
-- vCenter &gt; vSAN Cluster &gt; Skyline Health: no critical alerts
-- SDDC Manager &gt; Lifecycle Management &gt; Bundle Management: review available updates
-- Check SDDC Manager disk: <code>df -h</code> on the appliance — <code>/</code> and <code>/data</code> below 80%</p>
+<blockquote>
+<p>Part of the <a href="../">VCF</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h2>
+<p>Daily checks begin in SDDC Manager. NSX fabric health must also be checked separately in NSX Manager — not all NSX events surface in SDDC Manager.</p>
+<p><strong>SDDC Manager:</strong></p>
+<ol>
+<li>Dashboard — all workload domains show <strong>Healthy</strong>; no domains in Warning or Error state</li>
+<li>Security → Certificates — no certificates expiring within 60 days</li>
+<li>Lifecycle Management → Bundle Management — review available updates; note critical patches</li>
+<li>Administration → Backup — confirm last successful backup timestamp</li>
+</ol>
+<p><strong>NSX Manager:</strong></p>
+<ol>
+<li>System → Fabric → Nodes — all transport nodes and edge nodes show <strong>Up</strong></li>
+<li>Networking → Tier-0 Gateways → BGP neighbours — all peers in <strong>Established</strong> state</li>
+<li>System → Fabric → Transport Zones — all zones healthy; no degraded nodes</li>
+</ol>
+<p><strong>vCenter (per workload domain):</strong></p>
+<pre><code class="language-powershell"># Check all hosts connected
+Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select Name, ConnectionState
+
+# Check for snapshots older than 3 days
+Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)} |
+  Select VM, Name, Created, SizeGB
+
+# Check for powered-off VMs without notes flagging them as intentional
+Get-VM | Where-Object {$_.PowerState -eq &quot;PoweredOff&quot; -and $_.Notes -notmatch &quot;intentional&quot;}
+</code></pre>
+<ol>
+<li>vCenter → vSAN Cluster → Skyline Health — no critical (red) alerts</li>
+</ol>
+<p><strong>SDDC Manager appliance disk:</strong></p>
+<pre><code class="language-bash">ssh vcf@&lt;sddc-manager-ip&gt;
+df -h
+# Alert if /data or / is above 80%
+</code></pre>
+<hr />
+<h2 id="sddc-manager-password-management">SDDC Manager Password Management<a class="headerlink" href="#sddc-manager-password-management" title="Permanent link">&para;</a></h2>
+<p>VCF credential rotation is managed centrally through SDDC Manager. Do not rotate component passwords manually outside this workflow — it will cause drift between SDDC Manager's credential store and the actual component password.</p>
+<pre><code>SDDC Manager → Security → Password Management
+→ Select component type (ESXi, vCenter, NSX, SDDC Manager)
+→ Rotate → confirm the domain
+→ Monitor in Administration → Tasks
+</code></pre>
+<p><strong>Recommended rotation schedule:</strong> 90 days or per organisation policy.</p>
+<p>Break-glass accounts are exempt from auto-rotation. Store them in the enterprise vault after initial deployment and rotate manually on the same schedule.</p>
+<hr />
+<h2 id="lifecycle-management-patching">Lifecycle Management (Patching)<a class="headerlink" href="#lifecycle-management-patching" title="Permanent link">&para;</a></h2>
+<p>All VCF component upgrades (vSphere, vSAN, NSX, SDDC Manager, firmware) must go through SDDC Manager LCM. Patching components independently breaks the VCF BOM (Bill of Materials) alignment and can block future LCM upgrades.</p>
+<p><strong>Pre-upgrade checklist:</strong></p>
+<ul>
+<li>[ ] All workload domains healthy in SDDC Manager</li>
+<li>[ ] No active critical alarms in vCenter or NSX Manager</li>
+<li>[ ] vSAN Skyline Health shows no critical issues</li>
+<li>[ ] SDDC Manager backup completed successfully within 24 hours</li>
+<li>[ ] BOM compatibility confirmed — check VCF release notes for target version</li>
+<li>[ ] Maintenance window scheduled with change management</li>
+</ul>
+<p><strong>Upgrade order within a VCF release:</strong></p>
+<ol>
+<li>SDDC Manager itself (if SDDC Manager is being upgraded)</li>
+<li>Management domain: vCenter → ESXi → vSAN → NSX (in order per BOM)</li>
+<li>Workload domains (in order)</li>
+</ol>
+<p>Each domain upgrade places ESXi hosts into maintenance mode one at a time, evacuates VMs via DRS, upgrades, then exits maintenance before the next host.</p>
+<pre><code>SDDC Manager → Lifecycle Management → Upgrade → select target bundle → run pre-check → schedule
+</code></pre>
+<hr />
+<h2 id="sddc-manager-backup">SDDC Manager Backup<a class="headerlink" href="#sddc-manager-backup" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager backup protects the VCF configuration database, domain mapping, and credential store. This is separate from VM backup.</p>
+<ol>
+<li>Administration → Backup → Configure (SFTP target recommended)</li>
+<li>Schedule: daily; retain at least 7 restore points</li>
+<li>Validate: confirm last backup timestamp and status under the Backup page</li>
+</ol>
+<p><strong>On-demand backup:</strong></p>
+<pre><code>SDDC Manager → Administration → Backup → Backup Now
+</code></pre>
+<p>Download the backup bundle after creation if you need to transfer it off-site manually.</p>
+<hr />
+<h2 id="common-operational-issues">Common Operational Issues<a class="headerlink" href="#common-operational-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Where to Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workload domain shows Warning</td>
+<td>SDDC Manager → Dashboard → domain details</td>
+<td>Review component health; expand domain view</td>
+</tr>
+<tr>
+<td>NSX transport node degraded</td>
+<td>NSX Manager → System → Fabric → Nodes</td>
+<td>Check NSX agent on affected ESXi host; re-install if needed</td>
+</tr>
+<tr>
+<td>Certificate expiry warning</td>
+<td>SDDC Manager → Security → Certificates</td>
+<td>Use SDDC Manager Certificate Management to renew</td>
+</tr>
+<tr>
+<td>LCM upgrade stuck</td>
+<td>SDDC Manager → Administration → Tasks</td>
+<td>Review task details; check <code>/var/log/vmware/vcf/sddc-manager/</code></td>
+</tr>
+<tr>
+<td>SDDC Manager disk full</td>
+<td>SSH → <code>df -h</code></td>
+<td>Archive old LCM bundle downloads from <code>/nfs/vmware/vcf/nfs-mount/</code></td>
+</tr>
+<tr>
+<td>BGP peer down</td>
+<td>NSX Manager → Networking → Tier-0 → BGP</td>
+<td>Check edge node uptime; verify upstream router config hasn't changed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="useful-log-locations">Useful Log Locations<a class="headerlink" href="#useful-log-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Log Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager</td>
+<td><code>/var/log/vmware/vcf/sddc-manager/</code></td>
+</tr>
+<tr>
+<td>LCM service</td>
+<td><code>/var/log/vmware/vcf/lcm/</code></td>
+</tr>
+<tr>
+<td>Domain manager</td>
+<td><code>/var/log/vmware/vcf/domainmanager/</code></td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>NSX Manager UI → System → Support Bundle</td>
+</tr>
+<tr>
+<td>ESXi (per host)</td>
+<td><code>/var/log/hostd.log</code>, <code>/var/log/vmkernel.log</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

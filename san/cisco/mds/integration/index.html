@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nexus-dashboard-fabric-controller-ndfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nexus Dashboard Fabric Controller (NDFC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-fc-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware FC Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-powermax-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell PowerMax Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure-storage-flasharray-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure Storage FlashArray Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-and-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP and Syslog
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +786,93 @@
 
 
 <h1 id="cisco-mds-integration">Cisco MDS Integration<a class="headerlink" href="#cisco-mds-integration" title="Permanent link">&para;</a></h1>
-<p>Nexus Dashboard Fabric Controller (NDFC) provides centralised zone management, fabric topology visibility, and performance monitoring across all MDS switches, replacing the older DCNM tool. VMware FC connectivity is managed by ensuring ESXi host HBA WWPNs are registered in the correct VSAN and zoned to storage target ports. Pure FlashArray and Dell PowerMax target port WWPNs are registered as device aliases and added to zone member sets. SNMP traps and syslog messages are forwarded from each switch to the monitoring platform for alerting, trending, and audit trail.</p>
+<blockquote>
+<p>Part of the <a href="../">Cisco MDS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="nexus-dashboard-fabric-controller-ndfc">Nexus Dashboard Fabric Controller (NDFC)<a class="headerlink" href="#nexus-dashboard-fabric-controller-ndfc" title="Permanent link">&para;</a></h2>
+<p>NDFC (formerly DCNM) provides centralised zone management, fabric topology visibility, performance monitoring, and firmware orchestration across all MDS switches.</p>
+<p><strong>Key capabilities:</strong></p>
 <ul>
-<li>NDFC: centralised zone management, fabric discovery, performance dashboards</li>
-<li>VMware: ESXi HBA WWPNs in production VSAN, zoned to storage targets</li>
-<li>Pure FlashArray: target port device-aliases per array port, zoned per host</li>
-<li>Dell PowerMax: FA port WWPNs registered as device-aliases in each VSAN</li>
-<li>SNMP/syslog: forwarded to monitoring platform (SNMP trap v2c/v3, syslog UDP 514)</li>
+<li>Zone provisioning from a single GUI without SSHing to individual switches</li>
+<li>Fabric topology view with ISL health and utilisation</li>
+<li>Per-port performance graphs (IOPS, MB/s, errors)</li>
+<li>Firmware upgrade orchestration</li>
 </ul>
+<p><strong>Setup:</strong></p>
+<ol>
+<li>Deploy the NDFC virtual appliance.</li>
+<li>Discover MDS switches: NDFC → Manage → Inventory → Discover → enter switch IP and credentials.</li>
+<li>Configure SNMP v3 on each switch for telemetry collection (NDFC requires SNMP and SSH access).</li>
+</ol>
+<hr />
+<h2 id="vmware-fc-connectivity">VMware FC Connectivity<a class="headerlink" href="#vmware-fc-connectivity" title="Permanent link">&para;</a></h2>
+<p>ESXi hosts connect to storage via FC HBAs, which log into the MDS fabric and are zoned to storage target ports.</p>
+<p><strong>Zone a new ESXi host:</strong></p>
+<pre><code># Step 1 — Find the host HBA WWPN after it logs in
+show flogi database vsan 10 | grep &lt;host-ip-or-note&gt;
+# Or check the host HBA WWPNs from the ESXi console:
+esxcli storage san fc list
+
+# Step 2 — Create a device alias for each HBA port
+device-alias database
+  device-alias name esxi-host01_hba0 pwwn 21:00:00:xx:xx:xx:xx:xx
+  device-alias name esxi-host01_hba1 pwwn 21:00:00:xx:xx:xx:xx:xx
+device-alias commit
+
+# Step 3 — Create zones (one per host-port to storage-port pair)
+zone name esxi-host01_hba0-powermax01_fa0 vsan 10
+  member device-alias esxi-host01_hba0
+  member device-alias powermax01_fa0
+
+# Step 4 — Add zones to the active zone set and activate
+zoneset name prod-zoneset vsan 10
+  member esxi-host01_hba0-powermax01_fa0
+
+zoneset activate name prod-zoneset vsan 10
+</code></pre>
+<p><strong>Verify the host can see the storage:</strong></p>
+<pre><code>show zone member device-alias esxi-host01_hba0 vsan 10
+</code></pre>
+<hr />
+<h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
+<p>PowerMax FA (Front-End Adapter) ports log into the MDS fabric. Each FA port is registered as a device alias.</p>
+<pre><code># Show PowerMax FA port registrations
+show flogi database vsan 10 | grep &lt;powermax-wwpns&gt;
+
+# Create device aliases for PowerMax FA ports
+device-alias database
+  device-alias name powermax01_fa0e pwwn 5x:xx:xx:xx:xx:xx:xx:xx
+device-alias commit
+</code></pre>
+<p>For SRDF/A replication, the SRDF director ports on both arrays are zoned together in the replication VSAN (e.g., VSAN 20/21) — not in the production VSAN.</p>
+<hr />
+<h2 id="pure-storage-flasharray-integration">Pure Storage FlashArray Integration<a class="headerlink" href="#pure-storage-flasharray-integration" title="Permanent link">&para;</a></h2>
+<p>Pure FlashArray target ports are registered as device aliases and zoned per host.</p>
+<pre><code># Pure array target ports (get WWPNs from Pure UI: Settings → SAN)
+device-alias database
+  device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx
+device-alias commit
+
+# Zone: one zone per host HBA to one Pure target port
+zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10
+  member device-alias esxi-host01_hba0
+  member device-alias pure-fa01_ct0.eth4
+</code></pre>
+<p>Pure recommends at least 2 target ports per host path for redundancy. Zone each host HBA to 2 Pure target ports (one zone per pair).</p>
+<hr />
+<h2 id="snmp-and-syslog">SNMP and Syslog<a class="headerlink" href="#snmp-and-syslog" title="Permanent link">&para;</a></h2>
+<pre><code># Configure SNMP v3 (preferred over v2c)
+snmp-server user &lt;username&gt; network-operator auth sha &lt;auth-password&gt; priv aes-128 &lt;priv-password&gt;
+snmp-server host &lt;monitoring-server-ip&gt; traps version 3 priv &lt;username&gt;
+
+# Configure syslog forwarding
+logging server &lt;siem-ip&gt; 5 facility local7
+# Level 5 = notifications (includes port state changes and zone changes)
+</code></pre>
+<p>Verify SNMP is reachable from the monitoring server:</p>
+<pre><code class="language-bash">snmpwalk -v3 -u &lt;username&gt; -l authPriv -a SHA -A &lt;auth-pass&gt; -x AES -X &lt;priv-pass&gt; &lt;switch-ip&gt; sysDescr
+</code></pre>
 
 
 

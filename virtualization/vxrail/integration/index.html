@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-srs-supportassist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell SRS / SupportAssist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-openmanage-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell OpenManage Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stretched-cluster-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stretched Cluster Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,13 +808,79 @@
 
 
 <h1 id="vxrail-integration">VxRail Integration<a class="headerlink" href="#vxrail-integration" title="Permanent link">&para;</a></h1>
-<p>VxRail integrates natively with vCenter as a plugin, providing lifecycle management, cluster health, and hardware visibility directly within the vSphere UI. NSX-T integration enables software-defined networking for VxRail workloads, while Aria Operations (formerly vROps) with the VxRail management pack provides performance monitoring and capacity analytics. Dell SRS/SupportAssist enables proactive remote support by automatically opening service requests for hardware faults detected by iDRAC.</p>
+<blockquote>
+<p>Part of the <a href="../">VxRail</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
+<p>VxRail Manager registers as a vCenter plugin, surfacing cluster health, node status, and lifecycle management directly within the vSphere Client.</p>
 <ul>
-<li><strong>vCenter plugin:</strong> VxRail Manager registers as a vCenter plugin; all cluster management is surfaced in the vSphere Client</li>
-<li><strong>NSX-T:</strong> Overlay networking for VM traffic; NSX Manager points to VxRail-hosted vCenter</li>
-<li><strong>Aria Operations:</strong> VxRail management pack pulls cluster, node, and vSAN metrics</li>
-<li><strong>Dell OpenManage:</strong> Hardware inventory and alerting for node-level components (fans, PSUs, drives)</li>
-<li><strong>SRS/SupportAssist:</strong> Configured during initial deployment; monitors iDRAC events and auto-opens Dell SRs</li>
+<li>Navigate to <strong>VxRail</strong> in the vSphere Client left-hand menu to access the VxRail Manager UI.</li>
+<li>Hardware health for each node (PSU, fans, drives, NICs) is visible per-node under the VxRail Cluster view.</li>
+<li>Upgrade workflows are initiated from within vCenter via the VxRail plugin — no separate browser access to VxRail Manager is required for most operations.</li>
+</ul>
+<p><strong>VxRail Manager local UI</strong> (for break-glass or upgrade operations): <code>https://&lt;vxrail-manager-ip&gt;</code> — default credentials configured during initial deployment.</p>
+<hr />
+<h2 id="nsx-integration">NSX Integration<a class="headerlink" href="#nsx-integration" title="Permanent link">&para;</a></h2>
+<p>VxRail is fully compatible with NSX-T as the software-defined networking layer for VM traffic. NSX Manager points to the vCenter managing the VxRail cluster.</p>
+<p><strong>Host preparation</strong> (installing NSX agents on ESXi nodes) is triggered from NSX Manager:</p>
+<ul>
+<li>System → Fabric → Hosts → Add Host (or configure via Transport Node Profile)</li>
+<li>NSX deploys VIBs to each ESXi node; this requires the host to be in non-maintenance mode</li>
+<li>TEP (Tunnel Endpoint) VMkernel adapters are created automatically per the transport node profile</li>
+</ul>
+<p>For VxRail clusters running NSX, all overlay (east-west) VM traffic uses GENEVE encapsulation over the vSAN/vMotion VLAN or a dedicated TEP VLAN.</p>
+<p><strong>VxRail LCM and NSX:</strong> VxRail Composite Bundle upgrades include NSX VIB versions tested for compatibility. Do not independently upgrade NSX host components on VxRail nodes.</p>
+<hr />
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The VxRail management pack for Aria Operations (vROps) provides:</p>
+<ul>
+<li>Node-level hardware metrics (CPU, memory, storage controller, NIC)</li>
+<li>vSAN performance and capacity metrics per cluster</li>
+<li>VxRail Manager alerts and health state</li>
+</ul>
+<p><strong>Install and configure:</strong></p>
+<ol>
+<li>Download the VxRail management pack from Dell or VMware solution exchange.</li>
+<li>In Aria Operations: Administration → Solutions → Import Management Pack.</li>
+<li>Add a VxRail account: provide VxRail Manager IP and credentials.</li>
+<li>Configure alerting thresholds for disk failure, capacity, and node health.</li>
+</ol>
+<hr />
+<h2 id="dell-srs-supportassist">Dell SRS / SupportAssist<a class="headerlink" href="#dell-srs-supportassist" title="Permanent link">&para;</a></h2>
+<p>SupportAssist (formerly SRS — Secure Remote Services) is configured during initial VxRail deployment. It monitors iDRAC hardware events and automatically opens Dell support cases for hardware faults.</p>
+<p><strong>Verify SupportAssist is active:</strong></p>
+<ol>
+<li>In VxRail Manager UI → Support → SupportAssist status.</li>
+<li>Confirm "Connected" state and last heartbeat time.</li>
+<li>Run a test event to confirm a case is opened in the Dell support portal.</li>
+</ol>
+<p>If SupportAssist is not connected, VxRail hardware failures will not auto-generate SRs — manual monitoring and SR creation is required.</p>
+<hr />
+<h2 id="dell-openmanage-integration">Dell OpenManage Integration<a class="headerlink" href="#dell-openmanage-integration" title="Permanent link">&para;</a></h2>
+<p>Dell OpenManage Enterprise (OME) can inventory and monitor VxRail node hardware independently of VxRail Manager.</p>
+<ul>
+<li>Add VxRail nodes to OME using iDRAC IPs.</li>
+<li>OME provides hardware warranty status, firmware inventory, and hardware alerts.</li>
+<li>OME does not replace VxRail Manager for lifecycle operations — use OME for hardware asset management and iDRAC alerting only.</li>
+</ul>
+<hr />
+<h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
+<p>VxRail-hosted VMs are backed up like any vSphere VM. Common integrations:</p>
+<p><strong>Veeam B&amp;R:</strong>
+- Add the vCenter managing VxRail as a Managed Server in Veeam.
+- VxRail-hosted VMs appear in the Veeam inventory and can be added to backup jobs.
+- Veeam backup proxies should have access to the vSAN datastore via the vCenter NBD (Network Block Device) mode if no additional proxy is deployed inside the cluster.</p>
+<p><strong>NetBackup / Commvault:</strong>
+- Similarly connect via vCenter; the hypervisor backup method (agentless) is used for most VMs.</p>
+<hr />
+<h2 id="stretched-cluster-integration">Stretched Cluster Integration<a class="headerlink" href="#stretched-cluster-integration" title="Permanent link">&para;</a></h2>
+<p>For VxRail stretched cluster configurations (two data sites + witness):</p>
+<ul>
+<li>vSAN stretched cluster policy (FTT=1, PFTT=1) ensures data is written synchronously to both sites.</li>
+<li>vCenter uses Host Groups and VM-Host Affinity rules to prefer primary site placement.</li>
+<li>NSX-T supports stretched clusters by deploying edge nodes at both sites with the same logical segments.</li>
+<li>VxRail Manager manages the stretched cluster as a single cluster entity — both sites are visible in one cluster view.</li>
 </ul>
 
 

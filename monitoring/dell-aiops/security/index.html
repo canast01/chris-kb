@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#access-control-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control (RBAC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sso-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Access Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Access Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-credential-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Credential Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-sovereignty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Sovereignty
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +825,8 @@
 
 
 <h1 id="dell-aiops-security">Dell AIOps Security<a class="headerlink" href="#dell-aiops-security" title="Permanent link">&para;</a></h1>
-<p>Dell AIOps access control inherits from CloudIQ RBAC, with Admin and Viewer roles assignable to users via the CloudIQ portal. SSO via CloudIQ supports integration with enterprise identity providers (SAML 2.0). All actions taken on recommendations are logged in the CloudIQ audit trail, which should be reviewed periodically for unauthorised access or unexpected changes. Storage telemetry is processed entirely in Dell's cloud infrastructure — confirm data residency and sovereignty requirements are met for regulated environments. API client credentials (OAuth2) should be rotated regularly and scoped to minimum required permissions.</p>
+<h2 id="access-control-rbac">Access Control (RBAC)<a class="headerlink" href="#access-control-rbac" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps access control inherits from CloudIQ RBAC. Roles are assigned per user in the CloudIQ portal.</p>
 <table>
 <thead>
 <tr>
@@ -736,20 +837,116 @@
 <tbody>
 <tr>
 <td>Admin</td>
-<td>Full access to recommendations, configuration, and user management</td>
+<td>Full access: recommendations, configuration, notification rules, user management, API client management</td>
 </tr>
 <tr>
 <td>Viewer</td>
-<td>Read-only access to recommendations, anomalies, and health data</td>
+<td>Read-only access to recommendations, anomalies, health data, and capacity trends</td>
 </tr>
 </tbody>
 </table>
+<p>User management: <strong>CloudIQ portal &gt; Settings &gt; User Management</strong></p>
+<p>Apply the principle of least privilege. Operations staff reviewing dashboards and recommendations should be Viewers. Admins should be limited to designated platform administrators.</p>
+<h2 id="sso-integration">SSO Integration<a class="headerlink" href="#sso-integration" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps authentication is handled through CloudIQ SSO, which supports SAML 2.0 integration with enterprise IdPs.</p>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Identity Providers &gt; Add
+- SAML 2.0 metadata from Okta / Azure AD / ADFS
+- Attribute mapping: email → user account, group claim → Admin/Viewer role
+- Enable JIT provisioning for automatic account creation from IdP groups
+</code></pre>
+<p>After SSO is configured, disable local CloudIQ account login for all non-break-glass users.</p>
+<h2 id="api-access-control">API Access Control<a class="headerlink" href="#api-access-control" title="Permanent link">&para;</a></h2>
+<p>All REST API access uses OAuth2 client credentials. Each consuming system should have its own API client with minimum required scopes.</p>
+<pre><code class="language-text">Create an API client:
+CloudIQ portal &gt; Settings &gt; API Clients &gt; Add Client
+- Name: descriptive (e.g., automation-aiops, splunk-aiops)
+- Scopes: read-only for monitoring and reporting
+- Store client_id and client_secret in secrets manager immediately
+  (secret only shown once)
+</code></pre>
+<h3 id="api-credential-rotation">API Credential Rotation<a class="headerlink" href="#api-credential-rotation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">Rotation procedure (90-day schedule):
+1. CloudIQ portal &gt; Settings &gt; API Clients &gt; [Client] &gt; Rotate Secret
+2. Update new client_secret in secrets manager
+3. Redeploy all scripts and integrations referencing the old secret
+4. Verify scripts return HTTP 200 with new credentials
+5. Log rotation date and next due date in the credential register
+</code></pre>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>CloudIQ audit log captures all administrative actions for AIOps configuration and access.</p>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Audit Log
+- View: filter by user, date, or action type
+- Export to CSV for SIEM ingestion
+</code></pre>
+<p>Key events to review in audit log:
+- User login/logout (especially failed logins or logins from unexpected locations)
+- API client creation, modification, and secret rotation
+- Notification rule changes
+- Recommendation acknowledgement and dismissal</p>
+<p><strong>Retention</strong>: Export audit logs monthly to SIEM for long-term retention beyond CloudIQ's on-platform retention window.</p>
+<h2 id="data-sovereignty">Data Sovereignty<a class="headerlink" href="#data-sovereignty" title="Permanent link">&para;</a></h2>
+<p>AIOps telemetry is processed entirely in Dell's cloud infrastructure.</p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data type</td>
+<td>Storage performance metrics, capacity data, hardware health — not customer data or PII</td>
+</tr>
+<tr>
+<td>Processing location</td>
+<td>Dell cloud (confirm EU region for GDPR compliance if required)</td>
+</tr>
+<tr>
+<td>Retention in Dell cloud</td>
+<td>Per Dell's data retention policy — review Dell's privacy documentation</td>
+</tr>
+<tr>
+<td>Local SCG buffer</td>
+<td>SCG stores a short-term telemetry buffer on disk — ensure SCG VM disk is on an encrypted datastore</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SCG egress</td>
+<td>TCP 443 outbound only to Dell cloud endpoints; no inbound rules required</td>
+</tr>
+<tr>
+<td>SCG management UI access</td>
+<td>Restrict to ops management subnet via firewall rule (TCP 9443)</td>
+</tr>
+<tr>
+<td>Array credentials on SCG</td>
+<td>Use dedicated read-only service accounts per array; store in SCG credential store</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Authentication: SSO via CloudIQ (SAML 2.0 supported)</li>
-<li>Audit log: available in CloudIQ portal; export for SIEM retention</li>
-<li>Data sovereignty: telemetry processed in Dell cloud — review for regulated data</li>
-<li>API credentials: OAuth2 client credentials; rotate every 90 days</li>
-<li>RBAC: assign minimum required role (prefer Viewer for read-only operational users)</li>
+<li>[ ] SSO enabled; local accounts disabled for non-break-glass users</li>
+<li>[ ] Admin role limited to designated platform administrators</li>
+<li>[ ] API clients scoped to minimum required permissions</li>
+<li>[ ] API secrets stored in secrets manager; not in scripts or repos</li>
+<li>[ ] API secret rotation on 90-day schedule; rotation dates tracked</li>
+<li>[ ] SCG management UI access restricted to ops subnet</li>
+<li>[ ] SCG VM disk on encrypted datastore</li>
+<li>[ ] NTP configured on SCG (prevents certificate validation failures)</li>
+<li>[ ] Audit log exported to SIEM monthly</li>
+<li>[ ] Annual review of user accounts — remove stale accounts</li>
 </ul>
 
 

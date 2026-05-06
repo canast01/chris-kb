@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#access-control-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control (RBAC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sso-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-client-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Client Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Client Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-token-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scg-certificate-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Certificate Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-residency-and-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Residency and Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +825,116 @@
 
 
 <h1 id="cloudiq-security">CloudIQ Security<a class="headerlink" href="#cloudiq-security" title="Permanent link">&para;</a></h1>
-<p>CloudIQ access is controlled via user roles managed in the CloudIQ console, with SSO via SAML for enterprise identity integration. API client secrets are scoped to service accounts and rotated on the team's standard schedule. Telemetry is processed in Dell's cloud infrastructure, and the SCG certificate must be maintained to ensure encrypted telemetry transport.</p>
+<h2 id="access-control-rbac">Access Control (RBAC)<a class="headerlink" href="#access-control-rbac" title="Permanent link">&para;</a></h2>
+<p>CloudIQ uses role-based access control managed in the CloudIQ portal. Assign the minimum required role to each user.</p>
 <table>
 <thead>
 <tr>
-<th>Control</th>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin</td>
+<td>Full access: configuration, notifications, user management, API client management</td>
+</tr>
+<tr>
+<td>Viewer</td>
+<td>Read-only access to health scores, capacity, alerts, and system data</td>
+</tr>
+</tbody>
+</table>
+<p>User management: <strong>CloudIQ portal &gt; Settings &gt; User Management</strong></p>
+<p>Principle of least privilege: operations staff monitoring dashboards should be assigned the Viewer role. Admin access should be limited to designated platform administrators.</p>
+<h2 id="sso-configuration">SSO Configuration<a class="headerlink" href="#sso-configuration" title="Permanent link">&para;</a></h2>
+<p>CloudIQ supports SAML 2.0 SSO integration with enterprise IdPs (Okta, Azure AD, ADFS).</p>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Identity Providers &gt; Add
+- IdP Metadata URL or upload XML
+- Attribute mapping:
+  - email → CloudIQ username
+  - role attribute → Admin or Viewer (via IdP group claim)
+- Enable Just-in-Time (JIT) provisioning if supported
+</code></pre>
+<p>Once SSO is configured, local account login should be disabled for standard users. Retain one break-glass local admin account.</p>
+<h2 id="api-client-management">API Client Management<a class="headerlink" href="#api-client-management" title="Permanent link">&para;</a></h2>
+<p>CloudIQ REST API uses OAuth2 client credentials. Each consuming system (automation scripts, Splunk, Grafana) should have its own API client — do not share a single credential across multiple systems.</p>
+<pre><code class="language-text">Create an API client:
+CloudIQ portal &gt; Settings &gt; API Clients &gt; Add Client
+- Name: descriptive (e.g., splunk-poller, grafana-cloudiq)
+- Scope: assign minimum required scopes (read-only for dashboards/monitoring)
+- Store client_id and client_secret in the team secrets manager immediately
+  — the secret is only shown once
+</code></pre>
+<h3 id="api-token-rotation">API Token Rotation<a class="headerlink" href="#api-token-rotation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">Rotation procedure (annual schedule):
+1. CloudIQ portal &gt; Settings &gt; API Clients &gt; [Client] &gt; Rotate Secret
+2. Update the new secret in the team secrets manager
+3. Redeploy/restart all dependent scripts and integrations
+4. Verify API calls return HTTP 200 after rotation
+5. Log the rotation date and next due date in the credential register
+</code></pre>
+<h2 id="scg-certificate-security">SCG Certificate Security<a class="headerlink" href="#scg-certificate-security" title="Permanent link">&para;</a></h2>
+<p>The SCG uses TLS certificates for:
+- HTTPS communication to Dell cloud (uses Dell trusted root CA — pre-configured)
+- HTTPS communication to array management interfaces</p>
+<p>Ensure the SCG clock is NTP-synchronised to avoid certificate validation failures:</p>
+<pre><code class="language-text">SCG admin UI &gt; System Settings &gt; Date/Time &gt; NTP Configuration
+</code></pre>
+<p>For internal arrays with self-signed certificates, add them to the SCG trust store:</p>
+<pre><code class="language-text">SCG admin UI &gt; Security &gt; Trusted Certificates &gt; Add Certificate
+</code></pre>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>CloudIQ logs all administrative actions in an audit trail accessible from the portal.</p>
+<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Audit Log
+- Filter by user, date range, or action type
+- Export to CSV for SIEM ingestion
+</code></pre>
+<p>Key events to monitor:
+- User login/logout (especially failed logins)
+- API client creation and secret rotation
+- Notification rule changes
+- System add/remove events</p>
+<p>Audit logs should be exported monthly and forwarded to the SIEM for long-term retention.</p>
+<h2 id="data-residency-and-privacy">Data Residency and Privacy<a class="headerlink" href="#data-residency-and-privacy" title="Permanent link">&para;</a></h2>
+<p>Telemetry is processed and stored in Dell's cloud infrastructure.</p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
 <th>Detail</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>User roles</td>
-<td>Admin, Viewer</td>
+<td>Data type</td>
+<td>Performance metrics, capacity data, hardware health — no customer workload data</td>
 </tr>
 <tr>
-<td>SSO</td>
-<td>SAML 2.0 with enterprise IdP</td>
+<td>Residency</td>
+<td>Dell cloud (confirm region with Dell for GDPR/data sovereignty requirements)</td>
 </tr>
 <tr>
-<td>API client secret rotation</td>
-<td>Every 12 months; stored in secrets manager</td>
+<td>Retention</td>
+<td>Dell retains telemetry per their data retention policy — review Dell's privacy policy</td>
 </tr>
 <tr>
-<td>SCG certificate</td>
-<td>Must be current and trusted for encrypted telemetry</td>
-</tr>
-<tr>
-<td>Audit log</td>
-<td>Admin actions logged in CloudIQ audit trail</td>
-</tr>
-<tr>
-<td>Data sovereignty</td>
-<td>Telemetry processed in Dell cloud (check region if required)</td>
+<td>SCG data at rest</td>
+<td>SCG stores a local telemetry buffer — ensure the SCG VM disk is on an encrypted datastore</td>
 </tr>
 </tbody>
 </table>
+<h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] SSO enabled; local accounts disabled for non-break-glass users</li>
+<li>[ ] API clients scoped to minimum required permissions</li>
+<li>[ ] API secrets stored in secrets manager, not in plain text configs</li>
+<li>[ ] SCG management UI access restricted to ops management subnet (firewall rules)</li>
+<li>[ ] SCG VM disk on encrypted datastore</li>
+<li>[ ] NTP configured on SCG</li>
+<li>[ ] Audit log exported to SIEM monthly</li>
+<li>[ ] API secrets rotated on annual schedule; rotation dates logged</li>
+</ul>
 
 
 

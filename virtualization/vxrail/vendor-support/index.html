@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#opening-a-support-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Support Request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collecting-the-vxrail-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collecting the VxRail Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srs-supportassist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRS / SupportAssist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-support-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Support Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,16 +797,112 @@
 
 
 <h1 id="vxrail-vendor-support">VxRail Vendor Support<a class="headerlink" href="#vxrail-vendor-support" title="Permanent link">&para;</a></h1>
-<p>Dell support for VxRail is accessed via the Dell support portal at support.dell.com, where service requests are opened against the cluster service tag or individual node service tags. Before opening an SR, collect the VxRail support bundle from VxRail Manager (System &gt; Support &gt; Generate Support Bundle), which includes logs from all nodes, vCenter, and VxRail Manager itself. SRS/SupportAssist should be configured to auto-generate SRs for hardware faults, reducing time to detection for physical component failures.</p>
+<blockquote>
+<p>Part of the <a href="../">VxRail</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="opening-a-support-request">Opening a Support Request<a class="headerlink" href="#opening-a-support-request" title="Permanent link">&para;</a></h2>
+<p>Dell support for VxRail is accessed via the Dell support portal. Service requests are opened against the cluster service tag or an individual node service tag.</p>
+<ol>
+<li>Navigate to the Dell support portal.</li>
+<li>Search by service tag (cluster or node) — confirms warranty and support level.</li>
+<li>Select <strong>VxRail</strong> as the product line.</li>
+<li>Choose the appropriate category: software (VxRail Manager, ESXi, vSAN), hardware (node failure, disk, PSU), or networking.</li>
+</ol>
+<p><strong>Required information for every VxRail SR:</strong></p>
 <ul>
-<li><strong>Support portal:</strong> <a href="https://support.dell.com">support.dell.com</a></li>
-<li><strong>SR creation:</strong> Use cluster service tag or node service tag; select VxRail product line</li>
-<li><strong>Log bundle:</strong> VxRail Manager &gt; System &gt; Support &gt; Generate Support Bundle</li>
-<li><strong>Bundle contents:</strong> VxRail Manager logs, ESXi host logs, vSAN traces, vCenter events</li>
-<li><strong>SRS/SupportAssist:</strong> Proactive SR creation for iDRAC hardware events; verify configuration post-deployment</li>
-<li><strong>Version matrix:</strong> VxRail compatibility matrix available at Dell's interoperability matrix tool (IMT)</li>
-<li><strong>Escalation:</strong> Request Engineering Escalation in the SR if the issue is blocking production</li>
+<li>VxRail bundle version (VxRail Manager → System → Software Versions)</li>
+<li>Affected node service tag(s)</li>
+<li>Cluster size and configuration (all-flash, NVMe, etc.)</li>
+<li>Description of the issue with timestamps</li>
+<li>VxRail support bundle (see below)</li>
 </ul>
+<hr />
+<h2 id="collecting-the-vxrail-support-bundle">Collecting the VxRail Support Bundle<a class="headerlink" href="#collecting-the-vxrail-support-bundle" title="Permanent link">&para;</a></h2>
+<p>The support bundle collects logs from all nodes, vCenter, VxRail Manager, and vSAN traces in a single operation.</p>
+<pre><code>VxRail Manager UI → System → Support → Generate Support Bundle
+→ Select all nodes → Generate
+→ Download the bundle once complete (may take 10–20 minutes for large clusters)
+</code></pre>
+<p><strong>Bundle contents:</strong></p>
+<ul>
+<li>VxRail Manager application logs</li>
+<li>ESXi host logs (hostd, vmkernel, vpxa) for each node</li>
+<li>vSAN health and trace data</li>
+<li>vCenter events and alarms</li>
+<li>Hardware event logs from iDRAC for each node</li>
+</ul>
+<p><strong>Alternative — individual node bundle via ESXi:</strong></p>
+<pre><code class="language-bash"># SSH to the ESXi host directly
+vm-support -w /tmp
+# SCP the output off the host
+scp root@&lt;esxi-ip&gt;:/tmp/esx-&lt;hostname&gt;-*.tgz &lt;destination&gt;
+</code></pre>
+<hr />
+<h2 id="srs-supportassist">SRS / SupportAssist<a class="headerlink" href="#srs-supportassist" title="Permanent link">&para;</a></h2>
+<p>SupportAssist (formerly Secure Remote Services) auto-generates Dell support cases for hardware faults detected by iDRAC.</p>
+<p><strong>Verify SupportAssist is active:</strong></p>
+<pre><code>VxRail Manager UI → System → Support → SupportAssist
+→ Status should show: Connected
+→ Check Last Heartbeat timestamp — should be within 24 hours
+</code></pre>
+<p><strong>Test SupportAssist:</strong></p>
+<pre><code>VxRail Manager → System → Support → SupportAssist → Run Test
+→ Confirm a test SR appears in the Dell support portal within a few minutes
+</code></pre>
+<p>If SupportAssist shows disconnected, check:
+1. Outbound HTTPS access from VxRail Manager to Dell SupportAssist endpoints
+2. Proxy configuration if applicable (VxRail Manager → System → Network → Proxy)</p>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard SR</td>
+<td>Opens automatically (SupportAssist) or via portal</td>
+</tr>
+<tr>
+<td>Priority escalation</td>
+<td>In the open SR → <strong>Request Escalation</strong> → provide business impact</td>
+</tr>
+<tr>
+<td>Engineering escalation</td>
+<td>In the SR → <strong>Request Engineering Escalation</strong> → for bugs blocking production</td>
+</tr>
+<tr>
+<td>Account team</td>
+<td>Contact Dell account team for critical production outages if SR response is insufficient</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="version-compatibility-matrix">Version Compatibility Matrix<a class="headerlink" href="#version-compatibility-matrix" title="Permanent link">&para;</a></h2>
+<p>Before any lifecycle operation, verify the target VxRail bundle version against the VxRail Compatibility Matrix:</p>
+<pre><code>Dell Technologies Interoperability Matrix (IMT)
+→ Select VxRail → current version → check compatible vSphere, vSAN, NSX versions
+</code></pre>
+<p>Also check for any VxRail-specific release notes or known issues before applying an LCM bundle — some bundles have prerequisites or known issues documented in the release notes.</p>
+<hr />
+<h2 id="useful-support-commands">Useful Support Commands<a class="headerlink" href="#useful-support-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check VxRail Manager version from the appliance
+ssh vcf@&lt;vxrail-manager-ip&gt;
+cat /etc/vxrail-release
+
+# Check ESXi version on a node
+vmware -v
+
+# Check all node service tags from VxRail Manager CLI
+vxrail-system-info --node-list
+
+# Check iDRAC for hardware events on a node
+racadm getsel   # System Event Log (hardware alerts)
+</code></pre>
 
 
 

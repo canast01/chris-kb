@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#job-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retention-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retention Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-job-configuration-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Configuration Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Standard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proxy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instant-vm-recovery-rto-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant VM Recovery RTO Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,42 +808,177 @@
 
 
 <h1 id="veeam-standards">Veeam Standards<a class="headerlink" href="#veeam-standards" title="Permanent link">&para;</a></h1>
-<p>Job names follow the convention <code>env-workload-type</code> (e.g., <code>prod-vm-daily</code>, <code>dr-fileserver-weekly</code>, <code>dev-vm-backup</code>) to make environment, workload class, and job type immediately clear in the console. Backup windows are scheduled during off-peak hours (22:00–06:00 by default) with a hard stop configured to prevent overlap with the next window. Encryption is mandatory for all jobs writing to cloud repositories or off-site backup copy targets; AES-256 with keys stored in the Veeam configuration database (backed up separately) is the standard. Instant VM Recovery RTO targets must be agreed per application tier and documented in the DR plan.</p>
+<h2 id="job-naming-convention">Job Naming Convention<a class="headerlink" href="#job-naming-convention" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Retention Level</th>
-<th>Type</th>
-<th>Retention</th>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup job</td>
+<td><code>&lt;env&gt;-&lt;workload&gt;-&lt;type&gt;</code></td>
+<td><code>prod-vm-daily</code>, <code>dr-fileserver-weekly</code></td>
+</tr>
+<tr>
+<td>Backup copy job</td>
+<td><code>&lt;env&gt;-&lt;workload&gt;-copy-&lt;dest&gt;</code></td>
+<td><code>prod-vm-copy-offsite</code></td>
+</tr>
+<tr>
+<td>Replication job</td>
+<td><code>&lt;env&gt;-&lt;workload&gt;-repl</code></td>
+<td><code>prod-critical-vm-repl</code></td>
+</tr>
+<tr>
+<td>SOBR</td>
+<td><code>&lt;site&gt;-sobr-&lt;tier&gt;</code></td>
+<td><code>dc1-sobr-primary</code></td>
+</tr>
+<tr>
+<td>Repository</td>
+<td><code>&lt;site&gt;-repo-&lt;type&gt;-&lt;seq&gt;</code></td>
+<td><code>dc1-repo-ssd-01</code>, <code>dc2-repo-linux-01</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="retention-schedule">Retention Schedule<a class="headerlink" href="#retention-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Restore Points</th>
+<th>Schedule</th>
+<th>Repository</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Daily</td>
-<td>Incremental</td>
-<td>14 restore points</td>
+<td>14</td>
+<td>Incremental (synthetic full weekly)</td>
+<td>Performance tier (fast disk)</td>
 </tr>
 <tr>
 <td>Weekly</td>
-<td>Full (synthetic)</td>
-<td>8 restore points</td>
+<td>8</td>
+<td>Synthetic full</td>
+<td>Performance tier</td>
 </tr>
 <tr>
 <td>Monthly</td>
-<td>Full (active)</td>
-<td>12 restore points</td>
+<td>12</td>
+<td>Active full (monthly)</td>
+<td>SOBR capacity tier offload</td>
 </tr>
 <tr>
 <td>Yearly</td>
-<td>Full (active)</td>
-<td>7 restore points</td>
+<td>7</td>
+<td>Active full (yearly)</td>
+<td>Object storage archive</td>
 </tr>
 </tbody>
 </table>
+<p>SOBR capacity tier offload: configure automatic offload after 14 days → moves monthly/yearly points to object storage.</p>
+<h2 id="backup-job-configuration-standards">Backup Job Configuration Standards<a class="headerlink" href="#backup-job-configuration-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Repository target: primary repo on fast disk (performance tier); capacity tier offload to object storage after 14 days.</li>
-<li>Encryption key management: keys must be exported and stored in a secure vault (CyberArk or offline safe) — loss of key means loss of backup data.</li>
+<li><strong>Backup window</strong>: 22:00–06:00 (default); set hard stop to prevent daytime impact</li>
+<li><strong>Source-side deduplication</strong>: Enabled on all jobs (reduces WAN for copy jobs)</li>
+<li><strong>Compression</strong>: Optimal (default) — do not use Extreme unless backup window permits extra CPU time</li>
+<li><strong>Application-aware processing</strong>: Enabled for all jobs containing SQL Server, Oracle, Exchange, Active Directory VMs</li>
+<li><strong>Guest OS quiescence</strong>: VSS quiescence for Windows VMs; file system freeze for Linux VMs</li>
 </ul>
+<h2 id="encryption-standard">Encryption Standard<a class="headerlink" href="#encryption-standard" title="Permanent link">&para;</a></h2>
+<p>Mandatory encryption for:
+- All backup copy jobs targeting off-site repositories
+- All cloud repository targets (SOBR capacity tier)
+- Any job protecting VMs with classified or regulated data (PII, financial, healthcare)</p>
+<p>Algorithm: AES-256.</p>
+<p><strong>Key management</strong>:
+- Export encryption keys immediately after creation
+- Store in CyberArk → dedicated VBR Encryption Keys safe
+- Rotate keys annually — plan for re-encryption of existing backup files</p>
+<h2 id="proxy-standards">Proxy Standards<a class="headerlink" href="#proxy-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum proxies per site</td>
+<td>2 (redundancy + parallel capacity)</td>
+</tr>
+<tr>
+<td>Transport mode preference</td>
+<td>Hot-add (SAN) &gt; Direct NFS &gt; NBD</td>
+</tr>
+<tr>
+<td>Max concurrent tasks per proxy</td>
+<td>vCPU count / 2 (default)</td>
+</tr>
+<tr>
+<td>Proxy OS</td>
+<td>Windows Server 2022 or RHEL 8+ (Linux proxy)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="repository-standards">Repository Standards<a class="headerlink" href="#repository-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Repository Type</th>
+<th>Use Case</th>
+<th>Performance Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux hardened (immutable)</td>
+<td>Primary onsite backup</td>
+<td>XFS or ReFS; 10 GbE minimum</td>
+</tr>
+<tr>
+<td>NFS/SMB share</td>
+<td>Secondary onsite storage</td>
+<td>Dedicated NAS volume; 10 GbE</td>
+</tr>
+<tr>
+<td>S3-compatible (SOBR capacity)</td>
+<td>Long-term / archival</td>
+<td>Glacier-class for yearly; Standard for monthly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="instant-vm-recovery-rto-targets">Instant VM Recovery RTO Targets<a class="headerlink" href="#instant-vm-recovery-rto-targets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Application Tier</th>
+<th>Target RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1 (critical DB, ERP)</td>
+<td>&lt; 15 minutes via Instant VM Recovery</td>
+</tr>
+<tr>
+<td>Tier 2 (business apps)</td>
+<td>&lt; 1 hour</td>
+</tr>
+<tr>
+<td>Tier 3 (dev/test)</td>
+<td>&lt; 4 hours</td>
+</tr>
+</tbody>
+</table>
+<p>Document agreed RTOs in the DR plan; validate quarterly via Instant VM Recovery test.</p>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vm-patching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Patching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-retirement-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Retirement Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscription-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscription Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-group-expiry-non-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Group Expiry (Non-Production)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entra-id-app-registration-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entra ID App Registration Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,43 +797,82 @@
 
 
 <h1 id="azure-lifecycle">Azure Lifecycle<a class="headerlink" href="#azure-lifecycle" title="Permanent link">&para;</a></h1>
-<p>VM OS images are sourced from Azure Marketplace and patched via Azure Update Manager on a monthly schedule aligned to Microsoft's Patch Tuesday, with production VMs updated in rolling waves. AKS clusters are supported for N-2 minor versions; clusters running an unsupported version must be upgraded within the 30-day deprecation window to remain eligible for support. Azure service retirements are tracked via Azure Updates and the Azure Portal's Retirement Workbook, and affected resources must be migrated before the announced retirement date.</p>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Lifecycle Event</th>
-<th>Cadence / Policy</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM OS images</td>
-<td>Patch via Azure Update Manager</td>
-<td>Monthly, Patch Tuesday + 1 week</td>
-</tr>
-<tr>
-<td>AKS versions</td>
-<td>Supported: N-2 minor versions</td>
-<td>Upgrade within 30 days of deprecation notice</td>
-</tr>
-<tr>
-<td>Azure service retirements</td>
-<td>Track via Azure Updates</td>
-<td>Migrate before retirement date; review monthly</td>
-</tr>
-<tr>
-<td>Subscription decommissioning</td>
-<td>Cancel → move resources → delete</td>
-<td>90-day hold after cancellation before permanent deletion</td>
-</tr>
-<tr>
-<td>Resource group cleanup</td>
-<td>Tag-based expiry for non-production</td>
-<td>Reviewed quarterly; expired RGs deleted after 14-day notice</td>
-</tr>
-</tbody>
-</table>
+<h2 id="vm-patching">VM Patching<a class="headerlink" href="#vm-patching" title="Permanent link">&para;</a></h2>
+<p>VM OS images are patched via Azure Update Manager on a monthly schedule:</p>
+<pre><code class="language-bash"># Check patch assessment for a VM
+az maintenance assignment list --resource-group &lt;rg&gt; --provider-name Microsoft.Compute \
+    --resource-type virtualMachines --resource-name &lt;vm-name&gt;
+
+# Trigger on-demand assessment
+az maintenance apply-updates create --resource-group &lt;rg&gt; \
+    --provider-name Microsoft.Compute --resource-type virtualMachines --resource-name &lt;vm-name&gt;
+
+# Check patch compliance status
+az update-management-v2 assess --resource-group &lt;rg&gt; --vm-name &lt;vm-name&gt;
+</code></pre>
+<p>Patching waves:
+- Development: Patch Tuesday + 1 day (auto-reboot allowed)
+- Staging: Patch Tuesday + 3 days
+- Production: maintenance window (manual reboot approval required)</p>
+<h2 id="aks-upgrade">AKS Upgrade<a class="headerlink" href="#aks-upgrade" title="Permanent link">&para;</a></h2>
+<p>AKS supports N-2 minor Kubernetes versions. Clusters on unsupported versions receive no patches:</p>
+<pre><code class="language-bash"># Check available upgrades
+az aks get-upgrades --name &lt;cluster-name&gt; -g &lt;rg&gt; --output table
+
+# Upgrade control plane first
+az aks upgrade --name &lt;cluster-name&gt; -g &lt;rg&gt; --kubernetes-version 1.30 --no-wait
+
+# Monitor upgrade progress
+az aks show --name &lt;cluster-name&gt; -g &lt;rg&gt; --query 'provisioningState'
+
+# Upgrade node pools after control plane completes
+az aks nodepool upgrade --cluster-name &lt;cluster-name&gt; -g &lt;rg&gt; \
+    --name &lt;nodepool-name&gt; --kubernetes-version 1.30
+</code></pre>
+<h2 id="service-retirement-tracking">Service Retirement Tracking<a class="headerlink" href="#service-retirement-tracking" title="Permanent link">&para;</a></h2>
+<p>Monitor Azure service retirements:
+- Azure Portal → Home → Recommendations → Retirements
+- Subscribe to Azure Updates: <a href="https://azure.microsoft.com/updates">azure.microsoft.com/updates</a>
+- Azure Advisor: Operational Excellence recommendations</p>
+<pre><code class="language-bash"># Check Advisor recommendations
+az advisor recommendation list --category OperationalExcellence \
+    --query &quot;[?contains(shortDescription.solution, 'Upgrade')]&quot;
+</code></pre>
+<h2 id="subscription-lifecycle">Subscription Lifecycle<a class="headerlink" href="#subscription-lifecycle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all subscriptions in tenant
+az account list --all --output table
+
+# Move subscription to different management group
+az management-group subscriptions add --name &lt;sub-id&gt; --management-group &lt;mg-id&gt;
+
+# Decommission subscription
+# 1. Cancel all resources
+# 2. Remove from management groups
+# 3. Cancel subscription (requires Billing Admin role)
+az account set --subscription &lt;sub-id&gt;
+# Cancel in Azure Portal → Subscriptions → Cancel
+</code></pre>
+<p>90-day hold period after cancellation before permanent deletion.</p>
+<h2 id="resource-group-expiry-non-production">Resource Group Expiry (Non-Production)<a class="headerlink" href="#resource-group-expiry-non-production" title="Permanent link">&para;</a></h2>
+<p>Tag non-production resource groups with expiry:</p>
+<pre><code class="language-bash"># Tag with expiry date
+az group update --name &lt;rg-name&gt; --tags ExpiryDate=2026-12-31 Environment=dev
+
+# Script to find expired RGs (run monthly)
+az group list --query &quot;[?tags.ExpiryDate &lt; '$(date +%Y-%m-%d)'].{Name:name,ExpiryDate:tags.ExpiryDate}&quot; --output table
+</code></pre>
+<p>Expired RGs are notified to owner 14 days before deletion.</p>
+<h2 id="entra-id-app-registration-lifecycle">Entra ID App Registration Lifecycle<a class="headerlink" href="#entra-id-app-registration-lifecycle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List app registrations with credential expiry
+az ad app list --all --query &quot;[*].{AppId:appId,DisplayName:displayName}&quot; -o table
+
+# Check credential expiry dates
+az ad app credential list --id &lt;app-id&gt;
+
+# Rotate client secret
+az ad app credential reset --id &lt;app-id&gt; --credential-description &quot;rotation-$(date +%Y%m)&quot;
+</code></pre>
+<p>Alert 60 days before credential expiry — expired credentials break CI/CD pipelines silently.</p>
 
 
 

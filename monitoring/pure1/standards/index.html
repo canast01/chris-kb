@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#array-tagging-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Tagging Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-threshold-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Threshold Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-notification-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Notification Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-score-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Score Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-access-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Access Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purity-version-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purity Version Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,37 +819,171 @@
 
 
 <h1 id="pure1-standards">Pure1 Standards<a class="headerlink" href="#pure1-standards" title="Permanent link">&para;</a></h1>
-<p>Array tagging in Pure1 follows a mandatory three-tag standard (Site, Environment, Owner) to support reporting, alert routing, and capacity forecasting by business unit. Alert notification routing rules are defined per severity level, with CRITICAL alerts routed to PagerDuty and WARNING alerts delivered via email. Capacity threshold alerts are configured to warn at 70% used and escalate to critical at 85% used, with a weekly capacity report emailed to the storage team.</p>
+<h2 id="array-tagging-policy">Array Tagging Policy<a class="headerlink" href="#array-tagging-policy" title="Permanent link">&para;</a></h2>
+<p>Every FlashArray and FlashBlade registered in Pure1 must carry the three mandatory tags. Tags are used for reporting, alert routing, capacity forecasting by business unit, and chargeback.</p>
 <table>
 <thead>
 <tr>
-<th>Standard</th>
-<th>Value</th>
+<th>Tag Key</th>
+<th>Required</th>
+<th>Example Values</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Required tags</td>
-<td>Site, Environment, Owner</td>
+<td>Site</td>
+<td>Yes</td>
+<td><code>dc1</code>, <code>dc2</code>, <code>dr-site</code></td>
 </tr>
 <tr>
-<td>Capacity warn threshold</td>
-<td>70% used</td>
+<td>Environment</td>
+<td>Yes</td>
+<td><code>prod</code>, <code>non-prod</code>, <code>dev</code></td>
 </tr>
 <tr>
-<td>Capacity critical threshold</td>
-<td>85% used</td>
-</tr>
-<tr>
-<td>Report schedule</td>
-<td>Weekly capacity report via email</td>
-</tr>
-<tr>
-<td>API access policy</td>
-<td>Per-team API keys, rotated annually</td>
+<td>Owner</td>
+<td>Yes</td>
+<td><code>storage-ops</code>, <code>db-team</code>, <code>platform</code></td>
 </tr>
 </tbody>
 </table>
+<p>Apply tags immediately after a new array appears in Pure1 (within 24 hours of onboarding).</p>
+<p>Monthly tag compliance check:</p>
+<pre><code class="language-bash"># Using Pure1 REST API to find untagged arrays
+# See scripts/pure1/tag_compliance.py
+</code></pre>
+<h2 id="capacity-threshold-standards">Capacity Threshold Standards<a class="headerlink" href="#capacity-threshold-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usable capacity used</td>
+<td>70%</td>
+<td>85%</td>
+<td>Warning: track; Critical: raise capacity planning request same day</td>
+</tr>
+<tr>
+<td>Data reduction ratio decline</td>
+<td>&gt; 15% below 30-day baseline</td>
+<td>&gt; 25% decline</td>
+<td>Investigate workload change; review dedup/compression settings</td>
+</tr>
+<tr>
+<td>Days to capacity exhaustion</td>
+<td>45 days</td>
+<td>15 days</td>
+<td>45 days: plan expansion; 15 days: emergency action</td>
+</tr>
+</tbody>
+</table>
+<p>Capacity alerts are configured in <strong>Pure1 &gt; Administration &gt; Notifications</strong> with severity-based routing.</p>
+<h2 id="alert-notification-routing">Alert Notification Routing<a class="headerlink" href="#alert-notification-routing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Channel</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRITICAL</td>
+<td>PagerDuty (on-call) + ServiceNow incident</td>
+<td>Acknowledge within 15 minutes</td>
+</tr>
+<tr>
+<td>WARNING</td>
+<td>Email — storage-ops distribution list</td>
+<td>Review within 4 hours</td>
+</tr>
+<tr>
+<td>INFO</td>
+<td>Pure1 portal only</td>
+<td>Review in daily checklist</td>
+</tr>
+</tbody>
+</table>
+<p>Notification rules are configured per array tag filter (e.g., separate rules for prod vs. non-prod).</p>
+<h2 id="health-score-standards">Health Score Standards<a class="headerlink" href="#health-score-standards" title="Permanent link">&para;</a></h2>
+<p>Pure1 array health is expressed as a pass/fail component health model rather than a numerical score. The equivalent operational thresholds:</p>
+<table>
+<thead>
+<tr>
+<th>Array Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Healthy (all components green)</td>
+<td>Normal monitoring</td>
+</tr>
+<tr>
+<td>Degraded (non-critical component fault)</td>
+<td>Raise in daily stand-up; investigate within 4 hours</td>
+</tr>
+<tr>
+<td>Error / Critical fault</td>
+<td>Raise ServiceNow incident immediately; engage Pure Storage support</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-access-standards">API Access Standards<a class="headerlink" href="#api-access-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One API service account per consuming system (Splunk, Grafana, automation scripts, Aria Operations)</li>
+<li>API keys are RSA private keys — store securely in the secrets manager (not in filesystem or repos)</li>
+<li>Rotation schedule: annual; rotation dates tracked in the credential register</li>
+<li>Read-only API access for monitoring and reporting; no write access unless required</li>
+</ul>
+<h2 id="reporting-cadence">Reporting Cadence<a class="headerlink" href="#reporting-cadence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Schedule</th>
+<th>Format</th>
+<th>Audience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weekly Capacity Report</td>
+<td>Weekly (Monday 07:00)</td>
+<td>Email + CSV</td>
+<td>Storage team</td>
+</tr>
+<tr>
+<td>Monthly Fleet Health Summary</td>
+<td>Monthly, 1st working day</td>
+<td>PDF</td>
+<td>Storage team + management</td>
+</tr>
+<tr>
+<td>Capacity Trend Archive</td>
+<td>Weekly (automated script)</td>
+<td>CSV → shared drive</td>
+<td>Capacity planning</td>
+</tr>
+</tbody>
+</table>
+<p>Reports are generated via the <code>pure1_capacity_report.py</code> script and distributed via email. Archive capacity trend data to the shared drive for 2-year retention.</p>
+<h2 id="purity-version-standards">Purity Version Standards<a class="headerlink" href="#purity-version-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Production arrays: must be on a supported Purity release (not EOS)</li>
+<li>Non-production arrays: may lag production by one minor version</li>
+<li>All arrays: plan upgrades within 6 months of EOS announcement</li>
+<li>Review Pure Storage release calendar quarterly</li>
+</ul>
+<h2 id="change-management">Change Management<a class="headerlink" href="#change-management" title="Permanent link">&para;</a></h2>
+<p>All planned Purity upgrades and array configuration changes must be logged in ServiceNow as standard change records. Emergency changes (e.g., critical patch) use the emergency change process with post-change documentation within 24 hours.</p>
 
 
 

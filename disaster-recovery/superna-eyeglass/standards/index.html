@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#synciq-policy-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SyncIQ Policy Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#share-and-quota-alignment-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Share and Quota Alignment Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rpo-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPO Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-readiness-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Readiness Score
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-test-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Test Frequency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,39 +797,139 @@
 
 
 <h1 id="superna-eyeglass-standards">Superna Eyeglass Standards<a class="headerlink" href="#superna-eyeglass-standards" title="Permanent link">&para;</a></h1>
-<p>Eyeglass configuration objects should follow a consistent naming convention: SyncIQ policy names use the format <code>&lt;source-cluster&gt;-&lt;target-cluster&gt;-&lt;zone-or-path&gt;</code>, and Eyeglass DR configuration groups mirror this naming. SyncIQ policy alignment is mandatory — all policies managed by Eyeglass must have matching share and quota configurations on both clusters before DR readiness can be confirmed.</p>
-<p>DNS zone delegation for automated cutover must be pre-configured and validated before any failover test. RPO targets should be defined per SyncIQ policy and configured in Eyeglass to trigger alerts when replication lag exceeds the threshold.</p>
+<h2 id="synciq-policy-naming">SyncIQ Policy Naming<a class="headerlink" href="#synciq-policy-naming" title="Permanent link">&para;</a></h2>
+<p>SyncIQ policy names must be consistent between primary and DR clusters and follow the format:</p>
+<pre><code>&lt;source-cluster&gt;-&lt;target-cluster&gt;-&lt;zone-or-path&gt;
+</code></pre>
+<p>Examples:
+- <code>isilon-a-isilon-b-homedir</code> — home directory replication between Isilon A and B
+- <code>pscale-dc1-pscale-dc2-finance</code> — finance data zone
+- <code>pscale-dc1-pscale-dc2-archive</code> — archival data path</p>
+<p>Eyeglass DR configuration groups mirror SyncIQ policy naming — consistent names simplify DR readiness audits.</p>
+<h2 id="share-and-quota-alignment-requirements">Share and Quota Alignment Requirements<a class="headerlink" href="#share-and-quota-alignment-requirements" title="Permanent link">&para;</a></h2>
+<p>Before declaring DR-ready, ALL of the following must be met:</p>
 <table>
 <thead>
 <tr>
+<th>Check</th>
 <th>Standard</th>
-<th>Requirement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SyncIQ policy naming</td>
-<td><code>&lt;source&gt;-&lt;target&gt;-&lt;zone&gt;</code> format</td>
+<td>SMB share mapping</td>
+<td>Every primary share must have a corresponding DR share defined in Eyeglass</td>
 </tr>
 <tr>
-<td>Share mapping validation</td>
-<td>All shares mapped in Eyeglass before declaring DR-ready</td>
+<td>NFS export mapping</td>
+<td>Every primary NFS export mapped for DR</td>
 </tr>
 <tr>
-<td>Quota mapping validation</td>
-<td>All quotas aligned between primary and DR cluster</td>
+<td>Quota mapping</td>
+<td>All quotas (user, group, directory) aligned between primary and DR cluster</td>
+</tr>
+<tr>
+<td>ACL verification</td>
+<td>Share ACLs reference AD groups (not local users) to survive failover</td>
 </tr>
 <tr>
 <td>DNS zone delegation</td>
-<td>Pre-configured and tested before any failover exercise</td>
+<td>Pre-configured and validated in DNS preview before any DR test</td>
+</tr>
+</tbody>
+</table>
+<p>Verify via Admin UI: DR → Readiness → expand each category for gap report.</p>
+<h2 id="rpo-targets">RPO Targets<a class="headerlink" href="#rpo-targets" title="Permanent link">&para;</a></h2>
+<p>Define RPO thresholds per SyncIQ policy in Eyeglass:</p>
+<table>
+<thead>
+<tr>
+<th>Data Tier</th>
+<th>SyncIQ Schedule</th>
+<th>RPO Target</th>
+<th>Eyeglass Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1 (critical file services)</td>
+<td>Continuous</td>
+<td>&lt; 15 minutes</td>
+<td>Alert at &gt; 10 minutes lag</td>
 </tr>
 <tr>
-<td>RPO target</td>
-<td>Defined per policy; alert on breach</td>
+<td>Tier 2 (departmental shares)</td>
+<td>Every 4 hours</td>
+<td>&lt; 4 hours</td>
+<td>Alert at &gt; 3.5 hours lag</td>
 </tr>
 <tr>
-<td>DR readiness score</td>
-<td>Must be 100% before scheduled failover tests</td>
+<td>Tier 3 (archival)</td>
+<td>Daily</td>
+<td>&lt; 24 hours</td>
+<td>Alert at &gt; 20 hours lag</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dr-readiness-score">DR Readiness Score<a class="headerlink" href="#dr-readiness-score" title="Permanent link">&para;</a></h2>
+<p>The Eyeglass DR Readiness Score must be 100% before any scheduled failover test or before declaring DR capability for the environment.</p>
+<p>Score &lt; 100% indicates one or more missing mappings or replication lag beyond threshold — investigate and resolve before proceeding with DR exercises.</p>
+<h2 id="failover-test-frequency">Failover Test Frequency<a class="headerlink" href="#failover-test-frequency" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Minimum Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS cutover test (non-disruptive)</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td>Share/quota validation on DR cluster (read-only check)</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td>Full failover test (maintenance window, with data)</td>
+<td>Annually</td>
+</tr>
+<tr>
+<td>Failback validation</td>
+<td>After each full failover test</td>
+</tr>
+</tbody>
+</table>
+<p>Document all failover test results in the change management system.</p>
+<h2 id="operational-standards">Operational Standards<a class="headerlink" href="#operational-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eyeglass appliance backup</td>
+<td>Daily configuration backup exported and stored off-appliance</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Eyeglass SNMP traps integrated with Aria Operations or equivalent</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>Email notifications active for DR team distribution list</td>
+</tr>
+<tr>
+<td>Service account rotation</td>
+<td>Eyeglass service account credentials rotated every 90 days (coordinate with CyberArk policy)</td>
+</tr>
+<tr>
+<td>Post-change validation</td>
+<td>Re-run Eyeglass readiness scan after any SyncIQ or PowerScale configuration change</td>
 </tr>
 </tbody>
 </table>

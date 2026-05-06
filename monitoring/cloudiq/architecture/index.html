@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secure-connect-gateway-scg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Connect Gateway (SCG)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secure Connect Gateway (SCG)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scg-system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG System Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#telemetry-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telemetry Collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-residency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Residency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,7 +825,21 @@
 
 
 <h1 id="cloudiq-architecture">CloudIQ Architecture<a class="headerlink" href="#cloudiq-architecture" title="Permanent link">&para;</a></h1>
-<p>Dell CloudIQ is a cloud-native AIOps monitoring platform collecting telemetry from Dell storage, servers, and networking via Secure Connect Gateway (SCG). CloudIQ presents health scores, capacity forecasts, anomaly detection, and performance baselines through a web dashboard and REST API. The SCG virtual appliance is deployed on-premises and acts as the sole outbound telemetry relay — all communication to CloudIQ is outbound HTTPS with no inbound firewall rules required.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from Dell storage, server, and networking systems. All communication is outbound HTTPS from an on-premises Secure Connect Gateway (SCG) virtual appliance — no inbound firewall rules are required. The platform provides health scores, capacity forecasts, anomaly detection, and AI-driven recommendations via a web dashboard and REST API.</p>
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<pre><code>On-Premises                           Dell Cloud
+┌─────────────────────────────┐       ┌─────────────────────────────┐
+│  Dell Arrays / Servers       │       │  CloudIQ SaaS Platform       │
+│  (PowerStore, PowerMax,      │──────►│  - Health scoring engine     │
+│   PowerScale, Unity XT,      │       │  - AI/AIOps recommendations  │
+│   Data Domain, PowerEdge)    │       │  - Capacity forecasting      │
+│                              │       │  - REST API                  │
+│  Secure Connect Gateway(SCG) │──────►│  - Web dashboard             │
+│  (OVA on-prem)               │ HTTPS │                              │
+└─────────────────────────────┘  443   └─────────────────────────────┘
+</code></pre>
+<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -736,19 +850,109 @@
 <tbody>
 <tr>
 <td>CloudIQ Cloud</td>
-<td>SaaS platform hosted by Dell</td>
+<td>SaaS platform hosted and managed by Dell</td>
 </tr>
 <tr>
 <td>Secure Connect Gateway (SCG)</td>
-<td>On-premises virtual appliance; collects and relays telemetry</td>
+<td>On-premises virtual appliance; collects telemetry from arrays and relays to CloudIQ over HTTPS</td>
 </tr>
 <tr>
 <td>CloudIQ Dashboard</td>
-<td>Web UI for health scores, alerts, capacity, anomalies</td>
+<td>Web UI presenting health scores, alerts, capacity trends, and anomaly detections</td>
 </tr>
 <tr>
 <td>CloudIQ REST API</td>
-<td>Programmatic access to fleet data, alerts, capacity</td>
+<td>Programmatic access to fleet data, alerts, and capacity metrics</td>
+</tr>
+<tr>
+<td>Dell AIOps (integrated)</td>
+<td>AI recommendations layer within CloudIQ for root cause analysis and predictive insights</td>
+</tr>
+</tbody>
+</table>
+<h2 id="secure-connect-gateway-scg">Secure Connect Gateway (SCG)<a class="headerlink" href="#secure-connect-gateway-scg" title="Permanent link">&para;</a></h2>
+<p>The SCG is the sole on-premises component. Key characteristics:</p>
+<ul>
+<li>Deployed as a Linux-based OVA (VMware or KVM)</li>
+<li>Communicates to Dell cloud endpoints on TCP 443 outbound only</li>
+<li>Supports proxy configuration for environments without direct internet egress</li>
+<li>Collects from arrays via management IP — requires reachability to all array management interfaces</li>
+<li>Supports multiple sites; a single SCG can collect from arrays across multiple subnets if routable</li>
+</ul>
+<h3 id="scg-system-requirements">SCG System Requirements<a class="headerlink" href="#scg-system-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Minimum</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCPU</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>8 GB</td>
+<td>16 GB</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td>100 GB</td>
+<td>200 GB</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>RHEL/CentOS 7/8 or OVA</td>
+<td>OVA preferred</td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry-collection">Telemetry Collection<a class="headerlink" href="#telemetry-collection" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Collection interval: typically every 5 minutes for performance metrics; health scores refresh every 15–30 minutes</li>
+<li>Protocol: HTTPS (REST API calls from SCG to array management endpoint)</li>
+<li>Supported platforms: PowerStore, PowerMax/VMAX, PowerScale/Isilon, Unity XT, Data Domain/PowerProtect, PowerVault, PowerEdge (via iDRAC)</li>
+</ul>
+<h2 id="data-residency">Data Residency<a class="headerlink" href="#data-residency" title="Permanent link">&para;</a></h2>
+<p>CloudIQ telemetry is processed and stored in Dell's cloud infrastructure. Confirm with Dell that data is stored in the appropriate region for compliance requirements (EU customers should verify GDPR residency options).</p>
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SCG</td>
+<td>Dell cloud (cloudiq.dell.com)</td>
+<td>TCP 443</td>
+<td>Telemetry upload</td>
+</tr>
+<tr>
+<td>SCG</td>
+<td>Array management IPs</td>
+<td>TCP 443 / 8443</td>
+<td>Telemetry collection</td>
+</tr>
+<tr>
+<td>Browser (admin)</td>
+<td>SCG management UI</td>
+<td>TCP 9443</td>
+<td>SCG administration</td>
+</tr>
+<tr>
+<td>Browser (ops)</td>
+<td>cloudiq.dell.com</td>
+<td>TCP 443</td>
+<td>CloudIQ web dashboard</td>
 </tr>
 </tbody>
 </table>

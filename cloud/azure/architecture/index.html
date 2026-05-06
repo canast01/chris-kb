@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#management-group-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Group Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +797,114 @@
 
 
 <h1 id="azure-architecture">Azure Architecture<a class="headerlink" href="#azure-architecture" title="Permanent link">&para;</a></h1>
-<p>Azure account structure is organised through Management Groups at the root, which contain Subscriptions (one per environment: dev, staging, production, shared-services), with Resource Groups providing logical boundaries for related workloads within each subscription. Core services include Virtual Machines and AKS for compute, Azure SQL and Cosmos DB for data, Azure Blob Storage for object storage, Entra ID for identity, and Virtual Networks for private connectivity. High availability is achieved using Availability Zones within a region, while disaster recovery leverages Azure region pairs with geo-redundant storage and Azure Site Recovery for VM replication.</p>
+<h2 id="management-group-hierarchy">Management Group Hierarchy<a class="headerlink" href="#management-group-hierarchy" title="Permanent link">&para;</a></h2>
+<pre><code>Tenant Root Group
+└── Corp Root
+    ├── Platform
+    │   ├── Connectivity Subscription     (hub VNet, ExpressRoute, VPN, Azure Firewall)
+    │   ├── Identity Subscription         (AD Connect, Entra ID P2, PIM)
+    │   └── Management Subscription       (Defender for Cloud, Log Analytics, Automation)
+    └── Workloads
+        ├── Production Subscription
+        ├── Staging Subscription
+        └── Development Subscription
+</code></pre>
+<p>Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.</p>
+<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
+<p>Hub-and-spoke topology:</p>
+<pre><code>On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
+                                    │
+                   ┌────────────────┼────────────────┐
+                   ▼                ▼                 ▼
+            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
+            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
+            ├── snet-web      
+            ├── snet-app      
+            └── snet-db (isolated — no internet)
+</code></pre>
+<p>Azure Firewall in the hub VNet controls all east-west and internet-bound traffic from spokes.</p>
+<h2 id="compute-options">Compute Options<a class="headerlink" href="#compute-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Virtual Machines</td>
+<td>Lift-and-shift, legacy, special OS</td>
+</tr>
+<tr>
+<td>Azure Kubernetes Service (AKS)</td>
+<td>Container workloads</td>
+</tr>
+<tr>
+<td>Azure App Service</td>
+<td>Web apps, APIs</td>
+</tr>
+<tr>
+<td>Azure Container Apps</td>
+<td>Serverless containers</td>
+</tr>
+<tr>
+<td>Azure Functions</td>
+<td>Event-driven, short-lived tasks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Management Groups</strong>: root → platform → workloads → per-environment subscriptions</li>
-<li><strong>Subscriptions</strong>: dev, staging, prod, shared-services, identity, connectivity (hub-and-spoke via Azure Virtual WAN or hub VNet)</li>
-<li><strong>Resource Groups</strong>: one per workload tier; locked in production to prevent accidental deletion</li>
-<li><strong>HA pattern</strong>: Availability Zones for VMs, AKS, and Azure SQL; zone-redundant storage (ZRS)</li>
-<li><strong>DR pattern</strong>: Region pairs (e.g., West Europe / North Europe); Azure Site Recovery for VM failover; geo-redundant storage for blob data</li>
+<li><strong>VMs</strong>: Availability Zones (spread across 3 zones per region) or Availability Sets</li>
+<li><strong>Azure SQL</strong>: Zone-redundant Business Critical tier or Geo-redundant</li>
+<li><strong>AKS</strong>: System node pool spanning ≥ 2 zones; application node pools zone-spread</li>
+<li><strong>Storage</strong>: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR</li>
 </ul>
+<h2 id="disaster-recovery">Disaster Recovery<a class="headerlink" href="#disaster-recovery" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Services</th>
+<th>RPO / RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Site Recovery</td>
+<td>VM replication to secondary region</td>
+<td>&lt; 1 hour RPO, &lt; 2 hours RTO</td>
+</tr>
+<tr>
+<td>Geo-redundant storage</td>
+<td>Azure Blob, ADLS Gen2 (GRS/GZRS)</td>
+<td>Near-zero RPO</td>
+</tr>
+<tr>
+<td>Azure SQL Failover Groups</td>
+<td>Active geo-replication</td>
+<td>&lt; 30 seconds RPO</td>
+</tr>
+<tr>
+<td>Azure Backup cross-region restore</td>
+<td>Recovery Services Vault</td>
+<td>12–24 hours RTO</td>
+</tr>
+</tbody>
+</table>
+<h2 id="identity-architecture">Identity Architecture<a class="headerlink" href="#identity-architecture" title="Permanent link">&para;</a></h2>
+<pre><code>Entra ID (cloud identity plane)
+    │
+    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
+    ├── Entra ID Governance (lifecycle, access reviews)
+    ├── Privileged Identity Management (PIM — JIT role activation)
+    └── Conditional Access Policies (MFA, compliant device requirements)
+
+Humans: SSO via Entra ID, MFA required
+Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
+Managed Identities: used by Azure services (no credentials to manage)
+</code></pre>
 
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disable-unused-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Unused Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aaa-configuration-tacacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AAA Configuration (TACACS+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role-Based Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-interface-ip-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Interface IP ACL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,41 +819,119 @@
 
 
 <h1 id="cisco-mds-security">Cisco MDS Security<a class="headerlink" href="#cisco-mds-security" title="Permanent link">&para;</a></h1>
-<p>MDS management is hardened by disabling unused services including Telnet, HTTP, and TFTP, leaving SSH and HTTPS as the only access methods. AAA is configured with RADIUS or TACACS+ pointing to Active Directory, with local <code>admin</code> account retained as break-glass only. Role-based access uses NX-OS built-in roles: <code>network-admin</code> for full access, <code>network-operator</code> for read-only, and <code>san-admin</code> for SAN-specific operations. VSAN isolation provides security zone separation, ensuring hosts in different VSANs cannot communicate without explicit routing policy. IP ACLs on the management interface restrict access to the management network subnet only.</p>
-<table>
-<thead>
-<tr>
-<th>Control</th>
-<th>Implementation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management protocols</td>
-<td>SSH, HTTPS only (Telnet/HTTP/TFTP disabled)</td>
-</tr>
-<tr>
-<td>AAA</td>
-<td>TACACS+/RADIUS to Active Directory</td>
-</tr>
-<tr>
-<td>RBAC</td>
-<td>network-admin, network-operator, san-admin</td>
-</tr>
-<tr>
-<td>VSAN isolation</td>
-<td>Separate name servers and zone DBs per VSAN</td>
-</tr>
-<tr>
-<td>Management ACL</td>
-<td>IP ACL restricting mgmt interface to mgmt subnet</td>
-</tr>
-<tr>
-<td>Audit logging</td>
-<td>NX-OS accounting log for all config commands</td>
-</tr>
-</tbody>
-</table>
+<blockquote>
+<p>Part of the <a href="../">Cisco MDS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Telnet, HTTP, and TFTP disabled; SSH and HTTPS only</li>
+<li>[ ] AAA configured (TACACS+ primary, RADIUS fallback) pointing to Active Directory</li>
+<li>[ ] Local <code>admin</code> account password stored in vault; used for break-glass only</li>
+<li>[ ] RBAC roles assigned: <code>network-admin</code> for ops, <code>network-operator</code> for monitoring</li>
+<li>[ ] VSAN isolation in place — production and replication VSANs separated</li>
+<li>[ ] Management interface IP ACL restricts access to management subnet only</li>
+<li>[ ] NTP configured and synced (required for certificate-based auth and log correlation)</li>
+<li>[ ] SNMP v3 configured; v1/v2c community strings disabled or restricted</li>
+<li>[ ] All config changes logged via <code>aaa accounting</code> to TACACS+ or syslog</li>
+</ul>
+<hr />
+<h2 id="disable-unused-services">Disable Unused Services<a class="headerlink" href="#disable-unused-services" title="Permanent link">&para;</a></h2>
+<pre><code># Disable Telnet
+no feature telnet
+
+# Disable HTTP (HTTPS only)
+no feature http-server
+feature https-server
+
+# Disable TFTP server if not required
+no feature tftp-server
+
+# Verify only SSH and HTTPS are active
+show feature | include telnet\|http\|tftp\|ssh
+</code></pre>
+<hr />
+<h2 id="aaa-configuration-tacacs">AAA Configuration (TACACS+)<a class="headerlink" href="#aaa-configuration-tacacs" title="Permanent link">&para;</a></h2>
+<pre><code># Add TACACS+ server
+tacacs-server host &lt;tacacs-server-ip&gt; key &lt;shared-secret&gt;
+
+# Configure AAA to use TACACS+ for authentication, authorisation, and accounting
+aaa authentication login default group tacacs+ local
+aaa authorization commands default group tacacs+ local
+aaa accounting default group tacacs+
+
+# Keep local fallback in case TACACS+ is unreachable
+username admin password &lt;strong-password&gt; role network-admin
+</code></pre>
+<p><strong>Verify AAA is working:</strong></p>
+<pre><code>test aaa group tacacs+ &lt;test-username&gt; &lt;test-password&gt;
+</code></pre>
+<hr />
+<h2 id="role-based-access-control">Role-Based Access Control<a class="headerlink" href="#role-based-access-control" title="Permanent link">&para;</a></h2>
+<pre><code># Built-in NX-OS roles
+# network-admin  — full config access
+# network-operator — read-only (show commands only)
+# san-admin — SAN-specific (zoning, VSANs, FC services)
+
+# Assign a TACACS+-authenticated user to a role
+# (Role assignment comes from TACACS+ AV-pairs or local role mapping)
+
+# Verify current user roles
+show role
+show user-account
+</code></pre>
+<hr />
+<h2 id="vsan-isolation">VSAN Isolation<a class="headerlink" href="#vsan-isolation" title="Permanent link">&para;</a></h2>
+<p>VSAN isolation provides logical fabric separation. Hosts in different VSANs cannot communicate across VSAN boundaries without explicit VSAN routing policy.</p>
+<pre><code># Verify VSAN membership per port
+show vsan membership
+
+# Verify VSAN database
+show vsan
+
+# Ensure no production host ports are in the default VSAN 1
+show vsan 1 membership
+# Any F_Ports listed in VSAN 1 are a configuration error
+</code></pre>
+<hr />
+<h2 id="management-interface-ip-acl">Management Interface IP ACL<a class="headerlink" href="#management-interface-ip-acl" title="Permanent link">&para;</a></h2>
+<pre><code># Create an IP access list restricting management access
+ip access-list MGMT-RESTRICT
+  permit ip &lt;mgmt-subnet&gt;/&lt;prefix&gt; any
+  deny ip any any log
+
+# Apply to the management (mgmt0) interface
+interface mgmt0
+  ip access-group MGMT-RESTRICT in
+</code></pre>
+<hr />
+<h2 id="snmp-hardening">SNMP Hardening<a class="headerlink" href="#snmp-hardening" title="Permanent link">&para;</a></h2>
+<pre><code># Disable default SNMPv1/v2c community strings
+no snmp-server community public
+no snmp-server community private
+
+# Configure SNMPv3 with auth + priv
+snmp-server user nms_user network-operator auth sha &lt;auth-password&gt; priv aes-128 &lt;priv-password&gt;
+snmp-server host &lt;nms-ip&gt; traps version 3 priv nms_user
+
+# Restrict SNMP to monitoring subnet
+snmp-server host &lt;nms-ip&gt; traps version 3 priv nms_user
+ip access-list SNMP-RESTRICT
+  permit udp &lt;nms-subnet&gt;/&lt;prefix&gt; any eq 162
+  deny udp any any eq 162 log
+</code></pre>
+<hr />
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<pre><code># Enable accounting for all exec and config commands
+aaa accounting default group tacacs+
+
+# Configure local syslog with accounting detail
+logging level aaa 6
+logging server &lt;siem-ip&gt; 5 facility local7
+
+# Verify accounting is capturing config changes
+show accounting log
+</code></pre>
 
 
 

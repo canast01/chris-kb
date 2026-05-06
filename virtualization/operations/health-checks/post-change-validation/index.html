@@ -21,7 +21,7 @@
     
     
       
-        <title>Post-Change Checks - Chris KB</title>
+        <title>Post-Change Validation - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#post-change-checks" class="md-skip">
+        <a href="#post-change-validation" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post-Change Checks
+              Post-Change Validation
             
           </span>
         </div>
@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#immediate-checks-within-5-minutes-of-change-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate Checks (within 5 minutes of change completion)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastore-and-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore and Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-if-change-was-nsx-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX (if change was NSX-related)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-record-closure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Record Closure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,19 +807,68 @@
 
 
 
-<h1 id="post-change-checks">Post-Change Checks<a class="headerlink" href="#post-change-checks" title="Permanent link">&para;</a></h1>
-<p>Post-change checks confirm the environment is healthy after work is complete.</p>
+<h1 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h1>
+<p>Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.</p>
+<h2 id="immediate-checks-within-5-minutes-of-change-completion">Immediate Checks (within 5 minutes of change completion)<a class="headerlink" href="#immediate-checks-within-5-minutes-of-change-completion" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># 1. Confirm all hosts are connected to vCenter
+Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
+
+# 2. Confirm cluster HA status
+Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, @{N=&quot;HA Status&quot;; E={$_.ExtensionData.Summary.OverallStatus}}
+
+# 3. Confirm no VMs in unexpected state
+Get-VM | Where-Object {$_.PowerState -ne &quot;PoweredOn&quot; -and $_.PowerState -ne &quot;PoweredOff&quot;} | Select-Object Name, PowerState
+# Suspended or unknown states indicate issues
+</code></pre>
+<h2 id="datastore-and-storage">Datastore and Storage<a class="headerlink" href="#datastore-and-storage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm datastores are accessible (no APD/PDL)
+Get-Datastore | Where-Object {$_.State -ne &quot;Available&quot;} | Select-Object Name, State
+
+# vSAN: confirm health is green after change
+esxcli vsan health cluster list | grep -v &quot;Green&quot;
+</code></pre>
+<h2 id="nsx-if-change-was-nsx-related">NSX (if change was NSX-related)<a class="headerlink" href="#nsx-if-change-was-nsx-related" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify NSX Manager cluster stability
+get cluster status   # All nodes: STABLE
+
+# Verify edge nodes are healthy
+get service router
+get logical-routers
+</code></pre>
+<h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm backup jobs are not in failed state after change
+# (Veeam)
+Get-VBRJob | Where-Object {$_.GetLastState() -eq &quot;Failed&quot;} | Select-Object Name, LastRun
+
+# (CommVault — check via Command Center UI for jobs since change window start)
+</code></pre>
+<h2 id="monitoring-validation">Monitoring Validation<a class="headerlink" href="#monitoring-validation" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Log in to Aria Operations → confirm no new critical or immediate alerts generated by the change</li>
+<li>Verify collection is still running: Environment → <code>&lt;cluster name&gt;</code> → Collection State: OK</li>
+<li>Check that baseline alerts that existed before the change are not masked by new false positives</li>
+</ol>
+<h2 id="application-validation">Application Validation<a class="headerlink" href="#application-validation" title="Permanent link">&para;</a></h2>
+<p>If the change affected production workloads:
+- Contact the application owner to confirm the application is functioning correctly
+- Run a basic functional test (login to the app, execute a representative transaction)
+- Record the application owner's confirmation in the change record</p>
+<h2 id="change-record-closure">Change Record Closure<a class="headerlink" href="#change-record-closure" title="Permanent link">&para;</a></h2>
+<p>Before closing the change:</p>
 <ul>
-<li>Confirm all hosts are connected</li>
-<li>Confirm cluster HA and DRS status</li>
-<li>Confirm VMs are running as expected</li>
-<li>Confirm datastores are accessible</li>
-<li>Confirm vSAN health is green</li>
-<li>Confirm no unexpected new alerts</li>
-<li>Confirm backup jobs still run</li>
-<li>Confirm monitoring is receiving data</li>
-<li>Confirm application owner validation if needed</li>
-<li>Update change record with evidence</li>
+<li>[ ] All hosts connected: confirmed</li>
+<li>[ ] HA/DRS status: verified green</li>
+<li>[ ] vSAN health: no new alarms</li>
+<li>[ ] No unexpected VM state changes</li>
+<li>[ ] Datastores accessible</li>
+<li>[ ] Backup jobs not broken</li>
+<li>[ ] Monitoring collecting data</li>
+<li>[ ] Application owner sign-off (for production changes)</li>
+<li>[ ] Final component versions captured:
+  <code>powershell
+  Get-VMHost | Select-Object Name, Version, Build | Sort-Object Name
+  (Get-View ServiceInstance).Content.About.Version   # vCenter version</code></li>
+<li>[ ] Change record updated with evidence screenshots or command output</li>
 </ul>
 
 

@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#server-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#init-system-and-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Init System and Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,12 +786,15 @@
 
 
 <h1 id="linux-architecture">Linux Architecture<a class="headerlink" href="#linux-architecture" title="Permanent link">&para;</a></h1>
-<p>Linux servers fulfill multiple infrastructure roles: application servers running RHEL or Ubuntu, Ansible control plane nodes for automation, monitoring servers, NFS/SMB file hosts, and container hosts running Docker or Podman. The standard kernel is managed via the distribution's package repositories, with systemd as the init system providing service lifecycle management. Storage is managed with LVM, enabling flexible volume resizing and snapshot support. All servers follow a common baseline regardless of role, with role-specific configuration layered on top.</p>
+<h2 id="server-roles">Server Roles<a class="headerlink" href="#server-roles" title="Permanent link">&para;</a></h2>
+<p>Linux servers fulfill multiple infrastructure roles:</p>
 <table>
 <thead>
 <tr>
 <th>Role</th>
 <th>Typical OS</th>
+<th>vCPU</th>
+<th>RAM</th>
 <th>Notes</th>
 </tr>
 </thead>
@@ -738,30 +802,100 @@
 <tr>
 <td>Application server</td>
 <td>RHEL 8/9, Ubuntu 22.04</td>
+<td>4–16</td>
+<td>8–64 GB</td>
 <td>Primary workload host</td>
 </tr>
 <tr>
-<td>Automation node</td>
+<td>Automation node (Ansible)</td>
 <td>RHEL 9</td>
-<td>Ansible control plane</td>
+<td>4</td>
+<td>8 GB</td>
+<td>Ansible control plane; no inbound access</td>
 </tr>
 <tr>
 <td>Monitoring server</td>
 <td>Ubuntu 22.04</td>
-<td>Prometheus, Grafana stack</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Prometheus, Grafana, exporters</td>
 </tr>
 <tr>
-<td>NFS/SMB host</td>
+<td>NFS/SMB file host</td>
 <td>RHEL 9</td>
-<td>Shared storage services</td>
+<td>4</td>
+<td>16 GB</td>
+<td>Shared storage; LVM on SAN-backed LUNs</td>
 </tr>
 <tr>
 <td>Container host</td>
 <td>RHEL 9</td>
+<td>8–32</td>
+<td>16–128 GB</td>
 <td>Podman/Docker workloads</td>
+</tr>
+<tr>
+<td>Backup proxy (Linux)</td>
+<td>RHEL 9</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Veeam proxy or NetBackup media server</td>
 </tr>
 </tbody>
 </table>
+<h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
+<p>Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:</p>
+<pre><code>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
+VG: vg_system
+  lv_root     20 GB       xfs     /
+  lv_var      20 GB       xfs     /var
+  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
+  lv_home      5 GB       xfs     /home
+  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
+
+VG: vg_data (application data — sized per role)
+  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
+</code></pre>
+<p>LVM enables future resizing without OS reinstallation:</p>
+<pre><code class="language-bash"># Extend a volume
+lvextend -L +20G /dev/vg_system/lv_var
+xfs_growfs /var
+</code></pre>
+<h2 id="network-configuration">Network Configuration<a class="headerlink" href="#network-configuration" title="Permanent link">&para;</a></h2>
+<p>Standard network configuration (nmcli / Netplan):</p>
+<pre><code class="language-bash"># RHEL — configure bonded interface with VLAN
+nmcli con add type bond ifname bond0 bond.options &quot;mode=802.3ad,miimon=100&quot;
+nmcli con add type ethernet ifname eth0 master bond0
+nmcli con add type ethernet ifname eth1 master bond0
+nmcli con add type vlan con-name bond0.100 dev bond0 id 100
+nmcli con modify bond0.100 ipv4.addresses &lt;ip&gt;/&lt;prefix&gt; ipv4.gateway &lt;gw&gt; ipv4.method manual
+</code></pre>
+<p>All production servers require:
+- Bonded uplinks (LACP) for redundancy
+- Separate management IP (VLAN 10 or equivalent) and data IP (role-specific VLAN)
+- DNS configured to internal resolvers</p>
+<h2 id="init-system-and-services">Init System and Services<a class="headerlink" href="#init-system-and-services" title="Permanent link">&para;</a></h2>
+<p>systemd manages all services:</p>
+<pre><code class="language-bash"># Common service management
+systemctl status &lt;service&gt;
+systemctl start &lt;service&gt;
+systemctl enable &lt;service&gt;   # Persistent across reboots
+journalctl -u &lt;service&gt; -n 100 --no-pager   # Recent logs
+</code></pre>
+<h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RHEL (dnf)
+dnf check-update             # List available updates
+dnf upgrade                  # Apply all updates
+dnf history                  # Review change log
+subscription-manager status  # Verify RH subscription
+
+# Ubuntu (apt)
+apt-get update
+apt-get upgrade -y
+apt list --upgradable
+ua status                    # Verify Ubuntu Advantage subscription
+</code></pre>
+<p>Repositories locked to approved internal mirrors — no direct internet access from production servers.</p>
 
 
 

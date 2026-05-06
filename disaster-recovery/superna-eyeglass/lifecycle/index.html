@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Compatibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrade Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-upgrade-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onefs-upgrade-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OneFS Upgrade Impact
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eol-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,38 +825,117 @@
 
 
 <h1 id="superna-eyeglass-lifecycle">Superna Eyeglass Lifecycle<a class="headerlink" href="#superna-eyeglass-lifecycle" title="Permanent link">&para;</a></h1>
-<p>Eyeglass version compatibility with NetApp PowerScale OneFS versions must be validated before any upgrade — refer to the Superna compatibility matrix. The upgrade procedure involves downloading the new OVA, deploying it alongside the existing appliance, migrating configuration, and registering the new license. In-place upgrades may be supported in later versions — always verify against the release notes.</p>
-<p>EOL for Eyeglass appliance versions is published on the Superna support portal. SyncIQ policy configuration changes on PowerScale (e.g., schedule or path changes) must be re-validated in Eyeglass after any OneFS upgrade to confirm policy detection and DR readiness scoring remains accurate.</p>
+<h2 id="version-compatibility-matrix">Version Compatibility Matrix<a class="headerlink" href="#version-compatibility-matrix" title="Permanent link">&para;</a></h2>
+<p>Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.</p>
 <table>
 <thead>
 <tr>
-<th>Stage</th>
-<th>Action</th>
+<th>Eyeglass Version</th>
+<th>PowerScale OneFS</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pre-upgrade</td>
-<td>Validate Eyeglass–OneFS compatibility matrix; take config backup</td>
+<td>2.9.x</td>
+<td>OneFS 9.4, 9.5, 9.6</td>
+<td>Check release notes</td>
 </tr>
 <tr>
-<td>Upgrade</td>
-<td>Deploy new OVA, migrate configuration, register new license</td>
+<td>2.8.x</td>
+<td>OneFS 9.3, 9.4</td>
+<td></td>
 </tr>
 <tr>
-<td>Post-upgrade</td>
-<td>Validate SyncIQ policy detection, DR readiness score, DNS sync</td>
-</tr>
-<tr>
-<td>EOL tracking</td>
-<td>Check Superna support portal quarterly</td>
-</tr>
-<tr>
-<td>OneFS upgrade impact</td>
-<td>Re-validate all SyncIQ policies in Eyeglass after OneFS upgrade</td>
+<td>2.7.x</td>
+<td>OneFS 9.2, 9.3</td>
+<td></td>
 </tr>
 </tbody>
 </table>
+<p>Reference: <a href="https://support.superna.net">Superna Compatibility Matrix</a> — verify before any upgrade.</p>
+<h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="pre-upgrade">Pre-Upgrade<a class="headerlink" href="#pre-upgrade" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># 1. Export current Eyeglass configuration backup
+# Admin UI → Admin → Configuration Backup → Download
+
+# 2. Record current version
+# Admin UI → About → version number
+
+# 3. Verify SyncIQ policies are healthy (no lagging)
+# DR → Replication Policies — confirm all show &quot;In Sync&quot;
+</code></pre>
+<h3 id="upgrade-process">Upgrade Process<a class="headerlink" href="#upgrade-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download new OVA from <a href="https://support.superna.net">Superna support portal</a></li>
+<li>Deploy new Eyeglass OVA alongside the existing appliance (do not shut down existing)</li>
+<li>Power on new appliance; set static IP (different from existing)</li>
+<li>Import configuration backup to new appliance</li>
+<li>Re-register PowerScale clusters and DNS servers</li>
+<li>Verify DR readiness score returns to 100%</li>
+<li>Shut down old appliance after 24-hour validation period</li>
+</ol>
+<p>In-place upgrade support varies by version — check release notes before proceeding.</p>
+<h3 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] SyncIQ policies detected and showing correct state</li>
+<li>[ ] DR readiness score = 100%</li>
+<li>[ ] SMB shares visible and correctly mapped</li>
+<li>[ ] NFS exports visible and correctly mapped</li>
+<li>[ ] DNS integration verified (test DNS preview)</li>
+<li>[ ] SNMP/syslog notifications still reaching monitoring/SIEM</li>
+<li>[ ] Failover test with test shares (if possible in maintenance window)</li>
+</ul>
+<h2 id="onefs-upgrade-impact">OneFS Upgrade Impact<a class="headerlink" href="#onefs-upgrade-impact" title="Permanent link">&para;</a></h2>
+<p>After any PowerScale OneFS upgrade, re-validate Eyeglass policy detection:</p>
+<pre><code>Post-OneFS upgrade checklist:
+  1. Log in to Eyeglass Admin UI
+  2. DR → Replication Policies → Rescan
+  3. Verify all SyncIQ policies are detected
+  4. DR → Readiness — confirm score returns to 100%
+  5. Check for any new Eyeglass warnings about API changes
+</code></pre>
+<p>If Eyeglass shows API errors after OneFS upgrade, check if an Eyeglass update is required to support the new OneFS version.</p>
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Check Location</th>
+<th>Action Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eyeglass appliance version</td>
+<td>support.superna.net → EOL</td>
+<td>Upgrade plan at 6 months before EOL</td>
+</tr>
+<tr>
+<td>OneFS compatibility</td>
+<td>Superna compatibility matrix</td>
+<td>Verify before any OneFS upgrade</td>
+</tr>
+<tr>
+<td>License expiry</td>
+<td>Admin UI → License</td>
+<td>Renew 60 days before expiry</td>
+</tr>
+<tr>
+<td>VM guest OS (Eyeglass appliance)</td>
+<td>Admin UI → System Info</td>
+<td>Align with Superna supported OS list</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h2>
+<p>Eyeglass licensing is per-cluster (primary and DR) and per-node count:</p>
+<ol>
+<li>Download license file from Superna licensing portal</li>
+<li>Admin UI → License → Import License</li>
+<li>Verify license file UUID matches the appliance UUID shown in the UI</li>
+</ol>
+<p>If appliance shows "Unlicensed" after an upgrade, re-import the license — appliance UUID may have changed if deployed from new OVA.</p>
 
 
 

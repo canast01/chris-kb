@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-sizing-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Sizing Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-retention-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Retention Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-connection-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Connection Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Report Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,14 +819,190 @@
 
 
 <h1 id="insightiq-standards">InsightIQ Standards<a class="headerlink" href="#insightiq-standards" title="Permanent link">&para;</a></h1>
-<p>InsightIQ appliance sizing is based on the number of monitored clusters and the desired data retention period: allocate a minimum of 4 vCPU, 8 GB RAM, and 200 GB disk per 5 clusters with 90-day hot retention. The standard data retention policy is 90 days of high-resolution data. Cluster connection credentials should use a dedicated read-only OneFS service account (<code>svc-insightiq</code>) rather than shared admin credentials. Alert thresholds for latency should be set at 5 ms (warn) and 10 ms (critical) for NFS/SMB workloads; throughput thresholds are environment-specific.</p>
+<h2 id="appliance-sizing-standards">Appliance Sizing Standards<a class="headerlink" href="#appliance-sizing-standards" title="Permanent link">&para;</a></h2>
+<p>InsightIQ appliance sizing is based on the number of monitored clusters and the desired data retention period.</p>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>Clusters</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Data Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>Up to 5</td>
+<td>2</td>
+<td>4 GB</td>
+<td>200 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>6–15</td>
+<td>4</td>
+<td>8 GB</td>
+<td>400 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>16–30</td>
+<td>8</td>
+<td>16 GB</td>
+<td>800 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Add disk capacity for extended retention (approximately 1 GB/day/5-node cluster at default sample rates).</p>
+<h2 id="data-retention-policy">Data Retention Policy<a class="headerlink" href="#data-retention-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>Retention</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High-resolution metrics</td>
+<td>90 days</td>
+<td>Default; standard for operations</td>
+</tr>
+<tr>
+<td>Aggregated daily metrics</td>
+<td>365 days</td>
+<td>Used for capacity planning and trend reports</td>
+</tr>
+</tbody>
+</table>
+<p>Retention is configured per cluster connection in the InsightIQ web UI: <strong>Administration &gt; Clusters &gt; [Cluster] &gt; Data Retention</strong>.</p>
+<h2 id="cluster-connection-standards">Cluster Connection Standards<a class="headerlink" href="#cluster-connection-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Minimum sizing: 4 vCPU / 8 GB RAM / 200 GB per 5 clusters</li>
-<li>Data retention: 90 days hot (high-resolution)</li>
-<li>Cluster credentials: dedicated <code>svc-insightiq</code> read-only account</li>
-<li>Latency thresholds: 5 ms warn / 10 ms critical</li>
-<li>Report schedules: weekly utilisation, monthly capacity review</li>
+<li>All cluster connections must use a dedicated read-only OneFS service account: <code>svc-insightiq</code></li>
+<li>Do not use shared admin credentials or personal accounts</li>
+<li>Service account password rotation: every 12 months; update in InsightIQ immediately after rotation</li>
+<li>Each cluster must have a descriptive display name in InsightIQ using the format: <code>&lt;site&gt;-pscale-&lt;number&gt;</code> (e.g., <code>dc1-pscale-01</code>)</li>
 </ul>
+<h2 id="alert-thresholds">Alert Thresholds<a class="headerlink" href="#alert-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS latency (ms)</td>
+<td>5</td>
+<td>10</td>
+</tr>
+<tr>
+<td>SMB latency (ms)</td>
+<td>5</td>
+<td>10</td>
+</tr>
+<tr>
+<td>HTTP latency (ms)</td>
+<td>20</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Cluster CPU usage</td>
+<td>70%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>Disk throughput utilisation</td>
+<td>70%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>InsightIQ appliance disk (data volume)</td>
+<td>75%</td>
+<td>85%</td>
+</tr>
+</tbody>
+</table>
+<p>Latency thresholds are environment-specific; adjust for workload type (e.g., media workloads may have higher latency baselines). Document any custom thresholds with rationale.</p>
+<h2 id="dashboard-standards">Dashboard Standards<a class="headerlink" href="#dashboard-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dashboard</th>
+<th>Purpose</th>
+<th>Review Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster Overview</td>
+<td>Per-cluster throughput, latency, CPU</td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>Protocol Breakdown</td>
+<td>NFS/SMB/HTTP throughput comparison</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Top Clients</td>
+<td>Highest-traffic client IPs per cluster</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Capacity Trend</td>
+<td>Node and pool usage over time</td>
+<td>Weekly</td>
+</tr>
+</tbody>
+</table>
+<p>Dashboards are accessed via the InsightIQ web UI. Share report links or PDF exports for weekly capacity planning meetings.</p>
+<h2 id="report-schedule">Report Schedule<a class="headerlink" href="#report-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Schedule</th>
+<th>Format</th>
+<th>Audience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weekly Utilisation Report (per cluster)</td>
+<td>Weekly, Monday 08:00</td>
+<td>PDF/CSV</td>
+<td>Storage team</td>
+</tr>
+<tr>
+<td>Monthly Capacity Planning Report</td>
+<td>Monthly, 1st Monday</td>
+<td>PDF</td>
+<td>Storage team + management</td>
+</tr>
+<tr>
+<td>Protocol Throughput Summary</td>
+<td>Weekly</td>
+<td>PDF</td>
+<td>Application teams (on request)</td>
+</tr>
+</tbody>
+</table>
+<p>Reports are generated via <strong>Administration &gt; Reports &gt; Scheduled Reports</strong> and emailed to the configured distribution list.</p>
+<h2 id="credential-standards">Credential Standards<a class="headerlink" href="#credential-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>InsightIQ web UI admin account: use a team service account (<code>svc-iiq-admin</code>), not personal accounts</li>
+<li>LDAP integration: preferred over local accounts for auditing and centralised access control</li>
+<li>HTTPS enforced: HTTP access disabled; self-signed certificate replaced with internal CA-signed certificate</li>
+<li>Backup files: encrypted at rest; stored in the team backup storage location</li>
+</ul>
+<h2 id="change-management">Change Management<a class="headerlink" href="#change-management" title="Permanent link">&para;</a></h2>
+<p>All changes to InsightIQ (cluster additions/removals, threshold changes, software upgrades) must be documented in ServiceNow as standard change records and communicated to the storage ops team.</p>
 
 
 

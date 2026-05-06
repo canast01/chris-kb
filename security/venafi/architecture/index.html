@@ -582,8 +582,6 @@
       
         
       
-        
-      
     
     
     
@@ -707,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#component-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-tree-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Tree Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ca-connectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CA Connectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -725,8 +797,9 @@
 
 
 <h1 id="venafi-architecture">Venafi Architecture<a class="headerlink" href="#venafi-architecture" title="Permanent link">&para;</a></h1>
-<p>Venafi Trust Protection Platform (TPP) consists of a Policy Server that handles certificate lifecycle management and CA integration, paired with Venafi Edge Proxy for network-agnostic certificate discovery. An optional Venafi Log Server aggregates audit and event data for SIEM forwarding. Venafi as a Service (VaaS / TLS Protect Cloud) provides the equivalent SaaS-delivered capability without on-premises infrastructure.</p>
-<p>Venafi integrates natively with Microsoft ADCS, DigiCert, Entrust, and major public CAs as issuance backends, enabling policy-driven certificate requests regardless of CA type.</p>
+<p>Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates. The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).</p>
+<hr />
+<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -743,8 +816,8 @@
 </tr>
 <tr>
 <td>Edge Proxy</td>
-<td>Certificate discovery across network segments</td>
-<td>On-prem lightweight agent</td>
+<td>Certificate discovery across segmented networks</td>
+<td>Lightweight on-prem agent</td>
 </tr>
 <tr>
 <td>Log Server</td>
@@ -756,8 +829,186 @@
 <td>SaaS alternative to TPP</td>
 <td>Hosted by Venafi</td>
 </tr>
+<tr>
+<td>CA Connectors</td>
+<td>Integration adapters for ADCS, DigiCert, Entrust</td>
+<td>Configured on Policy Server</td>
+</tr>
+<tr>
+<td>Venafi SDK / REST API</td>
+<td>Automation and integration interface</td>
+<td>Consumed by CI/CD and scripts</td>
+</tr>
 </tbody>
 </table>
+<hr />
+<h2 id="policy-tree-structure">Policy Tree Structure<a class="headerlink" href="#policy-tree-structure" title="Permanent link">&para;</a></h2>
+<p>The Venafi policy tree (<code>\VED\Policy\</code>) organises certificates into folders that apply inheritance-based policy. Certificates inherit policy settings from parent folders unless explicitly overridden.</p>
+<pre><code>\VED\Policy\
+├── Internal\
+│   ├── Production\
+│   │   ├── Servers\
+│   │   └── Services\
+│   ├── Non-Production\
+│   │   ├── Dev\
+│   │   └── Test\
+│   └── Infrastructure\
+│       ├── Network\
+│       └── VMware\
+└── External\
+    ├── Public\
+    └── Partners\
+</code></pre>
+<p>Policy folder settings (configured per folder):
+- CA template / connector to use for issuance
+- Validity period and renewal window
+- Key algorithm and minimum key size
+- Required SANs and prohibited wildcard usage
+- Approval workflow (auto-issue vs. manual approval)
+- Notification contacts for expiry alerts</p>
+<hr />
+<h2 id="ca-connectors">CA Connectors<a class="headerlink" href="#ca-connectors" title="Permanent link">&para;</a></h2>
+<p>Venafi integrates with multiple CA backends. Each connector is configured once at the Policy Server level and referenced by policy folders.</p>
+<table>
+<thead>
+<tr>
+<th>CA Type</th>
+<th>Connector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft ADCS</td>
+<td>ADCS connector (built-in)</td>
+<td>Requires CES/CEP or direct RPC access to CA</td>
+</tr>
+<tr>
+<td>DigiCert</td>
+<td>DigiCert connector</td>
+<td>Requires DigiCert API key; supports OV/EV/DV</td>
+</tr>
+<tr>
+<td>Entrust</td>
+<td>Entrust connector</td>
+<td>Requires Entrust API key and client credentials</td>
+</tr>
+<tr>
+<td>Let's Encrypt</td>
+<td>ACME connector</td>
+<td>HTTP-01 or DNS-01 challenge; requires accessible validation endpoint</td>
+</tr>
+<tr>
+<td>Internal standalone CA</td>
+<td>Generic PKCS#10 / SCEP</td>
+<td>For CAs without a native connector</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># List configured CA connectors via Venafi REST API
+$headers = @{ &quot;X-Venafi-API-Key&quot; = $apiKey }
+Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates/CheckPolicy&quot; `
+  -Headers $headers -Method Post -ContentType &quot;application/json&quot; `
+  -Body '{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Internal\\Production&quot;}'
+</code></pre>
+<hr />
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.</p>
+<pre><code>[Client / API consumer]
+         |
+         | HTTPS (443)
+         v
+[Load Balancer / VIP]
+    /           \
+[TPP Primary]  [TPP Secondary]
+         \           /
+          [SQL Server]
+          (Always On AG preferred)
+</code></pre>
+<ul>
+<li>Both nodes are active; the load balancer distributes requests.</li>
+<li>SQL Server is the single source of truth; both nodes are stateless with respect to certificate data.</li>
+<li>Failover is transparent — if one node fails, the load balancer routes all traffic to the remaining node.</li>
+</ul>
+<pre><code class="language-powershell"># Check TPP service health on both nodes (run on each node)
+Get-Service -Name &quot;Venafi*&quot; | Select-Object Name, Status
+
+# Verify SQL connectivity from TPP node
+Test-NetConnection -ComputerName sql01.corp.example.com -Port 1433
+</code></pre>
+<hr />
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TPP Policy Server</td>
+<td>ADCS (CES endpoint)</td>
+<td>TCP 443</td>
+<td>Certificate enrolment</td>
+</tr>
+<tr>
+<td>TPP Policy Server</td>
+<td>DigiCert / Entrust APIs</td>
+<td>TCP 443</td>
+<td>External CA issuance</td>
+</tr>
+<tr>
+<td>TPP Policy Server</td>
+<td>SQL Server</td>
+<td>TCP 1433</td>
+<td>Database backend</td>
+</tr>
+<tr>
+<td>Edge Proxy</td>
+<td>TPP Policy Server</td>
+<td>TCP 443</td>
+<td>Proxy registration and data sync</td>
+</tr>
+<tr>
+<td>Admin / CI-CD</td>
+<td>TPP Policy Server</td>
+<td>TCP 443</td>
+<td>REST API and web UI</td>
+</tr>
+<tr>
+<td>TPP Log Server</td>
+<td>Splunk / SIEM</td>
+<td>TCP 514 / 6514</td>
+<td>Syslog event forwarding</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rest-api-access">REST API Access<a class="headerlink" href="#rest-api-access" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP exposes a REST API at <code>https://&lt;tpp-fqdn&gt;/vedsdk/</code>.</p>
+<pre><code class="language-powershell"># Authenticate and get API key
+$body = @{ Username = &quot;svc-venafi-api&quot;; Password = &quot;password&quot; } | ConvertTo-Json
+$response = Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedauth/authorize&quot; `
+  -Method Post -ContentType &quot;application/json&quot; -Body $body
+$apiKey = $response.APIKey
+
+# Request a certificate
+$certRequest = @{
+    PolicyDN = &quot;\\VED\\Policy\\Internal\\Production\\Servers&quot;
+    Subject  = &quot;app01.corp.example.com&quot;
+    SubjectAltNames = @(
+        @{ TypedName = &quot;dns:app01.corp.example.com&quot; },
+        @{ TypedName = &quot;dns:app01-internal.corp.example.com&quot; }
+    )
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates/Request&quot; `
+  -Headers @{ &quot;X-Venafi-API-Key&quot; = $apiKey } `
+  -Method Post -ContentType &quot;application/json&quot; -Body $certRequest
+</code></pre>
 
 
 
