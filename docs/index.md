@@ -12,6 +12,52 @@
 </div>
 
 
+## Quick Access
+
+<div class="kb-grid kb-grid-4">
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/health-checks/">
+  <strong>Daily Health Checks</strong>
+  <span>Pre-change, post-change, capacity, and daily platform checks.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/runbooks/incident-response/">
+  <strong>Incident Response</strong>
+  <span>First-response steps, triage, escalation, and evidence collection.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/reference/quick-reference/">
+  <strong>Quick Reference</strong>
+  <span>Commands, decision trees, emergency checks, and cheat sheets.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Host disconnects, datastore issues, certificates, VM performance.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/vmware/vcenter/">
+  <strong>vCenter</strong>
+  <span>Inventory, permissions, alarms, tasks, certificates, and backup.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/vxrail/">
+  <strong>VxRail</strong>
+  <span>Lifecycle, hardware, health checks, and support bundle collection.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="storage/dell/powermax/">
+  <strong>PowerMax</strong>
+  <span>Operations, health checks, SRDF, and support references.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="storage/pure/flasharray/">
+  <strong>FlashArray</strong>
+  <span>Array health, volumes, protection groups, and Pure1 monitoring.</span>
+</a>
+
+</div>
+
 ## Platforms
 
 <div class="kb-grid kb-grid-3">
