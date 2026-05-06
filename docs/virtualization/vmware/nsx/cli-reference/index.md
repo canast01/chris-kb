@@ -4,207 +4,51 @@ Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing
 
 > NSX Manager and Edge Node CLIs are accessed via SSH. Log in as `admin`.
 
----
+<div class="kb-grid kb-grid-3">
 
-## NSX Manager — System
+<a class="kb-card" href="system/">
+  <strong>NSX Manager — System</strong>
+  <span>get managers/clusters/services, version, nodes, interfaces, and appliance.</span>
+</a>
 
-```bash
-# System status
-get managers
-get clusters
-get services
-get service http
-get service manager
+<a class="kb-card" href="transport-nodes/">
+  <strong>Transport Nodes & Fabric</strong>
+  <span>get transport-nodes, transport-zone, tunnel endpoints, and status.</span>
+</a>
 
-# Version
-get version
+<a class="kb-card" href="segments/">
+  <strong>Logical Switches & Segments</strong>
+  <span>get logical-switches/ports and their status and stats.</span>
+</a>
 
-# Nodes
-get nodes
-get node interfaces
-get node interface eth0
+<a class="kb-card" href="gateways/">
+  <strong>Tier-0 and Tier-1 Gateways</strong>
+  <span>get logical-routers, vrf context, routes, BGP neighbors, and forwarding table.</span>
+</a>
 
-# Appliance management
-set appliance gw-route <prefix> <gw>
-set appliance ui <start|stop>
-```
+<a class="kb-card" href="edge-nodes/">
+  <strong>Edge Nodes</strong>
+  <span>get services/node/interfaces, routing context, and connectivity tests.</span>
+</a>
 
----
+<a class="kb-card" href="dfw/">
+  <strong>Distributed Firewall (DFW)</strong>
+  <span>nsxcli get firewall/dfw stats, summarize-dvfilter, and vsipioctl.</span>
+</a>
 
-## Transport Nodes & Fabric
+<a class="kb-card" href="nat-lb/">
+  <strong>NAT & Load Balancing</strong>
+  <span>NAT rules on Edge (vrf context) and load-balancer status/pools.</span>
+</a>
 
-```bash
-# Transport nodes
-get transport-nodes
-get transport-node <id>
-get transport-node <id> status
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics & Troubleshooting</strong>
+  <span>nsxcli, traceflow, packet capture, log levels, and system logs.</span>
+</a>
 
-# Host node connectivity
-get transport-zone
-get transport-zone <name>
+<a class="kb-card" href="admin/">
+  <strong>IPAM, Certificates & Backup</strong>
+  <span>get ip-pools, get certificates/trust-objects, backup status/schedule/history.</span>
+</a>
 
-# Tunnel endpoints
-get tunnel endpoints
-get tunnel status
-```
-
----
-
-## Logical Switches & Segments
-
-```bash
-# Segments (NSX-T)
-get logical-switches
-get logical-switch <id>
-get logical-switch <id> status
-get logical-switch <id> stats
-
-# Ports
-get logical-ports
-get logical-port <id>
-get logical-port <id> status
-```
-
----
-
-## Tier-0 and Tier-1 Gateways
-
-```bash
-# List gateways (NSX Manager)
-get logical-routers
-
-# On an Edge Node — enter router context
-vrf <logical-router-id>
-
-# Show routes
-get route
-get route detail
-get bgp neighbor summary
-get bgp neighbor <neighbor_ip>
-get bgp neighbor <neighbor_ip> routes
-
-# Forwarding table
-get forwarding
-
-# Interfaces
-get interfaces
-get interface <name>
-```
-
----
-
-## Edge Nodes
-
-```bash
-# Connect to Edge Node via SSH (admin)
-get services
-get service dataplane
-get service router
-
-# System
-get node
-get node cpu-usage
-get node memory
-
-# Uplinks
-get interfaces
-get interface fp-eth0
-
-# Routing
-vrf <lr_id>
-get route
-get forwarding
-get bgp neighbor summary
-
-# Connectivity tests
-ping <ip>
-traceroute <ip>
-curl http://<ip>
-```
-
----
-
-## Distributed Firewall (DFW) — NSX Manager
-
-```bash
-# DFW rules overview (via NSX Manager shell)
-nsxcli
-get firewall stats
-get dfw stats
-
-# From ESXi host — inspect DFW
-summarize-dvfilter
-vsipioctl getrules -f <filter_name>
-vsipioctl getaddrsets -f <filter_name>
-vsipioctl getstats -f <filter_name>
-```
-
----
-
-## NAT & Load Balancing
-
-```bash
-# NAT rules on Edge
-vrf <lr_id>
-get nat rules
-
-# Load balancer
-get load-balancer status
-get load-balancer virtual-servers
-get load-balancer pools
-```
-
----
-
-## Diagnostics & Troubleshooting
-
-```bash
-# Central CLI (run from NSX Manager against any node)
-nsxcli -u admin
-
-# Traceflow (Manager UI / API primarily, CLI helper)
-get traceflows
-
-# Packet capture on Edge
-debug packet capture interface fp-eth0 count 500
-debug packet capture interface nsx-geneve count 500
-
-# Log levels
-set service manager logging-level debug
-set service manager logging-level info
-
-# System logs
-get logs
-get log manager follow
-```
-
----
-
-## IPAM / IP Pools
-
-```bash
-get ip-pools
-get ip-pool <id>
-get ip-pool <id> allocations
-```
-
----
-
-## Certificates
-
-```bash
-get certificates
-get certificate <id>
-get trust-objects
-```
-
----
-
-## Backup & Restore
-
-```bash
-get backup status
-set backup schedule daily time 02:00
-backup manual
-get backup history
-```
+</div>

@@ -2,231 +2,56 @@
 
 Commonly used Git commands for version control, branching, and collaboration.
 
----
+<div class="kb-grid kb-grid-3">
 
-## Setup & Config
+<a class="kb-card" href="setup/">
+  <strong>Setup, Config & Remotes</strong>
+  <span>Global config, init, clone, shallow clone, and remote management.</span>
+</a>
 
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
-git config --global core.editor vim
-git config --list
-git config --global alias.st status
-```
+<a class="kb-card" href="status-log/">
+  <strong>Status & Log</strong>
+  <span>git status, diff, log (oneline, graph, author, since), and show.</span>
+</a>
 
----
+<a class="kb-card" href="staging/">
+  <strong>Staging & Committing</strong>
+  <span>git add, add -p, commit, and amend.</span>
+</a>
 
-## Repository
+<a class="kb-card" href="branches/">
+  <strong>Branches</strong>
+  <span>List, create, switch, rename, delete, and set upstream.</span>
+</a>
 
-```bash
-# Init and clone
-git init
-git clone <url>
-git clone <url> <directory>
-git clone --depth 1 <url>       # Shallow clone
+<a class="kb-card" href="merge-rebase/">
+  <strong>Merge & Rebase</strong>
+  <span>Merge (no-ff, squash), rebase, interactive rebase, continue/abort.</span>
+</a>
 
-# Remotes
-git remote -v
-git remote add origin <url>
-git remote remove <name>
-git remote set-url origin <new_url>
-```
+<a class="kb-card" href="fetch-pull-push/">
+  <strong>Fetch, Pull & Push</strong>
+  <span>fetch, fetch --prune, pull --rebase, push with upstream, force-with-lease.</span>
+</a>
 
----
+<a class="kb-card" href="stash/">
+  <strong>Stash</strong>
+  <span>stash, push with message, list, pop, apply, drop, clear, show diff.</span>
+</a>
 
-## Status & Log
+<a class="kb-card" href="tags/">
+  <strong>Tags</strong>
+  <span>Lightweight and annotated tags, push tags, and delete local/remote tags.</span>
+</a>
 
-```bash
-git status
-git diff
-git diff --staged
-git diff <branch1>..<branch2>
+<a class="kb-card" href="reset-restore/">
+  <strong>Reset & Restore</strong>
+  <span>Unstage, discard changes, soft/mixed/hard reset, and reset to remote.</span>
+</a>
 
-git log
-git log --oneline
-git log --oneline --graph --all
-git log -p                      # With diffs
-git log --author="name"
-git log --since="2 weeks ago"
-git log --follow <file>
-git show <commit>
-```
+<a class="kb-card" href="advanced/">
+  <strong>Advanced (Cherry-pick, Bisect, Submodules)</strong>
+  <span>Cherry-pick, bisect (good/bad), submodules, and useful aliases.</span>
+</a>
 
----
-
-## Staging & Committing
-
-```bash
-git add <file>
-git add .
-git add -p                      # Interactive hunk staging
-
-git commit -m "message"
-git commit --amend              # Amend last commit (local only)
-git commit --amend --no-edit    # Amend without changing message
-```
-
----
-
-## Branches
-
-```bash
-# List
-git branch
-git branch -a                   # Include remotes
-git branch -v                   # With last commit
-
-# Create / switch
-git branch <name>
-git checkout -b <name>
-git switch -c <name>            # Modern syntax
-git switch <name>
-
-# Rename
-git branch -m <old> <new>
-
-# Delete
-git branch -d <name>            # Safe delete
-git branch -D <name>            # Force delete
-git push origin --delete <name> # Delete remote branch
-
-# Track remote
-git branch --set-upstream-to=origin/<name>
-```
-
----
-
-## Merge & Rebase
-
-```bash
-# Merge
-git merge <branch>
-git merge --no-ff <branch>      # Always create merge commit
-git merge --squash <branch>     # Squash into one commit
-git merge --abort
-
-# Rebase
-git rebase <branch>
-git rebase -i HEAD~3            # Interactive rebase (last 3 commits)
-git rebase --continue
-git rebase --abort
-git rebase --skip
-```
-
----
-
-## Fetch, Pull & Push
-
-```bash
-git fetch
-git fetch --all
-git fetch --prune               # Clean up deleted remote branches
-
-git pull
-git pull --rebase               # Rebase instead of merge
-git pull origin <branch>
-
-git push
-git push -u origin <branch>     # Set upstream and push
-git push --force-with-lease     # Safe force push
-git push --tags
-git push origin :<branch>       # Delete remote branch
-```
-
----
-
-## Stash
-
-```bash
-git stash
-git stash push -m "description"
-git stash list
-git stash pop                   # Apply last + remove
-git stash apply stash@{0}      # Apply without removing
-git stash drop stash@{0}
-git stash clear
-git stash show -p stash@{0}    # View diff
-```
-
----
-
-## Tags
-
-```bash
-git tag
-git tag <name>                  # Lightweight tag
-git tag -a <name> -m "msg"      # Annotated tag
-git tag -a <name> <commit>      # Tag a specific commit
-git push origin <tag>
-git push --tags
-git tag -d <name>               # Delete local tag
-git push origin --delete <tag>  # Delete remote tag
-```
-
----
-
-## Reset & Restore
-
-```bash
-# Unstage file
-git restore --staged <file>
-
-# Discard working directory changes
-git restore <file>
-
-# Reset commits (keep changes staged)
-git reset --soft HEAD~1
-
-# Reset commits (keep changes unstaged)
-git reset --mixed HEAD~1
-
-# Reset commits (discard all changes)
-git reset --hard HEAD~1
-
-# Reset to remote state
-git fetch && git reset --hard origin/<branch>
-```
-
----
-
-## Cherry-pick
-
-```bash
-git cherry-pick <commit>
-git cherry-pick <commit1>..<commit2>
-git cherry-pick --no-commit <commit>
-git cherry-pick --abort
-```
-
----
-
-## Bisect
-
-```bash
-git bisect start
-git bisect bad                  # Current commit is bad
-git bisect good <commit>        # Last known good commit
-git bisect good / git bisect bad
-git bisect reset
-```
-
----
-
-## Submodules
-
-```bash
-git submodule add <url> <path>
-git submodule update --init --recursive
-git submodule foreach git pull
-```
-
----
-
-## Useful Aliases
-
-```bash
-git config --global alias.lg "log --oneline --graph --all --decorate"
-git config --global alias.undo "reset --soft HEAD~1"
-git config --global alias.unstage "restore --staged"
-git config --global alias.aliases "config --get-regexp alias"
-```
+</div>
