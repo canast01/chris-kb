@@ -1,4 +1,4 @@
-# Nsx Tier Gateways
+# NSX Tier Gateways
 
 ## Overview
 

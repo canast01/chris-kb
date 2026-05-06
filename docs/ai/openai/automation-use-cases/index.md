@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Openai Automation Use Cases notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical OpenAI Automation Use Cases notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

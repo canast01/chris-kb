@@ -1,4 +1,4 @@
-# Vcenter Tasks and Failures
+# vCenter Tasks and Failures
 
 ## Overview
 

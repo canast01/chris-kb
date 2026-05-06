@@ -1,6 +1,6 @@
-# Azure Openai
+# Azure OpenAI
 
-Azure Openai operational notes and deep-dive references.
+Azure OpenAI operational notes and deep-dive references.
 
 <div class="kb-grid kb-grid-5">
 

@@ -1,8 +1,8 @@
-# Vpn Gateway
+# VPN Gateway
 
 ## Purpose
 
-Use this page for practical Azure Networking Vpn Gateway notes, checks, troubleshooting, commands, change notes, and field references.
+Use this page for practical Azure Networking VPN Gateway notes, checks, troubleshooting, commands, change notes, and field references.
 
 ## Common checks
 

@@ -1,8 +1,8 @@
-# Tls Validation
+# TLS Validation
 
 ## Purpose
 
-Use this page for practical Azure Security Tls Validation notes, checks, troubleshooting, commands, change notes, and field references.
+Use this page for practical Azure Security TLS Validation notes, checks, troubleshooting, commands, change notes, and field references.
 
 ## Common checks
 

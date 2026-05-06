@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Azure Openai Deployments notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical Azure OpenAI Deployments notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

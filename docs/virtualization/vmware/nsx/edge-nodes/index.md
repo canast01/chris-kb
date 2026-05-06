@@ -1,4 +1,4 @@
-# Nsx Edge Nodes
+# NSX Edge Nodes
 
 ## Overview
 

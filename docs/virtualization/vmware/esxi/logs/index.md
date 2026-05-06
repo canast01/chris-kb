@@ -1,4 +1,4 @@
-# Esxi Logs
+# ESXi Logs
 
 ## Overview
 

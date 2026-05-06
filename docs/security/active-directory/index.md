@@ -10,8 +10,8 @@ Active Directory operational notes and deep-dive references.
   </div>
 
   <div class="kb-card">
-    <h3><a href="dns-dependency/">Dns Dependency</a></h3>
-    <p>Dns Dependency notes, checks, commands, troubleshooting, and validation.</p>
+    <h3><a href="dns-dependency/">DNS Dependency</a></h3>
+    <p>DNS Dependency notes, checks, commands, troubleshooting, and validation.</p>
   </div>
 
   <div class="kb-card">
@@ -20,8 +20,8 @@ Active Directory operational notes and deep-dive references.
   </div>
 
   <div class="kb-card">
-    <h3><a href="gpos/">Gpos</a></h3>
-    <p>Gpos notes, checks, commands, troubleshooting, and validation.</p>
+    <h3><a href="gpos/">GPOs</a></h3>
+    <p>GPOs notes, checks, commands, troubleshooting, and validation.</p>
   </div>
 
   <div class="kb-card">

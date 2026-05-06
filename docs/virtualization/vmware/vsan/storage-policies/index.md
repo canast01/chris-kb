@@ -1,4 +1,4 @@
-# Vsan Storage Policies
+# vSAN Storage Policies
 
 ## Overview
 

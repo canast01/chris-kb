@@ -25,8 +25,8 @@ Certificates operational notes and deep-dive references.
   </div>
 
   <div class="kb-card">
-    <h3><a href="tls-validation/">Tls Validation</a></h3>
-    <p>Tls Validation notes, checks, commands, troubleshooting, and validation.</p>
+    <h3><a href="tls-validation/">TLS Validation</a></h3>
+    <p>TLS Validation notes, checks, commands, troubleshooting, and validation.</p>
   </div>
 
   <div class="kb-card">

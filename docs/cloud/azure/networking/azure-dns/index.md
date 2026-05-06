@@ -1,8 +1,8 @@
-# Azure Dns
+# Azure DNS
 
 ## Purpose
 
-Use this page for practical Azure Networking Azure Dns notes, checks, troubleshooting, commands, change notes, and field references.
+Use this page for practical Azure Networking Azure DNS notes, checks, troubleshooting, commands, change notes, and field references.
 
 ## Common checks
 

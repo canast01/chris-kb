@@ -1,4 +1,4 @@
-# Nsx Distributed Firewall
+# NSX Distributed Firewall
 
 ## Overview
 

@@ -1,4 +1,4 @@
-# Vcenter Inventory Management
+# vCenter Inventory Management
 
 ## Overview
 

@@ -1,4 +1,4 @@
-# Vsan Capacity
+# vSAN Capacity
 
 ## Overview
 

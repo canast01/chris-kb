@@ -1,4 +1,4 @@
-# Nsx Segments
+# NSX Segments
 
 ## Overview
 

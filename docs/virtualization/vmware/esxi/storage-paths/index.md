@@ -1,4 +1,4 @@
-# Esxi Storage Paths
+# ESXi Storage Paths
 
 ## Overview
 

@@ -1,6 +1,6 @@
-# San Zoning Standard
+# SAN Zoning Standard
 
-San Zoning Standard operational notes and deep-dive references.
+SAN Zoning Standard operational notes and deep-dive references.
 
 <div class="kb-grid kb-grid-5">
 

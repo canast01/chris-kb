@@ -1,4 +1,4 @@
-# Vsan Disk Groups
+# vSAN Disk Groups
 
 ## Overview
 

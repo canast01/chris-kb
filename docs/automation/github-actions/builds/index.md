@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Github Actions Builds notes, checks, troubleshooting, commands, change notes, and field references.
+Use this page for practical GitHub Actions Builds notes, checks, troubleshooting, commands, change notes, and field references.
 
 ## Common checks
 

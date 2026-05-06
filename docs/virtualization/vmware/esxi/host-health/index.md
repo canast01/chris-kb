@@ -1,4 +1,4 @@
-# Esxi Host Health
+# ESXi Host Health
 
 ## Overview
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Azure Openai Monitoring notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical Azure OpenAI Monitoring notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

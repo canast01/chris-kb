@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Openai Security Review notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical OpenAI Security Review notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

@@ -1,8 +1,8 @@
-# Nas Servers
+# NAS Servers
 
 ## Purpose
 
-Operational notes, checks, troubleshooting, commands, and validation steps for Nas Servers.
+Operational notes, checks, troubleshooting, commands, and validation steps for NAS Servers.
 
 ## Common checks
 

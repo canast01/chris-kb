@@ -1,8 +1,8 @@
-# Tls Validation
+# TLS Validation
 
 ## Purpose
 
-Use this page for practical Certificates Tls Validation notes, checks, troubleshooting, commands, change notes, and field references.
+Use this page for practical Certificates TLS Validation notes, checks, troubleshooting, commands, change notes, and field references.
 
 ## Common checks
 

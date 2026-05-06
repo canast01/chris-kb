@@ -1,4 +1,4 @@
-# Nsx Routing
+# NSX Routing
 
 ## Overview
 

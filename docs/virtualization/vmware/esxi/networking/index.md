@@ -1,4 +1,4 @@
-# Esxi Networking
+# ESXi Networking
 
 ## Overview
 

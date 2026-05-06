@@ -8,8 +8,8 @@ Integration knowledge base articles, procedures, troubleshooting notes, and oper
 
 <div class="kb-grid kb-grid-3">
 <div class="kb-card">
-  <h3><a href="api-connectivity/">Api Connectivity</a></h3>
-  <p>Api Connectivity KB articles and procedures.</p>
+  <h3><a href="api-connectivity/">API Connectivity</a></h3>
+  <p>API Connectivity KB articles and procedures.</p>
 </div>
 <div class="kb-card">
   <h3><a href="certificate-trust/">Certificate Trust</a></h3>

@@ -1,7 +1,7 @@
-# San
+# SAN
 
 <div class="kb-summary">
-San knowledge base landing page.
+SAN knowledge base landing page.
 </div>
 
 ## Main Areas

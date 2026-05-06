@@ -1,4 +1,4 @@
-# Nsx Troubleshooting
+# NSX Troubleshooting
 
 ## Overview
 

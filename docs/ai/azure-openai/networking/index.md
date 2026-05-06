@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this page for practical Azure Openai Networking notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical Azure OpenAI Networking notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

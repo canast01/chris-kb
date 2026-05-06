@@ -1,8 +1,8 @@
-# Api Notes
+# API Notes
 
 ## Purpose
 
-Use this page for practical Openai Api Notes notes, checks, troubleshooting, commands, standards, and field references.
+Use this page for practical OpenAI API Notes notes, checks, troubleshooting, commands, standards, and field references.
 
 ## Common checks
 

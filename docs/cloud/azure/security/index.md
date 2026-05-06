@@ -43,7 +43,7 @@ Azure Security articles, operational checks, troubleshooting notes, and referenc
 </a>
 
 <a class="kb-card" href="tls-validation/">
-  <strong>Tls Validation</strong>
-  <span>Tls Validation notes, procedures, and operational references.</span>
+  <strong>TLS Validation</strong>
+  <span>TLS Validation notes, procedures, and operational references.</span>
 </a>
 </div>

@@ -8,8 +8,8 @@ Networking knowledge base articles, procedures, troubleshooting notes, and opera
 
 <div class="kb-grid kb-grid-3">
 <div class="kb-card">
-  <h3><a href="dns-troubleshooting/">Dns Troubleshooting</a></h3>
-  <p>Dns Troubleshooting KB articles and procedures.</p>
+  <h3><a href="dns-troubleshooting/">DNS Troubleshooting</a></h3>
+  <p>DNS Troubleshooting KB articles and procedures.</p>
 </div>
 <div class="kb-card">
   <h3><a href="firewall-rule-validation/">Firewall Rule Validation</a></h3>
@@ -48,19 +48,19 @@ Networking knowledge base articles, procedures, troubleshooting notes, and opera
   <p>Subnetting KB articles and procedures.</p>
 </div>
 <div class="kb-card">
-  <h3><a href="tcp-ip/">Tcp Ip</a></h3>
-  <p>Tcp Ip KB articles and procedures.</p>
+  <h3><a href="tcp-ip/">TCP/IP</a></h3>
+  <p>TCP/IP KB articles and procedures.</p>
 </div>
 <div class="kb-card">
-  <h3><a href="vlan/">Vlan</a></h3>
-  <p>Vlan KB articles and procedures.</p>
+  <h3><a href="vlan/">VLAN</a></h3>
+  <p>VLAN KB articles and procedures.</p>
 </div>
 <div class="kb-card">
-  <h3><a href="vlan-configuration/">Vlan Configuration</a></h3>
-  <p>Vlan Configuration KB articles and procedures.</p>
+  <h3><a href="vlan-configuration/">VLAN Configuration</a></h3>
+  <p>VLAN Configuration KB articles and procedures.</p>
 </div>
 <div class="kb-card">
-  <h3><a href="vpn/">Vpn</a></h3>
-  <p>Vpn KB articles and procedures.</p>
+  <h3><a href="vpn/">VPN</a></h3>
+  <p>VPN KB articles and procedures.</p>
 </div>
 </div>
