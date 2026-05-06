@@ -15,6 +15,5 @@ Use this page as a quick jump list for the main KB areas.
   <div class="kb-card"><h3><a href="monitoring/">Monitoring</a></h3><p>Monitoring tools and health checks.</p></div>
   <div class="kb-card"><h3><a href="tools/">Tools</a></h3><p>ServiceNow, Jira, Confluence, and Git.</p></div>
 
-  <div class="kb-card"><h3><a href="standards/">Standards</a></h3><p>Naming, builds, baselines, security, and zoning.</p></div>
   <div class="kb-card"><h3><a href="protocols/">Protocols</a></h3><p>FC, iSCSI, NFS, SMB, DNS, DHCP, NTP, SNMP, LDAP, TLS.</p></div>
 </div>

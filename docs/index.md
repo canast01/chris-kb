@@ -88,25 +88,19 @@
   <span>ServiceNow, Jira, Confluence, Git, and daily admin tooling.</span>
 </a>
 
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming, build, configuration, security, and zoning standards.</span>
-</a>
-
 <a class="kb-card" href="protocols/">
   <strong>Protocols</strong>
   <span>Fibre Channel, iSCSI, NFS, SMB, DNS, DHCP, NTP, SNMP, LDAP, TLS.</span>
 </a>
 
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>HA, DR, network, storage, and cloud design references.</span>
+<a class="kb-card" href="inventory/">
+  <strong>Inventory</strong>
+  <span>Infrastructure inventory references and asset tracking.</span>
 </a>
 
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Onboarding, decommissioning, migrations, and upgrade readiness.</span>
+<a class="kb-card" href="ai/">
+  <strong>AI</strong>
+  <span>OpenAI, Azure OpenAI, Bedrock, local AI, and GPU workloads.</span>
 </a>
 
 </div>

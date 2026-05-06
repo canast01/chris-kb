@@ -4,40 +4,15 @@ The VMware platform is the core virtualization layer used to run, manage, protec
 
 <div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="vmware-cloud-foundation/">
-  <strong>VMware Cloud Foundation</strong>
-  <span>VCF architecture, workload domains, lifecycle, and operations.</span>
-</a>
-
-<a class="kb-card" href="vcenter/">
-  <strong>vCenter</strong>
-  <span>Inventory, permissions, alarms, tasks, certificates, backup, and field reference notes.</span>
-</a>
-
-<a class="kb-card" href="esxi/">
-  <strong>ESXi</strong>
-  <span>Host health, networking, storage paths, logs, maintenance, patching, and field reference notes.</span>
-</a>
-
-<a class="kb-card" href="vsan/">
-  <strong>vSAN</strong>
-  <span>Storage policies, disk groups, capacity, resync, health, performance, and field reference notes.</span>
-</a>
-
-<a class="kb-card" href="nsx/">
-  <strong>NSX</strong>
-  <span>Segments, gateways, firewalling, routing, edge nodes, and troubleshooting.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>VMware Operations</strong>
-  <span>Day-to-day VMware procedures, checks, and troubleshooting workflows.</span>
-</a>
-
-<a class="kb-card" href="topics/">
-  <strong>Topics</strong>
-  <span>Deep-dive reference articles on specific VMware behaviors and scenarios.</span>
-</a>
+<a class="kb-card" href="vmware-cloud-foundation/"><strong>VMware Cloud Foundation</strong><span>Full-stack SDDC — SDDC Manager, workload domains, lifecycle, and operations.</span></a>
+<a class="kb-card" href="vcenter/"><strong>vCenter</strong><span>Inventory, permissions, alarms, certificates, backup, and lifecycle.</span></a>
+<a class="kb-card" href="esxi/"><strong>ESXi</strong><span>Host health, networking, storage paths, logs, maintenance, and patching.</span></a>
+<a class="kb-card" href="vsan/"><strong>vSAN</strong><span>Storage policies, disk groups, capacity, resync, health, and performance.</span></a>
+<a class="kb-card" href="nsx/"><strong>NSX</strong><span>Segments, gateways, distributed firewall, routing, and edge nodes.</span></a>
+<a class="kb-card" href="aria-operations/"><strong>Aria Operations</strong><span>Performance monitoring, capacity management, and compliance across the vSphere platform.</span></a>
+<a class="kb-card" href="aria-automation/"><strong>Aria Automation</strong><span>Infrastructure automation, service catalogue, and IaC pipeline integration.</span></a>
+<a class="kb-card" href="aria-suite-lifecycle/"><strong>Aria Suite Lifecycle</strong><span>Deployment, patching, certificate management, and upgrade orchestration for all Aria products.</span></a>
+<a class="kb-card" href="aria-operations-for-logs/"><strong>Aria Ops for Logs</strong><span>Log ingestion, querying, alerting, and integration for VMware infrastructure logs.</span></a>
 
 </div>
 
