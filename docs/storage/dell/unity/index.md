@@ -1,5 +1,14 @@
 # Dell Unity
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>uemcli commands for pools, LUNs, NAS, NFS/CIFS, hosts, replication, and hardware.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Dell Unity is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.

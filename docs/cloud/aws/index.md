@@ -4,6 +4,12 @@ AWS operational notes grouped by the way the platform is normally supported.
 
 <div class="kb-grid kb-grid-3">
 
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>EC2, S3, IAM, VPC, CloudWatch, CloudFormation, RDS, EKS, Lambda, and SSM commands.</span>
+</a>
+
+
 <a class="kb-card" href="compute/">
   <strong>Compute</strong>
   <span>EC2, Auto Scaling, Lambda, Systems Manager, AMIs, patching, and recovery.</span>

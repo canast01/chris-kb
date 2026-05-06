@@ -1,5 +1,14 @@
 # Dell PowerPath
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>powermt display, check, restore, path management, and load balancing policy commands.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Dell PowerPath is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.

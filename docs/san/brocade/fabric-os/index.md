@@ -1,5 +1,14 @@
 # Brocade Fabric OS
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>switchshow, portshow, zoning, fabricshow, firmware, ISLs, and diagnostics.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Brocade Fabric OS is the operating system for Brocade Fibre Channel SAN switches.

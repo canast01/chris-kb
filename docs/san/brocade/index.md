@@ -4,23 +4,16 @@
 Brocade SAN knowledge base articles, operational procedures, troubleshooting notes, and command references.
 </div>
 
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="fabric-os/">Fabric Os</a></h3>
-  <p>Fabric Os notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="sannav/">Sannav</a></h3>
-  <p>Sannav notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="fabric-os/">Fabric Os</a></h3>
-  <p>Fabric Os KB article.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="sannav/">Sannav</a></h3>
-  <p>Sannav KB article.</p>
-</div>
+
+<a class="kb-card" href="fabric-os/">
+  <strong>Fabric OS</strong>
+  <span>Switch CLI, zoning, ports, ISLs, firmware, and diagnostics.</span>
+</a>
+
+<a class="kb-card" href="sannav/">
+  <strong>SANnav</strong>
+  <span>Fabric management, alerts, inventory, monitoring, and reporting.</span>
+</a>
+
 </div>

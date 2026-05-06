@@ -1,5 +1,14 @@
 # Pure FlashBlade
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>purefb commands for file systems, object store, snapshots, replication, network, and hardware.</span>
+</a>
+
+</div>
+
 ## Overview
 
 Pure FlashBlade is an enterprise storage platform or storage service used to support production workloads, protection, replication, capacity management, and operational recovery.
