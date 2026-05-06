@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell PowerMax - Chris KB</title>
+        <title>Windows Server — Standards - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-powermax" class="md-skip">
+        <a href="#windows-server-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell PowerMax
+              Windows Server — Standards
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#hostname-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Hostname Convention
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#active-directory-ou-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Active Directory OU Structure
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#drive-letter-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Drive Letter Conventions
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#powershell-remoting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        PowerShell Remoting
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#winrm-configuration-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        WinRM Configuration Baseline
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
+  <a href="#server-build-baseline-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Tasks
+        Server Build Baseline Checklist
       
     </span>
   </a>
@@ -790,10 +790,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
+  <a href="#group-policy-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Notes
+        Group Policy Baseline
       
     </span>
   </a>
@@ -801,10 +801,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#related-sections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
+        Related Sections
       
     </span>
   </a>
@@ -830,186 +830,212 @@
 
 
 
-<h1 id="dell-powermax">Dell PowerMax<a class="headerlink" href="#dell-powermax" title="Permanent link">&para;</a></h1>
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>HA topology, components, connectivity, and sizing.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, build baseline, and configuration checklist.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Version matrix, upgrade paths, EOL tracking, and refresh planning.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>Daily checks, health monitoring, maintenance tasks, and runbooks.</span>
-</a>
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>Command reference by category with syntax and examples.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>Automation scripts for daily checks, health, incident triage, and validation.</span>
-</a>
-
-<a class="kb-card" href="troubleshooting/">
-  <strong>Troubleshooting</strong>
-  <span>Common issues, diagnostic commands, log locations, and error codes.</span>
-</a>
-
-<a class="kb-card" href="integration/">
-  <strong>Integration</strong>
-  <span>VMware, backup tools, monitoring, authentication, and API integration.</span>
-</a>
-
-<a class="kb-card" href="security/">
-  <strong>Security</strong>
-  <span>Hardening checklist, RBAC, encryption, audit logging, and compliance.</span>
-</a>
-
-<a class="kb-card" href="vendor-support/">
-  <strong>Vendor Support</strong>
-  <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
-</a>
-
-</div>
-
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax 2000 and 8000 models, designed for mission-critical workloads requiring sub-millisecond latency and continuous availability. It is managed via Unisphere for PowerMax (GUI) or SYMCLI (Solutions Enabler). PowerMax provides synchronous and asynchronous remote replication through SRDF (Symmetrix Remote Data Facility), local snapshots via SnapVX (up to 256 snapshots per device), and automated storage tiering with FAST VP.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Primary block storage for tier-1 databases (Oracle, SQL Server, SAP HANA) requiring consistent sub-millisecond latency</li>
-<li>Synchronous DR replication with SRDF/S for zero RPO between data centres</li>
-<li>Asynchronous DR replication with SRDF/A for longer-distance sites where synchronous distance is impractical</li>
-<li>Local point-in-time snapshots with SnapVX for application-consistent backups, dev/test clones, and fast recovery</li>
-<li>Multi-host SAN environments — storage groups, masking views, and port groups control LUN presentation</li>
-<li>Automated storage tiering with FAST VP to move data between NVMe, SAS, and NL-SAS tiers based on activity</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open Unisphere for PowerMax and review the Dashboard for active alerts and system health status</li>
-<li>Run <code>symcfg -sid &lt;SID&gt; show</code> to confirm array-level health and director status</li>
-<li>Run <code>symdf list -sid &lt;SID&gt;</code> to check SRDF pair states — all R1 pairs should be <code>Synchronized</code> (SRDF/S) or <code>Consistent</code> (SRDF/A)</li>
-<li>Review <code>sympd list -sid &lt;SID&gt;</code> to confirm no physical drives are in a <code>Failed</code> or <code>Degraded</code> state</li>
-<li>Check storage group thin device pool utilisation via Unisphere or <code>symsg list -sid &lt;SID&gt;</code></li>
-<li>Confirm any SnapVX sessions that are no longer needed have been terminated to avoid hitting per-device limits</li>
-<li>Review Unisphere → Performance → Array to check I/O response time and throughput against baselines</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all Symmetrix arrays visible to Solutions Enabler
-symcfg list
-
-# Show full array configuration and health for a specific SID
-symcfg -sid &lt;SID&gt; show
-
-# List SRDF groups (RDF groups) for the array
-symdf list -sid &lt;SID&gt;
-
-# Show SRDF pair state for a specific RDF group
-symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; query
-
-# List all storage groups
-symsg list -sid &lt;SID&gt;
-
-# List all device groups
-symdg list -sid &lt;SID&gt;
-
-# List all physical drives and their state
-sympd list -sid &lt;SID&gt;
-
-# List SnapVX snapshots for a storage group
-symsnap list -sid &lt;SID&gt; -sg &lt;storage-group&gt;
-
-# Show real-time I/O statistics (R2 side)
-symstat -sid &lt;SID&gt; -type r2
-
-# Show replication sessions (SRDF and SnapVX)
-symreplicate list -sid &lt;SID&gt;
-</code></pre>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h1 id="windows-server-standards">Windows Server — Standards<a class="headerlink" href="#windows-server-standards" title="Permanent link">&para;</a></h1>
+<h2 id="hostname-convention">Hostname Convention<a class="headerlink" href="#hostname-convention" title="Permanent link">&para;</a></h2>
+<p>Format: <code>&lt;env&gt;-&lt;function&gt;-&lt;nn&gt;</code></p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
+<th>Segment</th>
+<th>Values</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SRDF pair in <code>R1 Updated</code> or <code>Transmit Idle</code> state</td>
-<td>Link failure, R2 array unreachable, or SRDF director port error</td>
-<td>Run <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; query</code>; check director port with <code>symcfg -sid &lt;SID&gt; show</code>; investigate WAN link and RDF port health</td>
+<td>env</td>
+<td>prod, preprod, uat, dev, dr</td>
+<td>prod</td>
 </tr>
 <tr>
-<td>SRDF pair in <code>Suspended</code> state</td>
-<td>Manual suspend or automatic suspend triggered by I/O error</td>
-<td>Confirm cause; if intentional verify R2 is consistent; resume with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; resume</code></td>
+<td>function</td>
+<td>dc, sql, web, app, fs, jump, mgmt</td>
+<td>sql</td>
 </tr>
 <tr>
-<td>SnapVX session quota exceeded (256 per device limit)</td>
-<td>Accumulated snapshots not being expired or unlinked</td>
-<td>Run <code>symsnap list -sid &lt;SID&gt;</code> to identify stale sessions; terminate or expire unneeded snaps with <code>symsnap -sid &lt;SID&gt; terminate</code></td>
-</tr>
-<tr>
-<td>Storage group thin device at capacity warning threshold</td>
-<td>Thin device allocated capacity approaching the pool limit</td>
-<td>Increase thin pool allocation via Unisphere; or expand the storage group device with <code>symdev -sid &lt;SID&gt; modify</code></td>
-</tr>
-<tr>
-<td>Director port errors or I/O latency spike</td>
-<td>SAN fabric event, host HBA issue, or director port degraded</td>
-<td>Check <code>symcfg -sid &lt;SID&gt; show</code> for port status; review fabric zoning and host multipathing</td>
-</tr>
-<tr>
-<td>Unisphere certificate expired, GUI inaccessible</td>
-<td>TLS certificate for Unisphere web service has lapsed</td>
-<td>Replace the certificate via the Solutions Enabler configuration; restart the Unisphere service after renewal</td>
+<td>nn</td>
+<td>01–99 (zero-padded)</td>
+<td>01</td>
 </tr>
 </tbody>
 </table>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<p>Examples:</p>
 <ul>
-<li>Create a new storage group with <code>symsg -sid &lt;SID&gt; create &lt;sg-name&gt;</code> and add thin devices</li>
-<li>Create a masking view to present a storage group to a host: configure initiator group, port group, storage group, then create the masking view in Unisphere or with <code>symmask</code></li>
-<li>Create a SnapVX snapshot: <code>symsnap -sid &lt;SID&gt; create -sg &lt;sg-name&gt; -name &lt;snap-name&gt;</code></li>
-<li>Link a SnapVX snapshot to a target storage group for dev/test or restore</li>
-<li>Establish an SRDF pair: define RDF groups on both arrays, then use <code>symrdf -sid &lt;SID&gt; createpair</code> or Unisphere wizard</li>
-<li>Change SRDF mode between synchronous and asynchronous via <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; set mode</code></li>
-<li>Perform a planned SRDF failover (split) and failback via <code>symrdf split</code> and <code>symrdf restore</code> during DR tests</li>
-<li>Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modify</li>
+<li><code>prod-sql-01</code> — Production SQL Server node 1</li>
+<li><code>prod-dc-01</code> — Production Domain Controller 1</li>
+<li><code>dev-web-01</code> — Development web server</li>
+<li><code>dr-sql-01</code> — DR SQL Server</li>
 </ul>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Record the current PowerMaxOS and Solutions Enabler version from <code>symcfg list</code> and the Unisphere About page</li>
-<li>Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions</li>
-<li>Confirm all SRDF pairs are in <code>Synchronized</code> or <code>Consistent</code> state before upgrade; suspend replication if advised by release notes</li>
-<li>Back up the Solutions Enabler database and Unisphere configuration files to an external location</li>
-<li>Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes</li>
-<li>Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push</li>
-<li>After the upgrade completes, run <code>symcfg list</code>, <code>symdf list -sid &lt;SID&gt;</code>, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy</li>
-</ol>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h2 id="active-directory-ou-structure">Active Directory OU Structure<a class="headerlink" href="#active-directory-ou-structure" title="Permanent link">&para;</a></h2>
+<pre><code>domain.local
+└── Servers
+    ├── Production
+    │   ├── SQL
+    │   ├── Web
+    │   ├── AppServers
+    │   └── DomainControllers
+    ├── PreProd
+    │   └── ...
+    ├── Development
+    │   └── ...
+    └── Management
+        ├── JumpServers
+        └── MonitoringServers
+</code></pre>
+<p>All servers must be placed in the correct OU before applying GPOs. Computer accounts should not remain in the default <code>Computers</code> container.</p>
+<h2 id="drive-letter-conventions">Drive Letter Conventions<a class="headerlink" href="#drive-letter-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Drive</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C:</td>
+<td>Operating system</td>
+<td>Minimum 100 GB; OS and program files only</td>
+</tr>
+<tr>
+<td>D:</td>
+<td>Data / application files</td>
+<td>Size based on workload</td>
+</tr>
+<tr>
+<td>E:</td>
+<td>Logs</td>
+<td>Application and IIS logs</td>
+</tr>
+<tr>
+<td>T:</td>
+<td>TempDB (SQL Server)</td>
+<td>High-IOPS volume; separate spindle or tier</td>
+</tr>
+<tr>
+<td>X:</td>
+<td>Backup staging</td>
+<td>Optional; separate from data</td>
+</tr>
+</tbody>
+</table>
+<h2 id="powershell-remoting">PowerShell Remoting<a class="headerlink" href="#powershell-remoting" title="Permanent link">&para;</a></h2>
+<p>PowerShell remoting (WinRM) must be enabled on all managed servers:</p>
+<pre><code class="language-powershell"># Enable PowerShell remoting
+Enable-PSRemoting -Force
+
+# Verify WinRM is running
+Get-Service WinRM
+
+# Test remote connectivity
+Test-WSMan -ComputerName &lt;servername&gt;
+
+# Connect remotely
+Enter-PSSession -ComputerName &lt;servername&gt; -Credential (Get-Credential)
+</code></pre>
+<p>WinRM listener configuration:</p>
+<pre><code class="language-powershell"># View WinRM listeners
+winrm enumerate winrm/config/listener
+
+# Configure HTTPS listener (requires certificate)
+New-WSManInstance -ResourceURI winrm/config/Listener `
+  -SelectorSet @{Address=&quot;*&quot;; Transport=&quot;HTTPS&quot;} `
+  -ValueSet @{Hostname=&quot;&lt;fqdn&gt;&quot;; CertificateThumbprint=&quot;&lt;thumbprint&gt;&quot;}
+</code></pre>
+<h2 id="winrm-configuration-baseline">WinRM Configuration Baseline<a class="headerlink" href="#winrm-configuration-baseline" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Required Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service startup type</td>
+<td>Automatic</td>
+</tr>
+<tr>
+<td>HTTP listener</td>
+<td>Enabled (or HTTPS only in high-security environments)</td>
+</tr>
+<tr>
+<td>MaxEnvelopeSizekb</td>
+<td>500 minimum</td>
+</tr>
+<tr>
+<td>MaxTimeoutms</td>
+<td>60000 minimum</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Negotiate (Kerberos preferred)</td>
+</tr>
+<tr>
+<td>TrustedHosts</td>
+<td>Set to domain FQDN or specific hosts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-build-baseline-checklist">Server Build Baseline Checklist<a class="headerlink" href="#server-build-baseline-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Use SRDF/A with write-order consistency groups (<code>symcg</code>) for multi-volume application workloads to ensure crash-consistent recovery at the DR site</li>
-<li>Implement FAST VP policies to automate data tiering between NVMe and capacity tiers based on observed I/O patterns; review tier placement quarterly</li>
-<li>Set I/O limit SLOs (Service Level Objectives) on storage groups via Unisphere to enforce per-workload latency and bandwidth caps and prevent noisy-neighbour problems</li>
-<li>Document Symmetrix device IDs, storage group names, and masking view mappings in a CMDB or equivalent; SYMCLI device IDs are array-specific and not portable</li>
-<li>Never exceed 256 SnapVX snapshots per device; implement automated snap expiry policies in backup software or scripted <code>symsnap terminate</code> jobs to stay within limits</li>
-<li>Use Unisphere Performance → Thresholds to set alert thresholds on response time and port utilisation so issues are caught before they affect hosts</li>
-<li>Test SRDF failover and failback procedures at least annually; document the exact SYMCLI sequence and validate host I/O resumes on R2 within the target RTO</li>
-<li>Keep Solutions Enabler and Unisphere at the same major version as PowerMaxOS to avoid CLI and API incompatibilities</li>
+<li>[ ] Hostname set per naming convention</li>
+<li>[ ] Joined to correct AD domain and OU</li>
+<li>[ ] Drive layout per conventions above</li>
+<li>[ ] WinRM/PowerShell remoting enabled</li>
+<li>[ ] Windows Update configured (WSUS or Windows Update for Business)</li>
+<li>[ ] Windows Defender enabled and updated</li>
+<li>[ ] NTP configured (domain-joined servers sync from DC hierarchy)</li>
+<li>[ ] Local Administrator account renamed or disabled; LAPS deployed</li>
+<li>[ ] Remote Desktop enabled; restricted to jump servers via firewall/GPO</li>
+<li>[ ] Monitoring agent installed (Zabbix/Nagios/Datadog)</li>
+<li>[ ] Backup agent installed and job configured</li>
+<li>[ ] Event log sizes configured (System: 64 MB, Application: 64 MB, Security: 256 MB)</li>
+<li>[ ] Page file: system-managed or fixed on dedicated volume</li>
+<li>[ ] Server documented in CMDB</li>
+</ul>
+<h2 id="group-policy-baseline">Group Policy Baseline<a class="headerlink" href="#group-policy-baseline" title="Permanent link">&para;</a></h2>
+<p>All servers must receive the following GPO categories at minimum:</p>
+<table>
+<thead>
+<tr>
+<th>GPO</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security Baseline</td>
+<td>All servers</td>
+</tr>
+<tr>
+<td>Audit Policy</td>
+<td>All servers</td>
+</tr>
+<tr>
+<td>WinRM / PS Remoting</td>
+<td>All servers</td>
+</tr>
+<tr>
+<td>Windows Update</td>
+<td>All servers (or managed via WSUS)</td>
+</tr>
+<tr>
+<td>Defender ATP settings</td>
+<td>All servers</td>
+</tr>
+<tr>
+<td>Role-specific settings</td>
+<td>Applied at role-level OUs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../architecture/">Architecture</a> — server roles and topology</li>
+<li><a href="../security/">Security</a> — hardening and CIS benchmarks</li>
+<li><a href="../lifecycle/">Lifecycle</a> — version support and patching cadence</li>
 </ul>
 
 
