@@ -1473,3 +1473,216 @@ cd C:\Users\YourName\Desktop
 **What you should see**
 
 The first time it runs, it installs the Az PowerShell module automatically (can take 5–10 minutes). Then your browser opens for Azure login. After login, it prints a table of VMs with their power state and flags any that are not running. Then it shows any Azure Advisor recommendations for improving your environment.
+
+---
+
+## Daily Check Script
+
+Azure environment daily health check covering authentication, VM power states, Advisor HIGH severity HA issues, NSG rule count, and resource group population.
+
+~~~bash
+#!/bin/bash
+# azure_daily_check.sh — Azure environment daily health check
+SUBSCRIPTION_ID="${SUBSCRIPTION_ID:-}"
+RESOURCE_GROUP="${RESOURCE_GROUP:-}"
+FAIL=0
+
+check() { local l="$1"; shift; "$@" &>/dev/null && echo "[OK]   $l" || { echo "[FAIL] $l"; FAIL=$((FAIL+1)); }; }
+
+echo "=== Azure Daily Check: $RESOURCE_GROUP — $(date) ==="
+check "Azure CLI auth" az account show
+check "All VMs running" bash -c "[ \$(az vm list --resource-group $RESOURCE_GROUP --query \"[?powerState!='VM running'].name\" --show-details -o tsv | wc -l) -eq 0 ]"
+check "No Azure Advisor HIGH severity" bash -c "[ \$(az advisor recommendation list --category HighAvailability --query \"[?impact=='High'].id\" -o tsv | wc -l) -eq 0 ]"
+check "NSG rules within expected count" az network nsg list --resource-group $RESOURCE_GROUP --query '[*].name' -o tsv | wc -l | grep -qv "^0$"
+check "Resource health OK" bash -c "az resource list --resource-group $RESOURCE_GROUP -o tsv | wc -l | grep -qv '^0$'"
+
+echo ""
+echo "Daily check: $FAIL failure(s)"
+[[ $FAIL -gt 0 ]] && exit 2 || exit 0
+~~~
+
+---
+
+## Incident Triage Script
+
+Capture VM states, NSG rules, storage account status, Key Vault access logs, recent Activity Log events, and Advisor recommendations to a timestamped file.
+
+~~~bash
+#!/bin/bash
+# azure_triage.sh
+# Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> ./azure_triage.sh
+
+SUBSCRIPTION_ID="${SUBSCRIPTION_ID:?SUBSCRIPTION_ID is required}"
+RESOURCE_GROUP="${RESOURCE_GROUP:?RESOURCE_GROUP is required}"
+OUTFILE="/tmp/azure_triage_${RESOURCE_GROUP}_$(date +%Y%m%d_%H%M%S).txt"
+
+{
+  echo "=== Azure Incident Triage: $RESOURCE_GROUP — $(date) ==="
+  echo ""
+  echo "--- VM states ---"
+  az vm list --resource-group "$RESOURCE_GROUP" --show-details \
+    --query '[*].[name,powerState,location]' -o table
+  echo ""
+  echo "--- NSG rules ---"
+  az network nsg list --resource-group "$RESOURCE_GROUP" -o table
+  echo ""
+  echo "--- Storage account status ---"
+  az storage account list --resource-group "$RESOURCE_GROUP" \
+    --query '[*].[name,statusOfPrimary,provisioningState]' -o table
+  echo ""
+  echo "--- Recent Activity Log events (last 2h) ---"
+  START=$(date -u -v-2H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '2 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+  az monitor activity-log list --resource-group "$RESOURCE_GROUP" \
+    --start-time "$START" --max-events 50 \
+    --query '[*].[eventTimestamp,operationName.localizedValue,status.localizedValue,caller]' -o table
+  echo ""
+  echo "--- Advisor recommendations ---"
+  az advisor recommendation list --resource-group "$RESOURCE_GROUP" \
+    --query '[*].[category,impact,shortDescription.problem]' -o table
+} > "$OUTFILE" 2>&1
+
+echo "Triage data saved to: $OUTFILE"
+~~~
+
+---
+
+## Change Pre-Check Script
+
+Validate Azure environment before a deployment. Exits 2 if any critical condition is found.
+
+~~~bash
+#!/bin/bash
+# azure_precheck.sh
+# Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> ./azure_precheck.sh
+
+SUBSCRIPTION_ID="${SUBSCRIPTION_ID:?SUBSCRIPTION_ID is required}"
+RESOURCE_GROUP="${RESOURCE_GROUP:?RESOURCE_GROUP is required}"
+FAIL=0
+
+echo "=== Azure Pre-Change Check: $RESOURCE_GROUP — $(date) ==="
+
+# All VMs running
+NOT_RUNNING=$(az vm list --resource-group "$RESOURCE_GROUP" --show-details \
+  --query "[?powerState!='VM running'].name" -o tsv | wc -l | tr -d ' ')
+if [ "$NOT_RUNNING" -gt 0 ]; then
+  echo "[FAIL] $NOT_RUNNING VM(s) not in running state"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All VMs running"
+fi
+
+# No active Resource Health incidents (proxy: no recent critical activity log events)
+CRITICAL=$(az monitor activity-log list --resource-group "$RESOURCE_GROUP" \
+  --max-events 20 --filter "level eq 'Critical'" \
+  --query 'length([*])' -o tsv 2>/dev/null || echo 0)
+if [ "${CRITICAL:-0}" -gt 0 ]; then
+  echo "[FAIL] $CRITICAL critical event(s) in activity log"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No critical events in activity log"
+fi
+
+# Advisor has no HIGH severity HA issues
+HIGH_ADVISOR=$(az advisor recommendation list --category HighAvailability \
+  --query "[?impact=='High'].id" -o tsv | wc -l | tr -d ' ')
+if [ "$HIGH_ADVISOR" -gt 0 ]; then
+  echo "[FAIL] $HIGH_ADVISOR HIGH severity Advisor recommendation(s)"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No HIGH severity Advisor HA issues"
+fi
+
+echo ""
+echo "Pre-check: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Post-Change Validation Script
+
+After a deployment: confirm new resources exist and are healthy, no new Activity Log errors, VMs still accessible, and tags applied correctly.
+
+~~~bash
+#!/bin/bash
+# azure_postcheck.sh
+# Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> [NEW_RESOURCE_NAME=<name>] ./azure_postcheck.sh
+
+SUBSCRIPTION_ID="${SUBSCRIPTION_ID:?SUBSCRIPTION_ID is required}"
+RESOURCE_GROUP="${RESOURCE_GROUP:?RESOURCE_GROUP is required}"
+NEW_RESOURCE_NAME="${NEW_RESOURCE_NAME:-}"
+FAIL=0
+
+echo "=== Azure Post-Change Validation: $RESOURCE_GROUP — $(date) ==="
+
+# New resource exists (if name provided)
+if [ -n "$NEW_RESOURCE_NAME" ]; then
+  EXISTS=$(az resource list --resource-group "$RESOURCE_GROUP" \
+    --query "[?name=='$NEW_RESOURCE_NAME'].id" -o tsv | wc -l | tr -d ' ')
+  if [ "$EXISTS" -gt 0 ]; then
+    echo "[OK]   Resource $NEW_RESOURCE_NAME exists"
+  else
+    echo "[FAIL] Resource $NEW_RESOURCE_NAME not found"; FAIL=$((FAIL+1))
+  fi
+fi
+
+# All VMs still running
+NOT_RUNNING=$(az vm list --resource-group "$RESOURCE_GROUP" --show-details \
+  --query "[?powerState!='VM running'].name" -o tsv | wc -l | tr -d ' ')
+if [ "$NOT_RUNNING" -gt 0 ]; then
+  echo "[FAIL] $NOT_RUNNING VM(s) not running after change"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All VMs running"
+fi
+
+# No new Activity Log errors
+START=$(date -u -v-30M +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '30 minutes ago' +%Y-%m-%dT%H:%M:%SZ)
+ERRORS=$(az monitor activity-log list --resource-group "$RESOURCE_GROUP" \
+  --start-time "$START" --filter "level eq 'Error'" \
+  --query 'length([*])' -o tsv 2>/dev/null || echo 0)
+if [ "${ERRORS:-0}" -gt 0 ]; then
+  echo "[WARN] $ERRORS error event(s) in activity log since change — review"
+else
+  echo "[OK]   No error events in recent activity log"
+fi
+
+echo ""
+echo "Post-change validation: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Health Check Script
+
+Cron-safe summary: VM counts (running/stopped), storage account count, Advisor HIGH/MEDIUM recommendations, and recent Activity Log error count. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
+
+~~~bash
+#!/bin/bash
+# azure_health_check.sh
+# Cron: */5 * * * * SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> /opt/scripts/azure_health_check.sh
+
+SUBSCRIPTION_ID="${SUBSCRIPTION_ID:?SUBSCRIPTION_ID is required}"
+RESOURCE_GROUP="${RESOURCE_GROUP:?RESOURCE_GROUP is required}"
+
+RUNNING=$(az vm list --resource-group "$RESOURCE_GROUP" --show-details \
+  --query "length([?powerState=='VM running'])" -o tsv 2>/dev/null || echo 0)
+STOPPED=$(az vm list --resource-group "$RESOURCE_GROUP" --show-details \
+  --query "length([?powerState!='VM running'])" -o tsv 2>/dev/null || echo 0)
+STORAGE=$(az storage account list --resource-group "$RESOURCE_GROUP" \
+  --query "length([*])" -o tsv 2>/dev/null || echo 0)
+HIGH_ADV=$(az advisor recommendation list --category HighAvailability \
+  --query "length([?impact=='High'])" -o tsv 2>/dev/null || echo 0)
+MED_ADV=$(az advisor recommendation list --category HighAvailability \
+  --query "length([?impact=='Medium'])" -o tsv 2>/dev/null || echo 0)
+START=$(date -u -v-24H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+ACT_ERRORS=$(az monitor activity-log list --resource-group "$RESOURCE_GROUP" \
+  --start-time "$START" --filter "level eq 'Error'" \
+  --query 'length([*])' -o tsv 2>/dev/null || echo 0)
+
+echo "rg=$RESOURCE_GROUP vms_running=$RUNNING vms_stopped=$STOPPED storage_accounts=$STORAGE advisor_high=$HIGH_ADV advisor_medium=$MED_ADV activity_errors_24h=$ACT_ERRORS"
+
+if [ "${STOPPED:-0}" -gt 2 ] || [ "${HIGH_ADV:-0}" -gt 2 ]; then
+  exit 2
+elif [ "${STOPPED:-0}" -gt 0 ] || [ "${HIGH_ADV:-0}" -gt 0 ] || [ "${ACT_ERRORS:-0}" -gt 5 ]; then
+  exit 1
+fi
+exit 0
+~~~

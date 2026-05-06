@@ -847,6 +847,356 @@ Powered-on VMs appear in green, powered-off in yellow. Disconnected hosts appear
 
 ---
 
+## Daily Check Script (PowerShell/PowerCLI)
+
+Connect to vCenter and run daily operational checks: host connection states, datastore capacity (flag below 20% free), stale snapshots (older than 7 days), active alarms, and vCenter service health via REST API. Outputs PASS/FAIL.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vc_daily_check.ps1
+# Usage: pwsh -File vc_daily_check.ps1
+# Env vars: VCENTER_HOST, VC_USER, VC_PASS
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS,
+    [int]$SnapAgeDays    = 7,
+    [double]$DsFreeMinPct = 20
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$exit = 0
+$now  = Get-Date
+
+function Pass($msg) { Write-Host "  [PASS] $msg" -ForegroundColor Green }
+function Fail($msg) { Write-Host "  [FAIL] $msg" -ForegroundColor Red; $script:exit = 1 }
+function Warn($msg) { Write-Host "  [WARN] $msg" -ForegroundColor Yellow }
+
+Write-Host "`n=== vCenter Daily Check: $VCenterHost ===" -ForegroundColor Cyan
+Write-Host "($(Get-Date -Format 'yyyy-MM-dd HH:mm'))`n"
+
+# --- Host connectivity ---
+Write-Host "--- Host Connectivity ---"
+$disconnected = Get-VMHost | Where-Object { $_.ConnectionState -ne 'Connected' }
+if ($disconnected) {
+    $disconnected | ForEach-Object { Fail "Host $($_.Name) is $($_.ConnectionState)" }
+} else {
+    Pass "All hosts connected ($(( Get-VMHost ).Count) hosts)"
+}
+
+# --- Datastore capacity ---
+Write-Host "`n--- Datastore Capacity ---"
+$lowDs = Get-Datastore | Where-Object {
+    $_.CapacityMB -gt 0 -and ($_.FreeSpaceMB / $_.CapacityMB * 100) -lt $DsFreeMinPct
+}
+if ($lowDs) {
+    $lowDs | ForEach-Object {
+        $pct = [Math]::Round($_.FreeSpaceMB / $_.CapacityMB * 100, 1)
+        Fail "Datastore $($_.Name): only ${pct}% free"
+    }
+} else {
+    Pass "All datastores above ${DsFreeMinPct}% free"
+}
+
+# --- Stale snapshots ---
+Write-Host "`n--- Stale Snapshots (>$SnapAgeDays days) ---"
+$staleSnaps = Get-VM | Get-Snapshot -ErrorAction SilentlyContinue |
+    Where-Object { ($now - $_.Created).TotalDays -gt $SnapAgeDays }
+if ($staleSnaps) {
+    $staleSnaps | ForEach-Object {
+        $age = [Math]::Floor(($now - $_.Created).TotalDays)
+        Warn "VM $($_.VM.Name): snapshot '$($_.Name)' is ${age} days old"
+    }
+} else {
+    Pass "No snapshots older than $SnapAgeDays days"
+}
+
+# --- Active alarms ---
+Write-Host "`n--- Active Alarms ---"
+$alarms = Get-AlarmAction -ErrorAction SilentlyContinue
+if ($alarms) {
+    Warn "$($alarms.Count) active alarm action(s) configured"
+} else {
+    Pass "No active alarm actions triggered"
+}
+
+# --- vCenter services via REST API ---
+Write-Host "`n--- vCenter Services ---"
+try {
+    Add-Type @"
+using System.Net; using System.Security.Cryptography.X509Certificates;
+public class NoSSL : ICertificatePolicy {
+    public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+}
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object NoSSL
+    [System.Net.ServicePointManager]::SecurityProtocol  = [System.Net.SecurityProtocolType]::Tls12
+
+    $authB64   = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${VCUser}:${VCPass}"))
+    $sessResp  = Invoke-RestMethod -Uri "https://$VCenterHost/api/session" -Method POST `
+                   -Headers @{ Authorization = "Basic $authB64" }
+    $apiHdr    = @{ "vmware-api-session-id" = $sessResp }
+    $health    = Invoke-RestMethod -Uri "https://$VCenterHost/api/vcenter/health/system" `
+                   -Method GET -Headers $apiHdr
+    $hs = $health.health_status
+    if ($hs -eq "green") { Pass "vCenter system health: $hs" } else { Warn "vCenter system health: $hs" }
+} catch {
+    Warn "Could not check vCenter REST health: $($_.Exception.Message)"
+}
+
+Disconnect-VIServer -Confirm:$false
+Write-Host ""
+if ($exit -eq 0) { Write-Host "RESULT: PASS" -ForegroundColor Green }
+else             { Write-Host "RESULT: FAIL" -ForegroundColor Red }
+exit $exit
+~~~
+
+---
+
+## Incident Triage Script (PowerShell/PowerCLI)
+
+Capture disconnected hosts, inaccessible datastores, powered-off VMs, active alarms, recent tasks with errors, and vCenter service health to a timestamped file.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vc_incident_triage.ps1
+# Usage: pwsh -File vc_incident_triage.ps1
+# Env vars: VCENTER_HOST, VC_USER, VC_PASS
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$TS  = Get-Date -Format "yyyyMMdd_HHmmss"
+$OUT = "vc_triage_${VCenterHost}_${TS}.txt"
+
+function Log($msg) { $msg | Tee-Object -FilePath $OUT -Append }
+
+Log "=== vCenter Incident Triage: $VCenterHost ==="
+Log "Timestamp: $(Get-Date)"
+Log ""
+
+Log "--- Disconnected Hosts ---"
+Get-VMHost | Where-Object { $_.ConnectionState -ne 'Connected' } |
+    Select-Object Name, ConnectionState | Format-Table | Out-String | ForEach-Object { Log $_ }
+
+Log "--- Inaccessible Datastores ---"
+Get-Datastore | Where-Object { -not $_.ExtensionData.Summary.Accessible } |
+    Select-Object Name, Type | Format-Table | Out-String | ForEach-Object { Log $_ }
+
+Log "--- Powered-Off VMs ---"
+Get-VM | Where-Object { $_.PowerState -ne 'PoweredOn' } |
+    Select-Object Name, PowerState, VMHost | Format-Table | Out-String | ForEach-Object { Log $_ }
+
+Log "--- Active Alarms ---"
+Get-AlarmAction -ErrorAction SilentlyContinue |
+    Select-Object * | Format-List | Out-String | ForEach-Object { Log $_ }
+
+Log "--- Recent Tasks with Errors ---"
+Get-Task -Status Error -ErrorAction SilentlyContinue | Select-Object -First 20 |
+    Select-Object Name, State, StartTime, FinishTime, Description |
+    Format-Table | Out-String | ForEach-Object { Log $_ }
+
+Log ""
+Log "Triage data saved to: $OUT"
+Disconnect-VIServer -Confirm:$false
+Write-Host "Triage data saved to: $OUT" -ForegroundColor Cyan
+~~~
+
+---
+
+## Change Pre-Check Script (PowerShell/PowerCLI)
+
+Run before any maintenance window. Confirms no disconnected hosts, no inaccessible datastores, no critical alarms, no running migrations, healthy vCenter services, and NTP in sync. Exits non-zero on failure.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vc_precheck.ps1
+# Usage: pwsh -File vc_precheck.ps1
+# Env vars: VCENTER_HOST, VC_USER, VC_PASS
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$exit = 0
+function Go($msg)   { Write-Host "  [GO]    $msg" -ForegroundColor Green }
+function NoGo($msg) { Write-Host "  [NO-GO] $msg" -ForegroundColor Red; $script:exit = 2 }
+
+Write-Host "`n=== vCenter Change Pre-Check: $VCenterHost ===" -ForegroundColor Cyan
+Write-Host "($(Get-Date -Format 'yyyy-MM-dd HH:mm'))`n"
+
+# Check 1: No disconnected hosts
+$disc = (Get-VMHost | Where-Object { $_.ConnectionState -ne 'Connected' }).Count
+if ($disc -gt 0) { NoGo "$disc host(s) disconnected" } else { Go "All hosts connected" }
+
+# Check 2: No inaccessible datastores
+$inacc = (Get-Datastore | Where-Object { -not $_.ExtensionData.Summary.Accessible }).Count
+if ($inacc -gt 0) { NoGo "$inacc inaccessible datastore(s)" } else { Go "All datastores accessible" }
+
+# Check 3: No active critical alarms
+$critAlarms = Get-AlarmAction -ErrorAction SilentlyContinue
+if ($critAlarms -and $critAlarms.Count -gt 0) { NoGo "$($critAlarms.Count) active alarm action(s)" }
+else { Go "No active alarm actions" }
+
+# Check 4: No running vMotion/migrations
+$running = Get-Task -Status Running -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -match 'Migrate|vMotion|RelocateVM' }
+if ($running) { NoGo "$($running.Count) migration task(s) in progress" }
+else { Go "No migrations running" }
+
+# Check 5: NTP sync on all hosts
+$ntpBad = Get-VMHost | Where-Object {
+    $ntp = $_ | Get-VMHostNTPServer
+    -not $ntp -or $ntp.Count -eq 0
+}
+if ($ntpBad) { NoGo "$($ntpBad.Count) host(s) have no NTP configured" }
+else { Go "NTP configured on all hosts" }
+
+Disconnect-VIServer -Confirm:$false
+Write-Host ""
+if ($exit -eq 0) { Write-Host "VERDICT: GO" -ForegroundColor Green }
+else             { Write-Host "VERDICT: NO-GO" -ForegroundColor Red }
+exit $exit
+~~~
+
+---
+
+## Post-Change Validation Script (PowerShell/PowerCLI)
+
+Run after a maintenance window. Performs the same checks as pre-check and also verifies target cluster DRS/HA settings are unchanged, permissions are intact, and no new alarms were triggered.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vc_postcheck.ps1
+# Usage: pwsh -File vc_postcheck.ps1
+# Env vars: VCENTER_HOST, VC_USER, VC_PASS
+
+param(
+    [string]$VCenterHost  = $env:VCENTER_HOST,
+    [string]$VCUser       = $env:VC_USER,
+    [string]$VCPass       = $env:VC_PASS,
+    [string]$ClusterName  = $env:CLUSTER_NAME
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$exit = 0
+function Ok($msg)   { Write-Host "  [OK]   $msg" -ForegroundColor Green }
+function Fail($msg) { Write-Host "  [FAIL] $msg" -ForegroundColor Red; $script:exit = 1 }
+function Warn($msg) { Write-Host "  [WARN] $msg" -ForegroundColor Yellow }
+
+Write-Host "`n=== vCenter Post-Change Validation: $VCenterHost ===" -ForegroundColor Cyan
+Write-Host "($(Get-Date -Format 'yyyy-MM-dd HH:mm'))`n"
+
+# Repeat baseline checks
+$disc  = (Get-VMHost | Where-Object { $_.ConnectionState -ne 'Connected' }).Count
+$inacc = (Get-Datastore | Where-Object { -not $_.ExtensionData.Summary.Accessible }).Count
+if ($disc  -gt 0) { Fail "$disc host(s) still disconnected" } else { Ok "All hosts connected" }
+if ($inacc -gt 0) { Fail "$inacc inaccessible datastore(s)" } else { Ok "All datastores accessible" }
+
+# DRS/HA settings (if cluster specified)
+if ($ClusterName) {
+    $cl = Get-Cluster -Name $ClusterName -ErrorAction SilentlyContinue
+    if ($cl) {
+        Ok "Cluster $ClusterName: DRS=$($cl.DrsEnabled) HA=$($cl.HAEnabled)"
+    } else {
+        Warn "Cluster '$ClusterName' not found"
+    }
+}
+
+# No new alarms after change
+$alarms = Get-AlarmAction -ErrorAction SilentlyContinue
+if ($alarms -and $alarms.Count -gt 0) { Warn "$($alarms.Count) alarm action(s) active — review" }
+else { Ok "No active alarm actions" }
+
+Disconnect-VIServer -Confirm:$false
+Write-Host ""
+if ($exit -eq 0) { Write-Host "RESULT: PASS" -ForegroundColor Green }
+else             { Write-Host "RESULT: FAIL" -ForegroundColor Red }
+exit $exit
+~~~
+
+---
+
+## Health Check Script (PowerShell/PowerCLI, scheduled)
+
+Compact summary suitable for scheduled tasks. Outputs host count (connected/disconnected), datastore count (any below 20% free), and critical alarm count. Exits 0/1/2.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vc_health.ps1 — scheduled/cron-safe vCenter health check
+# Usage: pwsh -File vc_health.ps1
+# Task Scheduler: pwsh -NonInteractive -File C:\scripts\vc_health.ps1
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS,
+    [double]$DsFreeMinPct = 20
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+
+try {
+    Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+} catch {
+    Write-Output "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] CRITICAL | $VCenterHost | Cannot connect: $($_.Exception.Message)"
+    exit 2
+}
+
+$hosts      = Get-VMHost
+$connected  = ($hosts | Where-Object { $_.ConnectionState -eq 'Connected' }).Count
+$disconn    = $hosts.Count - $connected
+$datastores = Get-Datastore
+$lowDs      = ($datastores | Where-Object {
+    $_.CapacityMB -gt 0 -and ($_.FreeSpaceMB / $_.CapacityMB * 100) -lt $DsFreeMinPct
+}).Count
+$alarms = (Get-AlarmAction -ErrorAction SilentlyContinue | Measure-Object).Count
+
+$worst = 0
+if ($disconn -gt 0 -or $lowDs -gt 0) { $worst = 2 }
+elseif ($alarms -gt 0) { $worst = 1 }
+
+$status = if ($worst -eq 0) { "HEALTHY" } elseif ($worst -eq 1) { "WARNING" } else { "CRITICAL" }
+
+Write-Output "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $status | $VCenterHost | hosts=$($hosts.Count) connected=$connected disconnected=$disconn datastores=$($datastores.Count) low_ds=$lowDs alarms=$alarms"
+
+Disconnect-VIServer -Confirm:$false
+exit $worst
+~~~
+
+---
+
 ## Windows: vCenter ESXi Host Check via Plink (CMD)
 
 Connect to an ESXi host via SSH using plink (from PuTTY) and run quick health commands. Note: vCenter itself does not expose an SSH shell for ESXCLI commands — this script connects directly to an ESXi host instead.

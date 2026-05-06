@@ -819,3 +819,515 @@ cd C:\Users\YourName\Desktop
 **What you should see**
 
 A report showing each Evergreen//One subscription with its status, start date, end date, days remaining, reserved capacity, and current usage percentage. If any subscription is within 90 days of its term end, it is highlighted in red with `*** EXPIRING SOON ***`. If any subscription is above 90% capacity, it is also flagged in red. Below the subscription section, a table lists all the individual assets (arrays) included in the subscription. If warnings exist, the script prints a summary and exits with code 1 so it can be used in monitoring scripts.
+
+---
+
+## Daily Check Script (Python)
+
+Get Evergreen//One subscription from Pure1 API, calculate consumed vs reserved capacity, flag if over 90% consumed, and check if subscription term end is within 90 days. Outputs PASS/FAIL.
+
+~~~python
+#!/usr/bin/env python3
+"""
+eo1_daily_check.py
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+"""
+
+import os
+import sys
+import time
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit("ERROR: pip install requests pyjwt cryptography")
+
+PURE1_APP_ID           = os.environ.get("PURE1_APP_ID", "")
+PURE1_PRIVATE_KEY_FILE = os.environ.get("PURE1_PRIVATE_KEY_FILE", "")
+PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
+CAPACITY_WARN_PCT      = 90
+TERM_WARN_DAYS         = 90
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
+
+RED = "\033[0;31m"; GRN = "\033[0;32m"; YEL = "\033[0;33m"; NC = "\033[0m"
+overall = 0
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm="RS256")
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f"{PURE1_API_BASE}/oauth2/1.0/token",
+        data={"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "subject_token": jwt_tok,
+              "subject_token_type": "urn:ietf:params:oauth:token-type:jwt"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["access_token"]
+
+
+print(f"\n=== Evergreen//One Daily Check ===")
+print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
+
+token   = get_access_token(get_pure1_token())
+headers = {"Authorization": f"Bearer {token}"}
+
+subs = requests.get(f"{PURE1_API_BASE}/subscriptions", headers=headers, timeout=30).json().get("items", [])
+
+if not subs:
+    print("No Evergreen//One subscriptions found.")
+    sys.exit(0)
+
+today = datetime.date.today()
+
+for sub in subs:
+    name      = sub.get("name") or sub.get("display_name") or "unknown"
+    reserved  = float(sub.get("reserved_tib") or sub.get("committed_tib") or 0)
+    consumed  = float(sub.get("consumed_tib") or sub.get("used_tib") or 0)
+    end_date_str = sub.get("end_date") or ""
+
+    pct = (consumed / reserved * 100) if reserved > 0 else 0.0
+
+    # Capacity check
+    if pct >= CAPACITY_WARN_PCT:
+        print(f"  {RED}[FAIL]{NC} {name}: consumed {pct:.1f}% of reserved ({consumed:.1f}/{reserved:.1f} TiB)")
+        overall = max(overall, 1)
+    else:
+        print(f"  {GRN}[PASS]{NC} {name}: consumed {pct:.1f}% ({consumed:.1f}/{reserved:.1f} TiB)")
+
+    # Term end check
+    if end_date_str:
+        try:
+            end_date  = datetime.date.fromisoformat(end_date_str[:10])
+            days_left = (end_date - today).days
+            if days_left < TERM_WARN_DAYS:
+                print(f"  {YEL}[WARN]{NC} {name}: term ends in {days_left} days ({end_date})")
+                overall = max(overall, 1)
+            else:
+                print(f"  {GRN}[PASS]{NC} {name}: term ends in {days_left} days ({end_date})")
+        except ValueError:
+            print(f"  {YEL}[WARN]{NC} {name}: could not parse end_date '{end_date_str}'")
+
+print()
+label  = "PASS" if overall == 0 else "FAIL"
+colour = GRN if overall == 0 else RED
+print(f"{colour}RESULT: {label}{NC}")
+sys.exit(overall)
+~~~
+
+---
+
+## Incident Triage Script (Python)
+
+Capture subscription details, all assets in the subscription, capacity consumed per asset, and Pure1 health scores for all managed arrays to a timestamped file.
+
+~~~python
+#!/usr/bin/env python3
+"""
+eo1_incident_triage.py
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+"""
+
+import os
+import sys
+import time
+import json
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit("ERROR: pip install requests pyjwt cryptography")
+
+PURE1_APP_ID           = os.environ.get("PURE1_APP_ID", "")
+PURE1_PRIVATE_KEY_FILE = os.environ.get("PURE1_PRIVATE_KEY_FILE", "")
+PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
+
+TS  = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+OUT = f"eo1_triage_{TS}.json"
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm="RS256")
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f"{PURE1_API_BASE}/oauth2/1.0/token",
+        data={"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "subject_token": jwt_tok,
+              "subject_token_type": "urn:ietf:params:oauth:token-type:jwt"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["access_token"]
+
+
+token   = get_access_token(get_pure1_token())
+headers = {"Authorization": f"Bearer {token}"}
+
+print(f"Capturing Evergreen//One triage data...")
+
+triage = {"timestamp": TS, "subscriptions": [], "assets": [], "arrays": []}
+
+# Subscriptions
+subs = requests.get(f"{PURE1_API_BASE}/subscriptions", headers=headers, timeout=30).json().get("items", [])
+triage["subscriptions"] = subs
+print(f"  Subscriptions: {len(subs)}")
+
+# Subscription assets
+assets = requests.get(f"{PURE1_API_BASE}/subscriptions/assets", headers=headers, timeout=30).json().get("items", [])
+triage["assets"] = assets
+print(f"  Assets: {len(assets)}")
+
+# Array health scores
+arrays = requests.get(f"{PURE1_API_BASE}/arrays", headers=headers, timeout=30).json().get("items", [])
+triage["arrays"] = [{"name": a.get("name"), "model": a.get("model"),
+                      "health_score": a.get("health_score"), "version": a.get("version")}
+                    for a in arrays]
+print(f"  Arrays: {len(arrays)}")
+
+with open(OUT, "w") as f:
+    json.dump(triage, f, indent=2)
+
+print(f"\nTriage data saved to: {OUT}")
+~~~
+
+---
+
+## Change Pre-Check Script (Python)
+
+Before adding new workloads, confirm the subscription has more than 15% headroom, the term end is more than 90 days away, and there are no active Pure1 CRITICAL alerts on subscription assets. Exits 2 on failure.
+
+~~~python
+#!/usr/bin/env python3
+"""
+eo1_precheck.py
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+"""
+
+import os
+import sys
+import time
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit("ERROR: pip install requests pyjwt cryptography")
+
+PURE1_APP_ID           = os.environ.get("PURE1_APP_ID", "")
+PURE1_PRIVATE_KEY_FILE = os.environ.get("PURE1_PRIVATE_KEY_FILE", "")
+PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
+HEADROOM_MIN_PCT       = 15
+TERM_MIN_DAYS          = 90
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
+
+RED = "\033[0;31m"; GRN = "\033[0;32m"; NC = "\033[0m"
+exit_code = 0
+
+
+def nogo(msg):
+    global exit_code
+    print(f"  {RED}[NO-GO]{NC} {msg}")
+    exit_code = 2
+
+
+def go(msg):
+    print(f"  {GRN}[GO]{NC}    {msg}")
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm="RS256")
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f"{PURE1_API_BASE}/oauth2/1.0/token",
+        data={"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "subject_token": jwt_tok,
+              "subject_token_type": "urn:ietf:params:oauth:token-type:jwt"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["access_token"]
+
+
+print(f"\n=== Evergreen//One Change Pre-Check ===")
+print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
+
+token   = get_access_token(get_pure1_token())
+headers = {"Authorization": f"Bearer {token}"}
+today   = datetime.date.today()
+
+subs = requests.get(f"{PURE1_API_BASE}/subscriptions", headers=headers, timeout=30).json().get("items", [])
+
+for sub in subs:
+    name     = sub.get("name") or sub.get("display_name") or "unknown"
+    reserved = float(sub.get("reserved_tib") or sub.get("committed_tib") or 0)
+    consumed = float(sub.get("consumed_tib") or sub.get("used_tib") or 0)
+    end_str  = sub.get("end_date") or ""
+
+    # Check 1: Headroom > 15%
+    pct_used   = (consumed / reserved * 100) if reserved > 0 else 100.0
+    headroom   = 100 - pct_used
+    if headroom < HEADROOM_MIN_PCT:
+        nogo(f"{name}: only {headroom:.1f}% headroom (min {HEADROOM_MIN_PCT}%)")
+    else:
+        go(f"{name}: {headroom:.1f}% headroom available")
+
+    # Check 2: Term > 90 days
+    if end_str:
+        try:
+            end_date  = datetime.date.fromisoformat(end_str[:10])
+            days_left = (end_date - today).days
+            if days_left < TERM_MIN_DAYS:
+                nogo(f"{name}: term ends in {days_left} days (min {TERM_MIN_DAYS})")
+            else:
+                go(f"{name}: {days_left} days remaining on term")
+        except ValueError:
+            pass
+
+# Check 3: No Pure1 CRITICAL alerts on subscription assets
+assets = requests.get(f"{PURE1_API_BASE}/subscriptions/assets", headers=headers, timeout=30).json().get("items", [])
+crit_assets = [a.get("name") for a in assets if (a.get("alert_severity") or "") == "error"]
+if crit_assets:
+    nogo(f"CRITICAL alerts on subscription asset(s): {', '.join(crit_assets)}")
+else:
+    go("No CRITICAL alerts on subscription assets")
+
+print()
+if exit_code == 0:
+    print(f"{GRN}VERDICT: GO — safe to add workloads{NC}")
+else:
+    print(f"{RED}VERDICT: NO-GO — resolve issues first{NC}")
+sys.exit(exit_code)
+~~~
+
+---
+
+## Post-Change Validation Script (Python)
+
+After adding a workload, confirm consumed capacity increased as expected and is within the subscription reserve, and that no new CRITICAL alerts appeared.
+
+~~~python
+#!/usr/bin/env python3
+"""
+eo1_postcheck.py
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+           BASELINE_CONSUMED_TIB (consumed before change, optional)
+"""
+
+import os
+import sys
+import time
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit("ERROR: pip install requests pyjwt cryptography")
+
+PURE1_APP_ID           = os.environ.get("PURE1_APP_ID", "")
+PURE1_PRIVATE_KEY_FILE = os.environ.get("PURE1_PRIVATE_KEY_FILE", "")
+PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
+BASELINE_TIB           = float(os.environ.get("BASELINE_CONSUMED_TIB", "0"))
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
+
+RED = "\033[0;31m"; GRN = "\033[0;32m"; YEL = "\033[0;33m"; NC = "\033[0m"
+exit_code = 0
+
+
+def ok(msg):   print(f"  {GRN}[OK]{NC}   {msg}")
+def fail(msg):
+    global exit_code
+    print(f"  {RED}[FAIL]{NC} {msg}")
+    exit_code = 1
+def warn(msg): print(f"  {YEL}[WARN]{NC} {msg}")
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm="RS256")
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f"{PURE1_API_BASE}/oauth2/1.0/token",
+        data={"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "subject_token": jwt_tok,
+              "subject_token_type": "urn:ietf:params:oauth:token-type:jwt"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["access_token"]
+
+
+print(f"\n=== Evergreen//One Post-Change Validation ===")
+print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
+
+token   = get_access_token(get_pure1_token())
+headers = {"Authorization": f"Bearer {token}"}
+
+subs = requests.get(f"{PURE1_API_BASE}/subscriptions", headers=headers, timeout=30).json().get("items", [])
+
+for sub in subs:
+    name     = sub.get("name") or sub.get("display_name") or "unknown"
+    reserved = float(sub.get("reserved_tib") or sub.get("committed_tib") or 0)
+    consumed = float(sub.get("consumed_tib") or sub.get("used_tib") or 0)
+
+    # Check 1: Consumed increased (if baseline provided)
+    if BASELINE_TIB > 0:
+        delta = consumed - BASELINE_TIB
+        if delta > 0:
+            ok(f"{name}: consumed increased by {delta:.2f} TiB (expected)")
+        else:
+            warn(f"{name}: consumed did not increase (baseline={BASELINE_TIB:.2f}, now={consumed:.2f})")
+
+    # Check 2: Consumed within reserve
+    pct = (consumed / reserved * 100) if reserved > 0 else 100.0
+    if pct > 100:
+        fail(f"{name}: consumed {pct:.1f}% exceeds reservation")
+    else:
+        ok(f"{name}: consumed {pct:.1f}% of reserve ({consumed:.2f}/{reserved:.2f} TiB)")
+
+# Check 3: No new CRITICAL alerts
+assets    = requests.get(f"{PURE1_API_BASE}/subscriptions/assets", headers=headers, timeout=30).json().get("items", [])
+crit_list = [a.get("name") for a in assets if (a.get("alert_severity") or "") == "error"]
+if crit_list:
+    fail(f"CRITICAL alerts on: {', '.join(crit_list)}")
+else:
+    ok("No CRITICAL alerts on subscription assets")
+
+print()
+print(f"{GRN}RESULT: PASS{NC}" if exit_code == 0 else f"{RED}RESULT: FAIL{NC}")
+sys.exit(exit_code)
+~~~
+
+---
+
+## Health Check Script (Python, cron-safe)
+
+Lightweight cron-safe script. Outputs subscription name, reserved, consumed, percentage used, and days to term end. Exits 0 (healthy), 1 (warning), or 2 (critical).
+
+~~~python
+#!/usr/bin/env python3
+"""
+eo1_health.py — cron-safe Evergreen//One health check
+Requires: pip install requests pyjwt cryptography
+Variables: PURE1_APP_ID, PURE1_PRIVATE_KEY_FILE
+Cron: */30 * * * * python3 /opt/scripts/eo1_health.py >> /var/log/eo1_health.log 2>&1
+"""
+
+import os
+import sys
+import time
+import datetime
+
+try:
+    import jwt
+    import requests
+except ImportError:
+    sys.exit("ERROR: pip install requests pyjwt cryptography")
+
+PURE1_APP_ID           = os.environ.get("PURE1_APP_ID", "")
+PURE1_PRIVATE_KEY_FILE = os.environ.get("PURE1_PRIVATE_KEY_FILE", "")
+PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
+
+if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
+    sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
+
+
+def get_pure1_token():
+    with open(PURE1_PRIVATE_KEY_FILE) as f:
+        key = f.read()
+    payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
+    tok = jwt.encode(payload, key, algorithm="RS256")
+    return tok if isinstance(tok, str) else tok.decode()
+
+
+def get_access_token(jwt_tok):
+    resp = requests.post(
+        f"{PURE1_API_BASE}/oauth2/1.0/token",
+        data={"grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "subject_token": jwt_tok,
+              "subject_token_type": "urn:ietf:params:oauth:token-type:jwt"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["access_token"]
+
+
+try:
+    token   = get_access_token(get_pure1_token())
+    headers = {"Authorization": f"Bearer {token}"}
+    subs    = requests.get(f"{PURE1_API_BASE}/subscriptions", headers=headers, timeout=30).json().get("items", [])
+
+    today = datetime.date.today()
+    worst = 0
+
+    for sub in subs:
+        name     = sub.get("name") or sub.get("display_name") or "unknown"
+        reserved = float(sub.get("reserved_tib") or sub.get("committed_tib") or 0)
+        consumed = float(sub.get("consumed_tib") or sub.get("used_tib") or 0)
+        end_str  = sub.get("end_date") or ""
+        pct      = (consumed / reserved * 100) if reserved > 0 else 0.0
+
+        days_left = "N/A"
+        if end_str:
+            try:
+                days_left = (datetime.date.fromisoformat(end_str[:10]) - today).days
+            except ValueError:
+                pass
+
+        status = "HEALTHY"
+        if pct >= 90 or (isinstance(days_left, int) and days_left < 90):
+            status = "WARNING"
+            worst  = max(worst, 1)
+
+        ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{ts}] {status} | sub={name} reserved={reserved:.1f}TiB "
+              f"consumed={consumed:.1f}TiB pct={pct:.1f}% days_to_end={days_left}")
+
+    sys.exit(worst)
+
+except Exception as exc:
+    print(f"[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] ERROR: {exc}")
+    sys.exit(2)
+~~~

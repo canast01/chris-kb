@@ -544,3 +544,387 @@ powerpath_local_check.bat
 **What you should see**
 
 The script runs three PowerPath commands and saves their output to a text file on your Desktop called `powerpath_report.txt`. When it finishes, Notepad opens automatically showing the report. Look for lines containing `dead` (dead paths) or any devices with fewer paths than expected. The `powermt check` section reports any path topology changes.
+
+---
+
+## Daily Check Script
+
+SSHes to each Linux host running PowerPath, runs `powermt display dev=all`, counts paths per device, flags any device with fewer than 2 active paths, and flags any path in a dead or failed state.
+
+~~~bash
+#!/bin/bash
+# powerpath_daily_check.sh — Daily PowerPath path health check on Linux hosts
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root EXPECTED_PATHS=4 ./powerpath_daily_check.sh
+
+set -euo pipefail
+
+HOST_IP="${HOST_IP:?Set HOST_IP}"
+SSH_USER="${SSH_USER:-root}"
+EXPECTED_PATHS="${EXPECTED_PATHS:-4}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+FAIL=0
+
+echo "========================================"
+echo "  PowerPath Daily Check"
+echo "  Host : ${SSH_USER}@${HOST_IP}"
+echo "  Date : $(date '+%Y-%m-%d %H:%M:%S')"
+echo "========================================"
+echo ""
+
+POWERMT_OUT=$(ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "powermt display dev=all" 2>&1) || \
+  { echo "ERROR: Cannot connect to $HOST_IP or powermt not available"; exit 2; }
+
+echo "$POWERMT_OUT" | python3 -c "
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+devices = {}
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            devices[current_dev] = {'total': total, 'dead': dead}
+            current_dev = None
+
+expected = int('${EXPECTED_PATHS}')
+min_paths = 2
+fail = False
+
+print(f\"{'DEVICE':<22} {'TOTAL':>8} {'DEAD':>6} {'ALIVE':>6}  STATUS\")
+print('-' * 60)
+
+for dev, d in sorted(devices.items()):
+    alive = d['total'] - d['dead']
+    if d['dead'] > 0:
+        status = 'DEAD PATHS  <<<'
+        fail = True
+    elif alive < min_paths:
+        status = f'LOW PATHS (only {alive} alive)  <<<'
+        fail = True
+    else:
+        status = 'OK'
+    print(f\"{dev:<22} {d['total']:>8} {d['dead']:>6} {alive:>6}  {status}\")
+
+print()
+print(f'Total devices: {len(devices)}')
+sys.exit(1 if fail else 0)
+" || FAIL=1
+
+echo ""
+echo "========================================"
+[[ "$FAIL" -eq 0 ]] && echo "  Result: PASS — all paths healthy on $HOST_IP" || \
+  echo "  Result: FAIL — dead or low-path devices found on $HOST_IP"
+exit $FAIL
+~~~
+
+---
+
+## Incident Triage Script
+
+Captures `powermt display dev=all`, `powermt check`, `powermt display options=all`, and kernel messages related to SCSI/multipath to a timestamped file.
+
+~~~bash
+#!/bin/bash
+# powerpath_triage.sh — Capture PowerPath state to timestamped file
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root ./powerpath_triage.sh
+
+set -euo pipefail
+
+HOST_IP="${HOST_IP:?Set HOST_IP}"
+SSH_USER="${SSH_USER:-root}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+
+TS=$(date '+%Y%m%d_%H%M%S')
+OUTFILE="/tmp/powerpath_triage_${HOST_IP//./_}_${TS}.txt"
+
+pp_ssh() { ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "$@" 2>&1 || echo "Command failed: $*"; }
+
+{
+  echo "========================================"
+  echo "  PowerPath Incident Triage"
+  echo "  Host : $HOST_IP"
+  echo "  Time : $(date '+%Y-%m-%d %H:%M:%S')"
+  echo "========================================"
+
+  echo ""
+  echo "--- powermt display dev=all ---"
+  pp_ssh "powermt display dev=all"
+
+  echo ""
+  echo "--- powermt check ---"
+  pp_ssh "powermt check"
+
+  echo ""
+  echo "--- powermt display options=all ---"
+  pp_ssh "powermt display options=all" 2>/dev/null || pp_ssh "powermt display options"
+
+  echo ""
+  echo "--- Kernel SCSI/multipath messages (last 100 lines) ---"
+  pp_ssh "dmesg | grep -iE 'scsi|multipath|emcpower|powerpath' | tail -100" 2>/dev/null || echo "dmesg not available"
+
+  echo ""
+  echo "--- /var/log/messages (SCSI related, last 50 lines) ---"
+  pp_ssh "grep -iE 'scsi|powerpath|emcpower' /var/log/messages 2>/dev/null | tail -50" 2>/dev/null || echo "Not available"
+
+  echo ""
+  echo "========================================"
+  echo "  Triage capture complete: $OUTFILE"
+  echo "========================================"
+} | tee "$OUTFILE"
+
+echo ""
+echo "Output saved to: $OUTFILE"
+~~~
+
+---
+
+## Change Pre-Check Script
+
+Before HBA maintenance or replacement: confirms each volume has more than 2 active paths, no paths are currently recovering, and `powermt check` returns clean. Exits 2 if any path count equals 1.
+
+~~~bash
+#!/bin/bash
+# powerpath_precheck.sh — Pre-check before HBA maintenance on a Linux host
+# Usage: HOST_IP=192.168.1.50 SSH_USER=root MIN_PATHS=2 ./powerpath_precheck.sh
+
+set -euo pipefail
+
+HOST_IP="${HOST_IP:?Set HOST_IP}"
+SSH_USER="${SSH_USER:-root}"
+MIN_PATHS="${MIN_PATHS:-2}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+FAIL=0
+
+check_pass() { echo "  [PASS] $*"; }
+check_fail() { echo "  [FAIL] $*"; FAIL=1; }
+
+echo "========================================"
+echo "  PowerPath Pre-Change Check"
+echo "  Host     : $HOST_IP"
+echo "  Min paths: $MIN_PATHS"
+echo "  Date     : $(date '+%Y-%m-%d %H:%M:%S')"
+echo "========================================"
+echo ""
+
+pp_ssh() { ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "$@" 2>&1; }
+
+# Check 1: powermt check returns clean
+echo "--- powermt check ---"
+CHECK_OUT=$(pp_ssh "powermt check" 2>&1) || { check_fail "Cannot connect to $HOST_IP"; exit 2; }
+echo "$CHECK_OUT"
+if echo "$CHECK_OUT" | grep -qi "error\|dead\|failed\|topology change"; then
+  check_fail "powermt check reports issues — resolve before HBA maintenance"
+else
+  check_pass "powermt check returned clean"
+fi
+
+# Check 2: All devices have > MIN_PATHS active paths (and no paths = 1)
+echo ""
+echo "--- Path count per device ---"
+POWERMT_OUT=$(pp_ssh "powermt display dev=all" 2>&1)
+echo "$POWERMT_OUT" | python3 -c "
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+fail = False
+min_paths = int('${MIN_PATHS}')
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            if alive <= 1:
+                print(f'  [FAIL] {current_dev}: only {alive} alive path(s) — UNSAFE for HBA removal')
+                fail = True
+            elif alive <= min_paths:
+                print(f'  [WARN] {current_dev}: {alive} alive paths (min {min_paths}) — proceed with caution')
+                fail = True
+            else:
+                print(f'  [PASS] {current_dev}: {alive} alive paths, {dead} dead')
+            current_dev = None
+
+sys.exit(1 if fail else 0)
+" || FAIL=1
+
+# Check 3: No recovering paths
+RECOVERING=$(echo "$POWERMT_OUT" | grep -ic "recovering" || true)
+if [[ "$RECOVERING" -eq 0 ]]; then
+  check_pass "No paths currently in recovering state"
+else
+  check_fail "$RECOVERING path(s) in recovering state — wait for recovery to complete"
+fi
+
+echo ""
+echo "========================================"
+if [[ "$FAIL" -eq 0 ]]; then
+  echo "  Result: READY — safe to proceed with HBA maintenance"
+  exit 0
+else
+  echo "  Result: NOT READY — resolve failures above (exit 2)"
+  exit 2
+fi
+~~~
+
+---
+
+## Post-Change Validation Script
+
+After HBA maintenance: runs `powermt display dev=all`, confirms all expected paths per device are restored, and compares path count to the pre-change baseline.
+
+~~~bash
+#!/bin/bash
+# powerpath_postcheck.sh — Post-HBA maintenance path validation
+# Usage: HOST_IP=x SSH_USER=root EXPECTED_PATHS=4 ./powerpath_postcheck.sh
+
+set -euo pipefail
+
+HOST_IP="${HOST_IP:?Set HOST_IP}"
+SSH_USER="${SSH_USER:-root}"
+EXPECTED_PATHS="${EXPECTED_PATHS:-4}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+FAIL=0
+
+check_pass() { echo "  [PASS] $*"; }
+check_fail() { echo "  [FAIL] $*"; FAIL=1; }
+
+echo "========================================"
+echo "  PowerPath Post-Change Validation"
+echo "  Host            : $HOST_IP"
+echo "  Expected paths  : $EXPECTED_PATHS"
+echo "  Date            : $(date '+%Y-%m-%d %H:%M:%S')"
+echo "========================================"
+echo ""
+
+pp_ssh() { ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "$@" 2>&1; }
+
+POWERMT_OUT=$(pp_ssh "powermt display dev=all" 2>&1) || \
+  { echo "ERROR: Cannot connect to $HOST_IP"; exit 1; }
+
+echo "$POWERMT_OUT" | python3 -c "
+import sys, re
+
+lines = sys.stdin.read().splitlines()
+current_dev = None
+expected = int('${EXPECTED_PATHS}')
+fail = False
+
+print(f\"{'DEVICE':<22} {'TOTAL':>8} {'DEAD':>6} {'ALIVE':>6}  STATUS\")
+print('-' * 65)
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            if dead > 0:
+                status = 'DEAD PATHS  <<<'
+                fail = True
+            elif total < expected:
+                status = f'LOW — expected {expected}, got {total}  <<<'
+                fail = True
+            elif total == expected:
+                status = 'RESTORED OK'
+            else:
+                status = f'OK ({total} paths)'
+            print(f'{current_dev:<22} {total:>8} {dead:>6} {alive:>6}  {status}')
+            current_dev = None
+
+sys.exit(1 if fail else 0)
+" || FAIL=1
+
+echo ""
+echo "========================================"
+if [[ "$FAIL" -eq 0 ]]; then
+  echo "  Result: PASS — all paths restored to expected count ($EXPECTED_PATHS) on $HOST_IP"
+  exit 0
+else
+  echo "  Result: FAIL — some devices have not fully restored expected paths"
+  exit 1
+fi
+~~~
+
+---
+
+## Health Check Script
+
+Cron-safe script reporting total devices, total paths, dead paths count, and devices with fewer than 2 active paths. Exits 0 (OK), 1 (warning), or 2 (critical/dead paths found).
+
+~~~bash
+#!/bin/bash
+# powerpath_health.sh — Cron-safe PowerPath health check
+# Usage: HOST_IP=x SSH_USER=root ./powerpath_health.sh
+# Exit: 0=OK  1=WARNING(low paths)  2=CRITICAL(dead paths)
+
+HOST_IP="${HOST_IP:?Set HOST_IP}"
+SSH_USER="${SSH_USER:-root}"
+MIN_ALIVE="${MIN_ALIVE:-2}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+
+POWERMT_OUT=$(ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "powermt display dev=all" 2>/dev/null) || \
+  { echo "PP_HEALTH host=${HOST_IP} status=CRITICAL reason=connection_failed"; exit 2; }
+
+python3 -c "
+import sys, re
+
+lines = '''${POWERMT_OUT}'''.splitlines()
+current_dev = None
+total_devices = 0
+total_paths   = 0
+dead_paths    = 0
+low_path_devs = 0
+min_alive = int('${MIN_ALIVE}')
+worst = 0
+
+for line in lines:
+    m = re.match(r'^Pseudo\s+name=(\S+)', line)
+    if m:
+        current_dev = m.group(1)
+        total_devices += 1
+        continue
+    if current_dev:
+        m2 = re.search(r'(\d+)\s+paths?,\s*(\d+)\s+dead', line)
+        if m2:
+            total = int(m2.group(1))
+            dead  = int(m2.group(2))
+            alive = total - dead
+            total_paths += total
+            dead_paths  += dead
+            if dead > 0:
+                worst = max(worst, 2)
+            elif alive < min_alive:
+                low_path_devs += 1
+                worst = max(worst, 1)
+            current_dev = None
+
+if dead_paths > 0:
+    worst = 2
+elif low_path_devs > 0:
+    worst = 1
+
+status_map = {0: 'OK', 1: 'WARNING', 2: 'CRITICAL'}
+print(f'PP_HEALTH host=${HOST_IP} total_devices={total_devices} total_paths={total_paths} dead_paths={dead_paths} low_path_devices={low_path_devs} status={status_map[worst]}')
+sys.exit(worst)
+"
+~~~

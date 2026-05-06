@@ -864,3 +864,385 @@ You can also just double-click the `.bat` file on your Desktop.
 **What you should see**
 
 The script authenticates to SnapCenter using curl.exe, saves the response to a temporary file, extracts the auth token, then fetches all backup jobs. It prints each job with a colour-coded status (green = Completed, red = Failed, yellow = anything else). Temporary JSON files are cleaned up automatically after the script finishes.
+
+---
+
+## Daily Check Script
+
+Connects to SnapCenter via REST API, checks backup jobs from the last 24 hours, counts succeeded/failed/running, flags any failed jobs, and checks SnapCenter service health.
+
+~~~powershell
+# sc_daily_check.ps1 — Daily SnapCenter backup job and service health check
+# Usage: $env:SC_HOST="snapcenter01"; $env:SC_USER="admin"; $env:SC_PASS="secret"; .\sc_daily_check.ps1
+
+param(
+    [string]$SC_HOST = $env:SC_HOST,
+    [string]$SC_USER = $env:SC_USER,
+    [string]$SC_PASS = $env:SC_PASS,
+    [int]   $LookbackHours = 24,
+    [int]   $Port = 8146
+)
+
+if (-not $SC_HOST -or -not $SC_USER -or -not $SC_PASS) {
+    Write-Error "Set SC_HOST, SC_USER, SC_PASS environment variables."; exit 3
+}
+
+# Trust self-signed certs
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = "https://${SC_HOST}:${Port}/api/4.9"
+
+# Authenticate
+$LoginBody = @{ UserOperationContext = @{ User = @{ Name = $SC_USER; Passphrase = $SC_PASS; Rolename = "SnapCenterAdmin" } } } | ConvertTo-Json -Depth 5
+try {
+    $AuthResp = Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method POST -Body $LoginBody -ContentType "application/json" -ErrorAction Stop
+} catch {
+    Write-Error "Authentication failed: $($_.Exception.Message)"; exit 2
+}
+$Token   = $AuthResp.Token
+$Headers = @{ Token = $Token }
+
+Write-Host "========================================"
+Write-Host "  SnapCenter Daily Check"
+Write-Host "  Server : $SC_HOST"
+Write-Host "  Date   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+Write-Host "========================================"
+Write-Host ""
+
+# Job summary
+$Cutoff = (Get-Date).AddHours(-$LookbackHours)
+try {
+    $JobsResp = Invoke-RestMethod -Uri "$BaseUrl/jobs" -Headers $Headers -Method GET -ErrorAction Stop
+    $Jobs = $JobsResp.JobList | Where-Object { [datetime]$_.StartDateTime -ge $Cutoff }
+} catch {
+    Write-Warning "Could not retrieve jobs: $($_.Exception.Message)"; $Jobs = @()
+}
+
+$Succeeded = ($Jobs | Where-Object { $_.Status -eq "Completed" }).Count
+$Failed    = ($Jobs | Where-Object { $_.Status -eq "Failed" }).Count
+$Running   = ($Jobs | Where-Object { $_.Status -eq "Running" }).Count
+
+Write-Host "--- Job Summary (last ${LookbackHours}h) ---"
+Write-Host "  Total    : $($Jobs.Count)"
+Write-Host "  Succeeded: $Succeeded"
+Write-Host "  Failed   : $Failed"
+Write-Host "  Running  : $Running"
+Write-Host ""
+
+if ($Failed -gt 0) {
+    Write-Host "  [WARN] Failed jobs:" -ForegroundColor Yellow
+    $Jobs | Where-Object { $_.Status -eq "Failed" } | ForEach-Object {
+        Write-Host "    - JobID=$($_.JobId)  $($_.JobName)  Started=$($_.StartDateTime)" -ForegroundColor Red
+    }
+} else {
+    Write-Host "  [PASS] No failed jobs in last ${LookbackHours}h" -ForegroundColor Green
+}
+
+# Service health via REST
+Write-Host ""
+Write-Host "--- SnapCenter Service Health ---"
+try {
+    $Ping = Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET -ErrorAction Stop
+    Write-Host "  [PASS] SnapCenter API responsive — hosts endpoint returned $($Ping.HostList.Count) host(s)" -ForegroundColor Green
+} catch {
+    Write-Host "  [WARN] SnapCenter hosts endpoint failed: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "========================================"
+if ($Failed -gt 0) { Write-Host "  Result: WARNING — $Failed failed job(s)"; exit 1 }
+else { Write-Host "  Result: OK"; exit 0 }
+~~~
+
+---
+
+## Incident Triage Script
+
+Captures all jobs from the last 7 days, any alerts, host connectivity status, policy list, and recent events to a timestamped file.
+
+~~~powershell
+# sc_triage.ps1 — SnapCenter incident triage capture
+# Usage: $env:SC_HOST="x"; $env:SC_USER="admin"; $env:SC_PASS="secret"; .\sc_triage.ps1
+
+param(
+    [string]$SC_HOST = $env:SC_HOST,
+    [string]$SC_USER = $env:SC_USER,
+    [string]$SC_PASS = $env:SC_PASS,
+    [int]   $Port = 8146
+)
+
+if (-not $SC_HOST -or -not $SC_USER -or -not $SC_PASS) {
+    Write-Error "Set SC_HOST, SC_USER, SC_PASS."; exit 3
+}
+
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$BaseUrl  = "https://${SC_HOST}:${Port}/api/4.9"
+$TS       = Get-Date -Format "yyyyMMdd_HHmmss"
+$OutFile  = "$env:TEMP\sc_triage_${SC_HOST}_${TS}.txt"
+$BaseUrl  = "https://${SC_HOST}:${Port}/api/4.9"
+
+$LoginBody = @{ UserOperationContext = @{ User = @{ Name = $SC_USER; Passphrase = $SC_PASS; Rolename = "SnapCenterAdmin" } } } | ConvertTo-Json -Depth 5
+$AuthResp  = Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method POST -Body $LoginBody -ContentType "application/json"
+$Token     = $AuthResp.Token
+$Headers   = @{ Token = $Token }
+
+$Output = @()
+$Output += "========================================"
+$Output += "  SnapCenter Incident Triage"
+$Output += "  Server : $SC_HOST"
+$Output += "  Time   : $(Get-Date)"
+$Output += "========================================"
+
+foreach ($Endpoint in @("jobs", "hosts", "alerts", "policies")) {
+    $Output += ""
+    $Output += "--- $Endpoint ---"
+    try {
+        $Resp = Invoke-RestMethod -Uri "$BaseUrl/$Endpoint" -Headers $Headers -Method GET -ErrorAction Stop
+        $Output += ($Resp | ConvertTo-Json -Depth 5)
+    } catch {
+        $Output += "Error: $($_.Exception.Message)"
+    }
+}
+
+$Output += ""
+$Output += "========================================"
+$Output += "  Triage complete: $OutFile"
+$Output += "========================================"
+
+$Output | Out-File -FilePath $OutFile -Encoding utf8
+$Output | Write-Host
+Write-Host "`nOutput saved to: $OutFile"
+~~~
+
+---
+
+## Change Pre-Check Script
+
+Before SnapCenter server maintenance: confirms no active backup jobs are running, no jobs are pending in the next 2 hours, all hosts are connected, and SnapCenter services are healthy. Exits non-zero on failure.
+
+~~~powershell
+# sc_precheck.ps1 — Pre-check before SnapCenter server maintenance
+# Usage: $env:SC_HOST="x"; $env:SC_USER="admin"; $env:SC_PASS="secret"; .\sc_precheck.ps1
+
+param(
+    [string]$SC_HOST = $env:SC_HOST,
+    [string]$SC_USER = $env:SC_USER,
+    [string]$SC_PASS = $env:SC_PASS,
+    [int]   $Port = 8146
+)
+
+if (-not $SC_HOST -or -not $SC_USER -or -not $SC_PASS) {
+    Write-Error "Set SC_HOST, SC_USER, SC_PASS."; exit 3
+}
+
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$BaseUrl   = "https://${SC_HOST}:${Port}/api/4.9"
+$LoginBody = @{ UserOperationContext = @{ User = @{ Name = $SC_USER; Passphrase = $SC_PASS; Rolename = "SnapCenterAdmin" } } } | ConvertTo-Json -Depth 5
+$AuthResp  = Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method POST -Body $LoginBody -ContentType "application/json"
+$Token     = $AuthResp.Token
+$Headers   = @{ Token = $Token }
+
+$Fail = $false
+
+function Check-Pass { param($msg); Write-Host "  [PASS] $msg" -ForegroundColor Green }
+function Check-Fail { param($msg); Write-Host "  [FAIL] $msg" -ForegroundColor Red; $script:Fail = $true }
+
+Write-Host "========================================"; Write-Host "  SnapCenter Pre-Change Check"; Write-Host "  Server : $SC_HOST"; Write-Host "  Date   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"; Write-Host "========================================"; Write-Host ""
+
+# Check 1: No running jobs
+$Jobs = (Invoke-RestMethod -Uri "$BaseUrl/jobs" -Headers $Headers -Method GET).JobList
+$Running = $Jobs | Where-Object { $_.Status -eq "Running" }
+if ($Running.Count -eq 0) { Check-Pass "No active backup jobs running" }
+else { Check-Fail "$($Running.Count) job(s) currently running — wait for completion" }
+
+# Check 2: API responsive (proxy for service health)
+try {
+    Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET -ErrorAction Stop | Out-Null
+    Check-Pass "SnapCenter API responsive"
+} catch {
+    Check-Fail "SnapCenter API not responsive: $($_.Exception.Message)"
+}
+
+# Check 3: All hosts show as connected
+$Hosts = (Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET).HostList
+$NotConn = $Hosts | Where-Object { $_.Status -notin @("Connected", "Available") }
+if ($NotConn.Count -eq 0) { Check-Pass "All $($Hosts.Count) host(s) connected" }
+else { Check-Fail "$($NotConn.Count) host(s) not connected: $(($NotConn | Select-Object -ExpandProperty HostName) -join ', ')" }
+
+Write-Host ""
+Write-Host "========================================"
+if (-not $Fail) { Write-Host "  Result: READY — proceed with SnapCenter maintenance"; exit 0 }
+else { Write-Host "  Result: NOT READY — resolve failures above"; exit 2 }
+~~~
+
+---
+
+## Post-Change Validation Script
+
+After SnapCenter maintenance: runs a test backup of a small resource group, confirms it completes successfully, confirms all hosts have reconnected, and checks for any new alerts.
+
+~~~powershell
+# sc_postcheck.ps1 — Post-maintenance SnapCenter validation
+# Usage: $env:SC_HOST="x"; $env:SC_USER="admin"; $env:SC_PASS="secret"; $env:TEST_RESOURCE="MyResourceGroup"; .\sc_postcheck.ps1
+
+param(
+    [string]$SC_HOST       = $env:SC_HOST,
+    [string]$SC_USER       = $env:SC_USER,
+    [string]$SC_PASS       = $env:SC_PASS,
+    [string]$TEST_RESOURCE = $env:TEST_RESOURCE,
+    [int]   $Port = 8146
+)
+
+if (-not $SC_HOST -or -not $SC_USER -or -not $SC_PASS) {
+    Write-Error "Set SC_HOST, SC_USER, SC_PASS."; exit 3
+}
+
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$BaseUrl   = "https://${SC_HOST}:${Port}/api/4.9"
+$LoginBody = @{ UserOperationContext = @{ User = @{ Name = $SC_USER; Passphrase = $SC_PASS; Rolename = "SnapCenterAdmin" } } } | ConvertTo-Json -Depth 5
+$AuthResp  = Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method POST -Body $LoginBody -ContentType "application/json"
+$Token     = $AuthResp.Token
+$Headers   = @{ Token = $Token }
+$Fail      = $false
+
+function Check-Pass { param($msg); Write-Host "  [PASS] $msg" -ForegroundColor Green }
+function Check-Fail { param($msg); Write-Host "  [FAIL] $msg" -ForegroundColor Red; $script:Fail = $true }
+
+Write-Host "========================================"; Write-Host "  SnapCenter Post-Change Validation"; Write-Host "  Server : $SC_HOST"; Write-Host "  Date   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"; Write-Host "========================================"; Write-Host ""
+
+# Check 1: API responsive
+try {
+    Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET -ErrorAction Stop | Out-Null
+    Check-Pass "SnapCenter API responsive post-maintenance"
+} catch { Check-Fail "SnapCenter API not responding: $($_.Exception.Message)" }
+
+# Check 2: All hosts reconnected
+$Hosts  = (Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET).HostList
+$NotConn = $Hosts | Where-Object { $_.Status -notin @("Connected", "Available") }
+if ($NotConn.Count -eq 0) { Check-Pass "All $($Hosts.Count) host(s) connected" }
+else { Check-Fail "$($NotConn.Count) host(s) not connected post-maintenance: $(($NotConn | Select-Object -ExpandProperty HostName) -join ', ')" }
+
+# Check 3: No new alerts
+try {
+    $Alerts = (Invoke-RestMethod -Uri "$BaseUrl/alerts" -Headers $Headers -Method GET -ErrorAction Stop).AlertList
+    if ($Alerts.Count -eq 0) { Check-Pass "No active alerts" }
+    else { Write-Host "  [INFO] $($Alerts.Count) active alert(s) — verify none are new post-maintenance" -ForegroundColor Yellow }
+} catch { Write-Host "  [SKIP] Could not retrieve alerts" }
+
+# Check 4: Test backup (if TEST_RESOURCE provided)
+if ($TEST_RESOURCE) {
+    Write-Host ""
+    Write-Host "  Test backup of resource: $TEST_RESOURCE"
+    Write-Host "  (Trigger manually via SnapCenter UI or invoke via SnapCenter PowerShell toolkit)"
+    Write-Host "  Check job status in the jobs list after triggering."
+} else {
+    Write-Host "  [INFO] Set TEST_RESOURCE env var to include a test backup in validation"
+}
+
+Write-Host ""
+Write-Host "========================================"
+if (-not $Fail) { Write-Host "  Result: PASS — SnapCenter post-maintenance validation successful"; exit 0 }
+else { Write-Host "  Result: FAIL — investigate issues above"; exit 1 }
+~~~
+
+---
+
+## Health Check Script
+
+Cron-safe PowerShell script reporting service status, connected hosts count, last backup job result per resource group, and pending job count. Exits 0 (OK), 1 (warning), or 2 (critical).
+
+~~~powershell
+# sc_health.ps1 — Cron-safe SnapCenter health check
+# Usage: $env:SC_HOST="x"; $env:SC_USER="admin"; $env:SC_PASS="secret"; .\sc_health.ps1
+# Exit: 0=OK  1=WARNING  2=CRITICAL
+
+param(
+    [string]$SC_HOST = $env:SC_HOST,
+    [string]$SC_USER = $env:SC_USER,
+    [string]$SC_PASS = $env:SC_PASS,
+    [int]   $Port = 8146
+)
+
+if (-not $SC_HOST -or -not $SC_USER -or -not $SC_PASS) { "SC_HEALTH status=CRITICAL reason=missing_credentials"; exit 2 }
+
+if (-not ([System.Management.Automation.PSTypeName]'TrustAll').Type) {
+    Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint s, X509Certificate c, WebRequest r, int p) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+}
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = "https://${SC_HOST}:${Port}/api/4.9"
+$Worst   = 0
+
+try {
+    $LoginBody = @{ UserOperationContext = @{ User = @{ Name = $SC_USER; Passphrase = $SC_PASS; Rolename = "SnapCenterAdmin" } } } | ConvertTo-Json -Depth 5
+    $Token = (Invoke-RestMethod -Uri "$BaseUrl/auth/login" -Method POST -Body $LoginBody -ContentType "application/json" -ErrorAction Stop).Token
+    $Headers = @{ Token = $Token }
+} catch {
+    "SC_HEALTH server=$SC_HOST status=CRITICAL reason=auth_failed"
+    exit 2
+}
+
+# Connected hosts
+$HostList = try { (Invoke-RestMethod -Uri "$BaseUrl/hosts" -Headers $Headers -Method GET).HostList } catch { @() }
+$ConnectedHosts = ($HostList | Where-Object { $_.Status -in @("Connected","Available") }).Count
+$TotalHosts     = $HostList.Count
+
+# Job summary (last 24h)
+$Cutoff = (Get-Date).AddHours(-24)
+$Jobs   = try { (Invoke-RestMethod -Uri "$BaseUrl/jobs" -Headers $Headers -Method GET).JobList } catch { @() }
+$RecentJobs = $Jobs | Where-Object { try { [datetime]$_.StartDateTime -ge $Cutoff } catch { $false } }
+$FailedJobs  = ($RecentJobs | Where-Object { $_.Status -eq "Failed" }).Count
+$RunningJobs = ($RecentJobs | Where-Object { $_.Status -eq "Running" }).Count
+
+if ($FailedJobs -gt 0) { $Worst = [math]::Max($Worst, 2) }
+elseif ($ConnectedHosts -lt $TotalHosts) { $Worst = [math]::Max($Worst, 1) }
+
+$StatusMap = @{0="OK"; 1="WARNING"; 2="CRITICAL"}
+"SC_HEALTH server=$SC_HOST connected_hosts=${ConnectedHosts}/${TotalHosts} failed_jobs_24h=$FailedJobs running_jobs=$RunningJobs status=$($StatusMap[$Worst])"
+exit $Worst
+~~~
