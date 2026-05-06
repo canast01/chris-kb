@@ -1,25 +1,9 @@
 # NetApp ONTAP
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-3">
   <div class="kb-card">
     <h3><a href="cli-reference/">CLI Reference</a></h3>
     <p>Cluster, volume, SVM, NFS, CIFS, iSCSI, FC, SnapMirror, and QoS commands.</p>
-  </div>
-  <div class="kb-card">
-    <h3><a href="cluster-health/">Cluster Health</a></h3>
-    <p>Node status, alerts, disk health, and aggregate checks.</p>
-  </div>
-  <div class="kb-card">
-    <h3><a href="volumes/">Volumes</a></h3>
-    <p>Volume provisioning, snapshots, efficiency, and FlexClone.</p>
-  </div>
-  <div class="kb-card">
-    <h3><a href="svms/">SVMs</a></h3>
-    <p>Storage virtual machine configuration and protocol management.</p>
-  </div>
-  <div class="kb-card">
-    <h3><a href="protocols/">Protocols</a></h3>
-    <p>NFS, CIFS, iSCSI, and FC protocol configuration.</p>
   </div>
 </div>
 
