@@ -735,6 +735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#deduplication-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deduplication Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -873,6 +884,35 @@
 <h1 id="data-domain-architecture">Data Domain — Architecture<a class="headerlink" href="#data-domain-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around inline global deduplication. All data is deduplicated as it is written — not in post-processing — using the SISL (Stream-Informed Segment Layout) deduplication engine. The result is a highly space-efficient backup target that typically achieves 20:1 or greater reduction ratios across mixed workloads.</p>
+<h2 id="deduplication-pipeline">Deduplication Pipeline<a class="headerlink" href="#deduplication-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                  Data Domain (PowerProtect DD) Architecture              │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  Ingest                                                                  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  ┌──────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  Backup clients / media servers                                  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  Veeam  NetBackup  CommVault  TSM  Oracle RMAN  NFS / CIFS / VTL│   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  └────────────────────────────────┬─────────────────────────────── ┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │                                   │  data stream                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  ┌────────────────────────────────▼─────────────────────────────────┐  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  SISL Inline Deduplication Engine                                │  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  1. Segment stream into variable-length chunks                   │  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  2. Fingerprint each chunk (SHA)                                 │  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  3. Lookup FP in dedup index (DRAM + SSD cache)                  │  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │  4. If match: store reference only (no write to disk)            │  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  │  5. If new: compress + write to active tier                      │  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  └───────────────────────────────┬──────────────────────────────── ┘  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │                                  │  deduplicated + compressed data     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  ┌─────────────────────────────── ▼────────────────────────────────┐   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  │  Storage Tiers                                                   │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  │  ┌──────────────────┐  ┌───────────────────┐  ┌──────────────┐  │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  │  │  │  Active Tier     │  │  Retention Tier   │  │  Cloud Tier  │  │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  │  │  (SSD / NL-SAS)  │  │  (NL-SAS archive) │  │  (S3 / Azure)│  │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  │  │  └──────────────────┘  └───────────────────┘  └──────────────┘  │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  │  └──────────────────────────────────────────────────────────────────┘  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  │  Typical dedupe ratio: 20:1 across mixed backup workloads               │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  └──────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -921,32 +961,32 @@
 </tbody>
 </table>
 <h2 id="filesystem-architecture">Filesystem Architecture<a class="headerlink" href="#filesystem-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DDFS (Data Domain Filesystem)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Namespace layer (MTrees: /data/col1/&lt;name&gt;)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── MTree A (e.g., mtree-veeam-prod)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── MTree B (e.g., mtree-netbackup-ora)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── MTree C (e.g., mtree-commvault-dev)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── Segment store (deduplicated data containers)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── Index (segment fingerprint lookup table)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└── Cleaning layer (garbage collection of unreferenced segments)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>DDFS (Data Domain Filesystem)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Namespace layer (MTrees: /data/col1/&lt;name&gt;)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ├── MTree A (e.g., mtree-veeam-prod)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── MTree B (e.g., mtree-netbackup-ora)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   └── MTree C (e.g., mtree-commvault-dev)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>├── Segment store (deduplicated data containers)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>├── Index (segment fingerprint lookup table)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└── Cleaning layer (garbage collection of unreferenced segments)
 </code></pre></div>
 <p>Each MTree is a logical view; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.</p>
 <h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
 <h3 id="single-node-standard">Single Node (Standard)<a class="headerlink" href="#single-node-standard" title="Permanent link">&para;</a></h3>
 <p>The most common deployment. A single DD appliance with internal or external shelf expansion. No automatic failover — HA is achieved through MTree replication to a secondary DD at a remote site.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Backup Clients]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>      |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  [Data Domain]  ←── DDBoost / NFS / CIFS / VTL
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  [Disk Shelves]  (internal or external SAS expansion)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  [Replication target DD] (remote site — DR)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Backup Clients]
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>      |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  [Data Domain]  ←── DDBoost / NFS / CIFS / VTL
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>      |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  [Disk Shelves]  (internal or external SAS expansion)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>      |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  [Replication target DD] (remote site — DR)
 </code></pre></div>
 <h3 id="ha-active-standby-pair">HA Active-Standby Pair<a class="headerlink" href="#ha-active-standby-pair" title="Permanent link">&para;</a></h3>
 <p>Available on high-end DD9000/DD9900 series. Two DD heads share the same disk shelves. The standby monitors the active node and takes over on failure. Failover is automatic and non-disruptive to replication contexts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Active DD Head] ←──── Heartbeat ────→ [Standby DD Head]
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>         \                                    /
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>          └──── Shared SAS Disk Shelves ─────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[Active DD Head] ←──── Heartbeat ────→ [Standby DD Head]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>         \                                    /
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>          └──── Shared SAS Disk Shelves ─────┘
 </code></pre></div>
 <h3 id="replication-topologies">Replication Topologies<a class="headerlink" href="#replication-topologies" title="Permanent link">&para;</a></h3>
 <table>
@@ -976,23 +1016,23 @@
 </tbody>
 </table>
 <h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Backup Client
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    │  (DDBoost: client-side dedup filter)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    ▼
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>DD Boost Receiver / NFS / CIFS handler
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    ▼
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SISL Engine (segment fingerprinting + locality filter)
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    │  unique segments only
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    ▼
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>NVRAM write cache
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    │
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    ▼
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>DDFS Container Store (on disk)
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    │
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    ▼ (async)
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Replication engine → Remote DD
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Backup Client
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    │  (DDBoost: client-side dedup filter)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    ▼
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>DD Boost Receiver / NFS / CIFS handler
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    │
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    ▼
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>SISL Engine (segment fingerprinting + locality filter)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    │  unique segments only
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    ▼
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>NVRAM write cache
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    │
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    ▼
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>DDFS Container Store (on disk)
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    │
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    ▼ (async)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Replication engine → Remote DD
 </code></pre></div>
 <h2 id="protocol-interfaces">Protocol Interfaces<a class="headerlink" href="#protocol-interfaces" title="Permanent link">&para;</a></h2>
 <table>

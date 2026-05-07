@@ -724,17 +724,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#powermax-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerMax Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -921,40 +910,6 @@
   <span>Srdf notes, checks, commands, and references.</span>
 </a>
 </div>
-
-<h2 id="powermax-architecture">PowerMax Architecture<a class="headerlink" href="#powermax-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                     PowerMax 8000 Array                              │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌──────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │             Director Layer (active-active)                    │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │  FA Dir   │  │  FA Dir   │  │  SRDF Dir │  │  SRDF Dir │ │    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  │ (FC/NVMe) │  │ (FC/NVMe) │  │(replication│  │(replication│ │    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  │  ports)   │  │  ports)   │  │  ports)   │  │  ports)   │ │    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  └────────┼──────────────┼──────────────┼──────────────┼────────┘    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │           │              │              │              │             │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  ┌────────▼──────────────▼──────────────▼──────────────▼────────┐    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │              Crossbar Interconnect (low-latency)              │    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  └───────────────────────────┬───────────────────────────────────┘    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │                              │                                        │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  ┌───────────────────────────▼───────────────────────────────────┐    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │              NVMe Flash Drives (NVMe-SCM / eTLC)              │    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  │           (data + FAST VP tiering, SnapVX metadata)           │    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  └───────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  └─────────────────────┬─────────────────────┬────────────────────────── ┘
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                        │  FC / NVMe-oF        │ SRDF replication
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>           ┌────────────▼──────────┐   ┌───────▼───────────────────┐
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>           │    SAN Fabric          │   │   Remote PowerMax Array   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>           │  (Brocade / Cisco MDS) │   │   (SRDF/S or SRDF/A)      │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>           └────────────┬──────────┘   └───────────────────────────┘
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>           ┌────────────▼──────────────────────────┐
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>           │  Hosts (MPIO / PowerPath)              │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>           │  Oracle RAC / SQL Server / SAP HANA    │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>           └───────────────────────────────────────┘
-</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax 2000 and 8000 models, designed for mission-critical workloads requiring sub-millisecond latency and continuous availability. It is managed via Unisphere for PowerMax (GUI) or SYMCLI (Solutions Enabler). PowerMax provides synchronous and asynchronous remote replication through SRDF (Symmetrix Remote Data Facility), local snapshots via SnapVX (up to 256 snapshots per device), and automated storage tiering with FAST VP.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
@@ -1033,35 +988,35 @@
 </tbody>
 </table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all Symmetrix arrays visible to Solutions Enabler</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show full array configuration and health for a specific SID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List SRDF groups (RDF groups) for the array</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show SRDF pair state for a specific RDF group</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List all storage groups</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List all device groups</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># List all physical drives and their state</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># List SnapVX snapshots for a storage group</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;storage-group&gt;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Show real-time I/O statistics (R2 side)</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>r2
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX)</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Symmetrix arrays visible to Solutions Enabler</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full array configuration and health for a specific SID</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List SRDF groups (RDF groups) for the array</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show SRDF pair state for a specific RDF group</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all storage groups</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all device groups</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List all physical drives and their state</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List SnapVX snapshots for a storage group</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;storage-group&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show real-time I/O statistics (R2 side)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>r2
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

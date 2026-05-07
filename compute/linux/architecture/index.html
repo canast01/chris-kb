@@ -735,6 +735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#server-role-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Role Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#disk-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -856,32 +867,55 @@
 </tr>
 </tbody>
 </table>
+<h2 id="server-role-topology">Server Role Topology<a class="headerlink" href="#server-role-topology" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                       Linux Infrastructure                               │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Identity &amp; Access                                               │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  SSSD ──► Active Directory (Kerberos / LDAP)                    │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  PAM  ──► MFA / CyberArk PSM proxy                              │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │                                                                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  App Server  │  │  DB Server   │  │  Web Server  │  │  Bastion   │  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  RHEL / Ubuntu│  │ Oracle/PGSQL │  │  Nginx/Apache│  │  SSH jump  │  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  systemd     │  │  ASM / data  │  │  TLS cert    │  │  host      │  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └─────┬──────┘  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │         │                 │                  │                │         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  ┌──────▼─────────────────▼──────────────────▼────────────────▼──────┐  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  │                    Shared Services                                  │  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │  NFS mounts (ONTAP)   iSCSI/FC LUNs   Syslog ──► SIEM             │  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  │  NTP (Chrony)         DNS (resolv.conf) Monitoring (node exporter) │  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  └─────────────────────────────────────────────────────────────────── ┘  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  └──────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
 <p>Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VG: vg_system
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  lv_root     20 GB       xfs     /
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  lv_var      20 GB       xfs     /var
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  lv_home      5 GB       xfs     /home
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>VG: vg_data (application data — sized per role)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VG: vg_system
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  lv_root     20 GB       xfs     /
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  lv_var      20 GB       xfs     /var
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  lv_home      5 GB       xfs     /home
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VG: vg_data (application data — sized per role)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
 </code></pre></div>
 <p>LVM enables future resizing without OS reinstallation:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Extend a volume</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_system/lv_var
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>xfs_growfs<span class="w"> </span>/var
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Extend a volume</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_system/lv_var
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>xfs_growfs<span class="w"> </span>/var
 </code></pre></div></p>
 <h2 id="network-configuration">Network Configuration<a class="headerlink" href="#network-configuration" title="Permanent link">&para;</a></h2>
 <p>Standard network configuration (nmcli / Netplan):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RHEL — configure bonded interface with VLAN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">&quot;mode=802.3ad,miimon=100&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth0<span class="w"> </span>master<span class="w"> </span>bond0
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth1<span class="w"> </span>master<span class="w"> </span>bond0
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># RHEL — configure bonded interface with VLAN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">&quot;mode=802.3ad,miimon=100&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth0<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth1<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
 </code></pre></div>
 <p>All production servers require:
 - Bonded uplinks (LACP) for redundancy
@@ -889,24 +923,24 @@
 - DNS configured to internal resolvers</p>
 <h2 id="init-system-and-services">Init System and Services<a class="headerlink" href="#init-system-and-services" title="Permanent link">&para;</a></h2>
 <p>systemd manages all services:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Common service management</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;service&gt;<span class="w">   </span><span class="c1"># Persistent across reboots</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w">   </span><span class="c1"># Recent logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Common service management</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;service&gt;<span class="w">   </span><span class="c1"># Persistent across reboots</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w">   </span><span class="c1"># Recent logs</span>
 </code></pre></div>
 <h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RHEL (dnf)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>check-update<span class="w">             </span><span class="c1"># List available updates</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dnf<span class="w"> </span>upgrade<span class="w">                  </span><span class="c1"># Apply all updates</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w">                  </span><span class="c1"># Review change log</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>subscription-manager<span class="w"> </span>status<span class="w">  </span><span class="c1"># Verify RH subscription</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Ubuntu (apt)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>apt-get<span class="w"> </span>update
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ua<span class="w"> </span>status<span class="w">                    </span><span class="c1"># Verify Ubuntu Advantage subscription</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># RHEL (dnf)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dnf<span class="w"> </span>check-update<span class="w">             </span><span class="c1"># List available updates</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>dnf<span class="w"> </span>upgrade<span class="w">                  </span><span class="c1"># Apply all updates</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w">                  </span><span class="c1"># Review change log</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>subscription-manager<span class="w"> </span>status<span class="w">  </span><span class="c1"># Verify RH subscription</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Ubuntu (apt)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>apt-get<span class="w"> </span>update
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ua<span class="w"> </span>status<span class="w">                    </span><span class="c1"># Verify Ubuntu Advantage subscription</span>
 </code></pre></div>
 <p>Repositories locked to approved internal mirrors — no direct internet access from production servers.</p>
 

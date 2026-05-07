@@ -735,6 +735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#storage-federation-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Federation Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -801,6 +812,26 @@
 <h1 id="dell-vplex-architecture">Dell VPLEX Architecture<a class="headerlink" href="#dell-vplex-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell VPLEX is a storage virtualisation and federation platform that presents unified virtual volumes to hosts from one or more heterogeneous backend storage arrays. VPLEX abstracts physical storage into virtual volumes, enabling live data mobility between arrays, active-active block storage access across sites, and non-disruptive migration without host changes. VPLEX is deployed as a set of director pairs, each running the GeoSynchrony software stack. Management is via the <code>vplexcli</code> command-line interface or Unisphere for VPLEX web GUI.</p>
+<h2 id="storage-federation-topology">Storage Federation Topology<a class="headerlink" href="#storage-federation-topology" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Site A                                          Site B
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ──────────────────────────────────              ──────────────────────────────
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ┌──────────────────────────────┐               ┌──────────────────────────────┐
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │   VPLEX VS2 Cluster (Geo)    │               │   VPLEX VS2 Cluster (Geo)    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │   Director Pair 1  Dir Pair 2│◄──WAN/DS3────►│   Director Pair 1  Dir Pair 2│
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │   GeoSynchrony OS            │  synchronous  │   GeoSynchrony OS            │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  └───────┬──────────────────────┘  replication  └──────────┬───────────────────┘
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          │  FC (back-end)                                   │  FC (back-end)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ┌───────▼────────────┐                          ┌──────────▼───────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  Local Arrays      │                          │  Local Arrays (DR site)  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  PowerMax / Unity  │                          │  PowerMax / Unity        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  (physical volumes)│                          │  (mirrored extent)       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └────────────────────┘                          └──────────────────────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>          │  FC (front-end)                                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  ┌───────▼─────────────────────────────────────────────────▼──────────────┐
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  Hosts — see single virtual volume regardless of which site owns it    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  Active/Active cross-site — no host changes during site migration      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  └─────────────────────────────────────────────────────────────────────── ┘
+</code></pre></div>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

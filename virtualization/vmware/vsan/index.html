@@ -717,25 +717,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -756,109 +737,6 @@
 
 <h1 id="vsan">vSAN<a class="headerlink" href="#vsan" title="Permanent link">&para;</a></h1>
 <p>Technical and operational KBs for vSAN.</p>
-<h2 id="vsan-cluster-topology">vSAN Cluster Topology<a class="headerlink" href="#vsan-cluster-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                         vSAN Cluster (3-host minimum)                   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌───────────────────────┐  ┌───────────────────────┐  ┌─────────────── │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │       ESXi-01         │  │       ESXi-02         │  │  ESXi-03       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌── │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Ca │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SS │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └── │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │     └────┬────┘       │  │     └────┬────┘       │  │     └────┬──── │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │    Disk Group 1       │  │    Disk Group 1       │  │    Disk Group 1 │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1 │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  └────┬────────┬─────────┘  └────┬────────┬─────────┘  └────┬────────┬─ │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └───────┼────────┼─────────────────┼────────┼─────────────────┼────────┼──┘
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │        │                 │        │                 │        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  ┌───────▼────────▼─────────────────▼────────▼─────────────────▼────────▼──┐
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │             vSAN VMkernel Network (dedicated 10/25 GbE VLAN)            │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │              [object components distributed across all hosts]           │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  └──────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  FTT=1 (RAID-1): object has 2 data replicas + 1 witness — survives 1 host loss
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  FTT=1 (RAID-5): 4+ hosts required — more space-efficient than RAID-1
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  FTT=2 (RAID-6): 6+ hosts required — survives 2 concurrent host failures
-</code></pre></div>
-<div class="kb-grid kb-grid-15">
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>esxcli vsan, disk groups, object health, resync, PowerCLI, and RVC commands.</span>
-</a>
-
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Skyline health, cluster checks, object health, capacity, and policy compliance.</span>
-</a>
-
-<a class="kb-card" href="resync-rebuild/">
-  <strong>Resync and Rebuild</strong>
-  <span>Resync review, rebuild behavior, impact checks, and operational handling.</span>
-</a>
-
-<a class="kb-card" href="field-reference/">
-  <strong>Field Reference</strong>
-  <span>Architecture, dependencies, ports, daily checks, recovery notes, and RCA examples.</span>
-</a>
-
-<a class="kb-card" href="technical-deep-dive/">
-  <strong>Technical Deep Dive</strong>
-  <span>Components, logs, commands, failure points, resync, and upgrade notes.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>PowerCLI vSAN health check, disk group report, RVC diagnostics, and Ansible vSAN playbook.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
-</a>
-
-<a class="kb-card" href="troubleshooting/">
-  <strong>Troubleshooting</strong>
-  <span>Resync review, object health, disk group failures, and vSAN recovery procedures.</span>
-</a>
-
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
-</a>
-
-<a class="kb-card" href="disk-groups/">
-  <strong>Disk Groups</strong>
-  <span>Disk Groups notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="integration/">
-  <strong>Integration</strong>
-  <span>Integration with other systems and platforms.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Installation, upgrades, patching, and decommission.</span>
-</a>
-
-<a class="kb-card" href="performance/">
-  <strong>Performance</strong>
-  <span>Performance monitoring, tuning, and baselining.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Configuration standards, naming conventions, and baselines.</span>
-</a>
-
-<a class="kb-card" href="storage-policies/">
-  <strong>Storage Policies</strong>
-  <span>Storage Policies notes, checks, commands, and references.</span>
-</a>
-</div>
 
 
 

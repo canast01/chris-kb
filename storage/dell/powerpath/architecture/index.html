@@ -735,6 +735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#host-side-mpio-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-Side MPIO Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -801,6 +812,31 @@
 <h1 id="powerpath-architecture">PowerPath Architecture<a class="headerlink" href="#powerpath-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.</p>
+<h2 id="host-side-mpio-stack">Host-Side MPIO Stack<a class="headerlink" href="#host-side-mpio-stack" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                      Host (Windows / Linux / AIX)                        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌──────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Application (Oracle / SQL Server / File System)                 │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  └──────────────────────────────────┬───────────────────────────── ┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │                                     │  I/O                              │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  ┌──────────────────────────────────▼───────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  PowerPath Virtual Device (pseudo device, single LUN view)       │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  Intelligent load balancing  |  Automatic failover               │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  ALUA-aware path selection   |  Policy: CLAROpt / RoundRobin     │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  └───────────────┬──────────────────────────┬────────────────────── ┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │                  │  Active path              │  Standby / secondary path │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  ┌───────────────▼──────────┐  ┌────────────▼──────────────────────┐    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │  HBA0 (Fabric A)         │  │  HBA1 (Fabric B)                  │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  │  FC / NVMe-oF            │  │  FC / NVMe-oF                     │    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  └───────────────┬──────────┘  └────────────┬──────────────────────┘    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  └──────────────────┼─────────────────────────┼────────────────────────────┘
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                     │  FC / NVMe-oF            │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>             ┌───────▼──────────────────────────▼───────┐
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>             │  PowerMax  (CT0 → Fabric A, CT1 → Fab B)  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>             │  ALUA: preferred port = owning director   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>             └──────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
