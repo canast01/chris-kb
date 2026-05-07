@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#monitoring-and-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Monitoring and Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-cloudwatch-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key CloudWatch Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,179 @@
 
 
 <h1 id="lambda">Lambda<a class="headerlink" href="#lambda" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS serverless function notes.
-</div>
+<p>AWS Lambda — serverless function deployment, invocation, monitoring, and troubleshooting.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function</td>
+<td>Code + configuration (runtime, memory, timeout, env vars)</td>
+</tr>
+<tr>
+<td>Trigger / Event source</td>
+<td>What invokes the function (API GW, S3, SQS, EventBridge, etc.)</td>
+</tr>
+<tr>
+<td>Execution environment</td>
+<td>Isolated runtime container; reused across invocations (warm start)</td>
+</tr>
+<tr>
+<td>Concurrency</td>
+<td>Simultaneous executions; default account limit: 1,000</td>
+</tr>
+<tr>
+<td>Reserved concurrency</td>
+<td>Hard cap for a function (protects downstream systems)</td>
+</tr>
+<tr>
+<td>Provisioned concurrency</td>
+<td>Pre-warmed environments (eliminates cold starts)</td>
+</tr>
+<tr>
+<td>Layer</td>
+<td>Shared library or dependency package added to functions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List functions
+aws lambda list-functions \
+  --query 'Functions[*].{Name:FunctionName,Runtime:Runtime,Memory:MemorySize,Timeout:Timeout,Modified:LastModified}' \
+  --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Invoke a function synchronously
+aws lambda invoke \
+  --function-name &lt;function-name&gt; \
+  --payload '{&quot;key&quot;:&quot;value&quot;}' \
+  --cli-binary-format raw-in-base64-out \
+  response.json
+cat response.json
+
+# Invoke asynchronously
+aws lambda invoke \
+  --function-name &lt;function-name&gt; \
+  --invocation-type Event \
+  --payload '{&quot;key&quot;:&quot;value&quot;}' \
+  --cli-binary-format raw-in-base64-out \
+  /dev/null
+
+# Get function configuration
+aws lambda get-function-configuration --function-name &lt;function-name&gt;
+
+# Update function code (from S3)
+aws lambda update-function-code \
+  --function-name &lt;function-name&gt; \
+  --s3-bucket &lt;bucket&gt; \
+  --s3-key &lt;key&gt;
+
+# Update environment variables
+aws lambda update-function-configuration \
+  --function-name &lt;function-name&gt; \
+  --environment Variables={DB_HOST=&lt;host&gt;,DB_PORT=5432}
+
+# Publish a version and create alias
+aws lambda publish-version --function-name &lt;function-name&gt;
+aws lambda create-alias \
+  --function-name &lt;function-name&gt; \
+  --name prod \
+  --function-version &lt;version-number&gt;
+</code></pre>
+<h2 id="monitoring-and-logs">Monitoring and Logs<a class="headerlink" href="#monitoring-and-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Tail function logs (CloudWatch Logs)
+aws logs tail /aws/lambda/&lt;function-name&gt; --follow
+
+# Get recent log events
+aws logs get-log-events \
+  --log-group-name /aws/lambda/&lt;function-name&gt; \
+  --log-stream-name &lt;stream-name&gt; \
+  --limit 50
+
+# CloudWatch Insights — find errors in last 1 hour
+aws logs start-query \
+  --log-group-name /aws/lambda/&lt;function-name&gt; \
+  --start-time $(date -d '1 hour ago' +%s) \
+  --end-time $(date +%s) \
+  --query-string 'fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 50'
+</code></pre>
+<h2 id="key-cloudwatch-metrics">Key CloudWatch Metrics<a class="headerlink" href="#key-cloudwatch-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Threshold to Watch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Errors</td>
+<td>Any increase</td>
+</tr>
+<tr>
+<td>Duration (P99)</td>
+<td>Approaching timeout</td>
+</tr>
+<tr>
+<td>Throttles</td>
+<td>&gt;0 — increase reserved concurrency</td>
+</tr>
+<tr>
+<td>ConcurrentExecutions</td>
+<td>Approaching account limit</td>
+</tr>
+<tr>
+<td>IteratorAge (for streams)</td>
+<td>Increasing — function falling behind</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function timing out</td>
+<td>Duration vs timeout config</td>
+<td>Increase timeout; optimise code or add concurrency</td>
+</tr>
+<tr>
+<td>Throttling errors</td>
+<td>ConcurrentExecutions limit</td>
+<td>Request limit increase; add SQS queue for buffering</td>
+</tr>
+<tr>
+<td><code>AccessDeniedException</code></td>
+<td>Execution role IAM</td>
+<td>Add required permissions to Lambda execution role</td>
+</tr>
+<tr>
+<td>Cold start latency</td>
+<td>First invocation or after idle</td>
+<td>Use provisioned concurrency for latency-sensitive functions</td>
+</tr>
+<tr>
+<td>OOM (out of memory)</td>
+<td>MemorySize</td>
+<td>Increase memory; check for memory leaks in code</td>
+</tr>
+<tr>
+<td>VPC function can't reach internet</td>
+<td>NAT Gateway</td>
+<td>Lambda in private subnet needs NAT GW for outbound internet</td>
+</tr>
+</tbody>
+</table>
 
 
 

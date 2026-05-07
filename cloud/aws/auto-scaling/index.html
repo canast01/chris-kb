@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#scaling-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Scaling Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instance-refresh-rolling-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance Refresh (rolling replacement)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,143 @@
 
 
 <h1 id="auto-scaling">Auto Scaling<a class="headerlink" href="#auto-scaling" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS scaling group and policy notes.
-</div>
+<p>AWS Auto Scaling — EC2 Auto Scaling groups, scaling policies, and lifecycle management.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto Scaling Group (ASG)</td>
+<td>Fleet of EC2 instances with min/max/desired capacity</td>
+</tr>
+<tr>
+<td>Launch Template</td>
+<td>Configuration for new instances (AMI, type, SG, user data)</td>
+</tr>
+<tr>
+<td>Scaling Policy</td>
+<td>Target tracking, step, or scheduled scaling</td>
+</tr>
+<tr>
+<td>Lifecycle hook</td>
+<td>Pause instances during launch/terminate for custom actions</td>
+</tr>
+<tr>
+<td>Warm pool</td>
+<td>Pre-initialised instances ready to scale out faster</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List Auto Scaling groups
+aws autoscaling describe-auto-scaling-groups \
+  --query 'AutoScalingGroups[*].{Name:AutoScalingGroupName,Min:MinSize,Max:MaxSize,Desired:DesiredCapacity,Instances:length(Instances)}' \
+  --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List instances in an ASG
+aws autoscaling describe-auto-scaling-instances \
+  --query 'AutoScalingInstances[?AutoScalingGroupName==`&lt;asg-name&gt;`].{ID:InstanceId,State:LifecycleState,Health:HealthStatus,AZ:AvailabilityZone}' \
+  --output table
+
+# Update desired capacity manually
+aws autoscaling set-desired-capacity \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --desired-capacity 5
+
+# Suspend scaling processes (for maintenance)
+aws autoscaling suspend-processes \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --scaling-processes Launch Terminate HealthCheck
+
+# Resume after maintenance
+aws autoscaling resume-processes \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --scaling-processes Launch Terminate HealthCheck
+
+# Detach an instance (remove without terminating — useful for debugging)
+aws autoscaling detach-instances \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --instance-ids &lt;i-id&gt; \
+  --should-decrement-desired-capacity
+
+# Terminate an instance and replace it
+aws autoscaling terminate-instance-in-auto-scaling-group \
+  --instance-id &lt;i-id&gt; \
+  --should-decrement-desired-capacity false
+</code></pre>
+<h2 id="scaling-policies">Scaling Policies<a class="headerlink" href="#scaling-policies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Target tracking — keep CPU at 60%
+aws autoscaling put-scaling-policy \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --policy-name cpu-target-tracking \
+  --policy-type TargetTrackingScaling \
+  --target-tracking-configuration '{
+    &quot;PredefinedMetricSpecification&quot;: {&quot;PredefinedMetricType&quot;: &quot;ASGAverageCPUUtilization&quot;},
+    &quot;TargetValue&quot;: 60.0,
+    &quot;DisableScaleIn&quot;: false
+  }'
+
+# Scheduled action — scale up before business hours
+aws autoscaling put-scheduled-update-group-action \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --scheduled-action-name morning-scale-up \
+  --recurrence &quot;0 7 * * 1-5&quot; \
+  --min-size 4 \
+  --desired-capacity 6
+</code></pre>
+<h2 id="instance-refresh-rolling-replacement">Instance Refresh (rolling replacement)<a class="headerlink" href="#instance-refresh-rolling-replacement" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Replace all instances gradually with new launch template version
+aws autoscaling start-instance-refresh \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --preferences '{&quot;MinHealthyPercentage&quot;: 90, &quot;InstanceWarmup&quot;: 300}'
+
+# Check refresh status
+aws autoscaling describe-instance-refreshes \
+  --auto-scaling-group-name &lt;asg-name&gt; \
+  --query 'InstanceRefreshes[0].{Status:Status,Progress:PercentageComplete,Reason:StatusReason}'
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASG not scaling out</td>
+<td>Activity history</td>
+<td><code>describe-scaling-activities</code> — check for launch errors</td>
+</tr>
+<tr>
+<td>Instances immediately terminating</td>
+<td>Health checks</td>
+<td>Confirm LB health check path returns 200 within <code>HealthCheckGracePeriod</code></td>
+</tr>
+<tr>
+<td>ASG stuck at 0 instances</td>
+<td>Launch Template valid?</td>
+<td>Check AMI exists; verify security groups and subnet are valid</td>
+</tr>
+<tr>
+<td>Uneven AZ distribution</td>
+<td>Rebalancing suspended?</td>
+<td><code>resume-processes</code> for <code>AZRebalance</code></td>
+</tr>
+<tr>
+<td>Instance refresh stuck</td>
+<td>Healthy percentage</td>
+<td>Reduce <code>MinHealthyPercentage</code> or fix the health check issue first</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Capabilities
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Prerequisites
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#session-manager-ssh-less-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Session Manager (SSH-less access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Command
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Store
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +808,153 @@
 
 
 <h1 id="systems-manager">Systems Manager<a class="headerlink" href="#systems-manager" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS fleet management, patching, and operational tooling notes.
-</div>
+<p>AWS Systems Manager — fleet management, patching, session management, and parameter storage.</p>
+<h2 id="key-capabilities">Key Capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session Manager</td>
+<td>Browser/CLI shell access to EC2 without SSH or bastion</td>
+</tr>
+<tr>
+<td>Patch Manager</td>
+<td>Automate OS patching with patch baselines and maintenance windows</td>
+</tr>
+<tr>
+<td>Run Command</td>
+<td>Execute commands across fleets without SSH</td>
+</tr>
+<tr>
+<td>Parameter Store</td>
+<td>Hierarchical secret and config storage</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td>Collect software and configuration inventory from managed nodes</td>
+</tr>
+<tr>
+<td>Automation</td>
+<td>Runbook-based automation for common operational tasks</td>
+</tr>
+<tr>
+<td>State Manager</td>
+<td>Ensure instances maintain a desired configuration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>SSM Agent must be installed and running on managed instances (pre-installed on Amazon Linux 2/2023, Windows Server AMIs).</p>
+<pre><code class="language-bash"># Check SSM agent status
+systemctl status amazon-ssm-agent           # Linux
+Get-Service AmazonSSMAgent                  # Windows
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Verify instance is registered in SSM
+aws ssm describe-instance-information \
+  --query 'InstanceInformationList[*].{ID:InstanceId,OS:PlatformType,Version:PlatformVersion,Ping:PingStatus}' \
+  --output table
+</code></pre>
+<h2 id="session-manager-ssh-less-access">Session Manager (SSH-less access)<a class="headerlink" href="#session-manager-ssh-less-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Start interactive session (requires AWS CLI + session-manager-plugin)
+aws ssm start-session --target &lt;instance-id&gt;
+
+# Port forwarding (e.g., RDS through bastion without opening SGs)
+aws ssm start-session \
+  --target &lt;instance-id&gt; \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{&quot;host&quot;:[&quot;&lt;rds-endpoint&gt;&quot;],&quot;portNumber&quot;:[&quot;5432&quot;],&quot;localPortNumber&quot;:[&quot;5432&quot;]}'
+</code></pre>
+<h2 id="run-command">Run Command<a class="headerlink" href="#run-command" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run a shell command on multiple instances
+aws ssm send-command \
+  --instance-ids &lt;i-id1&gt; &lt;i-id2&gt; \
+  --document-name &quot;AWS-RunShellScript&quot; \
+  --parameters commands=&quot;df -h&quot; \
+  --query &quot;Command.CommandId&quot;
+
+# Check command output
+aws ssm get-command-invocation \
+  --command-id &lt;cmd-id&gt; \
+  --instance-id &lt;i-id&gt; \
+  --query '{Status:Status,Output:StandardOutputContent}'
+
+# Run on all instances with a tag
+aws ssm send-command \
+  --targets Key=tag:Env,Values=prod \
+  --document-name &quot;AWS-RunShellScript&quot; \
+  --parameters commands=&quot;systemctl status nginx&quot;
+</code></pre>
+<h2 id="parameter-store">Parameter Store<a class="headerlink" href="#parameter-store" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Put a parameter
+aws ssm put-parameter \
+  --name &quot;/prod/db/password&quot; \
+  --value &quot;secret-value&quot; \
+  --type SecureString \
+  --key-id alias/aws/ssm
+
+# Get a parameter value
+aws ssm get-parameter \
+  --name &quot;/prod/db/password&quot; \
+  --with-decryption \
+  --query 'Parameter.Value' \
+  --output text
+
+# List parameters by path
+aws ssm get-parameters-by-path \
+  --path &quot;/prod/&quot; \
+  --recursive \
+  --query 'Parameters[*].{Name:Name,Type:Type}' \
+  --output table
+</code></pre>
+<h2 id="patch-manager">Patch Manager<a class="headerlink" href="#patch-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List patch compliance for managed instances
+aws ssm describe-instance-patch-states \
+  --instance-ids &lt;i-id&gt; \
+  --query 'InstancePatchStates[*].{ID:InstanceId,Missing:MissingCount,Critical:CriticalNonCompliantCount,Failed:FailedCount}'
+
+# Trigger immediate patching
+aws ssm send-command \
+  --instance-ids &lt;i-id&gt; \
+  --document-name &quot;AWS-RunPatchBaseline&quot; \
+  --parameters Operation=Install
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Instance not in SSM Fleet</td>
+<td>SSM Agent running? IAM role?</td>
+<td>Verify <code>AmazonSSMManagedInstanceCore</code> policy on instance role</td>
+</tr>
+<tr>
+<td>Session Manager access denied</td>
+<td>SG or VPC endpoint?</td>
+<td>No inbound SG rules needed; ensure VPC endpoint for SSM if in private subnet</td>
+</tr>
+<tr>
+<td>Run Command times out</td>
+<td>Agent responsive?</td>
+<td>Check SSM agent logs: <code>/var/log/amazon/ssm/</code></td>
+</tr>
+<tr>
+<td>Parameter Store access denied</td>
+<td>IAM policy</td>
+<td>Add <code>ssm:GetParameter*</code> and <code>kms:Decrypt</code> if using SecureString</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#disk-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Disk Types
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#attach-detach-disks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Attach / Detach Disks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expand-os-disk-linux-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand OS Disk (Linux VM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,142 @@
 
 
 <h1 id="managed-disks">Managed Disks<a class="headerlink" href="#managed-disks" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure managed disk storage notes.
-</div>
+<p>Azure Managed Disks — block storage for Azure VMs, snapshots, and disk performance management.</p>
+<h2 id="disk-types">Disk Types<a class="headerlink" href="#disk-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use Case</th>
+<th>Max IOPS</th>
+<th>Max Throughput</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ultra Disk</td>
+<td>Latency-sensitive databases</td>
+<td>400,000</td>
+<td>10,000 MB/s</td>
+</tr>
+<tr>
+<td>Premium SSD v2</td>
+<td>Business-critical apps, flexible perf</td>
+<td>80,000</td>
+<td>1,200 MB/s</td>
+</tr>
+<tr>
+<td>Premium SSD (P-series)</td>
+<td>Production VMs, SQL Server</td>
+<td>20,000</td>
+<td>900 MB/s</td>
+</tr>
+<tr>
+<td>Standard SSD</td>
+<td>Dev/test, lightly used apps</td>
+<td>6,000</td>
+<td>750 MB/s</td>
+</tr>
+<tr>
+<td>Standard HDD</td>
+<td>Archival, infrequent access</td>
+<td>2,000</td>
+<td>500 MB/s</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List managed disks
+az disk list \
+  --query '[*].{Name:name,RG:resourceGroup,Type:sku.name,Size:diskSizeGb,State:diskState}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Show disk details
+az disk show -g &lt;rg&gt; -n &lt;disk-name&gt;
+
+# Create a managed disk from snapshot
+az disk create -g &lt;rg&gt; -n &lt;new-disk-name&gt; \
+  --source &lt;snapshot-resource-id&gt; \
+  --sku Premium_LRS
+
+# Create a snapshot
+az snapshot create -g &lt;rg&gt; -n &lt;snap-name&gt; \
+  --source &lt;disk-resource-id&gt;
+
+# List snapshots
+az snapshot list -g &lt;rg&gt; \
+  --query '[*].{Name:name,Disk:creationData.sourceResourceId,Size:diskSizeGb,State:diskState}' -o table
+
+# Resize a disk (VM must be deallocated or disk must be detached for OS disk)
+az disk update -g &lt;rg&gt; -n &lt;disk-name&gt; --size-gb 512
+
+# Change disk performance tier
+az disk update -g &lt;rg&gt; -n &lt;disk-name&gt; --sku Premium_LRS --disk-iops-read-write 5000 --disk-mbps-read-write 200
+</code></pre>
+<h2 id="attach-detach-disks">Attach / Detach Disks<a class="headerlink" href="#attach-detach-disks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Attach an existing managed disk to a VM
+az vm disk attach -g &lt;rg&gt; --vm-name &lt;vm-name&gt; \
+  --name &lt;disk-name&gt; --caching ReadOnly
+
+# Detach a disk
+az vm disk detach -g &lt;rg&gt; --vm-name &lt;vm-name&gt; --name &lt;disk-name&gt;
+</code></pre>
+<h2 id="expand-os-disk-linux-vm">Expand OS Disk (Linux VM)<a class="headerlink" href="#expand-os-disk-linux-vm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Deallocate VM
+az vm deallocate -g &lt;rg&gt; -n &lt;vm-name&gt;
+
+# 2. Resize OS disk
+az disk update -g &lt;rg&gt; -n &lt;os-disk-name&gt; --size-gb 256
+
+# 3. Start VM
+az vm start -g &lt;rg&gt; -n &lt;vm-name&gt;
+
+# 4. On the VM: extend the partition and filesystem
+sudo growpart /dev/sda 1
+sudo resize2fs /dev/sda1     # ext4
+sudo xfs_growfs /             # xfs
+</code></pre>
+<h2 id="disk-encryption">Disk Encryption<a class="headerlink" href="#disk-encryption" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable encryption using Azure Disk Encryption (ADE) with Key Vault
+az vm encryption enable -g &lt;rg&gt; -n &lt;vm-name&gt; \
+  --disk-encryption-keyvault &lt;keyvault-resource-id&gt; \
+  --volume-type All
+
+# Check encryption status
+az vm encryption show -g &lt;rg&gt; -n &lt;vm-name&gt; \
+  --query '{OS:osDisk.encryptionSettings,DataDisks:dataDiskEncryptionSettings}'
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk not visible in VM</td>
+<td>Disk attached / initialised</td>
+<td>Check disk is attached; on Linux run <code>lsblk</code>; initialise and mount</td>
+</tr>
+<tr>
+<td>High latency</td>
+<td>Disk type and burst credit</td>
+<td>Switch to Premium SSD or Ultra; check if disk is throttling</td>
+</tr>
+<tr>
+<td>Can't resize OS disk</td>
+<td>VM deallocated?</td>
+<td>Deallocate VM first; OS disk can't be resized while running</td>
+</tr>
+<tr>
+<td>Snapshot quota hit</td>
+<td>Snapshot count limit</td>
+<td>Delete old snapshots; request quota increase</td>
+</tr>
+</tbody>
+</table>
 
 
 

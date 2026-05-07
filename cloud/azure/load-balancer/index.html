@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Types
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#create-health-probe" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Create Health Probe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-load-balancing-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Load Balancing Rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inbound-nat-rules-for-direct-vm-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inbound NAT Rules (for direct VM access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,124 @@
 
 
 <h1 id="load-balancer">Load Balancer<a class="headerlink" href="#load-balancer" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure load balancing notes.
-</div>
+<p>Azure Load Balancer — layer 4 TCP/UDP load balancing for Azure VMs and VM scale sets.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Scope</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public Load Balancer</td>
+<td>Internet-facing</td>
+<td>External traffic to VMs; replaces NAT</td>
+</tr>
+<tr>
+<td>Internal Load Balancer</td>
+<td>VNet-internal</td>
+<td>Private traffic between tiers (app → DB)</td>
+</tr>
+<tr>
+<td>Standard SKU</td>
+<td>Zone-redundant, SLA</td>
+<td>Production — recommended</td>
+</tr>
+<tr>
+<td>Basic SKU</td>
+<td>Limited, no SLA</td>
+<td>Dev/test only</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>For HTTP/HTTPS with path routing, use <strong>Application Gateway</strong> instead of Load Balancer.</p>
+</blockquote>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List load balancers
+az network lb list -g &lt;rg&gt; \
+  --query '[*].{Name:name,SKU:sku.name,Type:properties.frontendIPConfigurations[0].properties.publicIPAddress.id}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List backend pools
+az network lb address-pool list -g &lt;rg&gt; --lb-name &lt;lb-name&gt; -o table
+
+# List health probes
+az network lb probe list -g &lt;rg&gt; --lb-name &lt;lb-name&gt; \
+  --query '[*].{Name:name,Protocol:protocol,Port:port,Path:requestPath,Interval:intervalInSeconds}' -o table
+
+# List load balancing rules
+az network lb rule list -g &lt;rg&gt; --lb-name &lt;lb-name&gt; \
+  --query '[*].{Name:name,Protocol:protocol,FrontendPort:frontendPort,BackendPort:backendPort,Probe:probe.id}' -o table
+
+# Add a backend VM to the backend pool
+az network nic ip-config update \
+  -g &lt;rg&gt; --nic-name &lt;nic-name&gt; --name ipconfig1 \
+  --lb-name &lt;lb-name&gt; --lb-address-pools &lt;pool-name&gt;
+</code></pre>
+<h2 id="create-health-probe">Create Health Probe<a class="headerlink" href="#create-health-probe" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">az network lb probe create -g &lt;rg&gt; --lb-name &lt;lb-name&gt; \
+  --name http-health \
+  --protocol Http \
+  --port 80 \
+  --path /health \
+  --interval 15 \
+  --threshold 2
+</code></pre>
+<h2 id="create-load-balancing-rule">Create Load Balancing Rule<a class="headerlink" href="#create-load-balancing-rule" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">az network lb rule create -g &lt;rg&gt; --lb-name &lt;lb-name&gt; \
+  --name app-rule \
+  --frontend-ip-name LoadBalancerFrontEnd \
+  --frontend-port 443 \
+  --backend-pool-name &lt;pool-name&gt; \
+  --backend-port 443 \
+  --protocol Tcp \
+  --probe-name http-health \
+  --idle-timeout 4
+</code></pre>
+<h2 id="inbound-nat-rules-for-direct-vm-access">Inbound NAT Rules (for direct VM access)<a class="headerlink" href="#inbound-nat-rules-for-direct-vm-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create NAT rule — map external port 50001 to VM port 22
+az network lb inbound-nat-rule create -g &lt;rg&gt; --lb-name &lt;lb-name&gt; \
+  --name ssh-vm01 \
+  --protocol Tcp \
+  --frontend-ip-name LoadBalancerFrontEnd \
+  --frontend-port 50001 \
+  --backend-port 22
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All backends unhealthy</td>
+<td>Health probe</td>
+<td>Verify probe port/path returns correct response from the subnet</td>
+</tr>
+<tr>
+<td>Intermittent connection drops</td>
+<td>Idle timeout</td>
+<td>Increase idle timeout on rule (default 4 min); app should send keepalives</td>
+</tr>
+<tr>
+<td>VMs not receiving traffic</td>
+<td>Backend pool membership</td>
+<td>Check NIC is in the pool; verify NSG allows LB inbound (<code>AzureLoadBalancer</code> tag)</td>
+</tr>
+<tr>
+<td>No SLA</td>
+<td>Basic SKU</td>
+<td>Upgrade to Standard SKU for production</td>
+</tr>
+</tbody>
+</table>
 
 
 

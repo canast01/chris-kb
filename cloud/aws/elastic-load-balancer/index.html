@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#load-balancer-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Load Balancer Types
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#health-check-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Health Check Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,133 @@
 
 
 <h1 id="elastic-load-balancer">Elastic Load Balancer<a class="headerlink" href="#elastic-load-balancer" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS load balancing notes.
-</div>
+<p>AWS Elastic Load Balancing — ALB (Application), NLB (Network), and GLB (Gateway) load balancer management.</p>
+<h2 id="load-balancer-types">Load Balancer Types<a class="headerlink" href="#load-balancer-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Layer</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALB</td>
+<td>Layer 7</td>
+<td>HTTP/HTTPS routing, path/host-based rules, microservices</td>
+</tr>
+<tr>
+<td>NLB</td>
+<td>Layer 4</td>
+<td>TCP/UDP, ultra-low latency, static IP, TLS passthrough</td>
+</tr>
+<tr>
+<td>GLB</td>
+<td>Layer 3</td>
+<td>Inline traffic inspection (firewalls, IDS/IPS)</td>
+</tr>
+<tr>
+<td>CLB</td>
+<td>Layer 4/7</td>
+<td>Legacy — migrate to ALB or NLB</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List load balancers
+aws elbv2 describe-load-balancers \
+  --query 'LoadBalancers[*].{Name:LoadBalancerName,Type:Type,DNS:DNSName,State:State.Code}' \
+  --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List target groups
+aws elbv2 describe-target-groups \
+  --query 'TargetGroups[*].{Name:TargetGroupName,Protocol:Protocol,Port:Port,HealthCheck:HealthCheckPath}' \
+  --output table
+
+# Check target health
+aws elbv2 describe-target-health \
+  --target-group-arn &lt;tg-arn&gt; \
+  --query 'TargetHealthDescriptions[*].{Target:Target.Id,Port:Target.Port,State:TargetHealth.State,Reason:TargetHealth.Reason}' \
+  --output table
+
+# List listeners on an ALB
+aws elbv2 describe-listeners \
+  --load-balancer-arn &lt;alb-arn&gt; \
+  --query 'Listeners[*].{Port:Port,Protocol:Protocol,DefaultAction:DefaultActions[0].Type}' \
+  --output table
+
+# Describe ALB rules (routing)
+aws elbv2 describe-rules \
+  --listener-arn &lt;listener-arn&gt; \
+  --query 'Rules[*].{Priority:Priority,Conditions:Conditions,Actions:Actions[0].Type}' \
+  --output table
+</code></pre>
+<h2 id="health-check-configuration">Health Check Configuration<a class="headerlink" href="#health-check-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Modify target group health check settings
+aws elbv2 modify-target-group \
+  --target-group-arn &lt;tg-arn&gt; \
+  --health-check-path /health \
+  --health-check-interval-seconds 30 \
+  --healthy-threshold-count 2 \
+  --unhealthy-threshold-count 3 \
+  --health-check-timeout-seconds 5
+
+# Register a target manually
+aws elbv2 register-targets \
+  --target-group-arn &lt;tg-arn&gt; \
+  --targets Id=&lt;instance-id&gt;,Port=8080
+
+# Deregister a target (for maintenance)
+aws elbv2 deregister-targets \
+  --target-group-arn &lt;tg-arn&gt; \
+  --targets Id=&lt;instance-id&gt;
+</code></pre>
+<h2 id="access-logs">Access Logs<a class="headerlink" href="#access-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable ALB access logs (requires S3 bucket with correct permissions)
+aws elbv2 modify-load-balancer-attributes \
+  --load-balancer-arn &lt;alb-arn&gt; \
+  --attributes Key=access_logs.s3.enabled,Value=true \
+               Key=access_logs.s3.bucket,Value=&lt;log-bucket&gt; \
+               Key=access_logs.s3.prefix,Value=alb-logs
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Targets unhealthy</td>
+<td><code>describe-target-health</code></td>
+<td>Verify health check path returns 200; check SG allows ALB to reach instances</td>
+</tr>
+<tr>
+<td>504 Gateway Timeout</td>
+<td>Target not responding</td>
+<td>Instance processing too slowly; increase timeout or fix app</td>
+</tr>
+<tr>
+<td>502 Bad Gateway</td>
+<td>App response invalid</td>
+<td>App returning wrong HTTP format; check app logs</td>
+</tr>
+<tr>
+<td>SSL certificate error</td>
+<td>Certificate on listener</td>
+<td>Verify ACM cert is valid and attached to the HTTPS listener</td>
+</tr>
+<tr>
+<td>Uneven traffic distribution</td>
+<td>Sticky sessions?</td>
+<td>Check if session stickiness is enabled on target group</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#what-aws-config-does" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        What AWS Config Does
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#common-managed-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Common Managed Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remediation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remediation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-query-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Query (Advanced)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,137 @@
 
 
 <h1 id="aws-config">AWS Config<a class="headerlink" href="#aws-config" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS configuration tracking and compliance notes.
-</div>
-
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<p>AWS Config — continuous configuration tracking, compliance evaluation, and change history.</p>
+<h2 id="what-aws-config-does">What AWS Config Does<a class="headerlink" href="#what-aws-config-does" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li>Records configuration state of AWS resources at every change</li>
+<li>Evaluates resources against compliance rules</li>
+<li>Maintains configuration history and relationship graph</li>
+<li>Supports remediation actions for non-compliant resources</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all config rules
+aws configservice describe-config-rules \
+  --query 'ConfigRules[*].{Name:ConfigRuleName,State:ConfigRuleState,Source:Source.Owner}' \
+  --output table
+
+# Check compliance for a specific rule
+aws configservice get-compliance-details-by-config-rule \
+  --config-rule-name &lt;rule-name&gt; \
+  --compliance-types NON_COMPLIANT \
+  --query 'EvaluationResults[*].{Resource:EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId,Time:ResultRecordedTime}' \
+  --output table
+
+# Get compliance summary across all rules
+aws configservice describe-compliance-by-config-rule \
+  --query 'ComplianceByConfigRules[*].{Rule:ConfigRuleName,Status:Compliance.ComplianceType}' \
+  --output table
+
+# Get config history for a resource
+aws configservice get-resource-config-history \
+  --resource-type AWS::EC2::SecurityGroup \
+  --resource-id &lt;sg-id&gt; \
+  --limit 10 \
+  --query 'configurationItems[*].{Time:configurationItemCaptureTime,Status:configurationItemStatus}' \
+  --output table
+
+# List all non-compliant resources across all rules
+aws configservice describe-compliance-by-resource \
+  --compliance-types NON_COMPLIANT \
+  --query 'ComplianceByResources[*].{Type:ResourceType,ID:ResourceId,Status:Compliance.ComplianceType}' \
+  --output table
+</code></pre>
+<h2 id="common-managed-rules">Common Managed Rules<a class="headerlink" href="#common-managed-rules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>What It Checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>restricted-ssh</code></td>
+<td>No security groups allow unrestricted inbound SSH (0.0.0.0/0:22)</td>
+</tr>
+<tr>
+<td><code>s3-bucket-public-read-prohibited</code></td>
+<td>S3 buckets are not publicly readable</td>
+</tr>
+<tr>
+<td><code>root-account-mfa-enabled</code></td>
+<td>AWS root account has MFA enabled</td>
+</tr>
+<tr>
+<td><code>iam-password-policy</code></td>
+<td>IAM account password policy meets requirements</td>
+</tr>
+<tr>
+<td><code>encrypted-volumes</code></td>
+<td>EBS volumes are encrypted</td>
+</tr>
+<tr>
+<td><code>rds-storage-encrypted</code></td>
+<td>RDS DB instances have storage encryption enabled</td>
+</tr>
+<tr>
+<td><code>cloudtrail-enabled</code></td>
+<td>CloudTrail is enabled in the account</td>
+</tr>
+<tr>
+<td><code>vpc-flow-logs-enabled</code></td>
+<td>VPC flow logs are enabled</td>
+</tr>
+</tbody>
+</table>
+<h2 id="remediation">Remediation<a class="headerlink" href="#remediation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Trigger automatic remediation for a rule
+aws configservice start-remediation-execution \
+  --config-rule-name &lt;rule-name&gt; \
+  --resource-keys '[{&quot;resourceType&quot;:&quot;AWS::EC2::SecurityGroup&quot;,&quot;resourceId&quot;:&quot;&lt;sg-id&gt;&quot;}]'
+
+# Check remediation status
+aws configservice describe-remediation-execution-statuses \
+  --config-rule-name &lt;rule-name&gt;
+</code></pre>
+<h2 id="config-query-advanced">Config Query (Advanced)<a class="headerlink" href="#config-query-advanced" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Use AWS Config Advanced Query to find all unencrypted EBS volumes
+aws configservice select-aggregate-resource-config \
+  --expression &quot;SELECT resourceId, resourceType, configuration.encrypted WHERE resourceType = 'AWS::EC2::Volume' AND configuration.encrypted = false&quot; \
+  --configuration-aggregator-name &lt;aggregator-name&gt;
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule evaluation not running</td>
+<td>Rule trigger type</td>
+<td>Check if periodic or change-triggered; force re-evaluation with <code>start-config-rules-evaluation</code></td>
+</tr>
+<tr>
+<td>Resources not showing in Config</td>
+<td>Config recorder running?</td>
+<td><code>describe-configuration-recorder-status</code> — ensure recorder is active</td>
+</tr>
+<tr>
+<td>Remediation not working</td>
+<td>SSM Automation document</td>
+<td>Check the document has correct permissions and the target resource is accessible</td>
+</tr>
+<tr>
+<td>Missing config history</td>
+<td>Config retention</td>
+<td>Default: 30 days; change via <code>put-retention-configuration</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

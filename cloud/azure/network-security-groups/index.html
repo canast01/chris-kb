@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#nsg-flow-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        NSG Flow Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#effective-security-rules-whats-actually-applied-to-a-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Effective Security Rules (what's actually applied to a VM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,149 @@
 
 
 <h1 id="network-security-groups">Network Security Groups<a class="headerlink" href="#network-security-groups" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure NSG rules and security notes.
-</div>
+<p>Azure NSGs — stateful firewall rules for controlling inbound and outbound traffic to Azure resources.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inbound rules</td>
+<td>Control traffic arriving at the associated subnet or NIC</td>
+</tr>
+<tr>
+<td>Outbound rules</td>
+<td>Control traffic leaving the associated subnet or NIC</td>
+</tr>
+<tr>
+<td>Priority</td>
+<td>Lower number = higher priority (100–4096); first matching rule wins</td>
+</tr>
+<tr>
+<td>Default rules</td>
+<td>Allow VNet-to-VNet and LB inbound; deny all internet inbound</td>
+</tr>
+<tr>
+<td>Service tag</td>
+<td>Named group of IP ranges (e.g., <code>Internet</code>, <code>AzureLoadBalancer</code>, <code>VirtualNetwork</code>)</td>
+</tr>
+<tr>
+<td>Application Security Group (ASG)</td>
+<td>Logical grouping of VMs — use ASGs in rules instead of IPs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List NSGs in a resource group
+az network nsg list -g &lt;rg&gt; --query '[*].{Name:name,Location:location}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Show rules for an NSG
+az network nsg rule list -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
+  --query '[*].{Priority:priority,Name:name,Direction:direction,Access:access,Protocol:protocol,Port:destinationPortRange,Source:sourceAddressPrefix}' \
+  --output table
+
+# Create an inbound allow rule
+az network nsg rule create \
+  -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
+  --name Allow-HTTPS-Inbound \
+  --priority 200 \
+  --direction Inbound \
+  --access Allow \
+  --protocol Tcp \
+  --destination-port-ranges 443 \
+  --source-address-prefixes 10.0.0.0/8
+
+# Create deny rule (catch-all, high priority number)
+az network nsg rule create \
+  -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
+  --name Deny-All-Inbound \
+  --priority 4000 \
+  --direction Inbound \
+  --access Deny \
+  --protocol '*' \
+  --destination-port-ranges '*'
+
+# Delete a rule
+az network nsg rule delete -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; --name &lt;rule-name&gt;
+
+# Associate NSG with a subnet
+az network vnet subnet update \
+  -g &lt;rg&gt; --vnet-name &lt;vnet-name&gt; \
+  --name &lt;subnet-name&gt; \
+  --network-security-group &lt;nsg-name&gt;
+</code></pre>
+<h2 id="nsg-flow-logs">NSG Flow Logs<a class="headerlink" href="#nsg-flow-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable flow logs (requires Network Watcher and storage account)
+az network watcher flow-log create \
+  --location &lt;region&gt; \
+  --name &lt;flow-log-name&gt; \
+  --nsg &lt;nsg-resource-id&gt; \
+  --storage-account &lt;storage-account-id&gt; \
+  --enabled true \
+  --retention 30 \
+  --log-version 2
+
+# Enable Traffic Analytics (Log Analytics workspace required)
+az network watcher flow-log update \
+  --location &lt;region&gt; \
+  --name &lt;flow-log-name&gt; \
+  --traffic-analytics true \
+  --workspace &lt;log-analytics-workspace-id&gt; \
+  --interval 10
+</code></pre>
+<h2 id="effective-security-rules-whats-actually-applied-to-a-vm">Effective Security Rules (what's actually applied to a VM)<a class="headerlink" href="#effective-security-rules-whats-actually-applied-to-a-vm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># See the merged effective rules for a VM NIC
+az network nic show-effective-nsg \
+  --name &lt;nic-name&gt; \
+  -g &lt;rg&gt; \
+  --query 'effectiveSecurityRules[*].{Name:name,Direction:direction,Access:access,Priority:priority,Dest:destinationAddressPrefix,Port:destinationPortRange}' \
+  -o table
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM can't receive traffic</td>
+<td>NSG effective rules</td>
+<td>Run <code>show-effective-nsg</code>; check for blocking deny rule</td>
+</tr>
+<tr>
+<td>VM can't reach internet</td>
+<td>Outbound NSG</td>
+<td>Verify no outbound deny overriding Azure default</td>
+</tr>
+<tr>
+<td>App accessible in some VMs, not others</td>
+<td>NSG at subnet vs NIC level</td>
+<td>Both levels apply; check both NSGs if attached to NIC and subnet</td>
+</tr>
+<tr>
+<td>IP Connectivity test fails</td>
+<td>Network Watcher IP Flow Verify</td>
+<td>Use <code>az network watcher test-ip-flow</code> to simulate traffic</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Test if traffic is allowed (Network Watcher)
+az network watcher test-ip-flow \
+  --direction Inbound \
+  --protocol Tcp \
+  --local &lt;vm-private-ip&gt;:443 \
+  --remote &lt;source-ip&gt;:* \
+  --vm &lt;vm-resource-id&gt; \
+  --nic &lt;nic-resource-id&gt;
+</code></pre>
 
 
 

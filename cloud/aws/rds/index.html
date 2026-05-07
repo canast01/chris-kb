@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#supported-engines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Supported Engines
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-cloudwatch-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key CloudWatch Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,185 @@
 
 
 <h1 id="rds">RDS<a class="headerlink" href="#rds" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS managed database service notes.
-</div>
+<p>AWS Relational Database Service — managed database instances, Multi-AZ, snapshots, and performance.</p>
+<h2 id="supported-engines">Supported Engines<a class="headerlink" href="#supported-engines" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL</td>
+<td>General-purpose relational</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Advanced SQL, JSON support</td>
+</tr>
+<tr>
+<td>MariaDB</td>
+<td>MySQL-compatible</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td>Enterprise legacy workloads</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>Windows ecosystem</td>
+</tr>
+<tr>
+<td>Aurora MySQL / PostgreSQL</td>
+<td>High performance, serverless option</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List RDS instances
+aws rds describe-db-instances \
+  --query 'DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,Class:DBInstanceClass,Status:DBInstanceStatus,AZ:AvailabilityZone,MultiAZ:MultiAZ,Endpoint:Endpoint.Address}' \
+  --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Describe a specific instance
+aws rds describe-db-instances --db-instance-identifier &lt;db-id&gt;
+
+# Create a snapshot
+aws rds create-db-snapshot \
+  --db-instance-identifier &lt;db-id&gt; \
+  --db-snapshot-identifier &lt;snap-name&gt;
+
+# List snapshots
+aws rds describe-db-snapshots \
+  --db-instance-identifier &lt;db-id&gt; \
+  --query 'DBSnapshots[*].{ID:DBSnapshotIdentifier,Status:Status,Created:SnapshotCreateTime,Size:AllocatedStorage}' \
+  --output table
+
+# Reboot instance
+aws rds reboot-db-instance --db-instance-identifier &lt;db-id&gt;
+
+# Modify instance (example: enable Multi-AZ)
+aws rds modify-db-instance \
+  --db-instance-identifier &lt;db-id&gt; \
+  --multi-az \
+  --apply-immediately
+
+# Start / stop instance (for dev/test)
+aws rds stop-db-instance --db-instance-identifier &lt;db-id&gt;
+aws rds start-db-instance --db-instance-identifier &lt;db-id&gt;
+</code></pre>
+<h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check instance status
+aws rds describe-db-instances --db-instance-identifier &lt;db-id&gt; \
+  --query 'DBInstances[0].DBInstanceStatus'
+
+# Check recent events
+aws rds describe-events \
+  --source-identifier &lt;db-id&gt; \
+  --source-type db-instance \
+  --duration 1440 \
+  --query 'Events[*].{Time:Date,Message:Message}' \
+  --output table
+
+# CloudWatch — check key metrics
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/RDS \
+  --metric-name FreeStorageSpace \
+  --dimensions Name=DBInstanceIdentifier,Value=&lt;db-id&gt; \
+  --start-time $(date -u -v-1H +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
+  --period 300 \
+  --statistics Average
+</code></pre>
+<h2 id="key-cloudwatch-metrics">Key CloudWatch Metrics<a class="headerlink" href="#key-cloudwatch-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning Threshold</th>
+<th>Critical Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPUUtilization</td>
+<td>&gt;70%</td>
+<td>&gt;90%</td>
+</tr>
+<tr>
+<td>FreeStorageSpace</td>
+<td>&lt;20%</td>
+<td>&lt;10%</td>
+</tr>
+<tr>
+<td>ReadLatency / WriteLatency</td>
+<td>&gt;10ms</td>
+<td>&gt;50ms</td>
+</tr>
+<tr>
+<td>DatabaseConnections</td>
+<td>&gt;80% of <code>max_connections</code></td>
+<td>&gt;95%</td>
+</tr>
+<tr>
+<td>FreeableMemory</td>
+<td>&lt;20%</td>
+<td>&lt;10%</td>
+</tr>
+<tr>
+<td>ReplicaLag (read replicas)</td>
+<td>&gt;30s</td>
+<td>&gt;120s</td>
+</tr>
+</tbody>
+</table>
+<h2 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Restore to new instance from snapshot
+aws rds restore-db-instance-from-db-snapshot \
+  --db-instance-identifier &lt;new-db-id&gt; \
+  --db-snapshot-identifier &lt;snap-id&gt; \
+  --db-instance-class db.r6g.large \
+  --no-publicly-accessible
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connection refused</td>
+<td>Security group / subnet group</td>
+<td>Verify SG allows inbound on DB port from app subnet</td>
+</tr>
+<tr>
+<td>High CPU</td>
+<td>Slow query log</td>
+<td>Enable <code>slow_query_log</code>; analyze with EXPLAIN</td>
+</tr>
+<tr>
+<td>Storage full</td>
+<td><code>FreeStorageSpace</code> metric</td>
+<td>Modify instance to increase <code>AllocatedStorage</code></td>
+</tr>
+<tr>
+<td>Multi-AZ failover delay</td>
+<td>Event log</td>
+<td>Expected: 60–120s for failover; update app retry logic</td>
+</tr>
+<tr>
+<td>Read replica lagging</td>
+<td><code>ReplicaLag</code> metric</td>
+<td>Check source instance I/O; consider read replica promotion</td>
+</tr>
+</tbody>
+</table>
 
 
 

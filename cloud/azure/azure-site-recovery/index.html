@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#supported-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Supported Scenarios
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-failover-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-failover-migration-no-data-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover (migration, no data loss)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-to-primary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback to Primary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -764,23 +808,124 @@
 
 
 <h1 id="azure-site-recovery">Azure Site Recovery<a class="headerlink" href="#azure-site-recovery" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure disaster recovery notes.
-</div>
+<p>Azure Site Recovery (ASR) — VM replication, failover, and failback between Azure regions or from on-premises.</p>
+<h2 id="supported-scenarios">Supported Scenarios<a class="headerlink" href="#supported-scenarios" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Target</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure VM (region A)</td>
+<td>Azure VM (region B)</td>
+<td>Native ASR</td>
+</tr>
+<tr>
+<td>VMware / physical</td>
+<td>Azure</td>
+<td>Mobility Service agent + replication appliance</td>
+</tr>
+<tr>
+<td>Hyper-V</td>
+<td>Azure</td>
+<td>Azure Site Recovery Provider</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List Recovery Services vaults
+az backup vault list --query '[*].{Name:name,RG:resourceGroup,Location:location}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List replicated items (VMs) in a vault
+az site-recovery protected-item list \
+  --vault-name &lt;vault-name&gt; -g &lt;rg&gt; \
+  --query '[*].{VM:name,State:properties.protectionState,Health:properties.replicationHealth}' -o table
+
+# Trigger test failover (non-destructive — creates test VMs in isolation)
+az site-recovery protected-item failover-cancel \
+  --vault-name &lt;vault-name&gt; -g &lt;rg&gt; \
+  --fabric-name &lt;target-fabric&gt; \
+  --protection-container-name &lt;container&gt; \
+  --replicated-protected-item-name &lt;item-name&gt;
+</code></pre>
+<h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
+<p><strong>Portal checks (daily):</strong>
+1. Recovery Services vault → <strong>Replicated items</strong> — all items show <code>Protected</code> and <code>Healthy</code>
+2. Review <strong>Replication health</strong> — no warnings or errors
+3. Check <strong>RPO</strong> compliance — green means within SLA
+4. Review <strong>Jobs</strong> → any failed jobs from last 24 hours</p>
+<pre><code class="language-bash"># Get replication health for all items
+az site-recovery replication-protected-item list \
+  --vault-name &lt;vault-name&gt; \
+  --resource-group &lt;rg&gt; \
+  --fabric-name &lt;primary-fabric&gt; \
+  --protection-container-name &lt;container&gt; \
+  --query '[*].{Name:name,State:properties.protectionState,Health:properties.replicationHealth,RPO:properties.rpoInSeconds}'
+</code></pre>
+<h2 id="test-failover-workflow">Test Failover Workflow<a class="headerlink" href="#test-failover-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Portal: Vault → Replicated items → select VM → <strong>Test Failover</strong></li>
+<li>Select recovery point (latest processed or latest app-consistent)</li>
+<li>Select test virtual network (isolated — not production)</li>
+<li>Review test VM at target region — verify OS boots, app responds</li>
+<li><strong>Cleanup test failover</strong> — removes test VMs, marks test complete</li>
+</ol>
+<h2 id="planned-failover-migration-no-data-loss">Planned Failover (migration, no data loss)<a class="headerlink" href="#planned-failover-migration-no-data-loss" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Portal: Replicated items → <strong>Planned failover</strong></li>
+<li>Confirm replication is synced (RPO = 0)</li>
+<li>Execute failover — source VM shuts down, replica starts at target</li>
+<li>Verify application at target region</li>
+<li><strong>Commit</strong> — severs replication; target is now primary</li>
+</ol>
+<h2 id="failback-to-primary">Failback to Primary<a class="headerlink" href="#failback-to-primary" title="Permanent link">&para;</a></h2>
+<ol>
+<li>After commit: <strong>Re-protect</strong> the VM (replicates from target back to primary)</li>
+<li>Wait for synchronisation</li>
+<li><strong>Planned failover</strong> again — back to primary region</li>
+<li><strong>Commit</strong> and <strong>Re-protect</strong> to resume normal replication direction</li>
+</ol>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Replication health unhealthy</td>
+<td>VM events in vault</td>
+<td>Check for connectivity issues between source and replication appliance</td>
+</tr>
+<tr>
+<td>RPO breach</td>
+<td>Network bandwidth</td>
+<td>Ensure sufficient bandwidth between source and target; check large data change rate</td>
+</tr>
+<tr>
+<td>Test failover VM not starting</td>
+<td>Target network / NSG</td>
+<td>Verify test network has no restrictive NSGs blocking boot</td>
+</tr>
+<tr>
+<td>Agent not communicating</td>
+<td>Mobility Service status</td>
+<td>Restart Mobility Service on source VM; check proxy settings</td>
+</tr>
+<tr>
+<td>Delta sync slow</td>
+<td>Disk churn rate</td>
+<td>High-churn disks may require larger cache; review exclusion of temp/swap disks</td>
+</tr>
+</tbody>
+</table>
 
 
 

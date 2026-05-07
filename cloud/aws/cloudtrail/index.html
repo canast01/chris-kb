@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#what-cloudtrail-captures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        What CloudTrail Captures
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Key Concepts
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Common CLI Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-cloudtrail-in-s3-with-athena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query CloudTrail in S3 with Athena
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudtrail-lake-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudTrail Lake Queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-with-cloudwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring with CloudWatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +808,138 @@
 
 
 <h1 id="cloudtrail">CloudTrail<a class="headerlink" href="#cloudtrail" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS audit logging and API activity tracking notes.
-</div>
-
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
+<p>AWS CloudTrail — API activity logging, audit trail, and event history.</p>
+<h2 id="what-cloudtrail-captures">What CloudTrail Captures<a class="headerlink" href="#what-cloudtrail-captures" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
+<li><strong>Management events</strong> — API calls that create, modify, or delete AWS resources (default: enabled)</li>
+<li><strong>Data events</strong> — object-level operations (S3 GetObject, Lambda invocations) — must be explicitly enabled</li>
+<li><strong>Insights events</strong> — anomaly detection on unusual API call rates</li>
 </ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trail</td>
+<td>Configuration that delivers events to S3 (and optionally CloudWatch Logs / EventBridge)</td>
+</tr>
+<tr>
+<td>Event history</td>
+<td>90-day read-only view in the console (no trail required)</td>
+</tr>
+<tr>
+<td>Management event</td>
+<td>Control plane API calls — EC2, IAM, S3 bucket ops, etc.</td>
+</tr>
+<tr>
+<td>Data event</td>
+<td>Data plane API calls — S3 GetObject, PutObject, Lambda Invoke</td>
+</tr>
+<tr>
+<td>CloudTrail Lake</td>
+<td>Managed query lake; store and query events in SQL-like format</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List trails
+aws cloudtrail describe-trails --output table
+
+# Get trail status (is logging?)
+aws cloudtrail get-trail-status --name &lt;trail-name&gt;
+
+# Look up events by resource or user (last 90 days from Event History)
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=Username,AttributeValue=&lt;iam-user&gt; \
+  --start-time 2026-05-01 --end-time 2026-05-06 \
+  --query 'Events[*].{Time:EventTime,Name:EventName,User:Username,Source:EventSource}' \
+  --output table
+
+# Look up events for a specific resource
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=ResourceName,AttributeValue=&lt;resource-id&gt; \
+  --output table
+
+# Look up events by event name
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=EventName,AttributeValue=DeleteBucket \
+  --output table
+</code></pre>
+<h2 id="query-cloudtrail-in-s3-with-athena">Query CloudTrail in S3 with Athena<a class="headerlink" href="#query-cloudtrail-in-s3-with-athena" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Partition table by account/region/date
+CREATE EXTERNAL TABLE cloudtrail_logs (
+  eventVersion STRING, ...
+)
+PARTITIONED BY (region string, year string, month string, day string)
+...
+
+-- Find all failed API calls
+SELECT eventTime, eventName, errorCode, errorMessage, userIdentity.arn
+FROM cloudtrail_logs
+WHERE errorCode IS NOT NULL
+  AND year='2026' AND month='05'
+ORDER BY eventTime DESC
+LIMIT 100;
+
+-- Who deleted a resource?
+SELECT eventTime, userIdentity.arn, requestParameters
+FROM cloudtrail_logs
+WHERE eventName = 'DeleteSecurityGroup'
+  AND year='2026' AND month='05';
+</code></pre>
+<h2 id="cloudtrail-lake-queries">CloudTrail Lake Queries<a class="headerlink" href="#cloudtrail-lake-queries" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run a query against CloudTrail Lake
+aws cloudtrail start-query \
+  --query-statement &quot;SELECT eventTime, eventName, userIdentity.arn FROM &lt;event-data-store-arn&gt; WHERE errorCode IS NOT NULL LIMIT 100&quot;
+
+# Get query results
+aws cloudtrail get-query-results --query-id &lt;query-id&gt;
+</code></pre>
+<h2 id="monitoring-with-cloudwatch">Monitoring with CloudWatch<a class="headerlink" href="#monitoring-with-cloudwatch" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a metric filter for root account usage
+aws logs put-metric-filter \
+  --log-group-name &lt;cloudtrail-log-group&gt; \
+  --filter-name RootUsage \
+  --filter-pattern '{ $.userIdentity.type = &quot;Root&quot; &amp;&amp; $.userIdentity.invokedBy NOT EXISTS &amp;&amp; $.eventType != &quot;AwsServiceEvent&quot; }' \
+  --metric-transformations metricName=RootUsageCount,metricNamespace=CloudTrailMetrics,metricValue=1
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trail not logging</td>
+<td><code>get-trail-status</code> → <code>IsLogging: false</code></td>
+<td><code>aws cloudtrail start-logging --name &lt;trail&gt;</code></td>
+</tr>
+<tr>
+<td>Events missing for a region</td>
+<td>Multi-region trail disabled</td>
+<td>Enable <code>--is-multi-region-trail</code></td>
+</tr>
+<tr>
+<td>S3 delivery failing</td>
+<td>S3 bucket policy</td>
+<td>Verify CloudTrail has <code>s3:PutObject</code> permission on the log bucket</td>
+</tr>
+<tr>
+<td>Event history empty</td>
+<td>Recent API calls?</td>
+<td>Event history only shows last 90 days; older events need Athena query</td>
+</tr>
+</tbody>
+</table>
 
 
 

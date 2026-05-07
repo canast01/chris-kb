@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,176 @@
 
 
 <h1 id="route-53">Route 53<a class="headerlink" href="#route-53" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS DNS and hosted zone notes.
-</div>
+<p>AWS Route 53 — DNS hosted zones, record management, health checks, and routing policies.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hosted zone</td>
+<td>Container for DNS records for a domain</td>
+</tr>
+<tr>
+<td>Public hosted zone</td>
+<td>Answers DNS queries from the internet</td>
+</tr>
+<tr>
+<td>Private hosted zone</td>
+<td>Answers DNS queries only within specified VPCs</td>
+</tr>
+<tr>
+<td>Alias record</td>
+<td>Route 53-specific record that maps to AWS resources (no TTL charge)</td>
+</tr>
+<tr>
+<td>Health check</td>
+<td>Monitors endpoints; drives failover routing policies</td>
+</tr>
+<tr>
+<td>Routing policy</td>
+<td>Simple, Weighted, Latency, Failover, Geolocation, Multivalue</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List hosted zones
+aws route53 list-hosted-zones \
+  --query 'HostedZones[*].{Name:Name,ID:Id,Type:Config.PrivateZone}' --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List records in a zone
+aws route53 list-resource-record-sets \
+  --hosted-zone-id &lt;zone-id&gt; \
+  --query 'ResourceRecordSets[*].{Name:Name,Type:Type,TTL:TTL}' --output table
+
+# Create an A record
+aws route53 change-resource-record-sets \
+  --hosted-zone-id &lt;zone-id&gt; \
+  --change-batch '{
+    &quot;Changes&quot;: [{
+      &quot;Action&quot;: &quot;CREATE&quot;,
+      &quot;ResourceRecordSet&quot;: {
+        &quot;Name&quot;: &quot;app.example.com.&quot;,
+        &quot;Type&quot;: &quot;A&quot;,
+        &quot;TTL&quot;: 300,
+        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.100&quot;}]
+      }
+    }]
+  }'
+
+# Update (UPSERT) a record — creates or replaces
+aws route53 change-resource-record-sets \
+  --hosted-zone-id &lt;zone-id&gt; \
+  --change-batch '{
+    &quot;Changes&quot;: [{
+      &quot;Action&quot;: &quot;UPSERT&quot;,
+      &quot;ResourceRecordSet&quot;: {
+        &quot;Name&quot;: &quot;app.example.com.&quot;,
+        &quot;Type&quot;: &quot;A&quot;,
+        &quot;TTL&quot;: 60,
+        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.200&quot;}]
+      }
+    }]
+  }'
+
+# Delete a record
+# Use same structure as CREATE but with &quot;Action&quot;: &quot;DELETE&quot; and exact matching values
+
+# Check propagation status of a change
+aws route53 get-change --id &lt;change-id&gt;
+</code></pre>
+<h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create health check for an HTTP endpoint
+aws route53 create-health-check \
+  --caller-reference &quot;app-hc-$(date +%s)&quot; \
+  --health-check-config '{
+    &quot;IPAddress&quot;: &quot;10.0.1.100&quot;,
+    &quot;Port&quot;: 443,
+    &quot;Type&quot;: &quot;HTTPS&quot;,
+    &quot;ResourcePath&quot;: &quot;/health&quot;,
+    &quot;FullyQualifiedDomainName&quot;: &quot;app.example.com&quot;,
+    &quot;RequestInterval&quot;: 30,
+    &quot;FailureThreshold&quot;: 3
+  }'
+
+# List health checks
+aws route53 list-health-checks \
+  --query 'HealthChecks[*].{ID:Id,Type:HealthCheckConfig.Type,Status:HealthCheckConfig.Type}' --output table
+
+# Get health check status
+aws route53 get-health-check-status --health-check-id &lt;hc-id&gt;
+</code></pre>
+<h2 id="routing-policies">Routing Policies<a class="headerlink" href="#routing-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td>Single resource, no health checks</td>
+</tr>
+<tr>
+<td>Weighted</td>
+<td>A/B testing, gradual traffic shift (set weights 0–255)</td>
+</tr>
+<tr>
+<td>Failover</td>
+<td>Primary/secondary with health checks</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Route to lowest-latency region</td>
+</tr>
+<tr>
+<td>Geolocation</td>
+<td>Route by country/continent</td>
+</tr>
+<tr>
+<td>Multivalue</td>
+<td>Return up to 8 healthy records (not a load balancer)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS change not resolving</td>
+<td>TTL cached</td>
+<td>Wait for TTL expiry; test with <code>dig @8.8.8.8 &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>Record resolves to wrong IP</td>
+<td>Route 53 propagation</td>
+<td><code>aws route53 get-change --id &lt;id&gt;</code> — wait for <code>INSYNC</code></td>
+</tr>
+<tr>
+<td>Private zone not resolving</td>
+<td>VPC association</td>
+<td>Check private hosted zone is associated with the querying VPC</td>
+</tr>
+<tr>
+<td>Health check failing</td>
+<td>Health check status</td>
+<td>Review CloudWatch metric <code>HealthCheckStatus</code>; check endpoint response</td>
+</tr>
+</tbody>
+</table>
 
 
 

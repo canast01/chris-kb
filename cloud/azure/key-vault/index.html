@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#what-key-vault-stores" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        What Key Vault Stores
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#access-policies-vs-rbac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Access Policies vs RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieve-secrets-in-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieve Secrets in Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,130 @@
 
 
 <h1 id="key-vault">Key Vault<a class="headerlink" href="#key-vault" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure secrets and key management notes.
-</div>
+<p>Azure Key Vault — secrets, keys, and certificate management.</p>
+<h2 id="what-key-vault-stores">What Key Vault Stores<a class="headerlink" href="#what-key-vault-stores" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secret</td>
+<td>Passwords, connection strings, API keys</td>
+</tr>
+<tr>
+<td>Key</td>
+<td>RSA or EC keys for encryption/signing; HSM-backed option</td>
+</tr>
+<tr>
+<td>Certificate</td>
+<td>X.509 certificates with automatic renewal via DigiCert / Let's Encrypt</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List key vaults
+az keyvault list --query '[*].{Name:name,RG:resourceGroup,Location:location}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List secrets in a vault
+az keyvault secret list --vault-name &lt;vault-name&gt; \
+  --query '[*].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}' -o table
+
+# Get secret value
+az keyvault secret show --vault-name &lt;vault-name&gt; --name &lt;secret-name&gt; --query value -o tsv
+
+# Set a secret
+az keyvault secret set --vault-name &lt;vault-name&gt; --name &lt;secret-name&gt; --value &quot;&lt;value&gt;&quot;
+
+# Set secret expiry
+az keyvault secret set-attributes \
+  --vault-name &lt;vault-name&gt; \
+  --name &lt;secret-name&gt; \
+  --expires 2027-01-01T00:00:00Z
+
+# List keys
+az keyvault key list --vault-name &lt;vault-name&gt; -o table
+
+# List certificates and expiry
+az keyvault certificate list --vault-name &lt;vault-name&gt; \
+  --query '[*].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}' -o table
+
+# Download a certificate
+az keyvault certificate download --vault-name &lt;vault-name&gt; --name &lt;cert-name&gt; --file cert.pem
+</code></pre>
+<h2 id="access-policies-vs-rbac">Access Policies vs RBAC<a class="headerlink" href="#access-policies-vs-rbac" title="Permanent link">&para;</a></h2>
+<p>Key Vault supports two authorization models:
+- <strong>Vault access policies</strong> (legacy): grant permissions per principal per vault
+- <strong>Azure RBAC</strong> (recommended): use roles like <code>Key Vault Secrets User</code>, <code>Key Vault Administrator</code></p>
+<pre><code class="language-bash"># Assign RBAC role to a service principal
+az role assignment create \
+  --role &quot;Key Vault Secrets User&quot; \
+  --assignee &lt;service-principal-object-id&gt; \
+  --scope /subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.KeyVault/vaults/&lt;vault-name&gt;
+</code></pre>
+<h2 id="retrieve-secrets-in-code">Retrieve Secrets in Code<a class="headerlink" href="#retrieve-secrets-in-code" title="Permanent link">&para;</a></h2>
+<p><strong>Python (azure-keyvault-secrets):</strong></p>
+<pre><code class="language-python">from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=&quot;https://&lt;vault-name&gt;.vault.azure.net&quot;, credential=credential)
+secret = client.get_secret(&quot;&lt;secret-name&gt;&quot;)
+print(secret.value)
+</code></pre>
+<p><strong>PowerShell:</strong></p>
+<pre><code class="language-powershell">$secret = Get-AzKeyVaultSecret -VaultName &quot;&lt;vault-name&gt;&quot; -Name &quot;&lt;secret-name&gt;&quot; -AsPlainText
+</code></pre>
+<h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable diagnostic logging for a vault
+az monitor diagnostic-settings create \
+  --name kv-logs \
+  --resource /subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.KeyVault/vaults/&lt;vault-name&gt; \
+  --logs '[{&quot;category&quot;:&quot;AuditEvent&quot;,&quot;enabled&quot;:true}]' \
+  --workspace &lt;log-analytics-workspace-id&gt;
+</code></pre>
+<p><strong>KQL — find secret access events:</strong></p>
+<pre><code class="language-kql">AzureDiagnostics
+| where ResourceProvider == &quot;MICROSOFT.KEYVAULT&quot;
+| where OperationName == &quot;SecretGet&quot;
+| project TimeGenerated, CallerIPAddress, identity_claim_unique_name_s, resourceId
+| sort by TimeGenerated desc
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Forbidden</code> on secret access</td>
+<td>RBAC or access policy</td>
+<td>Verify correct role (<code>Key Vault Secrets User</code>) is assigned</td>
+</tr>
+<tr>
+<td>Secret expiry warning</td>
+<td><code>attributes.expires</code></td>
+<td>Update or rotate secret; update expiry date</td>
+</tr>
+<tr>
+<td>Certificate not auto-renewing</td>
+<td>Contact admin email / CA integration</td>
+<td>Check renewal action config; verify CA contact in vault</td>
+</tr>
+<tr>
+<td>Soft-deleted vault</td>
+<td><code>az keyvault list-deleted</code></td>
+<td>Recover with <code>az keyvault recover --name &lt;vault&gt;</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

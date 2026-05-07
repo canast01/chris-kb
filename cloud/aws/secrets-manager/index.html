@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#retrieve-secret-value-in-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Retrieve Secret Value in Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotation-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotation Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,138 @@
 
 
 <h1 id="secrets-manager">Secrets Manager<a class="headerlink" href="#secrets-manager" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS secrets storage and rotation notes.
-</div>
+<p>AWS Secrets Manager — secrets storage, rotation, and lifecycle management.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secret</td>
+<td>Stored credential, API key, or config value</td>
+</tr>
+<tr>
+<td>Rotation</td>
+<td>Automatic periodic secret rotation using a Lambda function</td>
+</tr>
+<tr>
+<td>Secret version</td>
+<td>Immutable value; multiple versions stored per secret</td>
+</tr>
+<tr>
+<td>AWSCURRENT</td>
+<td>Label for the current active version</td>
+</tr>
+<tr>
+<td>AWSPENDING</td>
+<td>Label for the version being rotated in</td>
+</tr>
+<tr>
+<td>AWSPREVIOUS</td>
+<td>Label for the previous version (kept for rollback)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List secrets
+aws secretsmanager list-secrets \
+  --query 'SecretList[*].{Name:Name,LastChanged:LastChangedDate,RotationEnabled:RotationEnabled}' \
+  --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Get a secret value
+aws secretsmanager get-secret-value \
+  --secret-id &lt;secret-name-or-arn&gt; \
+  --query 'SecretString' \
+  --output text
+
+# Create a new secret
+aws secretsmanager create-secret \
+  --name &quot;prod/app/db-password&quot; \
+  --secret-string '{&quot;username&quot;:&quot;app&quot;,&quot;password&quot;:&quot;secret-value&quot;}' \
+  --kms-key-id alias/aws/secretsmanager
+
+# Update an existing secret
+aws secretsmanager put-secret-value \
+  --secret-id &quot;prod/app/db-password&quot; \
+  --secret-string '{&quot;username&quot;:&quot;app&quot;,&quot;password&quot;:&quot;new-secret-value&quot;}'
+
+# Rotate secret immediately (if rotation is configured)
+aws secretsmanager rotate-secret \
+  --secret-id &quot;prod/app/db-password&quot;
+
+# Describe secret (rotation config, version info)
+aws secretsmanager describe-secret --secret-id &lt;secret-name&gt;
+</code></pre>
+<h2 id="retrieve-secret-value-in-code">Retrieve Secret Value in Code<a class="headerlink" href="#retrieve-secret-value-in-code" title="Permanent link">&para;</a></h2>
+<p><strong>Python (boto3):</strong></p>
+<pre><code class="language-python">import boto3
+import json
+
+client = boto3.client('secretsmanager', region_name='eu-west-1')
+response = client.get_secret_value(SecretId='prod/app/db-password')
+secret = json.loads(response['SecretString'])
+db_password = secret['password']
+</code></pre>
+<p><strong>PowerShell:</strong></p>
+<pre><code class="language-powershell">$secret = Get-SECSecretValue -SecretId 'prod/app/db-password'
+$values = $secret.SecretString | ConvertFrom-Json
+$password = $values.password
+</code></pre>
+<h2 id="rotation-setup">Rotation Setup<a class="headerlink" href="#rotation-setup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable automatic rotation (using AWS-managed Lambda for RDS)
+aws secretsmanager rotate-secret \
+  --secret-id &quot;prod/app/db-password&quot; \
+  --rotation-lambda-arn arn:aws:lambda:&lt;region&gt;:&lt;account&gt;:function:SecretsManagerRDSRotation \
+  --rotation-rules AutomaticallyAfterDays=30
+
+# Check rotation status
+aws secretsmanager describe-secret --secret-id &lt;secret-name&gt; \
+  --query '{RotationEnabled:RotationEnabled,LastRotatedDate:LastRotatedDate,NextRotationDate:NextRotationDate}'
+</code></pre>
+<h2 id="access-control">Access Control<a class="headerlink" href="#access-control" title="Permanent link">&para;</a></h2>
+<pre><code class="language-json">// IAM policy — allow application to read a specific secret
+{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;secretsmanager:GetSecretValue&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:secretsmanager:&lt;region&gt;:&lt;account&gt;:secret:prod/app/*&quot;
+}
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDenied</code> on <code>GetSecretValue</code></td>
+<td>IAM policy</td>
+<td>Add <code>secretsmanager:GetSecretValue</code> and <code>kms:Decrypt</code> for the KMS key</td>
+</tr>
+<tr>
+<td>Rotation failing</td>
+<td>Lambda logs</td>
+<td>Check CloudWatch Logs for the rotation Lambda function</td>
+</tr>
+<tr>
+<td>Secret not rotating on schedule</td>
+<td>Rotation enabled?</td>
+<td>Verify <code>RotationEnabled=true</code>; check rotation Lambda health</td>
+</tr>
+<tr>
+<td>App using old password</td>
+<td>Version stage</td>
+<td>Ensure app is fetching <code>AWSCURRENT</code> version, not caching the old value</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#connection-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Connection Types
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#create-s2s-vpn-connection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Create S2S VPN Connection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ike-ipsec-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IKE / IPsec Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,130 @@
 
 
 <h1 id="vpn-gateway">VPN Gateway<a class="headerlink" href="#vpn-gateway" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure VPN connectivity notes.
-</div>
+<p>Azure VPN Gateway — site-to-site VPN, point-to-site VPN, and VNet-to-VNet connectivity.</p>
+<h2 id="connection-types">Connection Types<a class="headerlink" href="#connection-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Site-to-Site (S2S)</td>
+<td>On-premises network → Azure VNet via IPsec/IKE</td>
+</tr>
+<tr>
+<td>Point-to-Site (P2S)</td>
+<td>Individual client → Azure VNet (remote access)</td>
+</tr>
+<tr>
+<td>VNet-to-VNet</td>
+<td>Azure VNet → Azure VNet in same or different regions</td>
+</tr>
+<tr>
+<td>ExpressRoute co-existence</td>
+<td>VPN as failover for ExpressRoute</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List VPN gateways
+az network vnet-gateway list -g &lt;rg&gt; \
+  --query '[*].{Name:name,SKU:sku.name,VPN:vpnType,BGP:enableBgp,State:provisioningState}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List VPN connections
+az network vpn-connection list -g &lt;rg&gt; \
+  --query '[*].{Name:name,State:connectionStatus,SharedKey:sharedKey,Protocol:ipsecPolicies}' -o table
+
+# Check connection status
+az network vpn-connection show -g &lt;rg&gt; -n &lt;connection-name&gt; \
+  --query '{State:connectionStatus,IngressBytes:ingressBytesTransferred,EgressBytes:egressBytesTransferred}'
+
+# Reset gateway (clears stuck tunnels)
+az network vnet-gateway reset -g &lt;rg&gt; -n &lt;gateway-name&gt;
+
+# Reset a specific connection
+az network vpn-connection reset -g &lt;rg&gt; -n &lt;connection-name&gt;
+</code></pre>
+<h2 id="create-s2s-vpn-connection">Create S2S VPN Connection<a class="headerlink" href="#create-s2s-vpn-connection" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Create Local Network Gateway (represents on-premises)
+az network local-gateway create -g &lt;rg&gt; -n &lt;lgw-name&gt; \
+  --gateway-ip-address &lt;on-prem-public-ip&gt; \
+  --local-address-prefixes 10.0.0.0/8
+
+# 2. Create VPN Connection
+az network vpn-connection create -g &lt;rg&gt; -n &lt;conn-name&gt; \
+  --vnet-gateway1 &lt;azure-gw-name&gt; \
+  --local-gateway2 &lt;lgw-name&gt; \
+  --shared-key &lt;pre-shared-key&gt; \
+  --connection-type IPsec
+</code></pre>
+<h2 id="ike-ipsec-policy">IKE / IPsec Policy<a class="headerlink" href="#ike-ipsec-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Set custom IKE/IPsec policy on a connection
+az network vpn-connection ipsec-policy add -g &lt;rg&gt; \
+  --connection-name &lt;conn-name&gt; \
+  --ike-encryption AES256 \
+  --ike-integrity SHA256 \
+  --dh-group DHGroup14 \
+  --ipsec-encryption AES256 \
+  --ipsec-integrity SHA256 \
+  --pfs-group PFS2048 \
+  --sa-lifetime 3600 \
+  --sa-max-size 102400000
+</code></pre>
+<h2 id="diagnostic-logs">Diagnostic Logs<a class="headerlink" href="#diagnostic-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Enable gateway diagnostic logging
+az monitor diagnostic-settings create \
+  --name vpn-diag \
+  --resource &lt;gateway-resource-id&gt; \
+  --logs '[{&quot;category&quot;:&quot;GatewayDiagnosticLog&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;TunnelDiagnosticLog&quot;,&quot;enabled&quot;:true}]' \
+  --workspace &lt;log-analytics-workspace-id&gt;
+</code></pre>
+<p><strong>KQL — check tunnel events:</strong></p>
+<pre><code class="language-kql">AzureDiagnostics
+| where Category == &quot;TunnelDiagnosticLog&quot;
+| project TimeGenerated, operationName_s, status_s, remoteIP_s, message_s
+| sort by TimeGenerated desc
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tunnel stuck at Connecting</td>
+<td>IKE phase 1 mismatch</td>
+<td>Verify encryption/auth/DH group matches on both sides</td>
+</tr>
+<tr>
+<td>Tunnel connected but no traffic</td>
+<td>Routing / firewall</td>
+<td>Check routes exist on both sides; check on-prem firewall allows VPN subnet</td>
+</tr>
+<tr>
+<td>Intermittent drops</td>
+<td>Dead peer detection</td>
+<td>Ensure on-prem device sends DPD keepalives</td>
+</tr>
+<tr>
+<td>High latency through tunnel</td>
+<td>Gateway SKU</td>
+<td>Upgrade gateway SKU; check bandwidth limit</td>
+</tr>
+<tr>
+<td>P2S clients can't resolve DNS</td>
+<td>DNS settings</td>
+<td>Add Azure DNS resolver IP (168.63.129.16) to P2S DNS config</td>
+</tr>
+</tbody>
+</table>
 
 
 

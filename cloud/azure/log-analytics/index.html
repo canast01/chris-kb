@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#key-kql-queries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Key KQL Queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-alert-rule-from-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Alert Rule from Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +797,146 @@
 
 
 <h1 id="log-analytics">Log Analytics<a class="headerlink" href="#log-analytics" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure log analytics workspace notes.
-</div>
+<p>Azure Log Analytics — workspace for collecting, querying, and alerting on logs from Azure and on-premises sources.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workspace</td>
+<td>Central repository for log data</td>
+</tr>
+<tr>
+<td>KQL</td>
+<td>Kusto Query Language — used to query log data</td>
+</tr>
+<tr>
+<td>Data source</td>
+<td>Diagnostic settings, agents, connectors feeding data in</td>
+</tr>
+<tr>
+<td>Sentinel</td>
+<td>Microsoft SIEM/SOAR built on Log Analytics</td>
+</tr>
+<tr>
+<td>Saved queries</td>
+<td>Reusable KQL queries stored in the workspace</td>
+</tr>
+<tr>
+<td>Workspace transformation</td>
+<td>Filter/transform data before ingestion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List Log Analytics workspaces
+az monitor log-analytics workspace list \
+  --query '[*].{Name:name,RG:resourceGroup,Location:location,RetentionDays:retentionInDays}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Run a KQL query from CLI
+az monitor log-analytics query \
+  -w &lt;workspace-id&gt; \
+  --analytics-query &quot;Heartbeat | summarize count() by Computer | sort by count_ desc | take 10&quot;
+
+# Show workspace details
+az monitor log-analytics workspace show -g &lt;rg&gt; -n &lt;workspace-name&gt;
+</code></pre>
+<h2 id="key-kql-queries">Key KQL Queries<a class="headerlink" href="#key-kql-queries" title="Permanent link">&para;</a></h2>
+<p><strong>Heartbeat — check which agents reported recently:</strong></p>
+<pre><code class="language-kql">Heartbeat
+| where TimeGenerated &gt; ago(1h)
+| summarize LastHeartbeat=max(TimeGenerated) by Computer
+| where LastHeartbeat &lt; ago(15m)
+| order by LastHeartbeat asc
+</code></pre>
+<p><strong>Find errors across all logs:</strong></p>
+<pre><code class="language-kql">search &quot;error&quot; or &quot;ERROR&quot;
+| where TimeGenerated &gt; ago(1h)
+| project TimeGenerated, Type, _ResourceId, Computer, Message=tostring(split($table, &quot; &quot;))
+| sort by TimeGenerated desc
+| take 100
+</code></pre>
+<p><strong>VM performance — CPU over 80%:</strong></p>
+<pre><code class="language-kql">Perf
+| where ObjectName == &quot;Processor&quot; and CounterName == &quot;% Processor Time&quot;
+| where CounterValue &gt; 80
+| summarize avg(CounterValue) by Computer, bin(TimeGenerated, 5m)
+| sort by TimeGenerated desc
+</code></pre>
+<p><strong>Disk free space alerts:</strong></p>
+<pre><code class="language-kql">Perf
+| where ObjectName == &quot;LogicalDisk&quot; and CounterName == &quot;% Free Space&quot;
+| where CounterValue &lt; 20
+| summarize min(CounterValue) by Computer, InstanceName
+</code></pre>
+<p><strong>Security events — failed logons:</strong></p>
+<pre><code class="language-kql">SecurityEvent
+| where EventID == 4625
+| summarize FailedLogons=count() by Account, Computer, bin(TimeGenerated, 1h)
+| sort by FailedLogons desc
+</code></pre>
+<p><strong>Azure activity — who deleted what:</strong></p>
+<pre><code class="language-kql">AzureActivity
+| where OperationNameValue has &quot;delete&quot; and ActivityStatusValue == &quot;Success&quot;
+| project TimeGenerated, Caller, OperationNameValue, ResourceGroup, Resource
+| sort by TimeGenerated desc
+</code></pre>
+<h2 id="create-alert-rule-from-query">Create Alert Rule from Query<a class="headerlink" href="#create-alert-rule-from-query" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a scheduled alert rule (30-min check, alert if &gt;10 results)
+az monitor scheduled-query create \
+  -g &lt;rg&gt; \
+  -n &quot;High-CPU-Alert&quot; \
+  --scopes /subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.OperationalInsights/workspaces/&lt;workspace&gt; \
+  --condition &quot;count &gt; 10&quot; \
+  --condition-query &quot;Perf | where CounterName == '% Processor Time' and CounterValue &gt; 80&quot; \
+  --evaluation-frequency 5m \
+  --window-size 30m \
+  --severity 2 \
+  --action-groups &lt;action-group-id&gt;
+</code></pre>
+<h2 id="data-retention">Data Retention<a class="headerlink" href="#data-retention" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Set workspace retention (max 730 days for hot storage; archive beyond)
+az monitor log-analytics workspace update \
+  -g &lt;rg&gt; -n &lt;workspace-name&gt; \
+  --retention-time 90
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing data from a VM</td>
+<td>Agent running?</td>
+<td>Check MMA or AMA agent status; verify workspace ID and key</td>
+</tr>
+<tr>
+<td>Query returns no results</td>
+<td>Table exists?</td>
+<td>Run <code>search *</code> to confirm data is present; check time range</td>
+</tr>
+<tr>
+<td>High ingestion costs</td>
+<td>Top tables by volume</td>
+<td><code>Usage | summarize sum(Quantity) by DataType | sort by sum_Quantity desc</code></td>
+</tr>
+<tr>
+<td>Alert not firing</td>
+<td>Threshold correct?</td>
+<td>Test query in portal; verify evaluation window covers the event window</td>
+</tr>
+</tbody>
+</table>
 
 
 
