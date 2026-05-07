@@ -32,13 +32,16 @@ graph TB
   MDSB --> PM_B[("PowerMax Dir B")]
   MDSB --> NA_N2[("NetApp AFF Node 2")]
 
-  classDef switch fill:#1565c0,stroke:#0d47a1,color:#fff
-  classDef host fill:#2e7d32,stroke:#1b5e20,color:#fff
-  classDef storage fill:#6a1b9a,stroke:#4a148c,color:#fff
+  classDef switch fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  classDef host fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef storage fill:#f3e8ff,stroke:#9333ea,color:#581c87
 
   class MDSA,MDSB switch
   class H1A,H2A,H1B,H2B host
   class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage
+
+  style FabricA fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
+  style FabricB fill:#fff1f2,stroke:#f43f5e,color:#881337
 ```
 
 ## Overview
