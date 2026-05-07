@@ -1,15 +1,4 @@
 # ECS Integration
-
-```mermaid
-flowchart LR
-    ECS_Integration["ECS Integration"]
-    ECS_Integration --> S0["S3 Client Integration"]
-    ECS_Integration --> S1["Veeam Object Repository"]
-    ECS_Integration --> S2["HDFS Integration"]
-    ECS_Integration --> S3["Metadata Search Integration"]
-    ECS_Integration --> S4["External Authentication (LDAP/AD)"]
-```
-
 ## S3 Client Integration
 
 ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.

@@ -1,17 +1,4 @@
 # VxRail Logs
-
-```mermaid
-flowchart LR
-    VxRail_Logs["VxRail Logs"]
-    VxRail_Logs --> S0["Where It Fits"]
-    VxRail_Logs --> S1["Daily Checks"]
-    VxRail_Logs --> S2["Health Commands"]
-    VxRail_Logs --> S3["Common Issues"]
-    VxRail_Logs --> S4["Operational Tasks"]
-    VxRail_Logs --> S5["Upgrade Notes"]
-    VxRail_Logs --> S6["Best Practices"]
-```
-
 ## Overview
 
 Useful VxRail Manager logs, collection patterns, timestamps, and case evidence.

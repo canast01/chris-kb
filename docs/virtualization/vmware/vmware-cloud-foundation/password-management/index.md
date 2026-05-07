@@ -1,17 +1,4 @@
 # Vmware Cloud Foundation Password Management
-
-```mermaid
-flowchart LR
-    Password_Management["Password Management"]
-    Password_Management --> S0["Where It Fits"]
-    Password_Management --> S1["Daily Checks"]
-    Password_Management --> S2["Health Commands"]
-    Password_Management --> S3["Common Issues"]
-    Password_Management --> S4["Operational Tasks"]
-    Password_Management --> S5["Upgrade Notes"]
-    Password_Management --> S6["Best Practices"]
-```
-
 ## Overview
 
 Credential rotation, password lifecycle, account ownership, and validation.

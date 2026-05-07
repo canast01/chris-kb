@@ -1,20 +1,6 @@
 # Database Performance Troubleshooting
 
 Systematic approach to identifying and resolving database performance bottlenecks — from slow queries to I/O saturation and locking.
-
-```mermaid
-flowchart LR
-    Performance_Troubles["Performance Troublesho"]
-    Performance_Troubles --> S0["Triage — Identify the Bottleneck"]
-    Performance_Troubles --> S1["PostgreSQL — Slow Query Analysis"]
-    Performance_Troubles --> S2["MySQL / MariaDB — Slow Query Analysis"]
-    Performance_Troubles --> S3["SQL Server — Slow Query Analysis"]
-    Performance_Troubles --> S4["Buffer Pool / Cache Efficiency"]
-    Performance_Troubles --> S5["Connection Pool Issues"]
-    Performance_Troubles --> S6["Troubleshooting Decision Tree"]
-    Performance_Troubles --> S7["Immediate Remediation"]
-```
-
 ## Triage — Identify the Bottleneck
 
 ```bash

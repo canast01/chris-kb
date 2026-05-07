@@ -1,15 +1,4 @@
 # FlashBlade Integration
-
-```mermaid
-flowchart LR
-    FlashBlade_Integrati["FlashBlade Integration"]
-    FlashBlade_Integrati --> S0["VMware Integration"]
-    FlashBlade_Integrati --> S1["Backup Integration"]
-    FlashBlade_Integrati --> S2["Pure1 Monitoring"]
-    FlashBlade_Integrati --> S3["Authentication"]
-    FlashBlade_Integrati --> S4["REST API"]
-```
-
 ## VMware Integration
 
 FlashBlade integrates with VMware primarily as an NFS datastore and backup target — it is not a block storage device and does not use VMFS or vVols in the same way as FlashArray.

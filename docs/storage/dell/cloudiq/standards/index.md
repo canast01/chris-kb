@@ -1,13 +1,4 @@
 # CloudIQ Standards
-
-```mermaid
-flowchart LR
-    CloudIQ_Standards["CloudIQ Standards"]
-    CloudIQ_Standards --> S0["Naming Conventions"]
-    CloudIQ_Standards --> S1["Build and Deployment Baseline"]
-    CloudIQ_Standards --> S2["Configuration Checklist"]
-```
-
 ## Naming Conventions
 
 | Object | Convention | Example |

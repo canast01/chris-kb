@@ -1,18 +1,4 @@
 # InsightIQ Standards
-
-```mermaid
-flowchart LR
-    InsightIQ_Standards["InsightIQ Standards"]
-    InsightIQ_Standards --> S0["Appliance Sizing Standards"]
-    InsightIQ_Standards --> S1["Data Retention Policy"]
-    InsightIQ_Standards --> S2["Cluster Connection Standards"]
-    InsightIQ_Standards --> S3["Alert Thresholds"]
-    InsightIQ_Standards --> S4["Dashboard Standards"]
-    InsightIQ_Standards --> S5["Report Schedule"]
-    InsightIQ_Standards --> S6["Credential Standards"]
-    InsightIQ_Standards --> S7["Change Management"]
-```
-
 ## Appliance Sizing Standards
 
 InsightIQ appliance sizing is based on the number of monitored clusters and the desired data retention period.

@@ -1,17 +1,4 @@
 # AWS Standards
-
-```mermaid
-flowchart LR
-    AWS_Standards["AWS Standards"]
-    AWS_Standards --> S0["Tagging Policy"]
-    AWS_Standards --> S1["Naming Convention"]
-    AWS_Standards --> S2["IAM Policy Standards"]
-    AWS_Standards --> S3["S3 Standards"]
-    AWS_Standards --> S4["Security Standards"]
-    AWS_Standards --> S5["Approved Regions"]
-    AWS_Standards --> S6["Network Standards"]
-```
-
 ## Tagging Policy
 
 All AWS resources must carry these mandatory tags (enforced via AWS Config + SCPs):

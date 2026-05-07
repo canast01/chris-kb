@@ -1,16 +1,4 @@
 # Aria Operations — Scripts
-
-```mermaid
-flowchart LR
-    Aria_Operations["Aria Operations"]
-    Aria_Operations --> S0["Authentication Helper (Python)"]
-    Aria_Operations --> S1["Export Active Alerts to CSV (Python)"]
-    Aria_Operations --> S2["Capacity Report (PowerShell)"]
-    Aria_Operations --> S3["Cluster Health Check (Bash)"]
-    Aria_Operations --> S4["Alert Export via REST (Bash / curl)"]
-    Aria_Operations --> S5["Related Sections"]
-```
-
 ## Authentication Helper (Python)
 
 ```python

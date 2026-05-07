@@ -1,16 +1,4 @@
 # Windows Server Vendor Support
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Opening a Support Case"]
-    Vendor_Support --> S1["Pre-Collection Diagnostics"]
-    Vendor_Support --> S2["Support Tiers"]
-    Vendor_Support --> S3["Windows Server Lifecycle"]
-    Vendor_Support --> S4["Extended Security Updates (ESU)"]
-    Vendor_Support --> S5["Common Issue Reference"]
-```
-
 ## Opening a Support Case
 
 Microsoft support portal: [support.microsoft.com](https://support.microsoft.com)

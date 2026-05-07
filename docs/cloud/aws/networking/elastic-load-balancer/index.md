@@ -1,17 +1,4 @@
 # AWS Elastic Load Balancer
-
-```mermaid
-flowchart LR
-    Load_Balancer["Load Balancer"]
-    Load_Balancer --> S0["Where It Fits"]
-    Load_Balancer --> S1["Daily Checks"]
-    Load_Balancer --> S2["Health Commands"]
-    Load_Balancer --> S3["Common Issues"]
-    Load_Balancer --> S4["Operational Tasks"]
-    Load_Balancer --> S5["Upgrade Notes"]
-    Load_Balancer --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Elastic Load Balancer notes for day-to-day infrastructure operations.

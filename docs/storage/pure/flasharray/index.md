@@ -53,19 +53,6 @@
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    Pure_FlashArray["Pure FlashArray"]
-    Pure_FlashArray --> S0["Where It Fits"]
-    Pure_FlashArray --> S1["Daily Checks"]
-    Pure_FlashArray --> S2["Health Commands"]
-    Pure_FlashArray --> S3["Common Issues"]
-    Pure_FlashArray --> S4["Operational Tasks"]
-    Pure_FlashArray --> S5["Upgrade Notes"]
-    Pure_FlashArray --> S6["Best Practices"]
-```
-
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS, available in the //X series (NVMe-based, highest performance), //C series (QLC flash, capacity-optimized), and //E series (maximum density). All models run in an active-active dual-controller configuration with no single point of failure, and support FC, iSCSI, NVMe/FC, NVMe/RoCE, and NVMe/TCP host protocols. Fleet-wide monitoring, AI-driven analytics, and workload planning are delivered via Pure1 cloud management without requiring on-premises management infrastructure.

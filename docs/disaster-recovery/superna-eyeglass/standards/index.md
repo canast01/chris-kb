@@ -1,16 +1,4 @@
 # Superna Eyeglass Standards
-
-```mermaid
-flowchart LR
-    Eyeglass_Standards["Eyeglass Standards"]
-    Eyeglass_Standards --> S0["SyncIQ Policy Naming"]
-    Eyeglass_Standards --> S1["Share and Quota Alignment Requirements"]
-    Eyeglass_Standards --> S2["RPO Targets"]
-    Eyeglass_Standards --> S3["DR Readiness Score"]
-    Eyeglass_Standards --> S4["Failover Test Frequency"]
-    Eyeglass_Standards --> S5["Operational Standards"]
-```
-
 ## SyncIQ Policy Naming
 
 SyncIQ policy names must be consistent between primary and DR clusters and follow the format:

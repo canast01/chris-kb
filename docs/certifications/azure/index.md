@@ -24,16 +24,6 @@
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    Azure_Certification["Azure Certification"]
-    Azure_Certification --> S0["Core Certification Paths"]
-    Azure_Certification --> S1["Daily Study Focus"]
-    Azure_Certification --> S2["Useful Commands"]
-    Azure_Certification --> S3["Renewal Notes"]
-```
-
 ## Overview
 
 Azure certifications validate skills in managing Microsoft Azure infrastructure, networking, storage, and identity services.

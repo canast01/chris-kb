@@ -1,21 +1,6 @@
 # Unity LUNs
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
-
-```mermaid
-flowchart LR
-    Unity_LUNs["Unity LUNs"]
-    Unity_LUNs --> S0["List LUNs"]
-    Unity_LUNs --> S1["Create a LUN"]
-    Unity_LUNs --> S2["Expand a LUN"]
-    Unity_LUNs --> S3["Rename a LUN"]
-    Unity_LUNs --> S4["Delete a LUN"]
-    Unity_LUNs --> S5["LUN Host Access (Masking)"]
-    Unity_LUNs --> S6["LUN Snapshots"]
-    Unity_LUNs --> S7["LUN Performance Metrics"]
-    Unity_LUNs --> S8["Common Issues"]
-```
-
 ## List LUNs
 
 ```bash

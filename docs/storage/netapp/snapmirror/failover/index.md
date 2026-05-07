@@ -1,19 +1,6 @@
 # SnapMirror Failover
 
 SnapMirror failover activates the destination volume as the primary, allowing client access during a primary site outage.
-
-```mermaid
-flowchart LR
-    SnapMirror_Failover["SnapMirror Failover"]
-    SnapMirror_Failover --> S0["Planned Failover (Switchover)"]
-    SnapMirror_Failover --> S1["Unplanned Failover (Primary Site Down)"]
-    SnapMirror_Failover --> S2["Verify Data Accessibility After Failover"]
-    SnapMirror_Failover --> S3["Resync After Primary Recovery"]
-    SnapMirror_Failover --> S4["Reverse Resync (Fail Back)"]
-    SnapMirror_Failover --> S5["Failover Checklist"]
-    SnapMirror_Failover --> S6["Common Issues"]
-```
-
 ## Planned Failover (Switchover)
 
 For maintenance or planned migration:

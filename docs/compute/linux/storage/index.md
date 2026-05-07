@@ -1,20 +1,6 @@
 # Linux Storage
 
 Disk, LVM, filesystem, and mount management on RHEL and Ubuntu.
-
-```mermaid
-flowchart LR
-    Linux_Storage["Linux Storage"]
-    Linux_Storage --> S0["Disk and Block Device Overview"]
-    Linux_Storage --> S1["LVM — Physical Volumes"]
-    Linux_Storage --> S2["LVM — Volume Groups"]
-    Linux_Storage --> S3["LVM — Logical Volumes"]
-    Linux_Storage --> S4["Filesystem Operations"]
-    Linux_Storage --> S5["Disk Usage"]
-    Linux_Storage --> S6["Multipath (SAN LUNs)"]
-    Linux_Storage --> S7["iSCSI"]
-```
-
 ## Disk and Block Device Overview
 
 ```bash

@@ -1,18 +1,6 @@
 # Flex on Demand (FOD) — CLI Reference
 
 > Part of the [FOD](../) reference.
-
-```mermaid
-flowchart LR
-    N["—"]
-    N --> S0["Quick-Reference Command Table"]
-    N --> S1["SYMCLI — Burst Usage and Allocations"]
-    N --> S2["Unisphere REST API"]
-    N --> S3["Monitoring Burst Threshold"]
-    N --> S4["License Key Management"]
-    N --> S5["Monthly Usage Tracking and Reporting"]
-```
-
 ---
 
 Flex on Demand is Dell's consumption-based capacity model for PowerMax/VMAX arrays. A base capacity is licensed outright; burst capacity above the committed level is metered and billed monthly. FOD monitoring involves tracking burst usage against the contracted burst threshold and pulling monthly consumption reports.

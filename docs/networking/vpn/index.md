@@ -1,19 +1,6 @@
 # VPN
 
 VPNs provide encrypted connectivity between sites, cloud environments, remote users, and partner networks.
-
-```mermaid
-flowchart LR
-    VPN["VPN"]
-    VPN --> S0["Tunnel Status"]
-    VPN --> S1["IKE / IPsec Phases"]
-    VPN --> S2["Test Connectivity Through Tunnel"]
-    VPN --> S3["Common Phase 1 Issues"]
-    VPN --> S4["Common Phase 2 Issues"]
-    VPN --> S5["Certificate-Based VPN"]
-    VPN --> S6["Route-Based VPN"]
-```
-
 ## Tunnel Status
 
 **Cisco ASA / IOS:**

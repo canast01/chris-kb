@@ -1,14 +1,4 @@
 # RecoverPoint — Lifecycle
-
-```mermaid
-flowchart LR
-    RecoverPoint["RecoverPoint"]
-    RecoverPoint --> S0["Version Matrix"]
-    RecoverPoint --> S1["Upgrade Path"]
-    RecoverPoint --> S2["Refresh Planning"]
-    RecoverPoint --> S3["Compatibility References"]
-```
-
 ## Version Matrix
 
 | RecoverPoint Version | Status | End of Support | Notes |

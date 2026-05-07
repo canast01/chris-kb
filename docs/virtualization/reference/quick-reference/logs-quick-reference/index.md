@@ -1,15 +1,4 @@
 # VMware Logs Quick Reference
-
-```mermaid
-flowchart LR
-    Quick_Reference["Quick Reference"]
-    Quick_Reference --> S0["ESXi Log Locations"]
-    Quick_Reference --> S1["vCenter Appliance Log Locations"]
-    Quick_Reference --> S2["Collecting a vCenter Support Bundle"]
-    Quick_Reference --> S3["Collecting an ESXi Support Bundle"]
-    Quick_Reference --> S4["Using Aria Operations for Logs"]
-```
-
 ## ESXi Log Locations
 
 ```bash

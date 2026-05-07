@@ -1,16 +1,4 @@
 # Clean Room
-
-```mermaid
-flowchart LR
-    Clean_Room["Clean Room"]
-    Clean_Room --> S0["Purpose"]
-    Clean_Room --> S1["Common checks"]
-    Clean_Room --> S2["Incident notes"]
-    Clean_Room --> S3["Change notes"]
-    Clean_Room --> S4["Useful commands"]
-    Clean_Room --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Isolated Recovery Environment Ire Clean Room notes, checks, troubleshooting, commands, change notes, and field references.

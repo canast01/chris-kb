@@ -1,21 +1,6 @@
 # VSANs
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    VSANs["VSANs"]
-    VSANs --> S0["View VSAN Status"]
-    VSANs --> S1["VSAN States"]
-    VSANs --> S2["Create a VSAN"]
-    VSANs --> S3["Assign a Port to a VSAN"]
-    VSANs --> S4["Suspend / Resume a VSAN"]
-    VSANs --> S5["Delete a VSAN"]
-    VSANs --> S6["VSAN on ISL Trunks"]
-    VSANs --> S7["Inter-VSAN Routing (IVR)"]
-    VSANs --> S8["Common Issues"]
-```
-
 ## View VSAN Status
 
 ```bash

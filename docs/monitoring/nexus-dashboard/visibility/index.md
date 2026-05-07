@@ -1,16 +1,4 @@
 # Visibility
-
-```mermaid
-flowchart LR
-    Visibility["Visibility"]
-    Visibility --> S0["Purpose"]
-    Visibility --> S1["Common checks"]
-    Visibility --> S2["Incident notes"]
-    Visibility --> S3["Change notes"]
-    Visibility --> S4["Useful commands"]
-    Visibility --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Nexus Dashboard Visibility notes, checks, troubleshooting, commands, change notes, and field references.

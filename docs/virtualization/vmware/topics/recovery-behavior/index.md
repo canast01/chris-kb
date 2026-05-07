@@ -1,18 +1,6 @@
 # Recovery Behavior Expectations
 
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
-
-```mermaid
-flowchart LR
-    Behavior_Expectation["Behavior Expectations"]
-    Behavior_Expectation --> S0["After Host Failure"]
-    Behavior_Expectation --> S1["After Storage Failure"]
-    Behavior_Expectation --> S2["After Network Failure"]
-    Behavior_Expectation --> S3["After vSAN Component Failure"]
-    Behavior_Expectation --> S4["Recovery Performance Impact"]
-    Behavior_Expectation --> S5["When to Escalate"]
-```
-
 ## After Host Failure
 
 | Phase | Expected Behavior | Timeframe |

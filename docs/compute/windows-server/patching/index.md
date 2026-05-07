@@ -1,20 +1,6 @@
 # Windows Server Patching
 
 Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.
-
-```mermaid
-flowchart LR
-    Server_Patching["Server Patching"]
-    Server_Patching --> S0["Pre-Patch Checklist"]
-    Server_Patching --> S1["Windows Update via PowerShell (PSWindowsUpdate)"]
-    Server_Patching --> S2["Windows Update via COM (No Module Required)"]
-    Server_Patching --> S3["WSUS — Force Client Update Cycle"]
-    Server_Patching --> S4["Checking Installed Updates"]
-    Server_Patching --> S5["Pending Reboot Detection"]
-    Server_Patching --> S6["Post-Patch Validation"]
-    Server_Patching --> S7["Patch Schedule Standards"]
-```
-
 ## Pre-Patch Checklist
 
 ```powershell

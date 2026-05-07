@@ -1,18 +1,6 @@
 # Devices
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). Devices are the thin or thick volumes presented to hosts. All production devices on PowerMax should be thin (TDEV).
-
-```mermaid
-flowchart LR
-    Devices["Devices"]
-    Devices --> S0["List Devices"]
-    Devices --> S1["Device Details"]
-    Devices --> S2["Create and Delete Devices"]
-    Devices --> S3["Device Flags and Properties"]
-    Devices --> S4["Performance"]
-    Devices --> S5["Quick Reference"]
-```
-
 ## List Devices
 
 ```bash

@@ -1,21 +1,6 @@
 # Python CLI Reference
 
 > Part of the [Python](../) reference.
-
-```mermaid
-flowchart LR
-    Python["Python"]
-    Python --> S0["Python CLI Flags"]
-    Python --> S1["Virtual Environments"]
-    Python --> S2["Package Management (pip)"]
-    Python --> S3["Common Infrastructure Packages"]
-    Python --> S4["Environment Variables"]
-    Python --> S5["Running Scripts"]
-    Python --> S6["Debugging"]
-    Python --> S7["Windows-Specific"]
-    Python --> S8["requirements.txt Best Practices"]
-```
-
 ---
 
 ## Python CLI Flags

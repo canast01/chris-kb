@@ -1,14 +1,6 @@
 # Firmware, Upgrades & Config Backup
 
 > Part of the [Brocade Fabric OS CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Backup["Backup"]
-    Backup --> S0["Firmware and Upgrades"]
-    Backup --> S1["Configuration Backup"]
-```
-
 ---
 
 ## Firmware & Upgrades

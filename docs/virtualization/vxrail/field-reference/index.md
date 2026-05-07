@@ -1,15 +1,4 @@
 # VxRail Field Reference
-
-```mermaid
-flowchart LR
-    Field_Reference["Field Reference"]
-    Field_Reference --> S0["Daily Checks"]
-    Field_Reference --> S1["Dependencies"]
-    Field_Reference --> S2["Common Issues"]
-    Field_Reference --> S3["Troubleshooting Workflow"]
-    Field_Reference --> S4["Best Practices"]
-```
-
 ## Overview
 
 Core operational reference for VxRail infrastructure.

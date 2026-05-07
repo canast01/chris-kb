@@ -1,15 +1,4 @@
 # Pure Storage Evergreen Security
-
-```mermaid
-flowchart LR
-    Evergreen_Security["Evergreen Security"]
-    Evergreen_Security --> S0["Hardening Checklist"]
-    Evergreen_Security --> S1["RBAC"]
-    Evergreen_Security --> S2["Encryption"]
-    Evergreen_Security --> S3["Audit Logging"]
-    Evergreen_Security --> S4["Subscription Security"]
-```
-
 ## Hardening Checklist
 
 - Enforce TLS 1.2 or higher for all management access (GUI, REST API); confirm HTTP redirect is disabled

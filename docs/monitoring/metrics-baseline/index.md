@@ -1,17 +1,6 @@
 # Performance Metrics Baseline
 
 A documented baseline allows you to distinguish normal variation from genuine anomalies and set meaningful alert thresholds.
-
-```mermaid
-flowchart LR
-    Metrics_Baseline["Metrics Baseline"]
-    Metrics_Baseline --> S0["What to Capture"]
-    Metrics_Baseline --> S1["Baseline Collection Commands"]
-    Metrics_Baseline --> S2["Documenting the Baseline"]
-    Metrics_Baseline --> S3["Setting Thresholds from Baseline"]
-    Metrics_Baseline --> S4["Baseline Review Cadence"]
-```
-
 ## What to Capture
 
 | Metric | Capture Period | Notes |

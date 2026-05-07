@@ -1,18 +1,6 @@
 # Azure Automation
 
 Azure Automation — runbook automation, update management, configuration management (DSC), and change tracking.
-
-```mermaid
-flowchart LR
-    Azure_Automation["Azure Automation"]
-    Azure_Automation --> S0["Key Capabilities"]
-    Azure_Automation --> S1["Common Azure CLI Commands"]
-    Azure_Automation --> S2["Update Management"]
-    Azure_Automation --> S3["Runbook Example — Restart Azure VM"]
-    Azure_Automation --> S4["Hybrid Runbook Worker"]
-    Azure_Automation --> S5["Troubleshooting"]
-```
-
 ## Key Capabilities
 
 | Capability | Description |

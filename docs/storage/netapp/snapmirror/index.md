@@ -17,19 +17,6 @@
   <span>Relationship Health notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    NetApp_SnapMirror["NetApp SnapMirror"]
-    NetApp_SnapMirror --> S0["Where It Fits"]
-    NetApp_SnapMirror --> S1["Daily Checks"]
-    NetApp_SnapMirror --> S2["Health Commands"]
-    NetApp_SnapMirror --> S3["Common Issues"]
-    NetApp_SnapMirror --> S4["Operational Tasks"]
-    NetApp_SnapMirror --> S5["Upgrade Notes"]
-    NetApp_SnapMirror --> S6["Best Practices"]
-```
-
 ## Overview
 
 NetApp SnapMirror is ONTAP's native replication engine for volume and SVM-level data protection, supporting disaster recovery and long-term backup retention. It operates in asynchronous mode (RPO-based, most common), synchronous mode (zero RPO, requires sub-10ms inter-site latency), and XDP mode (extended data protection, replacing legacy SnapVault for disk-to-disk backup with independent retention). Relationships are always managed from the destination cluster, and SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.

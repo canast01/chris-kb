@@ -3,20 +3,6 @@
 > Part of the [Pure Storage Evergreen](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Pre-Upgrade Path Validation (Bash)"]
-    Scripts --> S1["Upgrade Readiness Check (Python)"]
-    Scripts --> S2["Ansible Pre-Upgrade Playbook"]
-    Scripts --> S3["Windows: Evergreen//One Usage Report via Pure1 REST API (PowerShell)"]
-    Scripts --> S4["Daily Check Script (Python)"]
-    Scripts --> S5["Incident Triage Script (Python)"]
-    Scripts --> S6["Change Pre-Check Script (Bash + Python)"]
-    Scripts --> S7["Post-Change Validation Script (Bash + Python)"]
-```
-
 ## Pre-Upgrade Path Validation (Bash)
 
 Before a Purity upgrade or Evergreen controller refresh, validate host paths, pod stretch status, mediator reachability, and snapshot count to produce a go/no-go checklist.

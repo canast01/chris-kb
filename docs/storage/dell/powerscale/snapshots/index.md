@@ -1,19 +1,6 @@
 # PowerScale Snapshots
 
 Snapshot management and recovery on Dell PowerScale using SnapshotIQ.
-
-```mermaid
-flowchart LR
-    PowerScale_Snapshots["PowerScale Snapshots"]
-    PowerScale_Snapshots --> S0["Manual Snapshots"]
-    PowerScale_Snapshots --> S1["Snapshot Schedules"]
-    PowerScale_Snapshots --> S2["Snapshot Aliases"]
-    PowerScale_Snapshots --> S3["Accessing Snapshot Data"]
-    PowerScale_Snapshots --> S4["Recovering Files from a Snapshot"]
-    PowerScale_Snapshots --> S5["Snapshot Capacity"]
-    PowerScale_Snapshots --> S6["SnapshotIQ Lock and Expiration"]
-```
-
 ## Manual Snapshots
 
 ```bash

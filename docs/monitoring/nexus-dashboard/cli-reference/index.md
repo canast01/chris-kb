@@ -1,18 +1,6 @@
 # Nexus Dashboard CLI Reference
 
 Nexus Dashboard is managed via its REST API and the `nd` CLI available on the appliance via SSH. The REST API base URL is `https://<nd_fqdn>/login`. SSH as `rescue-user` for appliance-level operations.
-
-```mermaid
-flowchart LR
-    Nexus_Dashboard["Nexus Dashboard"]
-    Nexus_Dashboard --> S0["Appliance Access"]
-    Nexus_Dashboard --> S1["REST API — Authentication"]
-    Nexus_Dashboard --> S2["Fabric Health"]
-    Nexus_Dashboard --> S3["Insights and Alerts"]
-    Nexus_Dashboard --> S4["Nodes and Inventory"]
-    Nexus_Dashboard --> S5["Services (Insights / Orchestrator)"]
-```
-
 ---
 
 ## Appliance Access

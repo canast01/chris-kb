@@ -1,16 +1,4 @@
 # Failback
-
-```mermaid
-flowchart LR
-    Failback["Failback"]
-    Failback --> S0["Purpose"]
-    Failback --> S1["Common checks"]
-    Failback --> S2["Incident notes"]
-    Failback --> S3["Change notes"]
-    Failback --> S4["Useful commands"]
-    Failback --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Superna Eyeglass Failback notes, checks, troubleshooting, commands, change notes, and field references.

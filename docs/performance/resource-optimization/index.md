@@ -1,17 +1,6 @@
 # Resource Optimization
 
 Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.
-
-```mermaid
-flowchart LR
-    Resource_Optimizatio["Resource Optimization"]
-    Resource_Optimizatio --> S0["Identify Underutilised Resources"]
-    Resource_Optimizatio --> S1["AWS — Cost Optimization"]
-    Resource_Optimizatio --> S2["Azure — Cost Optimization"]
-    Resource_Optimizatio --> S3["Storage Optimization"]
-    Resource_Optimizatio --> S4["Optimization Actions Reference"]
-```
-
 ## Identify Underutilised Resources
 
 **Linux — CPU and memory:**

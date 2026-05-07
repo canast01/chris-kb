@@ -1,16 +1,4 @@
 # Azure Site Recovery
-
-```mermaid
-flowchart LR
-    Site_Recovery["Site Recovery"]
-    Site_Recovery --> S0["Purpose"]
-    Site_Recovery --> S1["Common checks"]
-    Site_Recovery --> S2["Incident notes"]
-    Site_Recovery --> S3["Change notes"]
-    Site_Recovery --> S4["Useful commands"]
-    Site_Recovery --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Backup and DR Azure Site Recovery notes, checks, troubleshooting, commands, change notes, and field references.

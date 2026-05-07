@@ -1,16 +1,4 @@
 # Aria Suite Lifecycle — Product Lifecycle
-
-```mermaid
-flowchart LR
-    Suite_Lifecycle["Suite Lifecycle"]
-    Suite_Lifecycle --> S0["Upgrade Sequence"]
-    Suite_Lifecycle --> S1["Upgrade Procedure via LCM"]
-    Suite_Lifecycle --> S2["EOL Tracking"]
-    Suite_Lifecycle --> S3["LCM Upgrade (Upgrading LCM Itself)"]
-    Suite_Lifecycle --> S4["Backup and Recovery"]
-    Suite_Lifecycle --> S5["Product Decommission via LCM"]
-```
-
 ## Upgrade Sequence
 
 **Critical: LCM must always be upgraded first, then VIDM, then all other products.**

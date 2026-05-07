@@ -27,19 +27,6 @@
   <span>NAS Servers notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_Unity["Dell Unity"]
-    Dell_Unity --> S0["Where It Fits"]
-    Dell_Unity --> S1["Daily Checks"]
-    Dell_Unity --> S2["Health Commands"]
-    Dell_Unity --> S3["Common Issues"]
-    Dell_Unity --> S4["Operational Tasks"]
-    Dell_Unity --> S5["Upgrade Notes"]
-    Dell_Unity --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell Unity is a mid-range unified storage platform supporting block (Fibre Channel and iSCSI), file (NFS and SMB), and VMware (NFS datastores and VMFS over iSCSI/FC) workloads from a single system. It uses a dual storage processor (SP A / SP B) active-active architecture and is available as Unity XT (physical hardware) and UnityVSA (software-defined virtual appliance). Administration is via the Unisphere for Unity GUI or the `uemcli` command-line interface.

@@ -1,17 +1,4 @@
 # AWS Lambda
-
-```mermaid
-flowchart LR
-    AWS_Lambda["AWS Lambda"]
-    AWS_Lambda --> S0["Where It Fits"]
-    AWS_Lambda --> S1["Daily Checks"]
-    AWS_Lambda --> S2["Health Commands"]
-    AWS_Lambda --> S3["Common Issues"]
-    AWS_Lambda --> S4["Operational Tasks"]
-    AWS_Lambda --> S5["Upgrade Notes"]
-    AWS_Lambda --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Lambda notes for day-to-day infrastructure operations.

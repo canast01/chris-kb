@@ -1,16 +1,4 @@
 # ONTAP Security
-
-```mermaid
-flowchart LR
-    ONTAP_Security["ONTAP Security"]
-    ONTAP_Security --> S0["RBAC"]
-    ONTAP_Security --> S1["Encryption"]
-    ONTAP_Security --> S2["TLS and SSH Hardening"]
-    ONTAP_Security --> S3["SNMPv3"]
-    ONTAP_Security --> S4["Audit Logging"]
-    ONTAP_Security --> S5["Hardening Checklist"]
-```
-
 ## RBAC
 
 ONTAP has two RBAC scopes: **cluster-level** (managed by the `admin` account) and **SVM-level** (managed by `vsadmin` accounts within a specific SVM). Built-in roles:

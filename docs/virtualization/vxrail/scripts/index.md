@@ -3,18 +3,6 @@
 > Part of the [VxRail](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["VxRail Cluster Health Check (PowerShell / PowerCLI)"]
-    Scripts --> S1["LCM Upgrade Readiness Check (Bash)"]
-    Scripts --> S2["Node Hardware Status (Bash)"]
-    Scripts --> S3["Ansible VxRail Health Playbook"]
-    Scripts --> S4["Windows: VxRail Cluster Health via REST API (PowerShell)"]
-    Scripts --> S5["Windows: VxRail Node Status via Plink (CMD)"]
-```
-
 ## VxRail Cluster Health Check (PowerShell / PowerCLI)
 
 Connect to vCenter managing VxRail and query the VxRail Manager REST API to report cluster health, node states, and active faults.

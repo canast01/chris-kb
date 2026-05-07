@@ -1,19 +1,6 @@
 # Certificate Lifecycle Integration
 
 Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA backend for internal certificates.
-
-```mermaid
-flowchart LR
-    Lifecycle_Integratio["Lifecycle Integration"]
-    Lifecycle_Integratio --> S0["Integration Map"]
-    Lifecycle_Integratio --> S1["Venafi TPP — ADCS CA Integration"]
-    Lifecycle_Integratio --> S2["HashiCorp Vault PKI"]
-    Lifecycle_Integratio --> S3["Kubernetes cert-manager"]
-    Lifecycle_Integratio --> S4["Let's Encrypt ACME (DNS-01 Challenge)"]
-    Lifecycle_Integratio --> S5["ServiceNow Approval Workflow"]
-    Lifecycle_Integratio --> S6["Expiry Alerting"]
-```
-
 ## Integration Map
 
 | Integration | Purpose | Protocol |

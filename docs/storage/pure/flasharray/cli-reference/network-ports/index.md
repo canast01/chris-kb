@@ -1,20 +1,6 @@
 # Network & Ports
 
 > Part of the Pure FlashArray CLI Reference.
-
-```mermaid
-flowchart LR
-    Ports["Ports"]
-    Ports --> S0["Network Interfaces"]
-    Ports --> S1["FC and Ethernet Ports"]
-    Ports --> S2["Initiator (Host) Ports"]
-    Ports --> S3["Bandwidth Monitoring"]
-    Ports --> S4["FC Port WWNs"]
-    Ports --> S5["iSCSI Port IP Addresses"]
-    Ports --> S6["Port Health"]
-    Ports --> S7["Common Issues"]
-```
-
 ## Network Interfaces
 
 ```bash

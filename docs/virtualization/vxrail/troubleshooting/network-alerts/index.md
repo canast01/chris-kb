@@ -1,17 +1,4 @@
 # VxRail Network Alerts
-
-```mermaid
-flowchart LR
-    Network_Alerts["Network Alerts"]
-    Network_Alerts --> S0["Where It Fits"]
-    Network_Alerts --> S1["Daily Checks"]
-    Network_Alerts --> S2["Health Commands"]
-    Network_Alerts --> S3["Common Issues"]
-    Network_Alerts --> S4["Operational Tasks"]
-    Network_Alerts --> S5["Upgrade Notes"]
-    Network_Alerts --> S6["Best Practices"]
-```
-
 ## Overview
 
 VxRail networking symptoms, uplinks, VLANs, vmkernel checks, and connectivity validation.

@@ -1,16 +1,4 @@
 # AWS Troubleshooting
-
-```mermaid
-flowchart LR
-    AWS_Troubleshooting["AWS Troubleshooting"]
-    AWS_Troubleshooting --> S0["EC2 Connectivity Issues"]
-    AWS_Troubleshooting --> S1["S3 Access Denied"]
-    AWS_Troubleshooting --> S2["IAM Permission Denied"]
-    AWS_Troubleshooting --> S3["RDS Connection Issues"]
-    AWS_Troubleshooting --> S4["VPC Flow Logs — Analysing Traffic"]
-    AWS_Troubleshooting --> S5["Lambda Timeout Issues"]
-```
-
 ## EC2 Connectivity Issues
 
 ```bash

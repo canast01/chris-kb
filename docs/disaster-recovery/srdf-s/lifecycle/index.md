@@ -1,16 +1,4 @@
 # SRDF/S Lifecycle
-
-```mermaid
-flowchart LR
-    SRDF_S_Lifecycle["SRDF/S Lifecycle"]
-    SRDF_S_Lifecycle --> S0["HYPERMAX OS Version Compatibility"]
-    SRDF_S_Lifecycle --> S1["Firmware Upgrade Procedure"]
-    SRDF_S_Lifecycle --> S2["VMAX to PowerMax Migration"]
-    SRDF_S_Lifecycle --> S3["Establishing a New SRDF/S Pair"]
-    SRDF_S_Lifecycle --> S4["Decommission Procedure"]
-    SRDF_S_Lifecycle --> S5["License Lifecycle"]
-```
-
 ## HYPERMAX OS Version Compatibility
 
 SRDF/S pairs require compatible HYPERMAX OS versions on both arrays. Always check the Dell interoperability matrix before mixed-version pairing.

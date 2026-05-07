@@ -1,18 +1,6 @@
 # Events & Alerts
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Alerts["Alerts"]
-    Alerts --> S0["View Events"]
-    Alerts --> S1["Resolve and Acknowledge Events"]
-    Alerts --> S2["Alert Channels"]
-    Alerts --> S3["Alert Rules"]
-    Alerts --> S4["SNMP Configuration"]
-    Alerts --> S5["Event Log in syslog"]
-```
-
 ## View Events
 
 ```bash

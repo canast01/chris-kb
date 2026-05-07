@@ -1,17 +1,4 @@
 # VxRail Support Bundle Failures
-
-```mermaid
-flowchart LR
-    Bundle_Failures["Bundle Failures"]
-    Bundle_Failures --> S0["Where It Fits"]
-    Bundle_Failures --> S1["Daily Checks"]
-    Bundle_Failures --> S2["Health Commands"]
-    Bundle_Failures --> S3["Common Issues"]
-    Bundle_Failures --> S4["Operational Tasks"]
-    Bundle_Failures --> S5["Upgrade Notes"]
-    Bundle_Failures --> S6["Best Practices"]
-```
-
 ## Overview
 
 Failed or incomplete support bundle collection troubleshooting.

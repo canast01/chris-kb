@@ -1,17 +1,4 @@
 # SnapCenter Backup Jobs
-
-```mermaid
-flowchart LR
-    Backup_Jobs["Backup Jobs"]
-    Backup_Jobs --> S0["Viewing Job History"]
-    Backup_Jobs --> S1["Running a Backup On-Demand"]
-    Backup_Jobs --> S2["Checking Backup Copies"]
-    Backup_Jobs --> S3["Troubleshooting Failed Jobs"]
-    Backup_Jobs --> S4["Backup Retention"]
-    Backup_Jobs --> S5["Re-running a Failed Backup"]
-    Backup_Jobs --> S6["Common Issues"]
-```
-
 ## Viewing Job History
 
 In the SnapCenter UI:

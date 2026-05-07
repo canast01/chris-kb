@@ -1,18 +1,6 @@
 # InsightIQ CLI Reference
 
 InsightIQ is the Dell EMC analytics platform for PowerScale (Isilon) performance monitoring. It exposes a REST API and SSH access to the InsightIQ appliance for direct management. The API base URL is `https://<insightiq_fqdn>/api/json/v2`.
-
-```mermaid
-flowchart LR
-    InsightIQ["InsightIQ"]
-    InsightIQ --> S0["Appliance Access"]
-    InsightIQ --> S1["REST API — Authentication"]
-    InsightIQ --> S2["Clusters"]
-    InsightIQ --> S3["Performance Data"]
-    InsightIQ --> S4["Capacity"]
-    InsightIQ --> S5["Reports"]
-```
-
 ---
 
 ## Appliance Access

@@ -3,21 +3,6 @@
 Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scale-out NAS clusters. All commands run from the cluster CLI — log in via SSH to any node.
 
 > Use `isi --help` or `isi <subcommand> --help` for full option lists.
-
-```mermaid
-flowchart LR
-    Isilon["(Isilon)"]
-    Isilon --> S0["Cluster Status and Identity"]
-    Isilon --> S1["Nodes"]
-    Isilon --> S2["Storage Pools and Tiers"]
-    Isilon --> S3["File System and Quotas"]
-    Isilon --> S4["NFS Exports"]
-    Isilon --> S5["SMB Shares"]
-    Isilon --> S6["Network"]
-    Isilon --> S7["Access Zones and Authentication"]
-    Isilon --> S8["Snapshots"]
-```
-
 ---
 
 

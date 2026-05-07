@@ -1,15 +1,4 @@
 # Pure Storage Evergreen//One Integration
-
-```mermaid
-flowchart LR
-    Evergreen__One_Integ["Evergreen//One Integra"]
-    Evergreen__One_Integ --> S0["Pure1 Integration"]
-    Evergreen__One_Integ --> S1["Capacity True-Up Integration with Finance"]
-    Evergreen__One_Integ --> S2["VMware Integration"]
-    Evergreen__One_Integ --> S3["Backup Integration"]
-    Evergreen__One_Integ --> S4["REST API"]
-```
-
 ## Pure1 Integration
 
 Pure1 (https://pure1.purestorage.com) is the central management and reporting platform for all Evergreen//One deployments. Unlike standard Evergreen where Pure1 is a monitoring complement to local array management, for Evergreen//One Pure1 is the primary operational interface for the customer. All capacity reporting, SLA compliance tracking, billing data, and lifecycle management flow through Pure1.

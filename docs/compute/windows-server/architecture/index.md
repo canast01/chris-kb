@@ -1,18 +1,4 @@
 # Windows Server — Architecture
-
-```mermaid
-flowchart LR
-    Windows_Server["Windows Server"]
-    Windows_Server --> S0["Edition and Installation Types"]
-    Windows_Server --> S1["Roles and Features Model"]
-    Windows_Server --> S2["Active Directory Dependency"]
-    Windows_Server --> S3["Failover Clustering (WSFC)"]
-    Windows_Server --> S4["Hyper-V Architecture"]
-    Windows_Server --> S5["Networking Stack"]
-    Windows_Server --> S6["Sizing Guidelines"]
-    Windows_Server --> S7["High Availability Topology"]
-```
-
 ## Overview
 
 Windows Server is Microsoft's server operating system, available in Standard and Datacenter editions. Current supported versions are 2016, 2019, 2022, and 2025. The installation type choice — Server Core (headless) or Desktop Experience (full GUI) — is made at install time and cannot be changed post-install.

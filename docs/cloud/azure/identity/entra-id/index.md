@@ -1,16 +1,4 @@
 # Entra Id
-
-```mermaid
-flowchart LR
-    Entra_Id["Entra Id"]
-    Entra_Id --> S0["Purpose"]
-    Entra_Id --> S1["Common checks"]
-    Entra_Id --> S2["Incident notes"]
-    Entra_Id --> S3["Change notes"]
-    Entra_Id --> S4["Useful commands"]
-    Entra_Id --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Identity Entra Id notes, checks, troubleshooting, commands, change notes, and field references.

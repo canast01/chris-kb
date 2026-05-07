@@ -1,19 +1,6 @@
 # ISLs & Trunking
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Trunking["Trunking"]
-    Trunking --> S0["ISL Status"]
-    Trunking --> S1["ISL Interface Status"]
-    Trunking --> S2["Configure a TE Port (Trunking ISL)"]
-    Trunking --> S3["Restrict VSANs on an ISL"]
-    Trunking --> S4["ISL Error Counters"]
-    Trunking --> S5["Port Channel (LAG for ISLs)"]
-    Trunking --> S6["Common Issues"]
-```
-
 ## ISL Status
 
 ```bash

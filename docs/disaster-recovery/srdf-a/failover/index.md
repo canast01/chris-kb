@@ -1,16 +1,4 @@
 # Failover
-
-```mermaid
-flowchart LR
-    Failover["Failover"]
-    Failover --> S0["Purpose"]
-    Failover --> S1["Common checks"]
-    Failover --> S2["Incident notes"]
-    Failover --> S3["Change notes"]
-    Failover --> S4["Useful commands"]
-    Failover --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical SRDF/A Failover notes, checks, troubleshooting, commands, change notes, and field references.

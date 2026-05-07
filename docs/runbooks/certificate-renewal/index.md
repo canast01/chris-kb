@@ -1,15 +1,4 @@
 # Certificate Renewal Runbook
-
-```mermaid
-flowchart LR
-    Renewal_Runbook["Renewal Runbook"]
-    Renewal_Runbook --> S0["Pre-Checks"]
-    Renewal_Runbook --> S1["Renewal Process"]
-    Renewal_Runbook --> S2["Install Certificate"]
-    Renewal_Runbook --> S3["Post-Renewal Validation"]
-    Renewal_Runbook --> S4["Common Issues"]
-```
-
 ## Pre-Checks
 
 ```bash

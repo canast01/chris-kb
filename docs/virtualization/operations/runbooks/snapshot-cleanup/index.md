@@ -1,18 +1,4 @@
 # vSAN Degraded Object Runbook
-
-```mermaid
-flowchart LR
-    Object_Runbook["Object Runbook"]
-    Object_Runbook --> S0["Confirm vSAN Health State"]
-    Object_Runbook --> S1["Identify Affected Objects"]
-    Object_Runbook --> S2["Check Failed Disks"]
-    Object_Runbook --> S3["Check Host Availability"]
-    Object_Runbook --> S4["Check Resync Status"]
-    Object_Runbook --> S5["Check Capacity"]
-    Object_Runbook --> S6["Review Storage Policy"]
-    Object_Runbook --> S7["Avoid Unsafe Actions"]
-```
-
 ## Confirm vSAN Health State
 
 - Open vCenter → Cluster → vSAN → Skyline Health

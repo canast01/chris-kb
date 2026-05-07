@@ -1,19 +1,6 @@
 # SnapCenter Plugins
 
 SnapCenter uses host-based plugins to quiesce applications before snapshot creation, enabling application-consistent backups.
-
-```mermaid
-flowchart LR
-    SnapCenter_Plugins["SnapCenter Plugins"]
-    SnapCenter_Plugins --> S0["Available Plugins"]
-    SnapCenter_Plugins --> S1["Checking Plugin Status"]
-    SnapCenter_Plugins --> S2["Installing a Plugin"]
-    SnapCenter_Plugins --> S3["Upgrading Plugins"]
-    SnapCenter_Plugins --> S4["Restarting a Plugin"]
-    SnapCenter_Plugins --> S5["Plugin Communication"]
-    SnapCenter_Plugins --> S6["Common Issues"]
-```
-
 ## Available Plugins
 
 | Plugin | Use Case |

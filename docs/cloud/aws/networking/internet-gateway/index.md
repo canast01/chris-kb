@@ -1,17 +1,4 @@
 # AWS Internet Gateway
-
-```mermaid
-flowchart LR
-    Internet_Gateway["Internet Gateway"]
-    Internet_Gateway --> S0["Where It Fits"]
-    Internet_Gateway --> S1["Daily Checks"]
-    Internet_Gateway --> S2["Health Commands"]
-    Internet_Gateway --> S3["Common Issues"]
-    Internet_Gateway --> S4["Operational Tasks"]
-    Internet_Gateway --> S5["Upgrade Notes"]
-    Internet_Gateway --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Internet Gateway notes for day-to-day infrastructure operations.

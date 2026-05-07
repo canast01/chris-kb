@@ -1,17 +1,4 @@
 # Aria Operations Operations
-
-```mermaid
-flowchart LR
-    Operations_Operation["Operations Operations"]
-    Operations_Operation --> S0["Daily Checklist"]
-    Operations_Operation --> S1["Alert Triage Workflow"]
-    Operations_Operation --> S2["Capacity Review (Weekly)"]
-    Operations_Operation --> S3["Top-N VM Review (Weekly)"]
-    Operations_Operation --> S4["Adapter Health Checks"]
-    Operations_Operation --> S5["Remote Collector Connectivity"]
-    Operations_Operation --> S6["Monthly Tasks"]
-```
-
 ## Daily Checklist
 
 Run through these checks each morning before the ops team stand-up.

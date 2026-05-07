@@ -1,18 +1,4 @@
 # VMware Maintenance Window Standards
-
-```mermaid
-flowchart LR
-    Window_Standards["Window Standards"]
-    Window_Standards --> S0["Change Ticket Requirement"]
-    Window_Standards --> S1["Stakeholder Notification"]
-    Window_Standards --> S2["Window Definition"]
-    Window_Standards --> S3["Pre-Change Evidence"]
-    Window_Standards --> S4["Rollback Plan"]
-    Window_Standards --> S5["Communication During the Window"]
-    Window_Standards --> S6["Post-Change Validation"]
-    Window_Standards --> S7["Ticket Closure"]
-```
-
 ## Change Ticket Requirement
 
 All maintenance windows require an approved change ticket before work begins.

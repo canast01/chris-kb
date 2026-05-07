@@ -1,20 +1,6 @@
 # Configuration Management
 
 Track, baseline, and enforce system configurations across infrastructure to prevent drift and maintain compliance.
-
-```mermaid
-flowchart LR
-    Configuration_Manage["Configuration Manageme"]
-    Configuration_Manage --> S0["Configuration Baseline"]
-    Configuration_Manage --> S1["Ansible — Configuration Enforcement"]
-    Configuration_Manage --> S2["AWS Config — Cloud Configuration Compliance"]
-    Configuration_Manage --> S3["Azure Policy — Resource Compliance"]
-    Configuration_Manage --> S4["Drift Detection — Linux"]
-    Configuration_Manage --> S5["Drift Detection — Windows"]
-    Configuration_Manage --> S6["CMDB — Update After Changes"]
-    Configuration_Manage --> S7["Compliance Checklist"]
-```
-
 ## Configuration Baseline
 
 A baseline defines the approved, known-good state for a system type. Any deviation is drift.

@@ -1,17 +1,4 @@
 # Monitoring Dashboard Standards
-
-```mermaid
-flowchart LR
-    Dashboard_Standards["Dashboard Standards"]
-    Dashboard_Standards --> S0["Required Dashboards"]
-    Dashboard_Standards --> S1["Infrastructure Overview — Required Panels"]
-    Dashboard_Standards --> S2["Panel Design Rules"]
-    Dashboard_Standards --> S3["Naming Convention"]
-    Dashboard_Standards --> S4["Grafana — Dashboard as Code"]
-    Dashboard_Standards --> S5["Validation Checklist"]
-    Dashboard_Standards --> S6["Dashboard Review Cadence"]
-```
-
 ## Required Dashboards
 
 | Dashboard | Audience | Refresh |

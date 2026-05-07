@@ -1,14 +1,4 @@
 # CloudIQ Architecture
-
-```mermaid
-flowchart LR
-    CloudIQ_Architecture["CloudIQ Architecture"]
-    CloudIQ_Architecture --> S0["Components"]
-    CloudIQ_Architecture --> S1["How It Works"]
-    CloudIQ_Architecture --> S2["Connectivity and Integration Points"]
-    CloudIQ_Architecture --> S3["Sizing and Capacity Model"]
-```
-
 ## Overview
 
 Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.

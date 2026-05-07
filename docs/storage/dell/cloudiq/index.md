@@ -12,18 +12,6 @@
 <a class="kb-card" href="security/"><strong>Security</strong><span>Hardening checklist, RBAC, encryption, audit logging, and compliance.</span></a>
 <a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    CloudIQ["CloudIQ"]
-    CloudIQ --> S0["Where It Fits"]
-    CloudIQ --> S1["Common Checks"]
-    CloudIQ --> S2["Health Commands"]
-    CloudIQ --> S3["Incident Notes"]
-    CloudIQ --> S4["Change Notes"]
-    CloudIQ --> S5["Best Practices"]
-```
-
 ## Overview
 
 Dell CloudIQ is a cloud-native AIOps platform that collects telemetry from Dell storage, server, and networking infrastructure via the Secure Connect Gateway and presents health scores, capacity forecasts, and performance analytics through a web dashboard and REST API. CloudIQ continuously analyses telemetry against Dell's anomaly models and generates proactive alerts before issues become outages. It covers PowerMax, PowerStore, PowerScale, Unity, VPLEX, Data Domain, and other platforms.

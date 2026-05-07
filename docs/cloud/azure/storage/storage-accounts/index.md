@@ -1,16 +1,4 @@
 # Storage Accounts
-
-```mermaid
-flowchart LR
-    Storage_Accounts["Storage Accounts"]
-    Storage_Accounts --> S0["Purpose"]
-    Storage_Accounts --> S1["Common checks"]
-    Storage_Accounts --> S2["Incident notes"]
-    Storage_Accounts --> S3["Change notes"]
-    Storage_Accounts --> S4["Useful commands"]
-    Storage_Accounts --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Storage Storage Accounts notes, checks, troubleshooting, commands, change notes, and field references.

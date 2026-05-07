@@ -26,17 +26,6 @@ Lightweight Directory Access Protocol — directory service query and authentica
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    LDAP["LDAP"]
-    LDAP --> S0["Key Concepts"]
-    LDAP --> S1["Common ldapsearch Queries"]
-    LDAP --> S2["LDAPS Verification"]
-    LDAP --> S3["Application LDAP Integration (Linux PAM/SSSD)"]
-    LDAP --> S4["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

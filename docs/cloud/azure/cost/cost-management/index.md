@@ -1,14 +1,4 @@
 # Azure Cost Management
-
-```mermaid
-flowchart LR
-    Cost_Management["Cost Management"]
-    Cost_Management --> S0["Daily Checks"]
-    Cost_Management --> S1["Operational Tasks"]
-    Cost_Management --> S2["Common Issues"]
-    Cost_Management --> S3["Maintenance Notes"]
-```
-
 ## Overview
 
 Azure Cost Management is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

@@ -1,20 +1,6 @@
 # Windows Server Services
 
 Managing Windows services via PowerShell and sc.exe.
-
-```mermaid
-flowchart LR
-    Server_Services["Server Services"]
-    Server_Services --> S0["Service Status and Control"]
-    Server_Services --> S1["Listing Services"]
-    Server_Services --> S2["Service Account and Dependencies"]
-    Server_Services --> S3["sc.exe — Service Control (Legacy / Scripts)"]
-    Server_Services --> S4["Key Infrastructure Services"]
-    Server_Services --> S5["Service Recovery Options"]
-    Server_Services --> S6["Remote Service Management"]
-    Server_Services --> S7["Service Logs via Event Viewer"]
-```
-
 ## Service Status and Control
 
 ```powershell

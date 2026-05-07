@@ -3,19 +3,6 @@
 > Part of the [SRM](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    SRM_Integration["SRM Integration"]
-    SRM_Integration --> S0["Dell EMC SRA for PowerMax"]
-    SRM_Integration --> S1["Pure Storage SRA"]
-    SRM_Integration --> S2["NetApp SnapMirror SRA"]
-    SRM_Integration --> S3["vSphere Replication Configuration"]
-    SRM_Integration --> S4["NSX Network Mapping"]
-    SRM_Integration --> S5["Aria Operations Integration"]
-    SRM_Integration --> S6["Runbook Integration"]
-```
-
 ## Dell EMC SRA for PowerMax
 
 The Dell EMC SRA translates SRM storage operations into SYMCLI/Unisphere REST API calls against PowerMax arrays.

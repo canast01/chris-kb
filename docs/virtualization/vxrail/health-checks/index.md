@@ -1,17 +1,4 @@
 # VxRail Health Checks
-
-```mermaid
-flowchart LR
-    Health_Checks["Health Checks"]
-    Health_Checks --> S0["Where It Fits"]
-    Health_Checks --> S1["Daily Checks"]
-    Health_Checks --> S2["Health Commands"]
-    Health_Checks --> S3["Common Issues"]
-    Health_Checks --> S4["Operational Tasks"]
-    Health_Checks --> S5["Upgrade Notes"]
-    Health_Checks --> S6["Best Practices"]
-```
-
 ## Overview
 
 VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.

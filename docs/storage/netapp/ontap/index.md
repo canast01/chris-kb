@@ -65,19 +65,6 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    NetApp_ONTAP["NetApp ONTAP"]
-    NetApp_ONTAP --> S0["Where It Fits"]
-    NetApp_ONTAP --> S1["Daily Checks"]
-    NetApp_ONTAP --> S2["Health Commands"]
-    NetApp_ONTAP --> S3["Common Issues"]
-    NetApp_ONTAP --> S4["Operational Tasks"]
-    NetApp_ONTAP --> S5["Upgrade Notes"]
-    NetApp_ONTAP --> S6["Best Practices"]
-```
-
 ## Overview
 
 NetApp ONTAP is the enterprise storage operating system running on AFF (all-flash), FAS (hybrid flash/disk), and ONTAP Select (software-defined) platforms. It organizes storage in a hierarchy of cluster → nodes → aggregates → SVMs (Storage VMs) → volumes → LUNs or shares, and serves data over NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3. Built-in data protection features include SnapMirror for replication, SnapVault for backup retention, and SyncMirror for RAID-level mirroring across disk shelves or HA pairs.

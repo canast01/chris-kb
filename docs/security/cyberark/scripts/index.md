@@ -3,19 +3,6 @@
 PowerShell automation using the `psPAS` module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.
 
 ---
-
-```mermaid
-flowchart LR
-    CyberArk_Scripts["CyberArk Scripts"]
-    CyberArk_Scripts --> S0["Prerequisites"]
-    CyberArk_Scripts --> S1["Account Onboarding"]
-    CyberArk_Scripts --> S2["Password Retrieval"]
-    CyberArk_Scripts --> S3["Safe Management"]
-    CyberArk_Scripts --> S4["CPM Rotation Status Report"]
-    CyberArk_Scripts --> S5["Session Recording Inventory"]
-    CyberArk_Scripts --> S6["Failed Rotation Alert"]
-```
-
 ## Prerequisites
 
 ```powershell

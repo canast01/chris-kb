@@ -1,14 +1,4 @@
 # SnapCenter Troubleshooting
-
-```mermaid
-flowchart LR
-    SnapCenter_Troublesh["SnapCenter Troubleshoo"]
-    SnapCenter_Troublesh --> S0["Common Issues"]
-    SnapCenter_Troublesh --> S1["Diagnostic Commands"]
-    SnapCenter_Troublesh --> S2["Log Locations"]
-    SnapCenter_Troublesh --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

@@ -3,20 +3,6 @@
 > Part of the [Cisco MDS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    MDS_Security["MDS Security"]
-    MDS_Security --> S0["Hardening Checklist"]
-    MDS_Security --> S1["Disable Unused Services"]
-    MDS_Security --> S2["AAA Configuration (TACACS+)"]
-    MDS_Security --> S3["Role-Based Access Control"]
-    MDS_Security --> S4["VSAN Isolation"]
-    MDS_Security --> S5["Management Interface IP ACL"]
-    MDS_Security --> S6["SNMP Hardening"]
-    MDS_Security --> S7["Audit Logging"]
-```
-
 ## Hardening Checklist
 
 - [ ] Telnet, HTTP, and TFTP disabled; SSH and HTTPS only

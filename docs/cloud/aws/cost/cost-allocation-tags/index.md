@@ -1,17 +1,4 @@
 # AWS Cost Allocation Tags
-
-```mermaid
-flowchart LR
-    Allocation_Tags["Allocation Tags"]
-    Allocation_Tags --> S0["Where It Fits"]
-    Allocation_Tags --> S1["Daily Checks"]
-    Allocation_Tags --> S2["Health Commands"]
-    Allocation_Tags --> S3["Common Issues"]
-    Allocation_Tags --> S4["Operational Tasks"]
-    Allocation_Tags --> S5["Upgrade Notes"]
-    Allocation_Tags --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Cost Allocation Tags notes for day-to-day infrastructure operations.

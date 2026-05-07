@@ -1,16 +1,4 @@
 # SRM Security
-
-```mermaid
-flowchart LR
-    SRM_Security["SRM Security"]
-    SRM_Security --> S0["vCenter RBAC for DR Operators"]
-    SRM_Security --> S1["Site Pair Service Account"]
-    SRM_Security --> S2["Test Failover Network Isolation"]
-    SRM_Security --> S3["Certificate Management"]
-    SRM_Security --> S4["Firewall Ports"]
-    SRM_Security --> S5["Audit Logging"]
-```
-
 ## vCenter RBAC for DR Operators
 
 Define a dedicated `DR-Operator` role in vCenter with only the privileges required for SRM operations:

@@ -1,15 +1,4 @@
 # VMware Certificate Expiration Tracking
-
-```mermaid
-flowchart LR
-    Expiration_Tracking["Expiration Tracking"]
-    Expiration_Tracking --> S0["Certificates to Track"]
-    Expiration_Tracking --> S1["Expiration Tracking Schedule"]
-    Expiration_Tracking --> S2["Certificate Replacement Process"]
-    Expiration_Tracking --> S3["Validation After Replacement"]
-    Expiration_Tracking --> S4["Emergency Escalation"]
-```
-
 ## Certificates to Track
 
 | Certificate | Location | Risk if Expired |

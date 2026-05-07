@@ -3,19 +3,6 @@
 > Part of the [Standards](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Cluster_Standard["Cluster Standard"]
-    Cluster_Standard --> S0["Minimum Host Count"]
-    Cluster_Standard --> S1["vSphere HA"]
-    Cluster_Standard --> S2["DRS"]
-    Cluster_Standard --> S3["EVC (Enhanced vMotion Compatibility)"]
-    Cluster_Standard --> S4["vSAN (for vSAN-enabled clusters)"]
-    Cluster_Standard --> S5["Resource Pools"]
-    Cluster_Standard --> S6["New Cluster Checklist"]
-```
-
 ## Overview
 
 This standard defines the minimum required configuration for all vSphere clusters in the production environment. Any new cluster must meet these requirements before workloads are placed on it.

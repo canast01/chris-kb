@@ -1,20 +1,6 @@
 # Windows Server Event Logs
 
 Querying, filtering, and forwarding Windows event logs via PowerShell.
-
-```mermaid
-flowchart LR
-    Event_Logs["Event Logs"]
-    Event_Logs --> S0["Key Event Logs"]
-    Event_Logs --> S1["Get-WinEvent — Common Queries"]
-    Event_Logs --> S2["Key Security Event IDs"]
-    Event_Logs --> S3["Searching by Event ID"]
-    Event_Logs --> S4["Exporting Logs"]
-    Event_Logs --> S5["Event Log Forwarding (WEF)"]
-    Event_Logs --> S6["Log Size and Retention"]
-    Event_Logs --> S7["Sysmon (Extended Logging)"]
-```
-
 ## Key Event Logs
 
 | Log | Path | Content |

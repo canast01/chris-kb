@@ -1,17 +1,4 @@
 # NetApp Operations — Alerts
-
-```mermaid
-flowchart LR
-    NetApp_Operations["NetApp Operations"]
-    NetApp_Operations --> S0["ONTAP EMS Alerts"]
-    NetApp_Operations --> S1["AutoSupport Notifications"]
-    NetApp_Operations --> S2["SNMP Alerting"]
-    NetApp_Operations --> S3["BlueXP Alerts (Keystone / Cloud Manager)"]
-    NetApp_Operations --> S4["Alert Triage Priority"]
-    NetApp_Operations --> S5["Resolving Health Alerts"]
-    NetApp_Operations --> S6["Common Alerts"]
-```
-
 ## ONTAP EMS Alerts
 
 ```bash

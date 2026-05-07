@@ -1,17 +1,4 @@
 # ESXi Storage Paths
-
-```mermaid
-flowchart LR
-    Storage_Paths["Storage Paths"]
-    Storage_Paths --> S0["Where It Fits"]
-    Storage_Paths --> S1["Daily Checks"]
-    Storage_Paths --> S2["Health Commands"]
-    Storage_Paths --> S3["Common Issues"]
-    Storage_Paths --> S4["Operational Tasks"]
-    Storage_Paths --> S5["Upgrade Notes"]
-    Storage_Paths --> S6["Best Practices"]
-```
-
 ## Overview
 
 Datastore visibility, multipathing, HBA paths, latency, and path failover checks.

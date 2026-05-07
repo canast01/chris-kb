@@ -1,16 +1,4 @@
 # Azure Troubleshooting
-
-```mermaid
-flowchart LR
-    Azure_Troubleshootin["Azure Troubleshooting"]
-    Azure_Troubleshootin --> S0["VM Connectivity Issues"]
-    Azure_Troubleshootin --> S1["NSG Troubleshooting"]
-    Azure_Troubleshootin --> S2["Azure AD Authentication Errors"]
-    Azure_Troubleshootin --> S3["Azure Storage Access Denied"]
-    Azure_Troubleshootin --> S4["AKS Pod Not Starting"]
-    Azure_Troubleshootin --> S5["App Service 502/503"]
-```
-
 ## VM Connectivity Issues
 
 ```bash

@@ -1,17 +1,4 @@
 # AWS EventBridge
-
-```mermaid
-flowchart LR
-    AWS_EventBridge["AWS EventBridge"]
-    AWS_EventBridge --> S0["Where It Fits"]
-    AWS_EventBridge --> S1["Daily Checks"]
-    AWS_EventBridge --> S2["Health Commands"]
-    AWS_EventBridge --> S3["Common Issues"]
-    AWS_EventBridge --> S4["Operational Tasks"]
-    AWS_EventBridge --> S5["Upgrade Notes"]
-    AWS_EventBridge --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS EventBridge notes for day-to-day infrastructure operations.

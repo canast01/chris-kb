@@ -3,20 +3,6 @@
 > Part of the [NetApp ONTAP](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Cluster Health Check (Perl)"]
-    Scripts --> S1["SnapMirror Lag Monitor (Bash)"]
-    Scripts --> S2["Volume Capacity Reporter (Python)"]
-    Scripts --> S3["Ansible ONTAP Health Playbook"]
-    Scripts --> S4["Aggregate Space Alert (Perl)"]
-    Scripts --> S5["Windows: ONTAP Cluster Health via REST API (PowerShell)"]
-    Scripts --> S6["Windows: ONTAP Volume Space Check via Plink (CMD)"]
-    Scripts --> S7["Daily Check Script (Bash/SSH)"]
-```
-
 ## Cluster Health Check (Perl)
 
 SSH to an ONTAP cluster management LIF, run key health commands, parse the output, and print a PASS/WARNING/CRITICAL summary with an exit code reflecting the worst finding.

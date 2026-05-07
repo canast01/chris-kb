@@ -78,19 +78,6 @@
   <span>Srdf notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_PowerMax["Dell PowerMax"]
-    Dell_PowerMax --> S0["Where It Fits"]
-    Dell_PowerMax --> S1["Daily Checks"]
-    Dell_PowerMax --> S2["Health Commands"]
-    Dell_PowerMax --> S3["Common Issues"]
-    Dell_PowerMax --> S4["Operational Tasks"]
-    Dell_PowerMax --> S5["Upgrade Notes"]
-    Dell_PowerMax --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax 2000 and 8000 models, designed for mission-critical workloads requiring sub-millisecond latency and continuous availability. It is managed via Unisphere for PowerMax (GUI) or SYMCLI (Solutions Enabler). PowerMax provides synchronous and asynchronous remote replication through SRDF (Symmetrix Remote Data Facility), local snapshots via SnapVX (up to 256 snapshots per device), and automated storage tiering with FAST VP.

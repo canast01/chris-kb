@@ -1,17 +1,4 @@
 # Vmware Cloud Foundation Workload Domains
-
-```mermaid
-flowchart LR
-    Workload_Domains["Workload Domains"]
-    Workload_Domains --> S0["Where It Fits"]
-    Workload_Domains --> S1["Daily Checks"]
-    Workload_Domains --> S2["Health Commands"]
-    Workload_Domains --> S3["Common Issues"]
-    Workload_Domains --> S4["Operational Tasks"]
-    Workload_Domains --> S5["Upgrade Notes"]
-    Workload_Domains --> S6["Best Practices"]
-```
-
 ## Overview
 
 VCF workload domain structure, ownership, lifecycle, and operational boundaries.

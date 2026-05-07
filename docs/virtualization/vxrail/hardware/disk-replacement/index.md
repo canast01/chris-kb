@@ -1,17 +1,4 @@
 # VxRail Disk Replacement
-
-```mermaid
-flowchart LR
-    Disk_Replacement["Disk Replacement"]
-    Disk_Replacement --> S0["Where It Fits"]
-    Disk_Replacement --> S1["Daily Checks"]
-    Disk_Replacement --> S2["Health Commands"]
-    Disk_Replacement --> S3["Common Issues"]
-    Disk_Replacement --> S4["Operational Tasks"]
-    Disk_Replacement --> S5["Upgrade Notes"]
-    Disk_Replacement --> S6["Best Practices"]
-```
-
 ## Overview
 
 Disk fault workflow, vSAN impact, replacement validation, and vendor handoff.

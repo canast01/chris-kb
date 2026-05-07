@@ -1,17 +1,4 @@
 # Vmware Cloud Foundation SDDC Manager
-
-```mermaid
-flowchart LR
-    SDDC_Manager["SDDC Manager"]
-    SDDC_Manager --> S0["Where It Fits"]
-    SDDC_Manager --> S1["Daily Checks"]
-    SDDC_Manager --> S2["Health Commands"]
-    SDDC_Manager --> S3["Common Issues"]
-    SDDC_Manager --> S4["Operational Tasks"]
-    SDDC_Manager --> S5["Upgrade Notes"]
-    SDDC_Manager --> S6["Best Practices"]
-```
-
 ## Overview
 
 SDDC Manager health, lifecycle operations, inventory, credentials, and task checks.

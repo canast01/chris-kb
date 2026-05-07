@@ -3,20 +3,6 @@
 > Part of the [Dell PowerPath](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Path Health Check"]
-    Scripts --> S1["Path Count Validator"]
-    Scripts --> S2["Policy Audit"]
-    Scripts --> S3["Windows: PowerPath Device Status via Plink (CMD)"]
-    Scripts --> S4["Windows: PowerPath Check on Local Windows Host (CMD)"]
-    Scripts --> S5["Daily Check Script"]
-    Scripts --> S6["Incident Triage Script"]
-    Scripts --> S7["Change Pre-Check Script"]
-```
-
 ## Path Health Check
 
 Runs `powermt display dev=all`, counts total devices, dead paths, and devices with fewer paths than the expected minimum. Prints a summary table of each device with its path counts. Exits non-zero if any dead paths are found. Suitable for cron or a monitoring agent.

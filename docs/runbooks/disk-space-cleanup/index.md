@@ -1,15 +1,4 @@
 # Disk Space Cleanup Runbook
-
-```mermaid
-flowchart LR
-    Cleanup_Runbook["Cleanup Runbook"]
-    Cleanup_Runbook --> S0["Identify the Problem"]
-    Cleanup_Runbook --> S1["Common Cleanup Targets"]
-    Cleanup_Runbook --> S2["Windows Disk Cleanup"]
-    Cleanup_Runbook --> S3["Post-Cleanup Validation"]
-    Cleanup_Runbook --> S4["Safety Rules"]
-```
-
 ## Identify the Problem
 
 ```bash

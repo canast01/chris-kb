@@ -3,18 +3,6 @@
 > Part of the [NetApp SnapMirror](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Lag Monitor (Bash)"]
-    Scripts --> S1["Planned DR Failover (Bash)"]
-    Scripts --> S2["Relationship Health Report (Perl)"]
-    Scripts --> S3["Ansible SnapMirror Resync Playbook"]
-    Scripts --> S4["Windows: SnapMirror Relationship Status via REST API (PowerShell)"]
-    Scripts --> S5["Windows: SnapMirror Lag Alert via Plink (CMD)"]
-```
-
 ## Lag Monitor (Bash)
 
 SSH to the destination ONTAP cluster, parse SnapMirror lag times, colour-code each relationship by severity, and exit with a code reflecting the worst status. Thresholds are configurable via environment variables.

@@ -50,15 +50,6 @@
 </div>
 
 </div>
-
-```mermaid
-flowchart LR
-    Commvault["Commvault"]
-    Commvault --> S0["Daily Checks"]
-    Commvault --> S1["Health Commands"]
-    Commvault --> S2["Upgrade Workflow"]
-```
-
 ## Overview
 
 Commvault provides enterprise backup, recovery, replication, archive, and data protection management.

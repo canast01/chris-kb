@@ -1,17 +1,4 @@
 # VxRail Post-Upgrade Validation
-
-```mermaid
-flowchart LR
-    Post_Upgrade_Validat["Post-Upgrade Validatio"]
-    Post_Upgrade_Validat --> S0["Where It Fits"]
-    Post_Upgrade_Validat --> S1["Daily Checks"]
-    Post_Upgrade_Validat --> S2["Health Commands"]
-    Post_Upgrade_Validat --> S3["Common Issues"]
-    Post_Upgrade_Validat --> S4["Operational Tasks"]
-    Post_Upgrade_Validat --> S5["Upgrade Notes"]
-    Post_Upgrade_Validat --> S6["Best Practices"]
-```
-
 ## Overview
 
 Validation after upgrade, alert review, cluster health, and documentation.

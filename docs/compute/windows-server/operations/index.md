@@ -1,15 +1,4 @@
 # Windows Server — Operations
-
-```mermaid
-flowchart LR
-    Windows_Server["Windows Server"]
-    Windows_Server --> S0["Daily Health Checks"]
-    Windows_Server --> S1["Maintenance Tasks"]
-    Windows_Server --> S2["Reboot Procedure"]
-    Windows_Server --> S3["Common Operational Commands"]
-    Windows_Server --> S4["Related Sections"]
-```
-
 ## Daily Health Checks
 
 Run the following checks at the start of each operational shift or as part of an automated morning report.

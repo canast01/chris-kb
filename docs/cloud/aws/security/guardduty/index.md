@@ -1,17 +1,4 @@
 # AWS GuardDuty
-
-```mermaid
-flowchart LR
-    AWS_GuardDuty["AWS GuardDuty"]
-    AWS_GuardDuty --> S0["Where It Fits"]
-    AWS_GuardDuty --> S1["Daily Checks"]
-    AWS_GuardDuty --> S2["Health Commands"]
-    AWS_GuardDuty --> S3["Common Issues"]
-    AWS_GuardDuty --> S4["Operational Tasks"]
-    AWS_GuardDuty --> S5["Upgrade Notes"]
-    AWS_GuardDuty --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS GuardDuty notes for day-to-day infrastructure operations.

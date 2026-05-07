@@ -1,17 +1,4 @@
 # AWS FSx
-
-```mermaid
-flowchart LR
-    AWS_FSx["AWS FSx"]
-    AWS_FSx --> S0["Where It Fits"]
-    AWS_FSx --> S1["Daily Checks"]
-    AWS_FSx --> S2["Health Commands"]
-    AWS_FSx --> S3["Common Issues"]
-    AWS_FSx --> S4["Operational Tasks"]
-    AWS_FSx --> S5["Upgrade Notes"]
-    AWS_FSx --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS FSx notes for day-to-day infrastructure operations.

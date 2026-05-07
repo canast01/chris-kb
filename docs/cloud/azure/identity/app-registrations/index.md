@@ -1,16 +1,4 @@
 # App Registrations
-
-```mermaid
-flowchart LR
-    App_Registrations["App Registrations"]
-    App_Registrations --> S0["Purpose"]
-    App_Registrations --> S1["Common checks"]
-    App_Registrations --> S2["Incident notes"]
-    App_Registrations --> S3["Change notes"]
-    App_Registrations --> S4["Useful commands"]
-    App_Registrations --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Identity App Registrations notes, checks, troubleshooting, commands, change notes, and field references.

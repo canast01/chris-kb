@@ -53,19 +53,6 @@
   <span>Support bundles, case management, and escalation paths.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    NetApp_SnapCenter["NetApp SnapCenter"]
-    NetApp_SnapCenter --> S0["Where It Fits"]
-    NetApp_SnapCenter --> S1["Daily Checks"]
-    NetApp_SnapCenter --> S2["Health Commands"]
-    NetApp_SnapCenter --> S3["Common Issues"]
-    NetApp_SnapCenter --> S4["Operational Tasks"]
-    NetApp_SnapCenter --> S5["Upgrade Notes"]
-    NetApp_SnapCenter --> S6["Best Practices"]
-```
-
 ## Overview
 
 NetApp SnapCenter is centralized backup and recovery software that leverages application-consistent ONTAP snapshots to protect databases, virtual machines, and filesystems. It uses a plugin architecture to quiesce applications before snapshot creation, ensuring data consistency, and integrates with SnapMirror and SnapVault to replicate backups to secondary or tertiary storage. The web GUI is accessible at `https://[server]:8146` and automation is available via PowerShell cmdlets.

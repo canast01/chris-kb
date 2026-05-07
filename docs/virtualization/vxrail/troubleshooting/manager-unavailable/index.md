@@ -1,17 +1,4 @@
 # VxRail Manager Unavailable
-
-```mermaid
-flowchart LR
-    Manager_Unavailable["Manager Unavailable"]
-    Manager_Unavailable --> S0["Where It Fits"]
-    Manager_Unavailable --> S1["Daily Checks"]
-    Manager_Unavailable --> S2["Health Commands"]
-    Manager_Unavailable --> S3["Common Issues"]
-    Manager_Unavailable --> S4["Operational Tasks"]
-    Manager_Unavailable --> S5["Upgrade Notes"]
-    Manager_Unavailable --> S6["Best Practices"]
-```
-
 ## Overview
 
 VxRail Manager UI or service availability issues.

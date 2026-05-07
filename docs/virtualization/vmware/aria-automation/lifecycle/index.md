@@ -1,16 +1,4 @@
 # Aria Automation — Lifecycle
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["Version Matrix"]
-    Aria_Automation --> S1["Upgrade Path"]
-    Aria_Automation --> S2["Pre-Upgrade Checklist"]
-    Aria_Automation --> S3["Post-Upgrade Validation"]
-    Aria_Automation --> S4["EOL Tracking"]
-    Aria_Automation --> S5["Patch Cadence"]
-```
-
 ## Version Matrix
 
 | Product Name | Version | vSphere Compatibility | Notes |

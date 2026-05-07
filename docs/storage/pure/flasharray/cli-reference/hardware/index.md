@@ -1,14 +1,6 @@
 # Drives & Hardware
 
 > Part of the [Pure FlashArray CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Hardware["Hardware"]
-    Hardware --> S0["puredrive — Drives"]
-    Hardware --> S1["purehw — Hardware"]
-```
-
 ---
 
 ## puredrive — Drives

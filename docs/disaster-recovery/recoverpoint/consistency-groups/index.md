@@ -1,16 +1,4 @@
 # Consistency Groups
-
-```mermaid
-flowchart LR
-    Consistency_Groups["Consistency Groups"]
-    Consistency_Groups --> S0["Purpose"]
-    Consistency_Groups --> S1["Common checks"]
-    Consistency_Groups --> S2["Incident notes"]
-    Consistency_Groups --> S3["Change notes"]
-    Consistency_Groups --> S4["Useful commands"]
-    Consistency_Groups --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Recoverpoint Consistency Groups notes, checks, troubleshooting, commands, change notes, and field references.

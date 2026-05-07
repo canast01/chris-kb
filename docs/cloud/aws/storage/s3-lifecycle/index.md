@@ -1,17 +1,4 @@
 # AWS S3 Lifecycle
-
-```mermaid
-flowchart LR
-    S3_Lifecycle["S3 Lifecycle"]
-    S3_Lifecycle --> S0["Where It Fits"]
-    S3_Lifecycle --> S1["Daily Checks"]
-    S3_Lifecycle --> S2["Health Commands"]
-    S3_Lifecycle --> S3["Common Issues"]
-    S3_Lifecycle --> S4["Operational Tasks"]
-    S3_Lifecycle --> S5["Upgrade Notes"]
-    S3_Lifecycle --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS S3 Lifecycle notes for day-to-day infrastructure operations.

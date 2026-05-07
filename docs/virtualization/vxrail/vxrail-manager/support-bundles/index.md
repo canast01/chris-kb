@@ -1,17 +1,4 @@
 # VxRail Support Bundles
-
-```mermaid
-flowchart LR
-    Support_Bundles["Support Bundles"]
-    Support_Bundles --> S0["Where It Fits"]
-    Support_Bundles --> S1["Daily Checks"]
-    Support_Bundles --> S2["Health Commands"]
-    Support_Bundles --> S3["Common Issues"]
-    Support_Bundles --> S4["Operational Tasks"]
-    Support_Bundles --> S5["Upgrade Notes"]
-    Support_Bundles --> S6["Best Practices"]
-```
-
 ## Overview
 
 Support bundle creation, evidence capture, case attachment, and collection issues.

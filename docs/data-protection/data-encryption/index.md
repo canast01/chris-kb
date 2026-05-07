@@ -1,18 +1,6 @@
 # Data Encryption
 
 Encryption protects data at rest, in transit, and during processing against unauthorised access.
-
-```mermaid
-flowchart LR
-    Data_Encryption["Data Encryption"]
-    Data_Encryption --> S0["Encryption Requirements by Classification"]
-    Data_Encryption --> S1["Encryption at Rest"]
-    Data_Encryption --> S2["Encryption in Transit"]
-    Data_Encryption --> S3["Database Encryption"]
-    Data_Encryption --> S4["Key Rotation Schedule"]
-    Data_Encryption --> S5["Verification Checklist"]
-```
-
 ## Encryption Requirements by Classification
 
 | Level | At Rest | In Transit | Key Management |

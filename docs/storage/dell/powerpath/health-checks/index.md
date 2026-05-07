@@ -1,16 +1,4 @@
 # PowerPath Health Checks
-
-```mermaid
-flowchart LR
-    Health_Checks["Health Checks"]
-    Health_Checks --> S0["Daily Health Check"]
-    Health_Checks --> S1["Path State Verification"]
-    Health_Checks --> S2["Port / HBA Check"]
-    Health_Checks --> S3["Policy Verification"]
-    Health_Checks --> S4["Pre-Change Checklist"]
-    Health_Checks --> S5["Health Summary Table"]
-```
-
 ## Daily Health Check
 
 ```bash

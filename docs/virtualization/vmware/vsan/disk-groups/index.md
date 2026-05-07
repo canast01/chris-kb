@@ -1,17 +1,4 @@
 # vSAN Disk Groups
-
-```mermaid
-flowchart LR
-    Disk_Groups["Disk Groups"]
-    Disk_Groups --> S0["Where It Fits"]
-    Disk_Groups --> S1["Daily Checks"]
-    Disk_Groups --> S2["Health Commands"]
-    Disk_Groups --> S3["Common Issues"]
-    Disk_Groups --> S4["Operational Tasks"]
-    Disk_Groups --> S5["Upgrade Notes"]
-    Disk_Groups --> S6["Best Practices"]
-```
-
 ## Overview
 
 Disk group health, cache/capacity devices, failures, and replacement notes.

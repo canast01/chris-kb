@@ -1,16 +1,4 @@
 # VMware Certificate Quick Reference
-
-```mermaid
-flowchart LR
-    Quick_Reference["Quick Reference"]
-    Quick_Reference --> S0["Check Expiration Quickly"]
-    Quick_Reference --> S1["Identify Certificate Type"]
-    Quick_Reference --> S2["Review Trusted Root Chain"]
-    Quick_Reference --> S3["Check STS Certificate"]
-    Quick_Reference --> S4["Validate After Replacement"]
-    Quick_Reference --> S5["Escalate If"]
-```
-
 ## Check Expiration Quickly
 
 In vCenter Appliance Management (VAMI) at `https://<vcenter>:5480`:

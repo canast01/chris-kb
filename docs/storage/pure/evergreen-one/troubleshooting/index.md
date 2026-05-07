@@ -1,14 +1,4 @@
 # Pure Storage Evergreen//One Troubleshooting
-
-```mermaid
-flowchart LR
-    Evergreen__One_Troub["Evergreen//One Trouble"]
-    Evergreen__One_Troub --> S0["Common Issues"]
-    Evergreen__One_Troub --> S1["Diagnostic Commands"]
-    Evergreen__One_Troub --> S2["Log Locations"]
-    Evergreen__One_Troub --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

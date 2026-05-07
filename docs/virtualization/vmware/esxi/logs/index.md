@@ -1,17 +1,4 @@
 # ESXi Logs
-
-```mermaid
-flowchart LR
-    ESXi_Logs["ESXi Logs"]
-    ESXi_Logs --> S0["Where It Fits"]
-    ESXi_Logs --> S1["Daily Checks"]
-    ESXi_Logs --> S2["Health Commands"]
-    ESXi_Logs --> S3["Common Issues"]
-    ESXi_Logs --> S4["Operational Tasks"]
-    ESXi_Logs --> S5["Upgrade Notes"]
-    ESXi_Logs --> S6["Best Practices"]
-```
-
 ## Overview
 
 Common ESXi log locations, review patterns, and evidence collection.

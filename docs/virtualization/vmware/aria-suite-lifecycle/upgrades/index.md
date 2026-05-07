@@ -1,20 +1,6 @@
 # Aria Suite Upgrade Procedure
 
 Covers upgrades for Aria Suite Lifecycle, Aria Operations, Aria Operations for Logs, and Aria Automation.
-
-```mermaid
-flowchart LR
-    Upgrade_Procedure["Upgrade Procedure"]
-    Upgrade_Procedure --> S0["Upgrade Order"]
-    Upgrade_Procedure --> S1["Phase 1: Pre-Upgrade Checks"]
-    Upgrade_Procedure --> S2["Phase 2: Aria Suite Lifecycle Upgrade"]
-    Upgrade_Procedure --> S3["Phase 3: Aria Operations Upgrade"]
-    Upgrade_Procedure --> S4["Phase 4: Aria Operations for Logs Upgrade"]
-    Upgrade_Procedure --> S5["Phase 5: Aria Automation Upgrade"]
-    Upgrade_Procedure --> S6["Phase 6: Final Validation"]
-    Upgrade_Procedure --> S7["Documentation"]
-```
-
 ## Upgrade Order
 
 1. Aria Suite Lifecycle

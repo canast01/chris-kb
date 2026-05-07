@@ -3,18 +3,6 @@
 > Part of the [Cisco MDS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    MDS_Architecture["MDS Architecture"]
-    MDS_Architecture --> S0["Platform Reference"]
-    MDS_Architecture --> S1["Fabric Design"]
-    MDS_Architecture --> S2["VSAN Design"]
-    MDS_Architecture --> S3["FC Services"]
-    MDS_Architecture --> S4["Port Types"]
-    MDS_Architecture --> S5["Zoning"]
-```
-
 ## Overview
 
 Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC) and FCoE. The core isolation mechanism is the **VSAN (Virtual SAN)** — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.

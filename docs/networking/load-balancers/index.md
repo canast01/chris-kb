@@ -1,19 +1,6 @@
 # Load Balancers
 
 Load balancers distribute incoming traffic across a pool of backend servers. In enterprise infrastructure they front application servers, storage management APIs, and cloud endpoints.
-
-```mermaid
-flowchart LR
-    Load_Balancers["Load Balancers"]
-    Load_Balancers --> S0["Check VIP Availability"]
-    Load_Balancers --> S1["Check Pool Member Health"]
-    Load_Balancers --> S2["Pool Member Status Values (F5)"]
-    Load_Balancers --> S3["SSL Certificate Check"]
-    Load_Balancers --> S4["Health Monitor Validation"]
-    Load_Balancers --> S5["Persistence"]
-    Load_Balancers --> S6["Common Issues"]
-```
-
 ## Check VIP Availability
 
 ```bash

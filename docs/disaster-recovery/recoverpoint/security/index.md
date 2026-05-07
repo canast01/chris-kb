@@ -1,17 +1,4 @@
 # RecoverPoint Security
-
-```mermaid
-flowchart LR
-    RecoverPoint_Securit["RecoverPoint Security"]
-    RecoverPoint_Securit --> S0["Role-Based Access Control"]
-    RecoverPoint_Securit --> S1["API Token Management"]
-    RecoverPoint_Securit --> S2["Journal Encryption"]
-    RecoverPoint_Securit --> S3["Network Segmentation"]
-    RecoverPoint_Securit --> S4["SSH Hardening"]
-    RecoverPoint_Securit --> S5["Certificate Management"]
-    RecoverPoint_Securit --> S6["Audit Log"]
-```
-
 ## Role-Based Access Control
 
 RecoverPoint has three built-in roles. Use individual named accounts, never shared credentials:

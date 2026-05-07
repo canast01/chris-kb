@@ -1,17 +1,4 @@
 # Data Domain — Troubleshooting
-
-```mermaid
-flowchart LR
-    Data_Domain["Data Domain"]
-    Data_Domain --> S0["Issue Reference"]
-    Data_Domain --> S1["Diagnostic Commands"]
-    Data_Domain --> S2["Log Locations"]
-    Data_Domain --> S3["Replication Lag — Step-by-Step Investigation"]
-    Data_Domain --> S4["Low Dedup Ratio — Step-by-Step Investigation"]
-    Data_Domain --> S5["Filesystem Full — Emergency Steps"]
-    Data_Domain --> S6["Error Code Reference"]
-```
-
 ## Issue Reference
 
 | Symptom | Likely Cause | First Action |

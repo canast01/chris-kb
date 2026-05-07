@@ -1,15 +1,4 @@
 # PowerMax Security
-
-```mermaid
-flowchart LR
-    PowerMax_Security["PowerMax Security"]
-    PowerMax_Security --> S0["Hardening Checklist"]
-    PowerMax_Security --> S1["RBAC"]
-    PowerMax_Security --> S2["Encryption"]
-    PowerMax_Security --> S3["Audit Logging"]
-    PowerMax_Security --> S4["Compliance Notes"]
-```
-
 ## Hardening Checklist
 
 - [ ] Disable the default `smc` (array admin) local account after configuring LDAP/AD authentication

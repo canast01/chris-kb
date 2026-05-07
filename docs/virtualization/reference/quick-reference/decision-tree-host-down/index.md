@@ -1,19 +1,6 @@
 # Decision Tree: Host Down
 
 Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter.
-
-```mermaid
-flowchart LR
-    Host_Down["Host Down"]
-    Host_Down --> S0["Step 1 — Can You Ping the Host Management IP?"]
-    Host_Down --> S1["Step 2 — Can You SSH to the Host?"]
-    Host_Down --> S2["Step 3 — Check Management Agent Status"]
-    Host_Down --> S3["Step 4 — PSOD (Purple Screen of Death)?"]
-    Host_Down --> S4["Step 5 — Host Reconnects but VMs Are Missing?"]
-    Host_Down --> S5["Step 6 — Hardware Issues?"]
-    Host_Down --> S6["Escalation"]
-```
-
 ## Step 1 — Can You Ping the Host Management IP?
 
 ```bash

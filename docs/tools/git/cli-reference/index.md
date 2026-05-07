@@ -3,21 +3,6 @@
 Git is the standard distributed version control system. Every developer has a full copy of the repository history — commits, branches, and tags. Changes are staged before committing, and synced with remote repositories via push/pull.
 
 > Install: `brew install git` (macOS), `apt install git` (Debian/Ubuntu), or download from git-scm.com. Configure once with `git config --global user.name` and `git config --global user.email`.
-
-```mermaid
-flowchart LR
-    Git["Git"]
-    Git --> S0["Setup, Config and Remotes"]
-    Git --> S1["Status and Log"]
-    Git --> S2["Staging and Committing"]
-    Git --> S3["Branches"]
-    Git --> S4["Merge and Rebase"]
-    Git --> S5["Fetch, Pull and Push"]
-    Git --> S6["Stash"]
-    Git --> S7["Tags"]
-    Git --> S8["Reset and Restore"]
-```
-
 ---
 
 

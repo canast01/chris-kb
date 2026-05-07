@@ -3,19 +3,6 @@
 > Part of the [VxRail](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    VxRail_Standards["VxRail Standards"]
-    VxRail_Standards --> S0["Naming Conventions"]
-    VxRail_Standards --> S1["Cluster Sizing Standards"]
-    VxRail_Standards --> S2["vSAN Storage Policy Standards"]
-    VxRail_Standards --> S3["Network VLAN Standards"]
-    VxRail_Standards --> S4["Firmware and Software Standards"]
-    VxRail_Standards --> S5["Change Management Standards"]
-    VxRail_Standards --> S6["CMDB Standards"]
-```
-
 ## Naming Conventions
 
 | Item | Standard | Example |

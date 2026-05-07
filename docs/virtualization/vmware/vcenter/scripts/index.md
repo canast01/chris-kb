@@ -3,20 +3,6 @@
 > Part of the [vCenter](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["VM Health and Inventory Report (PowerShell / PowerCLI)"]
-    Scripts --> S1["Cluster Capacity Report (PowerShell / PowerCLI)"]
-    Scripts --> S2["Snapshot Cleanup Report (PowerShell / PowerCLI)"]
-    Scripts --> S3["vCenter Health Check (Python / pyVmomi)"]
-    Scripts --> S4["Ansible vCenter Operational Playbook"]
-    Scripts --> S5["Windows: vCenter Session Audit via REST API (PowerShell)"]
-    Scripts --> S6["Daily Check Script (PowerShell/PowerCLI)"]
-    Scripts --> S7["Incident Triage Script (PowerShell/PowerCLI)"]
-```
-
 ## VM Health and Inventory Report (PowerShell / PowerCLI)
 
 Connect to vCenter, enumerate all VMs, flag hygiene issues (stale snapshots, outdated Tools, missing backup tag), and export to CSV.

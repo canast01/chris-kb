@@ -1,17 +1,4 @@
 # NSX Tier Gateways
-
-```mermaid
-flowchart LR
-    Tier_Gateways["Tier Gateways"]
-    Tier_Gateways --> S0["Where It Fits"]
-    Tier_Gateways --> S1["Daily Checks"]
-    Tier_Gateways --> S2["Health Commands"]
-    Tier_Gateways --> S3["Common Issues"]
-    Tier_Gateways --> S4["Operational Tasks"]
-    Tier_Gateways --> S5["Upgrade Notes"]
-    Tier_Gateways --> S6["Best Practices"]
-```
-
 ## Overview
 
 Tier-0 and Tier-1 gateways, routing design, failover, and health checks.

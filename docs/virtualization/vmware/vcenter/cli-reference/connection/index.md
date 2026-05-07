@@ -1,18 +1,6 @@
 # Connection & Session
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Session["Session"]
-    Session --> S0["Install and Configure PowerCLI"]
-    Session --> S1["Connecting"]
-    Session --> S2["Session Info"]
-    Session --> S3["Disconnecting"]
-    Session --> S4["Running as a Script / Non-Interactive"]
-    Session --> S5["Proxy and Certificate Settings"]
-```
-
 ## Install and Configure PowerCLI
 
 ```powershell

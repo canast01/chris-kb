@@ -1,16 +1,4 @@
 # Aria Automation — Architecture
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["Deployment Models"]
-    Aria_Automation --> S1["On-Premises Cluster Topology"]
-    Aria_Automation --> S2["Services / Components"]
-    Aria_Automation --> S3["Single-Node vs. Cluster"]
-    Aria_Automation --> S4["Network Ports"]
-    Aria_Automation --> S5["Related Sections"]
-```
-
 ## Overview
 
 Aria Automation (formerly vRealize Automation) is available as a **SaaS offering** (VMware Aria Automation Cloud) or as an **on-premises appliance cluster**. The on-premises deployment is an appliance-based Kubernetes platform running microservices.

@@ -1,21 +1,6 @@
 # Replication
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
-
-```mermaid
-flowchart LR
-    Replication["Replication"]
-    Replication --> S0["Replication Sessions"]
-    Replication --> S1["Session States"]
-    Replication --> S2["Pause and Resume"]
-    Replication --> S3["Manual Sync"]
-    Replication --> S4["Planned Failover"]
-    Replication --> S5["Failback"]
-    Replication --> S6["Replication Connections"]
-    Replication --> S7["Create a Replication Session"]
-    Replication --> S8["Health Check"]
-```
-
 ## Replication Sessions
 
 ```bash

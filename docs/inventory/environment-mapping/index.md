@@ -1,20 +1,6 @@
 # Environment Mapping
 
 Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.
-
-```mermaid
-flowchart LR
-    Environment_Mapping["Environment Mapping"]
-    Environment_Mapping --> S0["Environment Tiers"]
-    Environment_Mapping --> S1["Dependency Map Template"]
-    Environment_Mapping --> S2["Application: Payments API"]
-    Environment_Mapping --> S3["Network Topology — Key Segments"]
-    Environment_Mapping --> S4["Cloud Resource Mapping"]
-    Environment_Mapping --> S5["Change Impact Assessment"]
-    Environment_Mapping --> S6["Mapping Maintenance"]
-    Environment_Mapping --> S7["Discovery Tools"]
-```
-
 ## Environment Tiers
 
 | Tier | Purpose | Change Risk | SLA |

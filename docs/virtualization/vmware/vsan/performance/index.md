@@ -1,17 +1,4 @@
 # vSAN Performance
-
-```mermaid
-flowchart LR
-    vSAN_Performance["vSAN Performance"]
-    vSAN_Performance --> S0["Where It Fits"]
-    vSAN_Performance --> S1["Daily Checks"]
-    vSAN_Performance --> S2["Health Commands"]
-    vSAN_Performance --> S3["Common Issues"]
-    vSAN_Performance --> S4["Operational Tasks"]
-    vSAN_Performance --> S5["Upgrade Notes"]
-    vSAN_Performance --> S6["Best Practices"]
-```
-
 ## Overview
 
 Latency, congestion, IOPS, throughput, and common performance review patterns.

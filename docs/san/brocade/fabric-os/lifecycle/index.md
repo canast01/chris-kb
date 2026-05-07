@@ -3,17 +3,6 @@
 > Part of the [Brocade Fabric OS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    OS_Lifecycle["OS Lifecycle"]
-    OS_Lifecycle --> S0["Version Tracking"]
-    OS_Lifecycle --> S1["Firmware Upgrade Procedure"]
-    OS_Lifecycle --> S2["configupload / configdownload (Backup and Restore)"]
-    OS_Lifecycle --> S3["Adding a New Switch to the Fabric"]
-    OS_Lifecycle --> S4["Switch Replacement"]
-```
-
 ## Version Tracking
 
 Fabric OS versions are tracked against the Broadcom end-of-support schedule. Version selection is driven by:

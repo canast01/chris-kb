@@ -1,16 +1,4 @@
 # Pair State
-
-```mermaid
-flowchart LR
-    Pair_State["Pair State"]
-    Pair_State --> S0["Purpose"]
-    Pair_State --> S1["Common checks"]
-    Pair_State --> S2["Incident notes"]
-    Pair_State --> S3["Change notes"]
-    Pair_State --> S4["Useful commands"]
-    Pair_State --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical SRDF/S Pair State notes, checks, troubleshooting, commands, change notes, and field references.

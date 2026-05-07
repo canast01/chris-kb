@@ -1,16 +1,4 @@
 # CommVault Lifecycle
-
-```mermaid
-flowchart LR
-    CommVault_Lifecycle["CommVault Lifecycle"]
-    CommVault_Lifecycle --> S0["Release Cadence"]
-    CommVault_Lifecycle --> S1["Upgrade Order"]
-    CommVault_Lifecycle --> S2["Pre-Upgrade Checklist"]
-    CommVault_Lifecycle --> S3["Post-Upgrade Validation"]
-    CommVault_Lifecycle --> S4["CommVault to Metallic SaaS Migration"]
-    CommVault_Lifecycle --> S5["EOL Tracking"]
-```
-
 ## Release Cadence
 
 CommVault releases Feature Releases (FRs) quarterly, each receiving Maintenance Releases (MRs/SPs) for approximately 12 months post-GA.

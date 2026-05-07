@@ -1,15 +1,4 @@
 # ECS Security
-
-```mermaid
-flowchart LR
-    ECS_Security["ECS Security"]
-    ECS_Security --> S0["Hardening Checklist"]
-    ECS_Security --> S1["RBAC"]
-    ECS_Security --> S2["Encryption"]
-    ECS_Security --> S3["Audit Logging"]
-    ECS_Security --> S4["Compliance"]
-```
-
 ## Hardening Checklist
 
 - [ ] Change the default `sysadmin` password immediately after initial deployment

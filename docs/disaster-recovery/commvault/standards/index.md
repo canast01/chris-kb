@@ -1,16 +1,4 @@
 # CommVault Standards
-
-```mermaid
-flowchart LR
-    CommVault_Standards["CommVault Standards"]
-    CommVault_Standards --> S0["Naming Conventions"]
-    CommVault_Standards --> S1["Retention Schedule"]
-    CommVault_Standards --> S2["Backup Job Design"]
-    CommVault_Standards --> S3["DDB (Deduplication Database) Standards"]
-    CommVault_Standards --> S4["VMware vSphere Standards"]
-    CommVault_Standards --> S5["Encryption Standard"]
-```
-
 ## Naming Conventions
 
 | Object | Convention | Example |

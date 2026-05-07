@@ -1,17 +1,6 @@
 # Application Gateway
 
 Azure Application Gateway — layer 7 load balancer with SSL termination, URL routing, WAF, and autoscaling.
-
-```mermaid
-flowchart LR
-    Application_Gateway["Application Gateway"]
-    Application_Gateway --> S0["Key Capabilities"]
-    Application_Gateway --> S1["Common Azure CLI Commands"]
-    Application_Gateway --> S2["SSL Certificate Management"]
-    Application_Gateway --> S3["WAF Mode and Rules"]
-    Application_Gateway --> S4["Troubleshooting"]
-```
-
 ## Key Capabilities
 
 | Feature | Description |

@@ -3,18 +3,6 @@
 Procedures for raising support cases with Venafi, collecting diagnostic data, and escalating critical incidents.
 
 ---
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Support Portal"]
-    Vendor_Support --> S1["Severity Levels and SLA"]
-    Vendor_Support --> S2["Pre-Collection Checklist"]
-    Vendor_Support --> S3["Required Information for SR"]
-    Vendor_Support --> S4["Common Issues and First Steps"]
-    Vendor_Support --> S5["Escalation Path"]
-```
-
 ## Support Portal
 
 | Item | Detail |

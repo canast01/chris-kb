@@ -1,18 +1,4 @@
 # Dell AIOps Standards
-
-```mermaid
-flowchart LR
-    AIOps_Standards["AIOps Standards"]
-    AIOps_Standards --> S0["System Tagging Requirements"]
-    AIOps_Standards --> S1["Recommendation Priority and Response SLA"]
-    AIOps_Standards --> S2["Alert Routing"]
-    AIOps_Standards --> S3["Change Management Requirements"]
-    AIOps_Standards --> S4["Deferral Policy"]
-    AIOps_Standards --> S5["Sensitivity Configuration"]
-    AIOps_Standards --> S6["Capacity Forecast Alert Thresholds"]
-    AIOps_Standards --> S7["Reporting Cadence"]
-```
-
 ## System Tagging Requirements
 
 Every storage system managed by Dell AIOps must carry the three mandatory tags. Tags are applied in CloudIQ and propagate to AIOps recommendation filtering and reporting.

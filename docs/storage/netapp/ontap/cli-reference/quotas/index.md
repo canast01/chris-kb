@@ -3,20 +3,6 @@
 > Part of the [NetApp ONTAP CLI Reference](../).
 
 ONTAP quotas limit disk space and file counts on volumes, trees (qtrees), or users.
-
-```mermaid
-flowchart LR
-    Quotas["Quotas"]
-    Quotas --> S0["View Quota Status"]
-    Quotas --> S1["Enable and Disable Quotas"]
-    Quotas --> S2["Quota Rule Types"]
-    Quotas --> S3["Create Quota Rules"]
-    Quotas --> S4["Modify a Quota Rule"]
-    Quotas --> S5["Delete a Quota Rule"]
-    Quotas --> S6["Quota Report Interpretation"]
-    Quotas --> S7["Common Issues"]
-```
-
 ## View Quota Status
 
 ```bash

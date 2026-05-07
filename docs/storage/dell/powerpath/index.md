@@ -63,19 +63,6 @@
   <span>Host Validation notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_PowerPath["Dell PowerPath"]
-    Dell_PowerPath --> S0["Where It Fits"]
-    Dell_PowerPath --> S1["Daily Checks"]
-    Dell_PowerPath --> S2["Health Commands"]
-    Dell_PowerPath --> S3["Common Issues"]
-    Dell_PowerPath --> S4["Operational Tasks"]
-    Dell_PowerPath --> S5["Upgrade Notes"]
-    Dell_PowerPath --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell PowerPath is host-based multipath I/O software that manages multiple physical paths between a host and storage arrays from Dell/EMC, providing automatic path failover and dynamic load balancing. It runs on Linux, Windows, AIX, HP-UX, and Solaris, and is controlled via the `powermt` CLI. PowerPath presents a single pseudo device per LUN to the OS, abstracting the underlying physical paths.

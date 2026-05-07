@@ -1,17 +1,4 @@
 # CloudIQ Scripts
-
-```mermaid
-flowchart LR
-    CloudIQ_Scripts["CloudIQ Scripts"]
-    CloudIQ_Scripts --> S0["Authentication"]
-    CloudIQ_Scripts --> S1["Fetch All Systems and Health Scores"]
-    CloudIQ_Scripts --> S2["Export Active Alerts"]
-    CloudIQ_Scripts --> S3["Capacity Trend Query"]
-    CloudIQ_Scripts --> S4["Create ServiceNow Incident on CRITICAL Alert (Event-Driven)"]
-    CloudIQ_Scripts --> S5["Script Inventory"]
-    CloudIQ_Scripts --> S6["Rate Limiting"]
-```
-
 ## Authentication
 
 CloudIQ REST API uses OAuth2 client credentials. All scripts load `client_id` and `client_secret` from the secrets manager at runtime.

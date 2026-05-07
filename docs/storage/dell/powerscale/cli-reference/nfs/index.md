@@ -1,20 +1,6 @@
 # NFS Exports
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    NFS_Exports["NFS Exports"]
-    NFS_Exports --> S0["List and View Exports"]
-    NFS_Exports --> S1["Create an Export"]
-    NFS_Exports --> S2["Modify an Export"]
-    NFS_Exports --> S3["Delete an Export"]
-    NFS_Exports --> S4["Reload / Verify"]
-    NFS_Exports --> S5["Client Access Levels"]
-    NFS_Exports --> S6["NFS Settings"]
-    NFS_Exports --> S7["Troubleshooting"]
-```
-
 ## List and View Exports
 
 ```bash

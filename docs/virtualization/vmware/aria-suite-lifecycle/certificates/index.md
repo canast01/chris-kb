@@ -1,17 +1,4 @@
 # Aria Suite Lifecycle — Certificate Management
-
-```mermaid
-flowchart LR
-    Suite_Lifecycle["Suite Lifecycle"]
-    Suite_Lifecycle --> S0["Certificate Inventory"]
-    Suite_Lifecycle --> S1["Expiration Tracking"]
-    Suite_Lifecycle --> S2["Trusted Root Chain"]
-    Suite_Lifecycle --> S3["Replacement Process"]
-    Suite_Lifecycle --> S4["Pre-Change Validation"]
-    Suite_Lifecycle --> S5["Post-Change Validation"]
-    Suite_Lifecycle --> S6["Rollback Plan"]
-```
-
 ## Certificate Inventory
 
 Track the following for each Aria product:

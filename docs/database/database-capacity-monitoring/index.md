@@ -1,19 +1,6 @@
 # Database Capacity Monitoring
 
 Track database storage growth, identify capacity risks early, and plan expansion before thresholds are breached.
-
-```mermaid
-flowchart LR
-    Capacity_Monitoring["Capacity Monitoring"]
-    Capacity_Monitoring --> S0["Current Capacity — Quick Check"]
-    Capacity_Monitoring --> S1["Filesystem / Volume Capacity"]
-    Capacity_Monitoring --> S2["Growth Trending (30-day estimate)"]
-    Capacity_Monitoring --> S3["Capacity Thresholds"]
-    Capacity_Monitoring --> S4["Capacity Reduction — Quick Wins"]
-    Capacity_Monitoring --> S5["Capacity Monitoring Checklist"]
-    Capacity_Monitoring --> S6["Troubleshooting"]
-```
-
 ## Current Capacity — Quick Check
 
 ### PostgreSQL

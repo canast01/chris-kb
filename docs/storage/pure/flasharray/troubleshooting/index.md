@@ -1,14 +1,4 @@
 # FlashArray Troubleshooting
-
-```mermaid
-flowchart LR
-    FlashArray_Troublesh["FlashArray Troubleshoo"]
-    FlashArray_Troublesh --> S0["Common Issues"]
-    FlashArray_Troublesh --> S1["Diagnostic Commands"]
-    FlashArray_Troublesh --> S2["Log Locations"]
-    FlashArray_Troublesh --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

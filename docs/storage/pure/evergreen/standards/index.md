@@ -1,13 +1,4 @@
 # Pure Storage Evergreen Standards
-
-```mermaid
-flowchart LR
-    Evergreen_Standards["Evergreen Standards"]
-    Evergreen_Standards --> S0["Naming Conventions"]
-    Evergreen_Standards --> S1["Build Baseline"]
-    Evergreen_Standards --> S2["Subscription Checklist"]
-```
-
 ## Naming Conventions
 
 Consistent naming across all FlashArray objects reduces operational confusion and enables automation.

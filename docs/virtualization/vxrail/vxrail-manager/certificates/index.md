@@ -1,17 +1,4 @@
 # VxRail Certificates
-
-```mermaid
-flowchart LR
-    VxRail_Certificates["VxRail Certificates"]
-    VxRail_Certificates --> S0["Where It Fits"]
-    VxRail_Certificates --> S1["Daily Checks"]
-    VxRail_Certificates --> S2["Health Commands"]
-    VxRail_Certificates --> S3["Common Issues"]
-    VxRail_Certificates --> S4["Operational Tasks"]
-    VxRail_Certificates --> S5["Upgrade Notes"]
-    VxRail_Certificates --> S6["Best Practices"]
-```
-
 ## Overview
 
 Certificate status, expiration review, renewal planning, and service impact.

@@ -3,20 +3,6 @@
 > Part of the [Standards](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Build_Standard["Build Standard"]
-    Build_Standard --> S0["ESXi Installation"]
-    Build_Standard --> S1["Hostname and DNS"]
-    Build_Standard --> S2["NTP"]
-    Build_Standard --> S3["Syslog"]
-    Build_Standard --> S4["Management VMkernel"]
-    Build_Standard --> S5["Additional VMkernels"]
-    Build_Standard --> S6["Security Profile"]
-    Build_Standard --> S7["Host Profiles"]
-```
-
 ## Overview
 
 All ESXi hosts must be built to this standard before joining a cluster. Deviations require documented approval. This standard applies to bare-metal ESXi deployments and VxRail nodes (where applicable — VxRail nodes are managed via VxRail LCM and may have additional vendor-specific requirements).

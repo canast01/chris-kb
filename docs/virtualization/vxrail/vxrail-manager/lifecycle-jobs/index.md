@@ -1,17 +1,4 @@
 # VxRail Lifecycle Jobs
-
-```mermaid
-flowchart LR
-    Lifecycle_Jobs["Lifecycle Jobs"]
-    Lifecycle_Jobs --> S0["Where It Fits"]
-    Lifecycle_Jobs --> S1["Daily Checks"]
-    Lifecycle_Jobs --> S2["Health Commands"]
-    Lifecycle_Jobs --> S3["Common Issues"]
-    Lifecycle_Jobs --> S4["Operational Tasks"]
-    Lifecycle_Jobs --> S5["Upgrade Notes"]
-    Lifecycle_Jobs --> S6["Best Practices"]
-```
-
 ## Overview
 
 Lifecycle task review, bundle status, failed jobs, and retry planning.

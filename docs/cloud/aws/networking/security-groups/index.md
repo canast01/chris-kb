@@ -1,17 +1,4 @@
 # AWS Security Groups
-
-```mermaid
-flowchart LR
-    Security_Groups["Security Groups"]
-    Security_Groups --> S0["Where It Fits"]
-    Security_Groups --> S1["Daily Checks"]
-    Security_Groups --> S2["Health Commands"]
-    Security_Groups --> S3["Common Issues"]
-    Security_Groups --> S4["Operational Tasks"]
-    Security_Groups --> S5["Upgrade Notes"]
-    Security_Groups --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Security Groups notes for day-to-day infrastructure operations.

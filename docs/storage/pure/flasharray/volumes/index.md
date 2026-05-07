@@ -1,18 +1,4 @@
 # FlashArray Volumes
-
-```mermaid
-flowchart LR
-    FlashArray_Volumes["FlashArray Volumes"]
-    FlashArray_Volumes --> S0["List Volumes"]
-    FlashArray_Volumes --> S1["Create a Volume"]
-    FlashArray_Volumes --> S2["Resize a Volume"]
-    FlashArray_Volumes --> S3["Connect a Volume to a Host"]
-    FlashArray_Volumes --> S4["Disconnect a Volume"]
-    FlashArray_Volumes --> S5["Snapshot a Volume"]
-    FlashArray_Volumes --> S6["Restore from Snapshot"]
-    FlashArray_Volumes --> S7["Create a Clone"]
-```
-
 ## List Volumes
 
 ```bash

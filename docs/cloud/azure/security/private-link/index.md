@@ -1,16 +1,4 @@
 # Private Link
-
-```mermaid
-flowchart LR
-    Private_Link["Private Link"]
-    Private_Link --> S0["Purpose"]
-    Private_Link --> S1["Common checks"]
-    Private_Link --> S2["Incident notes"]
-    Private_Link --> S3["Change notes"]
-    Private_Link --> S4["Useful commands"]
-    Private_Link --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Security Private Link notes, checks, troubleshooting, commands, change notes, and field references.

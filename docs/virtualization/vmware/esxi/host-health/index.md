@@ -1,17 +1,4 @@
 # ESXi Host Health
-
-```mermaid
-flowchart LR
-    Host_Health["Host Health"]
-    Host_Health --> S0["Where It Fits"]
-    Host_Health --> S1["Daily Checks"]
-    Host_Health --> S2["Health Commands"]
-    Host_Health --> S3["Common Issues"]
-    Host_Health --> S4["Operational Tasks"]
-    Host_Health --> S5["Upgrade Notes"]
-    Host_Health --> S6["Best Practices"]
-```
-
 ## Overview
 
 ESXi host health, sensors, hardware status, services, and operational readiness.

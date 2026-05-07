@@ -3,19 +3,6 @@
 This page covers the recurring operational tasks for Veeam Backup & Replication: daily and weekly checks, job creation, copy job setup, SOBR management, and pre-upgrade procedures.
 
 ---
-
-```mermaid
-flowchart LR
-    Veeam_Operations["Veeam Operations"]
-    Veeam_Operations --> S0["Daily Check Routine"]
-    Veeam_Operations --> S1["Weekly Checks"]
-    Veeam_Operations --> S2["Verifying a Backup is Restorable"]
-    Veeam_Operations --> S3["Backup Job Creation Checklist"]
-    Veeam_Operations --> S4["Backup Copy Job Setup (Offsite / Cloud Target)"]
-    Veeam_Operations --> S5["SOBR Capacity Management"]
-    Veeam_Operations --> S6["Pre-Upgrade Checklist (Veeam BandR Version Upgrades)"]
-```
-
 ## Daily Check Routine
 
 The primary review surface is the **Home** view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through this list top-to-bottom every morning.

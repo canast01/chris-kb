@@ -1,19 +1,6 @@
 # PowerScale SMB
 
 SMB share management, configuration, and troubleshooting on Dell PowerScale.
-
-```mermaid
-flowchart LR
-    PowerScale_SMB["PowerScale SMB"]
-    PowerScale_SMB --> S0["Share Management"]
-    PowerScale_SMB --> S1["Permissions"]
-    PowerScale_SMB --> S2["SMB Settings"]
-    PowerScale_SMB --> S3["SMB Sessions and Open Files"]
-    PowerScale_SMB --> S4["SMB Access Zones"]
-    PowerScale_SMB --> S5["Troubleshooting SMB"]
-    PowerScale_SMB --> S6["SMB Auditing"]
-```
-
 ## Share Management
 
 ```bash

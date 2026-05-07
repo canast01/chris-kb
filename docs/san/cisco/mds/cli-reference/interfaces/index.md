@@ -1,20 +1,6 @@
 # Interfaces & Ports
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Ports["Ports"]
-    Ports --> S0["Interface Status"]
-    Ports --> S1["Port Modes"]
-    Ports --> S2["Configure a Port"]
-    Ports --> S3["Administratively Enable/Disable a Port"]
-    Ports --> S4["Range Operations"]
-    Ports --> S5["FC Domain"]
-    Ports --> S6["Error Counter Reference"]
-    Ports --> S7["Common Issues"]
-```
-
 ## Interface Status
 
 ```bash

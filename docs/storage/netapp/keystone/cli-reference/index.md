@@ -1,17 +1,6 @@
 # NetApp Keystone CLI Reference
 
 > Part of the [Keystone](../) reference.
-
-```mermaid
-flowchart LR
-    NetApp_Keystone["NetApp Keystone"]
-    NetApp_Keystone --> S0["Overview"]
-    NetApp_Keystone --> S1["Keystone REST API"]
-    NetApp_Keystone --> S2["Burst Usage Alerting"]
-    NetApp_Keystone --> S3["ONTAP CLI — Capacity Tracking"]
-    NetApp_Keystone --> S4["BlueXP Digital Wallet (UI-equivalent API)"]
-```
-
 ---
 
 ## Overview

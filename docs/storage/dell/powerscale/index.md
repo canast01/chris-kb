@@ -27,19 +27,6 @@
   <span>Smb notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_PowerScale["Dell PowerScale"]
-    Dell_PowerScale --> S0["Where It Fits"]
-    Dell_PowerScale --> S1["Daily Checks"]
-    Dell_PowerScale --> S2["Health Commands"]
-    Dell_PowerScale --> S3["Common Issues"]
-    Dell_PowerScale --> S4["Operational Tasks"]
-    Dell_PowerScale --> S5["Upgrade Notes"]
-    Dell_PowerScale --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS distributed operating system, where all nodes form a single shared namespace under `/ifs`. Clusters scale from 3 to 252 nodes, with each node added linearly increasing both capacity and throughput. PowerScale supports multi-protocol access including NFS, SMB/CIFS, HDFS, S3, and FTP from the same file system.

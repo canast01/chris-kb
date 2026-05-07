@@ -1,17 +1,6 @@
 # Distributed Firewall (DFW)
 
 > Part of the [NSX-T CLI Reference](../).
-
-```mermaid
-flowchart LR
-    DFW["(DFW)"]
-    DFW --> S0["DFW Statistics — NSX Manager"]
-    DFW --> S1["DFW Inspection on ESXi Host"]
-    DFW --> S2["Identifying a VM's Filter Name"]
-    DFW --> S3["Rule Output Interpretation"]
-    DFW --> S4["Common Troubleshooting"]
-```
-
 ## DFW Statistics — NSX Manager
 
 ```bash

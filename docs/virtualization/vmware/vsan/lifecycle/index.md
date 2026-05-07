@@ -1,14 +1,4 @@
 # VMware vSAN Lifecycle
-
-```mermaid
-flowchart LR
-    vSAN_Lifecycle["vSAN Lifecycle"]
-    vSAN_Lifecycle --> S0["vSAN Version Matrix"]
-    vSAN_Lifecycle --> S1["Upgrade Procedure"]
-    vSAN_Lifecycle --> S2["ESA Migration"]
-    vSAN_Lifecycle --> S3["Driver and Firmware"]
-```
-
 ## vSAN Version Matrix
 
 vSAN versions are tied to vSphere releases. There is no standalone vSAN upgrade path — upgrading vSAN means upgrading vSphere.

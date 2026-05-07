@@ -1,19 +1,6 @@
 # ONTAP Protocols
 
 ONTAP supports NFS, SMB/CIFS, iSCSI, FCP (Fibre Channel), and NVMe over Fabrics. Protocol access is configured per SVM.
-
-```mermaid
-flowchart LR
-    ONTAP_Protocols["ONTAP Protocols"]
-    ONTAP_Protocols --> S0["NFS"]
-    ONTAP_Protocols --> S1["SMB/CIFS"]
-    ONTAP_Protocols --> S2["iSCSI"]
-    ONTAP_Protocols --> S3["FCP (Fibre Channel)"]
-    ONTAP_Protocols --> S4["Protocol on LIF Verification"]
-    ONTAP_Protocols --> S5["Enable/Disable a Protocol on an SVM"]
-    ONTAP_Protocols --> S6["Common Issues"]
-```
-
 ## NFS
 
 ```bash

@@ -1,15 +1,4 @@
 # PowerPath Security
-
-```mermaid
-flowchart LR
-    PowerPath_Security["PowerPath Security"]
-    PowerPath_Security --> S0["Hardening Checklist"]
-    PowerPath_Security --> S1["RBAC"]
-    PowerPath_Security --> S2["Encryption"]
-    PowerPath_Security --> S3["Audit Logging"]
-    PowerPath_Security --> S4["Compliance"]
-```
-
 ## Hardening Checklist
 
 - [ ] Install PowerPath only on hosts that have a valid support contract and license; do not run unlicensed instances (paths show as `unlic` and are unmanaged)

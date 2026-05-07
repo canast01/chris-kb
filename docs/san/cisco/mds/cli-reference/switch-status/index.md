@@ -1,20 +1,6 @@
 # Switch Status & Identity
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Identity["Identity"]
-    Identity --> S0["Switch Identity"]
-    Identity --> S1["Environment Health"]
-    Identity --> S2["Module / Slot Status"]
-    Identity --> S3["CPU and Memory"]
-    Identity --> S4["Running Configuration"]
-    Identity --> S5["Logging"]
-    Identity --> S6["Quick Health Summary"]
-    Identity --> S7["Pre-Change Baseline"]
-```
-
 ## Switch Identity
 
 ```bash

@@ -1,19 +1,6 @@
 # Cleaning
 
 Cleaning (garbage collection) reclaims disk space after backup data is expired or deleted by the backup application. Without regular cleaning, space is not returned to the usable pool even after backups are removed.
-
-```mermaid
-flowchart LR
-    Cleaning["Cleaning"]
-    Cleaning --> S0["How Cleaning Works"]
-    Cleaning --> S1["Running Cleaning"]
-    Cleaning --> S2["Automatic Cleaning Schedule"]
-    Cleaning --> S3["Monitoring Cleaning Progress"]
-    Cleaning --> S4["Space Reclaim Expectations"]
-    Cleaning --> S5["When to Trigger Cleaning"]
-    Cleaning --> S6["Troubleshooting"]
-```
-
 ## How Cleaning Works
 
 1. Backup application marks expired data for deletion.

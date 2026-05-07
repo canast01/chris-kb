@@ -1,16 +1,4 @@
 # Virtual Machines
-
-```mermaid
-flowchart LR
-    Virtual_Machines["Virtual Machines"]
-    Virtual_Machines --> S0["Purpose"]
-    Virtual_Machines --> S1["Common checks"]
-    Virtual_Machines --> S2["Incident notes"]
-    Virtual_Machines --> S3["Change notes"]
-    Virtual_Machines --> S4["Useful commands"]
-    Virtual_Machines --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Compute Virtual Machines notes, checks, troubleshooting, commands, change notes, and field references.

@@ -3,19 +3,6 @@
 CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys. The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.
 
 ---
-
-```mermaid
-flowchart LR
-    CyberArk_Architectur["CyberArk Architecture"]
-    CyberArk_Architectur --> S0["Component Overview"]
-    CyberArk_Architectur --> S1["Network Topology"]
-    CyberArk_Architectur --> S2["Digital Vault"]
-    CyberArk_Architectur --> S3["Central Policy Manager (CPM)"]
-    CyberArk_Architectur --> S4["Privileged Session Manager (PSM)"]
-    CyberArk_Architectur --> S5["PVWA (Password Vault Web Access)"]
-    CyberArk_Architectur --> S6["High Availability and DR"]
-```
-
 ## Component Overview
 
 | Component | Role | Typical Count |

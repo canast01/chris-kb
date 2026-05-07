@@ -1,20 +1,6 @@
 # Network
 
 > Part of the Dell Data Domain CLI Reference.
-
-```mermaid
-flowchart LR
-    Network["Network"]
-    Network --> S0["Interface Status"]
-    Network --> S1["Interface Configuration"]
-    Network --> S2["Routing"]
-    Network --> S3["DNS"]
-    Network --> S4["NTP"]
-    Network --> S5["Ping and Connectivity Testing"]
-    Network --> S6["Bonding / LACP"]
-    Network --> S7["Firewall"]
-```
-
 ## Interface Status
 
 ```bash

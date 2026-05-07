@@ -3,18 +3,6 @@
 > Part of the Dell Data Domain CLI Reference.
 
 DDBoost (Dell Data Domain Boost) offloads deduplication processing to the backup client, reducing network traffic and improving backup performance. It is used by NetBackup, Networker, Avamar, Veeam, and other backup applications.
-
-```mermaid
-flowchart LR
-    DDBoost["DDBoost"]
-    DDBoost --> S0["Service Status"]
-    DDBoost --> S1["Storage Units"]
-    DDBoost --> S2["Users"]
-    DDBoost --> S3["Performance and Throughput"]
-    DDBoost --> S4["Distributed Segment Processing (DSP)"]
-    DDBoost --> S5["Troubleshooting"]
-```
-
 ## Service Status
 
 ```bash

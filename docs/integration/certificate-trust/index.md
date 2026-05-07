@@ -1,20 +1,6 @@
 # Certificate Trust
 
 Configure and verify certificate trust chains so that services can validate TLS certificates from internal and external CAs.
-
-```mermaid
-flowchart LR
-    Certificate_Trust["Certificate Trust"]
-    Certificate_Trust --> S0["Trust Store Locations"]
-    Certificate_Trust --> S1["Add a CA Certificate — Linux"]
-    Certificate_Trust --> S2["Add a CA Certificate — Windows"]
-    Certificate_Trust --> S3["Add a CA Certificate — Java"]
-    Certificate_Trust --> S4["Verify a Certificate Chain"]
-    Certificate_Trust --> S5["Diagnose Trust Failures"]
-    Certificate_Trust --> S6["Certificate Expiry Check"]
-    Certificate_Trust --> S7["Troubleshooting"]
-```
-
 ## Trust Store Locations
 
 | OS / Platform | System Trust Store | Command to Add CA |

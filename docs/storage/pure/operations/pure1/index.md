@@ -1,19 +1,6 @@
 # Pure1 Cloud Management
 
 Pure1 is Pure Storage's cloud-based management and monitoring platform. It provides a unified view of all FlashArray and FlashBlade systems.
-
-```mermaid
-flowchart LR
-    Cloud_Management["Cloud Management"]
-    Cloud_Management --> S0["Accessing Pure1"]
-    Cloud_Management --> S1["Key Navigation Areas"]
-    Cloud_Management --> S2["Capacity Planning"]
-    Cloud_Management --> S3["Pure1 AI (Copilot)"]
-    Cloud_Management --> S4["Phone-Home Connectivity"]
-    Cloud_Management --> S5["Role-Based Access in Pure1"]
-    Cloud_Management --> S6["Pure1 API"]
-```
-
 ## Accessing Pure1
 
 Log in at **pure1.purestorage.com** with your Pure Storage account credentials.

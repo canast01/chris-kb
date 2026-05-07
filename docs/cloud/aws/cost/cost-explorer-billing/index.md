@@ -1,17 +1,4 @@
 # AWS Cost Explorer / Billing
-
-```mermaid
-flowchart LR
-    Billing["/ Billing"]
-    Billing --> S0["Where It Fits"]
-    Billing --> S1["Daily Checks"]
-    Billing --> S2["Health Commands"]
-    Billing --> S3["Common Issues"]
-    Billing --> S4["Operational Tasks"]
-    Billing --> S5["Upgrade Notes"]
-    Billing --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Cost Explorer / Billing notes for day-to-day infrastructure operations.

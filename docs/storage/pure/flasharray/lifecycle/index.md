@@ -1,14 +1,4 @@
 # FlashArray Lifecycle
-
-```mermaid
-flowchart LR
-    FlashArray_Lifecycle["FlashArray Lifecycle"]
-    FlashArray_Lifecycle --> S0["Purity Version Matrix"]
-    FlashArray_Lifecycle --> S1["Upgrade Paths"]
-    FlashArray_Lifecycle --> S2["Refresh Planning"]
-    FlashArray_Lifecycle --> S3["EOL Tracking"]
-```
-
 ## Purity Version Matrix
 
 | Version | Release Date | End of Support | Notes |

@@ -1,17 +1,4 @@
 # AWS CloudWatch Logs
-
-```mermaid
-flowchart LR
-    CloudWatch_Logs["CloudWatch Logs"]
-    CloudWatch_Logs --> S0["Where It Fits"]
-    CloudWatch_Logs --> S1["Daily Checks"]
-    CloudWatch_Logs --> S2["Health Commands"]
-    CloudWatch_Logs --> S3["Common Issues"]
-    CloudWatch_Logs --> S4["Operational Tasks"]
-    CloudWatch_Logs --> S5["Upgrade Notes"]
-    CloudWatch_Logs --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS CloudWatch Logs notes for day-to-day infrastructure operations.

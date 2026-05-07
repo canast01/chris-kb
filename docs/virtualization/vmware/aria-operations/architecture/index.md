@@ -1,17 +1,4 @@
 # Aria Operations — Architecture
-
-```mermaid
-flowchart LR
-    Aria_Operations["Aria Operations"]
-    Aria_Operations --> S0["Cluster Roles"]
-    Aria_Operations --> S1["Component Topology"]
-    Aria_Operations --> S2["Adapters"]
-    Aria_Operations --> S3["Sizing Guidelines"]
-    Aria_Operations --> S4["Network Ports"]
-    Aria_Operations --> S5["High Availability"]
-    Aria_Operations --> S6["Related Sections"]
-```
-
 ## Overview
 
 Aria Operations (formerly vRealize Operations) is deployed as an analytics cluster consisting of primary, replica, and data nodes. Remote collectors and cloud proxies extend monitoring reach without opening firewall holes back to the analytics cluster.

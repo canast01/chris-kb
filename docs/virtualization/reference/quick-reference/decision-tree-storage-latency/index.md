@@ -1,19 +1,6 @@
 # Decision Tree: Storage Latency
 
 Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.
-
-```mermaid
-flowchart LR
-    Storage_Latency["Storage Latency"]
-    Storage_Latency --> S0["Step 1 — Confirm Latency Baseline Breach"]
-    Storage_Latency --> S1["Step 2 — Is vSAN Resync Active?"]
-    Storage_Latency --> S2["Step 3 — Check Storage Array Health"]
-    Storage_Latency --> S3["Step 4 — Check Network / Fabric"]
-    Storage_Latency --> S4["Step 5 — Check for Hot-Spot VMs"]
-    Storage_Latency --> S5["Step 6 — Snapshot Chain"]
-    Storage_Latency --> S6["Escalation"]
-```
-
 ## Step 1 — Confirm Latency Baseline Breach
 
 ```bash

@@ -1,14 +1,4 @@
 # ECS Architecture
-
-```mermaid
-flowchart LR
-    ECS_Architecture["ECS Architecture"]
-    ECS_Architecture --> S0["Components"]
-    ECS_Architecture --> S1["How It Works"]
-    ECS_Architecture --> S2["Connectivity and Integration Points"]
-    ECS_Architecture --> S3["Sizing and Capacity Model"]
-```
-
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs over standard HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.

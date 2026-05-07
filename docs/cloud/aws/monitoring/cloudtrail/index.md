@@ -1,17 +1,4 @@
 # AWS CloudTrail
-
-```mermaid
-flowchart LR
-    AWS_CloudTrail["AWS CloudTrail"]
-    AWS_CloudTrail --> S0["Where It Fits"]
-    AWS_CloudTrail --> S1["Daily Checks"]
-    AWS_CloudTrail --> S2["Health Commands"]
-    AWS_CloudTrail --> S3["Common Issues"]
-    AWS_CloudTrail --> S4["Operational Tasks"]
-    AWS_CloudTrail --> S5["Upgrade Notes"]
-    AWS_CloudTrail --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS CloudTrail notes for day-to-day infrastructure operations.

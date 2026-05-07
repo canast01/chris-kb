@@ -1,21 +1,6 @@
 # SMB Shares
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    SMB_Shares["SMB Shares"]
-    SMB_Shares --> S0["List Shares"]
-    SMB_Shares --> S1["Create a Share"]
-    SMB_Shares --> S2["Modify a Share"]
-    SMB_Shares --> S3["Delete a Share"]
-    SMB_Shares --> S4["Share Permissions (ACL)"]
-    SMB_Shares --> S5["SMB Service and Global Settings"]
-    SMB_Shares --> S6["Active SMB Sessions"]
-    SMB_Shares --> S7["Access Zones"]
-    SMB_Shares --> S8["Common Issues"]
-```
-
 ## List Shares
 
 ```bash

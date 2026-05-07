@@ -1,16 +1,4 @@
 # Alert Management
-
-```mermaid
-flowchart LR
-    Alert_Management["Alert Management"]
-    Alert_Management --> S0["Alert Severity Levels"]
-    Alert_Management --> S1["Alert Response Workflow"]
-    Alert_Management --> S2["Silencing and Suppression Rules"]
-    Alert_Management --> S3["Common Alert Sources"]
-    Alert_Management --> S4["Alert Noise Reduction Checklist"]
-    Alert_Management --> S5["Escalation Matrix (template)"]
-```
-
 ## Alert Severity Levels
 
 | Severity | Meaning | Response Time |

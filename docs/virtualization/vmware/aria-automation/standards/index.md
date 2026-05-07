@@ -1,16 +1,4 @@
 # Aria Automation — Standards
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["Naming Conventions"]
-    Aria_Automation --> S1["Build Baseline"]
-    Aria_Automation --> S2["Configuration Checklist"]
-    Aria_Automation --> S3["Blueprint / Template Standards"]
-    Aria_Automation --> S4["Project Standards"]
-    Aria_Automation --> S5["Related Sections"]
-```
-
 ## Naming Conventions
 
 | Object | Convention | Example |

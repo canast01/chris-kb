@@ -1,15 +1,4 @@
 # PowerMax Integration
-
-```mermaid
-flowchart LR
-    PowerMax_Integration["PowerMax Integration"]
-    PowerMax_Integration --> S0["VMware Integration"]
-    PowerMax_Integration --> S1["Backup Integration"]
-    PowerMax_Integration --> S2["CloudIQ Monitoring"]
-    PowerMax_Integration --> S3["Active Directory / LDAP"]
-    PowerMax_Integration --> S4["REST API"]
-```
-
 ## VMware Integration
 
 PowerMax integrates with VMware vSphere via several paths:

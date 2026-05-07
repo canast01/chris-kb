@@ -1,19 +1,6 @@
 # Emergency Change Procedure
 
 Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or immediately after implementation.
-
-```mermaid
-flowchart LR
-    Change_Procedure["Change Procedure"]
-    Change_Procedure --> S0["Trigger Conditions"]
-    Change_Procedure --> S1["Pre-Implementation (< 30 minutes)"]
-    Change_Procedure --> S2["eCAB — Minimum Approval"]
-    Change_Procedure --> S3["Implementation"]
-    Change_Procedure --> S4["Post-Implementation — Required Within 24 Hours"]
-    Change_Procedure --> S5["Post-Incident Review Template"]
-    Change_Procedure --> S6["Guardrails"]
-```
-
 ## Trigger Conditions
 
 | Condition | Example |

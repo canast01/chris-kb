@@ -1,15 +1,4 @@
 # Pure FlashBlade Security
-
-```mermaid
-flowchart LR
-    FlashBlade_Security["FlashBlade Security"]
-    FlashBlade_Security --> S0["Hardening Checklist"]
-    FlashBlade_Security --> S1["RBAC"]
-    FlashBlade_Security --> S2["Encryption"]
-    FlashBlade_Security --> S3["Audit Logging"]
-    FlashBlade_Security --> S4["Compliance Notes"]
-```
-
 ## Hardening Checklist
 
 - Disable unused data protocols — if the array only serves S3, disable NFS and SMB in the Purity//FB protocol configuration to reduce attack surface

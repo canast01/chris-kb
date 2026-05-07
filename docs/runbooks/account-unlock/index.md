@@ -1,18 +1,4 @@
 # Account Unlock Runbook
-
-```mermaid
-flowchart LR
-    Unlock_Runbook["Unlock Runbook"]
-    Unlock_Runbook --> S0["Identify Locked Accounts"]
-    Unlock_Runbook --> S1["Find the Lockout Source"]
-    Unlock_Runbook --> S2["Unlock an Account"]
-    Unlock_Runbook --> S3["Bulk Unlock (with caution)"]
-    Unlock_Runbook --> S4["Reset Password and Unlock (combined)"]
-    Unlock_Runbook --> S5["Linux / LDAP Account (if applicable)"]
-    Unlock_Runbook --> S6["Validation"]
-    Unlock_Runbook --> S7["Checklist"]
-```
-
 ## Identify Locked Accounts
 
 ```powershell

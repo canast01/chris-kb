@@ -3,18 +3,6 @@
 > Part of the [VCF](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Foundation_Operation["Foundation Operations"]
-    Foundation_Operation --> S0["Daily Health Check"]
-    Foundation_Operation --> S1["SDDC Manager Password Management"]
-    Foundation_Operation --> S2["Lifecycle Management (Patching)"]
-    Foundation_Operation --> S3["SDDC Manager Backup"]
-    Foundation_Operation --> S4["Common Operational Issues"]
-    Foundation_Operation --> S5["Useful Log Locations"]
-```
-
 ## Daily Health Check
 
 Daily checks begin in SDDC Manager. NSX fabric health must also be checked separately in NSX Manager — not all NSX events surface in SDDC Manager.

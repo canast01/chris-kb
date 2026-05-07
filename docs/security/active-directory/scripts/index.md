@@ -3,19 +3,6 @@
 PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed. Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.
 
 ---
-
-```mermaid
-flowchart LR
-    Directory_Scripts["Directory Scripts"]
-    Directory_Scripts --> S0["Prerequisites"]
-    Directory_Scripts --> S1["User Account Queries"]
-    Directory_Scripts --> S2["Group Membership Audits"]
-    Directory_Scripts --> S3["Stale and Locked Accounts"]
-    Directory_Scripts --> S4["Expiring Passwords"]
-    Directory_Scripts --> S5["Replication Health"]
-    Directory_Scripts --> S6["GPO Backup and Reporting"]
-```
-
 ## Prerequisites
 
 ```powershell

@@ -1,16 +1,4 @@
 # SRDF/A Security
-
-```mermaid
-flowchart LR
-    SRDF_A_Security["SRDF/A Security"]
-    SRDF_A_Security --> S0["Encryption In-Flight"]
-    SRDF_A_Security --> S1["Solutions Enabler RBAC"]
-    SRDF_A_Security --> S2["Preventing Accidental Resync"]
-    SRDF_A_Security --> S3["Audit Logging"]
-    SRDF_A_Security --> S4["Network Port Requirements"]
-    SRDF_A_Security --> S5["Credential Rotation"]
-```
-
 ## Encryption In-Flight
 
 SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:

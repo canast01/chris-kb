@@ -1,16 +1,4 @@
 # Gpos
-
-```mermaid
-flowchart LR
-    Gpos["Gpos"]
-    Gpos --> S0["Purpose"]
-    Gpos --> S1["Common checks"]
-    Gpos --> S2["Incident notes"]
-    Gpos --> S3["Change notes"]
-    Gpos --> S4["Useful commands"]
-    Gpos --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Active Directory Gpos notes, checks, troubleshooting, commands, change notes, and field references.

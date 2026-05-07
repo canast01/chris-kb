@@ -1,20 +1,6 @@
 # Brocade Fabric OS CLI Reference
 
 Commonly used Brocade FOS commands for managing Fibre Channel SAN switches. Log in via SSH to the switch management IP. Most commands run without needing to enter a specific mode.
-
-```mermaid
-flowchart LR
-    OS["OS"]
-    OS --> S0["Switch Status and Identity"]
-    OS --> S1["Ports"]
-    OS --> S2["Fabric, Topology and Name Server"]
-    OS --> S3["Zoning"]
-    OS --> S4["Diagnostics and Health"]
-    OS --> S5["Firmware, Upgrades and Config Backup"]
-    OS --> S6["Security and Users"]
-    OS --> S7["Virtual Fabrics (VF)"]
-```
-
 ---
 
 

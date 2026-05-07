@@ -1,15 +1,4 @@
 # Pure Storage Evergreen//One Security
-
-```mermaid
-flowchart LR
-    Evergreen__One_Secur["Evergreen//One Securit"]
-    Evergreen__One_Secur --> S0["Hardening Checklist"]
-    Evergreen__One_Secur --> S1["RBAC"]
-    Evergreen__One_Secur --> S2["Encryption"]
-    Evergreen__One_Secur --> S3["Audit Logging"]
-    Evergreen__One_Secur --> S4["Subscription Security — Pure-Managed Responsibilities"]
-```
-
 ## Hardening Checklist
 
 - Enforce TLS 1.2 or higher for all management access; confirm HTTP redirect is disabled on all array management interfaces

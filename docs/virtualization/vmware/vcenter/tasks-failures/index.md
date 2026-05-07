@@ -1,17 +1,4 @@
 # vCenter Tasks and Failures
-
-```mermaid
-flowchart LR
-    and_Failures["and Failures"]
-    and_Failures --> S0["Where It Fits"]
-    and_Failures --> S1["Daily Checks"]
-    and_Failures --> S2["Health Commands"]
-    and_Failures --> S3["Common Issues"]
-    and_Failures --> S4["Operational Tasks"]
-    and_Failures --> S5["Upgrade Notes"]
-    and_Failures --> S6["Best Practices"]
-```
-
 ## Overview
 
 Failed tasks, stuck tasks, event review, job ownership, and first-pass triage.

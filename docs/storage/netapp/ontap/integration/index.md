@@ -1,17 +1,4 @@
 # ONTAP Integration
-
-```mermaid
-flowchart LR
-    ONTAP_Integration["ONTAP Integration"]
-    ONTAP_Integration --> S0["VMware"]
-    ONTAP_Integration --> S1["SnapCenter Plugin"]
-    ONTAP_Integration --> S2["Active Directory / CIFS Authentication"]
-    ONTAP_Integration --> S3["Veeam Storage Integration (VeeamON / Direct Storage Access)"]
-    ONTAP_Integration --> S4["ONTAP REST API"]
-    ONTAP_Integration --> S5["Cloud Volumes ONTAP Integration"]
-    ONTAP_Integration --> S6["Monitoring Integration"]
-```
-
 ## VMware
 
 ONTAP integrates with VMware vSphere at multiple layers:

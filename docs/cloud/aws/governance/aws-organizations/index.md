@@ -1,17 +1,4 @@
 # AWS AWS Organizations
-
-```mermaid
-flowchart LR
-    AWS_Organizations["AWS Organizations"]
-    AWS_Organizations --> S0["Where It Fits"]
-    AWS_Organizations --> S1["Daily Checks"]
-    AWS_Organizations --> S2["Health Commands"]
-    AWS_Organizations --> S3["Common Issues"]
-    AWS_Organizations --> S4["Operational Tasks"]
-    AWS_Organizations --> S5["Upgrade Notes"]
-    AWS_Organizations --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS AWS Organizations notes for day-to-day infrastructure operations.

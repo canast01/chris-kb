@@ -3,20 +3,6 @@
 > Part of the [Standards](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Naming_Standard["Naming Standard"]
-    Naming_Standard --> S0["Virtual Machines"]
-    Naming_Standard --> S1["Clusters"]
-    Naming_Standard --> S2["ESXi Hosts"]
-    Naming_Standard --> S3["Datastores"]
-    Naming_Standard --> S4["Port Groups"]
-    Naming_Standard --> S5["Distributed Switches (vDS)"]
-    Naming_Standard --> S6["Folders"]
-    Naming_Standard --> S7["vSAN Disk Groups"]
-```
-
 ## Overview
 
 Consistent naming across the VMware environment reduces confusion during incidents, simplifies inventory queries, and supports automation. All new objects must follow this standard. Exceptions require a documented justification.

@@ -1,17 +1,4 @@
 # Aria Operations Architecture
-
-```mermaid
-flowchart LR
-    Operations_Architect["Operations Architectur"]
-    Operations_Architect --> S0["Component Roles"]
-    Operations_Architect --> S1["Deployment Sizing"]
-    Operations_Architect --> S2["Remote Collectors"]
-    Operations_Architect --> S3["Data Retention"]
-    Operations_Architect --> S4["Management Pack (Adapter) Architecture"]
-    Operations_Architect --> S5["High Availability"]
-    Operations_Architect --> S6["Network Ports"]
-```
-
 ## Overview
 
 VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.

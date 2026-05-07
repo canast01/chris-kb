@@ -1,18 +1,6 @@
 # Jobs (Background Tasks)
 
 > Part of the Dell PowerScale (Isilon) CLI Reference. OneFS uses a job engine to run background tasks — FlexProtect rebuilds, SmartPools tiering, quota accounting, deduplication, and more.
-
-```mermaid
-flowchart LR
-    Tasks["Tasks)"]
-    Tasks --> S0["Check Running Jobs"]
-    Tasks --> S1["Job Types"]
-    Tasks --> S2["Start and Cancel Jobs"]
-    Tasks --> S3["Job History"]
-    Tasks --> S4["Job Impact Policies"]
-    Tasks --> S5["Monitoring FlexProtect"]
-```
-
 ## Check Running Jobs
 
 ```bash

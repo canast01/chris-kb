@@ -1,16 +1,4 @@
 # Policies
-
-```mermaid
-flowchart LR
-    Policies["Policies"]
-    Policies --> S0["Purpose"]
-    Policies --> S1["Common checks"]
-    Policies --> S2["Incident notes"]
-    Policies --> S3["Change notes"]
-    Policies --> S4["Useful commands"]
-    Policies --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Netbackup Policies notes, checks, troubleshooting, commands, change notes, and field references.

@@ -5,18 +5,6 @@
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Command reference by category with syntax and examples.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    Connect_Gateway["Connect Gateway"]
-    Connect_Gateway --> S0["Where It Fits"]
-    Connect_Gateway --> S1["Daily Checks"]
-    Connect_Gateway --> S2["Health Commands"]
-    Connect_Gateway --> S3["Common Issues"]
-    Connect_Gateway --> S4["Operational Tasks"]
-    Connect_Gateway --> S5["Best Practices"]
-```
-
 ## Overview
 
 Dell Secure Connect Gateway (SCG) is the outbound-only connectivity appliance that tunnels telemetry, support data, and remote access sessions from Dell storage and server infrastructure to Dell's support back-end. It replaces the legacy ESRS (EMC Secure Remote Services) gateway. SCG is deployed as a virtual appliance (OVA/QCOW2) or as a software package on a Linux host. It brokers all support-related communication including CloudIQ telemetry, SupportAssist diagnostics, and remote access for Dell support engineers.

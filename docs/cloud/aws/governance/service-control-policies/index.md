@@ -1,17 +1,4 @@
 # AWS Service Control Policies
-
-```mermaid
-flowchart LR
-    Control_Policies["Control Policies"]
-    Control_Policies --> S0["Where It Fits"]
-    Control_Policies --> S1["Daily Checks"]
-    Control_Policies --> S2["Health Commands"]
-    Control_Policies --> S3["Common Issues"]
-    Control_Policies --> S4["Operational Tasks"]
-    Control_Policies --> S5["Upgrade Notes"]
-    Control_Policies --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Service Control Policies notes for day-to-day infrastructure operations.

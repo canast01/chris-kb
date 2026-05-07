@@ -1,16 +1,4 @@
 # Audit
-
-```mermaid
-flowchart LR
-    Audit["Audit"]
-    Audit --> S0["Purpose"]
-    Audit --> S1["Common checks"]
-    Audit --> S2["Incident notes"]
-    Audit --> S3["Change notes"]
-    Audit --> S4["Useful commands"]
-    Audit --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Cyberark Audit notes, checks, troubleshooting, commands, change notes, and field references.

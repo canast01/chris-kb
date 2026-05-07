@@ -3,21 +3,6 @@
 Commonly used AWS CLI commands for managing compute, storage, networking, identity, and monitoring. The AWS CLI is a command-line tool that talks directly to AWS APIs — everything you can do in the console, you can automate with the CLI.
 
 > Requires `aws configure` or environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`).
-
-```mermaid
-flowchart LR
-    AWS["AWS"]
-    AWS --> S0["Identity and Access (IAM / STS)"]
-    AWS --> S1["EC2 — Instances"]
-    AWS --> S2["EC2 — Images, Volumes and Snapshots"]
-    AWS --> S3["S3"]
-    AWS --> S4["VPC and Networking"]
-    AWS --> S5["CloudWatch"]
-    AWS --> S6["CloudFormation"]
-    AWS --> S7["RDS"]
-    AWS --> S8["EKS"]
-```
-
 ---
 
 

@@ -3,20 +3,6 @@
 > Part of the [Standards](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Access_Standard["Access Standard"]
-    Access_Standard --> S0["Core Principles"]
-    Access_Standard --> S1["vCenter Role Definitions"]
-    Access_Standard --> S2["AD Group Mapping"]
-    Access_Standard --> S3["Service Accounts"]
-    Access_Standard --> S4["ESXi Host Access"]
-    Access_Standard --> S5["Break-Glass Access"]
-    Access_Standard --> S6["NSX Access"]
-    Access_Standard --> S7["Access Review Cadence"]
-```
-
 ## Overview
 
 This standard defines how access to the vSphere environment is granted, managed, and reviewed. The principle of least privilege applies. All access is granted via AD group membership mapped to vCenter roles — no direct user-to-object permission assignments.

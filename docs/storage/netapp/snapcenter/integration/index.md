@@ -1,17 +1,4 @@
 # SnapCenter Integration
-
-```mermaid
-flowchart LR
-    SnapCenter_Integrati["SnapCenter Integration"]
-    SnapCenter_Integrati --> S0["ONTAP Storage Systems"]
-    SnapCenter_Integrati --> S1["vCenter / VMware Integration"]
-    SnapCenter_Integrati --> S2["Active Directory / RBAC"]
-    SnapCenter_Integrati --> S3["Email Notifications"]
-    SnapCenter_Integrati --> S4["REST API"]
-    SnapCenter_Integrati --> S5["Oracle Plugin Integration"]
-    SnapCenter_Integrati --> S6["SQL Server Plugin Integration"]
-```
-
 ## ONTAP Storage Systems
 
 Register ONTAP clusters in SnapCenter under Settings → Storage Systems. SnapCenter communicates with ONTAP via REST API (SnapCenter 6.x) or ZAPI (SnapCenter 5.x and earlier).

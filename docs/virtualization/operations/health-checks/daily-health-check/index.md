@@ -1,20 +1,6 @@
 # Daily Health Check
 
 Morning checks covering all components that can silently degrade overnight. Target: complete in under 15 minutes.
-
-```mermaid
-flowchart LR
-    Health_Check["Health Check"]
-    Health_Check --> S0["1. vCenter Availability"]
-    Health_Check --> S1["2. Host Connectivity"]
-    Health_Check --> S2["3. Cluster HA / DRS"]
-    Health_Check --> S3["4. Datastore Free Space"]
-    Health_Check --> S4["5. vSAN Health"]
-    Health_Check --> S5["6. Critical VM Status"]
-    Health_Check --> S6["7. Active Alarms"]
-    Health_Check --> S7["8. Backup Job Status"]
-```
-
 ## 1. vCenter Availability
 
 ```powershell

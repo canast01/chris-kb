@@ -3,21 +3,6 @@
 Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. The CLI tool is SYMCLI (Solutions Enabler CLI) — commands follow a `sym<object> <action> -sid <SymmID>` pattern. Every command requires the array's SID (Symmetrix ID). Run `symcfg list` first to identify your SID.
 
 > Requires Solutions Enabler installed on a management host with connectivity to the array. All commands target a specific array via `-sid <SymmID>`.
-
-```mermaid
-flowchart LR
-    SYMCLI["(SYMCLI)"]
-    SYMCLI --> S0["Discovery and Array Info"]
-    SYMCLI --> S1["Devices"]
-    SYMCLI --> S2["Storage Groups"]
-    SYMCLI --> S3["Masking Views and Access"]
-    SYMCLI --> S4["Ports and Hardware"]
-    SYMCLI --> S5["SRDF — Replication"]
-    SYMCLI --> S6["SnapVX — Snapshots"]
-    SYMCLI --> S7["Performance and Statistics"]
-    SYMCLI --> S8["Events and Audit"]
-```
-
 ---
 
 

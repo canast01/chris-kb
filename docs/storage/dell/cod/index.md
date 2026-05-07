@@ -9,18 +9,6 @@
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common issues, diagnostic commands, log locations, and error codes.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    on_Demand["on Demand"]
-    on_Demand --> S0["Where It Fits"]
-    on_Demand --> S1["Daily Checks"]
-    on_Demand --> S2["Health Commands"]
-    on_Demand --> S3["Common Issues"]
-    on_Demand --> S4["Operational Tasks"]
-    on_Demand --> S5["Best Practices"]
-```
-
 ## Overview
 
 Dell Capacity on Demand (COD) is a flexible capacity licensing model that allows additional storage capacity to be pre-installed in the array but held in reserve. When needed, the capacity is activated by purchasing and applying a COD license key — no physical truck roll required. COD is available on PowerMax, VMAX, and select mid-range platforms, and is commonly used to ensure headroom for unpredictable workload growth without committing to full upfront capital for capacity that may not be needed immediately.

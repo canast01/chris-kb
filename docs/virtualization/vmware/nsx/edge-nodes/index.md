@@ -1,17 +1,4 @@
 # NSX Edge Nodes
-
-```mermaid
-flowchart LR
-    Edge_Nodes["Edge Nodes"]
-    Edge_Nodes --> S0["Where It Fits"]
-    Edge_Nodes --> S1["Daily Checks"]
-    Edge_Nodes --> S2["Health Commands"]
-    Edge_Nodes --> S3["Common Issues"]
-    Edge_Nodes --> S4["Operational Tasks"]
-    Edge_Nodes --> S5["Upgrade Notes"]
-    Edge_Nodes --> S6["Best Practices"]
-```
-
 ## Overview
 
 Edge cluster health, transport nodes, uplinks, services, and troubleshooting.

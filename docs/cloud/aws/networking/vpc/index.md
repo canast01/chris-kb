@@ -1,17 +1,4 @@
 # AWS VPC
-
-```mermaid
-flowchart LR
-    AWS_VPC["AWS VPC"]
-    AWS_VPC --> S0["Where It Fits"]
-    AWS_VPC --> S1["Daily Checks"]
-    AWS_VPC --> S2["Health Commands"]
-    AWS_VPC --> S3["Common Issues"]
-    AWS_VPC --> S4["Operational Tasks"]
-    AWS_VPC --> S5["Upgrade Notes"]
-    AWS_VPC --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS VPC notes for day-to-day infrastructure operations.

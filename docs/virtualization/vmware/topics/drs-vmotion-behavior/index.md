@@ -1,17 +1,4 @@
 # DRS and vMotion Behavior
-
-```mermaid
-flowchart LR
-    vMotion_Behavior["vMotion Behavior"]
-    vMotion_Behavior --> S0["DRS Modes"]
-    vMotion_Behavior --> S1["vMotion Requirements"]
-    vMotion_Behavior --> S2["EVC (Enhanced vMotion Compatibility)"]
-    vMotion_Behavior --> S3["vMotion Validation"]
-    vMotion_Behavior --> S4["Common vMotion Failure Causes"]
-    vMotion_Behavior --> S5["DRS Anti-Affinity / Affinity Rules"]
-    vMotion_Behavior --> S6["Storage vMotion"]
-```
-
 ## DRS Modes
 
 | Mode | Behavior |

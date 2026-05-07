@@ -32,15 +32,6 @@
   <span>Reporting notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Venafi["Venafi"]
-    Venafi --> S0["Daily Checks"]
-    Venafi --> S1["Health Commands"]
-    Venafi --> S2["Upgrade Workflow"]
-```
-
 ## Overview
 
 Venafi manages machine identities and automates certificate lifecycle management across infrastructure and applications.

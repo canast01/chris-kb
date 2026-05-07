@@ -1,20 +1,6 @@
 # Pre-Upgrade Checklist
 
 Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX).
-
-```mermaid
-flowchart LR
-    Pre_Upgrade_Checklis["Pre-Upgrade Checklist"]
-    Pre_Upgrade_Checklis --> S0["Backup and Recovery"]
-    Pre_Upgrade_Checklis --> S1["Environment Health"]
-    Pre_Upgrade_Checklis --> S2["Compatibility Verification"]
-    Pre_Upgrade_Checklis --> S3["Disk and Capacity"]
-    Pre_Upgrade_Checklis --> S4["DNS and NTP"]
-    Pre_Upgrade_Checklis --> S5["Certificates"]
-    Pre_Upgrade_Checklis --> S6["Access and Credentials"]
-    Pre_Upgrade_Checklis --> S7["Rollback Plan"]
-```
-
 ## Backup and Recovery
 
 - [ ] vCenter appliance backup completed and verified (VAMI → Backup → Run Now; confirm backup file exists)

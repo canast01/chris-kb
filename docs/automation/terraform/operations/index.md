@@ -3,18 +3,6 @@
 > Part of the [Terraform](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Operations["Operations"]
-    Operations --> S0["Daily Checks"]
-    Operations --> S1["Health Check"]
-    Operations --> S2["Change Readiness"]
-    Operations --> S3["Incident Triage"]
-    Operations --> S4["Maintenance Window"]
-    Operations --> S5["Post-Change Validation"]
-```
-
 ## Daily Checks
 
 

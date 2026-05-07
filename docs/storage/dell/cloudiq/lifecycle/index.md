@@ -1,15 +1,4 @@
 # Dell CloudIQ Lifecycle
-
-```mermaid
-flowchart LR
-    CloudIQ_Lifecycle["CloudIQ Lifecycle"]
-    CloudIQ_Lifecycle --> S0["Platform Updates"]
-    CloudIQ_Lifecycle --> S1["API Token Management"]
-    CloudIQ_Lifecycle --> S2["Secure Connect Gateway Compatibility"]
-    CloudIQ_Lifecycle --> S3["Supported Systems"]
-    CloudIQ_Lifecycle --> S4["Renewal and Subscription"]
-```
-
 ## Platform Updates
 
 CloudIQ is a SaaS platform hosted and operated by Dell — there is no on-premises upgrade process. All connected systems automatically use the current CloudIQ version. Dell releases major feature updates quarterly, with minor feature additions and bug fixes deployed continuously. Release notes are published at [https://www.dell.com/support](https://www.dell.com/support) under the CloudIQ product page.

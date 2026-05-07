@@ -1,17 +1,4 @@
 # VxRail Service Health
-
-```mermaid
-flowchart LR
-    Service_Health["Service Health"]
-    Service_Health --> S0["Where It Fits"]
-    Service_Health --> S1["Daily Checks"]
-    Service_Health --> S2["Health Commands"]
-    Service_Health --> S3["Common Issues"]
-    Service_Health --> S4["Operational Tasks"]
-    Service_Health --> S5["Upgrade Notes"]
-    Service_Health --> S6["Best Practices"]
-```
-
 ## Overview
 
 VxRail Manager service status, UI access, alerts, and management plane checks.

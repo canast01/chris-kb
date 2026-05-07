@@ -63,19 +63,6 @@
   <span>Evergreen//One notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Storage_Evergreen["Storage Evergreen"]
-    Storage_Evergreen --> S0["Where It Fits"]
-    Storage_Evergreen --> S1["Daily Checks"]
-    Storage_Evergreen --> S2["Health Commands"]
-    Storage_Evergreen --> S3["Common Issues"]
-    Storage_Evergreen --> S4["Operational Tasks"]
-    Storage_Evergreen --> S5["Upgrade Notes"]
-    Storage_Evergreen --> S6["Best Practices"]
-```
-
 ## Overview
 
 Pure Storage Evergreen is a hardware subscription model for FlashArray and FlashBlade that bundles hardware, Purity software, support, and controller upgrades into a single ongoing subscription. The core design principle is non-disruptive controller refresh every three years — data stays in place, hosts remain connected, and there is no forklift replacement or data migration. The model spans three tiers: Evergreen//Forever (base hardware subscription with Every Modern controller upgrades), Evergreen//Flex (adds non-disruptive blade and capacity swap flexibility), and Evergreen//One (consumption-based STaaS, covered separately).

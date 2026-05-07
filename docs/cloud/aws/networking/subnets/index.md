@@ -1,17 +1,4 @@
 # AWS Subnets
-
-```mermaid
-flowchart LR
-    AWS_Subnets["AWS Subnets"]
-    AWS_Subnets --> S0["Where It Fits"]
-    AWS_Subnets --> S1["Daily Checks"]
-    AWS_Subnets --> S2["Health Commands"]
-    AWS_Subnets --> S3["Common Issues"]
-    AWS_Subnets --> S4["Operational Tasks"]
-    AWS_Subnets --> S5["Upgrade Notes"]
-    AWS_Subnets --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Subnets notes for day-to-day infrastructure operations.

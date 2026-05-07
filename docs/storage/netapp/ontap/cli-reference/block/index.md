@@ -1,14 +1,6 @@
 # Block Protocols (iSCSI / FC)
 
 > Part of the [NetApp ONTAP CLI Reference](../).
-
-```mermaid
-flowchart LR
-    FC["FC)"]
-    FC --> S0["iSCSI"]
-    FC --> S1["Fibre Channel"]
-```
-
 ---
 
 ## iSCSI

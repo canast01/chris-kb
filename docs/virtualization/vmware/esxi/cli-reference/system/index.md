@@ -1,15 +1,6 @@
 # System, Services & Maintenance
 
 > Part of the [VMware ESXi CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Maintenance["Maintenance"]
-    Maintenance --> S0["System and Host Info"]
-    Maintenance --> S1["Services"]
-    Maintenance --> S2["Maintenance Mode"]
-```
-
 ---
 
 ## System & Host Info

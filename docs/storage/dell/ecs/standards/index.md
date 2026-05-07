@@ -1,13 +1,4 @@
 # ECS Standards
-
-```mermaid
-flowchart LR
-    ECS_Standards["ECS Standards"]
-    ECS_Standards --> S0["Naming Conventions"]
-    ECS_Standards --> S1["Build and Deployment Baseline"]
-    ECS_Standards --> S2["Configuration Checklist"]
-```
-
 ## Naming Conventions
 
 | Object | Convention | Example |

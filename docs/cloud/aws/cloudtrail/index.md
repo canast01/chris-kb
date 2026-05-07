@@ -1,19 +1,6 @@
 # CloudTrail
 
 AWS CloudTrail — API activity logging, audit trail, and event history.
-
-```mermaid
-flowchart LR
-    CloudTrail["CloudTrail"]
-    CloudTrail --> S0["What CloudTrail Captures"]
-    CloudTrail --> S1["Key Concepts"]
-    CloudTrail --> S2["Common CLI Commands"]
-    CloudTrail --> S3["Query CloudTrail in S3 with Athena"]
-    CloudTrail --> S4["CloudTrail Lake Queries"]
-    CloudTrail --> S5["Monitoring with CloudWatch"]
-    CloudTrail --> S6["Troubleshooting"]
-```
-
 ## What CloudTrail Captures
 
 - **Management events** — API calls that create, modify, or delete AWS resources (default: enabled)

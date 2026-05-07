@@ -1,16 +1,4 @@
 # Recovery Plans
-
-```mermaid
-flowchart LR
-    Recovery_Plans["Recovery Plans"]
-    Recovery_Plans --> S0["Purpose"]
-    Recovery_Plans --> S1["Common checks"]
-    Recovery_Plans --> S2["Incident notes"]
-    Recovery_Plans --> S3["Change notes"]
-    Recovery_Plans --> S4["Useful commands"]
-    Recovery_Plans --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical SRM Recovery Plans notes, checks, troubleshooting, commands, change notes, and field references.

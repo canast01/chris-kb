@@ -1,13 +1,4 @@
 # FlashArray Standards
-
-```mermaid
-flowchart LR
-    FlashArray_Standards["FlashArray Standards"]
-    FlashArray_Standards --> S0["Naming Conventions"]
-    FlashArray_Standards --> S1["Build Baseline"]
-    FlashArray_Standards --> S2["Configuration Checklist"]
-```
-
 ## Naming Conventions
 
 | Object | Pattern | Example |

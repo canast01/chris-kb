@@ -1,17 +1,4 @@
 # AWS Account Structure
-
-```mermaid
-flowchart LR
-    Account_Structure["Account Structure"]
-    Account_Structure --> S0["Where It Fits"]
-    Account_Structure --> S1["Daily Checks"]
-    Account_Structure --> S2["Health Commands"]
-    Account_Structure --> S3["Common Issues"]
-    Account_Structure --> S4["Operational Tasks"]
-    Account_Structure --> S5["Upgrade Notes"]
-    Account_Structure --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Account Structure notes for day-to-day infrastructure operations.

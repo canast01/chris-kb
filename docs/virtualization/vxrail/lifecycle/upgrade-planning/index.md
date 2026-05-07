@@ -3,20 +3,6 @@
 VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.
 
 ---
-
-```mermaid
-flowchart LR
-    Upgrade_Procedure["Upgrade Procedure"]
-    Upgrade_Procedure --> S0["Phase 1: Planning"]
-    Upgrade_Procedure --> S1["Phase 2: Pre-Upgrade Health Checks"]
-    Upgrade_Procedure --> S2["Phase 3: Pre-Upgrade Support Bundle"]
-    Upgrade_Procedure --> S3["Phase 4: Upgrade Pre-Check"]
-    Upgrade_Procedure --> S4["Phase 5: Upgrade Execution"]
-    Upgrade_Procedure --> S5["Phase 6: Failed Upgrade Handling"]
-    Upgrade_Procedure --> S6["Phase 7: Post-Upgrade Validation"]
-    Upgrade_Procedure --> S7["Phase 8: Documentation"]
-```
-
 ## Phase 1: Planning
 
 ### Capture Current State

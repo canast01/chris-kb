@@ -1,20 +1,6 @@
 # Windows Server Troubleshooting
 
 Structured approach to diagnosing common Windows Server issues.
-
-```mermaid
-flowchart LR
-    Server_Troubleshooti["Server Troubleshooting"]
-    Server_Troubleshooti --> S0["Triage Order"]
-    Server_Troubleshooti --> S1["Unexpected Reboots"]
-    Server_Troubleshooti --> S2["High CPU"]
-    Server_Troubleshooti --> S3["High Memory"]
-    Server_Troubleshooti --> S4["Disk Full or High Latency"]
-    Server_Troubleshooti --> S5["Network Connectivity Issues"]
-    Server_Troubleshooti --> S6["Service Not Starting"]
-    Server_Troubleshooti --> S7["RDP / Remote Access Issues"]
-```
-
 ## Triage Order
 
 1. **Is the host reachable?** — ping, RDP, WinRM, iDRAC/iLO console

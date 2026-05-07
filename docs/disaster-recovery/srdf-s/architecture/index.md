@@ -3,19 +3,6 @@
 > Part of the [SRDF/S](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    SRDF_S_Architecture["SRDF/S Architecture"]
-    SRDF_S_Architecture --> S0["Write Commit Model"]
-    SRDF_S_Architecture --> S1["Key Components"]
-    SRDF_S_Architecture --> S2["Pair States"]
-    SRDF_S_Architecture --> S3["RTT and Latency Budget"]
-    SRDF_S_Architecture --> S4["Connectivity"]
-    SRDF_S_Architecture --> S5["Cascade Architecture (SRDF/S + SRDF/A)"]
-    SRDF_S_Architecture --> S6["Licensing"]
-```
-
 ## Overview
 
 SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees **RPO = 0** at the cost of write latency, which is directly proportional to the inter-site round-trip time (RTT).

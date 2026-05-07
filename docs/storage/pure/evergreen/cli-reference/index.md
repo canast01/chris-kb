@@ -1,16 +1,6 @@
 # Pure Evergreen CLI Reference
 
 > Part of the [Evergreen](../) reference.
-
-```mermaid
-flowchart LR
-    Pure_Evergreen["Pure Evergreen"]
-    Pure_Evergreen --> S0["Overview"]
-    Pure_Evergreen --> S1["Pure1 REST API"]
-    Pure_Evergreen --> S2["FlashArray CLI (per-array)"]
-    Pure_Evergreen --> S3["Alerts"]
-```
-
 ---
 
 ## Overview

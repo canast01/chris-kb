@@ -1,19 +1,6 @@
 # Backup & Configuration
 
 > Part of the Dell Data Domain CLI Reference.
-
-```mermaid
-flowchart LR
-    Configuration["Configuration"]
-    Configuration --> S0["Configuration Backup"]
-    Configuration --> S1["System Configuration Export"]
-    Configuration --> S2["NTP Configuration"]
-    Configuration --> S3["SNMP and Alerting Configuration"]
-    Configuration --> S4["Syslog Configuration"]
-    Configuration --> S5["Pre-Change Config Capture"]
-    Configuration --> S6["Common Issues"]
-```
-
 ## Configuration Backup
 
 ```bash

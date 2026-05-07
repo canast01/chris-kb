@@ -1,17 +1,4 @@
 # Windows Server — Lifecycle
-
-```mermaid
-flowchart LR
-    Windows_Server["Windows Server"]
-    Windows_Server --> S0["Version Support Matrix"]
-    Windows_Server --> S1["Patching Tools"]
-    Windows_Server --> S2["Patching Cadence"]
-    Windows_Server --> S3["Upgrade Paths"]
-    Windows_Server --> S4["EOL Planning"]
-    Windows_Server --> S5["Hotfix and Patch Status"]
-    Windows_Server --> S6["Related Sections"]
-```
-
 ## Version Support Matrix
 
 | Version | GA Date | Mainstream Support End | Extended Support End | Notes |

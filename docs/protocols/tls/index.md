@@ -26,19 +26,6 @@ TLS (Transport Layer Security) provides encryption, integrity, and authenticatio
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    and_HTTPS["and HTTPS"]
-    and_HTTPS --> S0["Protocol Versions"]
-    and_HTTPS --> S1["Certificate and Handshake Inspection"]
-    and_HTTPS --> S2["Cipher Suite Audit"]
-    and_HTTPS --> S3["Server Configuration"]
-    and_HTTPS --> S4["OCSP Stapling Verification"]
-    and_HTTPS --> S5["Certificate Validation"]
-    and_HTTPS --> S6["Troubleshooting"]
-```
-
 ## Protocol Versions
 
 | Version | Status | Notes |

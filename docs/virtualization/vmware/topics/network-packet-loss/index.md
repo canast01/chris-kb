@@ -1,16 +1,4 @@
 # Network Packet Loss Validation
-
-```mermaid
-flowchart LR
-    Loss_Validation["Loss Validation"]
-    Loss_Validation --> S0["Symptoms"]
-    Loss_Validation --> S1["NIC Statistics"]
-    Loss_Validation --> S2["vmkping — Reachability and MTU Testing"]
-    Loss_Validation --> S3["PowerCLI Network Checks"]
-    Loss_Validation --> S4["Common Causes and Fixes"]
-    Loss_Validation --> S5["Ongoing Monitoring"]
-```
-
 ## Symptoms
 
 | Symptom | Likely Cause |

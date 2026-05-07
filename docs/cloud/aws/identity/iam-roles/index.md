@@ -1,17 +1,4 @@
 # AWS IAM Roles
-
-```mermaid
-flowchart LR
-    IAM_Roles["IAM Roles"]
-    IAM_Roles --> S0["Where It Fits"]
-    IAM_Roles --> S1["Daily Checks"]
-    IAM_Roles --> S2["Health Commands"]
-    IAM_Roles --> S3["Common Issues"]
-    IAM_Roles --> S4["Operational Tasks"]
-    IAM_Roles --> S5["Upgrade Notes"]
-    IAM_Roles --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS IAM Roles notes for day-to-day infrastructure operations.

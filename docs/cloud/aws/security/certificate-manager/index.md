@@ -1,17 +1,4 @@
 # AWS Certificate Manager
-
-```mermaid
-flowchart LR
-    Certificate_Manager["Certificate Manager"]
-    Certificate_Manager --> S0["Where It Fits"]
-    Certificate_Manager --> S1["Daily Checks"]
-    Certificate_Manager --> S2["Health Commands"]
-    Certificate_Manager --> S3["Common Issues"]
-    Certificate_Manager --> S4["Operational Tasks"]
-    Certificate_Manager --> S5["Upgrade Notes"]
-    Certificate_Manager --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Certificate Manager notes for day-to-day infrastructure operations.

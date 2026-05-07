@@ -1,16 +1,4 @@
 # Aria Operations Scripts
-
-```mermaid
-flowchart LR
-    Operations_Scripts["Operations Scripts"]
-    Operations_Scripts --> S0["Authentication"]
-    Operations_Scripts --> S1["Export Active Alerts"]
-    Operations_Scripts --> S2["Query Resource Metrics"]
-    Operations_Scripts --> S3["Push Custom Metric"]
-    Operations_Scripts --> S4["Script Inventory"]
-    Operations_Scripts --> S5["Token Refresh"]
-```
-
 ## Authentication
 
 All scripts authenticate via the Aria Operations REST API token endpoint. The session token is passed in the `Authorization: vRealizeOpsToken` header for subsequent requests.

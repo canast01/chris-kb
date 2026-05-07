@@ -1,17 +1,6 @@
 # ExpressRoute
 
 Azure ExpressRoute — private, dedicated network connection between on-premises and Azure, bypassing the public internet.
-
-```mermaid
-flowchart LR
-    ExpressRoute["ExpressRoute"]
-    ExpressRoute --> S0["Key Concepts"]
-    ExpressRoute --> S1["Common Azure CLI Commands"]
-    ExpressRoute --> S2["Health Checks"]
-    ExpressRoute --> S3["BGP Route Verification"]
-    ExpressRoute --> S4["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

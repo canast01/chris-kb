@@ -3,19 +3,6 @@
 > Part of the [VxRail](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    VxRail_Security["VxRail Security"]
-    VxRail_Security --> S0["Hardening Checklist"]
-    VxRail_Security --> S1["iDRAC Hardening"]
-    VxRail_Security --> S2["ESXi Lockdown Mode"]
-    VxRail_Security --> S3["vSAN Encryption"]
-    VxRail_Security --> S4["Certificate Management"]
-    VxRail_Security --> S5["vCenter RBAC"]
-    VxRail_Security --> S6["Syslog Forwarding"]
-```
-
 ## Hardening Checklist
 
 - [ ] All iDRAC default credentials changed; iDRAC access restricted to management VLAN

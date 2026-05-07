@@ -1,17 +1,4 @@
 # VxRail Connectivity
-
-```mermaid
-flowchart LR
-    VxRail_Connectivity["VxRail Connectivity"]
-    VxRail_Connectivity --> S0["Where It Fits"]
-    VxRail_Connectivity --> S1["Daily Checks"]
-    VxRail_Connectivity --> S2["Health Commands"]
-    VxRail_Connectivity --> S3["Common Issues"]
-    VxRail_Connectivity --> S4["Operational Tasks"]
-    VxRail_Connectivity --> S5["Upgrade Notes"]
-    VxRail_Connectivity --> S6["Best Practices"]
-```
-
 ## Overview
 
 Connectivity to vCenter, hosts, Dell services, DNS, NTP, and support endpoints.

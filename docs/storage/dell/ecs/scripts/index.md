@@ -3,20 +3,6 @@
 > Part of the [Dell ECS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Node and Capacity Health Check"]
-    Scripts --> S1["Bucket Audit"]
-    Scripts --> S2["S3 Connectivity Check"]
-    Scripts --> S3["Windows: ECS Bucket Listing via REST API (PowerShell)"]
-    Scripts --> S4["Windows: ECS Node Status via Plink (CMD)"]
-    Scripts --> S5["Daily Check Script"]
-    Scripts --> S6["Incident Triage Script"]
-    Scripts --> S7["Change Pre-Check Script"]
-```
-
 ## Node & Capacity Health Check
 
 Queries the ECS Management REST API to check node status, cluster capacity utilisation, and active alerts. Warns if capacity exceeds 80% and goes critical above 90%.

@@ -1,19 +1,6 @@
 # Permissions & Roles
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Roles["Roles"]
-    Roles --> S0["Roles"]
-    Roles --> S1["Permissions"]
-    Roles --> S2["Assign a Role"]
-    Roles --> S3["Modify and Remove Permissions"]
-    Roles --> S4["Create a Custom Role"]
-    Roles --> S5["Audit: Permission Report"]
-    Roles --> S6["Common Built-in Roles"]
-```
-
 ## Roles
 
 ```powershell

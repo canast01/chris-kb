@@ -1,17 +1,6 @@
 # Hosts & Access
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
-
-```mermaid
-flowchart LR
-    Access["Access"]
-    Access --> S0["Hosts"]
-    Access --> S1["Host OS Types"]
-    Access --> S2["Initiators"]
-    Access --> S3["LUN Access Control (Host Access)"]
-    Access --> S4["End-to-End LUN Presentation"]
-```
-
 ## Hosts
 
 Hosts represent servers that access Unity storage. Each host has associated initiators (WWNs or IQNs).

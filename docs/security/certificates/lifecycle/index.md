@@ -3,19 +3,6 @@
 The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured wherever possible (Venafi, ACME, cert-manager). Manual processes are a fallback only.
 
 ---
-
-```mermaid
-flowchart LR
-    Certificates_Lifecyc["Certificates Lifecycle"]
-    Certificates_Lifecyc --> S0["Lifecycle Overview"]
-    Certificates_Lifecyc --> S1["CSR Generation"]
-    Certificates_Lifecyc --> S2["Certificate Issuance (Internal ADCS)"]
-    Certificates_Lifecyc --> S3["Certificate Installation"]
-    Certificates_Lifecyc --> S4["Expiry Monitoring"]
-    Certificates_Lifecyc --> S5["Certificate Renewal"]
-    Certificates_Lifecyc --> S6["Certificate Revocation"]
-```
-
 ## Lifecycle Overview
 
 | Stage | Trigger | Owner | Target SLA |

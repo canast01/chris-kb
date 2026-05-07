@@ -1,16 +1,4 @@
 # Integrations
-
-```mermaid
-flowchart LR
-    Integrations["Integrations"]
-    Integrations --> S0["Purpose"]
-    Integrations --> S1["Common checks"]
-    Integrations --> S2["Incident notes"]
-    Integrations --> S3["Change notes"]
-    Integrations --> S4["Useful commands"]
-    Integrations --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Nexus Dashboard Integrations notes, checks, troubleshooting, commands, change notes, and field references.

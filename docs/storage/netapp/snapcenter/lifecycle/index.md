@@ -1,15 +1,4 @@
 # SnapCenter Lifecycle
-
-```mermaid
-flowchart LR
-    SnapCenter_Lifecycle["SnapCenter Lifecycle"]
-    SnapCenter_Lifecycle --> S0["SnapCenter Version Matrix"]
-    SnapCenter_Lifecycle --> S1["ONTAP Compatibility"]
-    SnapCenter_Lifecycle --> S2["Upgrade Paths"]
-    SnapCenter_Lifecycle --> S3["EOL Tracking"]
-    SnapCenter_Lifecycle --> S4["Refresh Planning"]
-```
-
 ## SnapCenter Version Matrix
 
 | SnapCenter Version | Release Date | Supported ONTAP Versions | End of Support |

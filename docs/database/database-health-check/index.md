@@ -1,20 +1,6 @@
 # Database Health Check
 
 Verify database availability, connectivity, replication status, and resource utilization across common platforms.
-
-```mermaid
-flowchart LR
-    Health_Check["Health Check"]
-    Health_Check --> S0["Quick Status — All Platforms"]
-    Health_Check --> S1["PostgreSQL Health Checks"]
-    Health_Check --> S2["MySQL / MariaDB Health Checks"]
-    Health_Check --> S3["SQL Server Health Checks"]
-    Health_Check --> S4["Connectivity Test"]
-    Health_Check --> S5["Health Check Thresholds"]
-    Health_Check --> S6["Log Locations"]
-    Health_Check --> S7["Troubleshooting"]
-```
-
 ## Quick Status — All Platforms
 
 ```bash

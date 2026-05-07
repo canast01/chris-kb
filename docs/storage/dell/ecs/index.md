@@ -63,19 +63,6 @@
   <span>S3 Access notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_ECS["Dell ECS"]
-    Dell_ECS --> S0["Where It Fits"]
-    Dell_ECS --> S1["Daily Checks"]
-    Dell_ECS --> S2["Health Commands"]
-    Dell_ECS --> S3["Common Issues"]
-    Dell_ECS --> S4["Operational Tasks"]
-    Dell_ECS --> S5["Upgrade Notes"]
-    Dell_ECS --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.

@@ -1,19 +1,6 @@
 # Service Level Objectives (SLO)
 
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
-
-```mermaid
-flowchart LR
-    Objectives__SLO["Objectives (SLO)"]
-    Objectives__SLO --> S0["SLO vs SLA vs SLI"]
-    Objectives__SLO --> S1["Common SLOs for Infrastructure"]
-    Objectives__SLO --> S2["Error Budget"]
-    Objectives__SLO --> S3["Measuring SLIs"]
-    Objectives__SLO --> S4["SLO Dashboard Requirements"]
-    Objectives__SLO --> S5["Alerting from SLOs"]
-    Objectives__SLO --> S6["SLO Review Cadence"]
-```
-
 ## SLO vs SLA vs SLI
 
 | Term | Definition |

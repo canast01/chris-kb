@@ -1,17 +1,4 @@
 # VxRail Firmware
-
-```mermaid
-flowchart LR
-    VxRail_Firmware["VxRail Firmware"]
-    VxRail_Firmware --> S0["Where It Fits"]
-    VxRail_Firmware --> S1["Daily Checks"]
-    VxRail_Firmware --> S2["Health Commands"]
-    VxRail_Firmware --> S3["Common Issues"]
-    VxRail_Firmware --> S4["Operational Tasks"]
-    VxRail_Firmware --> S5["Upgrade Notes"]
-    VxRail_Firmware --> S6["Best Practices"]
-```
-
 ## Overview
 
 Firmware lifecycle, hardware dependencies, version alignment, and post-update validation.

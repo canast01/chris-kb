@@ -1,14 +1,4 @@
 # Aria Automation — Operations
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["Daily Checks"]
-    Aria_Automation --> S1["Weekly Checks"]
-    Aria_Automation --> S2["Maintenance Tasks"]
-    Aria_Automation --> S3["Common Runbooks"]
-```
-
 ## Daily Checks
 
 

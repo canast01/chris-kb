@@ -12,19 +12,6 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 - Linux agent logs: `/var/log/veeam/`
 
 ---
-
-```mermaid
-flowchart LR
-    Veeam_Troubleshootin["Veeam Troubleshooting"]
-    Veeam_Troubleshootin --> S0["Snapshot Failure (VMware)"]
-    Veeam_Troubleshootin --> S1["Proxy Timeout / Network Error"]
-    Veeam_Troubleshootin --> S2["Repository Out of Space"]
-    Veeam_Troubleshootin --> S3["Instant VM Recovery — VM Not Starting"]
-    Veeam_Troubleshootin --> S4["VBR Service Crash / Instability"]
-    Veeam_Troubleshootin --> S5["Backup Copy Job Never Completes"]
-    Veeam_Troubleshootin --> S6["SureBackup Fails"]
-```
-
 ## Snapshot Failure (VMware)
 
 **Symptom:** Job fails at "Creating snapshot" or "Committing snapshot."

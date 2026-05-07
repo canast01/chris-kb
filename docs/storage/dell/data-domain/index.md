@@ -27,19 +27,6 @@
   <span>Restore Support notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Data_Domain["Data Domain"]
-    Data_Domain --> S0["Where It Fits"]
-    Data_Domain --> S1["Daily Checks"]
-    Data_Domain --> S2["Health Commands"]
-    Data_Domain --> S3["Common Issues"]
-    Data_Domain --> S4["Operational Tasks"]
-    Data_Domain --> S5["Upgrade Notes"]
-    Data_Domain --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance that performs inline global deduplication as data is written, achieving typical reduction ratios of 20:1 or higher. It serves as a backup target for leading data protection software via DDBoost, NFS, CIFS, and VTL interfaces. MTrees provide logical partitioning of the DD filesystem, enabling multi-tenant or per-application isolation of backup streams.

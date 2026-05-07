@@ -1,19 +1,6 @@
 # SRDF/A CLI Reference
 
 > Part of the [SRDF/A](../) reference.
-
-```mermaid
-flowchart LR
-    SRDF_A["SRDF/A"]
-    SRDF_A --> S0["Overview"]
-    SRDF_A --> S1["Status and Inspection"]
-    SRDF_A --> S2["Cycle Time and Delta Mark (Lag Monitoring)"]
-    SRDF_A --> S3["Operations on Storage Groups (CG-based)"]
-    SRDF_A --> S4["Device-Level Operations"]
-    SRDF_A --> S5["SRDF/A Consistency Protection"]
-    SRDF_A --> S6["Unisphere REST API"]
-```
-
 ---
 
 ## Overview

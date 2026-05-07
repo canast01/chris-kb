@@ -1,17 +1,4 @@
 # Brocade Fabric OS Standards
-
-```mermaid
-flowchart LR
-    OS_Standards["OS Standards"]
-    OS_Standards --> S0["Switch Naming"]
-    OS_Standards --> S1["Domain ID Allocation"]
-    OS_Standards --> S2["Zone and Alias Naming"]
-    OS_Standards --> S3["VSAN / Fabric Design"]
-    OS_Standards --> S4["ISL Standards"]
-    OS_Standards --> S5["Security Standards"]
-    OS_Standards --> S6["Firmware Standards"]
-```
-
 ## Switch Naming
 
 ```

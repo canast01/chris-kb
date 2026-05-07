@@ -1,14 +1,6 @@
 # Firmware, Upgrades & Support
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Support["Support"]
-    Support --> S0["Firmware and Upgrades"]
-    Support --> S1["Licenses and Support"]
-```
-
 ---
 
 ## Firmware & Upgrades

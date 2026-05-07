@@ -32,15 +32,6 @@
   <span>VSANs notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Cisco_MDS["Cisco MDS"]
-    Cisco_MDS --> S0["Daily Checks"]
-    Cisco_MDS --> S1["Health Commands"]
-    Cisco_MDS --> S2["Upgrade Workflow"]
-```
-
 ## Overview
 
 Cisco MDS switches provide Fibre Channel connectivity for SAN environments.

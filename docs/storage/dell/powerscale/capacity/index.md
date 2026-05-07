@@ -1,19 +1,6 @@
 # PowerScale Capacity
 
 Capacity monitoring, quotas, and planning on Dell PowerScale.
-
-```mermaid
-flowchart LR
-    PowerScale_Capacity["PowerScale Capacity"]
-    PowerScale_Capacity --> S0["Cluster Capacity Overview"]
-    PowerScale_Capacity --> S1["Storage Pool Detail"]
-    PowerScale_Capacity --> S2["Quotas (SmartQuotas)"]
-    PowerScale_Capacity --> S3["Quota Notifications"]
-    PowerScale_Capacity --> S4["Identifying Large Consumers"]
-    PowerScale_Capacity --> S5["Capacity Trend and Forecasting"]
-    PowerScale_Capacity --> S6["Capacity Management Actions"]
-```
-
 ## Cluster Capacity Overview
 
 ```bash

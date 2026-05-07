@@ -1,19 +1,6 @@
 # Diagnostics
 
 > Part of the Dell Data Domain CLI Reference.
-
-```mermaid
-flowchart LR
-    Diagnostics["Diagnostics"]
-    Diagnostics --> S0["Log Access"]
-    Diagnostics --> S1["Support Bundle"]
-    Diagnostics --> S2["System Shell (ddsh)"]
-    Diagnostics --> S3["Network Diagnostics"]
-    Diagnostics --> S4["Hardware Diagnostics"]
-    Diagnostics --> S5["Performance Capture"]
-    Diagnostics --> S6["Alert History for TAC"]
-```
-
 ## Log Access
 
 ```bash

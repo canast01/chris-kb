@@ -1,17 +1,4 @@
 # Data Domain — Architecture
-
-```mermaid
-flowchart LR
-    Data_Domain["Data Domain"]
-    Data_Domain --> S0["Core Components"]
-    Data_Domain --> S1["Filesystem Architecture"]
-    Data_Domain --> S2["HA Topology"]
-    Data_Domain --> S3["Data Path"]
-    Data_Domain --> S4["Protocol Interfaces"]
-    Data_Domain --> S5["Connectivity and Network Design"]
-    Data_Domain --> S6["Sizing Considerations"]
-```
-
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around inline global deduplication. All data is deduplicated as it is written — not in post-processing — using the SISL (Stream-Informed Segment Layout) deduplication engine. The result is a highly space-efficient backup target that typically achieves 20:1 or greater reduction ratios across mixed workloads.

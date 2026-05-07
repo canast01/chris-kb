@@ -1,18 +1,4 @@
 # Aria Suite Lifecycle Integration
-
-```mermaid
-flowchart LR
-    Lifecycle_Integratio["Lifecycle Integration"]
-    Lifecycle_Integratio --> S0["Workspace ONE Access (VIDM)"]
-    Lifecycle_Integratio --> S1["vCenter Server"]
-    Lifecycle_Integratio --> S2["NSX-T Integration (Optional)"]
-    Lifecycle_Integratio --> S3["SMTP Configuration"]
-    Lifecycle_Integratio --> S4["NFS Binary Repository"]
-    Lifecycle_Integratio --> S5["Proxy / Offline Depot"]
-    Lifecycle_Integratio --> S6["Active Directory / LDAP"]
-    Lifecycle_Integratio --> S7["Aria Automation Integration"]
-```
-
 ## Workspace ONE Access (VIDM)
 
 Workspace ONE Access is the SSO identity provider for all Aria products — it is registered with LCM during initial setup.

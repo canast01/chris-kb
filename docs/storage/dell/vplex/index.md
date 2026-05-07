@@ -48,19 +48,6 @@
   <span>Virtual Volumes notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Dell_VPLEX["Dell VPLEX"]
-    Dell_VPLEX --> S0["Where It Fits"]
-    Dell_VPLEX --> S1["Daily Checks"]
-    Dell_VPLEX --> S2["Health Commands"]
-    Dell_VPLEX --> S3["Common Issues"]
-    Dell_VPLEX --> S4["Operational Tasks"]
-    Dell_VPLEX --> S5["Upgrade Notes"]
-    Dell_VPLEX --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell VPLEX is a storage virtualization platform that presents a federated storage layer across heterogeneous arrays, abstracting physical storage into virtual volumes accessible to hosts. VPLEX Local provides active-active LUN access within a single data center across two arrays; VPLEX Metro extends this across two data centers up to ~10ms RTT with synchronous mirroring and transparent failover; VPLEX Geo adds asynchronous replication for greater distances using RecoverPoint. Management is via the `vplexcli` command-line interface or Unisphere for VPLEX.

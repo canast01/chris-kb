@@ -1,17 +1,4 @@
 # NetBackup Integration
-
-```mermaid
-flowchart LR
-    NetBackup_Integratio["NetBackup Integration"]
-    NetBackup_Integratio --> S0["Dell Data Domain (OST)"]
-    NetBackup_Integratio --> S1["VMware vSphere (VADP)"]
-    NetBackup_Integratio --> S2["Pure FlashArray (Snapshot Client)"]
-    NetBackup_Integratio --> S3["AWS S3 Cloud Storage Unit"]
-    NetBackup_Integratio --> S4["SIEM Integration"]
-    NetBackup_Integratio --> S5["CyberArk Integration"]
-    NetBackup_Integratio --> S6["OpsCenter / IT Analytics"]
-```
-
 ## Dell Data Domain (OST)
 
 The OpenStorage Technology (OST) plugin enables inline deduplication and DD Boost protocol between NetBackup media servers and Data Domain appliances:

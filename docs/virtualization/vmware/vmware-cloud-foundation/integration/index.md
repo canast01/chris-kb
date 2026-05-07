@@ -3,19 +3,6 @@
 > Part of the [VCF](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Foundation_Integrati["Foundation Integration"]
-    Foundation_Integrati --> S0["Integration Summary"]
-    Foundation_Integrati --> S1["Aria Operations"]
-    Foundation_Integrati --> S2["Aria Automation"]
-    Foundation_Integrati --> S3["Active Directory Integration"]
-    Foundation_Integrati --> S4["NSX Federation (Multi-Site VCF)"]
-    Foundation_Integrati --> S5["Backup Integration"]
-    Foundation_Integrati --> S6["SIEM and Syslog Integration"]
-```
-
 ## Integration Summary
 
 | Integration | Method | Notes |

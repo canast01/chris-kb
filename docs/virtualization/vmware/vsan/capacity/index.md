@@ -1,17 +1,4 @@
 # vSAN Capacity
-
-```mermaid
-flowchart LR
-    vSAN_Capacity["vSAN Capacity"]
-    vSAN_Capacity --> S0["Where It Fits"]
-    vSAN_Capacity --> S1["Daily Checks"]
-    vSAN_Capacity --> S2["Health Commands"]
-    vSAN_Capacity --> S3["Common Issues"]
-    vSAN_Capacity --> S4["Operational Tasks"]
-    vSAN_Capacity --> S5["Upgrade Notes"]
-    vSAN_Capacity --> S6["Best Practices"]
-```
-
 ## Overview
 
 Capacity planning, slack space, thin provisioning, growth trends, and alert thresholds.

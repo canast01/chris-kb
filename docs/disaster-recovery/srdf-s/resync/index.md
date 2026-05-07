@@ -1,16 +1,4 @@
 # Resync
-
-```mermaid
-flowchart LR
-    Resync["Resync"]
-    Resync --> S0["Purpose"]
-    Resync --> S1["Common checks"]
-    Resync --> S2["Incident notes"]
-    Resync --> S3["Change notes"]
-    Resync --> S4["Useful commands"]
-    Resync --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical SRDF/S Resync notes, checks, troubleshooting, commands, change notes, and field references.

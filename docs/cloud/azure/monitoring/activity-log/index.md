@@ -1,16 +1,4 @@
 # Activity Log
-
-```mermaid
-flowchart LR
-    Activity_Log["Activity Log"]
-    Activity_Log --> S0["Purpose"]
-    Activity_Log --> S1["Common checks"]
-    Activity_Log --> S2["Incident notes"]
-    Activity_Log --> S3["Change notes"]
-    Activity_Log --> S4["Useful commands"]
-    Activity_Log --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Monitoring Activity Log notes, checks, troubleshooting, commands, change notes, and field references.

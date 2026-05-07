@@ -1,14 +1,4 @@
 # PowerScale Architecture
-
-```mermaid
-flowchart LR
-    PowerScale_Architect["PowerScale Architectur"]
-    PowerScale_Architect --> S0["Components"]
-    PowerScale_Architect --> S1["HA Topology"]
-    PowerScale_Architect --> S2["Connectivity"]
-    PowerScale_Architect --> S3["Sizing Guidelines"]
-```
-
 ## Overview
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the **OneFS** distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at `/ifs` across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes, with each node added linearly contributing both capacity and throughput. PowerScale is available in all-flash (F-series), hybrid (H-series), and archive (A-series) node families.

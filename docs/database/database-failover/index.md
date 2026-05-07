@@ -1,20 +1,6 @@
 # Database Failover Procedure
 
 Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.
-
-```mermaid
-flowchart LR
-    Failover_Procedure["Failover Procedure"]
-    Failover_Procedure --> S0["Pre-Failover Checklist"]
-    Failover_Procedure --> S1["PostgreSQL — Streaming Replication Failover"]
-    Failover_Procedure --> S2["MySQL / MariaDB — Replica Promotion"]
-    Failover_Procedure --> S3["SQL Server — Always On Availability Group"]
-    Failover_Procedure --> S4["SQL Server — Failover Cluster Instance (FCI)"]
-    Failover_Procedure --> S5["Post-Failover Validation"]
-    Failover_Procedure --> S6["Post-Failover Actions"]
-    Failover_Procedure --> S7["Troubleshooting"]
-```
-
 ## Pre-Failover Checklist
 
 - [ ] Primary failure confirmed (not a network partition — verify from multiple paths)

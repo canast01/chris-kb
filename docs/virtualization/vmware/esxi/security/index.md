@@ -1,15 +1,4 @@
 # VMware ESXi Security
-
-```mermaid
-flowchart LR
-    ESXi_Security["ESXi Security"]
-    ESXi_Security --> S0["Hardening Checklist"]
-    ESXi_Security --> S1["Lockdown Mode"]
-    ESXi_Security --> S2["Firewall"]
-    ESXi_Security --> S3["Authentication"]
-    ESXi_Security --> S4["Audit Logging"]
-```
-
 ## Hardening Checklist
 
 Apply the following controls to every ESXi host before placing it in production. Use host profiles to enforce these settings consistently across the cluster.

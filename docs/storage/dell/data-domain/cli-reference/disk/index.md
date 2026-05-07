@@ -1,19 +1,6 @@
 # Disk & Storage
 
 > Part of the Dell Data Domain CLI Reference.
-
-```mermaid
-flowchart LR
-    Storage["Storage"]
-    Storage --> S0["Disk Status"]
-    Storage --> S1["Disk States"]
-    Storage --> S2["Enclosures and Shelves"]
-    Storage --> S3["Tier Management"]
-    Storage --> S4["RAID Group Status"]
-    Storage --> S5["Replacing a Failed Disk"]
-    Storage --> S6["Capacity Summary"]
-```
-
 ## Disk Status
 
 ```bash

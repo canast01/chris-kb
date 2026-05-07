@@ -1,16 +1,4 @@
 # Azure DNS
-
-```mermaid
-flowchart LR
-    Azure_DNS["Azure DNS"]
-    Azure_DNS --> S0["Purpose"]
-    Azure_DNS --> S1["Common checks"]
-    Azure_DNS --> S2["Incident notes"]
-    Azure_DNS --> S3["Change notes"]
-    Azure_DNS --> S4["Useful commands"]
-    Azure_DNS --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Networking Azure DNS notes, checks, troubleshooting, commands, change notes, and field references.

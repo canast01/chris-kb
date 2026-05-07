@@ -1,16 +1,4 @@
 # vCenter Standards
-
-```mermaid
-flowchart LR
-    vCenter_Standards["vCenter Standards"]
-    vCenter_Standards --> S0["Naming Conventions"]
-    vCenter_Standards --> S1["Cluster Configuration Baseline"]
-    vCenter_Standards --> S2["Resource Pool Naming and Structure"]
-    vCenter_Standards --> S3["vSAN Cluster Baseline (where applicable)"]
-    vCenter_Standards --> S4["vCenter Configuration Checklist"]
-    vCenter_Standards --> S5["VM Template Standards"]
-```
-
 ## Naming Conventions
 
 Consistent naming across the vSphere inventory is critical for readability, automation, and audit filtering.

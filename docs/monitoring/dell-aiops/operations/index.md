@@ -1,16 +1,4 @@
 # Dell AIOps Operations
-
-```mermaid
-flowchart LR
-    AIOps_Operations["AIOps Operations"]
-    AIOps_Operations --> S0["Daily Checklist"]
-    AIOps_Operations --> S1["Alert Triage Workflow"]
-    AIOps_Operations --> S2["Weekly Tasks"]
-    AIOps_Operations --> S3["Monthly Tasks"]
-    AIOps_Operations --> S4["Capacity Review Process"]
-    AIOps_Operations --> S5["Health Score Decline Investigation"]
-```
-
 ## Daily Checklist
 
 | Check | Location | Pass Criteria |

@@ -1,16 +1,4 @@
 # Savings Plans
-
-```mermaid
-flowchart LR
-    Savings_Plans["Savings Plans"]
-    Savings_Plans --> S0["Purpose"]
-    Savings_Plans --> S1["Common checks"]
-    Savings_Plans --> S2["Incident notes"]
-    Savings_Plans --> S3["Change notes"]
-    Savings_Plans --> S4["Useful commands"]
-    Savings_Plans --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Cost Savings Plans notes, checks, troubleshooting, commands, change notes, and field references.

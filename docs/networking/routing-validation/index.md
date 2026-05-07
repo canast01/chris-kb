@@ -1,20 +1,6 @@
 # Routing Validation
 
 Verify routing paths are correct before and after network changes.
-
-```mermaid
-flowchart LR
-    Routing_Validation["Routing Validation"]
-    Routing_Validation --> S0["Pre-Change Baseline"]
-    Routing_Validation --> S1["Post-Change Validation"]
-    Routing_Validation --> S2["Validate Default Gateway"]
-    Routing_Validation --> S3["OSPF Neighbor Validation"]
-    Routing_Validation --> S4["BGP Route Validation"]
-    Routing_Validation --> S5["Test Application-Level Connectivity"]
-    Routing_Validation --> S6["Validation Checklist"]
-    Routing_Validation --> S7["Common Issues"]
-```
-
 ## Pre-Change Baseline
 
 ```bash

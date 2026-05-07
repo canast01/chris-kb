@@ -1,14 +1,4 @@
 # AWS Cost Explorer
-
-```mermaid
-flowchart LR
-    Cost_Explorer["Cost Explorer"]
-    Cost_Explorer --> S0["Daily Checks"]
-    Cost_Explorer --> S1["Operational Tasks"]
-    Cost_Explorer --> S2["Common Issues"]
-    Cost_Explorer --> S3["Maintenance Notes"]
-```
-
 ## Overview
 
 AWS Cost Explorer is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

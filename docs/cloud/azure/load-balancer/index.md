@@ -1,18 +1,6 @@
 # Load Balancer
 
 Azure Load Balancer — layer 4 TCP/UDP load balancing for Azure VMs and VM scale sets.
-
-```mermaid
-flowchart LR
-    Load_Balancer["Load Balancer"]
-    Load_Balancer --> S0["Types"]
-    Load_Balancer --> S1["Common Azure CLI Commands"]
-    Load_Balancer --> S2["Create Health Probe"]
-    Load_Balancer --> S3["Create Load Balancing Rule"]
-    Load_Balancer --> S4["Inbound NAT Rules (for direct VM access)"]
-    Load_Balancer --> S5["Troubleshooting"]
-```
-
 ## Types
 
 | Type | Scope | Use Case |

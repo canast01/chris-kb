@@ -1,20 +1,6 @@
 # Linux Patching
 
 Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.
-
-```mermaid
-flowchart LR
-    Linux_Patching["Linux Patching"]
-    Linux_Patching --> S0["Pre-Patch Checklist"]
-    Linux_Patching --> S1["RHEL — dnf Patching"]
-    Linux_Patching --> S2["RHEL — yum history (Rollback)"]
-    Linux_Patching --> S3["Ubuntu — apt Patching"]
-    Linux_Patching --> S4["Kernel Updates and Reboot"]
-    Linux_Patching --> S5["Red Hat Subscription and Repositories"]
-    Linux_Patching --> S6["Ansible Patching at Scale"]
-    Linux_Patching --> S7["Post-Patch Validation"]
-```
-
 ## Pre-Patch Checklist
 
 ```bash

@@ -1,17 +1,4 @@
 # AWS AWS Config
-
-```mermaid
-flowchart LR
-    AWS_Config["AWS Config"]
-    AWS_Config --> S0["Where It Fits"]
-    AWS_Config --> S1["Daily Checks"]
-    AWS_Config --> S2["Health Commands"]
-    AWS_Config --> S3["Common Issues"]
-    AWS_Config --> S4["Operational Tasks"]
-    AWS_Config --> S5["Upgrade Notes"]
-    AWS_Config --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS AWS Config notes for day-to-day infrastructure operations.

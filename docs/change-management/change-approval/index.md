@@ -1,18 +1,6 @@
 # Change Approval Process
 
 Ensures all changes are assessed for risk and approved by the appropriate authority before implementation.
-
-```mermaid
-flowchart LR
-    Approval_Process["Approval Process"]
-    Approval_Process --> S0["Change Types and Approval Requirements"]
-    Approval_Process --> S1["CAB Approval Workflow"]
-    Approval_Process --> S2["Risk Classification Matrix"]
-    Approval_Process --> S3["ITSM Approval Fields"]
-    Approval_Process --> S4["Approval Checklist"]
-    Approval_Process --> S5["Common Rejection Reasons"]
-```
-
 ## Change Types and Approval Requirements
 
 | Change Type | Risk | Approval Required | Lead Time |

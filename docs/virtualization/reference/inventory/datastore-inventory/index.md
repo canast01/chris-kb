@@ -3,16 +3,6 @@
 > Part of the [Inventory](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Datastore_Inventory["Datastore Inventory"]
-    Datastore_Inventory --> S0["Datastore Inventory Table"]
-    Datastore_Inventory --> S1["Fields Reference"]
-    Datastore_Inventory --> S2["Capacity Thresholds"]
-    Datastore_Inventory --> S3["Datastore Checklist"]
-```
-
 ## Overview
 
 Track all datastores presented to the vSphere environment. Update this inventory after any datastore creation, expansion, removal, or re-presentation event.

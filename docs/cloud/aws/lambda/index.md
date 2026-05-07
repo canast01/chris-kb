@@ -1,17 +1,6 @@
 # Lambda
 
 AWS Lambda — serverless function deployment, invocation, monitoring, and troubleshooting.
-
-```mermaid
-flowchart LR
-    Lambda["Lambda"]
-    Lambda --> S0["Key Concepts"]
-    Lambda --> S1["Common CLI Commands"]
-    Lambda --> S2["Monitoring and Logs"]
-    Lambda --> S3["Key CloudWatch Metrics"]
-    Lambda --> S4["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

@@ -1,20 +1,6 @@
 # Linux Logs
 
 Log locations, query commands, and forwarding configuration for RHEL and Ubuntu.
-
-```mermaid
-flowchart LR
-    Linux_Logs["Linux Logs"]
-    Linux_Logs --> S0["Log Locations"]
-    Linux_Logs --> S1["journalctl — Common Queries"]
-    Linux_Logs --> S2["dmesg — Kernel Ring Buffer"]
-    Linux_Logs --> S3["Audit Log (auditd)"]
-    Linux_Logs --> S4["Authentication Events"]
-    Linux_Logs --> S5["Log Rotation"]
-    Linux_Logs --> S6["Remote Log Forwarding (rsyslog)"]
-    Linux_Logs --> S7["Journal Size Management"]
-```
-
 ## Log Locations
 
 | Log | Path / Command | Content |

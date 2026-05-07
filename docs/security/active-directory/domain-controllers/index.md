@@ -1,16 +1,4 @@
 # Domain Controllers
-
-```mermaid
-flowchart LR
-    Domain_Controllers["Domain Controllers"]
-    Domain_Controllers --> S0["Purpose"]
-    Domain_Controllers --> S1["Common checks"]
-    Domain_Controllers --> S2["Incident notes"]
-    Domain_Controllers --> S3["Change notes"]
-    Domain_Controllers --> S4["Useful commands"]
-    Domain_Controllers --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Active Directory Domain Controllers notes, checks, troubleshooting, commands, change notes, and field references.

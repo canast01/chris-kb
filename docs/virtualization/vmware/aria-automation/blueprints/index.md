@@ -1,16 +1,4 @@
 # Blueprints
-
-```mermaid
-flowchart LR
-    Blueprints["Blueprints"]
-    Blueprints --> S0["Purpose"]
-    Blueprints --> S1["Common checks"]
-    Blueprints --> S2["Incident notes"]
-    Blueprints --> S3["Change notes"]
-    Blueprints --> S4["Useful commands"]
-    Blueprints --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Aria Automation Blueprints notes, checks, troubleshooting, commands, change notes, and field references.

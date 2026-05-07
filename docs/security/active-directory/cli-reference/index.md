@@ -1,19 +1,6 @@
 # Active Directory CLI Reference
 
 Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `netdom`, `dsquery`) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.
-
-```mermaid
-flowchart LR
-    Active_Directory["Active Directory"]
-    Active_Directory --> S0["Replication Health"]
-    Active_Directory --> S1["DC Diagnostics"]
-    Active_Directory --> S2["FSMO Roles"]
-    Active_Directory --> S3["Users and Groups"]
-    Active_Directory --> S4["Computers"]
-    Active_Directory --> S5["Domain Controllers"]
-    Active_Directory --> S6["Trusts"]
-```
-
 ---
 
 ## Replication Health

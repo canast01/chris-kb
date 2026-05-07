@@ -1,17 +1,4 @@
 # Vmware Cloud Foundation Lifecycle Management
-
-```mermaid
-flowchart LR
-    Lifecycle_Management["Lifecycle Management"]
-    Lifecycle_Management --> S0["Where It Fits"]
-    Lifecycle_Management --> S1["Daily Checks"]
-    Lifecycle_Management --> S2["Health Commands"]
-    Lifecycle_Management --> S3["Common Issues"]
-    Lifecycle_Management --> S4["Operational Tasks"]
-    Lifecycle_Management --> S5["Upgrade Notes"]
-    Lifecycle_Management --> S6["Best Practices"]
-```
-
 ## Overview
 
 VCF upgrade order, bundles, compatibility, pre-checks, and validation.

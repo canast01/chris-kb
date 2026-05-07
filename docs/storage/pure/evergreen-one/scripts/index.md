@@ -3,20 +3,6 @@
 > Part of the [Pure Storage Evergreen//One](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Consumption Usage Report (Python)"]
-    Scripts --> S1["SLA Compliance Check (Python)"]
-    Scripts --> S2["Burst Alert Script (Bash)"]
-    Scripts --> S3["Windows: Evergreen//One Subscription Check via Pure1 API (PowerShell)"]
-    Scripts --> S4["Daily Check Script (Python)"]
-    Scripts --> S5["Incident Triage Script (Python)"]
-    Scripts --> S6["Change Pre-Check Script (Python)"]
-    Scripts --> S7["Post-Change Validation Script (Python)"]
-```
-
 ## Consumption Usage Report (Python)
 
 Authenticate to the Pure1 REST API using a JWT signed with your private key, fetch subscription asset usage metrics, and print a table showing committed vs. consumed vs. burst per array. Warns if any array is consuming more than 90% of committed capacity.

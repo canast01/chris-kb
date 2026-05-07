@@ -1,18 +1,4 @@
 # DNS and NTP Validation
-
-```mermaid
-flowchart LR
-    NTP_Validation["NTP Validation"]
-    NTP_Validation --> S0["Why This Matters"]
-    NTP_Validation --> S1["NTP Validation — ESXi Host"]
-    NTP_Validation --> S2["NTP Validation — vCenter Appliance"]
-    NTP_Validation --> S3["DNS Validation — ESXi Host"]
-    NTP_Validation --> S4["DNS Validation — PowerCLI"]
-    NTP_Validation --> S5["Time Consistency Check Across Cluster"]
-    NTP_Validation --> S6["Pre-Change Validation Checklist"]
-    NTP_Validation --> S7["Common Issues and Fixes"]
-```
-
 ## Why This Matters
 
 Time and DNS are foundational dependencies for the entire VMware stack. Failures cause cascading issues:

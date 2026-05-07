@@ -1,17 +1,4 @@
 # InsightIQ Integration
-
-```mermaid
-flowchart LR
-    InsightIQ_Integratio["InsightIQ Integration"]
-    InsightIQ_Integratio --> S0["OneFS Data Connector (Inbound)"]
-    InsightIQ_Integratio --> S1["Active Directory SSO (LDAP Integration)"]
-    InsightIQ_Integratio --> S2["SMTP Email Alerts"]
-    InsightIQ_Integratio --> S3["SNMP Forwarding to Monitoring Platform"]
-    InsightIQ_Integratio --> S4["Syslog to SIEM"]
-    InsightIQ_Integratio --> S5["CSV / PDF Report Export"]
-    InsightIQ_Integratio --> S6["Integration Summary"]
-```
-
 ## Overview
 
 InsightIQ integrates primarily with PowerScale (Isilon) clusters for data collection, and with enterprise monitoring, identity, and notification platforms for alerting and access management.

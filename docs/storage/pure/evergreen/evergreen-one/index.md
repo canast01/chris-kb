@@ -1,19 +1,6 @@
 # Pure Storage Evergreen//One
 
 Evergreen//One is Pure Storage's storage-as-a-service (STaaS) offering — a subscription model where Pure owns, manages, and refreshes hardware while the customer pays for consumed capacity.
-
-```mermaid
-flowchart LR
-    Storage_Evergreen__O["Storage Evergreen//One"]
-    Storage_Evergreen__O --> S0["How Evergreen//One Works"]
-    Storage_Evergreen__O --> S1["Subscription Components"]
-    Storage_Evergreen__O --> S2["Pure1 Monitoring (Customer View)"]
-    Storage_Evergreen__O --> S3["SLA Reporting"]
-    Storage_Evergreen__O --> S4["Capacity Management"]
-    Storage_Evergreen__O --> S5["Hardware Refresh Under Evergreen//One"]
-    Storage_Evergreen__O --> S6["Key Contacts"]
-```
-
 ## How Evergreen//One Works
 
 - Customer subscribes to a guaranteed minimum capacity tier with defined performance SLAs

@@ -1,16 +1,4 @@
 # Privileged Identity Management
-
-```mermaid
-flowchart LR
-    Identity_Management["Identity Management"]
-    Identity_Management --> S0["Purpose"]
-    Identity_Management --> S1["Common checks"]
-    Identity_Management --> S2["Incident notes"]
-    Identity_Management --> S3["Change notes"]
-    Identity_Management --> S4["Useful commands"]
-    Identity_Management --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Identity Privileged Identity Management notes, checks, troubleshooting, commands, change notes, and field references.

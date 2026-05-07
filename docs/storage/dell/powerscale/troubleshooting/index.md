@@ -1,14 +1,4 @@
 # PowerScale Troubleshooting
-
-```mermaid
-flowchart LR
-    PowerScale_Troublesh["PowerScale Troubleshoo"]
-    PowerScale_Troublesh --> S0["Common Issues"]
-    PowerScale_Troublesh --> S1["Diagnostic Commands"]
-    PowerScale_Troublesh --> S2["Log Locations"]
-    PowerScale_Troublesh --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

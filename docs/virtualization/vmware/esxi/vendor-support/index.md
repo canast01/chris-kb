@@ -1,15 +1,4 @@
 # VMware ESXi Vendor Support
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Support Portal"]
-    Vendor_Support --> S1["Opening a Case"]
-    Vendor_Support --> S2["Information to Collect"]
-    Vendor_Support --> S3["SLA Tiers"]
-    Vendor_Support --> S4["Escalation"]
-```
-
 ## Support Portal
 
 Broadcom acquired VMware in 2023. All VMware product support is now handled through the Broadcom Support Portal:

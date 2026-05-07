@@ -1,17 +1,4 @@
 # Windows Server Integration
-
-```mermaid
-flowchart LR
-    Server_Integration["Server Integration"]
-    Server_Integration --> S0["Active Directory Domain Join"]
-    Server_Integration --> S1["WSUS / SCCM Patch Management"]
-    Server_Integration --> S2["Monitoring Agent Deployment"]
-    Server_Integration --> S3["Backup Agent Deployment"]
-    Server_Integration --> S4["iSCSI / MPIO Configuration"]
-    Server_Integration --> S5["DNS Registration"]
-    Server_Integration --> S6["FC HBA Configuration"]
-```
-
 ## Active Directory Domain Join
 
 All Windows Server systems are domain-joined during provisioning:

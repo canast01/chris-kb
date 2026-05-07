@@ -3,18 +3,6 @@
 > Part of the [Brocade Fabric OS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    OS_Integration["OS Integration"]
-    OS_Integration --> S0["SANnav Management Portal"]
-    OS_Integration --> S1["VMware FC Connectivity"]
-    OS_Integration --> S2["Dell PowerMax Integration"]
-    OS_Integration --> S3["NetApp ONTAP Integration"]
-    OS_Integration --> S4["Pure Storage FlashArray Integration"]
-    OS_Integration --> S5["SNMP and Syslog"]
-```
-
 ## SANnav Management Portal
 
 SANnav provides fabric-wide monitoring, zoning management, and firmware orchestration across all Brocade switches, replacing the older DCFM/Network Advisor tools.

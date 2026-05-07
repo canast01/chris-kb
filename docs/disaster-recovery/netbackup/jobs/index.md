@@ -1,16 +1,4 @@
 # Jobs
-
-```mermaid
-flowchart LR
-    Jobs["Jobs"]
-    Jobs --> S0["Purpose"]
-    Jobs --> S1["Common checks"]
-    Jobs --> S2["Incident notes"]
-    Jobs --> S3["Change notes"]
-    Jobs --> S4["Useful commands"]
-    Jobs --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Netbackup Jobs notes, checks, troubleshooting, commands, change notes, and field references.

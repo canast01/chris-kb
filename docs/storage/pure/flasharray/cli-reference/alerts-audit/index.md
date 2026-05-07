@@ -1,14 +1,6 @@
 # Alerts & Audit
 
 > Part of the [Pure FlashArray CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Audit["Audit"]
-    Audit --> S0["purealert — Alerts"]
-    Audit --> S1["pureaudit — Audit Logs"]
-```
-
 ---
 
 ## purealert — Alerts

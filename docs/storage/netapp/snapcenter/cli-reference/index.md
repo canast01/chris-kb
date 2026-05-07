@@ -1,14 +1,6 @@
 # SnapCenter CLI Reference
 
 > Part of the [SnapCenter](../) reference.
-
-```mermaid
-flowchart LR
-    SnapCenter["SnapCenter"]
-    SnapCenter --> S0["PowerShell Module"]
-    SnapCenter --> S1["REST API (curl)"]
-```
-
 ---
 
 ## PowerShell Module

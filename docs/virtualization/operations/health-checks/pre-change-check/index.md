@@ -1,20 +1,6 @@
 # Pre-Change Checks
 
 Pre-change checks confirm the platform is healthy before maintenance begins. Run these before any host maintenance, upgrade, or configuration change.
-
-```mermaid
-flowchart LR
-    Pre_Change_Checks["Pre-Change Checks"]
-    Pre_Change_Checks --> S0["1. vCenter and Management Access"]
-    Pre_Change_Checks --> S1["2. Host Connectivity"]
-    Pre_Change_Checks --> S2["3. Active Alarms"]
-    Pre_Change_Checks --> S3["4. Datastore Free Space"]
-    Pre_Change_Checks --> S4["5. Snapshot Audit"]
-    Pre_Change_Checks --> S5["6. vSAN Health"]
-    Pre_Change_Checks --> S6["7. Storage Paths"]
-    Pre_Change_Checks --> S7["8. NTP and DNS"]
-```
-
 ## 1. vCenter and Management Access
 
 ```powershell

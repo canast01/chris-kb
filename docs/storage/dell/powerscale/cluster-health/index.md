@@ -1,20 +1,6 @@
 # PowerScale Cluster Health
 
 Daily health checks and status commands for Dell PowerScale (Isilon) clusters.
-
-```mermaid
-flowchart LR
-    Cluster_Health["Cluster Health"]
-    Cluster_Health --> S0["Cluster Overview"]
-    Cluster_Health --> S1["Node Health"]
-    Cluster_Health --> S2["Active Events and Alerts"]
-    Cluster_Health --> S3["Cluster Capacity"]
-    Cluster_Health --> S4["Protocol Services"]
-    Cluster_Health --> S5["SyncIQ Replication"]
-    Cluster_Health --> S6["Jobs (Background Tasks)"]
-    Cluster_Health --> S7["Health Check Summary"]
-```
-
 ## Cluster Overview
 
 ```bash

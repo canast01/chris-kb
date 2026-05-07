@@ -1,14 +1,4 @@
 # vSAN Quick Reference
-
-```mermaid
-flowchart LR
-    Quick_Reference["Quick Reference"]
-    Quick_Reference --> S0["Fast Health Checks"]
-    Quick_Reference --> S1["Common Commands"]
-    Quick_Reference --> S2["Ping vSAN VMkernel Between Hosts"]
-    Quick_Reference --> S3["Common Issues"]
-```
-
 ## Fast Health Checks
 
 - vSAN Skyline Health → vCenter → Cluster → vSAN → Skyline Health

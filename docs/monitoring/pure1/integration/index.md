@@ -1,17 +1,4 @@
 # Pure1 Integration
-
-```mermaid
-flowchart LR
-    Pure1_Integration["Pure1 Integration"]
-    Pure1_Integration --> S0["Native Array Integration"]
-    Pure1_Integration --> S1["ServiceNow Integration"]
-    Pure1_Integration --> S2["PagerDuty Integration"]
-    Pure1_Integration --> S3["Email Alert Integration"]
-    Pure1_Integration --> S4["Aria Operations Integration (Pure Storage Management Pack)"]
-    Pure1_Integration --> S5["Splunk Integration"]
-    Pure1_Integration --> S6["Integration Summary"]
-```
-
 ## Overview
 
 Pure1 integrates natively with all Pure Storage FlashArray and FlashBlade systems via outbound telemetry. External integrations extend Pure1 data and alerts into ITSM, observability, on-call, and notification platforms.

@@ -1,17 +1,4 @@
 # AWS Reserved Instances
-
-```mermaid
-flowchart LR
-    Reserved_Instances["Reserved Instances"]
-    Reserved_Instances --> S0["Where It Fits"]
-    Reserved_Instances --> S1["Daily Checks"]
-    Reserved_Instances --> S2["Health Commands"]
-    Reserved_Instances --> S3["Common Issues"]
-    Reserved_Instances --> S4["Operational Tasks"]
-    Reserved_Instances --> S5["Upgrade Notes"]
-    Reserved_Instances --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Reserved Instances notes for day-to-day infrastructure operations.

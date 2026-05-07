@@ -1,19 +1,6 @@
 # Networks
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Networks["Networks"]
-    Networks --> S0["Standard vSwitches"]
-    Networks --> S1["Distributed vSwitches (VDS)"]
-    Networks --> S2["VMkernel Adapters"]
-    Networks --> S3["Physical NICs (vmnic)"]
-    Networks --> S4["DNS and Routing"]
-    Networks --> S5["NIC Teaming Policy"]
-    Networks --> S6["VLAN Report"]
-```
-
 ## Standard vSwitches
 
 ```powershell

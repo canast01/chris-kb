@@ -1,16 +1,4 @@
 # Health
-
-```mermaid
-flowchart LR
-    Health["Health"]
-    Health --> S0["Purpose"]
-    Health --> S1["Common checks"]
-    Health --> S2["Incident notes"]
-    Health --> S3["Change notes"]
-    Health --> S4["Useful commands"]
-    Health --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Pure1 Health notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,17 +1,4 @@
 # VxRail Support Case Prep
-
-```mermaid
-flowchart LR
-    Case_Prep["Case Prep"]
-    Case_Prep --> S0["Where It Fits"]
-    Case_Prep --> S1["Daily Checks"]
-    Case_Prep --> S2["Health Commands"]
-    Case_Prep --> S3["Common Issues"]
-    Case_Prep --> S4["Operational Tasks"]
-    Case_Prep --> S5["Upgrade Notes"]
-    Case_Prep --> S6["Best Practices"]
-```
-
 ## Overview
 
 Evidence, timeline, logs, screenshots, and clear issue summary for Dell support.

@@ -1,16 +1,4 @@
 # Roles
-
-```mermaid
-flowchart LR
-    Roles["Roles"]
-    Roles --> S0["Purpose"]
-    Roles --> S1["Common checks"]
-    Roles --> S2["Incident notes"]
-    Roles --> S3["Change notes"]
-    Roles --> S4["Useful commands"]
-    Roles --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Ansible Roles notes, checks, troubleshooting, commands, change notes, and field references.

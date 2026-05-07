@@ -1,19 +1,6 @@
 # Packet Loss Troubleshooting
 
 Packet loss causes degraded application performance, storage I/O timeouts, replication lag, and vMotion failures.
-
-```mermaid
-flowchart LR
-    Loss_Troubleshooting["Loss Troubleshooting"]
-    Loss_Troubleshooting --> S0["Identify the Loss"]
-    Loss_Troubleshooting --> S1["Interface Error Counters"]
-    Loss_Troubleshooting --> S2["Duplex / Speed Mismatch"]
-    Loss_Troubleshooting --> S3["Congestion / Queue Drops"]
-    Loss_Troubleshooting --> S4["Physical Layer Checks"]
-    Loss_Troubleshooting --> S5["MTU Issues (Fragmentation)"]
-    Loss_Troubleshooting --> S6["Common Causes"]
-```
-
 ## Identify the Loss
 
 ```bash

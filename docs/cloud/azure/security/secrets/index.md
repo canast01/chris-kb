@@ -1,16 +1,4 @@
 # Secrets
-
-```mermaid
-flowchart LR
-    Secrets["Secrets"]
-    Secrets --> S0["Purpose"]
-    Secrets --> S1["Common checks"]
-    Secrets --> S2["Incident notes"]
-    Secrets --> S3["Change notes"]
-    Secrets --> S4["Useful commands"]
-    Secrets --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Security Secrets notes, checks, troubleshooting, commands, change notes, and field references.

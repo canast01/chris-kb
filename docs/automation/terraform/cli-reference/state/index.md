@@ -1,15 +1,6 @@
 # State & Output
 
 > Part of the [Terraform CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Output["Output"]
-    Output --> S0["State"]
-    Output --> S1["Import"]
-    Output --> S2["Output"]
-```
-
 ---
 
 ## State

@@ -1,18 +1,6 @@
 # Capacity Forecasting
 
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
-
-```mermaid
-flowchart LR
-    Capacity_Forecasting["Capacity Forecasting"]
-    Capacity_Forecasting --> S0["Forecasting Model"]
-    Capacity_Forecasting --> S1["Data Collection"]
-    Capacity_Forecasting --> S2["Forecasting by Resource Type"]
-    Capacity_Forecasting --> S3["Forecasting Thresholds"]
-    Capacity_Forecasting --> S4["Capacity Report Template"]
-    Capacity_Forecasting --> S5["Automation — Monthly Report Script"]
-```
-
 ## Forecasting Model
 
 ```

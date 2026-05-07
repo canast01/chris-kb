@@ -1,17 +1,4 @@
 # VxRail iDRAC
-
-```mermaid
-flowchart LR
-    VxRail_iDRAC["VxRail iDRAC"]
-    VxRail_iDRAC --> S0["Where It Fits"]
-    VxRail_iDRAC --> S1["Daily Checks"]
-    VxRail_iDRAC --> S2["Health Commands"]
-    VxRail_iDRAC --> S3["Common Issues"]
-    VxRail_iDRAC --> S4["Operational Tasks"]
-    VxRail_iDRAC --> S5["Upgrade Notes"]
-    VxRail_iDRAC --> S6["Best Practices"]
-```
-
 ## Overview
 
 iDRAC access, hardware inventory, logs, alerts, and support evidence.

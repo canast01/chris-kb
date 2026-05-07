@@ -1,16 +1,4 @@
 # Troubleshooting
-
-```mermaid
-flowchart LR
-    Troubleshooting["Troubleshooting"]
-    Troubleshooting --> S0["Purpose"]
-    Troubleshooting --> S1["Common checks"]
-    Troubleshooting --> S2["Incident notes"]
-    Troubleshooting --> S3["Change notes"]
-    Troubleshooting --> S4["Useful commands"]
-    Troubleshooting --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Terraform Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.

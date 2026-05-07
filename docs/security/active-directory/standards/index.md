@@ -3,18 +3,6 @@
 Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation complexity, enable scoped GPO application, and simplify access reviews.
 
 ---
-
-```mermaid
-flowchart LR
-    Directory_Standards["Directory Standards"]
-    Directory_Standards --> S0["OU Structure"]
-    Directory_Standards --> S1["Naming Conventions"]
-    Directory_Standards --> S2["Group Policy Standards"]
-    Directory_Standards --> S3["Password Policy Standards"]
-    Directory_Standards --> S4["Kerberos Settings"]
-    Directory_Standards --> S5["Privileged Access Model (Tiering)"]
-```
-
 ## OU Structure
 
 Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.

@@ -1,13 +1,4 @@
 # Pure1 Troubleshooting
-
-```mermaid
-flowchart LR
-    Pure1_Troubleshootin["Pure1 Troubleshooting"]
-    Pure1_Troubleshootin --> S0["Diagnostic Approach"]
-    Pure1_Troubleshootin --> S1["Common Issues"]
-    Pure1_Troubleshootin --> S2["Escalation to Pure Storage Support"]
-```
-
 ## Diagnostic Approach
 
 1. Check the array's last-seen timestamp in Pure1 — this determines how stale the data is.

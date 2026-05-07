@@ -1,18 +1,6 @@
 # Events & Audit
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). Review events after any array alert, before opening a support case, and as part of regular health checks.
-
-```mermaid
-flowchart LR
-    Audit["Audit"]
-    Audit --> S0["System Events"]
-    Audit --> S1["Audit Log"]
-    Audit --> S2["Health Checks via Events"]
-    Audit --> S3["Export for Support Case"]
-    Audit --> S4["Alerting Integration"]
-    Audit --> S5["Quick Reference"]
-```
-
 ## System Events
 
 ```bash

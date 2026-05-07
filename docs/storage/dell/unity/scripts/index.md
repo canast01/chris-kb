@@ -3,20 +3,6 @@
 > Part of the [Dell Unity](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["System Health Check"]
-    Scripts --> S1["Storage Processor Monitor"]
-    Scripts --> S2["Replication Session Check"]
-    Scripts --> S3["Ansible Unity Health Playbook"]
-    Scripts --> S4["Windows: Unity Health Check via REST API (PowerShell)"]
-    Scripts --> S5["Windows: Unity Capacity and Storage Pools via Plink (CMD)"]
-    Scripts --> S6["Daily Check Script (Bash)"]
-    Scripts --> S7["Incident Triage Script (Bash)"]
-```
-
 ## System Health Check
 
 Uses `uemcli` to run a comprehensive health check against a Dell Unity array: component health, pool capacity, LUN status, active alerts, and storage processor state. Exits non-zero if any component is in a non-OK health state.

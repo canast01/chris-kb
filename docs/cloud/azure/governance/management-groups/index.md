@@ -1,16 +1,4 @@
 # Management Groups
-
-```mermaid
-flowchart LR
-    Management_Groups["Management Groups"]
-    Management_Groups --> S0["Purpose"]
-    Management_Groups --> S1["Common checks"]
-    Management_Groups --> S2["Incident notes"]
-    Management_Groups --> S3["Change notes"]
-    Management_Groups --> S4["Useful commands"]
-    Management_Groups --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Governance Management Groups notes, checks, troubleshooting, commands, change notes, and field references.

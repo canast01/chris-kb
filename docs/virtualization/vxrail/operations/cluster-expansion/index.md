@@ -1,17 +1,4 @@
 # VxRail Cluster Expansion
-
-```mermaid
-flowchart LR
-    Cluster_Expansion["Cluster Expansion"]
-    Cluster_Expansion --> S0["Where It Fits"]
-    Cluster_Expansion --> S1["Daily Checks"]
-    Cluster_Expansion --> S2["Health Commands"]
-    Cluster_Expansion --> S3["Common Issues"]
-    Cluster_Expansion --> S4["Operational Tasks"]
-    Cluster_Expansion --> S5["Upgrade Notes"]
-    Cluster_Expansion --> S6["Best Practices"]
-```
-
 ## Overview
 
 Node add planning, compatibility, network checks, and validation.

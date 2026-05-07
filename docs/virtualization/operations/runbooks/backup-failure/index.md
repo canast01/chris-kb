@@ -1,18 +1,4 @@
 # VMware Backup Failure Runbook
-
-```mermaid
-flowchart LR
-    Failure_Runbook["Failure Runbook"]
-    Failure_Runbook --> S0["Identify Failed VMs"]
-    Failure_Runbook --> S1["Review the Error Message"]
-    Failure_Runbook --> S2["Check VM Snapshot State"]
-    Failure_Runbook --> S3["Check Datastore Free Space"]
-    Failure_Runbook --> S4["Check Backup Proxy Health"]
-    Failure_Runbook --> S5["Check Backup Repository"]
-    Failure_Runbook --> S6["Check vCenter Permissions"]
-    Failure_Runbook --> S7["Retry the Backup"]
-```
-
 ## Identify Failed VMs
 
 - Review the backup platform for failed or missed backup jobs

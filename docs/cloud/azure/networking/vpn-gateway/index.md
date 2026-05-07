@@ -1,16 +1,4 @@
 # VPN Gateway
-
-```mermaid
-flowchart LR
-    VPN_Gateway["VPN Gateway"]
-    VPN_Gateway --> S0["Purpose"]
-    VPN_Gateway --> S1["Common checks"]
-    VPN_Gateway --> S2["Incident notes"]
-    VPN_Gateway --> S3["Change notes"]
-    VPN_Gateway --> S4["Useful commands"]
-    VPN_Gateway --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Networking VPN Gateway notes, checks, troubleshooting, commands, change notes, and field references.

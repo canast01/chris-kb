@@ -1,16 +1,4 @@
 # Upgrade Readiness
-
-```mermaid
-flowchart LR
-    Upgrade_Readiness["Upgrade Readiness"]
-    Upgrade_Readiness --> S0["Purpose"]
-    Upgrade_Readiness --> S1["Common checks"]
-    Upgrade_Readiness --> S2["Incident notes"]
-    Upgrade_Readiness --> S3["Change notes"]
-    Upgrade_Readiness --> S4["Useful commands"]
-    Upgrade_Readiness --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Vmware Cloud Foundation Upgrade Readiness notes, checks, troubleshooting, commands, change notes, and field references.

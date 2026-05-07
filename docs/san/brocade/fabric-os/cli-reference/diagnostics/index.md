@@ -1,20 +1,6 @@
 # Diagnostics & Health
 
 > Part of the Brocade Fabric OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Health["Health"]
-    Health --> S0["Switch Health Summary"]
-    Health --> S1["Event Log"]
-    Health --> S2["Port Diagnostics"]
-    Health --> S3["MAPS (Monitoring and Alerting Policy Suite)"]
-    Health --> S4["Fabric Diagnostics"]
-    Health --> S5["Temperature / Environment"]
-    Health --> S6["Buffer Credit Diagnostics"]
-    Health --> S7["Common Issues"]
-```
-
 ## Switch Health Summary
 
 ```bash

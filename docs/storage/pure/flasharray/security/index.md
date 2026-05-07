@@ -1,15 +1,4 @@
 # FlashArray Security
-
-```mermaid
-flowchart LR
-    FlashArray_Security["FlashArray Security"]
-    FlashArray_Security --> S0["Hardening Checklist"]
-    FlashArray_Security --> S1["RBAC"]
-    FlashArray_Security --> S2["Encryption"]
-    FlashArray_Security --> S3["Audit Logging"]
-    FlashArray_Security --> S4["Compliance Notes"]
-```
-
 ## Hardening Checklist
 
 Apply the following in order on every new FlashArray before it enters production:

@@ -1,19 +1,6 @@
 # PowerScale NFS
 
 NFS export management, configuration, and troubleshooting on Dell PowerScale.
-
-```mermaid
-flowchart LR
-    PowerScale_NFS["PowerScale NFS"]
-    PowerScale_NFS --> S0["Export Management"]
-    PowerScale_NFS --> S1["Export Client Access Levels"]
-    PowerScale_NFS --> S2["NFS Settings"]
-    PowerScale_NFS --> S3["NFS Zones (Access Zones)"]
-    PowerScale_NFS --> S4["NFS Aliases"]
-    PowerScale_NFS --> S5["Troubleshooting NFS"]
-    PowerScale_NFS --> S6["Performance Tuning"]
-```
-
 ## Export Management
 
 ```bash

@@ -1,17 +1,4 @@
 # AWS Compliance Review
-
-```mermaid
-flowchart LR
-    Compliance_Review["Compliance Review"]
-    Compliance_Review --> S0["Where It Fits"]
-    Compliance_Review --> S1["Daily Checks"]
-    Compliance_Review --> S2["Health Commands"]
-    Compliance_Review --> S3["Common Issues"]
-    Compliance_Review --> S4["Operational Tasks"]
-    Compliance_Review --> S5["Upgrade Notes"]
-    Compliance_Review --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Compliance Review notes for day-to-day infrastructure operations.

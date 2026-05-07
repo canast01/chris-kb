@@ -1,14 +1,4 @@
 # FlashArray Architecture
-
-```mermaid
-flowchart LR
-    FlashArray_Architect["FlashArray Architectur"]
-    FlashArray_Architect --> S0["Components"]
-    FlashArray_Architect --> S1["HA Topology"]
-    FlashArray_Architect --> S2["Connectivity"]
-    FlashArray_Architect --> S3["Sizing Guidelines"]
-```
-
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.

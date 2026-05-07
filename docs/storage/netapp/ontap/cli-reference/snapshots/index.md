@@ -3,20 +3,6 @@
 > Part of the [NetApp ONTAP CLI Reference](../).
 
 ONTAP snapshots are read-only point-in-time copies of a volume stored within the same volume's snapshot reserve.
-
-```mermaid
-flowchart LR
-    Snapshots["Snapshots"]
-    Snapshots --> S0["List Snapshots"]
-    Snapshots --> S1["Create a Snapshot"]
-    Snapshots --> S2["Delete Snapshots"]
-    Snapshots --> S3["Rename a Snapshot"]
-    Snapshots --> S4["Restore from Snapshot"]
-    Snapshots --> S5["Snapshot Policies"]
-    Snapshots --> S6["Snapshot Reserve"]
-    Snapshots --> S7["Accessing Snapshots from the Client"]
-```
-
 ## List Snapshots
 
 ```bash

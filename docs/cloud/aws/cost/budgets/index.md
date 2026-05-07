@@ -1,17 +1,4 @@
 # AWS Budgets
-
-```mermaid
-flowchart LR
-    AWS_Budgets["AWS Budgets"]
-    AWS_Budgets --> S0["Where It Fits"]
-    AWS_Budgets --> S1["Daily Checks"]
-    AWS_Budgets --> S2["Health Commands"]
-    AWS_Budgets --> S3["Common Issues"]
-    AWS_Budgets --> S4["Operational Tasks"]
-    AWS_Budgets --> S5["Upgrade Notes"]
-    AWS_Budgets --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Budgets notes for day-to-day infrastructure operations.

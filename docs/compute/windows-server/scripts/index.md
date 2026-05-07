@@ -1,16 +1,4 @@
 # Windows Server — Scripts
-
-```mermaid
-flowchart LR
-    Windows_Server["Windows Server"]
-    Windows_Server --> S0["Daily Health Check"]
-    Windows_Server --> S1["Disk Space Alert"]
-    Windows_Server --> S2["Service Monitor"]
-    Windows_Server --> S3["Event Log Query"]
-    Windows_Server --> S4["Patch Status Report"]
-    Windows_Server --> S5["Related Sections"]
-```
-
 ## Daily Health Check
 
 Generates a summary report of disk space, services, and recent errors. Run via scheduled task or manually.

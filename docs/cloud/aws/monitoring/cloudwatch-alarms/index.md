@@ -1,17 +1,4 @@
 # AWS CloudWatch Alarms
-
-```mermaid
-flowchart LR
-    CloudWatch_Alarms["CloudWatch Alarms"]
-    CloudWatch_Alarms --> S0["Where It Fits"]
-    CloudWatch_Alarms --> S1["Daily Checks"]
-    CloudWatch_Alarms --> S2["Health Commands"]
-    CloudWatch_Alarms --> S3["Common Issues"]
-    CloudWatch_Alarms --> S4["Operational Tasks"]
-    CloudWatch_Alarms --> S5["Upgrade Notes"]
-    CloudWatch_Alarms --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS CloudWatch Alarms notes for day-to-day infrastructure operations.

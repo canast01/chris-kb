@@ -1,17 +1,4 @@
 # Data Domain — Lifecycle
-
-```mermaid
-flowchart LR
-    Data_Domain["Data Domain"]
-    Data_Domain --> S0["DDOS Version Matrix"]
-    Data_Domain --> S1["Backup Software Compatibility"]
-    Data_Domain --> S2["Hardware Model Lifecycle"]
-    Data_Domain --> S3["Upgrade Procedure — Single Node (In-Service)"]
-    Data_Domain --> S4["Upgrade Procedure — HA Active-Standby Pair (Rolling)"]
-    Data_Domain --> S5["EOL Tracking"]
-    Data_Domain --> S6["Refresh Planning"]
-```
-
 ## DDOS Version Matrix
 
 | DDOS Version | Status | Notes |

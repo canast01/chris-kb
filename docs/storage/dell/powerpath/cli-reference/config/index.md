@@ -1,14 +1,6 @@
 # Configuration & Checks
 
 > Part of the Dell PowerPath CLI Reference.
-
-```mermaid
-flowchart LR
-    Checks["Checks"]
-    Checks --> S0["Checks and Validation"]
-    Checks --> S1["Configuration Management"]
-```
-
 ---
 
 ## Checks & Validation

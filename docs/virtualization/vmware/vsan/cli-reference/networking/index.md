@@ -1,19 +1,6 @@
 # Networking (vSAN VMkernel)
 
 > Part of the [vSAN CLI Reference](../).
-
-```mermaid
-flowchart LR
-    VMkernel["VMkernel)"]
-    VMkernel --> S0["vSAN VMkernel Adapters"]
-    VMkernel --> S1["Unicast Agent Configuration"]
-    VMkernel --> S2["Connectivity Test"]
-    VMkernel --> S3["Verifying VMkernel Tagging"]
-    VMkernel --> S4["MTU Verification"]
-    VMkernel --> S5["Network Configuration Commands"]
-    VMkernel --> S6["Troubleshooting Reference"]
-```
-
 ## vSAN VMkernel Adapters
 
 ```bash

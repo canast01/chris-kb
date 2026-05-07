@@ -1,17 +1,4 @@
 # AWS Network ACLs
-
-```mermaid
-flowchart LR
-    Network_ACLs["Network ACLs"]
-    Network_ACLs --> S0["Where It Fits"]
-    Network_ACLs --> S1["Daily Checks"]
-    Network_ACLs --> S2["Health Commands"]
-    Network_ACLs --> S3["Common Issues"]
-    Network_ACLs --> S4["Operational Tasks"]
-    Network_ACLs --> S5["Upgrade Notes"]
-    Network_ACLs --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Network ACLs notes for day-to-day infrastructure operations.

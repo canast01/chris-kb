@@ -1,18 +1,6 @@
 # Key Vault
 
 Azure Key Vault — secrets, keys, and certificate management.
-
-```mermaid
-flowchart LR
-    Key_Vault["Key Vault"]
-    Key_Vault --> S0["What Key Vault Stores"]
-    Key_Vault --> S1["Common Azure CLI Commands"]
-    Key_Vault --> S2["Access Policies vs RBAC"]
-    Key_Vault --> S3["Retrieve Secrets in Code"]
-    Key_Vault --> S4["Monitoring"]
-    Key_Vault --> S5["Troubleshooting"]
-```
-
 ## What Key Vault Stores
 
 | Type | Description |

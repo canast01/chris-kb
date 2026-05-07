@@ -1,16 +1,4 @@
 # Dashboards
-
-```mermaid
-flowchart LR
-    Dashboards["Dashboards"]
-    Dashboards --> S0["Purpose"]
-    Dashboards --> S1["Common checks"]
-    Dashboards --> S2["Incident notes"]
-    Dashboards --> S3["Change notes"]
-    Dashboards --> S4["Useful commands"]
-    Dashboards --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Monitoring Dashboards notes, checks, troubleshooting, commands, change notes, and field references.

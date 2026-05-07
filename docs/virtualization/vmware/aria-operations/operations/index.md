@@ -1,18 +1,4 @@
 # Aria Operations — Operations
-
-```mermaid
-flowchart LR
-    Aria_Operations["Aria Operations"]
-    Aria_Operations --> S0["Daily Checks"]
-    Aria_Operations --> S1["Cluster Health Check"]
-    Aria_Operations --> S2["Adapter Health"]
-    Aria_Operations --> S3["Alert Management"]
-    Aria_Operations --> S4["Capacity Reclamation Workflow"]
-    Aria_Operations --> S5["Support Bundle Generation"]
-    Aria_Operations --> S6["Common Maintenance Tasks"]
-    Aria_Operations --> S7["Related Sections"]
-```
-
 ## Daily Checks
 
 | Check | Location | Expected State |

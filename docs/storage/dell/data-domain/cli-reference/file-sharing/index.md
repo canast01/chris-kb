@@ -1,16 +1,6 @@
 # NFS & CIFS/SMB
 
 > Part of the Dell Data Domain CLI Reference.
-
-```mermaid
-flowchart LR
-    CIFS_SMB["CIFS/SMB"]
-    CIFS_SMB --> S0["NFS"]
-    CIFS_SMB --> S1["CIFS / SMB"]
-    CIFS_SMB --> S2["NFS + CIFS Dual Protocol"]
-    CIFS_SMB --> S3["Troubleshooting"]
-```
-
 ## NFS
 
 Data Domain exports MTrees over NFS for backup applications that use the filesystem protocol (e.g., Networker, some Veeam configurations).

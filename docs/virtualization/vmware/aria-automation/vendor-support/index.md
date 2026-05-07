@@ -1,15 +1,4 @@
 # Aria Automation — Vendor Support
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["Support Portal"]
-    Aria_Automation --> S1["Generating a Support Bundle"]
-    Aria_Automation --> S2["Information to Collect Before Opening a Case"]
-    Aria_Automation --> S3["SLA Tiers"]
-    Aria_Automation --> S4["Useful Links"]
-```
-
 ## Support Portal
 
 **Broadcom Support Portal:** https://support.broadcom.com

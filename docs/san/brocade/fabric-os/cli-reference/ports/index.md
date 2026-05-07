@@ -1,21 +1,6 @@
 # Ports
 
 > Part of the Brocade Fabric OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Ports["Ports"]
-    Ports --> S0["Port Status"]
-    Ports --> S1["Port States"]
-    Ports --> S2["Enable / Disable a Port"]
-    Ports --> S3["Port Speed"]
-    Ports --> S4["Long Distance Mode"]
-    Ports --> S5["Port Error Counters"]
-    Ports --> S6["Reset Port Stats"]
-    Ports --> S7["Persistent Disable / Enable"]
-    Ports --> S8["Common Issues"]
-```
-
 ## Port Status
 
 ```bash

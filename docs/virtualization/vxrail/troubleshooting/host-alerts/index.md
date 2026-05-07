@@ -1,17 +1,4 @@
 # VxRail Host Alerts
-
-```mermaid
-flowchart LR
-    Host_Alerts["Host Alerts"]
-    Host_Alerts --> S0["Where It Fits"]
-    Host_Alerts --> S1["Daily Checks"]
-    Host_Alerts --> S2["Health Commands"]
-    Host_Alerts --> S3["Common Issues"]
-    Host_Alerts --> S4["Operational Tasks"]
-    Host_Alerts --> S5["Upgrade Notes"]
-    Host_Alerts --> S6["Best Practices"]
-```
-
 ## Overview
 
 ESXi host warnings, disconnected hosts, hardware alerts, and cluster impact.

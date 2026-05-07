@@ -1,16 +1,4 @@
 # Azure Monitor
-
-```mermaid
-flowchart LR
-    Azure_Monitor["Azure Monitor"]
-    Azure_Monitor --> S0["Purpose"]
-    Azure_Monitor --> S1["Common checks"]
-    Azure_Monitor --> S2["Incident notes"]
-    Azure_Monitor --> S3["Change notes"]
-    Azure_Monitor --> S4["Useful commands"]
-    Azure_Monitor --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Monitoring Azure Monitor notes, checks, troubleshooting, commands, change notes, and field references.

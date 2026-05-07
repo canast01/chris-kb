@@ -3,19 +3,6 @@
 > Part of the [Troubleshooting](../) hub.
 
 ---
-
-```mermaid
-flowchart LR
-    Certificate_Issues["Certificate Issues"]
-    Certificate_Issues --> S0["Quick Diagnosis"]
-    Certificate_Issues --> S1["Browser Certificate Warning on vCenter Login"]
-    Certificate_Issues --> S2["Login Failure After Certificate Renewal"]
-    Certificate_Issues --> S3["Product Integration Broken After Certificate Change"]
-    Certificate_Issues --> S4["NSX Certificate Thumbprint Mismatch"]
-    Certificate_Issues --> S5["ESXi Host Certificate Issues"]
-    Certificate_Issues --> S6["Certificate Expiry Monitoring"]
-```
-
 ## Quick Diagnosis
 
 ```bash

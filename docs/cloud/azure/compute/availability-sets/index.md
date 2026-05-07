@@ -1,16 +1,4 @@
 # Availability Sets
-
-```mermaid
-flowchart LR
-    Availability_Sets["Availability Sets"]
-    Availability_Sets --> S0["Purpose"]
-    Availability_Sets --> S1["Common checks"]
-    Availability_Sets --> S2["Incident notes"]
-    Availability_Sets --> S3["Change notes"]
-    Availability_Sets --> S4["Useful commands"]
-    Availability_Sets --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Compute Availability Sets notes, checks, troubleshooting, commands, change notes, and field references.

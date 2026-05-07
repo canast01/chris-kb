@@ -1,16 +1,4 @@
 # Aria Operations for Logs — Troubleshooting Guide
-
-```mermaid
-flowchart LR
-    for_Logs["for Logs"]
-    for_Logs --> S0["Searching ESXi Host Logs"]
-    for_Logs --> S1["Searching vCenter Events"]
-    for_Logs --> S2["Common Search Examples"]
-    for_Logs --> S3["Time-Based Filtering"]
-    for_Logs --> S4["Correlating Events Across Systems"]
-    for_Logs --> S5["Exporting Evidence"]
-```
-
 ## Searching ESXi Host Logs
 
 Search for a specific host by name or IP and filter by log source:

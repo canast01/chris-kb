@@ -1,15 +1,4 @@
 # COD — Standards
-
-```mermaid
-flowchart LR
-    COD["COD"]
-    COD --> S0["COD License Naming"]
-    COD --> S1["COD Inventory Tracking"]
-    COD --> S2["Threshold Alerting"]
-    COD --> S3["Change Management Process for COD Activation"]
-    COD --> S4["Post-Activation Checklist"]
-```
-
 ## COD License Naming
 
 COD license files downloaded from the Dell License Portal should be stored with a consistent filename that identifies the array and the activation increment.

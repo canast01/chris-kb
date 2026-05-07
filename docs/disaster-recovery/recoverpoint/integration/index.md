@@ -1,16 +1,4 @@
 # RecoverPoint Integration
-
-```mermaid
-flowchart LR
-    RecoverPoint_Integra["RecoverPoint Integrati"]
-    RecoverPoint_Integra --> S0["RecoverPoint for VMs (RP4VM) — vCenter Plugin"]
-    RecoverPoint_Integra --> S1["VPLEX Integration"]
-    RecoverPoint_Integra --> S2["VMware SRM Integration"]
-    RecoverPoint_Integra --> S3["Storage Array Integration"]
-    RecoverPoint_Integra --> S4["Aria Operations Integration"]
-    RecoverPoint_Integra --> S5["API Integration"]
-```
-
 ## RecoverPoint for VMs (RP4VM) — vCenter Plugin
 
 RP4VM integrates directly with vCenter, installing a vSphere plugin and a splitter component that intercepts VM writes at the VMDK level.

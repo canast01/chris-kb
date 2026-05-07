@@ -1,15 +1,4 @@
 # Dell Unity Security
-
-```mermaid
-flowchart LR
-    Unity_Security["Unity Security"]
-    Unity_Security --> S0["Hardening"]
-    Unity_Security --> S1["RBAC"]
-    Unity_Security --> S2["Encryption"]
-    Unity_Security --> S3["Audit Logging"]
-    Unity_Security --> S4["Compliance"]
-```
-
 ## Hardening
 
 Apply the following hardening steps on all Unity deployments:

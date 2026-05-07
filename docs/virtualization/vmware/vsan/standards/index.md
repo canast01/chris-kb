@@ -1,14 +1,4 @@
 # VMware vSAN Standards
-
-```mermaid
-flowchart LR
-    vSAN_Standards["vSAN Standards"]
-    vSAN_Standards --> S0["Cluster Configuration"]
-    vSAN_Standards --> S1["Storage Policy Baseline"]
-    vSAN_Standards --> S2["Naming Conventions"]
-    vSAN_Standards --> S3["Capacity Management"]
-```
-
 ## Cluster Configuration
 
 Apply the following configuration baseline to every vSAN cluster before placing it in production.

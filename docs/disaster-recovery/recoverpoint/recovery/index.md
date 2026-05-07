@@ -1,16 +1,4 @@
 # Recovery
-
-```mermaid
-flowchart LR
-    Recovery["Recovery"]
-    Recovery --> S0["Purpose"]
-    Recovery --> S1["Common checks"]
-    Recovery --> S2["Incident notes"]
-    Recovery --> S3["Change notes"]
-    Recovery --> S4["Useful commands"]
-    Recovery --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Recoverpoint Recovery notes, checks, troubleshooting, commands, change notes, and field references.

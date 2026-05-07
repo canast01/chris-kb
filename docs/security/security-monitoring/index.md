@@ -1,16 +1,4 @@
 # Security Monitoring
-
-```mermaid
-flowchart LR
-    Security_Monitoring["Security Monitoring"]
-    Security_Monitoring --> S0["Daily Review Checklist"]
-    Security_Monitoring --> S1["Key Windows Security Events"]
-    Security_Monitoring --> S2["Linux Security Monitoring"]
-    Security_Monitoring --> S3["Correlation Rules (SIEM Examples)"]
-    Security_Monitoring --> S4["Threat Detection Sources"]
-    Security_Monitoring --> S5["Alerting Thresholds"]
-```
-
 ## Daily Review Checklist
 
 | Check | Tool | Expected |

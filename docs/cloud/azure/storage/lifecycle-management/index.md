@@ -1,16 +1,4 @@
 # Lifecycle Management
-
-```mermaid
-flowchart LR
-    Lifecycle_Management["Lifecycle Management"]
-    Lifecycle_Management --> S0["Purpose"]
-    Lifecycle_Management --> S1["Common checks"]
-    Lifecycle_Management --> S2["Incident notes"]
-    Lifecycle_Management --> S3["Change notes"]
-    Lifecycle_Management --> S4["Useful commands"]
-    Lifecycle_Management --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Storage Lifecycle Management notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,19 +1,6 @@
 # License Management
 
 Track software entitlements, monitor utilisation against purchased seats, and prevent compliance violations.
-
-```mermaid
-flowchart LR
-    License_Management["License Management"]
-    License_Management --> S0["License Inventory — Key Attributes"]
-    License_Management --> S1["Discovery — Installed Software"]
-    License_Management --> S2["License Utilisation — Common Products"]
-    License_Management --> S3["Expiry Monitoring"]
-    License_Management --> S4["License Compliance Checklist"]
-    License_Management --> S5["Licence Risk Matrix"]
-    License_Management --> S6["Troubleshooting"]
-```
-
 ## License Inventory — Key Attributes
 
 | Field | Description |

@@ -1,18 +1,4 @@
 # Linux Security
-
-```mermaid
-flowchart LR
-    Linux_Security["Linux Security"]
-    Linux_Security --> S0["CIS Benchmark Hardening"]
-    Linux_Security --> S1["SSH Hardening"]
-    Linux_Security --> S2["SELinux (RHEL)"]
-    Linux_Security --> S3["AppArmor (Ubuntu)"]
-    Linux_Security --> S4["Audit Logging (auditd)"]
-    Linux_Security --> S5["Host Firewall"]
-    Linux_Security --> S6["AIDE File Integrity"]
-    Linux_Security --> S7["Security Hardening Checklist"]
-```
-
 ## CIS Benchmark Hardening
 
 All Linux servers are hardened to CIS Benchmark Level 1 at provisioning using an Ansible hardening role. Level 2 controls are reviewed and applied where operationally feasible.

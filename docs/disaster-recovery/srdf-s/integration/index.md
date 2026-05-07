@@ -1,15 +1,4 @@
 # SRDF/S Integration
-
-```mermaid
-flowchart LR
-    SRDF_S_Integration["SRDF/S Integration"]
-    SRDF_S_Integration --> S0["VMware SRM + Dell SRA"]
-    SRDF_S_Integration --> S1["vSphere Metro Storage Cluster (vMSC)"]
-    SRDF_S_Integration --> S2["Aria Operations Integration"]
-    SRDF_S_Integration --> S3["Solutions Enabler REST API"]
-    SRDF_S_Integration --> S4["Backup from R2"]
-```
-
 ## VMware SRM + Dell SRA
 
 The Dell Storage Replication Adapter (SRA) enables Site Recovery Manager to discover and manage SRDF/S replicated datastores for automated failover.

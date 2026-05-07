@@ -1,19 +1,6 @@
 # Dell Unity NAS Servers
 
 NAS server lifecycle management — create, configure, and troubleshoot NAS servers on Dell Unity.
-
-```mermaid
-flowchart LR
-    NAS_Servers["NAS Servers"]
-    NAS_Servers --> S0["List and Inspect"]
-    NAS_Servers --> S1["Create a NAS Server"]
-    NAS_Servers --> S2["AD / LDAP Authentication"]
-    NAS_Servers --> S3["File Interfaces (Network)"]
-    NAS_Servers --> S4["File Systems (on the NAS Server)"]
-    NAS_Servers --> S5["Failover / SP Rebalance"]
-    NAS_Servers --> S6["Troubleshooting"]
-```
-
 ## Overview
 
 A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.

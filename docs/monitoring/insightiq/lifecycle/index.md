@@ -1,18 +1,4 @@
 # InsightIQ Lifecycle
-
-```mermaid
-flowchart LR
-    InsightIQ_Lifecycle["InsightIQ Lifecycle"]
-    InsightIQ_Lifecycle --> S0["Compatibility Validation"]
-    InsightIQ_Lifecycle --> S1["Pre-Upgrade Checklist"]
-    InsightIQ_Lifecycle --> S2["Upgrade Procedure (OVA Deployment)"]
-    InsightIQ_Lifecycle --> S3["Upgrade Procedure (Linux Installer)"]
-    InsightIQ_Lifecycle --> S4["Backup"]
-    InsightIQ_Lifecycle --> S5["Cluster Registration"]
-    InsightIQ_Lifecycle --> S6["Cluster Removal"]
-    InsightIQ_Lifecycle --> S7["EOL Tracking"]
-```
-
 ## Compatibility Validation
 
 Before any InsightIQ upgrade, or before upgrading a monitored OneFS cluster, validate compatibility using the [NetApp Interoperability Matrix Tool (IMT)](https://mysupport.netapp.com/matrix/).

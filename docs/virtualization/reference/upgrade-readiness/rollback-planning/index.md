@@ -1,19 +1,6 @@
 # Rollback Planning
 
 Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident.
-
-```mermaid
-flowchart LR
-    Rollback_Planning["Rollback Planning"]
-    Rollback_Planning --> S0["Rollback Readiness by Component"]
-    Rollback_Planning --> S1["vCenter Rollback (File-Based Backup)"]
-    Rollback_Planning --> S2["ESXi Bootbank Rollback"]
-    Rollback_Planning --> S3["NSX Backup Before Upgrade"]
-    Rollback_Planning --> S4["Aria Product Rollback (Snapshots)"]
-    Rollback_Planning --> S5["Go / No-Go Decision Framework"]
-    Rollback_Planning --> S6["Rollback Communication"]
-```
-
 ## Rollback Readiness by Component
 
 | Component | Rollback Method | Practical Rollback? | Notes |

@@ -3,21 +3,6 @@
 Commonly used Data Domain OS (DDOS) commands for managing Dell EMC backup appliances. Data Domain is a purpose-built deduplication backup target — backup software writes to it, and it deduplicates data on the fly to save space.
 
 > Connect via SSH: `ssh sysadmin@<dd_hostname>`. Use `ddsh` for extended diagnostics.
-
-```mermaid
-flowchart LR
-    Domain["Domain"]
-    Domain --> S0["System Status"]
-    Domain --> S1["Filesystem"]
-    Domain --> S2["MTrees (Data Management Units)"]
-    Domain --> S3["Replication"]
-    Domain --> S4["DDBoost"]
-    Domain --> S5["NFS and CIFS/SMB"]
-    Domain --> S6["Network"]
-    Domain --> S7["Users and Security"]
-    Domain --> S8["Disk and Storage"]
-```
-
 ---
 
 

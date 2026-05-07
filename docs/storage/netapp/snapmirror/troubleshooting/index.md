@@ -1,14 +1,4 @@
 # NetApp SnapMirror Troubleshooting
-
-```mermaid
-flowchart LR
-    SnapMirror_Troublesh["SnapMirror Troubleshoo"]
-    SnapMirror_Troublesh --> S0["Common Issues"]
-    SnapMirror_Troublesh --> S1["Diagnostic Commands"]
-    SnapMirror_Troublesh --> S2["Log Locations"]
-    SnapMirror_Troublesh --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

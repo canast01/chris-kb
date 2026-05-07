@@ -3,18 +3,6 @@
 > Part of the [VxRail](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Opening a Support Request"]
-    Vendor_Support --> S1["Collecting the VxRail Support Bundle"]
-    Vendor_Support --> S2["SRS / SupportAssist"]
-    Vendor_Support --> S3["Escalation Path"]
-    Vendor_Support --> S4["Version Compatibility Matrix"]
-    Vendor_Support --> S5["Useful Support Commands"]
-```
-
 ## Opening a Support Request
 
 Dell support for VxRail is accessed via the Dell support portal. Service requests are opened against the cluster service tag or an individual node service tag.

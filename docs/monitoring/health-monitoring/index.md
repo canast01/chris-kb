@@ -1,17 +1,4 @@
 # Infrastructure Health Monitoring
-
-```mermaid
-flowchart LR
-    Health_Monitoring["Health Monitoring"]
-    Health_Monitoring --> S0["Daily Health Check Checklist"]
-    Health_Monitoring --> S1["Server Health (Linux)"]
-    Health_Monitoring --> S2["Server Health (Windows)"]
-    Health_Monitoring --> S3["Storage Array Health"]
-    Health_Monitoring --> S4["Network Health"]
-    Health_Monitoring --> S5["Monitoring Agent Validation"]
-    Health_Monitoring --> S6["Escalation Thresholds (reference)"]
-```
-
 ## Daily Health Check Checklist
 
 | Category | What to Check | Tool |

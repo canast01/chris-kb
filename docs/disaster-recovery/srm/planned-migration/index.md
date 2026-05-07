@@ -1,16 +1,4 @@
 # Planned Migration
-
-```mermaid
-flowchart LR
-    Planned_Migration["Planned Migration"]
-    Planned_Migration --> S0["Purpose"]
-    Planned_Migration --> S1["Common checks"]
-    Planned_Migration --> S2["Incident notes"]
-    Planned_Migration --> S3["Change notes"]
-    Planned_Migration --> S4["Useful commands"]
-    Planned_Migration --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical SRM Planned Migration notes, checks, troubleshooting, commands, change notes, and field references.

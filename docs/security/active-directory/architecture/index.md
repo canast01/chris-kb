@@ -1,17 +1,4 @@
 # Active Directory Architecture
-
-```mermaid
-flowchart LR
-    Directory_Architectu["Directory Architecture"]
-    Directory_Architectu --> S0["Forest and Domain Hierarchy"]
-    Directory_Architectu --> S1["Core Components"]
-    Directory_Architectu --> S2["FSMO Role Placement"]
-    Directory_Architectu --> S3["Key Services and Ports"]
-    Directory_Architectu --> S4["Sites and Replication"]
-    Directory_Architectu --> S5["DC High Availability Design"]
-    Directory_Architectu --> S6["Active Directory Database"]
-```
-
 ## Forest and Domain Hierarchy
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:

@@ -1,13 +1,4 @@
 # SRM Troubleshooting
-
-```mermaid
-flowchart LR
-    SRM_Troubleshooting["SRM Troubleshooting"]
-    SRM_Troubleshooting --> S0["Log Locations"]
-    SRM_Troubleshooting --> S1["Common Issues"]
-    SRM_Troubleshooting --> S2["Support Bundle Collection"]
-```
-
 ## Log Locations
 
 ```

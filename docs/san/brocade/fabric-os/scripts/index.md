@@ -3,20 +3,6 @@
 > Part of the [Brocade Fabric OS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Fabric Health Check (Bash)"]
-    Scripts --> S1["Port Error Monitor (Perl)"]
-    Scripts --> S2["ISL Utilization Report (Python)"]
-    Scripts --> S3["Zoning Audit (Perl)"]
-    Scripts --> S4["Ansible Config Backup Playbook"]
-    Scripts --> S5["Windows: Brocade Switch Health via Plink (CMD)"]
-    Scripts --> S6["Windows: Brocade Port Status Report (PowerShell via Plink)"]
-    Scripts --> S7["Daily Check Script"]
-```
-
 ## Fabric Health Check (Bash)
 
 SSH to a Brocade switch, collect key diagnostic outputs, parse for errors, and print a PASS/WARNING/CRITICAL summary for each section.

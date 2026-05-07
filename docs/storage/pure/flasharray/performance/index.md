@@ -1,17 +1,4 @@
 # FlashArray Performance
-
-```mermaid
-flowchart LR
-    FlashArray_Performan["FlashArray Performance"]
-    FlashArray_Performan --> S0["Array-Level Performance"]
-    FlashArray_Performan --> S1["Volume-Level Performance"]
-    FlashArray_Performan --> S2["Host-Level Performance"]
-    FlashArray_Performan --> S3["FlashArray Latency Targets"]
-    FlashArray_Performan --> S4["Pure1 Performance Analysis"]
-    FlashArray_Performan --> S5["QoS Limits (Bandwidth Throttling)"]
-    FlashArray_Performan --> S6["Common Issues"]
-```
-
 ## Array-Level Performance
 
 ```bash

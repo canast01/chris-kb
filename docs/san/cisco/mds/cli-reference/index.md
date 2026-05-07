@@ -1,21 +1,6 @@
 # Cisco MDS NX-OS CLI Reference
 
 Commonly used NX-OS commands for managing Cisco MDS Fibre Channel switches. MDS runs NX-OS — the same operating system family as Cisco Nexus, so commands follow the `show / configure terminal / interface` pattern.
-
-```mermaid
-flowchart LR
-    NX_OS["NX-OS"]
-    NX_OS --> S0["Switch Status and Identity"]
-    NX_OS --> S1["Interfaces and Ports"]
-    NX_OS --> S2["FLOGI and Name Server"]
-    NX_OS --> S3["Zoning"]
-    NX_OS --> S4["VSANs"]
-    NX_OS --> S5["ISLs and Trunking"]
-    NX_OS --> S6["Diagnostics, Counters and SPAN"]
-    NX_OS --> S7["Firmware and Configuration"]
-    NX_OS --> S8["Security and Users"]
-```
-
 ---
 
 

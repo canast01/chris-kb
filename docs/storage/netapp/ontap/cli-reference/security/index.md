@@ -1,17 +1,6 @@
 # Security & Users
 
 > Part of the NetApp ONTAP CLI Reference.
-
-```mermaid
-flowchart LR
-    Users["Users"]
-    Users --> S0["User Logins"]
-    Users --> S1["Roles"]
-    Users --> S2["Certificates"]
-    Users --> S3["Audit Logging"]
-    Users --> S4["Common Issues"]
-```
-
 ## User Logins
 
 ```bash

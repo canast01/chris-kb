@@ -1,18 +1,4 @@
 # ONTAP Cluster Health
-
-```mermaid
-flowchart LR
-    Cluster_Health["Cluster Health"]
-    Cluster_Health --> S0["Overall Cluster Status"]
-    Cluster_Health --> S1["Node Health"]
-    Cluster_Health --> S2["HA Pair Status"]
-    Cluster_Health --> S3["Disk Health"]
-    Cluster_Health --> S4["Aggregate Health"]
-    Cluster_Health --> S5["Volume Health"]
-    Cluster_Health --> S6["Interface Health"]
-    Cluster_Health --> S7["EMS Events (Recent Errors)"]
-```
-
 ## Overall Cluster Status
 
 ```bash

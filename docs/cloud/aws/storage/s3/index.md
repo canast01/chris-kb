@@ -1,17 +1,4 @@
 # AWS S3
-
-```mermaid
-flowchart LR
-    AWS_S3["AWS S3"]
-    AWS_S3 --> S0["Where It Fits"]
-    AWS_S3 --> S1["Daily Checks"]
-    AWS_S3 --> S2["Health Commands"]
-    AWS_S3 --> S3["Common Issues"]
-    AWS_S3 --> S4["Operational Tasks"]
-    AWS_S3 --> S5["Upgrade Notes"]
-    AWS_S3 --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS S3 notes for day-to-day infrastructure operations.

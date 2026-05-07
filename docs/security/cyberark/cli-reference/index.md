@@ -1,17 +1,6 @@
 # CyberArk CLI Reference
 
 CyberArk's primary programmatic interface is the PVWA REST API v2. The `psPAS` PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.
-
-```mermaid
-flowchart LR
-    CyberArk["CyberArk"]
-    CyberArk --> S0["REST API — Authentication"]
-    CyberArk --> S1["REST API — Accounts"]
-    CyberArk --> S2["REST API — Safes"]
-    CyberArk --> S3["psPAS PowerShell Module"]
-    CyberArk --> S4["PACLI (Legacy Vault CLI)"]
-```
-
 ---
 
 ## REST API — Authentication

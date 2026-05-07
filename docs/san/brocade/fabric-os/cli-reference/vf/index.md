@@ -3,20 +3,6 @@
 > Part of the Brocade Fabric OS CLI Reference.
 
 Virtual Fabrics partition a physical Brocade chassis into multiple logical switches (Logical Switches), each with its own Fabric ID (FID) and independent FLOGI domain.
-
-```mermaid
-flowchart LR
-    VF["(VF)"]
-    VF --> S0["Virtual Fabric Status"]
-    VF --> S1["Create a Logical Switch"]
-    VF --> S2["Delete a Logical Switch"]
-    VF --> S3["Assign a Port to a Logical Switch"]
-    VF --> S4["XISL (Inter-Switch Links Between VFs)"]
-    VF --> S5["Context Switching"]
-    VF --> S6["Check Port Assignments per FID"]
-    VF --> S7["Common Issues"]
-```
-
 ## Virtual Fabric Status
 
 ```bash

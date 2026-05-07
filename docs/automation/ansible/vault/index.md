@@ -1,16 +1,4 @@
 # Vault
-
-```mermaid
-flowchart LR
-    Vault["Vault"]
-    Vault --> S0["Purpose"]
-    Vault --> S1["Common checks"]
-    Vault --> S2["Incident notes"]
-    Vault --> S3["Change notes"]
-    Vault --> S4["Useful commands"]
-    Vault --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Ansible Vault notes, checks, troubleshooting, commands, change notes, and field references.

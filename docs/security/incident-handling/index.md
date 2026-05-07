@@ -1,18 +1,4 @@
 # Security Incident Handling
-
-```mermaid
-flowchart LR
-    Incident_Handling["Incident Handling"]
-    Incident_Handling --> S0["Severity Classification"]
-    Incident_Handling --> S1["Phase 1 — Identify and Triage"]
-    Incident_Handling --> S2["Phase 2 — Contain"]
-    Incident_Handling --> S3["Phase 3 — Investigate"]
-    Incident_Handling --> S4["Phase 4 — Eradicate and Recover"]
-    Incident_Handling --> S5["Phase 5 — Post-Incident"]
-    Incident_Handling --> S6["Escalation Contacts (fill in)"]
-    Incident_Handling --> S7["Key Notification Requirements"]
-```
-
 ## Severity Classification
 
 | Severity | Definition | Example | Response Time |

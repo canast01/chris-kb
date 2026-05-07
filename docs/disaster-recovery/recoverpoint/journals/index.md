@@ -1,16 +1,4 @@
 # Journals
-
-```mermaid
-flowchart LR
-    Journals["Journals"]
-    Journals --> S0["Purpose"]
-    Journals --> S1["Common checks"]
-    Journals --> S2["Incident notes"]
-    Journals --> S3["Change notes"]
-    Journals --> S4["Useful commands"]
-    Journals --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Recoverpoint Journals notes, checks, troubleshooting, commands, change notes, and field references.

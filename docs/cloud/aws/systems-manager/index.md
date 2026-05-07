@@ -1,19 +1,6 @@
 # Systems Manager
 
 AWS Systems Manager — fleet management, patching, session management, and parameter storage.
-
-```mermaid
-flowchart LR
-    Systems_Manager["Systems Manager"]
-    Systems_Manager --> S0["Key Capabilities"]
-    Systems_Manager --> S1["Prerequisites"]
-    Systems_Manager --> S2["Session Manager (SSH-less access)"]
-    Systems_Manager --> S3["Run Command"]
-    Systems_Manager --> S4["Parameter Store"]
-    Systems_Manager --> S5["Patch Manager"]
-    Systems_Manager --> S6["Troubleshooting"]
-```
-
 ## Key Capabilities
 
 | Capability | Description |

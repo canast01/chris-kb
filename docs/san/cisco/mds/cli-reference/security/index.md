@@ -1,17 +1,6 @@
 # Security & Users
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Users["Users"]
-    Users --> S0["Local Users"]
-    Users --> S1["TACACS+ / RADIUS"]
-    Users --> S2["SSH"]
-    Users --> S3["SNMPv3"]
-    Users --> S4["Common Issues"]
-```
-
 ## Local Users
 
 ```bash

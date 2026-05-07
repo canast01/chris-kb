@@ -1,18 +1,4 @@
 # Firewalls
-
-```mermaid
-flowchart LR
-    Firewalls["Firewalls"]
-    Firewalls --> S0["Check Traffic Sessions"]
-    Firewalls --> S1["View Security Policy"]
-    Firewalls --> S2["Test Connectivity Through a Firewall"]
-    Firewalls --> S3["Review Deny Logs"]
-    Firewalls --> S4["Common Rule Troubleshooting"]
-    Firewalls --> S5["NAT Verification"]
-    Firewalls --> S6["Pre-Change Checklist"]
-    Firewalls --> S7["Common Issues"]
-```
-
 ## Overview
 
 Firewalls control traffic between zones using rules, policies, NAT, and inspection profiles. In enterprise infrastructure, firewalls govern traffic between:

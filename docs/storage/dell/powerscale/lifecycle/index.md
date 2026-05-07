@@ -1,14 +1,4 @@
 # PowerScale Lifecycle
-
-```mermaid
-flowchart LR
-    PowerScale_Lifecycle["PowerScale Lifecycle"]
-    PowerScale_Lifecycle --> S0["Software Version Matrix"]
-    PowerScale_Lifecycle --> S1["Upgrade Paths"]
-    PowerScale_Lifecycle --> S2["Refresh Planning"]
-    PowerScale_Lifecycle --> S3["EOL Tracking"]
-```
-
 ## Software Version Matrix
 
 | OneFS Release | Notes |

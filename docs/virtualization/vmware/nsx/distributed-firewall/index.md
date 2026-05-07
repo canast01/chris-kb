@@ -1,17 +1,4 @@
 # NSX Distributed Firewall
-
-```mermaid
-flowchart LR
-    Distributed_Firewall["Distributed Firewall"]
-    Distributed_Firewall --> S0["Where It Fits"]
-    Distributed_Firewall --> S1["Daily Checks"]
-    Distributed_Firewall --> S2["Health Commands"]
-    Distributed_Firewall --> S3["Common Issues"]
-    Distributed_Firewall --> S4["Operational Tasks"]
-    Distributed_Firewall --> S5["Upgrade Notes"]
-    Distributed_Firewall --> S6["Best Practices"]
-```
-
 ## Overview
 
 DFW rules, groups, policy order, logging, and change validation.

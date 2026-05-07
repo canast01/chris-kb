@@ -1,20 +1,6 @@
 # Linux Troubleshooting
 
 Structured approach to diagnosing common Linux server issues.
-
-```mermaid
-flowchart LR
-    Linux_Troubleshootin["Linux Troubleshooting"]
-    Linux_Troubleshootin --> S0["Triage Order"]
-    Linux_Troubleshootin --> S1["High CPU"]
-    Linux_Troubleshootin --> S2["High Memory / OOM"]
-    Linux_Troubleshootin --> S3["High Disk I/O or Latency"]
-    Linux_Troubleshootin --> S4["Network Connectivity Issues"]
-    Linux_Troubleshootin --> S5["Service Not Starting"]
-    Linux_Troubleshootin --> S6["SSH Access Denied"]
-    Linux_Troubleshootin --> S7["Disk Full — Emergency"]
-```
-
 ## Triage Order
 
 1. **Is the host reachable?** — ping, SSH, IPMI/iDRAC console

@@ -1,18 +1,4 @@
 # Aria Automation — Integration
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["vCenter Cloud Account (Compute Integration)"]
-    Aria_Automation --> S1["NSX Cloud Account (Network Integration)"]
-    Aria_Automation --> S2["Active Directory / LDAP (User Authentication)"]
-    Aria_Automation --> S3["GitHub / GitLab (Pipeline SCM)"]
-    Aria_Automation --> S4["ServiceNow (Approval Workflows)"]
-    Aria_Automation --> S5["Ansible Tower / AWX (Configuration Management)"]
-    Aria_Automation --> S6["HashiCorp Vault (Secrets Management)"]
-    Aria_Automation --> S7["Integration Endpoint Health"]
-```
-
 ## vCenter Cloud Account (Compute Integration)
 
 Aria Automation connects to vCenter Server as a **cloud account** to discover compute resources, networks, and storage, and to provision VMs.

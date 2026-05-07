@@ -1,18 +1,6 @@
 # Pure Storage Evergreen Lifecycle
 
 The Evergreen program guarantees that Pure FlashArray and FlashBlade platforms never become obsolete — hardware and software are refreshed non-disruptively as technology evolves.
-
-```mermaid
-flowchart LR
-    Evergreen_Lifecycle["Evergreen Lifecycle"]
-    Evergreen_Lifecycle --> S0["Evergreen Program Tiers"]
-    Evergreen_Lifecycle --> S1["Software Upgrade (Purity)"]
-    Evergreen_Lifecycle --> S2["Drive Replacement"]
-    Evergreen_Lifecycle --> S3["Controller Refresh (Evergreen//Forever)"]
-    Evergreen_Lifecycle --> S4["End-of-Life Considerations"]
-    Evergreen_Lifecycle --> S5["Lifecycle Timeline"]
-```
-
 ## Evergreen Program Tiers
 
 | Program | Model | Refresh Included |

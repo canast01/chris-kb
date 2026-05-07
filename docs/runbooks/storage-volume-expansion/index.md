@@ -1,18 +1,6 @@
 # Storage Volume Expansion Runbook
 
 Controlled process for expanding a storage volume and resizing the filesystem on the host.
-
-```mermaid
-flowchart LR
-    Expansion_Runbook["Expansion Runbook"]
-    Expansion_Runbook --> S0["Pre-Checks"]
-    Expansion_Runbook --> S1["Step 1 — Expand the LUN on the Array"]
-    Expansion_Runbook --> S2["Step 2 — Rescan on the Host"]
-    Expansion_Runbook --> S3["Step 3 — Resize Partition and Filesystem"]
-    Expansion_Runbook --> S4["Validation"]
-    Expansion_Runbook --> S5["Common Issues"]
-```
-
 ## Pre-Checks
 
 ```bash

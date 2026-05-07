@@ -1,16 +1,4 @@
 # Reservations
-
-```mermaid
-flowchart LR
-    Reservations["Reservations"]
-    Reservations --> S0["Purpose"]
-    Reservations --> S1["Common checks"]
-    Reservations --> S2["Incident notes"]
-    Reservations --> S3["Change notes"]
-    Reservations --> S4["Useful commands"]
-    Reservations --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Cost Reservations notes, checks, troubleshooting, commands, change notes, and field references.

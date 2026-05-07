@@ -1,20 +1,6 @@
 # vCenter Service Commands
 
 > SSH to the vCenter appliance before running these commands.
-
-```mermaid
-flowchart LR
-    Service_Commands["Service Commands"]
-    Service_Commands --> S0["Check All Services"]
-    Service_Commands --> S1["Start All Services"]
-    Service_Commands --> S2["Stop All Services"]
-    Service_Commands --> S3["Restart All Services"]
-    Service_Commands --> S4["Restart a Single Service"]
-    Service_Commands --> S5["Check Disk Space"]
-    Service_Commands --> S6["Check Uptime"]
-    Service_Commands --> S7["Check Certificate Status"]
-```
-
 ## Check All Services
 
 ```bash

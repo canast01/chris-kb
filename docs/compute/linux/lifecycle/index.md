@@ -3,19 +3,6 @@
 > Part of the [Linux](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Linux_Lifecycle["Linux Lifecycle"]
-    Linux_Lifecycle --> S0["OS Support Timelines"]
-    Linux_Lifecycle --> S1["Patching Procedure"]
-    Linux_Lifecycle --> S2["Kernel Management"]
-    Linux_Lifecycle --> S3["Server Provisioning Checklist"]
-    Linux_Lifecycle --> S4["Decommission Checklist"]
-    Linux_Lifecycle --> S5["RHEL Subscription Management"]
-    Linux_Lifecycle --> S6["In-Place Upgrade (RHEL 8 → 9)"]
-```
-
 ## OS Support Timelines
 
 | OS | Version | End of Maintenance | Extended (ESM/ELS) |

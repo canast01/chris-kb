@@ -1,18 +1,6 @@
 # System Health & Events
 
 > Part of the NetApp ONTAP CLI Reference.
-
-```mermaid
-flowchart LR
-    Events["Events"]
-    Events --> S0["System Health"]
-    Events --> S1["EMS Event Log"]
-    Events --> S2["EMS Notification Config"]
-    Events --> S3["Firmware and Software"]
-    Events --> S4["AutoSupport"]
-    Events --> S5["Quick Reference"]
-```
-
 ## System Health
 
 ```bash

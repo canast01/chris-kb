@@ -5,18 +5,6 @@
 Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.
 
 ---
-
-```mermaid
-flowchart LR
-    SRDF_A_Troubleshooti["SRDF/A Troubleshooting"]
-    SRDF_A_Troubleshooti --> S0["SRDF/A Link Down"]
-    SRDF_A_Troubleshooti --> S1["Cycle Time Increasing / RPO Growing"]
-    SRDF_A_Troubleshooti --> S2["Consistency Group Suspended Automatically"]
-    SRDF_A_Troubleshooti --> S3["Target Volume Capacity Mismatch / Thin Pool Exhaustion"]
-    SRDF_A_Troubleshooti --> S4["`Invalid` Pair State"]
-    SRDF_A_Troubleshooti --> S5["On-Call Triage — SRDF/A Lag Alert"]
-```
-
 ## SRDF/A Link Down
 
 **Symptom:** Pairs move to `Transmit Idle` or `Suspended`; no delta sets completing.

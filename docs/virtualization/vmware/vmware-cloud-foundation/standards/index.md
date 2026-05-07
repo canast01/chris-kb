@@ -1,20 +1,6 @@
 # VMware Cloud Foundation Standards
 
 VCF deployments must adhere to strict naming and sizing standards to ensure SDDC Manager can successfully validate and manage all components throughout the lifecycle.
-
-```mermaid
-flowchart LR
-    Foundation_Standards["Foundation Standards"]
-    Foundation_Standards --> S0["Management Domain Sizing"]
-    Foundation_Standards --> S1["Workload Domain Sizing"]
-    Foundation_Standards --> S2["Naming Convention"]
-    Foundation_Standards --> S3["Network Requirements"]
-    Foundation_Standards --> S4["Password Policy"]
-    Foundation_Standards --> S5["vSAN Ready Node Requirements"]
-    Foundation_Standards --> S6["Supported Configurations"]
-    Foundation_Standards --> S7["Compliance Checks in SDDC Manager"]
-```
-
 ## Management Domain Sizing
 
 | Component | Minimum | Recommended |

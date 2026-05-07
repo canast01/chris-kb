@@ -1,14 +1,4 @@
 # CloudIQ Troubleshooting
-
-```mermaid
-flowchart LR
-    CloudIQ_Troubleshoot["CloudIQ Troubleshootin"]
-    CloudIQ_Troubleshoot --> S0["Diagnostic Approach"]
-    CloudIQ_Troubleshoot --> S1["Common Issues"]
-    CloudIQ_Troubleshoot --> S2["SCG Log Locations"]
-    CloudIQ_Troubleshoot --> S3["Dell Support Escalation"]
-```
-
 ## Diagnostic Approach
 
 Before escalating to Dell support, work through the standard diagnostic steps:

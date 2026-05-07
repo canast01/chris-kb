@@ -1,17 +1,4 @@
 # Patch Compliance Monitoring
-
-```mermaid
-flowchart LR
-    Compliance_Monitorin["Compliance Monitoring"]
-    Compliance_Monitorin --> S0["Patch Classification"]
-    Compliance_Monitorin --> S1["Windows Patch Compliance"]
-    Compliance_Monitorin --> S2["Linux Patch Compliance"]
-    Compliance_Monitorin --> S3["SCCM / Endpoint Manager (Windows fleet)"]
-    Compliance_Monitorin --> S4["Patch Reporting"]
-    Compliance_Monitorin --> S5["Compliance Checks by Tool"]
-    Compliance_Monitorin --> S6["Exception Handling"]
-```
-
 ## Patch Classification
 
 | Severity | Definition | Deployment SLA |

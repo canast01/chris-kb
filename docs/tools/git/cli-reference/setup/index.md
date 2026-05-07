@@ -1,14 +1,6 @@
 # Setup, Config & Remotes
 
 > Part of the Git CLI Reference.
-
-```mermaid
-flowchart LR
-    Remotes["Remotes"]
-    Remotes --> S0["Setup and Config"]
-    Remotes --> S1["Repository"]
-```
-
 ---
 
 ## Setup & Config

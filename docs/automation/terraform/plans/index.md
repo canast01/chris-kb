@@ -1,16 +1,4 @@
 # Plans
-
-```mermaid
-flowchart LR
-    Plans["Plans"]
-    Plans --> S0["Purpose"]
-    Plans --> S1["Common checks"]
-    Plans --> S2["Incident notes"]
-    Plans --> S3["Change notes"]
-    Plans --> S4["Useful commands"]
-    Plans --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Terraform Plans notes, checks, troubleshooting, commands, change notes, and field references.

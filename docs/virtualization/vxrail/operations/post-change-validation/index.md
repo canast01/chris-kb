@@ -1,17 +1,4 @@
 # VxRail Post-Change Validation
-
-```mermaid
-flowchart LR
-    Post_Change_Validati["Post-Change Validation"]
-    Post_Change_Validati --> S0["Where It Fits"]
-    Post_Change_Validati --> S1["Daily Checks"]
-    Post_Change_Validati --> S2["Health Commands"]
-    Post_Change_Validati --> S3["Common Issues"]
-    Post_Change_Validati --> S4["Operational Tasks"]
-    Post_Change_Validati --> S5["Upgrade Notes"]
-    Post_Change_Validati --> S6["Best Practices"]
-```
-
 ## Overview
 
 Validation after lifecycle, hardware, configuration, or support changes.

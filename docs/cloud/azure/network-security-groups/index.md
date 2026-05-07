@@ -1,17 +1,6 @@
 # Network Security Groups
 
 Azure NSGs — stateful firewall rules for controlling inbound and outbound traffic to Azure resources.
-
-```mermaid
-flowchart LR
-    Security_Groups["Security Groups"]
-    Security_Groups --> S0["Key Concepts"]
-    Security_Groups --> S1["Common Azure CLI Commands"]
-    Security_Groups --> S2["NSG Flow Logs"]
-    Security_Groups --> S3["Effective Security Rules (what's actually applied to a VM)"]
-    Security_Groups --> S4["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

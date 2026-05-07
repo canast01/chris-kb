@@ -1,19 +1,6 @@
 # VPLEX CLI Reference (vplexcli)
 
 > Part of the [VPLEX](../) reference.
-
-```mermaid
-flowchart LR
-    vplexcli["(vplexcli)"]
-    vplexcli --> S0["Quick-Reference Command Table"]
-    vplexcli --> S1["Cluster and Director Status"]
-    vplexcli --> S2["Virtual Volume Management"]
-    vplexcli --> S3["Distributed Device Operations (VPLEX Metro)"]
-    vplexcli --> S4["Storage Views (Host Masking)"]
-    vplexcli --> S5["Data Migration"]
-    vplexcli --> S6["Logs and Diagnostics"]
-```
-
 ---
 
 `vplexcli` is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with `vplexcli`. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g. `/clusters/cluster-1/`) and `ll` (list-long) is the standard inspection command.

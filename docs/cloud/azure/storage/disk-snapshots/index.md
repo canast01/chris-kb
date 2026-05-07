@@ -1,16 +1,4 @@
 # Disk Snapshots
-
-```mermaid
-flowchart LR
-    Disk_Snapshots["Disk Snapshots"]
-    Disk_Snapshots --> S0["Purpose"]
-    Disk_Snapshots --> S1["Common checks"]
-    Disk_Snapshots --> S2["Incident notes"]
-    Disk_Snapshots --> S3["Change notes"]
-    Disk_Snapshots --> S4["Useful commands"]
-    Disk_Snapshots --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Storage Disk Snapshots notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,16 +1,4 @@
 # Compliance Review
-
-```mermaid
-flowchart LR
-    Compliance_Review["Compliance Review"]
-    Compliance_Review --> S0["Purpose"]
-    Compliance_Review --> S1["Common checks"]
-    Compliance_Review --> S2["Incident notes"]
-    Compliance_Review --> S3["Change notes"]
-    Compliance_Review --> S4["Useful commands"]
-    Compliance_Review --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Governance Compliance Review notes, checks, troubleshooting, commands, change notes, and field references.

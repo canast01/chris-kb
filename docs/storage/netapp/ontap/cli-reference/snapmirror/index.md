@@ -1,17 +1,6 @@
 # SnapMirror
 
 > Part of the NetApp ONTAP CLI Reference.
-
-```mermaid
-flowchart LR
-    SnapMirror["SnapMirror"]
-    SnapMirror --> S0["View Relationships"]
-    SnapMirror --> S1["Create and Delete"]
-    SnapMirror --> S2["Operations"]
-    SnapMirror --> S3["Monitoring"]
-    SnapMirror --> S4["Common Issues"]
-```
-
 ## View Relationships
 
 ```bash

@@ -1,17 +1,4 @@
 # NSX Routing
-
-```mermaid
-flowchart LR
-    NSX_Routing["NSX Routing"]
-    NSX_Routing --> S0["Where It Fits"]
-    NSX_Routing --> S1["Daily Checks"]
-    NSX_Routing --> S2["Health Commands"]
-    NSX_Routing --> S3["Common Issues"]
-    NSX_Routing --> S4["Operational Tasks"]
-    NSX_Routing --> S5["Upgrade Notes"]
-    NSX_Routing --> S6["Best Practices"]
-```
-
 ## Overview
 
 BGP, static routes, route advertisement, troubleshooting, and validation.

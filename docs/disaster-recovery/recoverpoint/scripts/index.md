@@ -3,20 +3,6 @@
 > Part of the [RecoverPoint](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Consistency Group Health Monitor (Python)"]
-    Scripts --> S1["DR Test Failover Script (Bash)"]
-    Scripts --> S2["RPO Compliance Report (Python)"]
-    Scripts --> S3["Windows: RecoverPoint CG Status via REST API (PowerShell)"]
-    Scripts --> S4["Windows: RecoverPoint CG Health via Plink (CMD)"]
-    Scripts --> S5["Daily Check Script"]
-    Scripts --> S6["Incident Triage Script"]
-    Scripts --> S7["Change Pre-Check Script"]
-```
-
 ## Consistency Group Health Monitor (Python)
 
 Query the RecoverPoint REST API to report the replication state, lag, and RPO compliance for every consistency group.

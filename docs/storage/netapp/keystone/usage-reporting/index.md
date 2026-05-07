@@ -1,16 +1,4 @@
 # Keystone Usage Reporting
-
-```mermaid
-flowchart LR
-    Usage_Reporting["Usage Reporting"]
-    Usage_Reporting --> S0["BlueXP Digital Wallet"]
-    Usage_Reporting --> S1["Keystone Collector"]
-    Usage_Reporting --> S2["Monthly Consumption Reports"]
-    Usage_Reporting --> S3["Identifying High-Consuming Volumes (ONTAP CLI)"]
-    Usage_Reporting --> S4["Reporting Discrepancies"]
-    Usage_Reporting --> S5["Key Metrics"]
-```
-
 ## BlueXP Digital Wallet
 
 Primary source for Keystone consumption reporting:

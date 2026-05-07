@@ -3,21 +3,6 @@
 Commonly used Azure CLI (`az`) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that talks directly to Azure APIs — everything you can do in the portal, you can automate with `az`.
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
-
-```mermaid
-flowchart LR
-    Azure["Azure"]
-    Azure --> S0["Account and Subscriptions"]
-    Azure --> S1["Virtual Machines"]
-    Azure --> S2["Disks and Snapshots"]
-    Azure --> S3["Storage Accounts and Blobs"]
-    Azure --> S4["Networking"]
-    Azure --> S5["Identity and RBAC"]
-    Azure --> S6["Monitor and Alerts"]
-    Azure --> S7["Key Vault"]
-    Azure --> S8["AKS"]
-```
-
 ---
 
 

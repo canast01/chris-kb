@@ -1,17 +1,4 @@
 # ESXi Networking
-
-```mermaid
-flowchart LR
-    ESXi_Networking["ESXi Networking"]
-    ESXi_Networking --> S0["Where It Fits"]
-    ESXi_Networking --> S1["Daily Checks"]
-    ESXi_Networking --> S2["Health Commands"]
-    ESXi_Networking --> S3["Common Issues"]
-    ESXi_Networking --> S4["Operational Tasks"]
-    ESXi_Networking --> S5["Upgrade Notes"]
-    ESXi_Networking --> S6["Best Practices"]
-```
-
 ## Overview
 
 vSwitch, distributed switch, VMkernel adapters, uplinks, VLANs, and connectivity checks.

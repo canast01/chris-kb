@@ -1,18 +1,4 @@
 # Linux Build Standards
-
-```mermaid
-flowchart LR
-    Build_Standards["Build Standards"]
-    Build_Standards --> S0["Naming Convention"]
-    Build_Standards --> S1["OS Build Standards"]
-    Build_Standards --> S2["Disk Layout"]
-    Build_Standards --> S3["Authentication"]
-    Build_Standards --> S4["NTP Configuration"]
-    Build_Standards --> S5["Syslog Forwarding"]
-    Build_Standards --> S6["Package Repository Policy"]
-    Build_Standards --> S7["Software Installation Policy"]
-```
-
 ## Naming Convention
 
 ```

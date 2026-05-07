@@ -1,16 +1,4 @@
 # Azure Policy
-
-```mermaid
-flowchart LR
-    Azure_Policy["Azure Policy"]
-    Azure_Policy --> S0["Purpose"]
-    Azure_Policy --> S1["Common checks"]
-    Azure_Policy --> S2["Incident notes"]
-    Azure_Policy --> S3["Change notes"]
-    Azure_Policy --> S4["Useful commands"]
-    Azure_Policy --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Governance Azure Policy notes, checks, troubleshooting, commands, change notes, and field references.

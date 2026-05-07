@@ -1,16 +1,4 @@
 # Recommendations
-
-```mermaid
-flowchart LR
-    Recommendations["Recommendations"]
-    Recommendations --> S0["Purpose"]
-    Recommendations --> S1["Common checks"]
-    Recommendations --> S2["Incident notes"]
-    Recommendations --> S3["Change notes"]
-    Recommendations --> S4["Useful commands"]
-    Recommendations --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Dell Aiops Recommendations notes, checks, troubleshooting, commands, change notes, and field references.

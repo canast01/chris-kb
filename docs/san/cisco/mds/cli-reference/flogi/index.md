@@ -1,17 +1,6 @@
 # FLOGI & Name Server
 
 > Part of the Cisco MDS NX-OS CLI Reference.
-
-```mermaid
-flowchart LR
-    Server["Server"]
-    Server --> S0["FLOGI Database"]
-    Server --> S1["FC Name Server"]
-    Server --> S2["Interpreting FLOGI Output"]
-    Server --> S3["Verifying Host-to-Storage Visibility"]
-    Server --> S4["Common Issues"]
-```
-
 ## FLOGI Database
 
 ```bash

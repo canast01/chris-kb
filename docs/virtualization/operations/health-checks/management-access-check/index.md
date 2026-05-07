@@ -1,20 +1,6 @@
 # Management Access Check
 
 Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.
-
-```mermaid
-flowchart LR
-    Access_Check["Access Check"]
-    Access_Check --> S0["Connectivity Checks"]
-    Access_Check --> S1["vCenter Access"]
-    Access_Check --> S2["NSX Manager Access"]
-    Access_Check --> S3["SDDC Manager Access (VCF)"]
-    Access_Check --> S4["Aria Operations Access"]
-    Access_Check --> S5["AD/LDAP Identity Source Health"]
-    Access_Check --> S6["Access Control Review"]
-    Access_Check --> S7["Failed Login Monitoring"]
-```
-
 ## Connectivity Checks
 
 ```bash

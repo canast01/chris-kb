@@ -1,19 +1,6 @@
 # Restore Support
 
 Guidance for supporting backup application restore operations from Data Domain.
-
-```mermaid
-flowchart LR
-    Restore_Support["Restore Support"]
-    Restore_Support --> S0["Restore Methods"]
-    Restore_Support --> S1["Validating Restore Readiness"]
-    Restore_Support --> S2["DDBoost Restore (Backup Application)"]
-    Restore_Support --> S3["NFS Restore (Direct File Copy)"]
-    Restore_Support --> S4["Performance Expectations"]
-    Restore_Support --> S5["Troubleshooting Slow Restores"]
-    Restore_Support --> S6["Tape-Out / CIFS Restores"]
-```
-
 ## Restore Methods
 
 | Method | Protocol | When Used |

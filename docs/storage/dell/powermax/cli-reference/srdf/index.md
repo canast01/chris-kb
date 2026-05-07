@@ -3,17 +3,6 @@
 > Part of the Dell PowerMax CLI Reference (SYMCLI).
 
 SRDF (Symmetrix Remote Data Facility) provides synchronous and asynchronous replication between PowerMax arrays.
-
-```mermaid
-flowchart LR
-    Replication["Replication"]
-    Replication --> S0["SRDF Modes"]
-    Replication --> S1["List SRDF Groups and Devices"]
-    Replication --> S2["Storage Group Operations"]
-    Replication --> S3["SRDF/A Specific"]
-    Replication --> S4["Common Issues"]
-```
-
 ## SRDF Modes
 
 | Mode | Description | RPO |

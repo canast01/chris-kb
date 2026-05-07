@@ -1,16 +1,4 @@
 # Vm Scale Sets
-
-```mermaid
-flowchart LR
-    Scale_Sets["Scale Sets"]
-    Scale_Sets --> S0["Purpose"]
-    Scale_Sets --> S1["Common checks"]
-    Scale_Sets --> S2["Incident notes"]
-    Scale_Sets --> S3["Change notes"]
-    Scale_Sets --> S4["Useful commands"]
-    Scale_Sets --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Compute Vm Scale Sets notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,17 +1,4 @@
 # vCenter Roles and Permissions
-
-```mermaid
-flowchart LR
-    and_Permissions["and Permissions"]
-    and_Permissions --> S0["Where It Fits"]
-    and_Permissions --> S1["Daily Checks"]
-    and_Permissions --> S2["Health Commands"]
-    and_Permissions --> S3["Common Issues"]
-    and_Permissions --> S4["Operational Tasks"]
-    and_Permissions --> S5["Upgrade Notes"]
-    and_Permissions --> S6["Best Practices"]
-```
-
 ## Overview
 
 vCenter RBAC, roles, groups, permissions, access reviews, and least privilege cleanup.

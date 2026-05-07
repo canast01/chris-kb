@@ -1,18 +1,6 @@
 # VxRail CLI Reference
 
 > Part of the [VxRail](../) reference.
-
-```mermaid
-flowchart LR
-    VxRail["VxRail"]
-    VxRail --> S0["Overview"]
-    VxRail --> S1["VxRail Manager REST API"]
-    VxRail --> S2["VxRail Manager SSH CLI"]
-    VxRail --> S3["PowerCLI + VxRail Module"]
-    VxRail --> S4["ESXCLI on VxRail Nodes"]
-    VxRail --> S5["iDRAC / RACADM (Hardware Health)"]
-```
-
 ---
 
 ## Overview

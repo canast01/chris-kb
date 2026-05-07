@@ -1,18 +1,4 @@
 # ESXi Field Reference
-
-```mermaid
-flowchart LR
-    Field_Reference["Field Reference"]
-    Field_Reference --> S0["Where It Fits"]
-    Field_Reference --> S1["Architecture and Components"]
-    Field_Reference --> S2["Dependencies"]
-    Field_Reference --> S3["Ports and Protocols"]
-    Field_Reference --> S4["Daily Operations"]
-    Field_Reference --> S5["Health Checks"]
-    Field_Reference --> S6["Upgrade Workflow"]
-    Field_Reference --> S7["Backup and Recovery Considerations"]
-```
-
 ## Overview
 
 ESXi is the VMware hypervisor layer that runs virtual machines and provides compute, networking, and storage access to workloads.

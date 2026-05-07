@@ -1,16 +1,4 @@
 # Dell AIOps Architecture
-
-```mermaid
-flowchart LR
-    AIOps_Architecture["AIOps Architecture"]
-    AIOps_Architecture --> S0["Architecture"]
-    AIOps_Architecture --> S1["Component Roles"]
-    AIOps_Architecture --> S2["AIOps Capabilities"]
-    AIOps_Architecture --> S3["Telemetry Sources"]
-    AIOps_Architecture --> S4["Data Flow"]
-    AIOps_Architecture --> S5["SaaS Delivery Model"]
-```
-
 ## Overview
 
 Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operations platform providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. The platform is fully SaaS-delivered with no customer-managed AI compute components. Telemetry is collected on-premises by the Secure Connect Gateway (SCG) and processed by Dell's cloud AI pipeline.

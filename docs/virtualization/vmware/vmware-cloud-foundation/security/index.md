@@ -3,19 +3,6 @@
 > Part of the [VCF](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Foundation_Security["Foundation Security"]
-    Foundation_Security --> S0["Hardening Checklist"]
-    Foundation_Security --> S1["RBAC — SDDC Manager Roles"]
-    Foundation_Security --> S2["Certificate Management"]
-    Foundation_Security --> S3["Password Management"]
-    Foundation_Security --> S4["Audit Logging and SIEM Forwarding"]
-    Foundation_Security --> S5["Network Access Controls"]
-    Foundation_Security --> S6["vSAN Encryption"]
-```
-
 ## Hardening Checklist
 
 - [ ] All default passwords rotated via SDDC Manager Password Management at first use

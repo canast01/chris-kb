@@ -1,17 +1,4 @@
 # AWS IAM Policies
-
-```mermaid
-flowchart LR
-    IAM_Policies["IAM Policies"]
-    IAM_Policies --> S0["Where It Fits"]
-    IAM_Policies --> S1["Daily Checks"]
-    IAM_Policies --> S2["Health Commands"]
-    IAM_Policies --> S3["Common Issues"]
-    IAM_Policies --> S4["Operational Tasks"]
-    IAM_Policies --> S5["Upgrade Notes"]
-    IAM_Policies --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS IAM Policies notes for day-to-day infrastructure operations.

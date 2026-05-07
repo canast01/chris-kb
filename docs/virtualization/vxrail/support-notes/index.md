@@ -1,17 +1,4 @@
 # VxRail Support Notes
-
-```mermaid
-flowchart LR
-    Support_Notes["Support Notes"]
-    Support_Notes --> S0["Where It Fits"]
-    Support_Notes --> S1["Daily Checks"]
-    Support_Notes --> S2["Health Commands"]
-    Support_Notes --> S3["Common Issues"]
-    Support_Notes --> S4["Operational Tasks"]
-    Support_Notes --> S5["Upgrade Notes"]
-    Support_Notes --> S6["Best Practices"]
-```
-
 ## Overview
 
 VxRail Support Notes notes for infrastructure operations, support, health checks, and troubleshooting.

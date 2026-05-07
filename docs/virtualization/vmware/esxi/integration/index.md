@@ -1,15 +1,4 @@
 # VMware ESXi Integration
-
-```mermaid
-flowchart LR
-    ESXi_Integration["ESXi Integration"]
-    ESXi_Integration --> S0["vCenter Integration"]
-    ESXi_Integration --> S1["Storage Integration"]
-    ESXi_Integration --> S2["Network Integration"]
-    ESXi_Integration --> S3["Backup Integration"]
-    ESXi_Integration --> S4["Monitoring Integration"]
-```
-
 ## vCenter Integration
 
 ESXi hosts are managed by vCenter Server and must be joined to a vCenter instance for full functionality. To add a host: vCenter > Hosts and Clusters > right-click datacenter or cluster > Add Host. Provide the ESXi hostname or IP, root credentials, and optionally assign a licence.

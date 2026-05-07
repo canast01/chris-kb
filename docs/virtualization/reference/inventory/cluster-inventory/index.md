@@ -3,15 +3,6 @@
 > Part of the [Inventory](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Cluster_Inventory["Cluster Inventory"]
-    Cluster_Inventory --> S0["Cluster Inventory Table"]
-    Cluster_Inventory --> S1["Fields Reference"]
-    Cluster_Inventory --> S2["Cluster Configuration Checklist"]
-```
-
 ## Overview
 
 Use this table format to document each vSphere cluster in the environment. Maintain one row per cluster and update after any cluster configuration change or capacity event.

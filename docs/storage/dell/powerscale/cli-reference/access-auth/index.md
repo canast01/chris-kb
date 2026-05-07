@@ -1,14 +1,6 @@
 # Access Zones & Authentication
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Authentication["Authentication"]
-    Authentication --> S0["Access Zones"]
-    Authentication --> S1["Authentication and Users"]
-```
-
 ---
 
 ## Access Zones

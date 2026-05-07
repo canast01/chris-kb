@@ -5,19 +5,6 @@
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Command reference by category with syntax and examples.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    on_Demand["on Demand"]
-    on_Demand --> S0["Where It Fits"]
-    on_Demand --> S1["Daily Checks"]
-    on_Demand --> S2["Health Commands"]
-    on_Demand --> S3["Common Issues"]
-    on_Demand --> S4["Operational Tasks"]
-    on_Demand --> S5["Upgrade Notes"]
-    on_Demand --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.

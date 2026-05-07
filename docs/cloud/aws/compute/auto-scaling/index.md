@@ -1,17 +1,4 @@
 # AWS Auto Scaling
-
-```mermaid
-flowchart LR
-    Auto_Scaling["Auto Scaling"]
-    Auto_Scaling --> S0["Where It Fits"]
-    Auto_Scaling --> S1["Daily Checks"]
-    Auto_Scaling --> S2["Health Commands"]
-    Auto_Scaling --> S3["Common Issues"]
-    Auto_Scaling --> S4["Operational Tasks"]
-    Auto_Scaling --> S5["Upgrade Notes"]
-    Auto_Scaling --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Auto Scaling notes for day-to-day infrastructure operations.

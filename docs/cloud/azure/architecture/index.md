@@ -1,16 +1,4 @@
 # Azure Architecture
-
-```mermaid
-flowchart LR
-    Azure_Architecture["Azure Architecture"]
-    Azure_Architecture --> S0["Management Group Hierarchy"]
-    Azure_Architecture --> S1["Network Architecture"]
-    Azure_Architecture --> S2["Compute Options"]
-    Azure_Architecture --> S3["High Availability"]
-    Azure_Architecture --> S4["Disaster Recovery"]
-    Azure_Architecture --> S5["Identity Architecture"]
-```
-
 ## Management Group Hierarchy
 
 ```

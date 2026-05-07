@@ -1,17 +1,4 @@
 # InsightIQ Scripts
-
-```mermaid
-flowchart LR
-    InsightIQ_Scripts["InsightIQ Scripts"]
-    InsightIQ_Scripts --> S0["Authentication"]
-    InsightIQ_Scripts --> S1["Export Performance Data"]
-    InsightIQ_Scripts --> S2["Cluster Connection Health Check"]
-    InsightIQ_Scripts --> S3["Threshold Alert Forwarding (SNMP)"]
-    InsightIQ_Scripts --> S4["Automated Weekly Report Generation"]
-    InsightIQ_Scripts --> S5["Script Inventory"]
-    InsightIQ_Scripts --> S6["OneFS Performance Query (Direct API)"]
-```
-
 ## Authentication
 
 Scripts authenticate to the InsightIQ REST API using basic authentication with the admin service account. Credentials are loaded from the secrets manager at runtime.

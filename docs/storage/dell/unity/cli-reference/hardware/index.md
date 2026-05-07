@@ -1,19 +1,6 @@
 # Physical Disks & Hardware
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
-
-```mermaid
-flowchart LR
-    Hardware["Hardware"]
-    Hardware --> S0["Disks"]
-    Hardware --> S1["Disk Groups"]
-    Hardware --> S2["Storage Processors"]
-    Hardware --> S3["Enclosures and DAEs"]
-    Hardware --> S4["Power Supplies and Fans"]
-    Hardware --> S5["Battery Backup Units (BBU)"]
-    Hardware --> S6["Hardware Health Summary"]
-```
-
 ## Disks
 
 ```bash

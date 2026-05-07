@@ -1,17 +1,4 @@
 # NetApp Operations — Support Cases
-
-```mermaid
-flowchart LR
-    NetApp_Operations["NetApp Operations"]
-    NetApp_Operations --> S0["Opening a Support Case"]
-    NetApp_Operations --> S1["Case Severity Levels"]
-    NetApp_Operations --> S2["Generating a Support Bundle"]
-    NetApp_Operations --> S3["Information to Include in a Case"]
-    NetApp_Operations --> S4["Keystone-Specific Cases"]
-    NetApp_Operations --> S5["Escalating a Case"]
-    NetApp_Operations --> S6["Tracking Open Cases"]
-```
-
 ## Opening a Support Case
 
 **Via NetApp Support Portal (mysupport.netapp.com):**

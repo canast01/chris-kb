@@ -1,16 +1,4 @@
 # Azure Runbook Template
-
-```mermaid
-flowchart LR
-    Runbook_Template["Runbook Template"]
-    Runbook_Template --> S0["Purpose"]
-    Runbook_Template --> S1["Common checks"]
-    Runbook_Template --> S2["Incident notes"]
-    Runbook_Template --> S3["Change notes"]
-    Runbook_Template --> S4["Useful commands"]
-    Runbook_Template --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure runbook template notes, checks, troubleshooting, commands, change notes, and field references.

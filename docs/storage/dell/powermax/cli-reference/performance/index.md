@@ -1,19 +1,6 @@
 # Performance & Statistics
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). `symstat` provides real-time and historical performance data. For richer analysis, use Unisphere for PowerMax Performance or Dell CloudIQ.
-
-```mermaid
-flowchart LR
-    Statistics["Statistics"]
-    Statistics --> S0["Storage Group Statistics"]
-    Statistics --> S1["Device Statistics"]
-    Statistics --> S2["Director and Port Statistics"]
-    Statistics --> S3["Back-End and Cache Statistics"]
-    Statistics --> S4["Key Performance Metrics"]
-    Statistics --> S5["Performance Data Collection for TAC"]
-    Statistics --> S6["Unisphere Performance (GUI)"]
-```
-
 ## Storage Group Statistics
 
 ```bash

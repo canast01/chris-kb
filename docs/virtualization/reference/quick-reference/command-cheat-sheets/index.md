@@ -1,14 +1,4 @@
 # Command Cheat Sheet
-
-```mermaid
-flowchart LR
-    Cheat_Sheet["Cheat Sheet"]
-    Cheat_Sheet --> S0["ESXi Host Commands"]
-    Cheat_Sheet --> S1["vSAN Commands"]
-    Cheat_Sheet --> S2["Network Checks"]
-    Cheat_Sheet --> S3["Log Locations"]
-```
-
 ## ESXi Host Commands
 
 ```bash

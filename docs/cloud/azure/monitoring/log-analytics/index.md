@@ -1,16 +1,4 @@
 # Log Analytics
-
-```mermaid
-flowchart LR
-    Log_Analytics["Log Analytics"]
-    Log_Analytics --> S0["Purpose"]
-    Log_Analytics --> S1["Common checks"]
-    Log_Analytics --> S2["Incident notes"]
-    Log_Analytics --> S3["Change notes"]
-    Log_Analytics --> S4["Useful commands"]
-    Log_Analytics --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Monitoring Log Analytics notes, checks, troubleshooting, commands, change notes, and field references.

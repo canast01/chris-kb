@@ -1,18 +1,4 @@
 # Aria Operations Lifecycle
-
-```mermaid
-flowchart LR
-    Operations_Lifecycle["Operations Lifecycle"]
-    Operations_Lifecycle --> S0["Upgrade Overview"]
-    Operations_Lifecycle --> S1["Pre-Upgrade Checklist"]
-    Operations_Lifecycle --> S2["Upgrade Procedure via LCM"]
-    Operations_Lifecycle --> S3["vCenter Version Compatibility"]
-    Operations_Lifecycle --> S4["Data Retention Configuration"]
-    Operations_Lifecycle --> S5["Management Pack Version Management"]
-    Operations_Lifecycle --> S6["Backup"]
-    Operations_Lifecycle --> S7["EOL Tracking"]
-```
-
 ## Upgrade Overview
 
 All Aria Operations upgrades in multi-node deployments must be orchestrated via **Aria Suite Lifecycle Manager (LCM)**. Manual in-place upgrades on multi-node clusters are not supported and can leave the cluster in an inconsistent state.

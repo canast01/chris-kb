@@ -1,18 +1,6 @@
 # Storage Groups
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). Storage Groups are the primary logical grouping mechanism in Unisphere for PowerMax and SYMCLI. Every device that is presented to a host must be in a Storage Group that is part of a Masking View.
-
-```mermaid
-flowchart LR
-    Storage_Groups["Storage Groups"]
-    Storage_Groups --> S0["List and Inspect"]
-    Storage_Groups --> S1["Create and Delete"]
-    Storage_Groups --> S2["Add and Remove Devices"]
-    Storage_Groups --> S3["Parent / Child Hierarchy"]
-    Storage_Groups --> S4["Rename and Modify"]
-    Storage_Groups --> S5["Quick Reference"]
-```
-
 ## List and Inspect
 
 ```bash

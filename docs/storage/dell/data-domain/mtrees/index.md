@@ -1,19 +1,6 @@
 # MTree Operations
 
 MTrees are the primary logical partitions on a Data Domain system. Each MTree maps to a directory under `/data/col1/` and can have independent quotas, replication, and retention lock settings.
-
-```mermaid
-flowchart LR
-    MTree_Operations["MTree Operations"]
-    MTree_Operations --> S0["Capacity and Usage"]
-    MTree_Operations --> S1["MTree Space Actions"]
-    MTree_Operations --> S2["Replication State"]
-    MTree_Operations --> S3["Retention Lock Review"]
-    MTree_Operations --> S4["Creating MTrees for New Backup Applications"]
-    MTree_Operations --> S5["Decommissioning an MTree"]
-    MTree_Operations --> S6["Health Summary"]
-```
-
 ## Capacity and Usage
 
 ```bash

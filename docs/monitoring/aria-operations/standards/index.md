@@ -1,17 +1,4 @@
 # Aria Operations Standards
-
-```mermaid
-flowchart LR
-    Operations_Standards["Operations Standards"]
-    Operations_Standards --> S0["Alert Naming Convention"]
-    Operations_Standards --> S1["Alert Policy Hierarchy"]
-    Operations_Standards --> S2["Super Metric Standards"]
-    Operations_Standards --> S3["Dashboard Naming Convention"]
-    Operations_Standards --> S4["Custom Group Naming"]
-    Operations_Standards --> S5["Report Schedules"]
-    Operations_Standards --> S6["Threshold Reference"]
-```
-
 ## Alert Naming Convention
 
 Alerts follow the pattern `ENV-OBJECT_TYPE-CONDITION` to ensure consistent filtering and automated routing.

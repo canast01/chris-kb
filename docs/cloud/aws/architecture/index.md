@@ -1,16 +1,4 @@
 # AWS Architecture
-
-```mermaid
-flowchart LR
-    AWS_Architecture["AWS Architecture"]
-    AWS_Architecture --> S0["Account Structure"]
-    AWS_Architecture --> S1["Network Architecture"]
-    AWS_Architecture --> S2["Compute"]
-    AWS_Architecture --> S3["High Availability"]
-    AWS_Architecture --> S4["Disaster Recovery"]
-    AWS_Architecture --> S5["IAM Structure"]
-```
-
 ## Account Structure
 
 AWS Organizations with a management account at the root; all production workloads in member accounts:

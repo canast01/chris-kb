@@ -1,16 +1,4 @@
 # Azure Backup
-
-```mermaid
-flowchart LR
-    Azure_Backup["Azure Backup"]
-    Azure_Backup --> S0["Purpose"]
-    Azure_Backup --> S1["Common checks"]
-    Azure_Backup --> S2["Incident notes"]
-    Azure_Backup --> S3["Change notes"]
-    Azure_Backup --> S4["Useful commands"]
-    Azure_Backup --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Backup and DR Azure Backup notes, checks, troubleshooting, commands, change notes, and field references.

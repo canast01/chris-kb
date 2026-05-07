@@ -1,14 +1,4 @@
 # ONTAP Troubleshooting
-
-```mermaid
-flowchart LR
-    ONTAP_Troubleshootin["ONTAP Troubleshooting"]
-    ONTAP_Troubleshootin --> S0["Common Issues"]
-    ONTAP_Troubleshootin --> S1["Diagnostic Commands"]
-    ONTAP_Troubleshootin --> S2["Log Locations"]
-    ONTAP_Troubleshootin --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

@@ -3,17 +3,6 @@
 Ollama is a tool for running large language models locally. You download models to your machine and talk to them through the `ollama` command or its built-in API server — no cloud account or API key required. Models are stored as layers (similar to Docker images) and run on your GPU if one is available, or fall back to CPU.
 
 > Install on macOS with `brew install ollama` or download from ollama.com. On Linux, use the install script: `curl -fsSL https://ollama.com/install.sh | sh`. Start the server with `ollama serve` (runs automatically as a service on macOS after install).
-
-```mermaid
-flowchart LR
-    Ollama["Ollama"]
-    Ollama --> S0["Model Management"]
-    Ollama --> S1["Running Models"]
-    Ollama --> S2["Server"]
-    Ollama --> S3["Custom Models (Modelfiles)"]
-    Ollama --> S4["Environment and Configuration"]
-```
-
 ---
 
 ## Model Management

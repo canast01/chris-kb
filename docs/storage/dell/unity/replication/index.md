@@ -1,20 +1,6 @@
 # Dell Unity Replication
 
 Replication session management, monitoring, and failover on Dell Unity.
-
-```mermaid
-flowchart LR
-    Unity_Replication["Unity Replication"]
-    Unity_Replication --> S0["Replication Sessions Overview"]
-    Unity_Replication --> S1["Replication Session States"]
-    Unity_Replication --> S2["Pause and Resume"]
-    Unity_Replication --> S3["Manual Sync"]
-    Unity_Replication --> S4["Planned Failover"]
-    Unity_Replication --> S5["Failback"]
-    Unity_Replication --> S6["Replication Connections"]
-    Unity_Replication --> S7["Create a Replication Session"]
-```
-
 ## Replication Sessions Overview
 
 ```bash

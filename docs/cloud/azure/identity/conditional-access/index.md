@@ -1,16 +1,4 @@
 # Conditional Access
-
-```mermaid
-flowchart LR
-    Conditional_Access["Conditional Access"]
-    Conditional_Access --> S0["Purpose"]
-    Conditional_Access --> S1["Common checks"]
-    Conditional_Access --> S2["Incident notes"]
-    Conditional_Access --> S3["Change notes"]
-    Conditional_Access --> S4["Useful commands"]
-    Conditional_Access --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Identity Conditional Access notes, checks, troubleshooting, commands, change notes, and field references.

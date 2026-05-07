@@ -1,20 +1,6 @@
 # VLANs
 
 VLANs segment network traffic into logical broadcast domains. In an enterprise infrastructure, separate VLANs are standard practice for management, storage (iSCSI, NFS), replication, vMotion, backup, SAN, and production traffic.
-
-```mermaid
-flowchart LR
-    VLANs["VLANs"]
-    VLANs --> S0["View VLANs (Cisco IOS/NX-OS)"]
-    VLANs --> S1["Create a VLAN"]
-    VLANs --> S2["Assign a Port to a VLAN (Access Port)"]
-    VLANs --> S3["Configure a Trunk Port"]
-    VLANs --> S4["Add / Remove VLANs on a Trunk"]
-    VLANs --> S5["VLAN Validation"]
-    VLANs --> S6["Common VLAN Use Cases"]
-    VLANs --> S7["Common Issues"]
-```
-
 ## View VLANs (Cisco IOS/NX-OS)
 
 ```bash

@@ -1,18 +1,6 @@
 # File Systems (NAS)
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
-
-```mermaid
-flowchart LR
-    NAS["(NAS)"]
-    NAS --> S0["NAS Servers"]
-    NAS --> S1["File Systems"]
-    NAS --> S2["NFS Shares"]
-    NAS --> S3["CIFS Shares"]
-    NAS --> S4["File System Snapshots"]
-    NAS --> S5["Common Issues"]
-```
-
 ## NAS Servers
 
 ```bash

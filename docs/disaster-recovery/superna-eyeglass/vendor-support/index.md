@@ -1,16 +1,4 @@
 # Superna Eyeglass Vendor Support
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Opening a Support Request"]
-    Vendor_Support --> S1["Required Information for SR"]
-    Vendor_Support --> S2["Severity Levels"]
-    Vendor_Support --> S3["License Issues"]
-    Vendor_Support --> S4["Escalation Path"]
-    Vendor_Support --> S5["Useful Log Locations (on Eyeglass Appliance)"]
-```
-
 ## Opening a Support Request
 
 Raise support cases at: [https://support.superna.net](https://support.superna.net)

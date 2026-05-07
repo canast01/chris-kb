@@ -1,17 +1,4 @@
 # AWS AMIs
-
-```mermaid
-flowchart LR
-    AWS_AMIs["AWS AMIs"]
-    AWS_AMIs --> S0["Where It Fits"]
-    AWS_AMIs --> S1["Daily Checks"]
-    AWS_AMIs --> S2["Health Commands"]
-    AWS_AMIs --> S3["Common Issues"]
-    AWS_AMIs --> S4["Operational Tasks"]
-    AWS_AMIs --> S5["Upgrade Notes"]
-    AWS_AMIs --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS AMIs notes for day-to-day infrastructure operations.

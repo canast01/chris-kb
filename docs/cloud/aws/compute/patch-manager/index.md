@@ -1,17 +1,4 @@
 # AWS Patch Manager
-
-```mermaid
-flowchart LR
-    Patch_Manager["Patch Manager"]
-    Patch_Manager --> S0["Where It Fits"]
-    Patch_Manager --> S1["Daily Checks"]
-    Patch_Manager --> S2["Health Commands"]
-    Patch_Manager --> S3["Common Issues"]
-    Patch_Manager --> S4["Operational Tasks"]
-    Patch_Manager --> S5["Upgrade Notes"]
-    Patch_Manager --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Patch Manager notes for day-to-day infrastructure operations.

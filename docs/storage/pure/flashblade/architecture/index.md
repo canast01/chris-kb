@@ -1,14 +1,4 @@
 # FlashBlade Architecture
-
-```mermaid
-flowchart LR
-    FlashBlade_Architect["FlashBlade Architectur"]
-    FlashBlade_Architect --> S0["Components"]
-    FlashBlade_Architect --> S1["HA Topology"]
-    FlashBlade_Architect --> S2["Connectivity"]
-    FlashBlade_Architect --> S3["Sizing Guidelines"]
-```
-
 ## Overview
 
 Pure Storage FlashBlade is a scale-out all-flash storage platform running Purity//FB OS, purpose-built for unstructured data workloads: AI/ML training data, analytics, high-performance computing, backup repositories, and large-scale file storage. The design philosophy differs fundamentally from FlashArray — rather than a fixed dual-controller appliance, FlashBlade is a disaggregated scale-out architecture where both compute and flash capacity scale together by adding blades to a chassis.

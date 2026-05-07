@@ -12,15 +12,6 @@
 <a class="kb-card" href="security/"><strong>Security</strong><span>Hardening checklist, RBAC, encryption, audit logging, and compliance.</span></a>
 <a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    Veeam["Veeam"]
-    Veeam --> S0["Daily Checks"]
-    Veeam --> S1["Health Commands"]
-    Veeam --> S2["Upgrade Workflow"]
-```
-
 ## Overview
 
 Veeam provides backup, replication, recovery, and disaster recovery capabilities for virtual, physical, and cloud workloads.

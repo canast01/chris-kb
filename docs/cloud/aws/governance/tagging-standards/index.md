@@ -1,17 +1,4 @@
 # AWS Tagging Standards
-
-```mermaid
-flowchart LR
-    Tagging_Standards["Tagging Standards"]
-    Tagging_Standards --> S0["Where It Fits"]
-    Tagging_Standards --> S1["Daily Checks"]
-    Tagging_Standards --> S2["Health Commands"]
-    Tagging_Standards --> S3["Common Issues"]
-    Tagging_Standards --> S4["Operational Tasks"]
-    Tagging_Standards --> S5["Upgrade Notes"]
-    Tagging_Standards --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Tagging Standards notes for day-to-day infrastructure operations.

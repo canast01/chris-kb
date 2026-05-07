@@ -1,17 +1,6 @@
 # Alarms & Events
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Events["Events"]
-    Events --> S0["Triggered Alarms"]
-    Events --> S1["Acknowledge and Reset Alarms"]
-    Events --> S2["Events"]
-    Events --> S3["Export Events to CSV"]
-    Events --> S4["Common Event Types"]
-```
-
 ## Triggered Alarms
 
 ```powershell

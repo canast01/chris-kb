@@ -1,13 +1,4 @@
 # ONTAP Standards
-
-```mermaid
-flowchart LR
-    ONTAP_Standards["ONTAP Standards"]
-    ONTAP_Standards --> S0["Naming Conventions"]
-    ONTAP_Standards --> S1["Build Baseline"]
-    ONTAP_Standards --> S2["Configuration Checklist"]
-```
-
 ## Naming Conventions
 
 | Object | Pattern | Example |

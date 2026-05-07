@@ -1,17 +1,6 @@
 # AWS Organizations
 
 AWS Organizations — multi-account management, service control policies (SCPs), and consolidated billing.
-
-```mermaid
-flowchart LR
-    AWS_Organizations["AWS Organizations"]
-    AWS_Organizations --> S0["Key Concepts"]
-    AWS_Organizations --> S1["Common CLI Commands"]
-    AWS_Organizations --> S2["Service Control Policy (SCP) Examples"]
-    AWS_Organizations --> S3["Consolidated Billing"]
-    AWS_Organizations --> S4["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

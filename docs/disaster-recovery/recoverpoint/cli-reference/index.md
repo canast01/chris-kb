@@ -1,16 +1,6 @@
 # RecoverPoint CLI Reference
 
 > Part of the [RecoverPoint](../) reference.
-
-```mermaid
-flowchart LR
-    RecoverPoint["RecoverPoint"]
-    RecoverPoint --> S0["Overview"]
-    RecoverPoint --> S1["boxmgmt CLI"]
-    RecoverPoint --> S2["RPAPI REST"]
-    RecoverPoint --> S3["Key Operational Scenarios"]
-```
-
 ---
 
 ## Overview

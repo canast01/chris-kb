@@ -1,14 +1,4 @@
 # ONTAP Architecture
-
-```mermaid
-flowchart LR
-    ONTAP_Architecture["ONTAP Architecture"]
-    ONTAP_Architecture --> S0["Components"]
-    ONTAP_Architecture --> S1["HA Topology"]
-    ONTAP_Architecture --> S2["Connectivity"]
-    ONTAP_Architecture --> S3["Sizing Guidelines"]
-```
-
 ## Overview
 
 NetApp ONTAP is a clustered storage operating system that abstracts physical hardware into logical constructs, enabling non-disruptive operations, multi-protocol data access, and built-in data protection. The hierarchy flows from cluster → nodes → aggregates → SVMs → volumes, with data served across NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3 protocols simultaneously from a single cluster.

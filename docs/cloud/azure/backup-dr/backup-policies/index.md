@@ -1,16 +1,4 @@
 # Backup Policies
-
-```mermaid
-flowchart LR
-    Backup_Policies["Backup Policies"]
-    Backup_Policies --> S0["Purpose"]
-    Backup_Policies --> S1["Common checks"]
-    Backup_Policies --> S2["Incident notes"]
-    Backup_Policies --> S3["Change notes"]
-    Backup_Policies --> S4["Useful commands"]
-    Backup_Policies --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Backup and DR Backup Policies notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,17 +1,4 @@
 # Health Checks
-
-```mermaid
-flowchart LR
-    Health_Checks["Health Checks"]
-    Health_Checks --> S0["Daily Health Check"]
-    Health_Checks --> S1["Weekly Health Check"]
-    Health_Checks --> S2["Capacity Monitoring"]
-    Health_Checks --> S3["Replication Health"]
-    Health_Checks --> S4["Hardware Health"]
-    Health_Checks --> S5["Pre-Change Checklist"]
-    Health_Checks --> S6["Health Summary Table"]
-```
-
 ## Daily Health Check
 
 ```bash

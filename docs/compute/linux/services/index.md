@@ -1,20 +1,6 @@
 # Linux Services
 
 Managing systemd services on RHEL and Ubuntu.
-
-```mermaid
-flowchart LR
-    Linux_Services["Linux Services"]
-    Linux_Services --> S0["Service Status and Control"]
-    Linux_Services --> S1["Listing Services"]
-    Linux_Services --> S2["Service Logs"]
-    Linux_Services --> S3["Service Dependencies"]
-    Linux_Services --> S4["Creating a Custom Service"]
-    Linux_Services --> S5["Common Infrastructure Services"]
-    Linux_Services --> S6["Restart Policies"]
-    Linux_Services --> S7["Service Resource Limits"]
-```
-
 ## Service Status and Control
 
 ```bash

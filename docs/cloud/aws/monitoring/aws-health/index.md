@@ -1,17 +1,4 @@
 # AWS AWS Health
-
-```mermaid
-flowchart LR
-    AWS_Health["AWS Health"]
-    AWS_Health --> S0["Where It Fits"]
-    AWS_Health --> S1["Daily Checks"]
-    AWS_Health --> S2["Health Commands"]
-    AWS_Health --> S3["Common Issues"]
-    AWS_Health --> S4["Operational Tasks"]
-    AWS_Health --> S5["Upgrade Notes"]
-    AWS_Health --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS AWS Health notes for day-to-day infrastructure operations.

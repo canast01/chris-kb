@@ -1,16 +1,4 @@
 # Azure CLI Cheatsheet
-
-```mermaid
-flowchart LR
-    Azure["Azure"]
-    Azure --> S0["Purpose"]
-    Azure --> S1["Common checks"]
-    Azure --> S2["Incident notes"]
-    Azure --> S3["Change notes"]
-    Azure --> S4["Useful commands"]
-    Azure --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure CLI notes, checks, troubleshooting, commands, change notes, and field references.

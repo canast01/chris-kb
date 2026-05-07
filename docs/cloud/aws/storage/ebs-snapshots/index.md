@@ -1,17 +1,4 @@
 # AWS EBS Snapshots
-
-```mermaid
-flowchart LR
-    EBS_Snapshots["EBS Snapshots"]
-    EBS_Snapshots --> S0["Where It Fits"]
-    EBS_Snapshots --> S1["Daily Checks"]
-    EBS_Snapshots --> S2["Health Commands"]
-    EBS_Snapshots --> S3["Common Issues"]
-    EBS_Snapshots --> S4["Operational Tasks"]
-    EBS_Snapshots --> S5["Upgrade Notes"]
-    EBS_Snapshots --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS EBS Snapshots notes for day-to-day infrastructure operations.

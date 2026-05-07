@@ -1,17 +1,4 @@
 # Nexus Dashboard Architecture
-
-```mermaid
-flowchart LR
-    Dashboard_Architectu["Dashboard Architecture"]
-    Dashboard_Architectu --> S0["Cluster Architecture"]
-    Dashboard_Architectu --> S1["Deployment Modes"]
-    Dashboard_Architectu --> S2["Services on Nexus Dashboard"]
-    Dashboard_Architectu --> S3["ACI Integration"]
-    Dashboard_Architectu --> S4["NX-OS / NDFC Integration"]
-    Dashboard_Architectu --> S5["Node Communication"]
-    Dashboard_Architectu --> S6["Network Interfaces"]
-```
-
 ## Overview
 
 Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS data centre fabrics. It provides unified management, health monitoring, policy orchestration, and network insights through a microservices-based architecture. Services including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) run on top of the ND platform and are independently licensed and deployed.

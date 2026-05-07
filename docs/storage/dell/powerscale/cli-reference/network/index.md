@@ -1,19 +1,6 @@
 # Network
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Network["Network"]
-    Network --> S0["Interfaces"]
-    Network --> S1["Subnets"]
-    Network --> S2["IP Pools (SmartConnect)"]
-    Network --> S3["SmartConnect Zones (DNS Balancing)"]
-    Network --> S4["DNS Settings"]
-    Network --> S5["Connectivity Test"]
-    Network --> S6["Common Issues"]
-```
-
 ## Interfaces
 
 ```bash

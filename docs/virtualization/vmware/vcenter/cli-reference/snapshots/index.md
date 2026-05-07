@@ -1,18 +1,6 @@
 # Snapshots
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Snapshots["Snapshots"]
-    Snapshots --> S0["List Snapshots"]
-    Snapshots --> S1["Create Snapshots"]
-    Snapshots --> S2["Remove Snapshots"]
-    Snapshots --> S3["Revert to Snapshot"]
-    Snapshots --> S4["Snapshot Consolidation"]
-    Snapshots --> S5["Snapshot Best Practices"]
-```
-
 ## List Snapshots
 
 ```powershell

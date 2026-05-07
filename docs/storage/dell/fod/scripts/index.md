@@ -3,20 +3,6 @@
 > Part of the [Dell Flex on Demand](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Metered Usage Reporter"]
-    Scripts --> S1["Burst Detection Script"]
-    Scripts --> S2["Ansible FOD Audit Playbook"]
-    Scripts --> S3["Windows: FOD License Status via Unisphere REST API (PowerShell)"]
-    Scripts --> S4["Daily Check Script"]
-    Scripts --> S5["Incident Triage Script"]
-    Scripts --> S6["Change Pre-Check Script"]
-    Scripts --> S7["Post-Change Validation Script"]
-```
-
 ## Metered Usage Reporter
 
 Queries the CloudIQ REST API to pull capacity metrics for all FOD-enrolled systems and prints a monthly usage report showing committed baseline, current consumed, and burst delta. Flags any system where consumption exceeds the committed tier.

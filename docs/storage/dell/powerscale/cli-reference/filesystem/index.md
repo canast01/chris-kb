@@ -1,14 +1,6 @@
 # File System & Quotas
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Quotas["Quotas"]
-    Quotas --> S0["File System — Directories"]
-    Quotas --> S1["Quotas"]
-```
-
 ---
 
 ## File System — Directories

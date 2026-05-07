@@ -1,17 +1,6 @@
 # Pure1 CLI Reference
 
 Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure1` CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is `https://api.pure1.purestorage.com/api/1.latest`.
-
-```mermaid
-flowchart LR
-    Pure1["Pure1"]
-    Pure1 --> S0["Arrays and Fleet"]
-    Pure1 --> S1["Health and Alerts"]
-    Pure1 --> S2["Metrics"]
-    Pure1 --> S3["Capacity"]
-    Pure1 --> S4["Python SDK Example"]
-```
-
 ---
 
 ## Authentication

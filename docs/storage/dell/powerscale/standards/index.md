@@ -1,13 +1,4 @@
 # PowerScale Standards
-
-```mermaid
-flowchart LR
-    PowerScale_Standards["PowerScale Standards"]
-    PowerScale_Standards --> S0["Naming Conventions"]
-    PowerScale_Standards --> S1["Build Baseline"]
-    PowerScale_Standards --> S2["Configuration Checklist"]
-```
-
 ## Naming Conventions
 
 | Object | Convention | Example |

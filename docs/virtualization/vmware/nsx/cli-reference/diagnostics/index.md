@@ -1,20 +1,6 @@
 # Diagnostics & Troubleshooting
 
 > Part of the [NSX-T CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Troubleshooting["Troubleshooting"]
-    Troubleshooting --> S0["Central CLI (NSX Manager)"]
-    Troubleshooting --> S1["Traceflow"]
-    Troubleshooting --> S2["Packet Capture on Edge Node"]
-    Troubleshooting --> S3["Log Management"]
-    Troubleshooting --> S4["Connectivity Tests"]
-    Troubleshooting --> S5["BGP and Routing Diagnostics"]
-    Troubleshooting --> S6["Health and Cluster Status"]
-    Troubleshooting --> S7["Common Diagnostic Scenarios"]
-```
-
 ## Central CLI (NSX Manager)
 
 ```bash

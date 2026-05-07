@@ -1,17 +1,4 @@
 # AWS NAT Gateway
-
-```mermaid
-flowchart LR
-    NAT_Gateway["NAT Gateway"]
-    NAT_Gateway --> S0["Where It Fits"]
-    NAT_Gateway --> S1["Daily Checks"]
-    NAT_Gateway --> S2["Health Commands"]
-    NAT_Gateway --> S3["Common Issues"]
-    NAT_Gateway --> S4["Operational Tasks"]
-    NAT_Gateway --> S5["Upgrade Notes"]
-    NAT_Gateway --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS NAT Gateway notes for day-to-day infrastructure operations.

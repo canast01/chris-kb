@@ -26,18 +26,6 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    Fibre_Channel["Fibre Channel"]
-    Fibre_Channel --> S0["Key Concepts"]
-    Fibre_Channel --> S1["FC Port Speeds"]
-    Fibre_Channel --> S2["Health Checks — Cisco MDS"]
-    Fibre_Channel --> S3["Health Checks — Brocade"]
-    Fibre_Channel --> S4["Zoning Operations"]
-    Fibre_Channel --> S5["Troubleshooting"]
-```
-
 ## Key Concepts
 
 | Concept | Description |

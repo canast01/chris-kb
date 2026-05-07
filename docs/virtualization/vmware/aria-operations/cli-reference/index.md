@@ -1,16 +1,4 @@
 # Aria Operations — CLI Reference
-
-```mermaid
-flowchart LR
-    N["—"]
-    N --> S0["Access"]
-    N --> S1["vracli Commands"]
-    N --> S2["chkconfig (Legacy / Service Enable/Disable)"]
-    N --> S3["Useful Paths"]
-    N --> S4["REST API Quick Reference"]
-    N --> S5["Related Sections"]
-```
-
 ## Access
 
 ```bash

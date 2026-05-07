@@ -19,15 +19,6 @@
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    NTP["NTP"]
-    NTP --> S0["Daily Checks"]
-    NTP --> S1["Health Commands"]
-    NTP --> S2["Upgrade Workflow"]
-```
-
 ## Overview
 
 NTP keeps infrastructure time synchronized. Time drift can break authentication, certificates, logging, replication, clustering, and audit trails.

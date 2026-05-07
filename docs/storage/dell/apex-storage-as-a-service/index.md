@@ -5,19 +5,6 @@
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Command reference by category with syntax and examples.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
-
-```mermaid
-flowchart LR
-    a_Service["a Service"]
-    a_Service --> S0["Where It Fits"]
-    a_Service --> S1["Daily Checks"]
-    a_Service --> S2["Health Commands"]
-    a_Service --> S3["Common Issues"]
-    a_Service --> S4["Operational Tasks"]
-    a_Service --> S5["Upgrade Notes"]
-    a_Service --> S6["Best Practices"]
-```
-
 ## Overview
 
 Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.

@@ -3,20 +3,6 @@
 > Part of the [Dell Capacity on Demand](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Array Capacity vs. COD Reserve Reporter"]
-    Scripts --> S1["COD Threshold Alerter"]
-    Scripts --> S2["Ansible COD Capacity Audit Playbook"]
-    Scripts --> S3["Windows: COD License Query via Unisphere REST API (PowerShell)"]
-    Scripts --> S4["Daily Check Script"]
-    Scripts --> S5["Incident Triage Script"]
-    Scripts --> S6["Change Pre-Check Script"]
-    Scripts --> S7["Post-Change Validation Script"]
-```
-
 ## Array Capacity vs. COD Reserve Reporter
 
 Queries SYMCLI to report total installed capacity, activated capacity, and remaining COD reserve for a PowerMax array. Warns if activated capacity exceeds 80% of total installed (i.e., COD reserve is running low).

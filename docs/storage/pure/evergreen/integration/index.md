@@ -1,15 +1,4 @@
 # Pure Storage Evergreen Integration
-
-```mermaid
-flowchart LR
-    Evergreen_Integratio["Evergreen Integration"]
-    Evergreen_Integratio --> S0["Pure1 Integration"]
-    Evergreen_Integratio --> S1["True Forward Capacity Upgrades"]
-    Evergreen_Integratio --> S2["VMware Integration"]
-    Evergreen_Integratio --> S3["Backup Integration"]
-    Evergreen_Integratio --> S4["REST API"]
-```
-
 ## Pure1 Integration
 
 All Evergreen subscriptions are managed through the Pure1 cloud management platform (https://pure1.purestorage.com). Pure1 provides:

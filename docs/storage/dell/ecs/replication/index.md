@@ -1,18 +1,6 @@
 # ECS Replication
 
 ECS replication provides geo-redundancy by replicating objects across sites using replication groups.
-
-```mermaid
-flowchart LR
-    ECS_Replication["ECS Replication"]
-    ECS_Replication --> S0["Replication Groups"]
-    ECS_Replication --> S1["Monitoring Replication"]
-    ECS_Replication --> S2["Replication Failure Response"]
-    ECS_Replication --> S3["Cross-VDC Failover"]
-    ECS_Replication --> S4["Bandwidth Management"]
-    ECS_Replication --> S5["Common Issues"]
-```
-
 ## Replication Groups
 
 ECS uses **replication groups** to define which VDCs (Virtual Data Centers) participate in replication and the replication mode:

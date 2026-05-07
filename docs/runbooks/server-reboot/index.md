@@ -1,16 +1,4 @@
 # Server Reboot Runbook
-
-```mermaid
-flowchart LR
-    Reboot_Runbook["Reboot Runbook"]
-    Reboot_Runbook --> S0["Pre-Checks"]
-    Reboot_Runbook --> S1["Graceful Service Shutdown (if required)"]
-    Reboot_Runbook --> S2["Reboot"]
-    Reboot_Runbook --> S3["Post-Reboot Validation"]
-    Reboot_Runbook --> S4["Checklist"]
-    Reboot_Runbook --> S5["Common Issues"]
-```
-
 ## Pre-Checks
 
 ```bash

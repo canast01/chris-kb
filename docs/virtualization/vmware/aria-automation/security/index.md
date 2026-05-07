@@ -1,16 +1,4 @@
 # Aria Automation — Security
-
-```mermaid
-flowchart LR
-    Aria_Automation["Aria Automation"]
-    Aria_Automation --> S0["RBAC Model"]
-    Aria_Automation --> S1["Secrets and Encrypted Properties"]
-    Aria_Automation --> S2["TLS Certificate Management"]
-    Aria_Automation --> S3["API Token Rotation"]
-    Aria_Automation --> S4["Audit Logging"]
-    Aria_Automation --> S5["Hardening Checklist"]
-```
-
 ## RBAC Model
 
 Aria Automation uses a **project-based access control** model. All resource provisioning is scoped to a project.

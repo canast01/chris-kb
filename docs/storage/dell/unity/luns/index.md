@@ -1,19 +1,6 @@
 # Dell Unity LUNs
 
 LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.
-
-```mermaid
-flowchart LR
-    Unity_LUNs["Unity LUNs"]
-    Unity_LUNs --> S0["LUN Overview"]
-    Unity_LUNs --> S1["Create a LUN"]
-    Unity_LUNs --> S2["Modify and Expand"]
-    Unity_LUNs --> S3["Host Access (LUN Mapping)"]
-    Unity_LUNs --> S4["LUN Snapshots"]
-    Unity_LUNs --> S5["Delete a LUN"]
-    Unity_LUNs --> S6["Host-Side Validation (After Mapping)"]
-```
-
 ## LUN Overview
 
 ```bash

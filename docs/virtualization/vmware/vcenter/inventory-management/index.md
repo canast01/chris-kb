@@ -1,17 +1,4 @@
 # vCenter Inventory Management
-
-```mermaid
-flowchart LR
-    Inventory_Management["Inventory Management"]
-    Inventory_Management --> S0["Where It Fits"]
-    Inventory_Management --> S1["Daily Checks"]
-    Inventory_Management --> S2["Health Commands"]
-    Inventory_Management --> S3["Common Issues"]
-    Inventory_Management --> S4["Operational Tasks"]
-    Inventory_Management --> S5["Upgrade Notes"]
-    Inventory_Management --> S6["Best Practices"]
-```
-
 ## Overview
 
 vCenter inventory structure, folders, clusters, hosts, datastores, networks, and object ownership.

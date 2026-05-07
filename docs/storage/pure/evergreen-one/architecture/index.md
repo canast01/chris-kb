@@ -1,14 +1,4 @@
 # Pure Storage Evergreen//One Architecture
-
-```mermaid
-flowchart LR
-    Evergreen__One_Archi["Evergreen//One Archite"]
-    Evergreen__One_Archi --> S0["Components"]
-    Evergreen__One_Archi --> S1["HA Topology"]
-    Evergreen__One_Archi --> S2["Connectivity"]
-    Evergreen__One_Archi --> S3["Sizing and Capacity Model"]
-```
-
 ## Overview
 
 Evergreen//One is Pure Storage's Storage-as-a-Service (STaaS) consumption model. Unlike Evergreen//Forever or Evergreen//Flex — where the customer owns the subscription and hardware is refreshed in place — Evergreen//One means **Pure owns and manages the hardware**. The FlashArray or FlashBlade equipment is installed on the customer's premises (or in a designated colocation facility), but it remains Pure's property throughout the service term. The customer pays for consumed capacity on a monthly basis against a committed reserve tier, with burst capacity available on demand above the reserve.

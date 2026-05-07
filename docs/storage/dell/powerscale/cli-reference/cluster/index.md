@@ -1,19 +1,6 @@
 # Cluster Status & Identity
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
-
-```mermaid
-flowchart LR
-    Identity["Identity"]
-    Identity --> S0["Cluster Identity"]
-    Identity --> S1["Node Status"]
-    Identity --> S2["Cluster Statistics"]
-    Identity --> S3["Node Hardware"]
-    Identity --> S4["Adding and Removing Nodes"]
-    Identity --> S5["Cluster Events and Jobs"]
-    Identity --> S6["Quick Cluster Health"]
-```
-
 ## Cluster Identity
 
 ```bash

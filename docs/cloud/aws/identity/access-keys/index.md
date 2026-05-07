@@ -1,17 +1,4 @@
 # AWS Access Keys
-
-```mermaid
-flowchart LR
-    Access_Keys["Access Keys"]
-    Access_Keys --> S0["Where It Fits"]
-    Access_Keys --> S1["Daily Checks"]
-    Access_Keys --> S2["Health Commands"]
-    Access_Keys --> S3["Common Issues"]
-    Access_Keys --> S4["Operational Tasks"]
-    Access_Keys --> S5["Upgrade Notes"]
-    Access_Keys --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Access Keys notes for day-to-day infrastructure operations.

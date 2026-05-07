@@ -1,15 +1,4 @@
 # Superna Eyeglass Lifecycle
-
-```mermaid
-flowchart LR
-    Eyeglass_Lifecycle["Eyeglass Lifecycle"]
-    Eyeglass_Lifecycle --> S0["Version Compatibility Matrix"]
-    Eyeglass_Lifecycle --> S1["Upgrade Procedure"]
-    Eyeglass_Lifecycle --> S2["OneFS Upgrade Impact"]
-    Eyeglass_Lifecycle --> S3["EOL Tracking"]
-    Eyeglass_Lifecycle --> S4["License Management"]
-```
-
 ## Version Compatibility Matrix
 
 Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.

@@ -1,18 +1,6 @@
 # Compatibility Review
 
 Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.
-
-```mermaid
-flowchart LR
-    Compatibility_Review["Compatibility Review"]
-    Compatibility_Review --> S0["VMware Product Interoperability Matrix"]
-    Compatibility_Review --> S1["Hardware Compatibility"]
-    Compatibility_Review --> S2["Third-Party Tool Compatibility"]
-    Compatibility_Review --> S3["VMware Tools and VM Hardware"]
-    Compatibility_Review --> S4["Certificate Compatibility"]
-    Compatibility_Review --> S5["Compatibility Review Sign-Off Checklist"]
-```
-
 ## VMware Product Interoperability Matrix
 
 Primary source: [VMware Product Interoperability Matrix](https://interopmatrix.vmware.com/)

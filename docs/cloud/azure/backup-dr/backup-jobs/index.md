@@ -1,16 +1,4 @@
 # Backup Jobs
-
-```mermaid
-flowchart LR
-    Backup_Jobs["Backup Jobs"]
-    Backup_Jobs --> S0["Purpose"]
-    Backup_Jobs --> S1["Common checks"]
-    Backup_Jobs --> S2["Incident notes"]
-    Backup_Jobs --> S3["Change notes"]
-    Backup_Jobs --> S4["Useful commands"]
-    Backup_Jobs --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Backup and DR Backup Jobs notes, checks, troubleshooting, commands, change notes, and field references.

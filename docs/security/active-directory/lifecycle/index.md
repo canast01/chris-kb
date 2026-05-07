@@ -3,18 +3,6 @@
 Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported. Raising functional levels is a one-way operation and requires all DCs to run at least the corresponding Windows Server version. SYSVOL replication must be migrated from FRS to DFSR before the domain functional level can be raised to Windows Server 2008 R2 or higher.
 
 ---
-
-```mermaid
-flowchart LR
-    Directory_Lifecycle["Directory Lifecycle"]
-    Directory_Lifecycle --> S0["Domain and Forest Functional Levels"]
-    Directory_Lifecycle --> S1["SYSVOL FRS to DFSR Migration"]
-    Directory_Lifecycle --> S2["AD Schema Updates"]
-    Directory_Lifecycle --> S3["FSMO Role Management"]
-    Directory_Lifecycle --> S4["DC Decommission Procedure"]
-    Directory_Lifecycle --> S5["AD Recycle Bin"]
-```
-
 ## Domain and Forest Functional Levels
 
 | Domain Functional Level | Minimum DC OS | Key Feature Unlocked |

@@ -1,16 +1,4 @@
 # Catalog
-
-```mermaid
-flowchart LR
-    Catalog["Catalog"]
-    Catalog --> S0["Purpose"]
-    Catalog --> S1["Common checks"]
-    Catalog --> S2["Incident notes"]
-    Catalog --> S3["Change notes"]
-    Catalog --> S4["Useful commands"]
-    Catalog --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Netbackup Catalog notes, checks, troubleshooting, commands, change notes, and field references.

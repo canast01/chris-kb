@@ -1,14 +1,4 @@
 # VM Lifecycle Runbook
-
-```mermaid
-flowchart LR
-    Lifecycle_Runbook["Lifecycle Runbook"]
-    Lifecycle_Runbook --> S0["Pre-Checks"]
-    Lifecycle_Runbook --> S1["Steps"]
-    Lifecycle_Runbook --> S2["Validation"]
-    Lifecycle_Runbook --> S3["Rollback"]
-```
-
 ## Overview
 
 Use this for VM build, change, ownership, review, retirement, and cleanup.

@@ -1,16 +1,4 @@
 # Accounts
-
-```mermaid
-flowchart LR
-    Accounts["Accounts"]
-    Accounts --> S0["Purpose"]
-    Accounts --> S1["Common checks"]
-    Accounts --> S2["Incident notes"]
-    Accounts --> S3["Change notes"]
-    Accounts --> S4["Useful commands"]
-    Accounts --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Cyberark Accounts notes, checks, troubleshooting, commands, change notes, and field references.

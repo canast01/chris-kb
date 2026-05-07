@@ -1,19 +1,6 @@
 # Azure Site Recovery
 
 Azure Site Recovery (ASR) — VM replication, failover, and failback between Azure regions or from on-premises.
-
-```mermaid
-flowchart LR
-    Site_Recovery["Site Recovery"]
-    Site_Recovery --> S0["Supported Scenarios"]
-    Site_Recovery --> S1["Common Azure CLI Commands"]
-    Site_Recovery --> S2["Health Checks"]
-    Site_Recovery --> S3["Test Failover Workflow"]
-    Site_Recovery --> S4["Planned Failover (migration, no data loss)"]
-    Site_Recovery --> S5["Failback to Primary"]
-    Site_Recovery --> S6["Common Issues"]
-```
-
 ## Supported Scenarios
 
 | Source | Target | Method |

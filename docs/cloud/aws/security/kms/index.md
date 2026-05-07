@@ -1,17 +1,4 @@
 # AWS KMS
-
-```mermaid
-flowchart LR
-    AWS_KMS["AWS KMS"]
-    AWS_KMS --> S0["Where It Fits"]
-    AWS_KMS --> S1["Daily Checks"]
-    AWS_KMS --> S2["Health Commands"]
-    AWS_KMS --> S3["Common Issues"]
-    AWS_KMS --> S4["Operational Tasks"]
-    AWS_KMS --> S5["Upgrade Notes"]
-    AWS_KMS --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS KMS notes for day-to-day infrastructure operations.

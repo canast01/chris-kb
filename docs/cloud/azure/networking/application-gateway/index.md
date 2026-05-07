@@ -1,16 +1,4 @@
 # Application Gateway
-
-```mermaid
-flowchart LR
-    Application_Gateway["Application Gateway"]
-    Application_Gateway --> S0["Purpose"]
-    Application_Gateway --> S1["Common checks"]
-    Application_Gateway --> S2["Incident notes"]
-    Application_Gateway --> S3["Change notes"]
-    Application_Gateway --> S4["Useful commands"]
-    Application_Gateway --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Networking Application Gateway notes, checks, troubleshooting, commands, change notes, and field references.

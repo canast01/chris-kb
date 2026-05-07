@@ -1,20 +1,6 @@
 # Deployment Procedure
 
 Standard procedure for deploying infrastructure or application changes safely within an approved change window.
-
-```mermaid
-flowchart LR
-    Deployment_Procedure["Deployment Procedure"]
-    Deployment_Procedure --> S0["Pre-Deployment Checklist"]
-    Deployment_Procedure --> S1["Phase 1 — Preparation (before window)"]
-    Deployment_Procedure --> S2["Phase 2 — Implementation"]
-    Deployment_Procedure --> S3["Phase 3 — Validation"]
-    Deployment_Procedure --> S4["Phase 4 — Monitoring Soak"]
-    Deployment_Procedure --> S5["Phase 5 — Close"]
-    Deployment_Procedure --> S6["Rollback Decision Tree"]
-    Deployment_Procedure --> S7["Rollback Steps"]
-```
-
 ## Pre-Deployment Checklist
 
 - [ ] Change ticket approved and in "Implementation" state

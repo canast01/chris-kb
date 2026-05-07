@@ -1,18 +1,6 @@
 # Object Store (S3)
 
 > Part of the Pure FlashBlade CLI Reference.
-
-```mermaid
-flowchart LR
-    S3["(S3)"]
-    S3 --> S0["Buckets"]
-    S3 --> S1["Accounts"]
-    S3 --> S2["Users"]
-    S3 --> S3["Access Keys"]
-    S3 --> S4["Bucket Replication"]
-    S3 --> S5["S3 Endpoint"]
-```
-
 ## Buckets
 
 ```bash

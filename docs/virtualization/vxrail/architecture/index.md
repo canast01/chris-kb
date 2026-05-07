@@ -3,18 +3,6 @@
 > Part of the [VxRail](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    VxRail_Architecture["VxRail Architecture"]
-    VxRail_Architecture --> S0["Cluster Topology"]
-    VxRail_Architecture --> S1["Node Components"]
-    VxRail_Architecture --> S2["Network Design"]
-    VxRail_Architecture --> S3["Storage Layer (vSAN)"]
-    VxRail_Architecture --> S4["Management Plane"]
-    VxRail_Architecture --> S5["Lifecycle Management"]
-```
-
 ## Overview
 
 VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Each node contributes local compute (CPU, RAM), NVMe flash cache, and capacity storage to a unified cluster. VxRail Manager orchestrates all lifecycle and configuration operations by communicating with vCenter.

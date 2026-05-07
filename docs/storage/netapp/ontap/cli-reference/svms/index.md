@@ -3,21 +3,6 @@
 > Part of the [NetApp ONTAP CLI Reference](../).
 
 SVMs (also called Vservers) are the data access layer in ONTAP. Each SVM has its own namespace, protocols, network interfaces, and security configuration.
-
-```mermaid
-flowchart LR
-    Machines["Machines)"]
-    Machines --> S0["List and View SVMs"]
-    Machines --> S1["Create an SVM"]
-    Machines --> S2["Delete an SVM"]
-    Machines --> S3["Protocol Management"]
-    Machines --> S4["Network Interfaces (LIFs)"]
-    Machines --> S5["CIFS / Active Directory Join"]
-    Machines --> S6["NFS Service"]
-    Machines --> S7["SVM State Management"]
-    Machines --> S8["SVM DR (Disaster Recovery)"]
-```
-
 ## List and View SVMs
 
 ```bash

@@ -1,16 +1,4 @@
 # Expiration
-
-```mermaid
-flowchart LR
-    Expiration["Expiration"]
-    Expiration --> S0["Purpose"]
-    Expiration --> S1["Common checks"]
-    Expiration --> S2["Incident notes"]
-    Expiration --> S3["Change notes"]
-    Expiration --> S4["Useful commands"]
-    Expiration --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Certificates Expiration notes, checks, troubleshooting, commands, change notes, and field references.

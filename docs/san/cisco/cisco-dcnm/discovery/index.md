@@ -1,16 +1,4 @@
 # Discovery
-
-```mermaid
-flowchart LR
-    Discovery["Discovery"]
-    Discovery --> S0["Purpose"]
-    Discovery --> S1["Common checks"]
-    Discovery --> S2["Incident notes"]
-    Discovery --> S3["Change notes"]
-    Discovery --> S4["Useful commands"]
-    Discovery --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Cisco Dcnm Discovery notes, checks, troubleshooting, commands, change notes, and field references.

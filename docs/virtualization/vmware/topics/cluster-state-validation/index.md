@@ -1,19 +1,6 @@
 # Cluster State Validation
 
 Quick checks to confirm a vSphere cluster is healthy before and after changes.
-
-```mermaid
-flowchart LR
-    State_Validation["State Validation"]
-    State_Validation --> S0["Host Connectivity"]
-    State_Validation --> S1["HA and DRS Status"]
-    State_Validation --> S2["Active Alarms"]
-    State_Validation --> S3["vSAN Cluster Health"]
-    State_Validation --> S4["Resource Utilisation"]
-    State_Validation --> S5["DRS Migration Recommendations"]
-    State_Validation --> S6["Healthy State Checklist"]
-```
-
 ## Host Connectivity
 
 ```powershell

@@ -1,17 +1,4 @@
 # vSAN Storage Policies
-
-```mermaid
-flowchart LR
-    Storage_Policies["Storage Policies"]
-    Storage_Policies --> S0["Where It Fits"]
-    Storage_Policies --> S1["Daily Checks"]
-    Storage_Policies --> S2["Health Commands"]
-    Storage_Policies --> S3["Common Issues"]
-    Storage_Policies --> S4["Operational Tasks"]
-    Storage_Policies --> S5["Upgrade Notes"]
-    Storage_Policies --> S6["Best Practices"]
-```
-
 ## Overview
 
 Policy design, compliance checks, failures to tolerate, and object placement.

@@ -1,17 +1,4 @@
 # AWS Cost Anomaly Detection
-
-```mermaid
-flowchart LR
-    Anomaly_Detection["Anomaly Detection"]
-    Anomaly_Detection --> S0["Where It Fits"]
-    Anomaly_Detection --> S1["Daily Checks"]
-    Anomaly_Detection --> S2["Health Commands"]
-    Anomaly_Detection --> S3["Common Issues"]
-    Anomaly_Detection --> S4["Operational Tasks"]
-    Anomaly_Detection --> S5["Upgrade Notes"]
-    Anomaly_Detection --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Cost Anomaly Detection notes for day-to-day infrastructure operations.

@@ -1,15 +1,4 @@
 # ONTAP Vendor Support
-
-```mermaid
-flowchart LR
-    Vendor_Support["Vendor Support"]
-    Vendor_Support --> S0["Support Portal"]
-    Vendor_Support --> S1["AutoSupport"]
-    Vendor_Support --> S2["Information to Collect"]
-    Vendor_Support --> S3["SLA Tiers — NetApp SupportEdge"]
-    Vendor_Support --> S4["Escalation Path"]
-```
-
 ## Support Portal
 
 [https://mysupport.netapp.com](https://mysupport.netapp.com)

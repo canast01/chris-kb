@@ -3,20 +3,6 @@
 > Part of the [PowerShell](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Windows Server Health Check (PowerShell)"]
-    Scripts --> S1["Active Directory User Audit (PowerShell)"]
-    Scripts --> S2["Certificate Expiry Monitor (PowerShell)"]
-    Scripts --> S3["Service Health Monitor (PowerShell)"]
-    Scripts --> S4["Windows: PowerShell Script Runner with Logging (CMD Batch)"]
-    Scripts --> S5["Windows: PowerShell Module Auto-Installer (PowerShell)"]
-    Scripts --> S6["Daily Check Script"]
-    Scripts --> S7["Incident Triage Script"]
-```
-
 ## Windows Server Health Check (PowerShell)
 
 Connect to remote servers via `Invoke-Command`, collect disk, memory, CPU, top processes, stopped automatic services, last boot time, and pending reboot status, then export results to CSV.

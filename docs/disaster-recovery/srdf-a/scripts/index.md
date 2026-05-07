@@ -3,20 +3,6 @@
 > Part of the [SRDF/A](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["SRDF/A Cycle Time Monitor (Bash)"]
-    Scripts --> S1["SRDF State Checker (Perl)"]
-    Scripts --> S2["SRDF Planned Failover (Bash)"]
-    Scripts --> S3["SRDF Resync After DR Test (Bash)"]
-    Scripts --> S4["Windows: SRDF/A State Check via Unisphere REST API (PowerShell)"]
-    Scripts --> S5["Windows: SRDF/A Cycle Time Check via Plink (CMD)"]
-    Scripts --> S6["Daily Check Script"]
-    Scripts --> S7["Incident Triage Script"]
-```
-
 ## SRDF/A Cycle Time Monitor (Bash)
 
 Use SYMCLI to query SRDF/A cycle time and delta set processing time for a given RDF group, compare against configurable thresholds, and print the last 10 samples for trend visibility.

@@ -24,16 +24,6 @@
 </a>
 
 </div>
-
-```mermaid
-flowchart LR
-    AWS_Certification["AWS Certification"]
-    AWS_Certification --> S0["Core Certification Paths"]
-    AWS_Certification --> S1["Daily Study Focus"]
-    AWS_Certification --> S2["Useful Commands"]
-    AWS_Certification --> S3["Renewal Notes"]
-```
-
 ## Overview
 
 AWS certifications validate skills in designing, deploying, operating, and securing workloads in Amazon Web Services environments.

@@ -1,18 +1,4 @@
 # Nexus Dashboard Integration
-
-```mermaid
-flowchart LR
-    Dashboard_Integratio["Dashboard Integration"]
-    Dashboard_Integratio --> S0["ACI APIC Integration"]
-    Dashboard_Integratio --> S1["NDFC (NX-OS Fabric Controller) Integration"]
-    Dashboard_Integratio --> S2["DCNM Migration Note"]
-    Dashboard_Integratio --> S3["SIEM Integration (Syslog)"]
-    Dashboard_Integratio --> S4["ServiceNow ITSM Integration"]
-    Dashboard_Integratio --> S5["AAA / LDAP Integration"]
-    Dashboard_Integratio --> S6["SMTP Notifications"]
-    Dashboard_Integratio --> S7["Aria Operations Integration"]
-```
-
 ## Overview
 
 Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its core data sources, and extends to ITSM, SIEM, notification, and AAA platforms for operational workflows.

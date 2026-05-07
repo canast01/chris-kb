@@ -3,18 +3,6 @@
 > Part of the [Cisco MDS](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    MDS_Lifecycle["MDS Lifecycle"]
-    MDS_Lifecycle --> S0["Version Tracking"]
-    MDS_Lifecycle --> S1["Upgrade Methods"]
-    MDS_Lifecycle --> S2["Upgrade Procedure (`install all`)"]
-    MDS_Lifecycle --> S3["EPLD Upgrade"]
-    MDS_Lifecycle --> S4["Adding a New Switch to the Fabric"]
-    MDS_Lifecycle --> S5["Decommission Procedure"]
-```
-
 ## Version Tracking
 
 NX-OS versions for MDS 9000 are tracked on the Cisco Software Advisor. Version selection is driven by:

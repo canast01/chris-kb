@@ -1,17 +1,4 @@
 # VxRail vSAN Alerts
-
-```mermaid
-flowchart LR
-    vSAN_Alerts["vSAN Alerts"]
-    vSAN_Alerts --> S0["Where It Fits"]
-    vSAN_Alerts --> S1["Daily Checks"]
-    vSAN_Alerts --> S2["Health Commands"]
-    vSAN_Alerts --> S3["Common Issues"]
-    vSAN_Alerts --> S4["Operational Tasks"]
-    vSAN_Alerts --> S5["Upgrade Notes"]
-    vSAN_Alerts --> S6["Best Practices"]
-```
-
 ## Overview
 
 vSAN health issues, object health, resync, capacity, and disk group problems.

@@ -1,20 +1,6 @@
 # FlashBlade Snapshots
 
 FlashBlade supports snapshots at the file system level. Snapshots are space-efficient and near-instantaneous.
-
-```mermaid
-flowchart LR
-    FlashBlade_Snapshots["FlashBlade Snapshots"]
-    FlashBlade_Snapshots --> S0["List Snapshots"]
-    FlashBlade_Snapshots --> S1["Create a Snapshot"]
-    FlashBlade_Snapshots --> S2["Accessing Snapshot Data"]
-    FlashBlade_Snapshots --> S3["Restore a File System from Snapshot"]
-    FlashBlade_Snapshots --> S4["Copy a Snapshot to a New File System"]
-    FlashBlade_Snapshots --> S5["Delete a Snapshot"]
-    FlashBlade_Snapshots --> S6["Snapshot Policy (Automated Scheduling)"]
-    FlashBlade_Snapshots --> S7["Common Issues"]
-```
-
 ## List Snapshots
 
 ```bash

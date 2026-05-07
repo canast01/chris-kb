@@ -1,17 +1,4 @@
 # AWS EC2
-
-```mermaid
-flowchart LR
-    AWS_EC2["AWS EC2"]
-    AWS_EC2 --> S0["Where It Fits"]
-    AWS_EC2 --> S1["Daily Checks"]
-    AWS_EC2 --> S2["Health Commands"]
-    AWS_EC2 --> S3["Common Issues"]
-    AWS_EC2 --> S4["Operational Tasks"]
-    AWS_EC2 --> S5["Upgrade Notes"]
-    AWS_EC2 --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS EC2 notes for day-to-day infrastructure operations.

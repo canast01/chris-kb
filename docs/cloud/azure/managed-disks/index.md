@@ -1,18 +1,6 @@
 # Managed Disks
 
 Azure Managed Disks — block storage for Azure VMs, snapshots, and disk performance management.
-
-```mermaid
-flowchart LR
-    Managed_Disks["Managed Disks"]
-    Managed_Disks --> S0["Disk Types"]
-    Managed_Disks --> S1["Common Azure CLI Commands"]
-    Managed_Disks --> S2["Attach / Detach Disks"]
-    Managed_Disks --> S3["Expand OS Disk (Linux VM)"]
-    Managed_Disks --> S4["Disk Encryption"]
-    Managed_Disks --> S5["Troubleshooting"]
-```
-
 ## Disk Types
 
 | Type | Use Case | Max IOPS | Max Throughput |

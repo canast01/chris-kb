@@ -1,20 +1,6 @@
 # Support Contract Tracking
 
 Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.
-
-```mermaid
-flowchart LR
-    Contract_Tracking["Contract Tracking"]
-    Contract_Tracking --> S0["Contract Register — Key Fields"]
-    Contract_Tracking --> S1["Expiry Monitoring"]
-    Contract_Tracking --> S2["Support Tier Reference"]
-    Contract_Tracking --> S3["Opening a Support Case"]
-    Contract_Tracking --> S4["Warranty / Support Status Checks"]
-    Contract_Tracking --> S5["Renewal Process"]
-    Contract_Tracking --> S6["Support Contract Checklist"]
-    Contract_Tracking --> S7["Escalation Contacts"]
-```
-
 ## Contract Register — Key Fields
 
 | Field | Description |

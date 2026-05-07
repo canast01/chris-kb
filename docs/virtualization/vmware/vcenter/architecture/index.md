@@ -1,17 +1,4 @@
 # vCenter Architecture
-
-```mermaid
-flowchart LR
-    vCenter_Architecture["vCenter Architecture"]
-    vCenter_Architecture --> S0["Deployment Model"]
-    vCenter_Architecture --> S1["Core Components"]
-    vCenter_Architecture --> S2["vCenter HA"]
-    vCenter_Architecture --> S3["Key Ports and Connectivity"]
-    vCenter_Architecture --> S4["Sizing"]
-    vCenter_Architecture --> S5["Logical Hierarchy"]
-    vCenter_Architecture --> S6["High-Level Failure Domains"]
-```
-
 ## Deployment Model
 
 vCenter Server is delivered as the **vCenter Server Appliance (VCSA)** — a Photon OS-based virtual appliance. Since vCenter 7.0, the Platform Services Controller (PSC) is embedded directly in the appliance (external PSC is deprecated). The embedded database is PostgreSQL.

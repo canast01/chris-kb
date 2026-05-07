@@ -1,17 +1,4 @@
 # AWS Instance Recovery
-
-```mermaid
-flowchart LR
-    Instance_Recovery["Instance Recovery"]
-    Instance_Recovery --> S0["Where It Fits"]
-    Instance_Recovery --> S1["Daily Checks"]
-    Instance_Recovery --> S2["Health Commands"]
-    Instance_Recovery --> S3["Common Issues"]
-    Instance_Recovery --> S4["Operational Tasks"]
-    Instance_Recovery --> S5["Upgrade Notes"]
-    Instance_Recovery --> S6["Best Practices"]
-```
-
 ## Overview
 
 AWS Instance Recovery notes for day-to-day infrastructure operations.

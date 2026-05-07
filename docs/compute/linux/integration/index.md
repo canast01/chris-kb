@@ -3,18 +3,6 @@
 > Part of the [Linux](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Linux_Integration["Linux Integration"]
-    Linux_Integration --> S0["Active Directory Integration (SSSD / realmd)"]
-    Linux_Integration --> S1["Sudo Configuration for AD Groups"]
-    Linux_Integration --> S2["Backup Agent Integration"]
-    Linux_Integration --> S3["Monitoring Integration"]
-    Linux_Integration --> S4["iSCSI Storage Connectivity"]
-    Linux_Integration --> S5["Multipath Configuration"]
-```
-
 ## Active Directory Integration (SSSD / realmd)
 
 Linux servers join Active Directory using `realmd` and `sssd`, allowing AD users to authenticate with Kerberos credentials without local account provisioning.

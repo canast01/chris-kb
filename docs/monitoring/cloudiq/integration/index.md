@@ -1,17 +1,4 @@
 # CloudIQ Integration
-
-```mermaid
-flowchart LR
-    CloudIQ_Integration["CloudIQ Integration"]
-    CloudIQ_Integration --> S0["Native Platform Integrations (Inbound via SCG)"]
-    CloudIQ_Integration --> S1["ServiceNow Integration"]
-    CloudIQ_Integration --> S2["Email Alerts"]
-    CloudIQ_Integration --> S3["Slack / Teams Integration"]
-    CloudIQ_Integration --> S4["REST API Access for Splunk / Grafana"]
-    CloudIQ_Integration --> S5["Aria Operations Integration"]
-    CloudIQ_Integration --> S6["Integration Summary"]
-```
-
 ## Overview
 
 CloudIQ collects telemetry natively from all Dell platforms via the Secure Connect Gateway. External integrations extend alert delivery and data access into broader operational toolsets including ITSM, observability platforms, and notification systems.

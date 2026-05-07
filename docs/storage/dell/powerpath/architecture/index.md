@@ -1,14 +1,4 @@
 # PowerPath Architecture
-
-```mermaid
-flowchart LR
-    PowerPath_Architectu["PowerPath Architecture"]
-    PowerPath_Architectu --> S0["Components"]
-    PowerPath_Architectu --> S1["How It Works"]
-    PowerPath_Architectu --> S2["Connectivity and Integration Points"]
-    PowerPath_Architectu --> S3["Sizing and Path Count Model"]
-```
-
 ## Overview
 
 Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.

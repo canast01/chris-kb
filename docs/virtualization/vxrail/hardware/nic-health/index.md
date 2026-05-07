@@ -1,17 +1,4 @@
 # VxRail NIC Health
-
-```mermaid
-flowchart LR
-    NIC_Health["NIC Health"]
-    NIC_Health --> S0["Where It Fits"]
-    NIC_Health --> S1["Daily Checks"]
-    NIC_Health --> S2["Health Commands"]
-    NIC_Health --> S3["Common Issues"]
-    NIC_Health --> S4["Operational Tasks"]
-    NIC_Health --> S5["Upgrade Notes"]
-    NIC_Health --> S6["Best Practices"]
-```
-
 ## Overview
 
 Physical NIC state, link status, uplinks, redundancy, and troubleshooting.

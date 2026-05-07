@@ -1,21 +1,6 @@
 # Windows Server — CLI Reference
 
 All commands are PowerShell unless noted as `cmd`.
-
-```mermaid
-flowchart LR
-    N["—"]
-    N --> S0["Services"]
-    N --> S1["Event Logs"]
-    N --> S2["Disk and Storage"]
-    N --> S3["Networking"]
-    N --> S4["Active Directory and Domain"]
-    N --> S5["Process Management"]
-    N --> S6["Performance Counters"]
-    N --> S7["User and Security"]
-    N --> S8["Hotfix and Updates"]
-```
-
 ## Services
 
 ```powershell

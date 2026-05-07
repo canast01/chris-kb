@@ -1,14 +1,6 @@
 # Hosts & Host Groups
 
 > Part of the [Pure FlashArray CLI Reference](../).
-
-```mermaid
-flowchart LR
-    Groups["Groups"]
-    Groups --> S0["purehgroup — Host Groups"]
-    Groups --> S1["purehost — Hosts"]
-```
-
 ---
 
 ## purehgroup — Host Groups

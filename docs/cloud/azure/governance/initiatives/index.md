@@ -1,16 +1,4 @@
 # Initiatives
-
-```mermaid
-flowchart LR
-    Initiatives["Initiatives"]
-    Initiatives --> S0["Purpose"]
-    Initiatives --> S1["Common checks"]
-    Initiatives --> S2["Incident notes"]
-    Initiatives --> S3["Change notes"]
-    Initiatives --> S4["Useful commands"]
-    Initiatives --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical Azure Governance Initiatives notes, checks, troubleshooting, commands, change notes, and field references.

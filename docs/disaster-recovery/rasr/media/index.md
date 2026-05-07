@@ -1,16 +1,4 @@
 # Media
-
-```mermaid
-flowchart LR
-    Media["Media"]
-    Media --> S0["Purpose"]
-    Media --> S1["Common checks"]
-    Media --> S2["Incident notes"]
-    Media --> S3["Change notes"]
-    Media --> S4["Useful commands"]
-    Media --> S5["Known issues"]
-```
-
 ## Purpose
 
 Use this page for practical RASR Media notes, checks, troubleshooting, commands, change notes, and field references.

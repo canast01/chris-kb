@@ -3,20 +3,6 @@
 > Part of the [Azure](../) reference.
 
 ---
-
-```mermaid
-flowchart LR
-    Scripts["Scripts"]
-    Scripts --> S0["Azure Subscription Health Check"]
-    Scripts --> S1["VM Health and Compliance Report"]
-    Scripts --> S2["Azure Cost Spike Alert"]
-    Scripts --> S3["Network Security Group Audit"]
-    Scripts --> S4["VM DR Failover with Azure Site Recovery (Ansible)"]
-    Scripts --> S5["Managed Disk Snapshot Audit"]
-    Scripts --> S6["Key Vault Certificate Expiry Check"]
-    Scripts --> S7["Ansible Azure Infrastructure Health Playbook"]
-```
-
 ## Azure Subscription Health Check
 
 Prints a formatted health report covering VMs, load balancers, SQL servers, and recent critical activity log events. Exits non-zero if any critical events are found.

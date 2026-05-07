@@ -1,14 +1,4 @@
 # FlashBlade Troubleshooting
-
-```mermaid
-flowchart LR
-    FlashBlade_Troublesh["FlashBlade Troubleshoo"]
-    FlashBlade_Troublesh --> S0["Common Issues"]
-    FlashBlade_Troublesh --> S1["Diagnostic Commands"]
-    FlashBlade_Troublesh --> S2["Log Locations"]
-    FlashBlade_Troublesh --> S3["Before Calling Support"]
-```
-
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

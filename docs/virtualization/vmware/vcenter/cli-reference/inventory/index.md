@@ -1,20 +1,6 @@
 # Inventory & Reporting
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
-
-```mermaid
-flowchart LR
-    Reporting["Reporting"]
-    Reporting --> S0["VM Inventory Export"]
-    Reporting --> S1["Host Inventory Export"]
-    Reporting --> S2["Cluster Inventory"]
-    Reporting --> S3["Orphaned and Disconnected VMs"]
-    Reporting --> S4["Snapshots Across All VMs"]
-    Reporting --> S5["Tag and Category Inventory"]
-    Reporting --> S6["Resource Pool Inventory"]
-    Reporting --> S7["Folder Structure"]
-```
-
 ## VM Inventory Export
 
 ```powershell

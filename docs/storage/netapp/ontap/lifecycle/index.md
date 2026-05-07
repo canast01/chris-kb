@@ -1,14 +1,4 @@
 # ONTAP Lifecycle
-
-```mermaid
-flowchart LR
-    ONTAP_Lifecycle["ONTAP Lifecycle"]
-    ONTAP_Lifecycle --> S0["ONTAP Version Matrix"]
-    ONTAP_Lifecycle --> S1["Upgrade Paths"]
-    ONTAP_Lifecycle --> S2["EOL Tracking"]
-    ONTAP_Lifecycle --> S3["Refresh Planning"]
-```
-
 ## ONTAP Version Matrix
 
 | Release | GA Date | Full Support End | Limited Support End | Notes |

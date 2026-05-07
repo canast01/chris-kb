@@ -1,18 +1,4 @@
 # Aria Operations — Security
-
-```mermaid
-flowchart LR
-    Aria_Operations["Aria Operations"]
-    Aria_Operations --> S0["RBAC Roles"]
-    Aria_Operations --> S1["Local Admin Account Hardening"]
-    Aria_Operations --> S2["TLS Certificate Replacement"]
-    Aria_Operations --> S3["LDAP / Active Directory Authentication"]
-    Aria_Operations --> S4["Audit Logging"]
-    Aria_Operations --> S5["Hardening Checklist"]
-    Aria_Operations --> S6["Compliance Notes"]
-    Aria_Operations --> S7["Related Sections"]
-```
-
 ## RBAC Roles
 
 | Role | Permissions |

@@ -68,19 +68,6 @@
   <span>Object Services notes, checks, commands, and references.</span>
 </a>
 </div>
-
-```mermaid
-flowchart LR
-    Pure_FlashBlade["Pure FlashBlade"]
-    Pure_FlashBlade --> S0["Where It Fits"]
-    Pure_FlashBlade --> S1["Daily Checks"]
-    Pure_FlashBlade --> S2["Health Commands"]
-    Pure_FlashBlade --> S3["Common Issues"]
-    Pure_FlashBlade --> S4["Operational Tasks"]
-    Pure_FlashBlade --> S5["Upgrade Notes"]
-    Pure_FlashBlade --> S6["Best Practices"]
-```
-
 ## Overview
 
 Pure Storage FlashBlade is an all-flash scale-out storage platform running Purity//FB OS, designed for unstructured data workloads including AI/ML, analytics, backup, and high-performance computing. Each chassis holds multiple blades that combine compute and NVMe flash storage, allowing capacity and performance to scale together by adding blades. It natively serves NFS v3/v4.1, SMB 2/3, S3 object, and HDFS protocols from a single platform, and supports asynchronous replication (ActiveDR) and synchronous replication (ActiveCluster for file systems) for data protection.
