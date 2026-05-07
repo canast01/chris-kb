@@ -2,12 +2,6 @@
 
 OpenAI operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="api-notes/">API Notes</a></h3>
-    <p>API Notes notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="prompt-patterns/">Prompt Patterns</a></h3>
