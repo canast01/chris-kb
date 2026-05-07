@@ -1,4 +1,37 @@
 # FlashArray Architecture
+## ActiveCluster Topology
+
+```
+  Site A                                                  Site B
+  ──────────────────────────────────────────────────────────────────────────
+  ┌─────────────────────────────┐        ┌─────────────────────────────┐
+  │   FlashArray (FA-A)         │        │   FlashArray (FA-B)         │
+  │   CT0         CT1           │        │   CT0         CT1           │
+  │   ┌──────┐  ┌──────┐        │        │   ┌──────┐  ┌──────┐        │
+  │   │ pod1 │  │ pod1 │  ◄─────┼────────┼─► │ pod1 │  │ pod1 │        │
+  │   └──────┘  └──────┘        │        │   └──────┘  └──────┘        │
+  └─────────────┬───────────────┘        └───────────────┬─────────────┘
+                │  FC / NVMe-oF                           │  FC / NVMe-oF
+        ┌───────▼───────┐                        ┌───────▼───────┐
+        │  FC Fabric A  │                        │  FC Fabric A  │
+        │  FC Fabric B  │                        │  FC Fabric B  │
+        └───────┬───────┘                        └───────┬───────┘
+                │                                        │
+  ┌─────────────▼──────────────────────────────────────────────────────┐
+  │   Hosts (MPIO — both fabrics, both sites)                          │
+  │   ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐      │
+  │   │  ESXi-01  │  │  ESXi-02  │  │  ESXi-03  │  │  ESXi-04  │      │
+  │   │  (Site A) │  │  (Site A) │  │  (Site B) │  │  (Site B) │      │
+  │   └───────────┘  └───────────┘  └───────────┘  └───────────┘      │
+  └────────────────────────────────────────────────────────────────────┘
+                        │ heartbeat / tiebreak
+                ┌───────▼────────┐
+                │  Purity Mediator│
+                │  (Pure1 / VM)  │
+                └────────────────┘
+  Synchronous replication (≤5ms RTT) — zero RPO, transparent failover
+```
+
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.

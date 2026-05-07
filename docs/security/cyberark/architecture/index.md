@@ -16,6 +16,39 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
 
 ---
 
+
+## PAM Component Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                         CyberArk PAM Platform                           │
+  │                                                                          │
+  │  ┌────────────────────────────────────────────────────────────────┐     │
+  │  │  Digital Vault Server (DVS)                                    │     │
+  │  │  Encrypted credential store  |  Hardened OS  |  No network FS  │     │
+  │  │  DR Vault (async replication) ◄────────────────────────────    │     │
+  │  └───────┬──────────────────────────────────────────┬────────────┘     │
+  │          │  Vault API (TCP 1858)                    │                  │
+  │  ┌───────▼──────────┐                    ┌──────────▼─────────────┐    │
+  │  │  PVWA            │                    │  CPM                   │    │
+  │  │  Web UI + REST   │                    │  Password rotation      │    │
+  │  │  API gateway     │                    │  Verification & change │    │
+  │  │  (IIS on Windows)│                    │  Platform plugins       │    │
+  │  └───────┬──────────┘                    └────────────────────────┘    │
+  │          │  session launch                                              │
+  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
+  │  │  PSM  (Privileged Session Manager)                               │  │
+  │  │  RDP / SSH proxy  |  Session recording  |  Keystroke logging     │  │
+  │  │  No credential reaches end user — PSM injects transparently      │  │
+  │  └──────────────────────────────────────────────────────────────────┘  │
+  │          │  proxied session to target                                   │
+  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
+  │  │  Target Systems                                                   │  │
+  │  │  Windows servers  Linux / Unix  Network devices  Databases        │  │
+  │  └──────────────────────────────────────────────────────────────────┘  │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Network Topology
 
 ```

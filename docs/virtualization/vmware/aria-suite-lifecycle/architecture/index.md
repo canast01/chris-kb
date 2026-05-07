@@ -3,6 +3,36 @@
 
 Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria (formerly vRealize) product suite from a single control plane. LCM eliminates the need to update each Aria product independently.
 
+
+## Product Management Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  Aria Suite Lifecycle (LCM) Appliance                    │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  LCM Core Services                                              │    │
+  │  │  Deployment engine  |  Certificate manager  |  Password manager │    │
+  │  │  Inventory / environment registry  |  Upgrade orchestrator      │    │
+  │  └──────────────────────────────────────────────────────────────── ┘    │
+  │          │  deploy / upgrade / configure                                │
+  │  ┌───────┴─────────────────────────────────────────────────────────┐   │
+  │  │  Managed Products                                               │   │
+  │  │  ┌─────────────────┐  ┌────────────────────┐  ┌──────────────┐  │   │
+  │  │  │  Aria Operations│  │  Aria Automation   │  │  Aria Ops    │  │   │
+  │  │  │  (vROps)        │  │  (vRA)             │  │  for Logs    │  │   │
+  │  │  └─────────────────┘  └────────────────────┘  └──────────────┘  │   │
+  │  │  ┌─────────────────┐  ┌────────────────────┐                    │   │
+  │  │  │  Identity Mgr   │  │  Other Aria suite  │                    │   │
+  │  │  │  (Workspace ONE)│  │  products          │                    │   │
+  │  │  └─────────────────┘  └────────────────────┘                    │   │
+  │  └─────────────────────────────────────────────────────────────────┘   │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  NFS content library  ←  Binary store / patch bundles           │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Core Components
 
 | Component | Role |

@@ -3,6 +3,30 @@
 
 Dell VPLEX is a storage virtualisation and federation platform that presents unified virtual volumes to hosts from one or more heterogeneous backend storage arrays. VPLEX abstracts physical storage into virtual volumes, enabling live data mobility between arrays, active-active block storage access across sites, and non-disruptive migration without host changes. VPLEX is deployed as a set of director pairs, each running the GeoSynchrony software stack. Management is via the `vplexcli` command-line interface or Unisphere for VPLEX web GUI.
 
+
+## Storage Federation Topology
+
+```
+  Site A                                          Site B
+  ──────────────────────────────────              ──────────────────────────────
+  ┌──────────────────────────────┐               ┌──────────────────────────────┐
+  │   VPLEX VS2 Cluster (Geo)    │               │   VPLEX VS2 Cluster (Geo)    │
+  │   Director Pair 1  Dir Pair 2│◄──WAN/DS3────►│   Director Pair 1  Dir Pair 2│
+  │   GeoSynchrony OS            │  synchronous  │   GeoSynchrony OS            │
+  └───────┬──────────────────────┘  replication  └──────────┬───────────────────┘
+          │  FC (back-end)                                   │  FC (back-end)
+  ┌───────▼────────────┐                          ┌──────────▼───────────────┐
+  │  Local Arrays      │                          │  Local Arrays (DR site)  │
+  │  PowerMax / Unity  │                          │  PowerMax / Unity        │
+  │  (physical volumes)│                          │  (mirrored extent)       │
+  └────────────────────┘                          └──────────────────────────┘
+          │  FC (front-end)                                  │
+  ┌───────▼─────────────────────────────────────────────────▼──────────────┐
+  │  Hosts — see single virtual volume regardless of which site owns it    │
+  │  Active/Active cross-site — no host changes during site migration      │
+  └─────────────────────────────────────────────────────────────────────── ┘
+```
+
 ## Components
 
 | Component | Description |

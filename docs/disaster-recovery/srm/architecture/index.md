@@ -9,6 +9,31 @@ VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a 
 
 ---
 
+
+## SRM Topology
+
+```
+  Site A (Protected)                          Site B (Recovery)
+  ──────────────────────────────────          ──────────────────────────────────
+  ┌──────────────────────────────┐            ┌──────────────────────────────┐
+  │  vCenter A                   │◄──────────►│  vCenter B                   │
+  │  SRM A (plugin + server)     │  paired    │  SRM B (plugin + server)     │
+  │  Storage Manager A (SRA)     │            │  Storage Manager B (SRA)     │
+  └──────────────┬───────────────┘            └───────────────┬──────────────┘
+                 │  SRA communicates                          │  SRA communicates
+                 │  with storage array                        │  with storage array
+  ┌──────────────▼───────────────┐            ┌───────────────▼──────────────┐
+  │  Production Storage          │            │  DR Storage                  │
+  │  FlashArray / PowerMax       │──replication│  FlashArray / PowerMax (DR)  │
+  │  ONTAP / vSAN                │────────────►│  ONTAP / vSAN (DR)           │
+  └──────────────────────────────┘            └──────────────────────────────┘
+         │  VMs running                               │  VMs recovered here
+  ┌──────▼───────────────────┐             ┌──────────▼──────────────────┐
+  │  Protection Group        │  SRM plan   │  Recovery Plan              │
+  │  (VMs + replication)     │────────────►│  (power-on order, IP remap) │
+  └──────────────────────────┘             └────────────────────────────┘
+```
+
 ## Core Components
 
 | Component | Role |

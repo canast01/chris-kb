@@ -15,6 +15,39 @@ Forest (security boundary)
 
 The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.
 
+
+## Forest and Domain Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                         AD Forest                                        │
+  │                                                                          │
+  │  ┌────────────────────────────────────────────────────────────────┐     │
+  │  │  Forest Root Domain  (corp.example.com)                        │     │
+  │  │  ┌────────────────────────────────────────────────────────┐   │     │
+  │  │  │  Schema Master  Domain Naming Master  Global Catalogue  │   │     │
+  │  │  └────────────────────────────────────────────────────────┘   │     │
+  │  │                                                                │     │
+  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐    │     │
+  │  │  │  DC-01 (Site A PDC) │  │  DC-02 (Site A)             │    │     │
+  │  │  │  RID / PDC Emulator │  │  Global Catalogue           │    │     │
+  │  │  │  Infra Master       │  │                             │    │     │
+  │  │  └────────┬────────────┘  └─────────────────────────────┘    │     │
+  │  │           │ AD replication (inter-site: IP / SMTP)            │     │
+  │  │  ┌────────▼──────────────────────────────────────────────┐   │     │
+  │  │  │  DC-03 (Site B)  DC-04 (Site B)  — replica DCs        │   │     │
+  │  │  └────────────────────────────────────────────────────────┘   │     │
+  │  └────────────────────────────────────────────────────────────────┘     │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Child Domains (if used)                                        │    │
+  │  │  eu.corp.example.com    apac.corp.example.com                   │    │
+  │  │  (trust is automatic within forest — transitive two-way)        │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  └──────────────────────────────────────────────────────────────────────────┘
+  DNS: every DC is also a DNS server; AD relies entirely on DNS SRV records
+```
+
 ## Core Components
 
 | Component | Role |

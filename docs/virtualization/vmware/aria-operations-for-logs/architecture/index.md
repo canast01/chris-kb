@@ -5,6 +5,38 @@ Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics plat
 
 ---
 
+
+## Log Pipeline Architecture
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                   Aria Operations for Logs Cluster                       │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Master Node                                                    │    │
+  │  │  Query engine  |  Index coordinator  |  Web UI  |  REST API    │    │
+  │  └──────────────────────────────┬──────────────────────────────── ┘    │
+  │                                 │  cluster replication                 │
+  │  ┌──────────────────────────────▼──────────────────────────────────┐   │
+  │  │  Worker Nodes (2+)                                              │   │
+  │  │  Elasticsearch index shards  |  Log storage  |  Query workers  │   │
+  │  └─────────────────────────────────────────────────────────────── ┘   │
+  └───────────────────────────────────┬──────────────────────────────────── ┘
+                                      │  log ingestion
+          ┌───────────────────────────┼────────────────────────────┐
+          │                           │                            │
+  ┌───────▼────────┐         ┌────────▼────────┐          ┌───────▼────────┐
+  │  Syslog agent  │         │  Syslog (UDP    │          │  REST API      │
+  │  (LI agent on  │         │  514 / TCP 1514)│          │  ingest        │
+  │  ESXi / vCenter│         │  Windows events │          │  (third-party) │
+  └───────┬────────┘         └─────────────────┘          └────────────────┘
+          │
+  ┌───────▼─────────────────────────────────────────────────────────────┐
+  │  Sources                                                             │
+  │  ESXi  vCenter  NSX  vSAN  physical hosts  firewalls  Linux/Windows  │
+  └──────────────────────────────────────────────────────────────────── ┘
+```
+
 ## Cluster Topology
 
 | Node Role | Description |

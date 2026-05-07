@@ -65,41 +65,6 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 </div>
-
-## HA Pair Topology
-
-```
-  ┌──────────────────────────────────────────────────────────────────────┐
-  │                      ONTAP Cluster (2-node HA)                       │
-  │                                                                      │
-  │  ┌───────────────────────────┐     ┌────────────────────────────┐    │
-  │  │   Node 1 (Controller)     │     │   Node 2 (Controller)      │    │
-  │  │                           │◄───►│                            │    │
-  │  │  Cluster interconnect     │ HA  │  Cluster interconnect      │    │
-  │  │  (100 GbE / cluster net)  │ hb  │  (100 GbE / cluster net)   │    │
-  │  │                           │     │                            │    │
-  │  │  SVM-1 (NFS / CIFS)       │     │  SVM-1 replicated (takeover│    │
-  │  │  SVM-2 (iSCSI / FC)       │     │  if Node 1 fails)          │    │
-  │  └──────┬────────────────────┘     └────────────────┬───────────┘    │
-  │         │  FC / SAS                                 │  FC / SAS      │
-  │  ┌──────▼────────────────────────────────────────────▼───────────┐   │
-  │  │                    Shared Disk Shelves                         │   │
-  │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐      │   │
-  │  │  │  DS224C  │  │  DS224C  │  │  DS460C  │  │  DS460C  │      │   │
-  │  │  │ (NVMe    │  │  (NVMe)  │  │  (SAS    │  │  (SAS)   │      │   │
-  │  │  │  SSDs)   │  │          │  │  HDDs)   │  │          │      │   │
-  │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘      │   │
-  │  └────────────────────────────────────────────────────────────────┘   │
-  └──────────────────────────────────────────────────────────────────────┘
-       │  NFS / CIFS                    │  iSCSI / FC / NVMe-oF
-  ┌────▼────────────────────────────────▼────┐
-  │   Clients / Hosts                        │
-  │   VMware NFS datastores                  │
-  │   Windows/Linux CIFS shares              │
-  │   SAN hosts (LUNs / NVMe namespaces)     │
-  └──────────────────────────────────────────┘
-```
-
 ## Overview
 
 NetApp ONTAP is the enterprise storage operating system running on AFF (all-flash), FAS (hybrid flash/disk), and ONTAP Select (software-defined) platforms. It organizes storage in a hierarchy of cluster → nodes → aggregates → SVMs (Storage VMs) → volumes → LUNs or shares, and serves data over NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3. Built-in data protection features include SnapMirror for replication, SnapVault for backup retention, and SyncMirror for RAID-level mirroring across disk shelves or HA pairs.

@@ -7,6 +7,38 @@ Each FlashBlade blade is an independent storage node containing its own NVMe fla
 
 FlashBlade serves multiple protocols natively from a single platform without any protocol gateway: NFS v3/v4.1, SMB 2/3, S3 object, and HDFS, all from the same filesystem or object store namespace.
 
+
+## Scale-Out Blade Architecture
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                     FlashBlade Chassis (17U)                             │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Fabric Management Module (FMM)  /  Blade Mgmt Module (BMM)     │    │
+  │  │  NVMe-oF internal fabric  |  Out-of-band management plane       │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+  │  │ Blade 01 │ │ Blade 02 │ │ Blade 03 │ │  ...     │ │ Blade 15 │     │
+  │  │ CPU+NVMe │ │ CPU+NVMe │ │ CPU+NVMe │ │          │ │ CPU+NVMe │     │
+  │  │ 17 / 52T │ │ 17 / 52T │ │ 17 / 52T │ │          │ │ 17 / 52T │     │
+  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘     │
+  │       └────────────┴────────────┴─────────────┴────────────┘           │
+  │                         internal NVMe-oF fabric                        │
+  └──────────────────────────────┬──────────────────────────────────────────┘
+                                 │  10 / 25 / 100 GbE
+               ┌─────────────────▼───────────────────────┐
+               │  Ethernet Fabric (leaf-spine)            │
+               │  NFS v3/v4.1  |  S3  |  SMB  |  NFS/S3  │
+               └────────────────┬────────────────────────┘
+                                │
+        ┌───────────────────────▼────────────────────────────┐
+        │  Clients                                            │
+        │  GPU nodes (AI/ML)  Hadoop  Backup  Analytics       │
+        └─────────────────────────────────────────────────────┘
+  Scale: 1 to 15 blades per chassis, up to 20 chassis in a cluster
+```
+
 ## Components
 
 | Component | Description |

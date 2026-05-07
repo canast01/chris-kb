@@ -3,6 +3,35 @@
 
 Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.
 
+
+## Host-Side MPIO Stack
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                      Host (Windows / Linux / AIX)                        │
+  │                                                                          │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │  Application (Oracle / SQL Server / File System)                 │   │
+  │  └──────────────────────────────────┬───────────────────────────── ┘   │
+  │                                     │  I/O                              │
+  │  ┌──────────────────────────────────▼───────────────────────────────┐   │
+  │  │  PowerPath Virtual Device (pseudo device, single LUN view)       │   │
+  │  │  Intelligent load balancing  |  Automatic failover               │   │
+  │  │  ALUA-aware path selection   |  Policy: CLAROpt / RoundRobin     │   │
+  │  └───────────────┬──────────────────────────┬────────────────────── ┘   │
+  │                  │  Active path              │  Standby / secondary path │
+  │  ┌───────────────▼──────────┐  ┌────────────▼──────────────────────┐    │
+  │  │  HBA0 (Fabric A)         │  │  HBA1 (Fabric B)                  │    │
+  │  │  FC / NVMe-oF            │  │  FC / NVMe-oF                     │    │
+  │  └───────────────┬──────────┘  └────────────┬──────────────────────┘    │
+  └──────────────────┼─────────────────────────┼────────────────────────────┘
+                     │  FC / NVMe-oF            │
+             ┌───────▼──────────────────────────▼───────┐
+             │  PowerMax  (CT0 → Fabric A, CT1 → Fab B)  │
+             │  ALUA: preferred port = owning director   │
+             └──────────────────────────────────────────┘
+```
+
 ## Components
 
 | Component | Role |

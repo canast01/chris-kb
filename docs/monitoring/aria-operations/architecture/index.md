@@ -3,6 +3,36 @@
 
 VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.
 
+
+## Analytics Cluster Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                     Aria Operations Cluster                              │
+  │                                                                          │
+  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
+  │  │  Primary Node    │  │  Replica Node    │  │  Data Node(s)        │   │
+  │  │  UI / scheduler  │  │  failover target │  │  additional capacity  │   │
+  │  │  REST API        │  │                  │  │  for large fleets     │   │
+  │  └─────────┬────────┘  └─────────┬────────┘  └──────────┬───────────┘   │
+  │            └─────────────────────┴───────────────────────┘               │
+  │                          cluster bus                                     │
+  └───────────────────────────────────┬──────────────────────────────────────┘
+                                      │  metrics pull
+                    ┌─────────────────┼──────────────────────────┐
+                    │                 │                           │
+           ┌────────▼────────┐ ┌──────▼──────────┐  ┌───────────▼──────────┐
+           │  Remote         │ │  Cloud Proxy     │  │  SNMP / REST         │
+           │  Collector A    │ │  (SaaS / cloud)  │  │  Adapters            │
+           │  (Site A)       │ │                  │  │  (network, storage)  │
+           └────────┬────────┘ └──────────────────┘  └──────────────────────┘
+                    │  collect
+          ┌─────────▼────────────────────────────────────────────┐
+          │  vCenter / ESXi / vSAN / NSX / Physical hosts        │
+          │  Applications / Log sources / Storage endpoints       │
+          └──────────────────────────────────────────────────────┘
+```
+
 ## Component Roles
 
 | Component | Role |

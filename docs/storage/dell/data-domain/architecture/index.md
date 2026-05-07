@@ -3,6 +3,39 @@
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around inline global deduplication. All data is deduplicated as it is written — not in post-processing — using the SISL (Stream-Informed Segment Layout) deduplication engine. The result is a highly space-efficient backup target that typically achieves 20:1 or greater reduction ratios across mixed workloads.
 
+
+## Deduplication Pipeline
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  Data Domain (PowerProtect DD) Architecture              │
+  │                                                                          │
+  │  Ingest                                                                  │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │  Backup clients / media servers                                  │   │
+  │  │  Veeam  NetBackup  CommVault  TSM  Oracle RMAN  NFS / CIFS / VTL│   │
+  │  └────────────────────────────────┬─────────────────────────────── ┘   │
+  │                                   │  data stream                       │
+  │  ┌────────────────────────────────▼─────────────────────────────────┐  │
+  │  │  SISL Inline Deduplication Engine                                │  │
+  │  │  1. Segment stream into variable-length chunks                   │  │
+  │  │  2. Fingerprint each chunk (SHA)                                 │  │
+  │  │  3. Lookup FP in dedup index (DRAM + SSD cache)                  │  │
+  │  │  4. If match: store reference only (no write to disk)            │  │
+  │  │  5. If new: compress + write to active tier                      │  │
+  │  └───────────────────────────────┬──────────────────────────────── ┘  │
+  │                                  │  deduplicated + compressed data     │
+  │  ┌─────────────────────────────── ▼────────────────────────────────┐   │
+  │  │  Storage Tiers                                                   │   │
+  │  │  ┌──────────────────┐  ┌───────────────────┐  ┌──────────────┐  │   │
+  │  │  │  Active Tier     │  │  Retention Tier   │  │  Cloud Tier  │  │   │
+  │  │  │  (SSD / NL-SAS)  │  │  (NL-SAS archive) │  │  (S3 / Azure)│  │   │
+  │  │  └──────────────────┘  └───────────────────┘  └──────────────┘  │   │
+  │  └──────────────────────────────────────────────────────────────────┘  │
+  │  Typical dedupe ratio: 20:1 across mixed backup workloads               │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Core Components
 
 | Component | Description |

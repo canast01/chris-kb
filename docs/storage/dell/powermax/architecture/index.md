@@ -1,4 +1,40 @@
 # PowerMax Architecture
+## PowerMax Architecture
+
+```
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │                     PowerMax 8000 Array                              │
+  │                                                                      │
+  │  ┌──────────────────────────────────────────────────────────────┐    │
+  │  │             Director Layer (active-active)                    │    │
+  │  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │    │
+  │  │  │  FA Dir   │  │  FA Dir   │  │  SRDF Dir │  │  SRDF Dir │ │    │
+  │  │  │ (FC/NVMe) │  │ (FC/NVMe) │  │(replication│  │(replication│ │    │
+  │  │  │  ports)   │  │  ports)   │  │  ports)   │  │  ports)   │ │    │
+  │  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │    │
+  │  └────────┼──────────────┼──────────────┼──────────────┼────────┘    │
+  │           │              │              │              │             │
+  │  ┌────────▼──────────────▼──────────────▼──────────────▼────────┐    │
+  │  │              Crossbar Interconnect (low-latency)              │    │
+  │  └───────────────────────────┬───────────────────────────────────┘    │
+  │                              │                                        │
+  │  ┌───────────────────────────▼───────────────────────────────────┐    │
+  │  │              NVMe Flash Drives (NVMe-SCM / eTLC)              │    │
+  │  │           (data + FAST VP tiering, SnapVX metadata)           │    │
+  │  └───────────────────────────────────────────────────────────────┘    │
+  └─────────────────────┬─────────────────────┬────────────────────────── ┘
+                        │  FC / NVMe-oF        │ SRDF replication
+           ┌────────────▼──────────┐   ┌───────▼───────────────────┐
+           │    SAN Fabric          │   │   Remote PowerMax Array   │
+           │  (Brocade / Cisco MDS) │   │   (SRDF/S or SRDF/A)      │
+           └────────────┬──────────┘   └───────────────────────────┘
+                        │
+           ┌────────────▼──────────────────────────┐
+           │  Hosts (MPIO / PowerPath)              │
+           │  Oracle RAC / SQL Server / SAP HANA    │
+           └───────────────────────────────────────┘
+```
+
 ## Overview
 
 Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: **PowerMax 2000** (1–4 engines) and **PowerMax 8000** (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over Fibre Channel or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS (formerly Enginuity/HYPERMAX OS) and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).

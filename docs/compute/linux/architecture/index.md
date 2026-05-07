@@ -12,6 +12,33 @@ Linux servers fulfill multiple infrastructure roles:
 | Container host | RHEL 9 | 8–32 | 16–128 GB | Podman/Docker workloads |
 | Backup proxy (Linux) | RHEL 9 | 8 | 16 GB | Veeam proxy or NetBackup media server |
 
+
+## Server Role Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                       Linux Infrastructure                               │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Identity & Access                                               │    │
+  │  │  SSSD ──► Active Directory (Kerberos / LDAP)                    │    │
+  │  │  PAM  ──► MFA / CyberArk PSM proxy                              │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │                                                                          │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
+  │  │  App Server  │  │  DB Server   │  │  Web Server  │  │  Bastion   │  │
+  │  │  RHEL / Ubuntu│  │ Oracle/PGSQL │  │  Nginx/Apache│  │  SSH jump  │  │
+  │  │  systemd     │  │  ASM / data  │  │  TLS cert    │  │  host      │  │
+  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └─────┬──────┘  │
+  │         │                 │                  │                │         │
+  │  ┌──────▼─────────────────▼──────────────────▼────────────────▼──────┐  │
+  │  │                    Shared Services                                  │  │
+  │  │  NFS mounts (ONTAP)   iSCSI/FC LUNs   Syslog ──► SIEM             │  │
+  │  │  NTP (Chrony)         DNS (resolv.conf) Monitoring (node exporter) │  │
+  │  └─────────────────────────────────────────────────────────────────── ┘  │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Disk Layout
 
 Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:

@@ -11,6 +11,33 @@ VxRail is sold exclusively as a pre-configured appliance and is managed as a sys
 
 ---
 
+
+## HCI Node Cluster
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                       VxRail Cluster                                     │
+  │                                                                          │
+  │  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐ │
+  │  │   VxRail Node 1    │  │   VxRail Node 2    │  │   VxRail Node N    │ │
+  │  │   ESXi             │  │   ESXi             │  │   ESXi             │ │
+  │  │   NVMe cache       │  │   NVMe cache       │  │   NVMe cache       │ │
+  │  │   SSD / NL-SAS cap │  │   SSD / NL-SAS cap │  │   SSD / NL-SAS cap │ │
+  │  │   25 GbE NICs      │  │   25 GbE NICs      │  │   25 GbE NICs      │ │
+  │  └─────────┬──────────┘  └─────────┬──────────┘  └─────────┬──────────┘ │
+  └────────────┼─────────────────────── ┼────────────────────────┼───────────┘
+               └─────────────────────────────────────────────────┘
+                        25 GbE ToR switch (leaf-spine)
+                        vSAN, vMotion, VM, management traffic
+
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  VxRail Manager (VM on cluster)                                          │
+  │  Lifecycle management  |  Day-0 bring-up  |  vCenter integration        │
+  │  HW firmware + ESXi + vSAN coordinated upgrade via VxRail LCM           │
+  └──────────────────────────────────────────────────────────────────────────┘
+  Part of VCF on VxRail: SDDC Manager orchestrates workload domains
+```
+
 ## Cluster Topology
 
 | Parameter | Value |

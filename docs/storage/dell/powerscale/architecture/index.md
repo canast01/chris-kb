@@ -3,6 +3,34 @@
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the **OneFS** distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at `/ifs` across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes, with each node added linearly contributing both capacity and throughput. PowerScale is available in all-flash (F-series), hybrid (H-series), and archive (A-series) node families.
 
+
+## Scale-Out NAS Cluster
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  PowerScale (OneFS) Cluster                              │
+  │                                                                          │
+  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+  │  │  Node 1  │  │  Node 2  │  │  Node 3  │  │  Node N  │  │  Node N+1│  │
+  │  │  F810    │  │  F810    │  │  F810    │  │  H700    │  │  A2000   │  │
+  │  │  (flash) │  │  (flash) │  │  (flash) │  │ (hybrid) │  │(archive) │  │
+  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  │
+  │       └────────────────────────────────────────────────────────┘        │
+  │                       InfiniBand / 25 GbE backend                       │
+  │                       (OneFS distributed storage fabric)                │
+  │                                                                          │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │  Frontend network (10/25 GbE)                                    │   │
+  │  │  SmartConnect DNS  ──► distributes client connections            │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │              │  NFS v3/v4  SMB 2/3  HDFS  S3  FTP                       │
+  │  ┌───────────▼─────────────────────────────────────────────────────┐    │
+  │  │  Clients  (Linux, Windows, Hadoop, AI/ML GPU nodes)              │    │
+  │  └──────────────────────────────────────────────────────────────────┘    │
+  │  Single namespace: /ifs  — visible from all nodes simultaneously        │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Components
 
 | Component | Description |

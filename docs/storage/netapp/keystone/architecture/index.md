@@ -4,6 +4,35 @@
 
 NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware either at the customer's data center or in a colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus any burst usage above that commitment. A Keystone Collector agent deployed on-premises reports consumption telemetry to NetApp for billing.
 
+
+## STaaS Consumption Model
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  Customer Data Centre (or colocation)                                    │
+  │                                                                          │
+  │  ┌────────────────────────────────────────────────────────────────┐     │
+  │  │  NetApp-owned Hardware (managed by NetApp or partner)          │     │
+  │  │  AFF (block/file)   FAS (hybrid)   StorageGRID (object)        │     │
+  │  │  Installed, monitored, and maintained by NetApp                │     │
+  │  └───────────────────────────────────┬──────────────────────────── ┘     │
+  │                                      │  HTTPS telemetry                 │
+  │  ┌───────────────────────────────────▼─────────────────────────────┐    │
+  │  │  Keystone Collector (lightweight agent VM)                      │    │
+  │  │  Measures consumed capacity per service tier per hour           │    │
+  │  └───────────────────────────────────┬─────────────────────────────┘    │
+  └─────────────────────────────────────┼──────────────────────────────────┘
+                                        │  usage data
+  ┌─────────────────────────────────────▼──────────────────────────────────┐
+  │  NetApp Cloud / ActiveIQ                                                │
+  │  ┌───────────────────┐  ┌───────────────────┐  ┌─────────────────────┐ │
+  │  │  Consumption      │  │  Billing Engine   │  │  Customer Portal    │ │
+  │  │  Metering         │  │  Committed + burst│  │  Capacity dashboard │ │
+  │  └───────────────────┘  └───────────────────┘  └─────────────────────┘ │
+  └────────────────────────────────────────────────────────────────────────┘
+  Customer pays for committed reserve + burst overage; no CapEx
+```
+
 ## Service Tiers
 
 | Tier | Protocol | Use Case |

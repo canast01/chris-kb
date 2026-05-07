@@ -4,6 +4,34 @@
 
 SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.
 
+
+## Replication Modes
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                    SnapMirror Architecture                               │
+  │                                                                          │
+  │  Source Cluster                            Destination Cluster           │
+  │  ─────────────────────────────────         ────────────────────────────  │
+  │  ┌───────────────────────────────┐         ┌──────────────────────────┐  │
+  │  │  SVM / Volume (R/W)           │         │  SVM / Volume (DP/RO)    │  │
+  │  │                               │         │                          │  │
+  │  │  SnapMirror Async  ───────────┼─────────►  RPO = schedule interval │  │
+  │  │  (XDP / SnapVault)            │         │  (hourly / daily)        │  │
+  │  │                               │         │                          │  │
+  │  │  SnapMirror Sync  ◄───────────┼─────────►  RPO = 0 (synchronous)  │  │
+  │  │  (SM-S / SMBC)                │  NVLOG  │  AutomatedFailOver (SAN) │  │
+  │  │                               │  mirror │                          │  │
+  │  └───────────────────────────────┘         └──────────────────────────┘  │
+  │                                                                          │
+  │  Relationship management always from destination:                        │
+  │  snapmirror create / initialize / update / resync / break / quiesce     │
+  │                                                                          │
+  │  Mediator (SM-S): third cluster or host — tiebreak for transparent      │
+  │  failover when both clusters disagree on primary state                  │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Replication Types
 
 | Type | RPO | Description |

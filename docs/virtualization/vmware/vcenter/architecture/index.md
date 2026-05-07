@@ -1,4 +1,38 @@
 # vCenter Architecture
+## vSphere Cluster Topology
+
+```
+  ┌─────────────────────────────────────────────────────────────────────────────┐
+  │                          vSphere Cluster                                    │
+  │                                                                             │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
+  │  │   ESXi-01    │  │   ESXi-02    │  │   ESXi-03    │  │   ESXi-04    │   │
+  │  │  vmnic0/1    │  │  vmnic0/1    │  │  vmnic0/1    │  │  vmnic0/1    │   │
+  │  │  vmnic2/3    │  │  vmnic2/3    │  │  vmnic2/3    │  │  vmnic2/3    │   │
+  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘   │
+  │         │  VDS             │                 │                 │           │
+  └─────────┼──────────────────┼─────────────────┼─────────────────┼───────────┘
+            │                  │                 │                 │
+  ┌─────────▼──────────────────▼─────────────────▼─────────────────▼───────────┐
+  │                   vSphere Distributed Switch (VDS)                          │
+  │   ┌───────────┐  ┌────────────┐  ┌─────────────┐  ┌──────────────────┐    │
+  │   │  VM Net   │  │ vMotion    │  │  Storage    │  │  Management      │    │
+  │   │  (dvPG)   │  │ VMkernel   │  │  VMkernel   │  │  VMkernel        │    │
+  │   └───────────┘  └────────────┘  └─────────────┘  └──────────────────┘    │
+  └───────────────────────────────────────────────────────────────────────────┘
+            │ Management & API                          │ Storage
+  ┌─────────▼──────────────────────────────┐  ┌────────▼──────────────────────┐
+  │  vCenter Server                        │  │  Shared Storage               │
+  │  ┌────────────┐  ┌────────────────┐   │  │  ┌────────────┐  ┌─────────┐  │
+  │  │  vSphere   │  │  Lifecycle Mgr │   │  │  │ FlashArray │  │  vSAN   │  │
+  │  │  Client    │  │  (patching)    │   │  │  │ (VMFS/vVol)│  │ (local) │  │
+  │  └────────────┘  └────────────────┘   │  │  └────────────┘  └─────────┘  │
+  │  ┌────────────┐  ┌────────────────┐   │  └───────────────────────────────┘
+  │  │  DRS / HA  │  │  NSX Manager   │   │
+  │  └────────────┘  └────────────────┘   │
+  └────────────────────────────────────────┘
+```
+
 ## Deployment Model
 
 vCenter Server is delivered as the **vCenter Server Appliance (VCSA)** — a Photon OS-based virtual appliance. Since vCenter 7.0, the Platform Services Controller (PSC) is embedded directly in the appliance (external PSC is deprecated). The embedded database is PostgreSQL.

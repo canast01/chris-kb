@@ -3,6 +3,36 @@
 
 Use this page for practical Vmware Cloud Foundation Architecture notes, checks, troubleshooting, commands, change notes, and field references.
 
+
+## SDDC Stack Architecture
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  VMware Cloud Foundation (VCF)                           │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  SDDC Manager                                                   │    │
+  │  │  Lifecycle orchestration  |  Workload domain management         │    │
+  │  │  Certificate / password management  |  API / UI                 │    │
+  │  └───────────────────────────────────────────────────────────────── ┘    │
+  │          │  manages                                                      │
+  │  ┌───────┴────────────────────────────────────────────────────────┐     │
+  │  │  Workload Domains                                              │     │
+  │  │  ┌──────────────────────┐    ┌──────────────────────────────┐  │     │
+  │  │  │  Management Domain   │    │  VI Workload Domain(s)       │  │     │
+  │  │  │  vCenter (mgmt)      │    │  vCenter (workload)          │  │     │
+  │  │  │  NSX Manager cluster │    │  NSX (per domain or shared)  │  │     │
+  │  │  │  vSAN (mgmt)         │    │  vSAN / external storage     │  │     │
+  │  │  └──────────────────────┘    └──────────────────────────────┘  │     │
+  │  └────────────────────────────────────────────────────────────────┘     │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Shared Services (Cloud Builder automates day-0 bring-up)       │    │
+  │  │  vCenter  NSX  vSAN  SDDC Manager  Aria Ops  Aria Automation    │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Common checks
 
 - Confirm current health

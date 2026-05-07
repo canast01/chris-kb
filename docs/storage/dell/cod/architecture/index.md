@@ -3,6 +3,33 @@
 
 Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are physically installed in the array chassis at the factory or during a hardware add, but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required to activate reserved capacity — the unlock is entirely software-driven through SYMCLI or Unisphere.
 
+
+## Capacity on Demand Model
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  PowerMax COD — Capacity Unlock Model                    │
+  │                                                                          │
+  │  Physical drives installed at factory                                    │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  NVMe Drive Bay (all drives present in chassis)                 │    │
+  │  │  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐  │    │
+  │  │  │ Drv 1 │ │ Drv 2 │ │ Drv 3 │ │ Drv 4 │ │ Drv 5 │ │ Drv 6 │  │    │
+  │  │  │ACTIVE │ │ACTIVE │ │ACTIVE │ │ LOCKED│ │ LOCKED│ │ LOCKED│  │    │
+  │  │  │licensed│ │licensed│ │licensed│ │no lic │ │no lic │ │no lic │  │    │
+  │  │  └───────┘ └───────┘ └───────┘ └───────┘ └───────┘ └───────┘  │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │                                                                          │
+  │  Unlock process (no truck roll):                                         │
+  │                                                                          │
+  │  Purchase COD licence ──► Apply via SYMCLI / Unisphere                   │
+  │                       ──► Array controller unlocks capacity instantly    │
+  │                       ──► New storage available within minutes           │
+  │                                                                          │
+  │  symconfigure -cmd "unlock cod -capacity <TB>" commit                    │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## How COD Works
 
 ```

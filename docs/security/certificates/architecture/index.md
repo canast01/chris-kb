@@ -23,6 +23,34 @@ Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-g
 
 ---
 
+
+## PKI Hierarchy
+
+```
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │                        Enterprise PKI                                   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐  │
+  │  │  Root CA  (offline — HSM or dedicated server, air-gapped)        │  │
+  │  │  Self-signed, 4096-bit RSA or P-384 EC, 20yr validity            │  │
+  │  │  Stored: locked cabinet / HSM — never brought online to issue    │  │
+  │  └──────────────────────────┬───────────────────────────────────────┘  │
+  │                             │  signed by Root CA                       │
+  │  ┌──────────────────────────▼───────────────────────────────────────┐  │
+  │  │  Issuing / Intermediate CA  (ADCS — Windows Server online)       │  │
+  │  │  Enterprise CA — integrated with AD for auto-enrolment           │  │
+  │  │  CRL published to CDP  |  OCSP responder on IIS                  │  │
+  │  └───────┬────────────────────────────┬────────────────────────┬────┘  │
+  │          │                            │                        │       │
+  │  ┌───────▼────────┐  ┌───────────────▼──────┐  ┌─────────────▼──────┐ │
+  │  │  Server Certs  │  │  User Certs           │  │  Code Signing      │ │
+  │  │  TLS (2yr)     │  │  Smart card / S/MIME  │  │  CI/CD pipeline    │ │
+  │  │  HTTPS/LDAPS   │  │  (1yr)                │  │  (1yr)             │ │
+  │  └────────────────┘  └───────────────────────┘  └────────────────────┘ │
+  └─────────────────────────────────────────────────────────────────────────┘
+  Venafi / manual inventory monitors all certs for expiry and policy drift
+```
+
 ## ADCS Role Components
 
 | Component | Description |

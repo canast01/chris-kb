@@ -3,6 +3,32 @@
 
 Dell Unity XT is a mid-range unified storage platform delivering block (Fibre Channel, iSCSI) and file (NFS, SMB) storage from a single system. It uses a dual storage processor architecture with automatic failover between SP A and SP B. Unity XT is available as purpose-built hardware (Unity XT 380, 480, 680, 880) and as a software-defined appliance (UnityVSA). Administration is via the Unisphere for Unity web GUI or the `uemcli` command-line interface.
 
+
+## Dual Storage Processor Architecture
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                      Dell Unity XT Chassis                               │
+  │                                                                          │
+  │  ┌───────────────────────────────────────────────────────────────────┐  │
+  │  │                    System Bay                                     │  │
+  │  │  ┌───────────────────────┐     ┌───────────────────────┐         │  │
+  │  │  │  Storage Processor A  │◄───►│  Storage Processor B  │         │  │
+  │  │  │  (active for set A)   │ HA  │  (active for set B)   │         │  │
+  │  │  │  FC / iSCSI / NFS     │ peer│  FC / iSCSI / NFS     │         │  │
+  │  │  │  SMB ports            │ link│  SMB ports             │         │  │
+  │  │  └──────────┬────────────┘     └────────────┬──────────┘         │  │
+  │  └─────────────┼────────────────────────────────┼────────────────────┘  │
+  │                │  SAS / FC-AL                   │                       │
+  │  ┌─────────────▼────────────────────────────────▼────────────────────┐  │
+  │  │  Drive Enclosures                                                  │  │
+  │  │  SSD (all-flash)  NL-SAS (hybrid)  Tightly coupled to chassis     │  │
+  │  └────────────────────────────────────────────────────────────────── ┘  │
+  └──────────────────────────────────────────────────────────────────────────┘
+  Block: Fibre Channel / iSCSI LUNs  |  File: NFS / SMB (via NAS head)
+  Managed via Unisphere for Unity GUI  |  uemcli (CLI)  |  REST API
+```
+
 ## Components
 
 | Component | Description |

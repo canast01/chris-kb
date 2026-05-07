@@ -10,6 +10,35 @@ Evergreen spans two primary tiers:
 
 Evergreen//One (STaaS consumption model) is covered in a separate section of this KB.
 
+
+## Controller Refresh Model
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                  Evergreen — Non-Disruptive Controller Swap              │
+  │                                                                          │
+  │  Before refresh                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Chassis: Gen 5 CT0 + CT1  │  NVMe Drive Shelf (customer-owned) │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │                                                                          │
+  │  During refresh (hosts stay connected, I/O continues)                   │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Step 1: Pure installs Gen 6 CT0 alongside Gen 5 CT0            │    │
+  │  │  Step 2: Ownership migrates non-disruptively                    │    │
+  │  │  Step 3: Gen 5 CT0 removed; repeat for CT1                      │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │                                                                          │
+  │  After refresh                                                           │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Chassis: Gen 6 CT0 + CT1  │  Same NVMe Drive Shelf (unchanged) │    │
+  │  │  Data unchanged — no migration, no downtime, no host rescan      │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │                                                                          │
+  │  Subscription covers: controller hardware, Purity upgrades, support     │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Components
 
 **Controllers**

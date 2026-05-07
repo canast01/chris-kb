@@ -9,6 +9,35 @@
 | Command Center | Web UI for administration | Replaces legacy Java GUI in FR32+ |
 | Storage Policy | Job-to-storage mapping | Primary copy + secondary (offsite) copy |
 
+
+## Component Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                     CommVault Architecture                               │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  CommServe (CS) — SQL Server backend                            │    │
+  │  │  Job Manager / Scheduler / Index Cache / Web Console            │    │
+  │  └─────────────────────────────────────────────────────────────────┘    │
+  │          │  job control              │  REST API                        │
+  │  ┌───────▼──────────────────┐  ┌────▼──────────────────────────────┐   │
+  │  │  Media Agents (MA)       │  │  Access Nodes (proxy)             │   │
+  │  │  Dedup DB (DDB)          │  │  VSA proxy (VMware)               │   │
+  │  │  Aux copy / replication  │  │  DB agent hosts                   │   │
+  │  └───────┬──────────────────┘  └────────────────────────────────── ┘   │
+  │          │  data path                                                   │
+  │  ┌───────▼──────────────────────────────────────────────────────────┐   │
+  │  │  Backup Targets                                                   │   │
+  │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │   │
+  │  │  │ Disk Library │  │  Tape / VTL │  │  Cloud (S3 / Azure Blob)│  │   │
+  │  │  │ (Data Domain)│  │             │  │                         │  │   │
+  │  │  └─────────────┘  └─────────────┘  └─────────────────────────┘  │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  └──────────────────────────────────────────────────────────────────────────┘
+  Sources: VMware VMs, SQL/Oracle/SAP HANA, Windows/Linux file systems, NAS
+```
+
 ## CommServe
 
 The CommServe is the single most critical component — it holds the configuration database (SQL Server) that maps every backup job, client, and storage policy. CommServe failure means no new jobs run.

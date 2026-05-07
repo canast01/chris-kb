@@ -9,6 +9,34 @@
 | Storage Unit | Target storage for backup data | BasicDisk, AdvancedDisk, OST, Cloud, Tape |
 | OpsCenter / IT Analytics | Centralised reporting and monitoring | Separate server; multi-domain |
 
+
+## Three-Tier Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                     NetBackup Architecture                               │
+  │                                                                          │
+  │  ┌─────────────────────────────────────────────────────────────────┐    │
+  │  │  Primary Server (Master Server)                                 │    │
+  │  │  NetBackup catalogue  Policy DB  Job scheduler  EMM DB          │    │
+  │  └──────────────────────────────┬──────────────────────────────────┘    │
+  │                                 │  policy / job control                 │
+  │         ┌───────────────────────┼────────────────────────┐              │
+  │         │                       │                        │              │
+  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
+  │  │  Media Svr 1│        │  Media Svr 2 │        │  Media Svr 3 │       │
+  │  │  (Site A)   │        │  (Site B/DR) │        │  (Cloud gate)│       │
+  │  └──────┬──────┘        └───────┬──────┘        └───────┬──────┘       │
+  │         │  data                 │                       │              │
+  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
+  │  │ Disk / MSDP │        │ Disk / MSDP  │        │  Cloud (S3)  │       │
+  │  │ (dedup pool)│        │  (DR copy)   │        │  (long-term) │       │
+  │  └─────────────┘        └──────────────┘        └──────────────┘       │
+  │                                                                          │
+  │  Clients: NBU agents on VMs, DB hosts, NAS NDMP, VMware backup host     │
+  └──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Master Server
 
 The master server is the single most critical component — it holds the NetBackup catalog (file system and database tracking all backup images) and all policy definitions. Master server failure means no new jobs schedule.

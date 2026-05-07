@@ -13,6 +13,32 @@ Key distinctions from standard Evergreen:
 | SLA | Platform availability, controller refresh guarantee | 99.9999% availability SLA with performance guarantees (IOPS, bandwidth, latency) |
 | Data sovereignty | Customer premises | Customer premises or designated colo — data never leaves the agreed location |
 
+
+## STaaS Delivery Model
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  Customer Site (or colocation)                                           │
+  │                                                                          │
+  │  ┌────────────────────────────────────────────────────────────────┐     │
+  │  │  Pure-owned FlashArray / FlashBlade hardware                   │     │
+  │  │  Installed + monitored + maintained by Pure Storage            │     │
+  │  │  Controller refreshes happen non-disruptively at EOG           │     │
+  │  └──────────────────────────────┬─────────────────────────────── ┘     │
+  │                                 │  phone-home (HTTPS 443)               │
+  │  ┌──────────────────────────────▼──────────────────────────────────┐   │
+  │  │  Pure1 Cloud (telemetry + AIOps)                                │   │
+  │  │  Consumption metering  Health monitoring  Capacity forecasting  │   │
+  │  └──────────────────────────────┬───────────────────────────────── ┘   │
+  └────────────────────────────────┼────────────────────────────────────── ┘
+                                   │  usage data ──► monthly invoice
+  ┌────────────────────────────────▼──────────────────────────────────────┐
+  │  Pure Storage Billing Portal                                           │
+  │  Committed reserve tier + burst + professional services               │
+  └────────────────────────────────────────────────────────────────────────┘
+  Customer: no CapEx, no hardware ownership, Pure responsible for SLAs
+```
+
 ## Components
 
 **FlashArray and FlashBlade Hardware**

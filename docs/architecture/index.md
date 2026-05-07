@@ -27,3 +27,31 @@ Architecture knowledge base landing page.
   <span>Tiering strategy, protocol selection, capacity planning, and array placement principles.</span>
 </a>
 </div>
+
+
+## Enterprise Architecture Overview
+
+```
+  ┌────────────────────────────────────────────────────────────────────────────┐
+  │                        Enterprise Data Centre                              │
+  │                                                                            │
+  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐     │
+  │  │   Compute Tier   │  │   Storage Tier   │  │   Network Tier       │     │
+  │  │                  │  │                  │  │                      │     │
+  │  │  vSphere Cluster │  │  FlashArray      │  │  Core (leaf/spine)   │     │
+  │  │  ESXi hosts      │  │  PowerMax        │  │  FC fabric (SAN)     │     │
+  │  │  VCF / HCI       │  │  ONTAP AFF       │  │  NSX overlay         │     │
+  │  └────────┬─────────┘  └────────┬─────────┘  └──────────┬───────────┘     │
+  │           │                     │                       │                 │
+  │  ┌────────▼─────────────────────▼───────────────────────▼───────────┐     │
+  │  │                     Management Plane                              │     │
+  │  │   vCenter   Pure1   CloudIQ   Aria Operations   NSX Manager      │     │
+  │  └──────────────────────────────────────────────────────────────────┘     │
+  │                                                                            │
+  │  ┌──────────────────────────────────────────────────────────────────┐     │
+  │  │                    DR / Data Protection                           │     │
+  │  │   SRDF (PowerMax)  SnapMirror (ONTAP)  ActiveCluster (FlashArray)│     │
+  │  │   Veeam / NetBackup / CommVault         SRM (VMware)             │     │
+  │  └──────────────────────────────────────────────────────────────────┘     │
+  └────────────────────────────────────────────────────────────────────────────┘
+```

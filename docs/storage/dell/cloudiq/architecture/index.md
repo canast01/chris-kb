@@ -3,6 +3,35 @@
 
 Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.
 
+
+## Data Pipeline Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  On-Premises                                                             │
+  │                                                                          │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │  Secure Connect Gateway (SCG) — virtual appliance               │   │
+  │  │  Collects telemetry via REST from:                               │   │
+  │  │  PowerMax  PowerStore  Unity  PowerScale  PowerFlex  Networking  │   │
+  │  └─────────────────────────────────┬────────────────────────────── ┘   │
+  │                                    │  HTTPS outbound (port 443)        │
+  └────────────────────────────────────┼──────────────────────────────────┘
+                                       │
+  ┌────────────────────────────────────▼──────────────────────────────────┐
+  │  Dell Cloud (CloudIQ SaaS)                                             │
+  │                                                                        │
+  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐    │
+  │  │  Telemetry Store │  │  AI / ML Engine  │  │  REST API        │    │
+  │  │  (time-series)   │  │  Anomaly detect  │  │  (customer use)  │    │
+  │  │                  │  │  Capacity fcst   │  │                  │    │
+  │  └──────────────────┘  └──────────────────┘  └──────────────────┘    │
+  │                                                                        │
+  │  Health Scores  |  Capacity Forecasts  |  Anomaly Alerts               │
+  │  Web Dashboard  |  Email / Webhook notifications                       │
+  └────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Components
 
 | Component | Location | Role |
