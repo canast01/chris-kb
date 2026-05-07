@@ -9,20 +9,20 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="file-systems/">File Systems</a></h3>
-    <p>File Systems notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="file-systems/">
+  <strong>File Systems</strong>
+  <span>File Systems notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="luns/">Luns</a></h3>
-    <p>Luns notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="luns/">
+  <strong>Luns</strong>
+  <span>Luns notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="storage-pools/">Storage Pools</a></h3>
-    <p>Storage Pools notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="storage-pools/">
+  <strong>Storage Pools</strong>
+  <span>Storage Pools notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## System & Status

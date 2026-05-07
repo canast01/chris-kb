@@ -7,24 +7,24 @@ Confluence knowledge base articles, operational procedures, troubleshooting note
 ## Articles
 
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="cleanup/">Cleanup</a></h3>
-  <p>Cleanup notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="pages/">Pages</a></h3>
-  <p>Pages notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="search/">Search</a></h3>
-  <p>Search notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="spaces/">Spaces</a></h3>
-  <p>Spaces notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="templates/">Templates</a></h3>
-  <p>Templates notes, procedures, checks, and references.</p>
-</div>
+<a class="kb-card" href="cleanup/">
+  <strong>Cleanup</strong>
+  <span>Cleanup notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="pages/">
+  <strong>Pages</strong>
+  <span>Pages notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="search/">
+  <strong>Search</strong>
+  <span>Search notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="spaces/">
+  <strong>Spaces</strong>
+  <span>Spaces notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="templates/">
+  <strong>Templates</strong>
+  <span>Templates notes, procedures, checks, and references.</span>
+</a>
 </div>

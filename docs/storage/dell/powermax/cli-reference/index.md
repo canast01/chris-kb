@@ -9,25 +9,25 @@ Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. T
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="device-groups/">Device Groups</a></h3>
-    <p>Device Groups notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="device-groups/">
+  <strong>Device Groups</strong>
+  <span>Device Groups notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="discovery/">Discovery</a></h3>
-    <p>Discovery notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="discovery/">
+  <strong>Discovery</strong>
+  <span>Discovery notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="masking-views/">Masking Views</a></h3>
-    <p>Masking Views notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="masking-views/">
+  <strong>Masking Views</strong>
+  <span>Masking Views notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="storage-groups/">Storage Groups</a></h3>
-    <p>Storage Groups notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="storage-groups/">
+  <strong>Storage Groups</strong>
+  <span>Storage Groups notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Discovery & Array Info

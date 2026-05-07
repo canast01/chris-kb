@@ -4,29 +4,29 @@ Health Checks operational notes and deep-dive references.
 
 <div class="kb-grid kb-grid-5">
 
-  <div class="kb-card">
-    <h3><a href="daily-checks/">Daily Checks</a></h3>
-    <p>Daily Checks notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="daily-checks/">
+  <strong>Daily Checks</strong>
+  <span>Daily Checks notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="pre-change/">Pre Change</a></h3>
-    <p>Pre Change notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="pre-change/">
+  <strong>Pre Change</strong>
+  <span>Pre Change notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="post-change/">Post Change</a></h3>
-    <p>Post Change notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="post-change/">
+  <strong>Post Change</strong>
+  <span>Post Change notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="evidence/">Evidence</a></h3>
-    <p>Evidence notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="evidence/">
+  <strong>Evidence</strong>
+  <span>Evidence notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="follow-up/">Follow Up</a></h3>
-    <p>Follow Up notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="follow-up/">
+  <strong>Follow Up</strong>
+  <span>Follow Up notes, checks, references, and validation.</span>
+</a>
 
 </div>

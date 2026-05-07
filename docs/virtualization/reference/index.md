@@ -4,24 +4,24 @@ Standards, inventory, upgrade readiness checklists, and quick reference material
 
 <div class="kb-grid kb-grid-5">
 
-  <div class="kb-card">
-    <h3><a href="standards/">Standards</a></h3>
-    <p>Platform standards, naming conventions, and configuration baselines.</p>
-  </div>
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Platform standards, naming conventions, and configuration baselines.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="inventory/">Inventory</a></h3>
-    <p>Environment inventory, asset registers, and platform documentation.</p>
-  </div>
+<a class="kb-card" href="inventory/">
+  <strong>Inventory</strong>
+  <span>Environment inventory, asset registers, and platform documentation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="upgrade-readiness/">Upgrade Readiness</a></h3>
-    <p>Pre-upgrade checklists, compatibility matrices, and readiness assessments.</p>
-  </div>
+<a class="kb-card" href="upgrade-readiness/">
+  <strong>Upgrade Readiness</strong>
+  <span>Pre-upgrade checklists, compatibility matrices, and readiness assessments.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="quick-reference/">Quick Reference</a></h3>
-    <p>Command cheat sheets, port references, and quick lookup guides.</p>
-  </div>
+<a class="kb-card" href="quick-reference/">
+  <strong>Quick Reference</strong>
+  <span>Command cheat sheets, port references, and quick lookup guides.</span>
+</a>
 
 </div>

@@ -5,25 +5,25 @@ TLS (Transport Layer Security) provides encryption, integrity, and authenticatio
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="certificates/">Certificates</a></h3>
-    <p>Certificates notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="certificates/">
+  <strong>Certificates</strong>
+  <span>Certificates notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="chains/">Chains</a></h3>
-    <p>Chains notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="chains/">
+  <strong>Chains</strong>
+  <span>Chains notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="expiration/">Expiration</a></h3>
-    <p>Expiration notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="expiration/">
+  <strong>Expiration</strong>
+  <span>Expiration notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="validation/">Validation</a></h3>
-    <p>Validation notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="validation/">
+  <strong>Validation</strong>
+  <span>Validation notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Protocol Versions

@@ -9,20 +9,20 @@ Commonly used Data Domain OS (DDOS) commands for managing Dell EMC backup applia
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="backup-config/">Backup Config</a></h3>
-    <p>Backup Config notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="backup-config/">
+  <strong>Backup Config</strong>
+  <span>Backup Config notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="file-sharing/">File Sharing</a></h3>
-    <p>File Sharing notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="file-sharing/">
+  <strong>File Sharing</strong>
+  <span>File Sharing notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="mtrees/">MTrees</a></h3>
-    <p>MTrees notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="mtrees/">
+  <strong>MTrees</strong>
+  <span>MTrees notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## System Status

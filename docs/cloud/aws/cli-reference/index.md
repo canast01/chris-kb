@@ -9,15 +9,15 @@ Commonly used AWS CLI commands for managing compute, storage, networking, identi
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="ec2-instances/">EC2 Instances</a></h3>
-    <p>EC2 Instances notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="ec2-instances/">
+  <strong>EC2 Instances</strong>
+  <span>EC2 Instances notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="ec2-storage/">EC2 Storage</a></h3>
-    <p>EC2 Storage notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="ec2-storage/">
+  <strong>EC2 Storage</strong>
+  <span>EC2 Storage notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Identity & Access (IAM / STS)

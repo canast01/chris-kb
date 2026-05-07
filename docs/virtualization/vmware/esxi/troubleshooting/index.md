@@ -5,15 +5,15 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="host-disconnects/">Host Disconnects</a></h3>
-    <p>Host Disconnects notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="host-disconnects/">
+  <strong>Host Disconnects</strong>
+  <span>Host Disconnects notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="maintenance-mode/">Maintenance Mode</a></h3>
-    <p>Maintenance Mode notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="maintenance-mode/">
+  <strong>Maintenance Mode</strong>
+  <span>Maintenance Mode notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Quick Reference

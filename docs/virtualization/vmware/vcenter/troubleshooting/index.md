@@ -5,15 +5,15 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="certificate-checks/">Certificate Checks</a></h3>
-    <p>Certificate Checks notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="certificate-checks/">
+  <strong>Certificate Checks</strong>
+  <span>Certificate Checks notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="service-health/">Service Health</a></h3>
-    <p>Service Health notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="service-health/">
+  <strong>Service Health</strong>
+  <span>Service Health notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Issue Summary

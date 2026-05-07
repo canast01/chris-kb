@@ -4,19 +4,19 @@ Use this section for practical notes, checks, commands, troubleshooting, design 
 
 <div class="kb-grid kb-grid-3">
 
-  <div class="kb-card">
-    <h3><a href="alerts/">Alerts</a></h3>
-    <p>Notes, checks, runbooks, commands, troubleshooting, and operational references for Alerts.</p>
-  </div>
+<a class="kb-card" href="alerts/">
+  <strong>Alerts</strong>
+  <span>Notes, checks, runbooks, commands, troubleshooting, and operational references for Alerts.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="health-checks/">Health Checks</a></h3>
-    <p>Notes, checks, runbooks, commands, troubleshooting, and operational references for Health Checks.</p>
-  </div>
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Notes, checks, runbooks, commands, troubleshooting, and operational references for Health Checks.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="support-cases/">Support Cases</a></h3>
-    <p>Notes, checks, runbooks, commands, troubleshooting, and operational references for Support Cases.</p>
-  </div>
+<a class="kb-card" href="support-cases/">
+  <strong>Support Cases</strong>
+  <span>Notes, checks, runbooks, commands, troubleshooting, and operational references for Support Cases.</span>
+</a>
 
 </div>

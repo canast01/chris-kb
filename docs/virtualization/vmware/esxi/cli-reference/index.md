@@ -9,20 +9,20 @@ The ESXi shell gives you direct access to a hypervisor host via SSH. `esxcli` is
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="certificates-ssh/">Certificates & SSH</a></h3>
-    <p>Certificates & SSH notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="certificates-ssh/">
+  <strong>Certificates & SSH</strong>
+  <span>Certificates & SSH notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="firewall-ntp/">Firewall & NTP</a></h3>
-    <p>Firewall & NTP notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="firewall-ntp/">
+  <strong>Firewall & NTP</strong>
+  <span>Firewall & NTP notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="vm-management/">VM Management</a></h3>
-    <p>VM Management notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="vm-management/">
+  <strong>VM Management</strong>
+  <span>VM Management notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## System, Services & Maintenance

@@ -4,29 +4,29 @@ Configuration Baselines operational notes and deep-dive references.
 
 <div class="kb-grid kb-grid-5">
 
-  <div class="kb-card">
-    <h3><a href="compute/">Compute</a></h3>
-    <p>Compute notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="compute/">
+  <strong>Compute</strong>
+  <span>Compute notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="storage/">Storage</a></h3>
-    <p>Storage notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="storage/">
+  <strong>Storage</strong>
+  <span>Storage notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="san/">SAN</a></h3>
-    <p>SAN notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="san/">
+  <strong>SAN</strong>
+  <span>SAN notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="cloud/">Cloud</a></h3>
-    <p>Cloud notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="cloud/">
+  <strong>Cloud</strong>
+  <span>Cloud notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="monitoring/">Monitoring</a></h3>
-    <p>Monitoring notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="monitoring/">
+  <strong>Monitoring</strong>
+  <span>Monitoring notes, checks, references, and validation.</span>
+</a>
 
 </div>

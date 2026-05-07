@@ -7,25 +7,25 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="common-checks/">Common Checks</a></h3>
-    <p>Common Checks notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="common-checks/">
+  <strong>Common Checks</strong>
+  <span>Common Checks notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="hba-ports/">HBA Ports</a></h3>
-    <p>HBA Ports notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="hba-ports/">
+  <strong>HBA Ports</strong>
+  <span>HBA Ports notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="load-balancing/">Load Balancing</a></h3>
-    <p>Load Balancing notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="load-balancing/">
+  <strong>Load Balancing</strong>
+  <span>Load Balancing notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="windows/">Windows</a></h3>
-    <p>Windows notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="windows/">
+  <strong>Windows</strong>
+  <span>Windows notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Status & Devices

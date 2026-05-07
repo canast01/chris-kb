@@ -7,24 +7,24 @@ Jira knowledge base articles, operational procedures, troubleshooting notes, and
 ## Articles
 
 <div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="boards/">Boards</a></h3>
-  <p>Boards notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="projects/">Projects</a></h3>
-  <p>Projects notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="reporting/">Reporting</a></h3>
-  <p>Reporting notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="stories/">Stories</a></h3>
-  <p>Stories notes, procedures, checks, and references.</p>
-</div>
-<div class="kb-card">
-  <h3><a href="tasks/">Tasks</a></h3>
-  <p>Tasks notes, procedures, checks, and references.</p>
-</div>
+<a class="kb-card" href="boards/">
+  <strong>Boards</strong>
+  <span>Boards notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="projects/">
+  <strong>Projects</strong>
+  <span>Projects notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="reporting/">
+  <strong>Reporting</strong>
+  <span>Reporting notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="stories/">
+  <strong>Stories</strong>
+  <span>Stories notes, procedures, checks, and references.</span>
+</a>
+<a class="kb-card" href="tasks/">
+  <strong>Tasks</strong>
+  <span>Tasks notes, procedures, checks, and references.</span>
+</a>
 </div>

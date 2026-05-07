@@ -9,20 +9,20 @@ Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scal
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="access-auth/">Access & Auth</a></h3>
-    <p>Access & Auth notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="access-auth/">
+  <strong>Access & Auth</strong>
+  <span>Access & Auth notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="storage-pools/">Storage Pools</a></h3>
-    <p>Storage Pools notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="storage-pools/">
+  <strong>Storage Pools</strong>
+  <span>Storage Pools notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="synciq/">SyncIQ</a></h3>
-    <p>SyncIQ notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="synciq/">
+  <strong>SyncIQ</strong>
+  <span>SyncIQ notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Cluster Status & Identity

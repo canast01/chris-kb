@@ -3,20 +3,20 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="firewalls/">Firewalls</a></h3>
-    <p>Firewalls notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="firewalls/">
+  <strong>Firewalls</strong>
+  <span>Firewalls notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="sync-state/">Sync State</a></h3>
-    <p>Sync State notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="sync-state/">
+  <strong>Sync State</strong>
+  <span>Sync State notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="validation/">Validation</a></h3>
-    <p>Validation notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="validation/">
+  <strong>Validation</strong>
+  <span>Validation notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Overview

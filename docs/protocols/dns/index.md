@@ -3,15 +3,15 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="lookups/">Lookups</a></h3>
-    <p>Lookups notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="lookups/">
+  <strong>Lookups</strong>
+  <span>Lookups notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Common issues, diagnostic steps, and resolution guides.</p>
-  </div>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
 
 </div>
 ## Overview

@@ -7,15 +7,15 @@ Commonly used Brocade FOS commands for managing Fibre Channel SAN switches. Log 
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="switch-status/">Switch Status</a></h3>
-    <p>Switch Status notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="switch-status/">
+  <strong>Switch Status</strong>
+  <span>Switch Status notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="vf/">Vf</a></h3>
-    <p>Vf notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="vf/">
+  <strong>Vf</strong>
+  <span>Vf notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Switch Status & Identity

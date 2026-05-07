@@ -5,25 +5,25 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="fabric-login/">Fabric Login</a></h3>
-    <p>Fabric Login notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="fabric-login/">
+  <strong>Fabric Login</strong>
+  <span>Fabric Login notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="paths/">Paths</a></h3>
-    <p>Paths notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="paths/">
+  <strong>Paths</strong>
+  <span>Paths notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Common issues, diagnostic steps, and resolution guides.</p>
-  </div>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="wwns/">Wwns</a></h3>
-    <p>Wwns notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="wwns/">
+  <strong>Wwns</strong>
+  <span>Wwns notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Key Concepts

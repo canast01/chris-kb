@@ -4,29 +4,29 @@ DHCP operational notes and deep-dive references.
 
 <div class="kb-grid kb-grid-5">
 
-  <div class="kb-card">
-    <h3><a href="scopes/">Scopes</a></h3>
-    <p>Scopes notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="scopes/">
+  <strong>Scopes</strong>
+  <span>Scopes notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="leases/">Leases</a></h3>
-    <p>Leases notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="leases/">
+  <strong>Leases</strong>
+  <span>Leases notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="reservations/">Reservations</a></h3>
-    <p>Reservations notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="reservations/">
+  <strong>Reservations</strong>
+  <span>Reservations notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="options/">Options</a></h3>
-    <p>Options notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="options/">
+  <strong>Options</strong>
+  <span>Options notes, checks, references, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="failover/">Failover</a></h3>
-    <p>Failover notes, checks, references, and validation.</p>
-  </div>
+<a class="kb-card" href="failover/">
+  <strong>Failover</strong>
+  <span>Failover notes, checks, references, and validation.</span>
+</a>
 
 </div>

@@ -7,25 +7,25 @@ Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="alerts-audit/">Alerts & Audit</a></h3>
-    <p>Alerts & Audit notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="alerts-audit/">
+  <strong>Alerts & Audit</strong>
+  <span>Alerts & Audit notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="csv-exports/">CSV Exports</a></h3>
-    <p>CSV Exports notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="csv-exports/">
+  <strong>CSV Exports</strong>
+  <span>CSV Exports notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="network-ports/">Network Ports</a></h3>
-    <p>Network Ports notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="network-ports/">
+  <strong>Network Ports</strong>
+  <span>Network Ports notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="pods/">Pods</a></h3>
-    <p>Pods notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="pods/">
+  <strong>Pods</strong>
+  <span>Pods notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Array & System Management

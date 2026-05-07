@@ -4,40 +4,41 @@ Aria Operations for Logs collects logs from vCenter, ESXi hosts, NSX, applicatio
 
 <div class="kb-grid kb-grid-2">
 
-  <div class="kb-card">
-    <h3><a href="cli-reference/">CLI Reference</a></h3>
-    <p>li-admin, vracli, REST API queries, ingestion API, alert management, and agent connectivity.</p>
-  
-  <div class="kb-card">
-    <h3><a href="architecture/">Architecture</a></h3>
-    <p>Architecture overview, components, and design patterns.</p>
-  </div>
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>li-admin, vracli, REST API queries, ingestion API, alert management, and agent connectivity.</span>
+</a>
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Architecture overview, components, and design patterns.</span>
+</a>
 </div>
 
-  <div class="kb-card">
-    <h3><a href="queries/">Queries</a></h3>
-    <p>Queries notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="queries/">
+  <strong>Queries</strong>
+  <span>Queries notes, checks, commands, troubleshooting, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="alerts/">Alerts</a></h3>
-    <p>Alerts notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="alerts/">
+  <strong>Alerts</strong>
+  <span>Alerts notes, checks, commands, troubleshooting, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="ingestion/">Ingestion</a></h3>
-    <p>Ingestion notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="ingestion/">
+  <strong>Ingestion</strong>
+  <span>Ingestion notes, checks, commands, troubleshooting, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="dashboards/">Dashboards</a></h3>
-    <p>Dashboards notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="dashboards/">
+  <strong>Dashboards</strong>
+  <span>Dashboards notes, checks, commands, troubleshooting, and validation.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Troubleshooting notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Troubleshooting notes, checks, commands, troubleshooting, and validation.</span>
+</a>
 
 </div>
 

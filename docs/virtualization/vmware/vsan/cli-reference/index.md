@@ -9,25 +9,25 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="cluster-status/">Cluster Status</a></h3>
-    <p>Cluster Status notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="cluster-status/">
+  <strong>Cluster Status</strong>
+  <span>Cluster Status notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="disk-groups/">Disk Groups</a></h3>
-    <p>Disk Groups notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="disk-groups/">
+  <strong>Disk Groups</strong>
+  <span>Disk Groups notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="networking/">Networking</a></h3>
-    <p>Networking notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="networking/">
+  <strong>Networking</strong>
+  <span>Networking notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="powercli/">PowerCLI</a></h3>
-    <p>PowerCLI notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="powercli/">
+  <strong>PowerCLI</strong>
+  <span>PowerCLI notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Cluster Status & Capacity

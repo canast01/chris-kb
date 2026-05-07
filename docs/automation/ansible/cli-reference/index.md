@@ -9,10 +9,10 @@ Ansible is an agentless automation tool — it connects to remote hosts over SSH
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="ad-hoc/">Ad-Hoc Commands</a></h3>
-    <p>Ad-Hoc Commands notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="ad-hoc/">
+  <strong>Ad-Hoc Commands</strong>
+  <span>Ad-Hoc Commands notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## ansible (Ad-Hoc)

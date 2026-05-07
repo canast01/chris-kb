@@ -3,49 +3,50 @@
 
 <div class="kb-grid kb-grid-2">
 
-  <div class="kb-card">
-    <h3><a href="cli-reference/">CLI Reference</a></h3>
-    <p>qcommand toolkit, qlist, qoperation, qmedia, CommVault REST API, and job management.</p>
-  
-  <div class="kb-card">
-    <h3><a href="architecture/">Architecture</a></h3>
-    <p>Architecture overview, components, and design patterns.</p>
-  </div>
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>qcommand toolkit, qlist, qoperation, qmedia, CommVault REST API, and job management.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="integration/">Integration</a></h3>
-    <p>Integration with other systems and platforms.</p>
-  </div>
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Architecture overview, components, and design patterns.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="lifecycle/">Lifecycle</a></h3>
-    <p>Installation, upgrades, patching, and decommission.</p>
-  </div>
+<a class="kb-card" href="integration/">
+  <strong>Integration</strong>
+  <span>Integration with other systems and platforms.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="scripts/">Scripts</a></h3>
-    <p>Automation scripts for common tasks and reporting.</p>
-  </div>
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Installation, upgrades, patching, and decommission.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="security/">Security</a></h3>
-    <p>Security configuration, hardening, and access control.</p>
-  </div>
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for common tasks and reporting.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="standards/">Standards</a></h3>
-    <p>Configuration standards, naming conventions, and baselines.</p>
-  </div>
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Security configuration, hardening, and access control.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Common issues, diagnostic steps, and resolution guides.</p>
-  </div>
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Configuration standards, naming conventions, and baselines.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="vendor-support/">Vendor Support</a></h3>
-    <p>Support bundles, case management, and escalation paths.</p>
-  </div>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
+
+<a class="kb-card" href="vendor-support/">
+  <strong>Vendor Support</strong>
+  <span>Support bundles, case management, and escalation paths.</span>
+</a>
 </div>
 
 </div>

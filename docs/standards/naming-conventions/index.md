@@ -3,30 +3,30 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="cloud/">Cloud</a></h3>
-    <p>Cloud notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="cloud/">
+  <strong>Cloud</strong>
+  <span>Cloud notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="documentation/">Documentation</a></h3>
-    <p>Documentation notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="documentation/">
+  <strong>Documentation</strong>
+  <span>Documentation notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="network/">Network</a></h3>
-    <p>Network notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="network/">
+  <strong>Network</strong>
+  <span>Network notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="servers/">Servers</a></h3>
-    <p>Servers notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="servers/">
+  <strong>Servers</strong>
+  <span>Servers notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="storage/">Storage</a></h3>
-    <p>Storage notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="storage/">
+  <strong>Storage</strong>
+  <span>Storage notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Overview

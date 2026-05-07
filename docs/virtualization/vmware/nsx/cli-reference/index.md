@@ -9,25 +9,25 @@ Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="diagnostics/">Diagnostics</a></h3>
-    <p>Diagnostics notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostics notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="edge-nodes/">Edge Nodes</a></h3>
-    <p>Edge Nodes notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="edge-nodes/">
+  <strong>Edge Nodes</strong>
+  <span>Edge Nodes notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="nat-lb/">NAT & Load Balancing</a></h3>
-    <p>NAT & Load Balancing notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="nat-lb/">
+  <strong>NAT & Load Balancing</strong>
+  <span>NAT & Load Balancing notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="system/">System</a></h3>
-    <p>System notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="system/">
+  <strong>System</strong>
+  <span>System notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## NSX Manager — System

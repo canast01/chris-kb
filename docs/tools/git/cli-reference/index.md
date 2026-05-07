@@ -9,35 +9,35 @@ Git is the standard distributed version control system. Every developer has a fu
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="advanced/">Advanced</a></h3>
-    <p>Advanced notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="advanced/">
+  <strong>Advanced</strong>
+  <span>Advanced notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="fetch-pull-push/">Fetch Pull Push</a></h3>
-    <p>Fetch Pull Push notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="fetch-pull-push/">
+  <strong>Fetch Pull Push</strong>
+  <span>Fetch Pull Push notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="merge-rebase/">Merge Rebase</a></h3>
-    <p>Merge Rebase notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="merge-rebase/">
+  <strong>Merge Rebase</strong>
+  <span>Merge Rebase notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="reset-restore/">Reset Restore</a></h3>
-    <p>Reset Restore notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="reset-restore/">
+  <strong>Reset Restore</strong>
+  <span>Reset Restore notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="setup/">Setup</a></h3>
-    <p>Setup notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="setup/">
+  <strong>Setup</strong>
+  <span>Setup notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="status-log/">Status Log</a></h3>
-    <p>Status Log notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="status-log/">
+  <strong>Status Log</strong>
+  <span>Status Log notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Setup, Config & Remotes

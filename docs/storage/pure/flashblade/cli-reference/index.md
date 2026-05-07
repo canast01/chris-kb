@@ -9,20 +9,20 @@ Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. Fla
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="array-hardware/">Array Hardware</a></h3>
-    <p>Array Hardware notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="array-hardware/">
+  <strong>Array Hardware</strong>
+  <span>Array Hardware notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="file-systems/">File Systems</a></h3>
-    <p>File Systems notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="file-systems/">
+  <strong>File Systems</strong>
+  <span>File Systems notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="snapshots/">Snapshots</a></h3>
-    <p>Snapshots notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="snapshots/">
+  <strong>Snapshots</strong>
+  <span>Snapshots notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Array Status & Hardware

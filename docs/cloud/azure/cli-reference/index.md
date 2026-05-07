@@ -9,15 +9,15 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="key-vault/">Key Vault</a></h3>
-    <p>Key Vault notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="key-vault/">
+  <strong>Key Vault</strong>
+  <span>Key Vault notes, checks, commands, and references.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="virtual-machines/">Virtual Machines</a></h3>
-    <p>Virtual Machines notes, checks, commands, and references.</p>
-  </div>
+<a class="kb-card" href="virtual-machines/">
+  <strong>Virtual Machines</strong>
+  <span>Virtual Machines notes, checks, commands, and references.</span>
+</a>
 
 </div>
 ## Account & Subscriptions

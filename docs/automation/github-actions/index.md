@@ -3,10 +3,10 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
-    <p>Common issues, diagnostic steps, and resolution guides.</p>
-  </div>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
 
 </div>
 ## Overview

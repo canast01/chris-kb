@@ -3,30 +3,30 @@
 
 <div class="kb-grid kb-grid-1">
 
-  <div class="kb-card">
-    <h3><a href="exam-tracking/">Exam Tracking</a></h3>
-    <p>Exam scheduling, scores, and certification tracking.</p>
-  </div>
+<a class="kb-card" href="exam-tracking/">
+  <strong>Exam Tracking</strong>
+  <span>Exam scheduling, scores, and certification tracking.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="practice-notes/">Practice Notes</a></h3>
-    <p>Practice exam notes and study materials.</p>
-  </div>
+<a class="kb-card" href="practice-notes/">
+  <strong>Practice Notes</strong>
+  <span>Practice exam notes and study materials.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="products/">Products</a></h3>
-    <p>Product portfolio and certification paths.</p>
-  </div>
+<a class="kb-card" href="products/">
+  <strong>Products</strong>
+  <span>Product portfolio and certification paths.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="review-plan/">Review Plan</a></h3>
-    <p>Study plan and review schedule.</p>
-  </div>
+<a class="kb-card" href="review-plan/">
+  <strong>Review Plan</strong>
+  <span>Study plan and review schedule.</span>
+</a>
 
-  <div class="kb-card">
-    <h3><a href="weak-areas/">Weak Areas</a></h3>
-    <p>Topics needing additional study and focus.</p>
-  </div>
+<a class="kb-card" href="weak-areas/">
+  <strong>Weak Areas</strong>
+  <span>Topics needing additional study and focus.</span>
+</a>
 
 </div>
 ## Overview
