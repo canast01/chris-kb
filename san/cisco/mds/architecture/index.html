@@ -839,29 +839,37 @@
 <h2 id="cisco-mds-fabric-topology">Cisco MDS Fabric Topology<a class="headerlink" href="#cisco-mds-fabric-topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
   subgraph FabricA["Fabric A — VSAN 10"]
-    H1A["esxi-01\nHBA0"]
-    H2A["esxi-02\nHBA0"]
-    MDSA["MDS-9710\nDirector A\n2× 48p 32Gb FC"]
+    H1A(["esxi-01  HBA0"])
+    H2A(["esxi-02  HBA0"])
+    MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
     H1A --&gt; MDSA
     H2A --&gt; MDSA
   end
 
   subgraph FabricB["Fabric B — VSAN 11"]
-    H1B["esxi-01\nHBA1"]
-    H2B["esxi-02\nHBA1"]
-    MDSB["MDS-9710\nDirector B\n2× 48p 32Gb FC"]
+    H1B(["esxi-01  HBA1"])
+    H2B(["esxi-02  HBA1"])
+    MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
     H1B --&gt; MDSB
     H2B --&gt; MDSB
   end
 
   MDSA &lt;--&gt;|"4× 100G ISL"| MDSB
 
-  MDSA --&gt; FA_CT0["FlashArray\nCT0"]
-  MDSA --&gt; PM_A["PowerMax\nDir A"]
-  MDSA --&gt; NA_N1["NetApp AFF\nNode 1"]
-  MDSB --&gt; FA_CT1["FlashArray\nCT1"]
-  MDSB --&gt; PM_B["PowerMax\nDir B"]
-  MDSB --&gt; NA_N2["NetApp AFF\nNode 2"]</code></pre>
+  MDSA --&gt; FA_CT0[("FlashArray CT0")]
+  MDSA --&gt; PM_A[("PowerMax Dir A")]
+  MDSA --&gt; NA_N1[("NetApp AFF Node 1")]
+  MDSB --&gt; FA_CT1[("FlashArray CT1")]
+  MDSB --&gt; PM_B[("PowerMax Dir B")]
+  MDSB --&gt; NA_N2[("NetApp AFF Node 2")]
+
+  classDef switch fill:#1565c0,stroke:#0d47a1,color:#fff
+  classDef host fill:#2e7d32,stroke:#1b5e20,color:#fff
+  classDef storage fill:#6a1b9a,stroke:#4a148c,color:#fff
+
+  class MDSA,MDSB switch
+  class H1A,H2A,H1B,H2B host
+  class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC) and FCoE. The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
 <hr />
@@ -911,10 +919,7 @@
 <p>Directors (9706/9710) support ISSU (In-Service Software Upgrade), making them the preferred platform for environments requiring zero-downtime maintenance.</p>
 <hr />
 <h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
-<p>Typical enterprise deployment uses a <strong>dual-fabric</strong> architecture:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Fabric A:  Host HBA Port 0 → MDS-SW01 → Storage Target Port (Fabric A)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Fabric B:  Host HBA Port 1 → MDS-SW02 → Storage Target Port (Fabric B)
-</code></pre></div>
+<p>Typical enterprise deployment uses a <strong>dual-fabric</strong> architecture — each host HBA port connects to a separate switch, with storage targets dual-homed across both fabrics. A failure of one fabric does not impact the other.</p>
 <p>Each fabric is completely independent — a failure of one fabric does not impact the other. All hosts and storage targets are connected to both fabrics for redundancy.</p>
 <p><strong>ISLs (Inter-Switch Links):</strong> Used when multiple MDS switches form a fabric. ISLs are configured as port-channel trunks (minimum 2 links). All VSANs allowed on the ISL must be explicitly permitted.</p>
 <hr />
@@ -985,17 +990,17 @@
 </tbody>
 </table>
 <p><strong>Key commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Show all devices logged into a VSAN
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show fcns database vsan 10
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Show all FLOGI entries
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>show flogi database
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Show fabric shortest path
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>show fspf database vsan 10
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Show port status
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>show interface fc1/1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all devices logged into a VSAN</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show all FLOGI entries</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show fabric shortest path</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show port status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
 </code></pre></div>
 <hr />
 <h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
@@ -1029,25 +1034,25 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Check port type and state
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show interface fc1/1
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Set a port to F_Port mode (override auto-negotiation)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>interface fc1/1
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  switchport mode F
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  no shutdown
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check port type and state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set a port to F_Port mode (override auto-negotiation)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>F
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>no<span class="w"> </span>shutdown
 </code></pre></div>
 <hr />
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <p>Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is <strong>single-initiator / single-target</strong> zones — one zone per host-port-to-storage-port pair.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Show active zone set for a VSAN
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show zoneset active vsan 10
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Show all zones (active and inactive)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show zone vsan 10
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># Check if a specific WWPN is zoned
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show zone member wwn &lt;wwpn&gt; vsan 10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show active zone set for a VSAN</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show all zones (active and inactive)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check if a specific WWPN is zoned</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>wwn<span class="w"> </span>&lt;wwpn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p>Zone sets must be <strong>activated</strong> for zoning to take effect. An inactive zone set change is not applied to the fabric.</p>
 
