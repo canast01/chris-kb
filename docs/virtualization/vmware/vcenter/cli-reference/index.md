@@ -6,6 +6,25 @@ VMware PowerCLI is the official PowerShell module for managing vSphere from the 
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="connection/">Connection</a></h3>
+    <p>Connection notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="networks/">Networks</a></h3>
+    <p>Networks notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="vms/">Vms</a></h3>
+    <p>Vms notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Connection & Session
 
 Install PowerCLI, connect to vCenter, manage sessions, and handle credentials securely for scripts.

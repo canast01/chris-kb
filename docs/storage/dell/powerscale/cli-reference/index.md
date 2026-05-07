@@ -6,6 +6,25 @@ Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scal
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="access-auth/">Access & Auth</a></h3>
+    <p>Access & Auth notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="storage-pools/">Storage Pools</a></h3>
+    <p>Storage Pools notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="synciq/">SyncIQ</a></h3>
+    <p>SyncIQ notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Cluster Status & Identity
 
 The cluster status commands give you a high-level view of the entire system — what version it's running, whether nodes are healthy, and basic performance metrics. These are your first stop when checking in on the cluster.

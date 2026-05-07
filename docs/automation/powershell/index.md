@@ -2,6 +2,26 @@
 
 <div class="kb-summary">
 PowerShell knowledge base articles, operational procedures, troubleshooting notes, and command references.
+
+<a class="kb-card" href="modules/">
+  <strong>Modules</strong>
+  <span>Module usage and installation.</span>
+</a>
+
+<a class="kb-card" href="reports/">
+  <strong>Reports</strong>
+  <span>Reporting, dashboards, and data export.</span>
+</a>
+
+<a class="kb-card" href="vmware/">
+  <strong>Vmware</strong>
+  <span>Vmware notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="windows/">
+  <strong>Windows</strong>
+  <span>Windows notes, checks, commands, and references.</span>
+</a>
 </div>
 
 <div class="kb-grid kb-grid-3">

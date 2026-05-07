@@ -4,6 +4,30 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="common-checks/">Common Checks</a></h3>
+    <p>Common Checks notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="hba-ports/">HBA Ports</a></h3>
+    <p>HBA Ports notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="load-balancing/">Load Balancing</a></h3>
+    <p>Load Balancing notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="windows/">Windows</a></h3>
+    <p>Windows notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Status & Devices
 
 The first commands to run when checking on PowerPath. `powermt display` shows you all the storage devices and whether their paths are healthy. Dead paths mean some redundancy is lost — you need to investigate.

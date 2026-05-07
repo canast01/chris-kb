@@ -1,5 +1,24 @@
 # NTP
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="firewalls/">Firewalls</a></h3>
+    <p>Firewalls notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="sync-state/">Sync State</a></h3>
+    <p>Sync State notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="validation/">Validation</a></h3>
+    <p>Validation notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Overview
 
 NTP keeps infrastructure time synchronized. Time drift can break authentication, certificates, logging, replication, clustering, and audit trails.

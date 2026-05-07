@@ -2,7 +2,7 @@
 
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-9">
 
 <a class="kb-card" href="cluster-inventory/">
   <strong>Cluster Inventory</strong>
@@ -34,4 +34,19 @@ Inventory references for clusters, hosts, datastores, networks, management tools
   <span>Current and target versions across VMware, VxRail, NSX, and Aria.</span>
 </a>
 
+
+<a class="kb-card" href="backup-coverage/">
+  <strong>Backup Coverage</strong>
+  <span>Backup Coverage notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="certificate-inventory/">
+  <strong>Certificate Inventory</strong>
+  <span>Certificate Inventory notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="service-accounts/">
+  <strong>Service Accounts</strong>
+  <span>Service Accounts notes, checks, commands, and references.</span>
+</a>
 </div>

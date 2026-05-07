@@ -6,6 +6,25 @@ Commonly used Data Domain OS (DDOS) commands for managing Dell EMC backup applia
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="backup-config/">Backup Config</a></h3>
+    <p>Backup Config notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="file-sharing/">File Sharing</a></h3>
+    <p>File Sharing notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="mtrees/">MTrees</a></h3>
+    <p>MTrees notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## System Status
 
 These commands give you a quick view of the appliance's health — version, hardware, active alerts, and whether all components are functioning. Start here for any investigation.

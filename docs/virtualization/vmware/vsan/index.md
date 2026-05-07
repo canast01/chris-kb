@@ -2,7 +2,7 @@
 
 Technical and operational KBs for vSAN.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-15">
 
 <a class="kb-card" href="cli-reference/">
   <strong>CLI Reference</strong>
@@ -44,4 +44,39 @@ Technical and operational KBs for vSAN.
   <span>Resync review, object health, disk group failures, and vSAN recovery procedures.</span>
 </a>
 
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Architecture overview, components, and design patterns.</span>
+</a>
+
+<a class="kb-card" href="disk-groups/">
+  <strong>Disk Groups</strong>
+  <span>Disk Groups notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="integration/">
+  <strong>Integration</strong>
+  <span>Integration with other systems and platforms.</span>
+</a>
+
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Installation, upgrades, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="performance/">
+  <strong>Performance</strong>
+  <span>Performance monitoring, tuning, and baselining.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Configuration standards, naming conventions, and baselines.</span>
+</a>
+
+<a class="kb-card" href="storage-policies/">
+  <strong>Storage Policies</strong>
+  <span>Storage Policies notes, checks, commands, and references.</span>
+</a>
 </div>

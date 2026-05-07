@@ -6,6 +6,40 @@ Git is the standard distributed version control system. Every developer has a fu
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="advanced/">Advanced</a></h3>
+    <p>Advanced notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="fetch-pull-push/">Fetch Pull Push</a></h3>
+    <p>Fetch Pull Push notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="merge-rebase/">Merge Rebase</a></h3>
+    <p>Merge Rebase notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="reset-restore/">Reset Restore</a></h3>
+    <p>Reset Restore notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="setup/">Setup</a></h3>
+    <p>Setup notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="status-log/">Status Log</a></h3>
+    <p>Status Log notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Setup, Config & Remotes
 
 One-time configuration for Git identity and editor preferences. Remotes are named pointers to other copies of the repository (typically `origin` = the server you cloned from).

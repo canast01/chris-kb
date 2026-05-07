@@ -1,5 +1,14 @@
 # GitHub Actions
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
+    <p>Common issues, diagnostic steps, and resolution guides.</p>
+  </div>
+
+</div>
 ## Overview
 
 GitHub Actions runs CI/CD workflows for validation, builds, publishing, automation, and scheduled operations.

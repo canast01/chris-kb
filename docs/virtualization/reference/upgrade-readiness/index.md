@@ -2,7 +2,7 @@
 
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-9">
 
 <a class="kb-card" href="upgrade-planning/">
   <strong>Upgrade Planning</strong>
@@ -34,4 +34,19 @@ Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
   <span>Capture issues, fixes, timing, and changes for next maintenance window.</span>
 </a>
 
+
+<a class="kb-card" href="NSX-upgrade/">
+  <strong>NSX Upgrade</strong>
+  <span>NSX Upgrade notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="vCenter-upgrade/">
+  <strong>vCenter Upgrade</strong>
+  <span>vCenter Upgrade notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="vmware-platform-upgrade/">
+  <strong>VMware Platform Upgrade</strong>
+  <span>VMware Platform Upgrade notes, checks, commands, and references.</span>
+</a>
 </div>

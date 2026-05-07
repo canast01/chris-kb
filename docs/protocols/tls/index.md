@@ -2,6 +2,30 @@
 
 TLS (Transport Layer Security) provides encryption, integrity, and authentication for network communications.
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="certificates/">Certificates</a></h3>
+    <p>Certificates notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="chains/">Chains</a></h3>
+    <p>Chains notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="expiration/">Expiration</a></h3>
+    <p>Expiration notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="validation/">Validation</a></h3>
+    <p>Validation notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Protocol Versions
 
 | Version | Status | Notes |

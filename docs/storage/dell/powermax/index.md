@@ -1,6 +1,6 @@
 # Dell PowerMax
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-15">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
@@ -52,6 +52,31 @@
   <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
 </a>
 
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Health check procedures and validation steps.</span>
+</a>
+
+<a class="kb-card" href="masking-views/">
+  <strong>Masking Views</strong>
+  <span>Masking Views notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="performance/">
+  <strong>Performance</strong>
+  <span>Performance monitoring, tuning, and baselining.</span>
+</a>
+
+<a class="kb-card" href="provisioning/">
+  <strong>Provisioning</strong>
+  <span>Provisioning notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="srdf/">
+  <strong>Srdf</strong>
+  <span>Srdf notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Overview

@@ -6,6 +6,30 @@ Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. T
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="device-groups/">Device Groups</a></h3>
+    <p>Device Groups notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="discovery/">Discovery</a></h3>
+    <p>Discovery notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="masking-views/">Masking Views</a></h3>
+    <p>Masking Views notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="storage-groups/">Storage Groups</a></h3>
+    <p>Storage Groups notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Discovery & Array Info
 
 Discover arrays, list directors and ports, view cache usage and storage resource pools. Run these when connecting to a new array or after a network change affecting Solutions Enabler connectivity.

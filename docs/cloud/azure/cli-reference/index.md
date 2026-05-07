@@ -6,6 +6,20 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="key-vault/">Key Vault</a></h3>
+    <p>Key Vault notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="virtual-machines/">Virtual Machines</a></h3>
+    <p>Virtual Machines notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Account & Subscriptions
 
 Authenticate, manage subscriptions, and work with resource groups. Resource groups are the fundamental organizing container in Azure — every resource lives in one.

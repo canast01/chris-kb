@@ -2,6 +2,20 @@
 
 > Part of the [vCenter](../) reference.
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="certificate-checks/">Certificate Checks</a></h3>
+    <p>Certificate Checks notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="service-health/">Service Health</a></h3>
+    <p>Service Health notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Issue Summary
 
 | Symptom | Likely Cause | First Action |

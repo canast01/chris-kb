@@ -6,6 +6,30 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="cluster-status/">Cluster Status</a></h3>
+    <p>Cluster Status notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="disk-groups/">Disk Groups</a></h3>
+    <p>Disk Groups notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="networking/">Networking</a></h3>
+    <p>Networking notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="powercli/">PowerCLI</a></h3>
+    <p>PowerCLI notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Cluster Status & Capacity
 
 Get a high-level view of vSAN cluster membership, storage devices, and overall capacity. Run these commands first when checking cluster health.

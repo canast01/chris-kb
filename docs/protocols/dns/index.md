@@ -1,5 +1,19 @@
 # DNS
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="lookups/">Lookups</a></h3>
+    <p>Lookups notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
+    <p>Common issues, diagnostic steps, and resolution guides.</p>
+  </div>
+
+</div>
 ## Overview
 
 DNS resolves names to IP addresses and is a critical dependency for authentication, applications, storage, cloud services, monitoring, and automation.

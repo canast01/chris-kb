@@ -1,6 +1,6 @@
 # Dell VPLEX
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-9">
 
 <a class="kb-card" href="scripts/">
   <strong>Scripts</strong>
@@ -17,6 +17,36 @@
   <span>vplexcli commands: cluster health, virtual volumes, distributed devices, storage views, and migration.</span>
 </a>
 
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Architecture overview, components, and design patterns.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Health check procedures and validation steps.</span>
+</a>
+
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Installation, upgrades, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="metro-operations/">
+  <strong>Metro Operations</strong>
+  <span>Metro Operations notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Configuration standards, naming conventions, and baselines.</span>
+</a>
+
+<a class="kb-card" href="virtual-volumes/">
+  <strong>Virtual Volumes</strong>
+  <span>Virtual Volumes notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Overview

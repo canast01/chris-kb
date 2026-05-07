@@ -2,6 +2,30 @@
 
 Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="binds/">Binds</a></h3>
+    <p>Binds notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="ports/">Ports</a></h3>
+    <p>Ports notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="tls/">Tls</a></h3>
+    <p>Tls notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
+    <p>Common issues, diagnostic steps, and resolution guides.</p>
+  </div>
+
+</div>
 ## Key Concepts
 
 | Concept | Description |

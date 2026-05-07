@@ -1,6 +1,6 @@
 # Pure FlashBlade
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-13">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
@@ -52,6 +52,21 @@
   <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
 </a>
 
+
+<a class="kb-card" href="file-services/">
+  <strong>File Services</strong>
+  <span>File Services notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Health check procedures and validation steps.</span>
+</a>
+
+<a class="kb-card" href="object-services/">
+  <strong>Object Services</strong>
+  <span>Object Services notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Overview

@@ -6,6 +6,25 @@ The ESXi shell gives you direct access to a hypervisor host via SSH. `esxcli` is
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="certificates-ssh/">Certificates & SSH</a></h3>
+    <p>Certificates & SSH notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="firewall-ntp/">Firewall & NTP</a></h3>
+    <p>Firewall & NTP notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="vm-management/">VM Management</a></h3>
+    <p>VM Management notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## System, Services & Maintenance
 
 Get host identity, manage local accounts, control services, and put the host into maintenance mode. These are the first commands to run when connecting to a host you're unfamiliar with.

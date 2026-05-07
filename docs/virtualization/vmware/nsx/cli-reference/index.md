@@ -6,6 +6,30 @@ Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="diagnostics/">Diagnostics</a></h3>
+    <p>Diagnostics notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="edge-nodes/">Edge Nodes</a></h3>
+    <p>Edge Nodes notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="nat-lb/">NAT & Load Balancing</a></h3>
+    <p>NAT & Load Balancing notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="system/">System</a></h3>
+    <p>System notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## NSX Manager — System
 
 These commands show you the health of the NSX Manager cluster, which services are running, and how the appliance is configured. Start here when NSX Manager is unreachable or behaving unexpectedly.

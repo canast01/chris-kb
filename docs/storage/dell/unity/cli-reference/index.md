@@ -6,6 +6,25 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="file-systems/">File Systems</a></h3>
+    <p>File Systems notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="luns/">Luns</a></h3>
+    <p>Luns notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="storage-pools/">Storage Pools</a></h3>
+    <p>Storage Pools notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## System & Status
 
 These commands show you the overall health of the array — software version, active alerts, license status, and remote support connectivity. Start here when something seems wrong.

@@ -2,7 +2,7 @@
 
 Technical and operational KBs for NSX.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-9">
 
 <a class="kb-card" href="cli-reference/">
   <strong>CLI Reference</strong>
@@ -29,4 +29,24 @@ Technical and operational KBs for NSX.
   <span>Edge health, transport node issues, DFW connectivity, and NSX recovery procedures.</span>
 </a>
 
+
+<a class="kb-card" href="distributed-firewall/">
+  <strong>Distributed Firewall</strong>
+  <span>Distributed Firewall notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="edge-nodes/">
+  <strong>Edge Nodes</strong>
+  <span>Edge Nodes notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="segments/">
+  <strong>Segments</strong>
+  <span>Segments notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="tier-gateways/">
+  <strong>Tier Gateways</strong>
+  <span>Tier Gateways notes, checks, commands, and references.</span>
+</a>
 </div>

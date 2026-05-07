@@ -2,6 +2,30 @@
 
 High-speed serial protocol for Storage Area Network (SAN) connectivity between hosts and storage arrays.
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="fabric-login/">Fabric Login</a></h3>
+    <p>Fabric Login notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="paths/">Paths</a></h3>
+    <p>Paths notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="troubleshooting/">Troubleshooting</a></h3>
+    <p>Common issues, diagnostic steps, and resolution guides.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="wwns/">Wwns</a></h3>
+    <p>Wwns notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Key Concepts
 
 | Concept | Description |

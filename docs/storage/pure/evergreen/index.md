@@ -1,6 +1,6 @@
 # Pure Storage Evergreen
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-12">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
@@ -52,6 +52,16 @@
   <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
 </a>
 
+
+<a class="kb-card" href="controller-upgrades/">
+  <strong>Controller Upgrades</strong>
+  <span>Controller Upgrades notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="evergreen-one/">
+  <strong>Evergreen//One</strong>
+  <span>Evergreen//One notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Overview

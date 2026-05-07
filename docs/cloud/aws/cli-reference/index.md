@@ -6,6 +6,20 @@ Commonly used AWS CLI commands for managing compute, storage, networking, identi
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="ec2-instances/">EC2 Instances</a></h3>
+    <p>EC2 Instances notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="ec2-storage/">EC2 Storage</a></h3>
+    <p>EC2 Storage notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Identity & Access (IAM / STS)
 
 IAM (Identity and Access Management) controls who can do what in your AWS account. STS (Security Token Service) lets you temporarily assume a role — useful for cross-account access or giving scripts temporary credentials.

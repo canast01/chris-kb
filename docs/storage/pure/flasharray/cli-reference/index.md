@@ -4,6 +4,30 @@ Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="alerts-audit/">Alerts & Audit</a></h3>
+    <p>Alerts & Audit notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="csv-exports/">CSV Exports</a></h3>
+    <p>CSV Exports notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="network-ports/">Network Ports</a></h3>
+    <p>Network Ports notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="pods/">Pods</a></h3>
+    <p>Pods notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Array & System Management
 
 These commands show you the array's identity, monitor overall performance, and configure system-level settings like banners, timeouts, and NTP. Also covers firmware upgrades and remote support (phonehome).

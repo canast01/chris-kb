@@ -2,7 +2,7 @@
 
 The VMware platform is the core virtualization layer used to run, manage, protect, and operate virtual machines across enterprise infrastructure. The main components usually include **vCenter**, **ESXi**, **vSAN**, **NSX**, and sometimes **VMware Cloud Foundation**.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-11">
 
 <a class="kb-card" href="vmware-cloud-foundation/"><strong>VMware Cloud Foundation</strong><span>Full-stack SDDC — SDDC Manager, workload domains, lifecycle, and operations.</span></a>
 <a class="kb-card" href="vcenter/"><strong>vCenter</strong><span>Inventory, permissions, alarms, certificates, backup, and lifecycle.</span></a>
@@ -14,6 +14,16 @@ The VMware platform is the core virtualization layer used to run, manage, protec
 <a class="kb-card" href="aria-suite-lifecycle/"><strong>Aria Suite Lifecycle</strong><span>Deployment, patching, certificate management, and upgrade orchestration for all Aria products.</span></a>
 <a class="kb-card" href="aria-operations-for-logs/"><strong>Aria Ops for Logs</strong><span>Log ingestion, querying, alerting, and integration for VMware infrastructure logs.</span></a>
 
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Health check procedures and validation steps.</span>
+</a>
+
+<a class="kb-card" href="topics/">
+  <strong>Topics</strong>
+  <span>Topics notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Key Components

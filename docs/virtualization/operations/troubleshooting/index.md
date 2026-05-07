@@ -15,7 +15,7 @@ Start by defining the scope, then work down through the stack.
 7. **Check logs** — hostd, vpxa, vmkernel, vCenter events, Aria for Logs
 8. **Escalate** — open a Dell or VMware support case if the root cause is unclear
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-7">
 
 <a class="kb-card" href="vm-performance-issue/">
   <strong>VM Performance Issue</strong>
@@ -47,4 +47,9 @@ Start by defining the scope, then work down through the stack.
   <span>SSO, LDAP, AD, permissions, MFA, and local account checks.</span>
 </a>
 
+
+<a class="kb-card" href="known-issues/">
+  <strong>Known Issues</strong>
+  <span>Known issues and workarounds.</span>
+</a>
 </div>

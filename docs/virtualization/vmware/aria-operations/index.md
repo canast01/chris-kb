@@ -2,7 +2,7 @@
 
 Aria Operations is used to monitor vCenter, ESXi hosts, clusters, VMs, datastores, vSAN, NSX, and other infrastructure components.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-13">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
@@ -54,6 +54,21 @@ Aria Operations is used to monitor vCenter, ESXi hosts, clusters, VMs, datastore
   <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
 </a>
 
+
+<a class="kb-card" href="alerts/">
+  <strong>Alerts</strong>
+  <span>Alert configuration, thresholds, and notification setup.</span>
+</a>
+
+<a class="kb-card" href="capacity/">
+  <strong>Capacity</strong>
+  <span>Capacity planning, forecasting, and thresholds.</span>
+</a>
+
+<a class="kb-card" href="reports/">
+  <strong>Reports</strong>
+  <span>Reporting, dashboards, and data export.</span>
+</a>
 </div>
 
 ## Common Use Cases

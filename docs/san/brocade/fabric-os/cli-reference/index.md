@@ -4,6 +4,20 @@ Commonly used Brocade FOS commands for managing Fibre Channel SAN switches. Log 
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="switch-status/">Switch Status</a></h3>
+    <p>Switch Status notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="vf/">Vf</a></h3>
+    <p>Vf notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Switch Status & Identity
 
 The first commands to run when connecting to a switch. `switchshow` gives you a full port-by-port overview — which ports are up, what devices are connected, and their WWNs. `switchstatusshow` gives the overall health verdict.

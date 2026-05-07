@@ -6,6 +6,25 @@ Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. Fla
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="array-hardware/">Array Hardware</a></h3>
+    <p>Array Hardware notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="file-systems/">File Systems</a></h3>
+    <p>File Systems notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="snapshots/">Snapshots</a></h3>
+    <p>Snapshots notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Array Status & Hardware
 
 These commands show you the overall state of the FlashBlade — capacity usage, blade health, and active alerts. Start here when checking system health.

@@ -6,6 +6,15 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="svms/">Svms</a></h3>
+    <p>Svms notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Cluster & Nodes
 
 Cluster-level identity, health status, HA pairs, NTP, and node-level diagnostics. Run these first when connecting to an unfamiliar cluster.

@@ -4,6 +4,30 @@ Commonly used NX-OS commands for managing Cisco MDS Fibre Channel switches. MDS 
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="firmware/">Firmware</a></h3>
+    <p>Firmware notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="isls/">Isls</a></h3>
+    <p>Isls notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="switch-status/">Switch Status</a></h3>
+    <p>Switch Status notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="vsans/">VSANs</a></h3>
+    <p>VSANs notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Switch Status & Identity
 
 Start here when connecting to a switch. These commands confirm the software version, check environmental health, and verify which modules are installed and active.

@@ -1,6 +1,6 @@
 # NetApp SnapCenter
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-10">
 
 <a class="kb-card" href="scripts/">
   <strong>Scripts</strong>
@@ -17,6 +17,41 @@
   <span>SnapCenter PowerShell cmdlets, REST API reference, backup and clone operations.</span>
 </a>
 
+
+<a class="kb-card" href="backup-jobs/">
+  <strong>Backup Jobs</strong>
+  <span>Backup job management and monitoring.</span>
+</a>
+
+<a class="kb-card" href="integration/">
+  <strong>Integration</strong>
+  <span>Integration with other systems and platforms.</span>
+</a>
+
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Installation, upgrades, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Security configuration, hardening, and access control.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Configuration standards, naming conventions, and baselines.</span>
+</a>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
+
+<a class="kb-card" href="vendor-support/">
+  <strong>Vendor Support</strong>
+  <span>Support bundles, case management, and escalation paths.</span>
+</a>
 </div>
 
 ## Overview

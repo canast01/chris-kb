@@ -2,6 +2,20 @@
 
 > Part of the [ESXi](../) reference.
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="host-disconnects/">Host Disconnects</a></h3>
+    <p>Host Disconnects notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="maintenance-mode/">Maintenance Mode</a></h3>
+    <p>Maintenance Mode notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Quick Reference
 
 | Symptom | First Check | Key Command |

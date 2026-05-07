@@ -1,6 +1,6 @@
 # Dell PowerPath
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-12">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
@@ -52,6 +52,16 @@
   <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
 </a>
 
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Health check procedures and validation steps.</span>
+</a>
+
+<a class="kb-card" href="host-validation/">
+  <strong>Host Validation</strong>
+  <span>Host Validation notes, checks, commands, and references.</span>
+</a>
 </div>
 
 ## Overview

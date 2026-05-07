@@ -3,7 +3,62 @@
     <p class="section-kicker">Infrastructure Engineering</p>
     <h1>Knowledge Base</h1>
     <p>Production-grade notes, documentation, and references across VMware virtualization, enterprise storage, cloud, storage area networking, and disaster recovery.</p>
-  </div>
+  
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Architecture overview, components, and design patterns.</span>
+</a>
+
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>Certifications notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="change-management/">
+  <strong>Change Management</strong>
+  <span>Change Management notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="database/">
+  <strong>Database</strong>
+  <span>Database notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="integration/">
+  <strong>Integration</strong>
+  <span>Integration with other systems and platforms.</span>
+</a>
+
+<a class="kb-card" href="lifecycle/">
+  <strong>Lifecycle</strong>
+  <span>Installation, upgrades, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="performance/">
+  <strong>Performance</strong>
+  <span>Performance monitoring, tuning, and baselining.</span>
+</a>
+
+<a class="kb-card" href="project-management/">
+  <strong>Project Management</strong>
+  <span>Project Management notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Configuration standards, naming conventions, and baselines.</span>
+</a>
+
+<a class="kb-card" href="start-here/">
+  <strong>Start Here</strong>
+  <span>Start Here notes, checks, commands, and references.</span>
+</a>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostic steps, and resolution guides.</span>
+</a>
+</div>
   <div class="hero-name">
     <strong>Christos Anastasiadis</strong>
     <span>Infrastructure Engineer</span>
@@ -14,7 +69,7 @@
 
 ## Platforms
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-6">
 
 <a class="kb-card" href="virtualization/">
   <strong>Virtualization</strong>
@@ -50,7 +105,7 @@
 
 ## Operations
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="automation/">
   <strong>Automation</strong>

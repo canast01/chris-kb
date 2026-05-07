@@ -2,6 +2,21 @@
 
 <div class="kb-summary">
 Terraform knowledge base articles, operational procedures, troubleshooting notes, and command references.
+
+<a class="kb-card" href="applies/">
+  <strong>Applies</strong>
+  <span>Apply operations, state management, and drift detection.</span>
+</a>
+
+<a class="kb-card" href="modules/">
+  <strong>Modules</strong>
+  <span>Module usage and installation.</span>
+</a>
+
+<a class="kb-card" href="plans/">
+  <strong>Plans</strong>
+  <span>Plan creation, review, and apply workflows.</span>
+</a>
 </div>
 
 <div class="kb-grid kb-grid-3">

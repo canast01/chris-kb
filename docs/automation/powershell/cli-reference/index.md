@@ -6,6 +6,45 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 ---
 
+
+<div class="kb-grid kb-grid-1">
+
+  <div class="kb-card">
+    <h3><a href="core/">Core</a></h3>
+    <p>Core notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="error-handling/">Error Handling</a></h3>
+    <p>Error Handling notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="powercli/">PowerCLI</a></h3>
+    <p>PowerCLI notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="remoting/">Remoting</a></h3>
+    <p>Remoting notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="reporting/">Reporting</a></h3>
+    <p>Reporting notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="services-processes/">Services & Processes</a></h3>
+    <p>Services & Processes notes, checks, commands, and references.</p>
+  </div>
+
+  <div class="kb-card">
+    <h3><a href="variables-pipeline/">Variables & Pipeline</a></h3>
+    <p>Variables & Pipeline notes, checks, commands, and references.</p>
+  </div>
+
+</div>
 ## Core
 
 The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you're on an unfamiliar system.
