@@ -735,6 +735,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mfa-authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MFA Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#totp-vs-push-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOTP vs Push Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -790,6 +812,36 @@
 <h1 id="multi-factor-authentication-mfa">Multi-Factor Authentication (MFA)<a class="headerlink" href="#multi-factor-authentication-mfa" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>MFA adds an additional authentication factor beyond passwords to protect accounts and systems from unauthorized access.</p>
+<h2 id="mfa-authentication-flow">MFA Authentication Flow<a class="headerlink" href="#mfa-authentication-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  User                  Identity Provider (IdP)          MFA Service           Application
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │                            │                            │                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    │── Username + Password ────►│                            │                     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │                            │── Validate credentials ───►│                     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │                            │◄── Primary auth OK ────────│                     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │                            │                            │                     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    │                            │── Trigger MFA challenge ──►│                     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │◄── MFA challenge sent ─────│   (push / OTP / hardware)  │                     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    │                            │                            │                     │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    │── OTP / Approve push ─────────────────────────────────►│                     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    │                            │◄── Factor confirmed ───────│                     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    │                            │                            │                     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    │◄── Auth token (SAML/OIDC) ─│                            │                     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    │                            │                            │                     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    │── Present token ────────────────────────────────────────────────────────────►│
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    │◄── Access granted ──────────────────────────────────────────────────────────│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    │                            │                            │                     │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    │                    [Session established — token TTL enforced]                │
+</code></pre></div>
+<h2 id="totp-vs-push-comparison">TOTP vs Push Comparison<a class="headerlink" href="#totp-vs-push-comparison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  TOTP (Time-based OTP)                Push Notification
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  ──────────────────────────────────   ─────────────────────────────────────────
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  User generates 6-digit code          IdP sends push to registered device
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Code derived from shared secret      User taps Approve / Deny
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Valid for 30-second window           Out-of-band — does not traverse browser
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Works offline (no network needed)    Requires network on mobile device
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Phishing-resistant if typed once     Vulnerable to MFA fatigue (auto-accept)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Hardware token: highest assurance    Number-matching mitigates fatigue attacks
+</code></pre></div>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -823,8 +875,8 @@
 </tbody>
 </table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Get-MsolUser
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-MsolCompanyInformation
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Get-MsolUser
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Get-MsolCompanyInformation
 </code></pre></div>
 <h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
 <ol>
