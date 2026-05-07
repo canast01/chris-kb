@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#classification-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#labelling-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Labelling Requirements
       
     </span>
   </a>
@@ -745,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#microsoft-purview-mip-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Microsoft Purview / MIP Labels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classification-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dlp-policy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DLP Policy Alignment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities
       
     </span>
   </a>
@@ -775,28 +808,159 @@
 
 
 <h1 id="data-classification">Data Classification<a class="headerlink" href="#data-classification" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Data classification categorizes information based on sensitivity and protection requirements.</p>
+<p>Data classification defines how sensitive information must be labelled, handled, stored, and shared.</p>
 <h2 id="classification-levels">Classification Levels<a class="headerlink" href="#classification-levels" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Public</li>
-<li>Internal</li>
-<li>Confidential</li>
-<li>Restricted</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify classification labels applied</li>
-<li>Confirm access restrictions</li>
-<li>Review audit logs</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Description</th>
+<th>Examples</th>
+<th>Controls</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td>Approved for public distribution</td>
+<td>Marketing materials, public docs</td>
+<td>No restrictions</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Internal use only — not for public</td>
+<td>Internal policies, project plans</td>
+<td>Employee access only</td>
+</tr>
+<tr>
+<td>Confidential</td>
+<td>Sensitive business or personal data</td>
+<td>Financial data, HR records, customer data</td>
+<td>Need-to-know; encrypted at rest</td>
+</tr>
+<tr>
+<td>Restricted</td>
+<td>Highest sensitivity; regulatory or legal implications</td>
+<td>PII, PHI, PCI card data, credentials, legal privilege</td>
+<td>Strict access; encrypted; audit-logged</td>
+</tr>
+</tbody>
+</table>
+<h2 id="labelling-requirements">Labelling Requirements<a class="headerlink" href="#labelling-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Email</th>
+<th>Documents</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td>Optional</td>
+<td>Optional</td>
+<td>No special requirement</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Header/footer label</td>
+<td>Classification tag</td>
+<td>Standard access control</td>
+</tr>
+<tr>
+<td>Confidential</td>
+<td>Label + encryption for external recipients</td>
+<td>MIP/Purview sensitivity label</td>
+<td>Encrypted volume or folder</td>
+</tr>
+<tr>
+<td>Restricted</td>
+<td>Encrypted send only</td>
+<td>MIP Protect; watermark</td>
+<td>Dedicated encrypted store; DLP policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="microsoft-purview-mip-labels">Microsoft Purview / MIP Labels<a class="headerlink" href="#microsoft-purview-mip-labels" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Install-Module ExchangeOnlineManagement
+Connect-IPPSSession
+
+# List sensitivity labels
+Get-Label | Select-Object DisplayName, Priority, IsDefault, Guid
+
+# Check label policy assignments
+Get-LabelPolicy | Select-Object Name, Labels, Users, Workloads
+</code></pre>
+<h2 id="data-discovery">Data Discovery<a class="headerlink" href="#data-discovery" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Find files matching PII patterns (example — SSN format)
+grep -rE &quot;\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b&quot; /data/
+
+# Use Microsoft Purview, Varonis, or Spirion for enterprise-scale discovery
+</code></pre>
+<h2 id="classification-workflow">Classification Workflow<a class="headerlink" href="#classification-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Identify data type</li>
-<li>Assign classification level</li>
-<li>Apply protection controls</li>
-<li>Monitor data usage</li>
+<li><strong>Identify</strong> — what type of data? Who created it? What system stores it?</li>
+<li><strong>Classify</strong> — apply the correct level based on content and context</li>
+<li><strong>Label</strong> — apply MIP/Purview label or physical label to storage/document</li>
+<li><strong>Apply controls</strong> — access restrictions, encryption, DLP rules per level</li>
+<li><strong>Review</strong> — revisit classification when data changes hands or usage changes</li>
 </ol>
+<h2 id="dlp-policy-alignment">DLP Policy Alignment<a class="headerlink" href="#dlp-policy-alignment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Classification</th>
+<th>DLP Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restricted — PCI</td>
+<td>Block external email of card numbers; alert security</td>
+</tr>
+<tr>
+<td>Restricted — PII</td>
+<td>Encrypt external email; log access</td>
+</tr>
+<tr>
+<td>Confidential</td>
+<td>Warn on external sharing; allow with justification</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Allow internally; block public share links</td>
+</tr>
+</tbody>
+</table>
+<h2 id="responsibilities">Responsibilities<a class="headerlink" href="#responsibilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data Owner</td>
+<td>Classify data; approve access requests</td>
+</tr>
+<tr>
+<td>Data Custodian (IT)</td>
+<td>Implement controls; maintain storage; enforce labels</td>
+</tr>
+<tr>
+<td>Data User</td>
+<td>Handle data per classification; report misclassification</td>
+</tr>
+<tr>
+<td>Security / DLP team</td>
+<td>Define policy; monitor violations; audit</td>
+</tr>
+</tbody>
+</table>
 
 
 

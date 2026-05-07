@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#identify-underutilised-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Identify Underutilised Resources
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optimization-areas" class="md-nav__link">
+  <a href="#aws-cost-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optimization Areas
+        AWS — Cost Optimization
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#azure-cost-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Azure — Cost Optimization
       
     </span>
   </a>
@@ -745,10 +745,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#storage-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Storage Optimization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-actions-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimization Actions Reference
       
     </span>
   </a>
@@ -775,28 +786,91 @@
 
 
 <h1 id="resource-optimization">Resource Optimization<a class="headerlink" href="#resource-optimization" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Resource optimization improves efficiency and reduces operational cost.</p>
-<h2 id="optimization-areas">Optimization Areas<a class="headerlink" href="#optimization-areas" title="Permanent link">&para;</a></h2>
-<ul>
-<li>CPU allocation</li>
-<li>Memory usage</li>
-<li>Storage utilization</li>
-<li>Cloud resource sizing</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review underutilized resources</li>
-<li>Identify idle systems</li>
-<li>Validate performance impact</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Analyze resource usage</li>
-<li>Identify optimization opportunities</li>
-<li>Adjust resource allocation</li>
-<li>Monitor performance</li>
-</ol>
+<p>Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.</p>
+<h2 id="identify-underutilised-resources">Identify Underutilised Resources<a class="headerlink" href="#identify-underutilised-resources" title="Permanent link">&para;</a></h2>
+<p><strong>Linux — CPU and memory:</strong></p>
+<pre><code class="language-bash"># List processes consuming &gt; 1% CPU
+ps aux --sort=-%cpu | awk 'NR&gt;1 &amp;&amp; $3&gt;1 {print $1, $3&quot;%&quot;, $4&quot;%&quot;, $11}'
+
+# Average CPU per server (last 30 days via sar)
+sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
+
+# Memory available
+free -h | awk '/Mem/ {print &quot;Available:&quot;, $7}'
+</code></pre>
+<p><strong>VMware — VM rightsizing:</strong></p>
+<pre><code class="language-powershell"># VMs with low memory usage
+Get-VM | Get-Stat -Stat mem.usage.average -MaxSamples 48 |
+  Group-Object Entity |
+  Select-Object Name, @{N='AvgMem%';E={($_.Group.Value | Measure-Object -Average).Average}} |
+  Where-Object 'AvgMem%' -lt 20
+</code></pre>
+<h2 id="aws-cost-optimization">AWS — Cost Optimization<a class="headerlink" href="#aws-cost-optimization" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Underutilised EC2 instances (Compute Optimizer)
+aws compute-optimizer get-ec2-instance-recommendations \
+  --query 'instanceRecommendations[?finding==`OVER_PROVISIONED`].{Instance:instanceArn,Current:currentInstanceType,Recommended:recommendationOptions[0].instanceType}'
+
+# Unattached EBS volumes
+aws ec2 describe-volumes \
+  --filters Name=status,Values=available \
+  --query 'Volumes[*].{ID:VolumeId,Size:Size,Type:VolumeType}' -o table
+
+# Unused Elastic IPs
+aws ec2 describe-addresses \
+  --query 'Addresses[?AssociationId==null].{IP:PublicIp,AllocationId:AllocationId}' -o table
+</code></pre>
+<h2 id="azure-cost-optimization">Azure — Cost Optimization<a class="headerlink" href="#azure-cost-optimization" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Unattached managed disks
+az disk list \
+  --query '[?diskState==`Unattached`].{Name:name,RG:resourceGroup,Size:diskSizeGb,SKU:sku.name}' -o table
+
+# Azure Advisor cost recommendations
+az advisor recommendation list \
+  --category Cost \
+  --query '[*].{Impact:impact,Resource:resourceMetadata.resourceId,Recommendation:shortDescription.solution}' -o table
+</code></pre>
+<h2 id="storage-optimization">Storage Optimization<a class="headerlink" href="#storage-optimization" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># ONTAP — volumes with &gt; 50% free space
+volume show -percent-used &lt;50 -fields volume,size,used,percent-used
+
+# Large files older than 90 days
+find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
+</code></pre>
+<h2 id="optimization-actions-reference">Optimization Actions Reference<a class="headerlink" href="#optimization-actions-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM CPU avg &lt;10%, memory &lt;30%</td>
+<td>Downsize VM (1 or 2 tiers smaller)</td>
+</tr>
+<tr>
+<td>Unattached EBS/disk</td>
+<td>Delete after confirming not needed; snapshot first</td>
+</tr>
+<tr>
+<td>Storage volume &gt;50% free, static</td>
+<td>Reduce allocation; reclaim to pool</td>
+</tr>
+<tr>
+<td>Old cloud snapshots &gt;90 days</td>
+<td>Review retention; delete if beyond policy</td>
+</tr>
+<tr>
+<td>Idle cloud instances (nights/weekends)</td>
+<td>Schedule auto-stop for dev/test instances</td>
+</tr>
+<tr>
+<td>Reserved instance opportunity (AWS/Azure)</td>
+<td>Purchase 1-year RI/reservation for steady-state workloads</td>
+</tr>
+</tbody>
+</table>
 
 
 

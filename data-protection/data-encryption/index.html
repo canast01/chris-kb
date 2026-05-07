@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#encryption-requirements-by-classification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Encryption Requirements by Classification
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#encryption-areas" class="md-nav__link">
+  <a href="#encryption-at-rest" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Encryption Areas
+        Encryption at Rest
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#encryption-in-transit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Encryption in Transit
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#database-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Database Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-rotation-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Rotation Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification Checklist
       
     </span>
   </a>
@@ -775,28 +797,129 @@
 
 
 <h1 id="data-encryption">Data Encryption<a class="headerlink" href="#data-encryption" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Encryption protects data at rest and in transit.</p>
-<h2 id="encryption-areas">Encryption Areas<a class="headerlink" href="#encryption-areas" title="Permanent link">&para;</a></h2>
+<p>Encryption protects data at rest, in transit, and during processing against unauthorised access.</p>
+<h2 id="encryption-requirements-by-classification">Encryption Requirements by Classification<a class="headerlink" href="#encryption-requirements-by-classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>At Rest</th>
+<th>In Transit</th>
+<th>Key Management</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restricted</td>
+<td>AES-256 mandatory</td>
+<td>TLS 1.2+ mandatory</td>
+<td>HSM or enterprise KMS</td>
+</tr>
+<tr>
+<td>Confidential</td>
+<td>AES-256 mandatory</td>
+<td>TLS 1.2+ mandatory</td>
+<td>Enterprise KMS</td>
+</tr>
+<tr>
+<td>Internal</td>
+<td>Recommended</td>
+<td>Recommended</td>
+<td>Standard key store</td>
+</tr>
+<tr>
+<td>Public</td>
+<td>Optional</td>
+<td>Optional</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h2 id="encryption-at-rest">Encryption at Rest<a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h2>
+<p><strong>Linux — LUKS:</strong></p>
+<pre><code class="language-bash"># Check if encrypted
+cryptsetup isLuks /dev/sdb &amp;&amp; echo &quot;LUKS&quot; || echo &quot;Not encrypted&quot;
+
+# List open encrypted volumes
+dmsetup ls --target crypt
+
+# Dump LUKS header info
+cryptsetup luksDump /dev/sdb
+</code></pre>
+<p><strong>Windows — BitLocker:</strong></p>
+<pre><code class="language-powershell"># Check status all volumes
+Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, EncryptionMethod, ProtectionStatus
+
+# Enable on a drive
+Enable-BitLocker -MountPoint &quot;D:&quot; -EncryptionMethod XtsAes256 -RecoveryPasswordProtector
+
+# Back up recovery key to AD
+Backup-BitLockerKeyProtector -MountPoint &quot;C:&quot; -KeyProtectorId (Get-BitLockerVolume C:).KeyProtector[0].KeyProtectorId
+</code></pre>
+<p><strong>Storage arrays:</strong>
+- <strong>ONTAP</strong>: <code>security key-manager show</code> — confirm key manager connected; <code>volume show -fields encryption-state</code>
+- <strong>Pure FlashArray</strong>: always-on encryption — confirm via <code>purecli array get</code>
+- <strong>PowerMax</strong>: DARE — verify in Unisphere → Array Settings → Encryption</p>
+<h2 id="encryption-in-transit">Encryption in Transit<a class="headerlink" href="#encryption-in-transit" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify TLS version
+openssl s_client -connect &lt;host&gt;:443 -tls1_2
+openssl s_client -connect &lt;host&gt;:443 -tls1_3
+
+# Check nginx config
+grep -E &quot;ssl_protocols|ssl_ciphers&quot; /etc/nginx/nginx.conf
+
+# Comprehensive TLS audit
+./testssl.sh &lt;host&gt;:443
+</code></pre>
+<p><strong>Disable weak protocols (nginx):</strong></p>
+<pre><code class="language-nginx">ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers on;
+ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+</code></pre>
+<h2 id="database-encryption">Database Encryption<a class="headerlink" href="#database-encryption" title="Permanent link">&para;</a></h2>
+<p><strong>MSSQL — TDE:</strong></p>
+<pre><code class="language-sql">CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE &lt;cert-name&gt;;
+ALTER DATABASE &lt;dbname&gt; SET ENCRYPTION ON;
+
+SELECT db_name(database_id), encryption_state, percent_complete
+FROM sys.dm_database_encryption_keys;
+</code></pre>
+<h2 id="key-rotation-schedule">Key Rotation Schedule<a class="headerlink" href="#key-rotation-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TLS/SSL certificates</td>
+<td>Annual (external); 2-year (internal)</td>
+</tr>
+<tr>
+<td>AWS KMS CMK</td>
+<td>Annual (automatic)</td>
+</tr>
+<tr>
+<td>Azure Key Vault keys</td>
+<td>90 days (rotation policy)</td>
+</tr>
+<tr>
+<td>Database encryption keys</td>
+<td>Annual or on personnel change</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verification-checklist">Verification Checklist<a class="headerlink" href="#verification-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Disk encryption</li>
-<li>Database encryption</li>
-<li>Network encryption</li>
-<li>Backup encryption</li>
+<li>[ ] All production volumes confirmed encrypted at rest</li>
+<li>[ ] All external services confirmed TLS 1.2+ only</li>
+<li>[ ] Certificate expiry monitoring in place</li>
+<li>[ ] Key management system operational (HSM/KMS health checked)</li>
+<li>[ ] Encryption key backup confirmed and tested</li>
 </ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify encryption enabled</li>
-<li>Confirm key management functioning</li>
-<li>Check certificate validity</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Enable encryption</li>
-<li>Store keys securely</li>
-<li>Monitor encryption status</li>
-<li>Rotate keys periodically</li>
-</ol>
 
 
 

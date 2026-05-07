@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#test-categories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Test Categories
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-types" class="md-nav__link">
+  <a href="#pre-test-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Test Types
+        Pre-Test Checklist
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#linux-failure-injection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Linux — Failure Injection
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#storage-failure-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Storage Failure Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-resilience-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Resilience Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observability-during-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability During Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-results-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Results Documentation
       
     </span>
   </a>
@@ -775,28 +808,113 @@
 
 
 <h1 id="failure-testing">Failure Testing<a class="headerlink" href="#failure-testing" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Failure testing validates system resilience under controlled failure scenarios.</p>
-<h2 id="test-types">Test Types<a class="headerlink" href="#test-types" title="Permanent link">&para;</a></h2>
+<p>Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.</p>
+<h2 id="test-categories">Test Categories<a class="headerlink" href="#test-categories" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compute</td>
+<td>VM/host shutdown, process kill, CPU saturation</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Disk failure simulation, volume unmount, I/O saturation</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Interface down, packet loss injection, link saturation</td>
+</tr>
+<tr>
+<td>Application</td>
+<td>Process crash, OOM, dependency unavailable</td>
+</tr>
+<tr>
+<td>Dependency</td>
+<td>Database failure, auth service down, DNS failure</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pre-test-checklist">Pre-Test Checklist<a class="headerlink" href="#pre-test-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Server failure simulation</li>
-<li>Network outage test</li>
-<li>Storage failover test</li>
-<li>Application restart test</li>
+<li>[ ] Change window approved</li>
+<li>[ ] Stakeholders notified (service owners, on-call)</li>
+<li>[ ] Rollback plan documented and tested</li>
+<li>[ ] Monitoring dashboards open and verified working</li>
+<li>[ ] Alert routing confirmed (on-call will receive alerts)</li>
+<li>[ ] Test scope documented (what will break, what must not break)</li>
 </ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify test schedule</li>
-<li>Confirm rollback readiness</li>
-<li>Validate monitoring alerts</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Define failure scenario</li>
-<li>Execute test</li>
-<li>Observe system behavior</li>
-<li>Document results</li>
-</ol>
+<h2 id="linux-failure-injection">Linux — Failure Injection<a class="headerlink" href="#linux-failure-injection" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Kill a process (simulate crash)
+kill -9 $(pgrep nginx)
+
+# CPU saturation (use with caution — runs until ^C)
+stress-ng --cpu 4 --cpu-load 95 --timeout 60s
+
+# Memory pressure
+stress-ng --vm 2 --vm-bytes 80% --timeout 60s
+
+# Disk I/O saturation
+fio --name=fill --ioengine=posixaio --rw=randwrite --size=1G --numjobs=4 --runtime=60 --filename=/tmp/fio-test
+
+# Network packet loss (requires tc/netem)
+tc qdisc add dev eth0 root netem loss 20%
+# Remove after test
+tc qdisc del dev eth0 root
+</code></pre>
+<h2 id="storage-failure-tests">Storage Failure Tests<a class="headerlink" href="#storage-failure-tests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Simulate path failure (multipath — disable a path)
+echo offline &gt; /sys/block/&lt;device&gt;/device/state
+# Re-enable
+echo running &gt; /sys/block/&lt;device&gt;/device/state
+
+# Check multipath responds correctly
+multipath -ll
+</code></pre>
+<p><strong>VMware — simulate host failure:</strong></p>
+<pre><code class="language-powershell"># Suspend a VM (simulates host failure for HA test)
+Suspend-VM -VM &quot;&lt;vm-name&gt;&quot; -Confirm:$false
+# Monitor: HA should restart VM on another host
+</code></pre>
+<h2 id="application-resilience-tests">Application Resilience Tests<a class="headerlink" href="#application-resilience-tests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test graceful shutdown
+systemctl stop nginx
+# Expected: requests in flight complete; no connection errors to load balancer
+
+# Test reload without downtime
+systemctl reload nginx
+# Expected: zero downtime; access logs show no 502/503
+
+# Test dependency failure (block outbound connection to DB port)
+iptables -I OUTPUT -p tcp --dport 5432 -j DROP
+# Expected: application returns 503 not 500; retries correctly; alerts fire
+# Cleanup:
+iptables -D OUTPUT -p tcp --dport 5432 -j DROP
+</code></pre>
+<h2 id="observability-during-tests">Observability During Tests<a class="headerlink" href="#observability-during-tests" title="Permanent link">&para;</a></h2>
+<p>Confirm the following fire correctly during each test:
+- [ ] Monitoring alert triggers within expected threshold
+- [ ] Alert routes to on-call channel
+- [ ] Dashboard shows the fault clearly
+- [ ] Logs contain meaningful error messages (not just generic "connection failed")</p>
+<h2 id="test-results-documentation">Test Results Documentation<a class="headerlink" href="#test-results-documentation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Test:           Storage path failure — multipath failover
+Date:           2026-05-06
+Environment:    Prod-like (UAT)
+Scenario:       Disabled one FC path to array on host web-prod-01
+Expected:       Multipath redirects I/O to surviving path; no I/O errors at application layer
+Actual:         I/O redirected within 2 seconds; application logs show no errors
+RTO observed:   2 seconds (path failover)
+Alert fired:    Yes — &quot;Storage path degraded&quot; alert at 00:32
+Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
+Pass/Fail:      Pass
+Notes:          Alert was 45 seconds delayed — investigate alerting lag
+</code></pre>
 
 
 

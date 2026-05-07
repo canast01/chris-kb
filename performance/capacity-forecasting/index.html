@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#forecasting-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Forecasting Model
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-metrics" class="md-nav__link">
+  <a href="#data-collection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Metrics
+        Data Collection
       
     </span>
   </a>
@@ -734,10 +734,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#forecasting-by-resource-type" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Forecasting by Resource Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Forecasting by Resource Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-cpumemory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute (CPU/Memory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forecasting-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forecasting Thresholds
       
     </span>
   </a>
@@ -745,10 +795,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#capacity-report-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Capacity Report Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automation-monthly-report-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation — Monthly Report Script
       
     </span>
   </a>
@@ -775,28 +836,106 @@
 
 
 <h1 id="capacity-forecasting">Capacity Forecasting<a class="headerlink" href="#capacity-forecasting" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Capacity forecasting predicts future resource usage to prevent outages and support growth planning.</p>
-<h2 id="key-metrics">Key Metrics<a class="headerlink" href="#key-metrics" title="Permanent link">&para;</a></h2>
-<ul>
-<li>CPU utilization trends</li>
-<li>Memory consumption growth</li>
-<li>Storage capacity usage</li>
-<li>Network throughput</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review utilization trends</li>
-<li>Identify rapid growth patterns</li>
-<li>Validate monitoring thresholds</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Collect historical metrics</li>
-<li>Identify growth rate</li>
-<li>Estimate exhaustion timeline</li>
-<li>Plan capacity expansion</li>
-</ol>
+<p>Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.</p>
+<h2 id="forecasting-model">Forecasting Model<a class="headerlink" href="#forecasting-model" title="Permanent link">&para;</a></h2>
+<pre><code>Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
+</code></pre>
+<p>Use a 30–90 day trailing average for growth rate — avoid using peak outliers to inflate the rate.</p>
+<h2 id="data-collection">Data Collection<a class="headerlink" href="#data-collection" title="Permanent link">&para;</a></h2>
+<p><strong>Linux — capture weekly snapshots:</strong></p>
+<pre><code class="language-bash"># CPU average (last 7 days via sar)
+sar -u -f /var/log/sa/sa$(date -d '7 days ago' +%d) | tail -3
+
+# Disk usage over time (append to trend file)
+df -h | awk '{print strftime(&quot;%Y-%m-%d&quot;), $0}' &gt;&gt; /var/log/capacity/disk-$(date +%Y%m).log
+</code></pre>
+<p><strong>ONTAP — volume capacity trend:</strong></p>
+<pre><code class="language-bash">volume show -fields size,used,percent-used
+# Track weekly: write to external metrics store or pull via REST API
+</code></pre>
+<p><strong>Pure FlashArray:</strong></p>
+<pre><code class="language-bash">purecli volume list --space   # per-volume capacity
+purecli array get             # array-wide reduction ratio and used capacity
+</code></pre>
+<h2 id="forecasting-by-resource-type">Forecasting by Resource Type<a class="headerlink" href="#forecasting-by-resource-type" title="Permanent link">&para;</a></h2>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Current usage and growth estimate
+df -h /data
+# Compare with last month's snapshot
+# If usage grows 50 GB/month and 200 GB free → 4 months to full
+
+# ONTAP aggregate capacity
+storage aggregate show -fields size,used,percent-used,availsize
+</code></pre>
+<h3 id="compute-cpumemory">Compute (CPU/Memory)<a class="headerlink" href="#compute-cpumemory" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Average CPU over last 30 days from sar
+for day in $(seq 1 30); do
+  sar -u -f /var/log/sa/sa$(date -d &quot;$day days ago&quot; +%d) 2&gt;/dev/null | \
+    awk '/Average/ {print $3}' | tail -1
+done | awk '{sum+=$1; count++} END {print &quot;30d avg CPU:&quot;, sum/count &quot;%&quot;}'
+</code></pre>
+<h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Interface utilisation trend (sar)
+sar -n DEV 1 10 | grep eth0
+# Historical: sar -n DEV -f /var/log/sa/saDD
+</code></pre>
+<h2 id="forecasting-thresholds">Forecasting Thresholds<a class="headerlink" href="#forecasting-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Alert at</th>
+<th>Plan expansion at</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage (array/volume)</td>
+<td>75% used</td>
+<td>60 days to full</td>
+</tr>
+<tr>
+<td>CPU (sustained avg)</td>
+<td>&gt;70%</td>
+<td>&gt;60% sustained trend</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>&gt;80%</td>
+<td>&gt;75% sustained trend</td>
+</tr>
+<tr>
+<td>Network (sustained)</td>
+<td>&gt;60% of link speed</td>
+<td>&gt;50% sustained trend</td>
+</tr>
+<tr>
+<td>Backup window</td>
+<td>&gt;90% of allowed window</td>
+<td>75%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="capacity-report-template">Capacity Report Template<a class="headerlink" href="#capacity-report-template" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Date:          2026-05-06
+System:        prod-storage-01 (ONTAP)
+Current Usage: 68% (34 TB / 50 TB)
+Growth rate:   ~400 GB/month (3-month avg)
+Days to 85%:   ~105 days (est. mid-August)
+Days to 100%:  ~180 days (est. November)
+
+Recommendation:
+  Order 20 TB additional capacity by July.
+  Submit hardware request by 2026-06-01 (6-week lead time).
+</code></pre>
+<h2 id="automation-monthly-report-script">Automation — Monthly Report Script<a class="headerlink" href="#automation-monthly-report-script" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">#!/bin/bash
+echo &quot;=== Capacity Forecast $(date +%Y-%m-%d) ===&quot;
+df -h | awk 'NR&gt;1 &amp;&amp; $5+0 &gt; 70 {print &quot;WARNING:&quot;, $6, &quot;at&quot;, $5}'
+echo &quot;&quot;
+echo &quot;Storage volumes near capacity:&quot;
+# Add ONTAP/Pure/array CLI calls here for production use
+</code></pre>
 
 
 

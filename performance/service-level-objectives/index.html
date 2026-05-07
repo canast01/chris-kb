@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#slo-vs-sla-vs-sli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        SLO vs SLA vs SLI
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-targets" class="md-nav__link">
+  <a href="#common-slos-for-infrastructure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Targets
+        Common SLOs for Infrastructure
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#error-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Error Budget
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#measuring-slis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Measuring SLIs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slo-dashboard-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLO Dashboard Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerting-from-slos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerting from SLOs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slo-review-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLO Review Cadence
       
     </span>
   </a>
@@ -775,28 +808,170 @@
 
 
 <h1 id="service-level-objectives-slo">Service Level Objectives (SLO)<a class="headerlink" href="#service-level-objectives-slo" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SLOs define acceptable service performance and availability targets.</p>
-<h2 id="common-targets">Common Targets<a class="headerlink" href="#common-targets" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Availability percentage</li>
-<li>Response time</li>
-<li>Error rate</li>
-<li>Recovery time</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review service uptime</li>
-<li>Validate response times</li>
-<li>Check error rates</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Define service targets</li>
-<li>Monitor service metrics</li>
-<li>Alert on violations</li>
-<li>Review incidents</li>
-</ol>
+<p>SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.</p>
+<h2 id="slo-vs-sla-vs-sli">SLO vs SLA vs SLI<a class="headerlink" href="#slo-vs-sla-vs-sli" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SLI (Service Level Indicator)</td>
+<td>The actual measured metric (e.g., request success rate)</td>
+</tr>
+<tr>
+<td>SLO (Service Level Objective)</td>
+<td>The target for the SLI (e.g., 99.9% success rate)</td>
+</tr>
+<tr>
+<td>SLA (Service Level Agreement)</td>
+<td>Contractual commitment with consequences for breach</td>
+</tr>
+</tbody>
+</table>
+<p>Set SLOs internally; only publish SLAs externally when commercially required.</p>
+<h2 id="common-slos-for-infrastructure">Common SLOs for Infrastructure<a class="headerlink" href="#common-slos-for-infrastructure" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>SLI</th>
+<th>SLO Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web application</td>
+<td>HTTP success rate</td>
+<td>≥ 99.9% over 30 days</td>
+</tr>
+<tr>
+<td>API service</td>
+<td>P99 latency</td>
+<td>≤ 500ms</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>Query success rate</td>
+<td>≥ 99.95%</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>I/O error rate</td>
+<td>≤ 0.01%</td>
+</tr>
+<tr>
+<td>Backup</td>
+<td>Jobs completing within window</td>
+<td>≥ 99%</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Packet loss</td>
+<td>≤ 0.1%</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Resolution success</td>
+<td>≥ 99.99%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-budget">Error Budget<a class="headerlink" href="#error-budget" title="Permanent link">&para;</a></h2>
+<pre><code>Error budget = (1 - SLO target) × time period
+
+Example: 99.9% SLO for 30 days
+  Error budget = (1 - 0.999) × 30 days × 24 hours = 43.2 minutes/month
+</code></pre>
+<p>When the error budget is consumed, reliability work takes priority over features.</p>
+<h2 id="measuring-slis">Measuring SLIs<a class="headerlink" href="#measuring-slis" title="Permanent link">&para;</a></h2>
+<p><strong>Uptime / availability (Prometheus example):</strong></p>
+<pre><code class="language-promql"># HTTP success rate (last 30 days)
+sum(rate(http_requests_total{status!~&quot;5..&quot;}[30d]))
+/
+sum(rate(http_requests_total[30d]))
+</code></pre>
+<p><strong>Latency P99:</strong></p>
+<pre><code class="language-promql">histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))
+</code></pre>
+<p><strong>Azure Monitor — availability metric:</strong></p>
+<pre><code class="language-bash">az monitor metrics list \
+  --resource &lt;app-resource-id&gt; \
+  --metric Availability \
+  --start-time 2026-05-01 \
+  --end-time 2026-05-06 \
+  --interval PT1H \
+  --aggregation Average
+</code></pre>
+<h2 id="slo-dashboard-requirements">SLO Dashboard Requirements<a class="headerlink" href="#slo-dashboard-requirements" title="Permanent link">&para;</a></h2>
+<p>Each SLO should have a dashboard panel showing:
+1. Current SLI value vs SLO target (green/amber/red)
+2. 30-day trend
+3. Error budget remaining (% and absolute time/requests)
+4. Recent incidents that consumed budget</p>
+<h2 id="alerting-from-slos">Alerting from SLOs<a class="headerlink" href="#alerting-from-slos" title="Permanent link">&para;</a></h2>
+<p>Alert on error budget burn rate — not just current SLI value:</p>
+<table>
+<thead>
+<tr>
+<th>Burn Rate</th>
+<th>Severity</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;14×</td>
+<td>Critical</td>
+<td>Page immediately — budget exhausted in &lt;2 hours</td>
+</tr>
+<tr>
+<td>&gt;6×</td>
+<td>High</td>
+<td>Alert on-call — budget exhausted in &lt;5 hours</td>
+</tr>
+<tr>
+<td>&gt;3×</td>
+<td>Medium</td>
+<td>Investigate — budget exhausted in &lt;10 hours</td>
+</tr>
+<tr>
+<td>&lt;1×</td>
+<td>OK</td>
+<td>Normal operation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="slo-review-cadence">SLO Review Cadence<a class="headerlink" href="#slo-review-cadence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cadence</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monthly</td>
+<td>Review SLO compliance; update error budget tracking</td>
+</tr>
+<tr>
+<td>Quarterly</td>
+<td>Review whether targets are still appropriate</td>
+</tr>
+<tr>
+<td>After major incident</td>
+<td>Assess if SLO needs tightening or if it correctly reflected impact</td>
+</tr>
+<tr>
+<td>Before major release</td>
+<td>Assess risk to SLO; establish rollback threshold</td>
+</tr>
+</tbody>
+</table>
 
 
 

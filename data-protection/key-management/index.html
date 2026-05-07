@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#key-types-and-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Key Types and Storage
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#aws-kms-key-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        AWS KMS Key Lifecycle
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#azure-key-vault-key-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Azure Key Vault Key Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Revocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-host-key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Host Key Rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ontap-key-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ONTAP Key Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-management-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Management Checklist
       
     </span>
   </a>
@@ -764,21 +808,112 @@
 
 
 <h1 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Key management controls encryption keys used to protect sensitive data.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify key rotation schedule</li>
-<li>Confirm backup of key store</li>
-<li>Review access logs</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.</p>
+<h2 id="key-types-and-storage">Key Types and Storage<a class="headerlink" href="#key-types-and-storage" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Key Type</th>
+<th>Storage</th>
+<th>Rotation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Root CA private key</td>
+<td>Air-gapped HSM</td>
+<td>On CA renewal (~10 years)</td>
+</tr>
+<tr>
+<td>Issuing CA private key</td>
+<td>HSM (networked)</td>
+<td>On CA renewal (~5 years)</td>
+</tr>
+<tr>
+<td>TLS/server certificates</td>
+<td>Venafi / cert store</td>
+<td>Annually</td>
+</tr>
+<tr>
+<td>Symmetric data encryption keys</td>
+<td>KMS (AWS/Azure)</td>
+<td>Annually or on incident</td>
+</tr>
+<tr>
+<td>Backup encryption keys</td>
+<td>Offline + KMS</td>
+<td>Annually</td>
+</tr>
+<tr>
+<td>Service account API keys</td>
+<td>CyberArk / Secrets Manager</td>
+<td>90 days</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aws-kms-key-lifecycle">AWS KMS Key Lifecycle<a class="headerlink" href="#aws-kms-key-lifecycle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a key
+aws kms create-key --description &quot;prod-data-key&quot; --key-usage ENCRYPT_DECRYPT
+
+# Enable automatic rotation (annual, symmetric only)
+aws kms enable-key-rotation --key-id &lt;key-id&gt;
+
+# Check rotation status
+aws kms get-key-rotation-status --key-id &lt;key-id&gt;
+
+# Schedule deletion (7–30 day waiting period)
+aws kms schedule-key-deletion --key-id &lt;key-id&gt; --pending-window-in-days 30
+
+# Cancel deletion
+aws kms cancel-key-deletion --key-id &lt;key-id&gt;
+</code></pre>
+<h2 id="azure-key-vault-key-operations">Azure Key Vault Key Operations<a class="headerlink" href="#azure-key-vault-key-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List keys
+az keyvault key list --vault-name &lt;vault-name&gt; \
+  --query '[*].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}' -o table
+
+# Rotate a key (create new version)
+az keyvault key rotate --vault-name &lt;vault-name&gt; --name &lt;key-name&gt;
+
+# Backup a key
+az keyvault key backup --vault-name &lt;vault-name&gt; --name &lt;key-name&gt; --file key-backup.blob
+
+# Restore a key
+az keyvault key restore --vault-name &lt;vault-name&gt; --file key-backup.blob
+</code></pre>
+<h2 id="key-revocation">Key Revocation<a class="headerlink" href="#key-revocation" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Generate encryption keys</li>
-<li>Store keys securely</li>
-<li>Rotate keys periodically</li>
-<li>Revoke compromised keys</li>
+<li>Identify scope — which systems used the compromised key?</li>
+<li>Generate replacement key</li>
+<li>Re-encrypt data encrypted under the compromised key</li>
+<li>Revoke the old key in KMS/vault</li>
+<li>Document incident and remediation</li>
 </ol>
+<h2 id="ssh-host-key-rotation">SSH Host Key Rotation<a class="headerlink" href="#ssh-host-key-rotation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N &quot;&quot;
+ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N &quot;&quot;
+systemctl restart sshd
+# Update known_hosts on all clients
+</code></pre>
+<h2 id="ontap-key-manager">ONTAP Key Manager<a class="headerlink" href="#ontap-key-manager" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check key manager status
+security key-manager show
+
+# Query encryption keys
+security key-manager key query
+
+# Check volume encryption state
+volume show -fields encryption-state
+</code></pre>
+<h2 id="key-management-checklist">Key Management Checklist<a class="headerlink" href="#key-management-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All production keys stored in approved KMS/HSM — no plaintext keys in config files</li>
+<li>[ ] Rotation schedule confirmed for all key types</li>
+<li>[ ] Key backup tested and verifiable</li>
+<li>[ ] Access to key management restricted to named administrators</li>
+<li>[ ] Audit log for key operations forwarded to SIEM</li>
+<li>[ ] Key inventory reviewed quarterly</li>
+</ul>
 
 
 

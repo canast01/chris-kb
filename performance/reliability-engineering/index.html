@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#core-principles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Core Principles
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-practices" class="md-nav__link">
+  <a href="#redundancy-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Practices
+        Redundancy Patterns
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#reliability-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Reliability Metrics
       
     </span>
   </a>
@@ -745,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#incident-review-postmortem-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Incident Review (Postmortem) Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toil-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toil Reduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reliability-improvement-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability Improvement Checklist
       
     </span>
   </a>
@@ -775,28 +797,183 @@
 
 
 <h1 id="reliability-engineering">Reliability Engineering<a class="headerlink" href="#reliability-engineering" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Reliability engineering focuses on maintaining stable and resilient systems.</p>
-<h2 id="core-practices">Core Practices<a class="headerlink" href="#core-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Redundancy planning</li>
-<li>Failure testing</li>
-<li>Monitoring coverage</li>
-<li>Incident review</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review system health</li>
-<li>Validate failover readiness</li>
-<li>Confirm backup integrity</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Reliability engineering systematically improves system resilience through redundancy, failure testing, and learning from incidents.</p>
+<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Embrace failure</td>
+<td>Assume components will fail; design for it</td>
+</tr>
+<tr>
+<td>Measure everything</td>
+<td>Reliability without metrics is guesswork</td>
+</tr>
+<tr>
+<td>Error budgets</td>
+<td>Balance reliability investment vs feature velocity</td>
+</tr>
+<tr>
+<td>Eliminate toil</td>
+<td>Automate repetitive operational work</td>
+</tr>
+<tr>
+<td>Postmortems</td>
+<td>Learn from every significant incident</td>
+</tr>
+</tbody>
+</table>
+<h2 id="redundancy-patterns">Redundancy Patterns<a class="headerlink" href="#redundancy-patterns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compute</td>
+<td>Active/active cluster</td>
+<td>HAProxy, Kubernetes, VMware HA</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>RAID, erasure coding, replication</td>
+<td>RAID6, ONTAP SnapMirror, SRDF</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Bonding/LACP, dual uplinks</td>
+<td>Linux bonding mode 4, Cisco LACP</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>Dual PSU, UPS, dual PDU</td>
+<td>A+B power feeds per rack</td>
+</tr>
+<tr>
+<td>Geographic</td>
+<td>Multi-site / multi-AZ</td>
+<td>ASR, Route 53 failover, SRM</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reliability-metrics">Reliability Metrics<a class="headerlink" href="#reliability-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Availability</td>
+<td>(Total time − Downtime) / Total time</td>
+<td>≥ 99.9%</td>
+</tr>
+<tr>
+<td>MTTR (Mean Time to Recover)</td>
+<td>Avg time from failure detection to service restore</td>
+<td>&lt; 30 min for P1</td>
+</tr>
+<tr>
+<td>MTBF (Mean Time Between Failures)</td>
+<td>Avg time between incidents</td>
+<td>Track trend — improvement over time</td>
+</tr>
+<tr>
+<td>Change failure rate</td>
+<td>% of changes causing incidents</td>
+<td>&lt; 5%</td>
+</tr>
+<tr>
+<td>Error budget consumption</td>
+<td>Downtime vs SLO budget</td>
+<td>&lt; 100% per month</td>
+</tr>
+</tbody>
+</table>
+<h2 id="incident-review-postmortem-process">Incident Review (Postmortem) Process<a class="headerlink" href="#incident-review-postmortem-process" title="Permanent link">&para;</a></h2>
+<p>Every P1 and P2 incident should produce a blameless postmortem:</p>
 <ol>
-<li>Identify failure risks</li>
-<li>Implement redundancy</li>
-<li>Test recovery procedures</li>
-<li>Monitor system stability</li>
+<li><strong>Timeline</strong> — reconstruct events from monitoring, logs, and team recollection</li>
+<li><strong>Root cause</strong> — what was the underlying cause? (not just the symptom)</li>
+<li><strong>Contributing factors</strong> — what made it worse or harder to detect?</li>
+<li><strong>Impact</strong> — duration, affected users/systems, SLO budget consumed</li>
+<li><strong>What went well</strong> — detection speed, response, communication</li>
+<li><strong>Action items</strong> — specific, owned, time-bounded improvements</li>
 </ol>
+<pre><code class="language-markdown">Postmortem: Database Connection Pool Exhaustion
+Date: 2026-05-05
+Duration: 44 minutes downtime
+Impact: ERP unavailable; ~200 users affected
+
+Timeline:
+  14:23 — Monitoring alert: ERP returning 503
+  14:25 — On-call acknowledged; investigation started
+  14:38 — Root cause identified: connection pool exhausted
+  15:07 — Service restored after pool restart and slow query fixed
+
+Root cause: A missing index caused queries to run 40× slower than baseline,
+exhausting the 100-connection pool within 5 minutes.
+
+Action items:
+  1. Add missing index (DBA — due 2026-05-07) ✓
+  2. Add query time alerting in APM (Dev — due 2026-05-15)
+  3. Increase connection pool timeout alert threshold from 95% to 80% (Infra — due 2026-05-12)
+</code></pre>
+<h2 id="toil-reduction">Toil Reduction<a class="headerlink" href="#toil-reduction" title="Permanent link">&para;</a></h2>
+<p>Toil is manual, repetitive, automatable operational work that scales with system size.</p>
+<p>Identify toil by asking: "If we doubled our infrastructure, would this task double?"</p>
+<table>
+<thead>
+<tr>
+<th>Toil Task</th>
+<th>Automation Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual certificate renewal</td>
+<td>Certbot / Venafi auto-renew</td>
+</tr>
+<tr>
+<td>Manual backup verification</td>
+<td>Automated restore test script</td>
+</tr>
+<tr>
+<td>Repetitive health check commands</td>
+<td>Dashboard; automated alert</td>
+</tr>
+<tr>
+<td>Manual log review for errors</td>
+<td>Log alerting on error patterns</td>
+</tr>
+<tr>
+<td>VM snapshot cleanup</td>
+<td>Automated retention policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reliability-improvement-checklist">Reliability Improvement Checklist<a class="headerlink" href="#reliability-improvement-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All P1/P2 incidents have blameless postmortems within 5 business days</li>
+<li>[ ] Action items from postmortems tracked and completed</li>
+<li>[ ] Failure testing (chaos) run quarterly for critical services</li>
+<li>[ ] Error budget tracked and visible to team each month</li>
+<li>[ ] SLO review completed quarterly</li>
+<li>[ ] Single points of failure identified and have a documented mitigation plan</li>
+</ul>
 
 
 

@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#availability-calculation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Availability Calculation
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#metrics" class="md-nav__link">
+  <a href="#synthetic-monitoring-external-probes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Metrics
+        Synthetic Monitoring (External Probes)
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#uptime-monitoring-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Uptime Monitoring Tools
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#azure-monitor-availability-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Azure Monitor — Availability Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-route-53-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Route 53 Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#availability-incident-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Availability Incident Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting
       
     </span>
   </a>
@@ -775,28 +808,140 @@
 
 
 <h1 id="service-availability-monitoring">Service Availability Monitoring<a class="headerlink" href="#service-availability-monitoring" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Service availability monitoring ensures applications remain accessible.</p>
-<h2 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Uptime percentage</li>
-<li>Response latency</li>
-<li>Error rate</li>
-<li>Downtime duration</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review uptime reports</li>
-<li>Validate monitoring probes</li>
-<li>Confirm alert notifications</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Monitor service endpoints</li>
-<li>Record downtime events</li>
-<li>Analyze trends</li>
-<li>Improve reliability</li>
-</ol>
+<h2 id="availability-calculation">Availability Calculation<a class="headerlink" href="#availability-calculation" title="Permanent link">&para;</a></h2>
+<pre><code>Availability % = (Total time - Downtime) / Total time × 100
+
+99.9%  → 8.7 hours downtime/year (43.8 min/month)
+99.95% → 4.4 hours downtime/year (21.9 min/month)
+99.99% → 52 minutes downtime/year (4.4 min/month)
+</code></pre>
+<h2 id="synthetic-monitoring-external-probes">Synthetic Monitoring (External Probes)<a class="headerlink" href="#synthetic-monitoring-external-probes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># HTTP health check — confirm endpoint returns 200
+curl -o /dev/null -s -w &quot;%{http_code} %{time_total}s\n&quot; https://&lt;app&gt;/health
+
+# TCP port check
+nc -zv &lt;host&gt; 443 2&gt;&amp;1 | grep -E &quot;succeeded|failed&quot;
+
+# DNS resolution check
+dig +short &lt;hostname&gt; @8.8.8.8
+
+# Script: check multiple services
+for endpoint in &quot;https://app1/health&quot; &quot;https://app2/health&quot;; do
+    code=$(curl -o /dev/null -s -w &quot;%{http_code}&quot; &quot;$endpoint&quot;)
+    if [ &quot;$code&quot; != &quot;200&quot; ]; then
+        echo &quot;ALERT: $endpoint returned $code&quot;
+    fi
+done
+</code></pre>
+<h2 id="uptime-monitoring-tools">Uptime Monitoring Tools<a class="headerlink" href="#uptime-monitoring-tools" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prometheus Blackbox Exporter</td>
+<td>HTTP/TCP/ICMP probes from internal</td>
+<td>Integrates with Grafana</td>
+</tr>
+<tr>
+<td>Zabbix</td>
+<td>HTTP/TCP/ICMP + agent checks</td>
+<td>All-in-one monitoring</td>
+</tr>
+<tr>
+<td>Pingdom / UptimeRobot</td>
+<td>External HTTP probes</td>
+<td>External visibility; SLA reporting</td>
+</tr>
+<tr>
+<td>Azure Monitor / Application Insights</td>
+<td>App-level availability tests</td>
+<td>Built-in for Azure workloads</td>
+</tr>
+<tr>
+<td>AWS CloudWatch</td>
+<td>Route 53 health checks</td>
+<td>Native for AWS endpoints</td>
+</tr>
+</tbody>
+</table>
+<h2 id="azure-monitor-availability-test">Azure Monitor — Availability Test<a class="headerlink" href="#azure-monitor-availability-test" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create an availability test (ping test)
+az monitor app-insights web-test create \
+  -g &lt;rg&gt; \
+  --app-insights &lt;ai-name&gt; \
+  -n &lt;test-name&gt; \
+  --defined-web-test-kind ping \
+  --locations '[{&quot;Id&quot;:&quot;us-east-az&quot;}]' \
+  --url &quot;https://&lt;app&gt;/health&quot; \
+  --frequency 300 \
+  --timeout 30
+</code></pre>
+<h2 id="aws-route-53-health-checks">AWS Route 53 Health Checks<a class="headerlink" href="#aws-route-53-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create HTTP health check
+aws route53 create-health-check \
+  --caller-reference &quot;$(date +%s)&quot; \
+  --health-check-config '{
+    &quot;Type&quot;: &quot;HTTPS&quot;,
+    &quot;FullyQualifiedDomainName&quot;: &quot;&lt;app-host&gt;&quot;,
+    &quot;Port&quot;: 443,
+    &quot;ResourcePath&quot;: &quot;/health&quot;,
+    &quot;RequestInterval&quot;: 30,
+    &quot;FailureThreshold&quot;: 3
+  }'
+
+# Get health check status
+aws route53 get-health-check-status --health-check-id &lt;id&gt; \
+  --query 'HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}'
+</code></pre>
+<h2 id="availability-incident-tracking">Availability Incident Tracking<a class="headerlink" href="#availability-incident-tracking" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Incident:       APP-2026-042
+Service:        ERP Application
+Start time:     2026-05-05 14:23 UTC
+End time:       2026-05-05 15:07 UTC
+Downtime:       44 minutes
+SLO impact:     Monthly budget: 43.8 min — budget consumed 100%
+Root cause:     Database connection pool exhausted due to slow query
+Detection:      Monitoring alert fired at 14:24 (1 min after start)
+Resolution:     Restarted connection pool; fixed query index
+</code></pre>
+<h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Report</th>
+<th>Frequency</th>
+<th>Audience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Availability dashboard</td>
+<td>Real-time</td>
+<td>Operations team</td>
+</tr>
+<tr>
+<td>Monthly SLO compliance</td>
+<td>Monthly</td>
+<td>Management, service owners</td>
+</tr>
+<tr>
+<td>Incident post-mortem</td>
+<td>After each P1/P2</td>
+<td>Management, tech leads</td>
+</tr>
+<tr>
+<td>Quarterly availability trend</td>
+<td>Quarterly</td>
+<td>CISO, IT management</td>
+</tr>
+</tbody>
+</table>
 
 
 
