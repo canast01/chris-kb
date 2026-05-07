@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#ip-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        IP Configuration
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#tcp-connection-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        TCP Connection Testing
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#active-connections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Active Connections
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#mtu-and-fragmentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        MTU and Fragmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tcp-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TCP States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-protocol-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Protocol Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,30 +808,162 @@
 
 
 <h1 id="tcpip">TCP/IP<a class="headerlink" href="#tcpip" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>TCP/IP is the core communication model used by servers, storage, cloud services, applications, and infrastructure platforms.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify host IP configuration</li>
-<li>Confirm gateway reachability</li>
-<li>Check DNS resolution</li>
-<li>Validate service port connectivity</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ip addr
-ip route
-ping 8.8.8.8
-traceroute 8.8.8.8
-nc -vz server 443
+<h2 id="ip-configuration">IP Configuration<a class="headerlink" href="#ip-configuration" title="Permanent link">&para;</a></h2>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">ip addr show
+ip addr show &lt;interface&gt;
+ip addr add &lt;ip&gt;/&lt;prefix&gt; dev &lt;interface&gt;
+ip route add default via &lt;gateway&gt;
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm source and destination IPs</li>
-<li>Verify subnet and gateway</li>
-<li>Test DNS resolution</li>
-<li>Test port connectivity</li>
-<li>Check firewall rules</li>
-</ol>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell">Get-NetIPAddress
+Get-NetIPConfiguration
+ipconfig /all
+</code></pre>
+<h2 id="tcp-connection-testing">TCP Connection Testing<a class="headerlink" href="#tcp-connection-testing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test TCP port reachability
+nc -zv &lt;host&gt; &lt;port&gt;
+telnet &lt;host&gt; &lt;port&gt;
+
+# PowerShell
+Test-NetConnection &lt;host&gt; -Port &lt;port&gt;
+</code></pre>
+<h2 id="active-connections">Active Connections<a class="headerlink" href="#active-connections" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux
+ss -tnp         # TCP connections with process info
+ss -tnlp        # listening ports
+netstat -tnp    # legacy equivalent
+
+# Windows
+netstat -ano
+Get-NetTCPConnection
+</code></pre>
+<h2 id="mtu-and-fragmentation">MTU and Fragmentation<a class="headerlink" href="#mtu-and-fragmentation" title="Permanent link">&para;</a></h2>
+<p>Default Ethernet MTU is 1500 bytes. Storage networks (iSCSI, NFS) typically use jumbo frames (9000 bytes). Mismatches cause fragmentation or dropped packets.</p>
+<pre><code class="language-bash"># Check interface MTU
+ip link show &lt;interface&gt;
+
+# Test path MTU (don't-fragment bit)
+ping -M do -s 1472 &lt;destination&gt;    # 1500 MTU test
+ping -M do -s 8972 &lt;destination&gt;    # 9000 MTU test
+
+# Windows
+ping /f /l 1472 &lt;destination&gt;
+</code></pre>
+<h2 id="tcp-states">TCP States<a class="headerlink" href="#tcp-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESTABLISHED</td>
+<td>Active connection</td>
+</tr>
+<tr>
+<td>TIME_WAIT</td>
+<td>Connection closing; waiting for delayed packets</td>
+</tr>
+<tr>
+<td>CLOSE_WAIT</td>
+<td>Remote side closed; local app hasn't closed yet</td>
+</tr>
+<tr>
+<td>SYN_SENT</td>
+<td>TCP handshake in progress</td>
+</tr>
+<tr>
+<td>LISTEN</td>
+<td>Port open and listening</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-protocol-ports">Common Protocol Ports<a class="headerlink" href="#common-protocol-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH</td>
+<td>22</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>iSCSI</td>
+<td>3260</td>
+</tr>
+<tr>
+<td>NFS</td>
+<td>2049</td>
+</tr>
+<tr>
+<td>SMB/CIFS</td>
+<td>445</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>53 (UDP/TCP)</td>
+</tr>
+<tr>
+<td>LDAP</td>
+<td>389</td>
+</tr>
+<tr>
+<td>LDAPS</td>
+<td>636</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>123 (UDP)</td>
+</tr>
+<tr>
+<td>SNMP</td>
+<td>161/162 (UDP)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can't reach port</td>
+<td>Firewall, service down</td>
+<td><code>nc -zv</code>; check firewall and service</td>
+</tr>
+<tr>
+<td>High TIME_WAIT count</td>
+<td>Short connection pattern</td>
+<td>Tune <code>net.ipv4.tcp_tw_reuse</code></td>
+</tr>
+<tr>
+<td>MTU causing drops</td>
+<td>Path MTU</td>
+<td>Lower MTU or fix network</td>
+</tr>
+<tr>
+<td>Intermittent loss</td>
+<td>Duplex mismatch</td>
+<td>Force full duplex on NIC and switch</td>
+</tr>
+</tbody>
+</table>
 
 
 

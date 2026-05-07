@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#create-a-vlan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Create a VLAN
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#assign-an-access-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Assign an Access Port
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#configure-a-trunk-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Configure a Trunk Port
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#add-a-vlan-to-an-existing-trunk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Add a VLAN to an Existing Trunk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-a-vlan-from-a-trunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove a VLAN from a Trunk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#save-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Save Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,25 +819,93 @@
 
 
 <h1 id="vlan-configuration">VLAN Configuration<a class="headerlink" href="#vlan-configuration" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure defines how to configure VLANs on network infrastructure.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm VLAN ID</li>
-<li>Confirm network segment requirements</li>
-<li>Verify switch configuration access</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show vlan
-show interface trunk
-configure terminal
+<p>Step-by-step procedures for creating and assigning VLANs on Cisco IOS/NX-OS switches.</p>
+<h2 id="create-a-vlan">Create a VLAN<a class="headerlink" href="#create-a-vlan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">configure terminal
+vlan &lt;id&gt;
+  name &lt;vlan_name&gt;
+exit
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm VLAN created</li>
-<li>Confirm devices assigned to VLAN</li>
-<li>Validate connectivity</li>
-</ol>
+<h2 id="assign-an-access-port">Assign an Access Port<a class="headerlink" href="#assign-an-access-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport mode access
+  switchport access vlan &lt;id&gt;
+  description &lt;description&gt;
+  no shutdown
+exit
+</code></pre>
+<h2 id="configure-a-trunk-port">Configure a Trunk Port<a class="headerlink" href="#configure-a-trunk-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport mode trunk
+  switchport trunk encapsulation dot1q    # if required by platform
+  switchport trunk native vlan &lt;native_id&gt;
+  switchport trunk allowed vlan &lt;id1&gt;,&lt;id2&gt;,&lt;id3&gt;
+  no shutdown
+exit
+</code></pre>
+<h2 id="add-a-vlan-to-an-existing-trunk">Add a VLAN to an Existing Trunk<a class="headerlink" href="#add-a-vlan-to-an-existing-trunk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport trunk allowed vlan add &lt;id&gt;
+</code></pre>
+<h2 id="remove-a-vlan-from-a-trunk">Remove a VLAN from a Trunk<a class="headerlink" href="#remove-a-vlan-from-a-trunk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport trunk allowed vlan remove &lt;id&gt;
+</code></pre>
+<h2 id="save-configuration">Save Configuration<a class="headerlink" href="#save-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">copy running-config startup-config
+# or (NX-OS)
+copy running-config startup-config vdc-all
+</code></pre>
+<h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm VLAN exists
+show vlan brief | include &lt;id&gt;
+
+# Confirm port VLAN assignment
+show interface &lt;int&gt; status
+
+# Confirm trunk carries VLAN
+show interfaces trunk | include &lt;id&gt;
+
+# Confirm VLAN on both sides of a trunk
+# (Run on both switches)
+</code></pre>
+<p>After VLAN config:
+- [ ] VLAN visible in <code>show vlan brief</code> on all relevant switches
+- [ ] Trunk carries VLAN — <code>show interfaces trunk</code>
+- [ ] End-host reachable — <code>ping &lt;host_on_vlan&gt;</code>
+- [ ] Storage / application traffic flowing</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLAN not passing</td>
+<td>Trunk allowed list</td>
+<td><code>switchport trunk allowed vlan add</code></td>
+</tr>
+<tr>
+<td>Host not on VLAN</td>
+<td>Access port assignment</td>
+<td><code>switchport access vlan &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Native VLAN mismatch</td>
+<td>CDP/LLDP warnings</td>
+<td>Match native VLAN on both trunk ends</td>
+</tr>
+<tr>
+<td>VLAN pruned by VTP</td>
+<td>VTP mode</td>
+<td>Set to transparent or manually add VLAN</td>
+</tr>
+</tbody>
+</table>
 
 
 

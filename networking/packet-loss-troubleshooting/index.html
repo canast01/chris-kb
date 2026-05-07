@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#identify-the-loss" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Identify the Loss
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#interface-error-counters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Interface Error Counters
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#duplex-speed-mismatch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Duplex / Speed Mismatch
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#congestion-queue-drops" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Congestion / Queue Drops
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#physical-layer-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Layer Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtu-issues-fragmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTU Issues (Fragmentation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Causes
       
     </span>
   </a>
@@ -775,25 +808,92 @@
 
 
 <h1 id="packet-loss-troubleshooting">Packet Loss Troubleshooting<a class="headerlink" href="#packet-loss-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook diagnoses packet loss affecting application performance.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm affected application</li>
-<li>Identify network path</li>
-<li>Check recent network changes</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ping -c 100 destination-host
-mtr destination-host
-ethtool interface
+<p>Packet loss causes degraded application performance, storage I/O timeouts, replication lag, and vMotion failures.</p>
+<h2 id="identify-the-loss">Identify the Loss<a class="headerlink" href="#identify-the-loss" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Extended ping to observe loss pattern
+ping -c 100 &lt;destination&gt;
+
+# Continuous path trace with loss stats per hop
+mtr &lt;destination&gt;
+mtr --report --report-cycles 100 &lt;destination&gt;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm packet loss resolved</li>
-<li>Confirm latency stabilized</li>
-<li>Monitor network performance metrics</li>
-</ol>
+<p><code>mtr</code> shows loss per hop — if loss appears at hop N but not N+1, it's ICMP de-prioritization by the router, not true loss. True loss appears at hop N and all subsequent hops.</p>
+<h2 id="interface-error-counters">Interface Error Counters<a class="headerlink" href="#interface-error-counters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux
+ethtool -S &lt;interface&gt; | grep -i error
+ip -s link show &lt;interface&gt;
+
+# Show interface errors
+netstat -i
+
+# Network interface stats
+cat /proc/net/dev
+</code></pre>
+<h2 id="duplex-speed-mismatch">Duplex / Speed Mismatch<a class="headerlink" href="#duplex-speed-mismatch" title="Permanent link">&para;</a></h2>
+<p>Half-duplex on a switch port causes severe packet loss under load:</p>
+<pre><code class="language-bash">ethtool &lt;interface&gt;
+# Look for: Speed: 1000Mb/s, Duplex: Full
+</code></pre>
+<p>On the switch:</p>
+<pre><code class="language-bash">show interface &lt;int&gt;
+# Look for: duplex full, 1000 Mbps
+</code></pre>
+<h2 id="congestion-queue-drops">Congestion / Queue Drops<a class="headerlink" href="#congestion-queue-drops" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — show interface TX/RX drops
+ip -s link show &lt;interface&gt;
+</code></pre>
+<p>On the switch, check output drops:</p>
+<pre><code class="language-bash">show interface &lt;int&gt; counters    # Cisco
+show interface &lt;int&gt;             # look for output drops
+</code></pre>
+<h2 id="physical-layer-checks">Physical Layer Checks<a class="headerlink" href="#physical-layer-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SFP/cable on the switch port
+show interface &lt;int&gt; transceiver    # Cisco
+# Check Rx power — should be within spec
+</code></pre>
+<h2 id="mtu-issues-fragmentation">MTU Issues (Fragmentation)<a class="headerlink" href="#mtu-issues-fragmentation" title="Permanent link">&para;</a></h2>
+<p>Packet loss with large frames may be MTU-related:</p>
+<pre><code class="language-bash">ping -M do -s 8972 &lt;destination&gt;    # iSCSI/NFS MTU test (9000 bytes)
+ping -M do -s 1472 &lt;destination&gt;    # standard MTU test
+</code></pre>
+<p>Any failure with do-not-fragment set indicates an MTU mismatch somewhere in the path.</p>
+<h2 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Duplex mismatch</td>
+<td><code>ethtool</code> / switch port</td>
+<td>Force full duplex on both ends</td>
+</tr>
+<tr>
+<td>Congestion / drops</td>
+<td>Interface counters</td>
+<td>Increase bandwidth or QoS</td>
+</tr>
+<tr>
+<td>Bad cable / SFP</td>
+<td>Rx power, error counters</td>
+<td>Replace SFP or cable</td>
+</tr>
+<tr>
+<td>MTU mismatch</td>
+<td>DF-bit ping</td>
+<td>Align MTU across path</td>
+</tr>
+<tr>
+<td>Physical interface errors</td>
+<td><code>ip -s link show</code></td>
+<td>Replace NIC or port</td>
+</tr>
+</tbody>
+</table>
 
 
 

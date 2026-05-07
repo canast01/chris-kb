@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#tunnel-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Tunnel Status
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#ike-ipsec-phases" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        IKE / IPsec Phases
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#test-connectivity-through-tunnel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Test Connectivity Through Tunnel
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#common-phase-1-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Common Phase 1 Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-phase-2-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Phase 2 Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-based-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate-Based VPN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#route-based-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route-Based VPN
       
     </span>
   </a>
@@ -775,30 +808,114 @@
 
 
 <h1 id="vpn">VPN<a class="headerlink" href="#vpn" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>VPNs provide encrypted connectivity between users, sites, cloud environments, and partner networks.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm tunnel status</li>
-<li>Review authentication failures</li>
-<li>Check encryption settings</li>
-<li>Validate route advertisements</li>
-<li>Review certificate expiration</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show vpn-sessiondb
-show crypto ikev2 sa
-show crypto ipsec sa
-ping remote-subnet-ip
+<p>VPNs provide encrypted connectivity between sites, cloud environments, remote users, and partner networks.</p>
+<h2 id="tunnel-status">Tunnel Status<a class="headerlink" href="#tunnel-status" title="Permanent link">&para;</a></h2>
+<p><strong>Cisco ASA / IOS:</strong></p>
+<pre><code class="language-bash">show vpn-sessiondb                  # all active VPN sessions
+show crypto ikev2 sa                # IKEv2 Phase 1 status
+show crypto ipsec sa                # IPsec Phase 2 status
+show crypto ikev1 sa                # IKEv1 Phase 1
+show crypto isakmp sa               # IKEv1 ISAKMP
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm peer IP reachability</li>
-<li>Validate Phase 1 settings</li>
-<li>Validate Phase 2 settings</li>
-<li>Check routes and ACLs</li>
-<li>Review tunnel logs</li>
-</ol>
+<p><strong>Palo Alto:</strong></p>
+<pre><code class="language-bash">show vpn ike-sa
+show vpn ipsec-sa
+show vpn tunnel
+</code></pre>
+<h2 id="ike-ipsec-phases">IKE / IPsec Phases<a class="headerlink" href="#ike-ipsec-phases" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 1 (IKE)</td>
+<td>ISAKMP/IKEv2</td>
+<td>Establish authenticated, encrypted channel</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>IPsec</td>
+<td>Negotiate encryption for data tunnels</td>
+</tr>
+</tbody>
+</table>
+<p>Both phases must complete for a functional tunnel.</p>
+<h2 id="test-connectivity-through-tunnel">Test Connectivity Through Tunnel<a class="headerlink" href="#test-connectivity-through-tunnel" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ping &lt;remote_subnet_ip&gt; source &lt;local_subnet_ip&gt;
+traceroute &lt;remote_ip&gt;
+</code></pre>
+<h2 id="common-phase-1-issues">Common Phase 1 Issues<a class="headerlink" href="#common-phase-1-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No response from peer</td>
+<td>Firewall blocking UDP 500/4500</td>
+<td>Open UDP 500 and 4500</td>
+</tr>
+<tr>
+<td>Authentication failed</td>
+<td>Mismatched PSK or certificate</td>
+<td>Verify PSK or certificate chain</td>
+</tr>
+<tr>
+<td>Proposal mismatch</td>
+<td>Different encryption/hash settings</td>
+<td>Match DH group, encryption, hash on both ends</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-phase-2-issues">Common Phase 2 Issues<a class="headerlink" href="#common-phase-2-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tunnel up, no traffic</td>
+<td>Proxy IDs / ACL mismatch</td>
+<td>Match encryption domain (interesting traffic) on both ends</td>
+</tr>
+<tr>
+<td>Traffic one-directional</td>
+<td>Asymmetric routing</td>
+<td>Check routing on remote peer</td>
+</tr>
+<tr>
+<td>Tunnel drops intermittently</td>
+<td>SA lifetime mismatch</td>
+<td>Match Phase 2 lifetime on both peers</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-based-vpn">Certificate-Based VPN<a class="headerlink" href="#certificate-based-vpn" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check certificate validity
+openssl x509 -in &lt;cert_file&gt; -noout -dates
+
+# Check PKI enrollment status (Cisco IOS)
+show crypto pki certificate
+</code></pre>
+<h2 id="route-based-vpn">Route-Based VPN<a class="headerlink" href="#route-based-vpn" title="Permanent link">&para;</a></h2>
+<p>Route-based VPNs use virtual tunnel interfaces (VTI) — routing directs traffic into the tunnel rather than ACLs:</p>
+<pre><code class="language-bash"># Cisco IOS — view VTI state
+show interface tunnel &lt;id&gt;
+show ip route | grep tunnel
+</code></pre>
 
 
 

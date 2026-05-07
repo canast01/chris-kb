@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#check-vip-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Check VIP Availability
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#check-pool-member-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Check Pool Member Health
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#pool-member-status-values-f5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Pool Member Status Values (F5)
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#ssl-certificate-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        SSL Certificate Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-monitor-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Monitor Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,29 +808,108 @@
 
 
 <h1 id="load-balancers">Load Balancers<a class="headerlink" href="#load-balancers" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Load balancers distribute traffic across multiple backend systems. They improve availability, scalability, and maintenance flexibility.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review pool member health</li>
-<li>Check virtual server status</li>
-<li>Validate certificates</li>
-<li>Confirm persistence settings</li>
-<li>Review error rates</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">curl -vk https://vip.example.com
-openssl s_client -connect vip.example.com:443
-dig vip.example.com
+<p>Load balancers distribute incoming traffic across a pool of backend servers. In enterprise infrastructure they front application servers, storage management APIs, and cloud endpoints.</p>
+<h2 id="check-vip-availability">Check VIP Availability<a class="headerlink" href="#check-vip-availability" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test the VIP endpoint
+curl -vk https://&lt;vip_fqdn&gt;/
+curl -vk http://&lt;vip_fqdn&gt;:&lt;port&gt;/
+
+# Test TCP port reachability
+nc -zv &lt;vip_ip&gt; &lt;port&gt;
+
+# Verify DNS resolves to the VIP
+dig &lt;vip_fqdn&gt;
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm VIP is reachable</li>
-<li>Check pool member health</li>
-<li>Validate backend service ports</li>
-<li>Review SSL certificate state</li>
-<li>Check firewall path</li>
-</ol>
+<h2 id="check-pool-member-health">Check Pool Member Health<a class="headerlink" href="#check-pool-member-health" title="Permanent link">&para;</a></h2>
+<p>On F5 BIG-IP:</p>
+<pre><code class="language-bash">tmsh show ltm node
+tmsh show ltm pool
+tmsh show ltm pool &lt;pool_name&gt; members
+</code></pre>
+<p>On HAProxy:</p>
+<pre><code class="language-bash">echo &quot;show stat&quot; | socat stdio /var/run/haproxy.sock | cut -d ',' -f1,2,18 | column -t -s ','
+</code></pre>
+<h2 id="pool-member-status-values-f5">Pool Member Status Values (F5)<a class="headerlink" href="#pool-member-status-values-f5" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>up</td>
+<td>Available and passing health checks</td>
+</tr>
+<tr>
+<td>down</td>
+<td>Failed health check</td>
+</tr>
+<tr>
+<td>forced-offline</td>
+<td>Administratively removed</td>
+</tr>
+<tr>
+<td>unknown</td>
+<td>No health monitor configured</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ssl-certificate-check">SSL Certificate Check<a class="headerlink" href="#ssl-certificate-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">openssl s_client -connect &lt;vip_fqdn&gt;:443 &lt;/dev/null 2&gt;&amp;1 | grep -E &quot;subject|Verify|expire&quot;
+echo | openssl s_client -connect &lt;vip_fqdn&gt;:443 2&gt;/dev/null | openssl x509 -noout -dates
+</code></pre>
+<h2 id="health-monitor-validation">Health Monitor Validation<a class="headerlink" href="#health-monitor-validation" title="Permanent link">&para;</a></h2>
+<p>Backend members fail health checks if:
+- The service port is not responding
+- The health check path returns a non-2xx response
+- The member's firewall blocks the health check source IP</p>
+<pre><code class="language-bash"># Test the health check manually from the LB server or another host
+curl -o /dev/null -s -w &quot;%{http_code}&quot; http://&lt;member_ip&gt;:&lt;port&gt;/health
+</code></pre>
+<h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">&para;</a></h2>
+<p>If sessions are being dropped inconsistently, check persistence profile:
+- Cookie persistence — browser-based stickiness
+- Source IP — same source always goes to same member
+- SSL session ID — for HTTPS without cookie insertion</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VIP unreachable</td>
+<td>Firewall, routing</td>
+<td>Check path from client to VIP</td>
+</tr>
+<tr>
+<td>All members down</td>
+<td>Health monitor</td>
+<td>Check monitor config; test check manually</td>
+</tr>
+<tr>
+<td>One member down</td>
+<td>Backend service</td>
+<td>Restart service on failed member</td>
+</tr>
+<tr>
+<td>Session drops</td>
+<td>Persistence</td>
+<td>Enable or fix persistence profile</td>
+</tr>
+<tr>
+<td>SSL error</td>
+<td>Certificate expiry</td>
+<td>Renew and replace certificate</td>
+</tr>
+</tbody>
+</table>
 
 
 
