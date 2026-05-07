@@ -7,21 +7,10 @@
 
 ```mermaid
 graph TB
-  subgraph FabricA["Fabric A — VSAN 10"]
-    H1A(["esxi-01  HBA0"])
-    H2A(["esxi-02  HBA0"])
-    MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
-    H1A --> MDSA
-    H2A --> MDSA
-  end
-
-  subgraph FabricB["Fabric B — VSAN 11"]
-    H1B(["esxi-01  HBA1"])
-    H2B(["esxi-02  HBA1"])
-    MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
-    H1B --> MDSB
-    H2B --> MDSB
-  end
+  H1A(["esxi-01  HBA0"]) --> MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
+  H2A(["esxi-02  HBA0"]) --> MDSA
+  H1B(["esxi-01  HBA1"]) --> MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
+  H2B(["esxi-02  HBA1"]) --> MDSB
 
   MDSA <-->|"4× 100G ISL"| MDSB
 
@@ -32,16 +21,13 @@ graph TB
   MDSB --> PM_B[("PowerMax Dir B")]
   MDSB --> NA_N2[("NetApp AFF Node 2")]
 
-  classDef switch fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-  classDef host fill:#dcfce7,stroke:#16a34a,color:#14532d
-  classDef storage fill:#f3e8ff,stroke:#9333ea,color:#581c87
+  classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
 
   class MDSA,MDSB switch
   class H1A,H2A,H1B,H2B host
   class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage
-
-  style FabricA fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
-  style FabricB fill:#fff1f2,stroke:#f43f5e,color:#881337
 ```
 
 ## Overview
