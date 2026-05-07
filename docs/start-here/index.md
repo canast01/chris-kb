@@ -113,7 +113,7 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 <div class="kb-grid kb-grid-3">
 
   <div class="kb-card">
-    <h3><a href="../usage-metrics/">Usage Metrics</a></h3>
+    <h3><a href="../usage-metrics.md">Usage Metrics</a></h3>
     <p>Page counts, section growth, and site health notes.</p>
   </div>
 
