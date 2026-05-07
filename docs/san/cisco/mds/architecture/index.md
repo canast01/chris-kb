@@ -8,29 +8,37 @@
 ```mermaid
 graph TB
   subgraph FabricA["Fabric A — VSAN 10"]
-    H1A["esxi-01\nHBA0"]
-    H2A["esxi-02\nHBA0"]
-    MDSA["MDS-9710\nDirector A\n2× 48p 32Gb FC"]
+    H1A(["esxi-01  HBA0"])
+    H2A(["esxi-02  HBA0"])
+    MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
     H1A --> MDSA
     H2A --> MDSA
   end
 
   subgraph FabricB["Fabric B — VSAN 11"]
-    H1B["esxi-01\nHBA1"]
-    H2B["esxi-02\nHBA1"]
-    MDSB["MDS-9710\nDirector B\n2× 48p 32Gb FC"]
+    H1B(["esxi-01  HBA1"])
+    H2B(["esxi-02  HBA1"])
+    MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
     H1B --> MDSB
     H2B --> MDSB
   end
 
   MDSA <-->|"4× 100G ISL"| MDSB
 
-  MDSA --> FA_CT0["FlashArray\nCT0"]
-  MDSA --> PM_A["PowerMax\nDir A"]
-  MDSA --> NA_N1["NetApp AFF\nNode 1"]
-  MDSB --> FA_CT1["FlashArray\nCT1"]
-  MDSB --> PM_B["PowerMax\nDir B"]
-  MDSB --> NA_N2["NetApp AFF\nNode 2"]
+  MDSA --> FA_CT0[("FlashArray CT0")]
+  MDSA --> PM_A[("PowerMax Dir A")]
+  MDSA --> NA_N1[("NetApp AFF Node 1")]
+  MDSB --> FA_CT1[("FlashArray CT1")]
+  MDSB --> PM_B[("PowerMax Dir B")]
+  MDSB --> NA_N2[("NetApp AFF Node 2")]
+
+  classDef switch fill:#1565c0,stroke:#0d47a1,color:#fff
+  classDef host fill:#2e7d32,stroke:#1b5e20,color:#fff
+  classDef storage fill:#6a1b9a,stroke:#4a148c,color:#fff
+
+  class MDSA,MDSB switch
+  class H1A,H2A,H1B,H2B host
+  class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage
 ```
 
 ## Overview
@@ -55,12 +63,7 @@ Directors (9706/9710) support ISSU (In-Service Software Upgrade), making them th
 
 ## Fabric Design
 
-Typical enterprise deployment uses a **dual-fabric** architecture:
-
-```
-Fabric A:  Host HBA Port 0 → MDS-SW01 → Storage Target Port (Fabric A)
-Fabric B:  Host HBA Port 1 → MDS-SW02 → Storage Target Port (Fabric B)
-```
+Typical enterprise deployment uses a **dual-fabric** architecture — each host HBA port connects to a separate switch, with storage targets dual-homed across both fabrics. A failure of one fabric does not impact the other.
 
 Each fabric is completely independent — a failure of one fabric does not impact the other. All hosts and storage targets are connected to both fabrics for redundancy.
 
@@ -99,7 +102,7 @@ VSAN 1 is the default VSAN — do not use VSAN 1 for production; all production 
 
 **Key commands:**
 
-```
+```bash
 # Show all devices logged into a VSAN
 show fcns database vsan 10
 
@@ -125,7 +128,7 @@ show interface fc1/1
 | NP_Port | N_Port Proxy — used in NPV mode |
 | SD_Port | SPAN Destination Port — used for FC traffic capture |
 
-```
+```bash
 # Check port type and state
 show interface fc1/1
 
@@ -141,7 +144,7 @@ interface fc1/1
 
 Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is **single-initiator / single-target** zones — one zone per host-port-to-storage-port pair.
 
-```
+```bash
 # Show active zone set for a VSAN
 show zoneset active vsan 10
 
