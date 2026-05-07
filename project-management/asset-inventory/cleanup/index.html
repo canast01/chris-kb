@@ -21,7 +21,7 @@
     
     
       
-        <title>Cleanup - Chris KB</title>
+        <title>Asset Cleanup and Decommission - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cleanup · Chris KB">
+  <meta property="og:title" content="Asset Cleanup and Decommission · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cleanup · Chris KB">
+  <meta name="twitter:title" content="Asset Cleanup and Decommission · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cleanup" class="md-skip">
+        <a href="#asset-cleanup-and-decommission" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cleanup
+              Asset Cleanup and Decommission
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#decommission-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Decommission Workflow
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#data-wiping-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Data Wiping Standards
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#dependency-verification-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Dependency Verification Checklist
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#physical-asset-disposal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Physical Asset Disposal
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#cmdb-record-updates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        CMDB Record Updates
       
     </span>
   </a>
@@ -809,42 +809,134 @@
 
 
 
-<h1 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Asset Inventory Cleanup notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="asset-cleanup-and-decommission">Asset Cleanup and Decommission<a class="headerlink" href="#asset-cleanup-and-decommission" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Asset cleanup covers the full workflow from decommission decision through physical disposal and CMDB record retirement. Skipping steps creates compliance gaps, security risks from data not wiped, and CMDB inaccuracies that affect downstream processes like change and incident management.</p>
+<hr />
+<h2 id="decommission-workflow">Decommission Workflow<a class="headerlink" href="#decommission-workflow" title="Permanent link">&para;</a></h2>
+<p>Follow this sequence for every asset decommission — server, VM, network device, or end-user hardware.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Raise decommission request ticket</td>
+<td>Requestor</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Confirm no active dependencies</td>
+<td>App / infra owner</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Obtain approval from asset owner</td>
+<td>Asset Manager</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Notify affected teams (14-day notice)</td>
+<td>Change Manager</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Shut down and isolate asset</td>
+<td>Infra Engineer</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Perform data wipe or disk destruction</td>
+<td>Infra Engineer</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Update CMDB status to Retired</td>
+<td>Asset Manager</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Arrange physical disposal</td>
+<td>Facilities</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-wiping-standards">Data Wiping Standards<a class="headerlink" href="#data-wiping-standards" title="Permanent link">&para;</a></h2>
+<p>Data must be handled appropriately based on asset classification.</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Standard HDD/SSD</strong> — NIST 800-88 compliant wipe (e.g., <code>shred</code>, <code>blkdiscard</code> for SSDs, or Blancco)</li>
+<li><strong>Cloud volumes</strong> — delete volume and snapshot; confirm no residual in object storage</li>
+<li><strong>Encrypted disks</strong> — key destruction sufficient if full-disk encryption was active</li>
+<li><strong>Physical destruction</strong> — required for damaged media or devices holding sensitive data; use certified vendor</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>Document the wipe method, tool version, and operator in the decommission ticket.</p>
+<hr />
+<h2 id="dependency-verification-checklist">Dependency Verification Checklist<a class="headerlink" href="#dependency-verification-checklist" title="Permanent link">&para;</a></h2>
+<p>Before any shutdown, confirm no live dependencies remain.</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Check monitoring: no active alerts referencing this asset</li>
+<li>[ ] Check load balancer / DNS: asset removed from rotation</li>
+<li>[ ] Check backup jobs: exclude asset from backup schedules</li>
+<li>[ ] Check application config: no references in connection strings or env vars</li>
+<li>[ ] Check CMDB relationships: all upstream/downstream CIs reviewed</li>
+<li>[ ] Confirm with app owners in writing (email or ticket comment)</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="physical-asset-disposal">Physical Asset Disposal<a class="headerlink" href="#physical-asset-disposal" title="Permanent link">&para;</a></h2>
+<p>For physical hardware leaving the organisation:</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>Use only approved WEEE-compliant disposal vendors</li>
+<li>Obtain a certificate of destruction for each device containing persistent storage</li>
+<li>Record vendor name, collection date, and certificate reference in the decommission ticket</li>
+<li>For leased equipment, coordinate return with the vendor before disposal</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<table>
+<thead>
+<tr>
+<th>Disposal Route</th>
+<th>When to Use</th>
+<th>Documentation Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certified vendor</td>
+<td>End-of-life owned hardware</td>
+<td>Certificate of destruction</td>
+</tr>
+<tr>
+<td>Lease return</td>
+<td>Leased servers/laptops</td>
+<td>Vendor receipt</td>
+</tr>
+<tr>
+<td>Internal reuse</td>
+<td>Hardware reassigned to another team</td>
+<td>Asset transfer form</td>
+</tr>
+<tr>
+<td>Donation</td>
+<td>Non-sensitive, wiped end-user devices</td>
+<td>Wipe certificate + donor form</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cmdb-record-updates">CMDB Record Updates<a class="headerlink" href="#cmdb-record-updates" title="Permanent link">&para;</a></h2>
+<p>After decommission is complete, update the following:</p>
+<ul>
+<li>[ ] Set CI status to <code>Retired</code> with retirement date</li>
+<li>[ ] Remove all active CI relationships</li>
+<li>[ ] Record disposal method and certificate reference in the CI notes field</li>
+<li>[ ] Close all open tickets linked to the CI</li>
+<li>[ ] Notify cost allocation team if the asset carried a cost code</li>
+</ul>
 
 
 

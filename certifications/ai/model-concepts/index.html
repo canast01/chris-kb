@@ -21,7 +21,7 @@
     
     
       
-        <title>Model Concepts - Chris KB</title>
+        <title>AI Model Concepts - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Model Concepts · Chris KB">
+  <meta property="og:title" content="AI Model Concepts · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Model Concepts · Chris KB">
+  <meta name="twitter:title" content="AI Model Concepts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#model-concepts" class="md-skip">
+        <a href="#ai-model-concepts" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Model Concepts
+              AI Model Concepts
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#transformers-and-attention-mechanisms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Transformers and Attention Mechanisms
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#embeddings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Embeddings
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#tokens-and-tokenization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Tokens and Tokenization
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#fine-tuning-vs-rag-vs-prompting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Fine-Tuning vs. RAG vs. Prompting
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#generation-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Generation Parameters
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,213 @@
 
 
 
-<h1 id="model-concepts">Model Concepts<a class="headerlink" href="#model-concepts" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical AI Model Concepts notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="ai-model-concepts">AI Model Concepts<a class="headerlink" href="#ai-model-concepts" title="Permanent link">&para;</a></h1>
+<h2 id="transformers-and-attention-mechanisms">Transformers and Attention Mechanisms<a class="headerlink" href="#transformers-and-attention-mechanisms" title="Permanent link">&para;</a></h2>
+<p>The Transformer architecture underpins virtually all modern LLMs. Key components tested on AI certification exams:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Exam Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Self-attention</td>
+<td>Relates every token to every other token</td>
+<td>Quadratic complexity O(n²)</td>
+</tr>
+<tr>
+<td>Multi-head attention</td>
+<td>Parallel attention across different subspaces</td>
+<td>Head count is a hyperparameter</td>
+</tr>
+<tr>
+<td>Positional encoding</td>
+<td>Injects sequence order (no recurrence)</td>
+<td>Sinusoidal or learned</td>
+</tr>
+<tr>
+<td>Feed-forward layer</td>
+<td>Per-token transformation after attention</td>
+<td>Applied identically at each position</td>
+</tr>
+<tr>
+<td>Layer normalization</td>
+<td>Stabilizes training, applied pre or post</td>
+<td>Pre-LN preferred in modern models</td>
+</tr>
+</tbody>
+</table>
+<p>Attention formula: <code>Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V</code></p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><code>d_k</code> is the key dimension; dividing prevents vanishing gradients in softmax</li>
+<li>Encoder-only models (BERT): bidirectional attention, good for classification</li>
+<li>Decoder-only models (GPT): causal/autoregressive, good for generation</li>
+<li>Encoder-decoder (T5, BART): seq2seq tasks, translation, summarization</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="embeddings">Embeddings<a class="headerlink" href="#embeddings" title="Permanent link">&para;</a></h2>
+<p>Embeddings map discrete tokens or documents to continuous vector spaces.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Dimensionality (typical)</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Word embeddings (Word2Vec, GloVe)</td>
+<td>100–300</td>
+<td>Legacy NLP tasks</td>
+</tr>
+<tr>
+<td>Contextual embeddings (BERT)</td>
+<td>768–1024</td>
+<td>Semantic search, classification</td>
+</tr>
+<tr>
+<td>Sentence/document embeddings</td>
+<td>384–1536</td>
+<td>RAG retrieval, clustering</td>
+</tr>
+<tr>
+<td>Multimodal embeddings (CLIP)</td>
+<td>512–1024</td>
+<td>Image-text alignment</td>
+</tr>
+</tbody>
+</table>
+<p>Key exam points:
+- Cosine similarity is the standard distance metric for comparing embeddings
+- Embedding dimension affects both quality and storage/compute cost
+- OpenAI <code>text-embedding-3-small</code> supports Matryoshka (variable dimension output)</p>
+<h2 id="tokens-and-tokenization">Tokens and Tokenization<a class="headerlink" href="#tokens-and-tokenization" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>Tokenization converts raw text to integer IDs via Byte Pair Encoding (BPE) or SentencePiece</li>
+<li>~1 token = approximately 0.75 English words (rough rule for exam questions)</li>
+<li>Context window = maximum token count for prompt + completion combined</li>
+<li>Tokens, not characters or words, determine pricing and context limits</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model Family</th>
+<th>Approximate Context Window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPT-3.5-turbo</td>
+<td>4K / 16K variants</td>
+</tr>
+<tr>
+<td>GPT-4o</td>
+<td>128K</td>
+</tr>
+<tr>
+<td>Claude 3 / 3.5</td>
+<td>200K</td>
+</tr>
+<tr>
+<td>Gemini 1.5 Pro</td>
+<td>1M</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fine-tuning-vs-rag-vs-prompting">Fine-Tuning vs. RAG vs. Prompting<a class="headerlink" href="#fine-tuning-vs-rag-vs-prompting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>When to Use</th>
+<th>Cost</th>
+<th>Latency</th>
+<th>Knowledge Freshness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero/few-shot prompting</td>
+<td>Quick experiments, well-defined tasks</td>
+<td>Low</td>
+<td>Low</td>
+<td>Real-time via prompt</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Dynamic, large, frequently updated knowledge</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>High (retrieval at inference)</td>
+</tr>
+<tr>
+<td>Fine-tuning</td>
+<td>Task-specific style/format, domain vocabulary</td>
+<td>High (training)</td>
+<td>Low (inference)</td>
+<td>Static at training time</td>
+</tr>
+<tr>
+<td>Full pre-training</td>
+<td>New domain from scratch</td>
+<td>Very high</td>
+<td>Low</td>
+<td>Static</td>
+</tr>
+</tbody>
+</table>
+<p>RAG pipeline stages: document ingestion → chunking → embedding → vector store indexing → query embedding → ANN retrieval → context injection → generation.</p>
+<h2 id="generation-parameters">Generation Parameters<a class="headerlink" href="#generation-parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Range</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Temperature</td>
+<td>0–2</td>
+<td>Higher = more random output</td>
+</tr>
+<tr>
+<td>Top-p (nucleus sampling)</td>
+<td>0–1</td>
+<td>Limits to top-p probability mass</td>
+</tr>
+<tr>
+<td>Top-k</td>
+<td>Integer</td>
+<td>Limits to top-k tokens at each step</td>
+</tr>
+<tr>
+<td>Max tokens</td>
+<td>Integer</td>
+<td>Hard cap on output length</td>
+</tr>
+<tr>
+<td>Frequency penalty</td>
+<td>0–2</td>
+<td>Reduces repetition of frequent tokens</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>[ ] Explain self-attention vs cross-attention</li>
+<li>[ ] Describe encoder-only, decoder-only, and encoder-decoder architectures with examples</li>
+<li>[ ] Calculate approximate token count for a given text passage</li>
+<li>[ ] Compare RAG vs fine-tuning trade-offs for three distinct scenarios</li>
+<li>[ ] Define cosine similarity and when it is preferred over dot product</li>
+<li>[ ] Explain positional encoding and why it is necessary</li>
+<li>[ ] Describe temperature and top-p sampling and their interaction</li>
+<li>[ ] Know context window sizes for GPT-4o, Claude 3.5, and Gemini 1.5 Pro</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

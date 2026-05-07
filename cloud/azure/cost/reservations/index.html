@@ -724,10 +724,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#ri-purchasing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        RI Purchasing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RI Purchasing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purchase-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purchase Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reservation-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reservation Scope
       
     </span>
   </a>
@@ -735,10 +763,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#exchange-and-refund" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Exchange and Refund
       
     </span>
   </a>
@@ -746,43 +774,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#utilisation-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Utilisation Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utilisation Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#utilisation-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilisation Thresholds
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change notes
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#reservation-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Reservation Best Practices
       
     </span>
   </a>
@@ -810,46 +833,163 @@
 
 
 <h1 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Cost Reservations notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<p>Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-as-you-go pricing in exchange for a 1-year or 3-year commitment. Reservations apply to VMs, SQL Databases, Cosmos DB, Storage, and other services.</p>
+<h2 id="ri-purchasing">RI Purchasing<a class="headerlink" href="#ri-purchasing" title="Permanent link">&para;</a></h2>
+<p>Reservations are purchased at the billing account or subscription level. The reservation scope determines which subscriptions benefit from the discount.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List available reservation orders</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation-order<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show details of a specific reservation order</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation-order<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List reservations within an order</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Show a specific reservation</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--reservation-id<span class="w"> </span>&lt;reservation-id&gt;
+</code></pre></div>
+<h3 id="purchase-workflow">Purchase Workflow<a class="headerlink" href="#purchase-workflow" title="Permanent link">&para;</a></h3>
+<p>Reservations are purchased through the Azure portal or REST API. The CLI is used primarily for post-purchase management (listing, scope changes, exchange/refund).</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Identify candidates</td>
+<td>Use Advisor recommendations to find VMs suitable for RIs</td>
+</tr>
+<tr>
+<td>2. Validate workload</td>
+<td>Confirm VM runs 24/7 with consistent SKU requirements</td>
+</tr>
+<tr>
+<td>3. Choose term</td>
+<td>1-year (~40% savings) vs 3-year (~72% savings)</td>
+</tr>
+<tr>
+<td>4. Choose scope</td>
+<td>Shared (all subscriptions) vs single subscription</td>
+</tr>
+<tr>
+<td>5. Purchase</td>
+<td>Portal → Reservations → Add</td>
+</tr>
+<tr>
+<td>6. Monitor utilisation</td>
+<td>Check within 7 days; low utilisation = misconfigured scope</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reservation-scope">Reservation Scope<a class="headerlink" href="#reservation-scope" title="Permanent link">&para;</a></h2>
+<p>Scope determines which Azure usage the reservation discount is applied to.</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared</td>
+<td>Applies across all subscriptions in the billing account/enrolment</td>
+</tr>
+<tr>
+<td>Single subscription</td>
+<td>Applies only to the nominated subscription</td>
+</tr>
+<tr>
+<td>Single resource group</td>
+<td>Applies only to VMs in the nominated resource group</td>
+</tr>
+<tr>
+<td>Management group</td>
+<td>Applies to all subscriptions in the management group</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Update the scope of an existing reservation</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--reservation-id<span class="w"> </span>&lt;reservation-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--applied-scope-type<span class="w"> </span>Shared
+</code></pre></div>
+<h2 id="exchange-and-refund">Exchange and Refund<a class="headerlink" href="#exchange-and-refund" title="Permanent link">&para;</a></h2>
+<p>Reservations can be exchanged for a different SKU or region, or refunded (subject to a 12% early termination fee and $50,000/year refund cap).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get the reservation details needed before an exchange</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>reservation<span class="w"> </span>reservation<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--reservation-id<span class="w"> </span>&lt;reservation-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{SKU:sku.name, Scope:properties.appliedScopeType, Quantity:properties.quantity, ExpiryDate:properties.expiryDate}&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Exchanges and refunds are processed via the portal or REST API</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># REST endpoint: POST /providers/Microsoft.Capacity/reservationOrders/{orderId}/exchange</span>
+</code></pre></div>
+<h2 id="utilisation-monitoring">Utilisation Monitoring<a class="headerlink" href="#utilisation-monitoring" title="Permanent link">&para;</a></h2>
+<p>Low utilisation means the discount is being wasted. Track utilisation and act quickly if it drops below 80%.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get utilisation summary for all reservations</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>consumption<span class="w"> </span>reservation<span class="w"> </span>summary<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--grain<span class="w"> </span>daily<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Get detail-level utilisation</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>consumption<span class="w"> </span>reservation<span class="w"> </span>detail<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--reservation-order-id<span class="w"> </span>&lt;order-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--start-date<span class="w"> </span><span class="m">2026</span>-05-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--end-date<span class="w"> </span><span class="m">2026</span>-05-07<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<h3 id="utilisation-thresholds">Utilisation Thresholds<a class="headerlink" href="#utilisation-thresholds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Utilisation %</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 95 %</td>
+<td>Healthy</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>80–95 %</td>
+<td>Acceptable</td>
+<td>Monitor; consider scope widening</td>
+</tr>
+<tr>
+<td>60–80 %</td>
+<td>Warning</td>
+<td>Review scope or consider exchange</td>
+</tr>
+<tr>
+<td>&lt; 60 %</td>
+<td>Critical</td>
+<td>Exchange or refund; investigate misconfiguration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reservation-best-practices">Reservation Best Practices<a class="headerlink" href="#reservation-best-practices" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm subscription</li>
-<li>Confirm resource group</li>
-<li>Confirm region</li>
-<li>Review active alerts</li>
-<li>Review recent changes</li>
-<li>Check activity logs</li>
-<li>Check permissions</li>
-<li>Capture current state before changes</li>
+<li>Purchase RIs only for stable, predictable workloads — not dev/test or auto-scaled services with variable SKUs.</li>
+<li>Start with <code>Shared</code> scope to maximise coverage across all subscriptions.</li>
+<li>Set a calendar reminder at 90 days before expiry to decide on renewal or exchange.</li>
+<li>Review Advisor's RI recommendations monthly — it surfaces new candidates as workloads stabilise.</li>
+<li>Track savings using the amortised cost export to quantify RI benefit over pay-as-you-go.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>Subscription</li>
-<li>Resource group</li>
-<li>Resource name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested Azure CLI or PowerShell commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

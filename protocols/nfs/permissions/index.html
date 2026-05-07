@@ -21,7 +21,7 @@
     
     
       
-        <title>Permissions - Chris KB</title>
+        <title>NFS Permissions - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Permissions · Chris KB">
+  <meta property="og:title" content="NFS Permissions · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Permissions · Chris KB">
+  <meta name="twitter:title" content="NFS Permissions · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#permissions" class="md-skip">
+        <a href="#nfs-permissions" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Permissions
+              NFS Permissions
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#uidgid-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        UID/GID Mapping
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#nfsv4-id-mapping-idmapd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        NFSv4 ID Mapping (idmapd)
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#kerberos-security-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Kerberos Security Modes
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#acl-interaction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        ACL Interaction
       
     </span>
   </a>
@@ -782,7 +782,7 @@
   <a href="#known-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Known Issues
       
     </span>
   </a>
@@ -809,42 +809,105 @@
 
 
 
-<h1 id="permissions">Permissions<a class="headerlink" href="#permissions" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical NFS Permissions notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="nfs-permissions">NFS Permissions<a class="headerlink" href="#nfs-permissions" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>NFS relies on UID/GID matching between client and server for access control. NFSv3 trusts client-reported UIDs; NFSv4 with Kerberos (<code>krb5</code>, <code>krb5i</code>, <code>krb5p</code>) adds cryptographic authentication. POSIX ACLs are supported over NFS but require the underlying filesystem to support them.</p>
+<h2 id="uidgid-mapping">UID/GID Mapping<a class="headerlink" href="#uidgid-mapping" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check UID/GID of a file on the NFS server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ls<span class="w"> </span>-ln<span class="w"> </span>/data/shared
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm the same UID exists on the client</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>id<span class="w"> </span>username
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span><span class="m">1001</span><span class="w">   </span><span class="c1"># look up by UID</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create matching user on client (if UIDs differ)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>useradd<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-M<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>nfsuser
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Use nfsnobody for squashed access</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>id<span class="w"> </span>nfsnobody<span class="w">   </span><span class="c1"># typically UID 65534</span>
+</code></pre></div>
+<h2 id="nfsv4-id-mapping-idmapd">NFSv4 ID Mapping (idmapd)<a class="headerlink" href="#nfsv4-id-mapping-idmapd" title="Permanent link">&para;</a></h2>
+<p>NFSv4 uses <code>user@domain</code> strings for identity. The <code>idmapd</code> daemon translates between names and UID/GIDs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/idmapd.conf — set the same domain on client and server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">[</span>General<span class="o">]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">Domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>corp.local
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart idmapd after editing</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-idmapd<span class="w">   </span><span class="c1"># server</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rpc-idmapd<span class="w">   </span><span class="c1"># client (older distros)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check idmapd is running</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nfs-idmapd
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Debug: files showing &quot;nobody&quot; owner on client indicates idmap mismatch</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Force flush of idmap cache</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nfsidmap<span class="w"> </span>-c
+</code></pre></div>
+<h2 id="kerberos-security-modes">Kerberos Security Modes<a class="headerlink" href="#kerberos-security-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Authentication</th>
+<th>Integrity</th>
+<th>Encryption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sec=sys</code></td>
+<td>UID/GID (trust client)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sec=krb5</code></td>
+<td>Kerberos ticket</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sec=krb5i</code></td>
+<td>Kerberos ticket</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>sec=krb5p</code></td>
+<td>Kerberos ticket</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export with Kerberos (server /etc/exports)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/data/secure<span class="w">  </span><span class="m">192</span>.168.10.0/24<span class="o">(</span>rw,sync,sec<span class="o">=</span>krb5i,no_subtree_check<span class="o">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Mount with Kerberos (client)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span><span class="nv">sec</span><span class="o">=</span>krb5i<span class="w"> </span><span class="m">192</span>.168.10.10:/data/secure<span class="w"> </span>/mnt/secure
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify Kerberos keytab includes nfs/ principal</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>klist<span class="w"> </span>-k<span class="w"> </span>/etc/krb5.keytab<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+</code></pre></div>
+<h2 id="acl-interaction">ACL Interaction<a class="headerlink" href="#acl-interaction" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if ACLs are supported on the NFS mount</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>getfacl<span class="w"> </span>/mnt/shared/testfile
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set an ACL on the NFS server (must be done server-side for persistence)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>setfacl<span class="w"> </span>-m<span class="w"> </span>u:devuser:rwx<span class="w"> </span>/data/shared/project
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify ACL is visible from client</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>getfacl<span class="w"> </span>/mnt/shared/project
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Mount with ACL support explicitly</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span>acl<span class="w"> </span><span class="m">192</span>.168.10.10:/data/shared<span class="w"> </span>/mnt/shared
+</code></pre></div>
+<h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>If files appear owned by <code>nobody</code> on the NFSv4 client, the <code>idmapd</code> domain setting does not match between client and server. Set <code>Domain =</code> to the same value in <code>/etc/idmapd.conf</code> on both sides.</li>
+<li><code>no_root_squash</code> is required for backup agents or configuration management tools running as root on the client. Use it only for trusted management hosts, never for general user access exports.</li>
+<li>POSIX ACLs set on the server are visible over NFSv4 but not over NFSv3. If ACLs are critical, use NFSv4 and verify the underlying server filesystem (ext4, XFS) has ACL support mounted.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

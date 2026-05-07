@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>SAN Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Troubleshooting · Chris KB">
+  <meta property="og:title" content="SAN Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="SAN Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#san-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              SAN Troubleshooting
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#diagnostic-scenario-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Diagnostic Scenario Reference
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#flogi-failure-troubleshooting-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        FLOGI Failure — Troubleshooting Sequence
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#zone-not-active-troubleshooting-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Zone Not Active — Troubleshooting Sequence
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#isl-down-troubleshooting-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        ISL Down — Troubleshooting Sequence
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#key-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Key CLI Commands
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,142 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SAN Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="san-troubleshooting">SAN Troubleshooting<a class="headerlink" href="#san-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="diagnostic-scenario-reference">Diagnostic Scenario Reference<a class="headerlink" href="#diagnostic-scenario-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First Check</th>
+<th>Root Cause Candidates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host not logging into fabric</td>
+<td>FLOGI status on switch port</td>
+<td>Link down, SFP failure, speed mismatch, Domain ID conflict</td>
+</tr>
+<tr>
+<td>Host visible in fabric but cannot see LUN</td>
+<td>Active zone set, LUN masking</td>
+<td>WWPN not in zone, zone set not activated, LUN not masked to host</td>
+</tr>
+<tr>
+<td>Zone exists but I/O not working</td>
+<td>Zone set activation</td>
+<td>Correct zone set must be active — adding a zone to the DB does not take effect until zone set activation</td>
+</tr>
+<tr>
+<td>ISL went down</td>
+<td>Physical layer, BB_Credit</td>
+<td>SFP failure, cable, E_Port speed mismatch, trunk misconfiguration</td>
+</tr>
+<tr>
+<td>Fabric segmented into two</td>
+<td>Domain ID conflict</td>
+<td>Check domain ID of each switch; one must be changed and re-merged</td>
+</tr>
+<tr>
+<td>RSCN storm</td>
+<td>Link or HBA flapping</td>
+<td>Check for unstable HBA, bad SFP, or misconfigured link</td>
+</tr>
+<tr>
+<td>I/O latency spike</td>
+<td>ISL congestion, credit starvation</td>
+<td>Check ISL utilization, verify buffer credits per port, check for slow drain devices</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flogi-failure-troubleshooting-sequence">FLOGI Failure — Troubleshooting Sequence<a class="headerlink" href="#flogi-failure-troubleshooting-sequence" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm physical link is up: check port LED, SFP insertion, fiber connectivity</li>
+<li>Check speed/duplex auto-negotiation — FC does not use duplex but speed must match</li>
+<li>Verify VSAN (Cisco) or Virtual Fabric (Brocade) assignment on the port</li>
+<li>Check for Domain ID conflict: <code>switchshow</code> (Brocade) or <code>show flogi database</code> (Cisco)</li>
+<li>Verify port is configured as F_Port (not disabled or in wrong mode)</li>
+<li>Check Name Server registration: <code>nsshow</code> (Brocade) or <code>show fcns database</code> (Cisco)</li>
+</ol>
+<h2 id="zone-not-active-troubleshooting-sequence">Zone Not Active — Troubleshooting Sequence<a class="headerlink" href="#zone-not-active-troubleshooting-sequence" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm which zone set is currently active: <code>cfgshow</code> (Brocade), <code>show zone active</code> (Cisco)</li>
+<li>Verify that both the initiator WWPN and target WWPN are in the same zone</li>
+<li>Check if zone changes were made to the zone DB but the zone set was never re-activated</li>
+<li>Confirm zone DB is consistent across all switches in the fabric (verify no segmentation)</li>
+<li>After making zone changes, explicitly activate the zone set: <code>cfgenable &lt;cfgname&gt;</code> (Brocade), <code>zone commit vsan &lt;id&gt;</code> (Cisco)</li>
+</ol>
+<h2 id="isl-down-troubleshooting-sequence">ISL Down — Troubleshooting Sequence<a class="headerlink" href="#isl-down-troubleshooting-sequence" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Check physical: SFP, cable, patch panel — reseat or swap SFP</li>
+<li>Verify E_Port or TE_Port mode on both sides</li>
+<li>Check that ISL speed matches on both ends (auto-neg can fail between vendors)</li>
+<li>Check for Domain ID conflict if the ISL came up and then went to a segmented state</li>
+<li>Verify trunk configuration matches if using ISL trunking</li>
+<li>Check BB_Credit configuration — mismatched long-distance buffer credit settings cause link instability</li>
+</ol>
+<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brocade</td>
+<td><code>switchshow</code></td>
+<td>Port status, WWPN, link state</td>
+</tr>
+<tr>
+<td>Brocade</td>
+<td><code>nsshow</code></td>
+<td>Name Server registrations</td>
+</tr>
+<tr>
+<td>Brocade</td>
+<td><code>cfgshow</code></td>
+<td>Zone database and active configuration</td>
+</tr>
+<tr>
+<td>Brocade</td>
+<td><code>portlogshow</code></td>
+<td>Port event log — shows FLOGI/LOGO events</td>
+</tr>
+<tr>
+<td>Cisco MDS</td>
+<td><code>show flogi database</code></td>
+<td>FLOGI registrations per VSAN</td>
+</tr>
+<tr>
+<td>Cisco MDS</td>
+<td><code>show zone active vsan &lt;id&gt;</code></td>
+<td>Active zone set members</td>
+</tr>
+<tr>
+<td>Cisco MDS</td>
+<td><code>show fcns database vsan &lt;id&gt;</code></td>
+<td>Fabric Name Server entries</td>
+</tr>
+<tr>
+<td>Cisco MDS</td>
+<td><code>show interface fc &lt;x/y&gt;</code></td>
+<td>Port state, counters, BB_Credit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Walk through FLOGI failure troubleshooting sequence without reference</li>
+<li>[ ] Explain why a zone change requires zone set activation to take effect</li>
+<li>[ ] Describe three causes of ISL instability</li>
+<li>[ ] Know Brocade CLI commands: switchshow, nsshow, cfgshow, portlogshow</li>
+<li>[ ] Know Cisco MDS CLI commands: show flogi database, show zone active, show fcns database</li>
+<li>[ ] Explain the impact of a Domain ID conflict on fabric behavior</li>
+<li>[ ] Describe how to identify and resolve a slow drain device causing I/O latency</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

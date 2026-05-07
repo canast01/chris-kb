@@ -21,7 +21,7 @@
     
     
       
-        <title>Options - Chris KB</title>
+        <title>DHCP Options - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Options · Chris KB">
+  <meta property="og:title" content="DHCP Options · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Options · Chris KB">
+  <meta name="twitter:title" content="DHCP Options · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#options" class="md-skip">
+        <a href="#dhcp-options" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Options
+              DHCP Options
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#common-option-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Common Option Codes
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#setting-scope-level-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Setting Scope-Level Options
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#setting-server-level-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Setting Server-Level Options
       
     </span>
   </a>
@@ -768,10 +768,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#vendor-specific-options-043" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Vendor-Specific Options (043)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing Options
       
     </span>
   </a>
@@ -782,7 +793,7 @@
   <a href="#known-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Known Issues
       
     </span>
   </a>
@@ -809,42 +820,115 @@
 
 
 
-<h1 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical DHCP Options notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="dhcp-options">DHCP Options<a class="headerlink" href="#dhcp-options" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>DHCP options deliver network configuration alongside an IP address. Options can be set at the server level (apply to all scopes), scope level (apply to one subnet), reservation level (apply to one client), or class level (apply to clients presenting a matching vendor or user class).</p>
+<h2 id="common-option-codes">Common Option Codes<a class="headerlink" href="#common-option-codes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>Typical Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>003</td>
+<td>Router</td>
+<td>Default gateway IP</td>
+</tr>
+<tr>
+<td>006</td>
+<td>DNS Servers</td>
+<td>Up to 4 DNS server IPs</td>
+</tr>
+<tr>
+<td>015</td>
+<td>DNS Domain Name</td>
+<td><code>corp.local</code></td>
+</tr>
+<tr>
+<td>043</td>
+<td>Vendor-Specific Info</td>
+<td>PXE, VoIP phone config</td>
+</tr>
+<tr>
+<td>044</td>
+<td>WINS Servers</td>
+<td>WINS server IP</td>
+</tr>
+<tr>
+<td>046</td>
+<td>WINS Node Type</td>
+<td>0x8 (H-node)</td>
+</tr>
+<tr>
+<td>066</td>
+<td>Boot Server Hostname</td>
+<td>PXE/TFTP server</td>
+</tr>
+<tr>
+<td>067</td>
+<td>Bootfile Name</td>
+<td><code>pxelinux.0</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="setting-scope-level-options">Setting Scope-Level Options<a class="headerlink" href="#setting-scope-level-options" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Set default gateway for a scope</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Set-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="n">-OptionId</span> <span class="n">3</span> <span class="n">-Value</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Set DNS servers for a scope</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="n">-OptionId</span> <span class="n">6</span> <span class="n">-Value</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span><span class="p">,</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">54</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Set DNS domain name</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="n">-OptionId</span> <span class="n">15</span> <span class="n">-Value</span> <span class="s2">&quot;corp.local&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># View all options on a scope</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span>
+</code></pre></div>
+<h2 id="setting-server-level-options">Setting Server-Level Options<a class="headerlink" href="#setting-server-level-options" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Server-level DNS servers (apply to all scopes unless overridden)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Set-DhcpServerv4OptionValue</span> <span class="n">-OptionId</span> <span class="n">6</span> <span class="n">-Value</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">53</span><span class="p">,</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">54</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># View all server-level options</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-DhcpServerv4OptionValue</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Show effective options for a scope (includes inherited server options)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="n">-All</span>
+</code></pre></div>
+<h2 id="vendor-specific-options-043">Vendor-Specific Options (043)<a class="headerlink" href="#vendor-specific-options-043" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Define a vendor class (e.g., for Cisco VoIP phones)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-DhcpServerv4Class</span> <span class="n">-Name</span> <span class="s2">&quot;CiscoPhone&quot;</span> <span class="n">-Type</span> <span class="n">Vendor</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Data</span> <span class="s2">&quot;Cisco Systems, Inc. IP Phone&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Set vendor-specific option for that class</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Set-DhcpServerv4OptionValue</span> <span class="p">`</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">30</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">-VendorClass</span> <span class="s2">&quot;CiscoPhone&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="n">-OptionId</span> <span class="n">43</span> <span class="p">`</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="n">-Value</span> <span class="p">(</span><span class="no">[byte[]]</span><span class="p">(</span><span class="n">0x01</span><span class="p">,</span><span class="n">0x04</span><span class="p">,</span><span class="n">0x0A</span><span class="p">,</span><span class="n">0x00</span><span class="p">,</span><span class="n">0x00</span><span class="p">,</span><span class="n">0x0A</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="removing-options">Removing Options<a class="headerlink" href="#removing-options" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Remove a scope-level option (falls back to server-level)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Remove-DhcpServerv4OptionValue</span> <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="n">-OptionId</span> <span class="n">6</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Remove a server-level option</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Remove-DhcpServerv4OptionValue</span> <span class="n">-OptionId</span> <span class="n">15</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Remove a reservation-level option</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Remove-DhcpServerv4OptionValue</span> <span class="p">`</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="n">-ScopeId</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">-ReservedIP</span> <span class="n">192</span><span class="p">.</span><span class="n">168</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">200</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">-OptionId</span> <span class="n">6</span>
+</code></pre></div>
+<h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Scope options override server options for the same code. If a client is getting unexpected DNS servers, check for a conflicting scope-level option 006.</li>
+<li>Vendor option 043 must match the exact vendor class string the client broadcasts in option 060. Capture a packet with Wireshark to verify the client's <code>Vendor Class Identifier</code> before configuring.</li>
+<li>Option 051 (lease time) set at scope level overrides the scope's configured lease duration shown in the DHCP console. Use <code>Get-DhcpServerv4OptionValue -All</code> to detect hidden overrides.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

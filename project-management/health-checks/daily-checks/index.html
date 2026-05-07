@@ -21,7 +21,7 @@
     
     
       
-        <title>Daily Checks - Chris KB</title>
+        <title>Daily Infrastructure Health Checks - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Daily Checks · Chris KB">
+  <meta property="og:title" content="Daily Infrastructure Health Checks · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Daily Checks · Chris KB">
+  <meta name="twitter:title" content="Daily Infrastructure Health Checks · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#daily-checks" class="md-skip">
+        <a href="#daily-infrastructure-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Daily Checks
+              Daily Infrastructure Health Checks
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#morning-check-routine" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Morning Check Routine
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#what-to-look-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        What to Look For
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#escalation-decision-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Escalation Decision Tree
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#documentation-and-handover" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Documentation and Handover
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#common-daily-check-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Common Daily Check Commands
       
     </span>
   </a>
@@ -809,42 +809,103 @@
 
 
 
-<h1 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Health Checks Daily Checks notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="daily-infrastructure-health-checks">Daily Infrastructure Health Checks<a class="headerlink" href="#daily-infrastructure-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A consistent daily check routine catches issues before they escalate into incidents. The goal is not to review everything — it is to confirm that the most critical systems are healthy, recent changes have not caused drift, and nothing in overnight logs or alerts requires action before business hours begin.</p>
+<hr />
+<h2 id="morning-check-routine">Morning Check Routine<a class="headerlink" href="#morning-check-routine" title="Permanent link">&para;</a></h2>
+<p>Run these checks at the start of each working day, or at handover between on-call shifts.</p>
+<table>
+<thead>
+<tr>
+<th>Check Area</th>
+<th>What to Review</th>
+<th>Tool / Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitoring alerts</td>
+<td>Open and unacknowledged alerts</td>
+<td>PagerDuty / Alertmanager</td>
+</tr>
+<tr>
+<td>Backup jobs</td>
+<td>Last night's backup success/failure status</td>
+<td>Backup console or email digest</td>
+</tr>
+<tr>
+<td>Disk space</td>
+<td>Filesystems above 80% used</td>
+<td>Monitoring dashboard</td>
+</tr>
+<tr>
+<td>Service health</td>
+<td>All critical services in <code>UP</code> state</td>
+<td>Uptime / health check dashboard</td>
+</tr>
+<tr>
+<td>Overnight changes</td>
+<td>Any changes deployed overnight</td>
+<td>Change management tool</td>
+</tr>
+<tr>
+<td>Certificate expiry</td>
+<td>Certs expiring within 30 days</td>
+<td>Cert monitoring / Vault</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>DB replication lag within threshold</td>
+<td>DB monitoring</td>
+</tr>
+</tbody>
+</table>
+<p>Flag anything outside normal thresholds immediately. Do not wait for an alert to escalate it.</p>
+<hr />
+<h2 id="what-to-look-for">What to Look For<a class="headerlink" href="#what-to-look-for" title="Permanent link">&para;</a></h2>
+<p>Beyond raw alerts, use judgment to identify:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Creeping degradation</strong> — metrics that are still within threshold but trending the wrong way</li>
+<li><strong>Silenced alerts</strong> — alerts that were acknowledged overnight but not resolved</li>
+<li><strong>Scheduled job failures</strong> — batch jobs, ETL pipelines, or cron tasks that did not complete</li>
+<li><strong>Log spikes</strong> — a sudden increase in error-level log entries even without a firing alert</li>
+<li><strong>Capacity warnings</strong> — disk, memory, or connection pools approaching limits</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="escalation-decision-tree">Escalation Decision Tree<a class="headerlink" href="#escalation-decision-tree" title="Permanent link">&para;</a></h2>
+<p>When a finding requires action, determine urgency before escalating.</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Is a production service actively degraded or down? → Raise P1/P2 incident immediately</li>
+<li>[ ] Is the issue growing or likely to cause impact within the hour? → Raise incident, notify on-call lead</li>
+<li>[ ] Is the issue contained but needs same-day attention? → Create task ticket, assign owner</li>
+<li>[ ] Is the issue low-risk and can wait until planned maintenance? → Log it, set reminder</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<p>Never sit on a finding because you are unsure. If in doubt, raise it.</p>
+<hr />
+<h2 id="documentation-and-handover">Documentation and Handover<a class="headerlink" href="#documentation-and-handover" title="Permanent link">&para;</a></h2>
+<p>Record the outcome of every daily check, even if everything is healthy.</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>Use the daily check log template (date, engineer name, findings, actions taken)</li>
+<li>For "all clear" checks, a single line confirming each area was checked is sufficient</li>
+<li>For findings, include: what was found, when, what action was taken, and current status</li>
+<li>At shift handover, verbally walk the incoming engineer through any open items</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<hr />
+<h2 id="common-daily-check-commands">Common Daily Check Commands<a class="headerlink" href="#common-daily-check-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Disk usage — filesystems over 80%</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; $5+0 &gt; 80 {print}&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Services that are not running (systemd)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>failed
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Last backup job exit codes (example: restic)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>restic-backup.service<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;yesterday&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Certificate expiry check (example: openssl)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>hostname:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
+<p>Add environment-specific commands as you test and verify them.</p>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Consistency Groups - Chris KB</title>
+        <title>RecoverPoint — Consistency Groups - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Consistency Groups · Chris KB">
+  <meta property="og:title" content="RecoverPoint — Consistency Groups · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Consistency Groups · Chris KB">
+  <meta name="twitter:title" content="RecoverPoint — Consistency Groups · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#consistency-groups" class="md-skip">
+        <a href="#recoverpoint-consistency-groups" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Consistency Groups
+              RecoverPoint — Consistency Groups
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#viewing-cg-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Viewing CG State
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#creating-and-configuring-a-cg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Creating and Configuring a CG
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#suspending-and-resuming-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Suspending and Resuming Replication
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#bookmarks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Bookmarks
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#cg-consistency-group-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        CG Consistency Group Checklist
       
     </span>
   </a>
@@ -809,43 +809,155 @@
 
 
 
-<h1 id="consistency-groups">Consistency Groups<a class="headerlink" href="#consistency-groups" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Recoverpoint Consistency Groups notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="recoverpoint-consistency-groups">RecoverPoint — Consistency Groups<a class="headerlink" href="#recoverpoint-consistency-groups" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">RecoverPoint</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A Consistency Group (CG) is the primary replication unit in RecoverPoint. Each CG groups one or more volumes that must be recovered together as a consistent set — for example, all data and log LUNs for an Oracle database. RecoverPoint guarantees write-order consistency across all volumes in a CG.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production Copy</td>
+<td>The live, writable copy of the data at the production site</td>
+</tr>
+<tr>
+<td>DR Copy</td>
+<td>The replica at the remote (DR) site — read-only unless image access is enabled</td>
+</tr>
+<tr>
+<td>Local Copy</td>
+<td>Optional CDP copy at the production site for local point-in-time recovery</td>
+</tr>
+<tr>
+<td>Journal</td>
+<td>Per-copy rolling delta store; determines recovery window</td>
+</tr>
+<tr>
+<td>Bookmark</td>
+<td>A named or automatic point-in-time marker within the journal</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="viewing-cg-state">Viewing CG State<a class="headerlink" href="#viewing-cg-state" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-cluster-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># All CGs and their current replication state</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>groups<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Detailed CG state including RPO, lag, and journal utilization</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>groups<span class="w"> </span>status<span class="w"> </span>detail
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># State of a specific CG</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Via REST API — summary of all CGs</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">RP</span><span class="o">=</span><span class="s2">&quot;https://&lt;rpa-ip&gt;/fapi/rest/5_1&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u admin:password --insecure&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/group/all_groups_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<hr />
+<h2 id="creating-and-configuring-a-cg">Creating and Configuring a CG<a class="headerlink" href="#creating-and-configuring-a-cg" title="Permanent link">&para;</a></h2>
+<p>CGs are created via the RecoverPoint Management Application (RPMA) or vSphere plugin (RP4VM). CLI steps below apply to RPMA-managed environments.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1 — Add volumes to a new CG (interactive via boxmgmt)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Navigate: Group Management → Add Group → follow wizard</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Step 2 — Set RPO alarm threshold for a CG</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>group<span class="w"> </span>set_rpo<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--rpo_seconds<span class="w"> </span><span class="m">300</span><span class="w">   </span><span class="c1"># 5-minute RPO</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Step 3 — Enable a CG after creation</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>group<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Step 4 — Verify CG state post-creation</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+</code></pre></div>
+<hr />
+<h2 id="suspending-and-resuming-replication">Suspending and Resuming Replication<a class="headerlink" href="#suspending-and-resuming-replication" title="Permanent link">&para;</a></h2>
+<p>Suspend CGs before planned maintenance on protected storage or hosts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Suspend a single CG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>group<span class="w"> </span>disable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Suspend all CGs (pre-maintenance)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>groups<span class="w"> </span>disable-replication
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Resume a single CG after maintenance</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>group<span class="w"> </span>enable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Resume all CGs</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>groups<span class="w"> </span>enable-replication
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Monitor return to ACTIVE state after resume</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;ssh admin@&lt;rpa-ip&gt; &#39;groups status&#39;&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="bookmarks">Bookmarks<a class="headerlink" href="#bookmarks" title="Permanent link">&para;</a></h2>
+<p>Bookmarks are named points in time within the journal. Use them for application-consistent DR tests and recovery.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a manual bookmark (e.g., before a patching window)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>group<span class="w"> </span>create_bookmark<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;pre-patch-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List available bookmarks for a CG</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>group<span class="w"> </span>list_bookmarks<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enable image access at a specific bookmark</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>group<span class="w"> </span>enable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--copy<span class="w"> </span>DR<span class="w"> </span>--image<span class="w"> </span>&lt;bookmark_name&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable image access (return to replication)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>group<span class="w"> </span>disable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+</code></pre></div>
+<hr />
+<h2 id="cg-consistency-group-checklist">CG Consistency Group Checklist<a class="headerlink" href="#cg-consistency-group-checklist" title="Permanent link">&para;</a></h2>
+<p>Use before any DR test or planned failover.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CG state</td>
+<td><code>groups status</code></td>
+<td>All <code>ACTIVE</code></td>
+</tr>
+<tr>
+<td>Journal utilization</td>
+<td><code>journals list</code></td>
+<td>&lt; 70%</td>
+</tr>
+<tr>
+<td>RPO compliance</td>
+<td><code>group status --gname &lt;n&gt;</code></td>
+<td>Within SLA</td>
+</tr>
+<tr>
+<td>Image access disabled</td>
+<td><code>groups status detail</code></td>
+<td>No active image access</td>
+</tr>
+<tr>
+<td>No active alarms</td>
+<td><code>alarms list</code></td>
+<td>No critical alarms</td>
+</tr>
+<tr>
+<td>DR site reachable</td>
+<td><code>network connectivity check</code></td>
+<td>Connected</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>SRDF/S Health Checks - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Health Checks · Chris KB">
+  <meta property="og:title" content="SRDF/S Health Checks · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Health Checks · Chris KB">
+  <meta name="twitter:title" content="SRDF/S Health Checks · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#srdfs-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              SRDF/S Health Checks
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#daily-pair-state-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Daily Pair State Check
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#rdf-director-and-link-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        RDF Director and Link Health
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#performance-and-throughput-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Performance and Throughput Metrics
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#configuration-consistency-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Configuration Consistency Check
       
     </span>
   </a>
@@ -779,10 +779,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#health-check-summary-table" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Health Check Summary Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-issues-and-field-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Issues and Field Notes
       
     </span>
   </a>
@@ -809,43 +820,117 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SRDF/S Health Checks notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="srdfs-health-checks">SRDF/S Health Checks<a class="headerlink" href="#srdfs-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist. These checks should run daily as part of infrastructure monitoring and immediately before any planned failover or maintenance activity.</p>
+<p>Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.</p>
+<h2 id="daily-pair-state-check">Daily Pair State Check<a class="headerlink" href="#daily-pair-state-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check all pairs in each active RDFG group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">11</span><span class="w"> </span>query
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show all RDFG groups and their link state</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Detailed check including track counts (expect 0 for all Synchronized pairs)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Identify any device not Synchronized</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iv<span class="w"> </span>synchronized
+</code></pre></div>
+<p>Any pair showing a state other than <code>Synchronized</code> or <code>Transmit Idle</code> requires investigation before the next maintenance window.</p>
+<h2 id="rdf-director-and-link-health">RDF Director and Link Health<a class="headerlink" href="#rdf-director-and-link-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List RDF directors and port status on local array</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-rdf
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show detailed director configuration</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symcfg<span class="w"> </span>show<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-v
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Query RDF link statistics (bandwidth, utilization)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check remote array connectivity</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-detail
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Confirm remote array is reachable via SYMAPI</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Remote&quot;</span>
+</code></pre></div>
+<h2 id="performance-and-throughput-metrics">Performance and Throughput Metrics<a class="headerlink" href="#performance-and-throughput-metrics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor RDF write throughput and latency (5-second intervals, 6 samples)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check for any bandwidth saturation on RDF ports</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-type<span class="w"> </span>port
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Review historical performance data</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;2026-05-07 08:00:00&quot;</span><span class="w"> </span>-end_time<span class="w"> </span><span class="s2">&quot;2026-05-07 09:00:00&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check host-side write latency impact from synchronous commit</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symstat<span class="w"> </span>-type<span class="w"> </span>device<span class="w"> </span>-dev<span class="w"> </span>0A1<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
+<h2 id="configuration-consistency-check">Configuration Consistency Check<a class="headerlink" href="#configuration-consistency-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm RDFG group membership matches expected device list</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify OLPAIRS (Online Pair) configuration</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>OLPAIRS
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check SRDF/S mode is correctly set (not accidentally changed to /A)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SRDF Mode&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm both arrays have matching group numbers</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+</code></pre></div>
+<h2 id="health-check-summary-table">Health Check Summary Table<a class="headerlink" href="#health-check-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Healthy Result</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pair state</td>
+<td><code>symrdf -g &lt;rdfg&gt; query</code></td>
+<td>All Synchronized</td>
+<td>Any non-Synchronized</td>
+</tr>
+<tr>
+<td>Invalid tracks</td>
+<td><code>symrdf -g &lt;rdfg&gt; query -detail</code></td>
+<td>0 tracks</td>
+<td>&gt; 0 tracks</td>
+</tr>
+<tr>
+<td>RDF director</td>
+<td><code>symcfg list -dir all -rdf</code></td>
+<td>Online</td>
+<td>Any Offline/Failed</td>
+</tr>
+<tr>
+<td>Link utilization</td>
+<td><code>symstat -rdf</code></td>
+<td>&lt; 80% sustained</td>
+<td>&gt; 80% for &gt; 5 min</td>
+</tr>
+<tr>
+<td>Remote connectivity</td>
+<td><code>symcfg list -rdfg &lt;n&gt; -detail</code></td>
+<td>Link Online</td>
+<td>Link Offline/Partitioned</td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-issues-and-field-notes">Known Issues and Field Notes<a class="headerlink" href="#known-issues-and-field-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li><strong>Intermittent "Transmit Idle" during off-peak hours</strong>: Normal behaviour when there are no writes to replicate. Does not indicate a problem. Confirm by checking that track count remains 0.</li>
+<li><strong>Director shows Online but link shows Partitioned</strong>: Usually a transient WAN interruption. Wait 2 minutes and re-query. If it persists, escalate to network team to check the dark fibre or IP WAN path.</li>
+<li><strong>Health check script timeouts on large arrays</strong>: If <code>symcfg list -rdfg all</code> takes &gt; 60 seconds, break queries into per-group calls and parallelize across RDFG groups using a shell loop.</li>
+<li><strong>Mismatched device counts between R1 and R2</strong>: Investigate immediately — indicates a pairing configuration error. Use <code>symrdf -g &lt;rdfg&gt; list -v</code> on both arrays to compare device lists.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

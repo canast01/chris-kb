@@ -21,7 +21,7 @@
     
     
       
-        <title>Evidence - Chris KB</title>
+        <title>Evidence Capture and Audit Trail - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Evidence · Chris KB">
+  <meta property="og:title" content="Evidence Capture and Audit Trail · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Evidence · Chris KB">
+  <meta name="twitter:title" content="Evidence Capture and Audit Trail · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#evidence" class="md-skip">
+        <a href="#evidence-capture-and-audit-trail" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Evidence
+              Evidence Capture and Audit Trail
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#what-counts-as-evidence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        What Counts as Evidence
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#naming-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Naming Convention
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#evidence-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Evidence Storage
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#evidence-capture-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Evidence Capture Checklist
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#audit-trail-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Audit Trail Requirements
       
     </span>
   </a>
@@ -809,42 +809,123 @@
 
 
 
-<h1 id="evidence">Evidence<a class="headerlink" href="#evidence" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Health Checks Evidence notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="evidence-capture-and-audit-trail">Evidence Capture and Audit Trail<a class="headerlink" href="#evidence-capture-and-audit-trail" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Evidence capture creates a verifiable record of infrastructure state at a given point in time. This is essential for change audits, incident post-mortems, compliance reviews, and dispute resolution. Screenshots and command output saved only in memory are lost the moment the session ends.</p>
+<hr />
+<h2 id="what-counts-as-evidence">What Counts as Evidence<a class="headerlink" href="#what-counts-as-evidence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Evidence Type</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Command output</td>
+<td>Terminal output saved to file; <code>tee</code> captures</td>
+</tr>
+<tr>
+<td>Screenshots</td>
+<td>Dashboard state, alert conditions, config screens</td>
+</tr>
+<tr>
+<td>Log extracts</td>
+<td>Time-stamped log snippets covering the relevant window</td>
+</tr>
+<tr>
+<td>Configuration exports</td>
+<td>YAML/JSON/text config files exported before and after change</td>
+</tr>
+<tr>
+<td>Monitoring graphs</td>
+<td>Exported PNG/PDF from Grafana, Datadog, CloudWatch</td>
+</tr>
+<tr>
+<td>Ticket updates</td>
+<td>Timestamped comments in ServiceNow, Jira, etc.</td>
+</tr>
+</tbody>
+</table>
+<p>All evidence must include a timestamp (either in the content itself or in the filename).</p>
+<hr />
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>Use a consistent naming convention so evidence can be located quickly.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;date&gt;_&lt;type&gt;_&lt;system&gt;_&lt;context&gt;.&lt;ext&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Examples:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>2026-05-07_screenshot_grafana_prod-cpu-pre-change.png
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>2026-05-07_output_df-h_prod-web01.txt
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2026-05-07_config_nginx_prod-lb01-pre-change.conf
+</code></pre></div>
+<p>Avoid spaces in filenames. Use hyphens or underscores.</p>
+<hr />
+<h2 id="evidence-storage">Evidence Storage<a class="headerlink" href="#evidence-storage" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Storage Location</th>
+<th>Use Case</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change ticket (attached)</td>
+<td>Per-change evidence</td>
+<td>Ticket lifecycle</td>
+</tr>
+<tr>
+<td>Incident ticket (attached)</td>
+<td>Incident-related evidence</td>
+<td>Ticket lifecycle</td>
+</tr>
+<tr>
+<td>Shared drive / wiki</td>
+<td>Health check logs, audit exports</td>
+<td>12 months</td>
+</tr>
+<tr>
+<td>Version control (Git)</td>
+<td>Config file diffs</td>
+<td>Indefinitely</td>
+</tr>
+<tr>
+<td>S3 / blob storage</td>
+<td>Large log archives, graph exports</td>
+<td>Per policy</td>
+</tr>
+</tbody>
+</table>
+<p>Do not store evidence only on a personal laptop or local desktop. If you are unavailable, someone else must be able to find it.</p>
+<hr />
+<h2 id="evidence-capture-checklist">Evidence Capture Checklist<a class="headerlink" href="#evidence-capture-checklist" title="Permanent link">&para;</a></h2>
+<p>For change windows:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Pre-change state captured: service health, config, disk, relevant metrics</li>
+<li>[ ] Screenshots timestamped and named per convention</li>
+<li>[ ] Command output saved to file, not just viewed in terminal</li>
+<li>[ ] Evidence uploaded to the change ticket before implementation begins</li>
+<li>[ ] Post-change evidence captured using the same checks as pre-change</li>
+<li>[ ] Before/after comparison documented in ticket notes</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>For incidents:</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Initial alert / notification screenshot captured</li>
+<li>[ ] Timeline of key actions recorded in the incident ticket as they happen</li>
+<li>[ ] Relevant log extracts saved before they are rotated or overwritten</li>
+<li>[ ] Final state screenshot taken once service is restored</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="audit-trail-requirements">Audit Trail Requirements<a class="headerlink" href="#audit-trail-requirements" title="Permanent link">&para;</a></h2>
+<p>For compliance and regulatory purposes, the audit trail must show:</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>Who took what action, and when</li>
+<li>What the state of the system was before and after</li>
+<li>What decisions were made and by whom</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Timestamps in evidence must match the timezone used in the ticketing system. If your terminal uses UTC and your ticket system uses local time, note the offset explicitly.</p>
 
 
 

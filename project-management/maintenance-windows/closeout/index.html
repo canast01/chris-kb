@@ -21,7 +21,7 @@
     
     
       
-        <title>Closeout - Chris KB</title>
+        <title>Maintenance Window Closeout - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Closeout · Chris KB">
+  <meta property="og:title" content="Maintenance Window Closeout · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Closeout · Chris KB">
+  <meta name="twitter:title" content="Maintenance Window Closeout · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#closeout" class="md-skip">
+        <a href="#maintenance-window-closeout" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Closeout
+              Maintenance Window Closeout
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#closeout-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Closeout Sequence
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#closeout-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Closeout Checklist
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#deferred-task-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Deferred Task Handling
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#debrief-and-lessons-learned" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Debrief and Lessons Learned
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#monitoring-reinstatement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Monitoring Reinstatement
       
     </span>
   </a>
@@ -809,42 +809,152 @@
 
 
 
-<h1 id="closeout">Closeout<a class="headerlink" href="#closeout" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Maintenance Windows Closeout notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="maintenance-window-closeout">Maintenance Window Closeout<a class="headerlink" href="#maintenance-window-closeout" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Closeout formally ends the maintenance window, ensures all tasks are accounted for, and hands the environment back to normal operations. A rushed or skipped closeout leaves ambiguity about what was completed, creates gaps in the audit trail, and can leave monitoring in a suppressed state.</p>
+<hr />
+<h2 id="closeout-sequence">Closeout Sequence<a class="headerlink" href="#closeout-sequence" title="Permanent link">&para;</a></h2>
+<p>Follow this order after the last task in the implementation plan is complete.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Run post-maintenance validation checks</td>
+<td>Lead Engineer</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Confirm all planned tasks completed or deferred</td>
+<td>Lead Engineer</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Re-enable any suppressed monitoring alerts</td>
+<td>Lead Engineer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Notify stakeholders that maintenance is complete</td>
+<td>Comms lead</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Update the maintenance window ticket</td>
+<td>Lead Engineer</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Update CMDB for any CI changes made</td>
+<td>Asset Manager</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Release the maintenance bridge / war room</td>
+<td>Incident Cmdr</td>
+</tr>
+<tr>
+<td>8    ] Schedule debrief if required</td>
+<td>Change Manager</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Do not suppress monitoring alerts beyond the agreed maintenance window. Re-enable alerts as the first act of closeout, before validation is complete, so that real issues are caught.</p>
+<hr />
+<h2 id="closeout-checklist">Closeout Checklist<a class="headerlink" href="#closeout-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] All implementation plan steps marked complete or deferred (with reason)</li>
+<li>[ ] Post-maintenance health check passed for all affected services</li>
+<li>[ ] Monitoring alerts re-enabled (confirm in alerting tool, not just by assumption)</li>
+<li>[ ] Maintenance window status page / notification updated to "Complete"</li>
+<li>[ ] Stakeholder close-out notification sent</li>
+<li>[ ] Deferred tasks ticketed and assigned with due dates</li>
+<li>[ ] Any issues encountered documented in the ticket notes</li>
+<li>[ ] CMDB updated for all CI changes made during the window</li>
+<li>[ ] Maintenance ticket closed with actual start and end time recorded</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<hr />
+<h2 id="deferred-task-handling">Deferred Task Handling<a class="headerlink" href="#deferred-task-handling" title="Permanent link">&para;</a></h2>
+<p>Not all tasks planned for a window will complete. Handle deferrals explicitly.</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task ran out of time</td>
+<td>Ticket the remaining work; schedule next window</td>
+</tr>
+<tr>
+<td>Task blocked by unexpected issue</td>
+<td>Ticket the blocker; notify relevant owner</td>
+</tr>
+<tr>
+<td>Task found to be unnecessary</td>
+<td>Document why; close the task with explanation</td>
+</tr>
+<tr>
+<td>Task partially complete</td>
+<td>Document completed portion; ticket remainder</td>
+</tr>
+</tbody>
+</table>
+<p>A task is not "done" until it is either fully completed and validated, or explicitly deferred with a follow-up ticket.</p>
+<hr />
+<h2 id="debrief-and-lessons-learned">Debrief and Lessons Learned<a class="headerlink" href="#debrief-and-lessons-learned" title="Permanent link">&para;</a></h2>
+<p>A brief debrief is recommended after every Major maintenance window and mandatory after any window that encountered significant issues.</p>
+<p>Debrief agenda (30 minutes maximum):</p>
+<ol>
+<li>Did the window run to plan? What deviated?</li>
+<li>Were there any surprises — technical or logistical?</li>
+<li>What went well that we should repeat?</li>
+<li>What would we change for next time?</li>
+<li>Are there any follow-up actions not already ticketed?</li>
+</ol>
+<p>Debrief notes are stored in the maintenance ticket and shared with the change management team.</p>
+<hr />
+<h2 id="monitoring-reinstatement">Monitoring Reinstatement<a class="headerlink" href="#monitoring-reinstatement" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Alert Type</th>
+<th>When to Re-enable</th>
+<th>Confirmed By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service availability</td>
+<td>Immediately after closeout</td>
+<td>Monitoring dashboard</td>
+</tr>
+<tr>
+<td>Performance thresholds</td>
+<td>After baseline stabilises</td>
+<td>Lead engineer</td>
+</tr>
+<tr>
+<td>Capacity alerts</td>
+<td>Immediately after closeout</td>
+<td>Monitoring dashboard</td>
+</tr>
+<tr>
+<td>Custom change-related</td>
+<td>After observation period</td>
+<td>Change owner</td>
+</tr>
+</tbody>
+</table>
 
 
 

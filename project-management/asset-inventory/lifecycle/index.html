@@ -21,7 +21,7 @@
     
     
       
-        <title>Lifecycle - Chris KB</title>
+        <title>Asset Lifecycle Management - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Lifecycle · Chris KB">
+  <meta property="og:title" content="Asset Lifecycle Management · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Lifecycle · Chris KB">
+  <meta name="twitter:title" content="Asset Lifecycle Management · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lifecycle" class="md-skip">
+        <a href="#asset-lifecycle-management" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lifecycle
+              Asset Lifecycle Management
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#lifecycle-stages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Lifecycle Stages
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#refresh-cycles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Refresh Cycles
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#eol-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        EOL Tracking
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#budget-planning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Budget Planning
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#roles-and-responsibilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Roles and Responsibilities
       
     </span>
   </a>
@@ -809,42 +809,195 @@
 
 
 
-<h1 id="lifecycle">Lifecycle<a class="headerlink" href="#lifecycle" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Asset Inventory Lifecycle notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="asset-lifecycle-management">Asset Lifecycle Management<a class="headerlink" href="#asset-lifecycle-management" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Every asset moves through a predictable set of stages from procurement to disposal. Tracking these stages in the CMDB enables proactive refresh planning, accurate budgeting, and timely EOL management — avoiding the risk of running unsupported hardware or software in production.</p>
+<hr />
+<h2 id="lifecycle-stages">Lifecycle Stages<a class="headerlink" href="#lifecycle-stages" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Description</th>
+<th>CMDB Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Requested</td>
+<td>Purchase request raised, not yet approved</td>
+<td>Ordered</td>
+</tr>
+<tr>
+<td>Procurement</td>
+<td>PO raised, asset on order</td>
+<td>Ordered</td>
+</tr>
+<tr>
+<td>Receiving</td>
+<td>Asset received, tagged, and inventoried</td>
+<td>In Stock</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Asset configured and placed in service</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Operational</td>
+<td>Asset in production use</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Under Review</td>
+<td>Flagged for refresh, evaluation in progress</td>
+<td>Under Review</td>
+</tr>
+<tr>
+<td>Decommission</td>
+<td>Retirement approved, shutdown and wipe in progress</td>
+<td>Decommissioning</td>
+</tr>
+<tr>
+<td>Retired</td>
+<td>Disposed or returned; record closed</td>
+<td>Retired</td>
+</tr>
+</tbody>
+</table>
+<p>Stage transitions must be reflected in the CMDB within 48 hours of the physical change.</p>
+<hr />
+<h2 id="refresh-cycles">Refresh Cycles<a class="headerlink" href="#refresh-cycles" title="Permanent link">&para;</a></h2>
+<p>Default refresh cycles by asset class. Adjust based on vendor support timelines and actual failure rates.</p>
+<table>
+<thead>
+<tr>
+<th>Asset Class</th>
+<th>Target Refresh Cycle</th>
+<th>EOL Warning Lead Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical servers</td>
+<td>5 years</td>
+<td>12 months</td>
+</tr>
+<tr>
+<td>Laptops / desktops</td>
+<td>4 years</td>
+<td>6 months</td>
+</tr>
+<tr>
+<td>Network switches</td>
+<td>7 years</td>
+<td>12 months</td>
+</tr>
+<tr>
+<td>Firewalls</td>
+<td>5 years</td>
+<td>12 months</td>
+</tr>
+<tr>
+<td>SAN / NAS storage</td>
+<td>5 years</td>
+<td>12 months</td>
+</tr>
+<tr>
+<td>UPS units</td>
+<td>7–10 years</td>
+<td>18 months</td>
+</tr>
+</tbody>
+</table>
+<p>Trigger a refresh review when: vendor EOL is announced, hardware failure rate exceeds 10% in a cohort, or the asset no longer meets performance requirements.</p>
+<hr />
+<h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
+<p>Maintain an EOL register separate from the main CMDB for forward planning. At minimum track:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Asset tag and CI reference</li>
+<li>Vendor EOL date (hardware and OS/firmware)</li>
+<li>Current contract / support end date</li>
+<li>Assigned refresh budget year</li>
+<li>
+<p>Owner and escalation contact</p>
+</li>
+<li>
+<p>[ ] Review EOL register monthly for items within 12-month window</p>
+</li>
+<li>[ ] Raise refresh project request at least 6 months before EOL</li>
+<li>[ ] Confirm vendor support extension availability if refresh is delayed</li>
+<li>[ ] Update CMDB with EOL dates from vendor bulletins as they are published</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<hr />
+<h2 id="budget-planning">Budget Planning<a class="headerlink" href="#budget-planning" title="Permanent link">&para;</a></h2>
+<p>Asset refresh planning feeds directly into the annual capital budget cycle.</p>
+<p>Steps to prepare the refresh budget:</p>
+<ol>
+<li>Export all CIs with <code>Active</code> status and deployment date</li>
+<li>Apply refresh cycle per asset class to calculate projected refresh year</li>
+<li>Cross-reference with EOL register</li>
+<li>Estimate replacement cost per unit (use current vendor pricing + 10% contingency)</li>
+<li>Group by budget year and present to finance by agreed submission deadline</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Budget Year</th>
+<th>Assets Due for Refresh</th>
+<th>Estimated Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026</td>
+<td>(from CMDB export)</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td>2027</td>
+<td>(from CMDB export)</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td>2028</td>
+<td>(from CMDB export)</td>
+<td>TBD</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="roles-and-responsibilities">Roles and Responsibilities<a class="headerlink" href="#roles-and-responsibilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asset Manager</td>
+<td>Maintain lifecycle register; own CMDB accuracy</td>
+</tr>
+<tr>
+<td>Infra Lead</td>
+<td>Trigger refresh projects; validate technical readiness</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td>Approve capital spend; track depreciation</td>
+</tr>
+<tr>
+<td>Procurement</td>
+<td>Manage vendor relationships and purchase orders</td>
+</tr>
+<tr>
+<td>Change Manager</td>
+<td>Coordinate decommission within change process</td>
+</tr>
+</tbody>
+</table>
 
 
 

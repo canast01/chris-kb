@@ -724,10 +724,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#built-in-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Built-in Policies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commonly-used-built-in-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commonly Used Built-in Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-policy-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Policy Definitions
       
     </span>
   </a>
@@ -735,10 +763,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#policy-effects" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Policy Effects
       
     </span>
   </a>
@@ -746,10 +774,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#policy-rule-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Policy Rule Structure
       
     </span>
   </a>
@@ -757,10 +785,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#evaluating-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Evaluating Compliance
       
     </span>
   </a>
@@ -768,21 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#policy-lifecycle-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Policy Lifecycle Management
       
     </span>
   </a>
@@ -810,46 +827,214 @@
 
 
 <h1 id="azure-policy">Azure Policy<a class="headerlink" href="#azure-policy" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Governance Azure Policy notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm subscription</li>
-<li>Confirm resource group</li>
-<li>Confirm region</li>
-<li>Review active alerts</li>
-<li>Review recent changes</li>
-<li>Check activity logs</li>
-<li>Check permissions</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>Subscription</li>
-<li>Resource group</li>
-<li>Resource name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested Azure CLI or PowerShell commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Azure Policy evaluates resources against defined rules and enforces organisational standards across your Azure environment. Policies can audit, deny, or automatically remediate non-compliant resources.</p>
+<h2 id="built-in-policies">Built-in Policies<a class="headerlink" href="#built-in-policies" title="Permanent link">&para;</a></h2>
+<p>Azure provides hundreds of built-in policy definitions covering security, compliance, cost, and operational standards. Use them before authoring custom policies.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all built-in policy definitions</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?policyType==&#39;BuiltIn&#39;].{Name:displayName, ID:name}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Search for built-in policies by keyword</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?policyType==&#39;BuiltIn&#39; &amp;&amp; contains(displayName, &#39;tag&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Show details of a specific built-in policy</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Show the policy rule for a definition</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;policyRule&quot;</span>
+</code></pre></div>
+<h3 id="commonly-used-built-in-policies">Commonly Used Built-in Policies<a class="headerlink" href="#commonly-used-built-in-policies" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Display Name</th>
+<th>Definition ID</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Require a tag on resources</td>
+<td>96670d01-0a4d-4649-9c89-2d3abc0a5025</td>
+<td>Deny/Modify</td>
+</tr>
+<tr>
+<td>Allowed locations</td>
+<td>e56962a6-4747-49cd-b67b-bf8b01975c4f</td>
+<td>Deny</td>
+</tr>
+<tr>
+<td>Allowed virtual machine SKUs</td>
+<td>cccc23c7-8427-4f53-ad12-b6a63eb452b3</td>
+<td>Deny</td>
+</tr>
+<tr>
+<td>Audit VMs without disaster recovery configured</td>
+<td>0015ea4d-51ff-4ce3-8d8c-f3f8f0179a56</td>
+<td>Audit</td>
+</tr>
+<tr>
+<td>Storage accounts should use customer-managed keys</td>
+<td>6fac406b-40ca-413b-bf8e-0bf964659c25</td>
+<td>Audit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="custom-policy-definitions">Custom Policy Definitions<a class="headerlink" href="#custom-policy-definitions" title="Permanent link">&para;</a></h2>
+<p>When built-in policies do not meet requirements, create custom definitions. Definitions are stored at management group or subscription scope.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a custom policy definition from a JSON file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-non-approved-vm-images&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Deny non-approved VM images&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Ensures only approved marketplace images are used&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--rules<span class="w"> </span>policy-rules.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--params<span class="w"> </span>policy-params.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--mode<span class="w"> </span>Indexed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Create at management group scope</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-diagnostics-storage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Require diagnostic settings for storage accounts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--rules<span class="w"> </span>diag-rules.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--mode<span class="w"> </span>Indexed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># List custom policy definitions</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?policyType==&#39;Custom&#39;].{Name:displayName, ID:name, Mode:mode}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Update a custom policy definition</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-non-approved-vm-images&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span>--rules<span class="w"> </span>updated-policy-rules.json
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># Delete a custom policy definition</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;deny-non-approved-vm-images&quot;</span>
+</code></pre></div>
+<h2 id="policy-effects">Policy Effects<a class="headerlink" href="#policy-effects" title="Permanent link">&para;</a></h2>
+<p>The effect defines what happens when a resource is evaluated and does not comply.</p>
+<table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Behaviour</th>
+<th>Remediation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Audit</code></td>
+<td>Marks non-compliant; no blocking</td>
+<td>Manual</td>
+</tr>
+<tr>
+<td><code>AuditIfNotExists</code></td>
+<td>Audits if a related resource is missing</td>
+<td>Manual</td>
+</tr>
+<tr>
+<td><code>Deny</code></td>
+<td>Blocks the create/update operation</td>
+<td>N/A (preventive)</td>
+</tr>
+<tr>
+<td><code>DeployIfNotExists</code></td>
+<td>Deploys a related resource if missing</td>
+<td>Automatic via task</td>
+</tr>
+<tr>
+<td><code>Modify</code></td>
+<td>Adds, updates, or removes properties/tags</td>
+<td>Automatic via task</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td>Policy is inactive</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>Append</code></td>
+<td>Adds fields to the resource request</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h2 id="policy-rule-structure">Policy Rule Structure<a class="headerlink" href="#policy-rule-structure" title="Permanent link">&para;</a></h2>
+<p>A minimal deny policy rule:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;if&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;allOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;type&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="nt">&quot;equals&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Microsoft.Compute/virtualMachines&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;location&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">&quot;notIn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[parameters(&#39;allowedLocations&#39;)]&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">&quot;then&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">&quot;effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="evaluating-compliance">Evaluating Compliance<a class="headerlink" href="#evaluating-compliance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger a compliance scan (on-demand)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>trigger-scan<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List non-compliant resources for a specific policy</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;policyDefinitionName eq &#39;&lt;definition-name&gt;&#39; and complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Summarise compliance by policy assignment</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[0].policyAssignments[].{Policy:policyAssignmentId, NonCompliant:results.nonCompliantResources}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<h2 id="policy-lifecycle-management">Policy Lifecycle Management<a class="headerlink" href="#policy-lifecycle-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Activity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Design</td>
+<td>Define scope, effect, parameters, and test in sandbox</td>
+</tr>
+<tr>
+<td>Deploy as Audit</td>
+<td>Baseline non-compliance without blocking operations</td>
+</tr>
+<tr>
+<td>Remediate</td>
+<td>Fix existing non-compliant resources</td>
+</tr>
+<tr>
+<td>Switch to Deny/Modify</td>
+<td>Enforce going forward after remediation sprint</td>
+</tr>
+<tr>
+<td>Review quarterly</td>
+<td>Check for new built-in policies; retire outdated custom policies</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Zoning - Chris KB</title>
+        <title>SAN Zoning - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Zoning · Chris KB">
+  <meta property="og:title" content="SAN Zoning · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Zoning · Chris KB">
+  <meta name="twitter:title" content="SAN Zoning · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#zoning" class="md-skip">
+        <a href="#san-zoning" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Zoning
+              SAN Zoning
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#zone-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Zone Types
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#hard-vs-soft-zoning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Hard vs Soft Zoning
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#zone-sets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Zone Sets
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#single-initiator-zoning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Single-Initiator Zoning
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#cisco-vsan-vs-brocade-virtual-fabric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Cisco VSAN vs Brocade Virtual Fabric
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,159 @@
 
 
 
-<h1 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SAN Zoning notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="san-zoning">SAN Zoning<a class="headerlink" href="#san-zoning" title="Permanent link">&para;</a></h1>
+<h2 id="zone-types">Zone Types<a class="headerlink" href="#zone-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Zone Type</th>
+<th>Member Identifier</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WWPN (WWN) Zoning</td>
+<td>World Wide Port Name</td>
+<td>Portable across fabric; survives port moves</td>
+<td>Must update zone when HBA replaced</td>
+</tr>
+<tr>
+<td>Port (Domain:Port) Zoning</td>
+<td>Switch Domain + Port number</td>
+<td>Survives HBA replacement</td>
+<td>Must update zone if device moves to different port</td>
+</tr>
+<tr>
+<td>Mixed Zoning</td>
+<td>WWPN + Domain:Port in same zone</td>
+<td>Flexibility</td>
+<td>More complex; less common</td>
+</tr>
+<tr>
+<td>Alias Zoning</td>
+<td>Alias name → WWPN mapping</td>
+<td>Human-readable zone members</td>
+<td>Alias must be kept up to date</td>
+</tr>
+</tbody>
+</table>
+<p>Best practice: Use WWPN-based zoning (alias-based for readability) as the industry default. Port zoning is used in environments where HBA replacement is frequent and port assignments are fixed.</p>
+<h2 id="hard-vs-soft-zoning">Hard vs Soft Zoning<a class="headerlink" href="#hard-vs-soft-zoning" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Hard Zoning</th>
+<th>Soft Zoning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enforcement</td>
+<td>ASIC/hardware — frame-level blocking</td>
+<td>Name Server only — blocks discovery</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>High — no communication possible outside zone</td>
+<td>Lower — a host with a known FCID can still communicate</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>No overhead</td>
+<td>No overhead</td>
+</tr>
+<tr>
+<td>Default behavior</td>
+<td>Supported on all modern switches</td>
+<td>Older fallback; not recommended alone</td>
+</tr>
+</tbody>
+</table>
+<p>Exam rule: Hard zoning is enforced in ASIC hardware and is the default on all modern switches. Soft zoning only prevents a host from discovering targets via the Name Server — it does not physically block frames.</p>
+<h2 id="zone-sets">Zone Sets<a class="headerlink" href="#zone-sets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zone</td>
+<td>A group of ports/WWPNs that can communicate with each other</td>
+</tr>
+<tr>
+<td>Zone Set (Zone Configuration)</td>
+<td>A named collection of zones; only ONE can be active at a time per fabric</td>
+</tr>
+<tr>
+<td>Zone Database</td>
+<td>The full repository of zone and zone set definitions stored on the switch</td>
+</tr>
+<tr>
+<td>Active Zone Set</td>
+<td>The currently enforced zone set; changes to zone DB do not affect fabric until a zone set is activated</td>
+</tr>
+</tbody>
+</table>
+<p>Activation behavior:
+- When a zone set is activated it is distributed to all switches in the fabric via RSCN
+- Only one zone set can be active per fabric (per VSAN on Cisco)
+- Deactivating a zone set removes all zoning — all ports can see all other ports (open fabric)</p>
+<h2 id="single-initiator-zoning">Single-Initiator Zoning<a class="headerlink" href="#single-initiator-zoning" title="Permanent link">&para;</a></h2>
+<p>The industry-standard design principle:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Each zone contains exactly ONE initiator (host WWPN) and one or more targets (storage port WWPNs)</li>
+<li>Single-initiator, single-target: maximum isolation; one zone per initiator-target pair</li>
+<li>Single-initiator, multi-target: one zone per host; less isolation but manageable for known-good environments</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>Avoid multi-initiator zones: if two hosts share a zone with a target and one host behaves badly, it can impact the other.</p>
+<h2 id="cisco-vsan-vs-brocade-virtual-fabric">Cisco VSAN vs Brocade Virtual Fabric<a class="headerlink" href="#cisco-vsan-vs-brocade-virtual-fabric" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Cisco VSAN</th>
+<th>Brocade Virtual Fabric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scope</td>
+<td>Logical partition of a physical fabric</td>
+<td>Logical partition of a chassis</td>
+</tr>
+<tr>
+<td>Zone isolation</td>
+<td>Per-VSAN zone DB</td>
+<td>Per-Virtual Fabric zone DB</td>
+</tr>
+<tr>
+<td>Inter-VSAN routing</td>
+<td>IVR (Inter-VSAN Routing)</td>
+<td>Not natively supported</td>
+</tr>
+<tr>
+<td>Default zone behavior</td>
+<td>Deny (no default zoning across VSANs)</td>
+<td>Configurable</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Explain the difference between hard and soft zoning and why hard is preferred</li>
+<li>[ ] Describe single-initiator zoning and why multi-initiator zones are avoided</li>
+<li>[ ] Walk through what happens when a zone set is activated (RSCN distribution)</li>
+<li>[ ] Explain what happens if a zone set is deactivated (open fabric)</li>
+<li>[ ] Compare WWPN vs port zoning — give a scenario where each is preferred</li>
+<li>[ ] Know the Brocade commands to create a zone, add members, create a zone set, and activate it</li>
+<li>[ ] Know the Cisco MDS equivalent zone configuration commands</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

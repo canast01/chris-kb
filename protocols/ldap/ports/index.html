@@ -21,7 +21,7 @@
     
     
       
-        <title>Ports - Chris KB</title>
+        <title>LDAP Ports - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ports · Chris KB">
+  <meta property="og:title" content="LDAP Ports · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Ports · Chris KB">
+  <meta name="twitter:title" content="LDAP Ports · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ports" class="md-skip">
+        <a href="#ldap-ports" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ports
+              LDAP Ports
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#port-389-and-636" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Port 389 and 636
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#global-catalog-ports-3268-and-3269" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Global Catalog Ports (3268 and 3269)
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#firewall-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Firewall Rules
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#starttls-vs-ldaps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        StartTLS vs LDAPS
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#port-troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Port Troubleshooting
       
     </span>
   </a>
@@ -809,42 +809,118 @@
 
 
 
-<h1 id="ports">Ports<a class="headerlink" href="#ports" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical LDAP Ports notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="ldap-ports">LDAP Ports<a class="headerlink" href="#ldap-ports" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>LDAP uses a small set of well-known TCP ports. All are required in different scenarios — plain LDAP for legacy compatibility, LDAPS for encrypted binds, and Global Catalog ports for forest-wide searches in Active Directory.</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>389</td>
+<td>TCP/UDP</td>
+<td>Standard LDAP (cleartext or StartTLS)</td>
+</tr>
+<tr>
+<td>636</td>
+<td>TCP</td>
+<td>LDAPS — LDAP over TLS (always encrypted)</td>
+</tr>
+<tr>
+<td>3268</td>
+<td>TCP</td>
+<td>LDAP Global Catalog (forest-wide, cleartext)</td>
+</tr>
+<tr>
+<td>3269</td>
+<td>TCP</td>
+<td>LDAPS Global Catalog (forest-wide, encrypted)</td>
+</tr>
+<tr>
+<td>49152–65535</td>
+<td>TCP</td>
+<td>Dynamic RPC ports (AD replication)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="port-389-and-636">Port 389 and 636<a class="headerlink" href="#port-389-and-636" title="Permanent link">&para;</a></h2>
+<p>Port 389 is the default LDAP port. Traffic is cleartext unless the client issues a StartTLS extended operation to upgrade the connection. Port 636 always uses TLS from the initial connection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test port 389 connectivity</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">389</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Test port 636 connectivity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">636</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query via LDAP (port 389)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:389<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Query via LDAPS (port 636)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
+</code></pre></div>
+<h2 id="global-catalog-ports-3268-and-3269">Global Catalog Ports (3268 and 3269)<a class="headerlink" href="#global-catalog-ports-3268-and-3269" title="Permanent link">&para;</a></h2>
+<p>The Global Catalog contains a partial replica of all objects across all domains in the AD forest. Use these ports when queries must span multiple domains.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test GC port 3268</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>dc01.corp.example.com<span class="w"> </span><span class="m">3268</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Query Global Catalog</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:3268<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">           </span><span class="s2">&quot;(mail=jsmith@corp.example.com)&quot;</span><span class="w"> </span>cn<span class="w"> </span>sAMAccountName
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Query Global Catalog over SSL (port 3269)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:3269<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">           </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span><span class="w"> </span>memberOf
+</code></pre></div>
+<h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux: allow LDAP and LDAPS outbound from an application server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-d<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>--dport<span class="w"> </span><span class="m">389</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-d<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>--dport<span class="w"> </span><span class="m">636</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-d<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>--dport<span class="w"> </span><span class="m">3268</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iptables<span class="w"> </span>-A<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>-d<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>--dport<span class="w"> </span><span class="m">3269</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Windows Firewall: allow inbound LDAP to a DC</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>netsh<span class="w"> </span>advfirewall<span class="w"> </span>firewall<span class="w"> </span>add<span class="w"> </span>rule<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;LDAP&quot;</span><span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>TCP<span class="w"> </span><span class="nv">dir</span><span class="o">=</span><span class="k">in</span><span class="w"> </span><span class="nv">localport</span><span class="o">=</span><span class="m">389</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>allow
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>netsh<span class="w"> </span>advfirewall<span class="w"> </span>firewall<span class="w"> </span>add<span class="w"> </span>rule<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;LDAPS&quot;</span><span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>TCP<span class="w"> </span><span class="nv">dir</span><span class="o">=</span><span class="k">in</span><span class="w"> </span><span class="nv">localport</span><span class="o">=</span><span class="m">636</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>allow
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>netsh<span class="w"> </span>advfirewall<span class="w"> </span>firewall<span class="w"> </span>add<span class="w"> </span>rule<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;LDAP-GC&quot;</span><span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>TCP<span class="w"> </span><span class="nv">dir</span><span class="o">=</span><span class="k">in</span><span class="w"> </span><span class="nv">localport</span><span class="o">=</span><span class="m">3268</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>allow
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>netsh<span class="w"> </span>advfirewall<span class="w"> </span>firewall<span class="w"> </span>add<span class="w"> </span>rule<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;LDAPS-GC&quot;</span><span class="w"> </span><span class="nv">protocol</span><span class="o">=</span>TCP<span class="w"> </span><span class="nv">dir</span><span class="o">=</span><span class="k">in</span><span class="w"> </span><span class="nv">localport</span><span class="o">=</span><span class="m">3269</span><span class="w"> </span><span class="nv">action</span><span class="o">=</span>allow
+</code></pre></div>
+<h2 id="starttls-vs-ldaps">StartTLS vs LDAPS<a class="headerlink" href="#starttls-vs-ldaps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Use StartTLS on port 389 (upgrade cleartext connection to TLS)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com:389<span class="w"> </span>-ZZ<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span>-D<span class="w"> </span><span class="s2">&quot;svc-ldap@corp.example.com&quot;</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;P@ssw0rd!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=domain)&quot;</span><span class="w"> </span>dn
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify if StartTLS is supported</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-x<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">           </span>-b<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>-s<span class="w"> </span>base<span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span>supportedExtension
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Look for OID 1.3.6.1.4.1.1466.20037 = StartTLS</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Test LDAPS certificate</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.corp.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After&quot;</span>
+</code></pre></div>
+<h2 id="port-troubleshooting">Port Troubleshooting<a class="headerlink" href="#port-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Test from Windows client</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">389</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">636</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">3268</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">3269</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Check DC is listening on LDAP ports</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">netstat</span> <span class="n">-an</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;:389\|:636\|:3268\|:3269&quot;</span>
+</code></pre></div>
 
 
 

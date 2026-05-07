@@ -21,7 +21,7 @@
     
     
       
-        <title>Cloud - Chris KB</title>
+        <title>Cloud Build Standards - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cloud · Chris KB">
+  <meta property="og:title" content="Cloud Build Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cloud · Chris KB">
+  <meta name="twitter:title" content="Cloud Build Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloud" class="md-skip">
+        <a href="#cloud-build-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cloud
+              Cloud Build Standards
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#resource-naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Resource Naming Conventions
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#tagging-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Tagging Requirements
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#subscription-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Subscription Structure
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#baseline-configuration-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Baseline Configuration Requirements
       
     </span>
   </a>
@@ -768,21 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#approval-and-deployment-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Approval and Deployment Process
       
     </span>
   </a>
@@ -809,42 +798,121 @@
 
 
 
-<h1 id="cloud">Cloud<a class="headerlink" href="#cloud" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Build Standards Cloud notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="cloud-build-standards">Cloud Build Standards<a class="headerlink" href="#cloud-build-standards" title="Permanent link">&para;</a></h1>
+<h2 id="resource-naming-conventions">Resource Naming Conventions<a class="headerlink" href="#resource-naming-conventions" title="Permanent link">&para;</a></h2>
+<p>All cloud resources must follow a consistent naming pattern to enable filtering, cost attribution, and automation. Names are lowercase, hyphen-delimited, and include environment and region codes.</p>
+<table>
+<thead>
+<tr>
+<th>Resource Type</th>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource Group</td>
+<td><code>rg-{env}-{region}-{name}</code></td>
+<td><code>rg-prod-eus2-networking</code></td>
+</tr>
+<tr>
+<td>Virtual Machine</td>
+<td><code>vm-{app}-{env}-{num}</code></td>
+<td><code>vm-webapi-prod-01</code></td>
+</tr>
+<tr>
+<td>Storage Account</td>
+<td><code>sa{env}{region}{name}</code> (no hyphens, max 24 chars)</td>
+<td><code>saprodeus2appdata</code></td>
+</tr>
+<tr>
+<td>Key Vault</td>
+<td><code>kv-{env}-{name}</code></td>
+<td><code>kv-prod-secrets</code></td>
+</tr>
+<tr>
+<td>Virtual Network</td>
+<td><code>vnet-{env}-{region}</code></td>
+<td><code>vnet-prod-eus2</code></td>
+</tr>
+<tr>
+<td>Subnet</td>
+<td><code>snet-{role}-{env}</code></td>
+<td><code>snet-app-prod</code></td>
+</tr>
+<tr>
+<td>Network Security Group</td>
+<td><code>nsg-{role}-{env}</code></td>
+<td><code>nsg-app-prod</code></td>
+</tr>
+<tr>
+<td>Load Balancer</td>
+<td><code>lb-{app}-{env}</code></td>
+<td><code>lb-webapi-prod</code></td>
+</tr>
+</tbody>
+</table>
+<p>Region codes: <code>eus2</code> (East US 2), <code>weu</code> (West Europe), <code>seau</code> (Southeast Asia), <code>uks</code> (UK South).</p>
+<p>Environment codes: <code>prod</code>, <code>stg</code>, <code>dev</code>, <code>sbx</code>.</p>
+<h2 id="tagging-requirements">Tagging Requirements<a class="headerlink" href="#tagging-requirements" title="Permanent link">&para;</a></h2>
+<p>All resources must carry the following tags at creation. Missing tags block deployment via policy enforcement.</p>
+<p><strong>Mandatory tags:</strong></p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><code>env</code> — <code>prod</code> | <code>stg</code> | <code>dev</code> | <code>sbx</code></li>
+<li><code>owner</code> — email of the team or service owner</li>
+<li><code>application</code> — application or workload name</li>
+<li><code>cost-centre</code> — finance cost code (e.g. <code>cc-1042</code>)</li>
+<li><code>created-by</code> — automation tool or engineer login</li>
+<li><code>criticality</code> — <code>high</code> | <code>medium</code> | <code>low</code></li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p><strong>Optional but recommended:</strong></p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li><code>support-tier</code> — <code>24x7</code> | <code>business-hours</code></li>
+<li><code>data-classification</code> — <code>public</code> | <code>internal</code> | <code>confidential</code></li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Tags are enforced via Azure Policy <code>Require tag on resources</code>. Any resource missing mandatory tags is flagged in the compliance dashboard within 24 hours.</p>
+<h2 id="subscription-structure">Subscription Structure<a class="headerlink" href="#subscription-structure" title="Permanent link">&para;</a></h2>
+<p>Subscriptions are organised by workload and environment, not by team. Each production workload gets a dedicated subscription to enforce blast radius isolation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Management Group: Corp
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Platform
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── sub-identity-prod           # Domain controllers, ADCS
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── sub-management-prod         # Log Analytics, Backup, Automation
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── Landing Zones
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── sub-app01-prod
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── sub-app01-dev
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── sub-app02-prod
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └── sub-app02-dev
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└── Sandbox
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    └── sub-sandbox
+</code></pre></div>
+<p>Each landing zone subscription inherits policy from its management group. Do not place prod and non-prod workloads in the same subscription.</p>
+<h2 id="baseline-configuration-requirements">Baseline Configuration Requirements<a class="headerlink" href="#baseline-configuration-requirements" title="Permanent link">&para;</a></h2>
+<p>Every deployed resource must meet these baseline config checks before being marked build-complete.</p>
+<p><strong>Networking:</strong>
+- All VMs deployed into a named subnet, not directly into a VNet
+- No public IP unless explicitly approved; use Azure Bastion or private endpoints
+- NSG attached at subnet level; NIC-level NSGs only for exceptions with justification</p>
+<p><strong>Identity and Access:</strong>
+- System-assigned managed identity enabled on all VMs and function apps
+- No local credentials stored; secrets go to Key Vault
+- Subscription Owner role: maximum two named accounts plus one break-glass</p>
+<p><strong>Diagnostics:</strong>
+- Boot diagnostics enabled on all VMs
+- Diagnostic settings configured to send platform logs to central Log Analytics workspace
+- Azure Monitor Agent deployed and reporting within 15 minutes of build</p>
+<p><strong>Encryption:</strong>
+- OS and data disks encrypted with platform-managed keys minimum; customer-managed keys for confidential data
+- Storage accounts: <code>Require secure transfer</code> enabled, TLS 1.2 minimum</p>
+<h2 id="approval-and-deployment-process">Approval and Deployment Process<a class="headerlink" href="#approval-and-deployment-process" title="Permanent link">&para;</a></h2>
+<p>All cloud builds follow a four-stage gate process before production promotion.</p>
+<ol>
+<li><strong>Design review</strong> — architecture diagram reviewed by platform team; naming and tagging confirmed</li>
+<li><strong>Terraform plan review</strong> — PR raised, plan output reviewed, no resource deletions without explicit sign-off</li>
+<li><strong>Dev/staging validation</strong> — functional tests pass, monitoring agent confirmed active</li>
+<li><strong>Production deployment</strong> — deployment window booked, rollback plan documented in change record</li>
+</ol>
+<p>Deployments to production subscriptions require a ServiceNow change record number in the pipeline run. Pipelines reject runs without a valid change reference.</p>
 
 
 

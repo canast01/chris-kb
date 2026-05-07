@@ -21,7 +21,7 @@
     
     
       
-        <title>Practice Notes - Chris KB</title>
+        <title>Storage Practice Notes - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Practice Notes · Chris KB">
+  <meta property="og:title" content="Storage Practice Notes · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Practice Notes · Chris KB">
+  <meta name="twitter:title" content="Storage Practice Notes · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#practice-notes" class="md-skip">
+        <a href="#storage-practice-notes" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Practice Notes
+              Storage Practice Notes
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#raid-level-quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        RAID Level Quick Reference
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#thin-vs-thick-provisioning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Thin vs Thick Provisioning
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#deduplication-vs-compression" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Deduplication vs Compression
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#replication-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Replication Types
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#snapshot-vs-clone" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Snapshot vs Clone
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,253 @@
 
 
 
-<h1 id="practice-notes">Practice Notes<a class="headerlink" href="#practice-notes" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Storage Practice Notes notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="storage-practice-notes">Storage Practice Notes<a class="headerlink" href="#storage-practice-notes" title="Permanent link">&para;</a></h1>
+<h2 id="raid-level-quick-reference">RAID Level Quick Reference<a class="headerlink" href="#raid-level-quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>RAID Level</th>
+<th>Min Disks</th>
+<th>Fault Tolerance</th>
+<th>Overhead</th>
+<th>Performance</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID 0</td>
+<td>2</td>
+<td>None</td>
+<td>0%</td>
+<td>Best read/write</td>
+<td>Temp data, no tolerance needed</td>
+</tr>
+<tr>
+<td>RAID 1</td>
+<td>2</td>
+<td>1 disk failure</td>
+<td>50%</td>
+<td>Good read</td>
+<td>OS volumes, small datasets</td>
+</tr>
+<tr>
+<td>RAID 5</td>
+<td>3</td>
+<td>1 disk failure</td>
+<td>1/n</td>
+<td>Good read, slower write</td>
+<td>General purpose, cost-efficient</td>
+</tr>
+<tr>
+<td>RAID 6</td>
+<td>4</td>
+<td>2 disk failures</td>
+<td>2/n</td>
+<td>Good read, slowest write</td>
+<td>Large capacity groups, compliance</td>
+</tr>
+<tr>
+<td>RAID 10</td>
+<td>4</td>
+<td>1 disk per mirror</td>
+<td>50%</td>
+<td>Best all-around</td>
+<td>High-performance databases</td>
+</tr>
+<tr>
+<td>RAID 50</td>
+<td>6</td>
+<td>1 disk per RAID-5 set</td>
+<td>Variable</td>
+<td>High</td>
+<td>Large-scale mixed workloads</td>
+</tr>
+<tr>
+<td>RAID 60</td>
+<td>8</td>
+<td>2 disks per RAID-6 set</td>
+<td>Variable</td>
+<td>High</td>
+<td>Very large, high-availability</td>
+</tr>
+</tbody>
+</table>
+<p>Exam gotcha: RAID is NOT a backup. RAID 5 rebuilds become risky on large drives (long rebuild = second failure window). RAID 6 or RAID 10 preferred for modern large-capacity drives.</p>
+<h2 id="thin-vs-thick-provisioning">Thin vs Thick Provisioning<a class="headerlink" href="#thin-vs-thick-provisioning" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Thin Provisioned</th>
+<th>Thick Provisioned (Eager Zeroed)</th>
+<th>Thick (Lazy Zeroed)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Space allocation</td>
+<td>On-demand as data is written</td>
+<td>Full allocation at creation, zeros written</td>
+<td>Full allocation at creation, zeros on demand</td>
+</tr>
+<tr>
+<td>Array side</td>
+<td>Space from pool allocated as needed</td>
+<td>All space reserved immediately</td>
+<td>All space reserved immediately</td>
+</tr>
+<tr>
+<td>Oversubscription</td>
+<td>Possible (monitor carefully)</td>
+<td>Not possible</td>
+<td>Not possible</td>
+</tr>
+<tr>
+<td>VM performance</td>
+<td>Slightly lower initial write</td>
+<td>Best (zeros already written)</td>
+<td>Slight overhead on first write</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Dev/test, general workloads</td>
+<td>High-performance VMs, Fault Tolerance</td>
+<td>Standard VMs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deduplication-vs-compression">Deduplication vs Compression<a class="headerlink" href="#deduplication-vs-compression" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Deduplication</th>
+<th>Compression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mechanism</td>
+<td>Removes duplicate data blocks</td>
+<td>Encodes data with fewer bits</td>
+</tr>
+<tr>
+<td>Granularity</td>
+<td>Block-level (4KB–8KB typical)</td>
+<td>Block or byte level</td>
+</tr>
+<tr>
+<td>Best data type</td>
+<td>Virtual machines, VDI, backups</td>
+<td>Databases, logs, general files</td>
+</tr>
+<tr>
+<td>CPU overhead</td>
+<td>Higher (hash comparison)</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td>Inline</td>
+<td>Before write — no extra capacity needed</td>
+<td>Before write</td>
+</tr>
+<tr>
+<td>Post-process</td>
+<td>After write — needs extra space temporarily</td>
+<td>After write</td>
+</tr>
+<tr>
+<td>Typical savings</td>
+<td>2:1 to 10:1 (VDI)</td>
+<td>1.5:1 to 3:1 (general)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-types">Replication Types<a class="headerlink" href="#replication-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Direction</th>
+<th>RPO</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synchronous</td>
+<td>Write acknowledged only after target confirms</td>
+<td>Zero (0 RPO)</td>
+<td>Tier-1 databases, short distance (&lt;100km)</td>
+</tr>
+<tr>
+<td>Asynchronous</td>
+<td>Write acknowledged before target confirms</td>
+<td>Non-zero (minutes to hours)</td>
+<td>DR across long distances</td>
+</tr>
+<tr>
+<td>Snapshot-based</td>
+<td>Periodic snapshots sent to remote</td>
+<td>Snapshot interval</td>
+<td>Cost-effective DR, longer RPO acceptable</td>
+</tr>
+<tr>
+<td>Continuous Data Protection (CDP)</td>
+<td>Every I/O journaled</td>
+<td>Seconds</td>
+<td>Highest protection, any point-in-time recovery</td>
+</tr>
+</tbody>
+</table>
+<p>Latency impact: Synchronous replication adds round-trip latency to every write. At 100km, speed of light latency ≈ 0.5ms one-way = 1ms RTT added to write response time.</p>
+<h2 id="snapshot-vs-clone">Snapshot vs Clone<a class="headerlink" href="#snapshot-vs-clone" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Snapshot</th>
+<th>Clone (Full Copy)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Creation time</td>
+<td>Near-instant (pointer/metadata)</td>
+<td>Minutes to hours (full data copy)</td>
+</tr>
+<tr>
+<td>Space usage</td>
+<td>Incremental (redirect-on-write or copy-on-write)</td>
+<td>Full copy of source</td>
+</tr>
+<tr>
+<td>Independence</td>
+<td>Dependent on source — source deletion impacts snapshot</td>
+<td>Fully independent</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Recovery points, testing on short timescale</td>
+<td>Independent dev/test copy, migration</td>
+</tr>
+<tr>
+<td>I/O overhead</td>
+<td>Yes (CoW penalty on source writes)</td>
+<td>None after creation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] State the fault tolerance and overhead of RAID 0, 1, 5, 6, and 10 from memory</li>
+<li>[ ] Explain thin provisioning oversubscription risk and how to monitor it</li>
+<li>[ ] Differentiate deduplication from compression — give best use case for each</li>
+<li>[ ] Compare synchronous vs asynchronous replication RPO impact</li>
+<li>[ ] Explain snapshot CoW overhead and when a clone is preferable</li>
+<li>[ ] Know that RAID is not a backup and explain why</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

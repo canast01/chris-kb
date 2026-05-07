@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Prerequisites
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#accessing-the-serial-console" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Accessing the Serial Console
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#linux-serial-console" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Linux Serial Console
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#windows-serial-console-sac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Windows Serial Console — SAC
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#enabling-sac-on-windows-if-not-pre-enabled" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Enabling SAC on Windows (if not pre-enabled)
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#troubleshooting-common-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Troubleshooting Common Scenarios
       
     </span>
   </a>
@@ -810,46 +810,206 @@
 
 
 <h1 id="serial-console">Serial Console<a class="headerlink" href="#serial-console" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Compute Serial Console notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm subscription</li>
-<li>Confirm resource group</li>
-<li>Confirm region</li>
-<li>Review active alerts</li>
-<li>Review recent changes</li>
-<li>Check activity logs</li>
-<li>Check permissions</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>Subscription</li>
-<li>Resource group</li>
-<li>Resource name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested Azure CLI or PowerShell commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Azure Serial Console provides out-of-band terminal access to a VM's serial port. It works independently of the VM's network and is accessible even when the VM is unreachable via SSH or RDP, making it invaluable for diagnosing boot failures and locked-out scenarios.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boot diagnostics</td>
+<td>Must be enabled on the VM (managed storage supported)</td>
+</tr>
+<tr>
+<td>VM Agent</td>
+<td>Must be installed and running</td>
+</tr>
+<tr>
+<td>RBAC</td>
+<td><code>Virtual Machine Contributor</code> or <code>Virtual Machine Administrator Login</code></td>
+</tr>
+<tr>
+<td>Serial Console access</td>
+<td>Not blocked by subscription-level policy</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable boot diagnostics (required for serial console)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verify VM agent is healthy</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>vm<span class="w"> </span>get-instance-view<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;instanceView.vmAgent.statuses[?code==&#39;ProvisioningState/succeeded&#39;].displayStatus&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>tsv
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Assign the right role for serial console access</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--assignee<span class="w"> </span>&lt;user-upn-or-sp&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Virtual Machine Contributor&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--scope<span class="w"> </span>&lt;vm-resource-id&gt;
+</code></pre></div>
+<hr />
+<h2 id="accessing-the-serial-console">Accessing the Serial Console<a class="headerlink" href="#accessing-the-serial-console" title="Permanent link">&para;</a></h2>
+<p>Serial Console is accessed exclusively through the Azure portal:</p>
+<ol>
+<li>Navigate to <strong>Virtual Machines</strong> &gt; select VM &gt; <strong>Help</strong> &gt; <strong>Serial console</strong></li>
+<li>The portal connects to the VM's serial port and displays the current output buffer</li>
+<li>Press <strong>Enter</strong> to send input if the prompt is idle</li>
+</ol>
+<p>There is no <code>az</code> CLI command to directly open an interactive serial console session. However, you can verify readiness and collect the serial log programmatically.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get the serial log (non-interactive, last N KB of serial output)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Get URIs for both the log and screenshot</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>vm<span class="w"> </span>boot-diagnostics<span class="w"> </span>get-boot-log-uris<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--output<span class="w"> </span>json
+</code></pre></div>
+<hr />
+<h2 id="linux-serial-console">Linux Serial Console<a class="headerlink" href="#linux-serial-console" title="Permanent link">&para;</a></h2>
+<p>On Linux VMs, the serial console presents a login prompt on <code>ttyS0</code>. Common use cases:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After logging in via the serial console (in-console commands):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check filesystem for errors (run from single-user mode)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>fsck<span class="w"> </span>-y<span class="w"> </span>/dev/sda1
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Edit fstab if the VM won&#39;t boot due to bad mount entry</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>mount<span class="w"> </span>-o<span class="w"> </span>remount,rw<span class="w"> </span>/
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vi<span class="w"> </span>/etc/fstab
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unlock an SSH user (if locked out)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>passwd<span class="w"> </span>azureuser
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check network configuration</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>cat<span class="w"> </span>/etc/netplan/*.yaml
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Restart networking</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-networkd
+</code></pre></div>
+<p>To access GRUB on Linux via serial console, the VM must have <code>console=ttyS0</code> in its kernel command line. Most Azure marketplace images include this by default.</p>
+<hr />
+<h2 id="windows-serial-console-sac">Windows Serial Console — SAC<a class="headerlink" href="#windows-serial-console-sac" title="Permanent link">&para;</a></h2>
+<p>On Windows VMs, the Serial Console connects to the Special Administration Console (SAC). SAC requires EMS (Emergency Management Services) to be enabled.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># From within SAC (entered after connecting via portal Serial Console):
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a># List running processes
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cmd
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># After &#39;cmd&#39;, switch to the command prompt channel
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ch -si 1
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a># Inside the SAC cmd channel:
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a># Check disk
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>chkdsk C: /f
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a># View event logs
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>wevtutil qe System /c:20 /f:text
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a># Reset admin password
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>net user Administrator &lt;NewPassword&gt;
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a># Check network
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>ipconfig /all
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>netsh advfirewall show allprofiles
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>SAC Command</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cmd</code></td>
+<td>Open a new cmd.exe channel</td>
+</tr>
+<tr>
+<td><code>ch</code></td>
+<td>List active channels</td>
+</tr>
+<tr>
+<td><code>ch -si &lt;n&gt;</code></td>
+<td>Switch to channel n</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>Show system info</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>Show network config</td>
+</tr>
+<tr>
+<td><code>restart</code></td>
+<td>Reboot the machine</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="enabling-sac-on-windows-if-not-pre-enabled">Enabling SAC on Windows (if not pre-enabled)<a class="headerlink" href="#enabling-sac-on-windows-if-not-pre-enabled" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run via az vm run-command if the VM is still reachable via RDP/PowerShell</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>vm<span class="w"> </span>run-command<span class="w"> </span>invoke<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;win-vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--command-id<span class="w"> </span>RunPowerShellScript<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--scripts<span class="w"> </span><span class="s2">&quot;bcdedit /ems {current} on; bcdedit /emssettings EMSPORT:1 EMSBAUDRATE:115200; bcdedit /bootems {current} on&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting-common-scenarios">Troubleshooting Common Scenarios<a class="headerlink" href="#troubleshooting-common-scenarios" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM stuck at GRUB (Linux)</td>
+<td>Use serial console to select kernel or enter single-user mode</td>
+</tr>
+<tr>
+<td><code>fstab</code> error on boot (Linux)</td>
+<td>Boot to emergency shell, fix <code>/etc/fstab</code>, remount, reboot</td>
+</tr>
+<tr>
+<td>Windows BSOD loop</td>
+<td>SAC cmd channel — run <code>chkdsk</code>, check MBR/BCD</td>
+</tr>
+<tr>
+<td>Password locked (Linux)</td>
+<td>Single-user mode, <code>passwd</code> command</td>
+</tr>
+<tr>
+<td>SSH daemon not starting</td>
+<td>Serial console, <code>systemctl status sshd</code>, check port/config</td>
+</tr>
+<tr>
+<td>Network misconfiguration</td>
+<td>Serial console, fix netplan/ifcfg, restart networking</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After fixing the issue remotely, force VM restart</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>vm<span class="w"> </span>restart<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vm-name&gt;
+</code></pre></div>
 
 
 

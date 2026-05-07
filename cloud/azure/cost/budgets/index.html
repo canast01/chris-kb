@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#creating-a-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Creating a Budget
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#scope-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Scope Options
       
     </span>
   </a>
@@ -746,10 +746,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#alert-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Alert Thresholds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alert Thresholds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#threshold-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#action-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action Groups
       
     </span>
   </a>
@@ -757,32 +785,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#budget-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Useful commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Budget Best Practices
       
     </span>
   </a>
@@ -810,46 +816,196 @@
 
 
 <h1 id="budgets">Budgets<a class="headerlink" href="#budgets" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Cost Budgets notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm subscription</li>
-<li>Confirm resource group</li>
-<li>Confirm region</li>
-<li>Review active alerts</li>
-<li>Review recent changes</li>
-<li>Check activity logs</li>
-<li>Check permissions</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>Subscription</li>
-<li>Resource group</li>
-<li>Resource name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested Azure CLI or PowerShell commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Azure Cost Management budgets let you set spending thresholds and trigger alerts or automated actions when spending approaches or exceeds those thresholds. Budgets are scoped to a management group, subscription, or resource group.</p>
+<h2 id="creating-a-budget">Creating a Budget<a class="headerlink" href="#creating-a-budget" title="Permanent link">&para;</a></h2>
+<p>Budgets are created with the <code>az costmanagement budget create</code> command. You define the amount, time grain, start/end dates, and notification rules in one call.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a monthly subscription-level budget with email alert at 80% and 100%</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>budget<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--budget-name<span class="w"> </span><span class="s2">&quot;monthly-sub-budget&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--amount<span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--time-grain<span class="w"> </span>Monthly<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--start-date<span class="w"> </span><span class="m">2026</span>-05-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--end-date<span class="w"> </span><span class="m">2027</span>-05-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--notifications<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s1">    {</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s1">      &quot;enabled&quot;: true,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">      &quot;operator&quot;: &quot;GreaterThan&quot;,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">      &quot;threshold&quot;: 80,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">      &quot;contactEmails&quot;: [&quot;finops@example.com&quot;],</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">      &quot;thresholdType&quot;: &quot;Actual&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">    },</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">    {</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">      &quot;enabled&quot;: true,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">      &quot;operator&quot;: &quot;GreaterThan&quot;,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">      &quot;threshold&quot;: 100,</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s1">      &quot;contactEmails&quot;: [&quot;finops@example.com&quot;, &quot;eng-leads@example.com&quot;],</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s1">      &quot;thresholdType&quot;: &quot;Actual&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s1">    }</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s1">  ]&#39;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># List budgets on a subscription</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>budget<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># Show a specific budget</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>budget<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">  </span>--budget-name<span class="w"> </span><span class="s2">&quot;monthly-sub-budget&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Delete a budget</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>budget<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span>--budget-name<span class="w"> </span><span class="s2">&quot;monthly-sub-budget&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;&quot;</span>
+</code></pre></div>
+<h2 id="scope-options">Scope Options<a class="headerlink" href="#scope-options" title="Permanent link">&para;</a></h2>
+<p>Budgets can target different scopes. Use the narrowest scope that makes sense for the use case.</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Resource ID Pattern</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Group</td>
+<td><code>/providers/Microsoft.Management/managementGroups/&lt;mg-id&gt;</code></td>
+<td>Organisation-wide cap</td>
+</tr>
+<tr>
+<td>Subscription</td>
+<td><code>/subscriptions/&lt;sub-id&gt;</code></td>
+<td>Per-environment budget</td>
+</tr>
+<tr>
+<td>Resource Group</td>
+<td><code>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;</code></td>
+<td>Per-team or per-project</td>
+</tr>
+<tr>
+<td>Billing Account</td>
+<td><code>/providers/Microsoft.Billing/billingAccounts/&lt;id&gt;</code></td>
+<td>EA/MCA billing control</td>
+</tr>
+<tr>
+<td>Invoice Section</td>
+<td><code>/providers/Microsoft.Billing/billingAccounts/&lt;id&gt;/invoiceSections/&lt;id&gt;</code></td>
+<td>Department-level</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a resource-group-scoped budget</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>costmanagement<span class="w"> </span>budget<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--budget-name<span class="w"> </span><span class="s2">&quot;team-alpha-monthly&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;/resourceGroups/rg-team-alpha&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--amount<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--time-grain<span class="w"> </span>Monthly<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--start-date<span class="w"> </span><span class="m">2026</span>-05-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--end-date<span class="w"> </span><span class="m">2027</span>-05-01
+</code></pre></div>
+<h2 id="alert-thresholds">Alert Thresholds<a class="headerlink" href="#alert-thresholds" title="Permanent link">&para;</a></h2>
+<p>Each budget supports up to five notification rules. Notifications fire when actual or forecasted spend crosses a percentage of the budget amount.</p>
+<h3 id="threshold-types">Threshold Types<a class="headerlink" href="#threshold-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual</td>
+<td>Fires when cumulative spend in the period exceeds the threshold</td>
+</tr>
+<tr>
+<td>Forecasted</td>
+<td>Fires when projected end-of-period spend exceeds the threshold</td>
+</tr>
+</tbody>
+</table>
+<p>Recommended tier structure:</p>
+<table>
+<thead>
+<tr>
+<th>Threshold %</th>
+<th>Threshold Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>70 %</td>
+<td>Forecasted</td>
+<td>Early awareness</td>
+</tr>
+<tr>
+<td>90 %</td>
+<td>Forecasted</td>
+<td>Time to investigate</td>
+</tr>
+<tr>
+<td>80 %</td>
+<td>Actual</td>
+<td>Confirmed trending high</td>
+</tr>
+<tr>
+<td>100 %</td>
+<td>Actual</td>
+<td>Budget breached</td>
+</tr>
+</tbody>
+</table>
+<h2 id="action-groups">Action Groups<a class="headerlink" href="#action-groups" title="Permanent link">&para;</a></h2>
+<p>In addition to email notifications, budgets can trigger an Azure Action Group to run Logic Apps, webhooks, or Function Apps.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an Action Group for budget alerts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>action-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-finops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span>ag-budget-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--short-name<span class="w"> </span>budg-alert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--action<span class="w"> </span>email<span class="w"> </span>finops-team<span class="w"> </span>finops@example.com
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get the Action Group resource ID</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>az<span class="w"> </span>monitor<span class="w"> </span>action-group<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-finops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--name<span class="w"> </span>ag-budget-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--query<span class="w"> </span>id<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--output<span class="w"> </span>tsv
+</code></pre></div>
+<h2 id="budget-best-practices">Budget Best Practices<a class="headerlink" href="#budget-best-practices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Set budgets at subscription and RG level</td>
+<td>Dual coverage — broad and granular</td>
+</tr>
+<tr>
+<td>Use forecasted thresholds at 90%</td>
+<td>Early warning before actual breach</td>
+</tr>
+<tr>
+<td>Attach Action Group for auto-remediation</td>
+<td>Enables automated shutdown of non-prod VMs</td>
+</tr>
+<tr>
+<td>Review and update amounts quarterly</td>
+<td>Aligns budgets with approved spend plans</td>
+</tr>
+<tr>
+<td>Tag budgets with owner metadata</td>
+<td>Accountability for overspend</td>
+</tr>
+</tbody>
+</table>
 
 
 

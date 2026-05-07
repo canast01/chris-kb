@@ -21,7 +21,7 @@
     
     
       
-        <title>Post Change - Chris KB</title>
+        <title>Post-Change Health Check - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Post Change · Chris KB">
+  <meta property="og:title" content="Post-Change Health Check · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Post Change · Chris KB">
+  <meta name="twitter:title" content="Post-Change Health Check · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#post-change" class="md-skip">
+        <a href="#post-change-health-check" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post Change
+              Post-Change Health Check
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#timing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Timing
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#post-change-check-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Post-Change Check Sequence
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#comparison-against-pre-change-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Comparison Against Pre-Change Baseline
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#escalation-during-post-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Escalation During Post-Check
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#post-check-sign-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Post-Check Sign-Off
       
     </span>
   </a>
@@ -809,42 +809,121 @@
 
 
 
-<h1 id="post-change">Post Change<a class="headerlink" href="#post-change" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Health Checks Post Change notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="post-change-health-check">Post-Change Health Check<a class="headerlink" href="#post-change-health-check" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A post-change health check is a structured review of system state immediately after a change is implemented. It is narrower and more targeted than a general daily check — the focus is on confirming the changed component is healthy and that nothing adjacent was disturbed. The rollback window remains open until this check passes.</p>
+<hr />
+<h2 id="timing">Timing<a class="headerlink" href="#timing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change Risk Level</th>
+<th>When to Run Post-Check</th>
+<th>Rollback Window Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>Immediately after change</td>
+<td>30 minutes</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Immediately + 1 hour</td>
+<td>2 hours</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Immediately + 4 hours</td>
+<td>24 hours</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>Immediately + 24 hours</td>
+<td>48–72 hours</td>
+</tr>
+</tbody>
+</table>
+<p>Do not close the change ticket until the initial post-check is complete and passing.</p>
+<hr />
+<h2 id="post-change-check-sequence">Post-Change Check Sequence<a class="headerlink" href="#post-change-check-sequence" title="Permanent link">&para;</a></h2>
+<p>Run checks in this order. Stop and initiate backout if any step fails before moving to the next.</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] <strong>Service health</strong> — confirm the directly changed service reports healthy</li>
+<li>[ ] <strong>Application logs</strong> — scan for new error patterns introduced by the change</li>
+<li>[ ] <strong>Key functional test</strong> — exercise the specific function that was changed</li>
+<li>[ ] <strong>Monitoring alerts</strong> — confirm no new alerts have fired since implementation</li>
+<li>[ ] <strong>Upstream dependencies</strong> — confirm services that feed the changed component are unaffected</li>
+<li>[ ] <strong>Downstream dependencies</strong> — confirm services consuming the changed component are unaffected</li>
+<li>[ ] <strong>Performance baseline</strong> — compare error rate, latency, and throughput against pre-change snapshot</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="comparison-against-pre-change-baseline">Comparison Against Pre-Change Baseline<a class="headerlink" href="#comparison-against-pre-change-baseline" title="Permanent link">&para;</a></h2>
+<p>Before starting the change, snapshot these values and record them in the change ticket.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Pre-Change Value</th>
+<th>Post-Change Value</th>
+<th>Within Normal Range?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service error rate</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Response time (p95)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CPU utilisation</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Memory utilisation</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Active connections</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Fill in the Post-Change Value column immediately after implementation. Any column showing "No" is a potential rollback trigger.</p>
+<hr />
+<h2 id="escalation-during-post-check">Escalation During Post-Check<a class="headerlink" href="#escalation-during-post-check" title="Permanent link">&para;</a></h2>
+<p>If the post-change check reveals a problem:</p>
+<ol>
+<li>Do not close the change ticket or dismiss the change bridge</li>
+<li>Assess whether it meets backout criteria (defined in the backout plan)</li>
+<li>If backout criteria are met, initiate backout immediately</li>
+<li>If uncertain, escalate to the change owner before deciding to proceed</li>
+<li>Raise an incident ticket if the issue is causing or will likely cause user impact</li>
+<li>Do not exceed the rollback window without a conscious decision and documented justification</li>
+</ol>
+<hr />
+<h2 id="post-check-sign-off">Post-Check Sign-Off<a class="headerlink" href="#post-check-sign-off" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] All post-change checks completed and results documented in the change ticket</li>
+<li>[ ] Monitoring observation period confirmed and owner named</li>
+<li>[ ] Any anomalies investigated and either resolved or risk-accepted in writing</li>
+<li>[ ] Rollback window expiry time noted in the ticket</li>
+<li>[ ] Change owner notified of post-check completion status</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

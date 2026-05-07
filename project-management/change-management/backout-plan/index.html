@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#backout-criteria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Backout Criteria
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#backout-steps-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Backout Steps Template
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#backout-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Backout Checklist
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#validation-after-backout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Validation After Backout
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#post-backout-communication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Post-Backout Communication
       
     </span>
   </a>
@@ -810,41 +810,109 @@
 
 
 <h1 id="backout-plan">Backout Plan<a class="headerlink" href="#backout-plan" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Change Management Backout Plan notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A backout plan defines exactly how to reverse a change if it fails or causes unintended impact. Every change with a risk score above 2 must have a documented backout plan approved before implementation begins. A vague "restore from backup" is not an acceptable backout plan — it must be specific, tested, and actionable in the heat of an incident.</p>
+<hr />
+<h2 id="backout-criteria">Backout Criteria<a class="headerlink" href="#backout-criteria" title="Permanent link">&para;</a></h2>
+<p>Define trigger conditions clearly before the change window opens. The team should not need to debate whether to back out — the criteria decide it.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger Condition</th>
+<th>Recommended Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service fails to come back online within X min</td>
+<td>Initiate backout</td>
+</tr>
+<tr>
+<td>Error rate exceeds pre-defined threshold</td>
+<td>Initiate backout</td>
+</tr>
+<tr>
+<td>Monitoring alerts fire within rollback window</td>
+<td>Assess; likely backout</td>
+</tr>
+<tr>
+<td>Dependency service reports degradation</td>
+<td>Assess; notify and pause</td>
+</tr>
+<tr>
+<td>Go/no-go check fails during implementation</td>
+<td>Stop and backout</td>
+</tr>
+</tbody>
+</table>
+<p>Set the rollback decision deadline before starting — for example, "if service is not healthy by 02:30, we backout." Do not extend deadlines mid-window without explicit approval.</p>
+<hr />
+<h2 id="backout-steps-template">Backout Steps Template<a class="headerlink" href="#backout-steps-template" title="Permanent link">&para;</a></h2>
+<p>Document backout steps as a numbered, executable list. Example structure:</p>
+<ol>
+<li>Stop the deployment or configuration process</li>
+<li>Revert configuration files from backup taken at step X of the implementation plan</li>
+<li>Restart affected services in dependency order</li>
+<li>Validate service health (checks listed in the Validation section)</li>
+<li>Notify the change bridge / incident bridge of backout status</li>
+<li>Open an incident ticket if service has not recovered within 15 minutes of backout completion</li>
+</ol>
+<p>Each step should include the exact command or GUI action, the expected output, and what to do if the output is not as expected.</p>
+<hr />
+<h2 id="backout-checklist">Backout Checklist<a class="headerlink" href="#backout-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Backout plan written and reviewed by a peer before the change window</li>
+<li>[ ] Snapshot, backup, or config export taken immediately before implementation</li>
+<li>[ ] Rollback decision deadline agreed and documented</li>
+<li>[ ] All team members on the change bridge aware of backout criteria</li>
+<li>[ ] Backout has been tested in a non-production environment where possible</li>
+<li>[ ] Backout duration estimated (does it fit within the change window?)</li>
+<li>[ ] Customer / stakeholder communication drafted for backout scenario</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="validation-after-backout">Validation After Backout<a class="headerlink" href="#validation-after-backout" title="Permanent link">&para;</a></h2>
+<p>After executing a backout, confirm the environment has returned to baseline state.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service health endpoint</td>
+<td>HTTP 200 / healthy status</td>
+</tr>
+<tr>
+<td>Application logs</td>
+<td>No new errors introduced by change</td>
+</tr>
+<tr>
+<td>Monitoring dashboards</td>
+<td>Metrics back to pre-change baseline</td>
+</tr>
+<tr>
+<td>Downstream services</td>
+<td>No reported impact or degradation</td>
+</tr>
+<tr>
+<td>CMDB / config records</td>
+<td>Reflect pre-change state</td>
+</tr>
+</tbody>
+</table>
+<p>Document backout completion time and validation results in the change ticket.</p>
+<hr />
+<h2 id="post-backout-communication">Post-Backout Communication<a class="headerlink" href="#post-backout-communication" title="Permanent link">&para;</a></h2>
+<p>Once backout is confirmed complete and the environment is stable:</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>Update the incident or change ticket with backout timestamp and outcome</li>
+<li>Notify all stakeholders on the change distribution list</li>
+<li>Keep the change status as <code>Backed Out</code> — do not mark it as <code>Successful</code></li>
+<li>Schedule a post-implementation review (PIR) within 5 business days</li>
+<li>Identify root cause of backout trigger before rescheduling the change</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

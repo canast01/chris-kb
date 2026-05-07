@@ -21,7 +21,7 @@
     
     
       
-        <title>Triage - Chris KB</title>
+        <title>Incident Triage - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Triage · Chris KB">
+  <meta property="og:title" content="Incident Triage · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Triage · Chris KB">
+  <meta name="twitter:title" content="Incident Triage · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#triage" class="md-skip">
+        <a href="#incident-triage" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Triage
+              Incident Triage
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#triage-process-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Triage Process Flow
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#initial-diagnosis-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Initial Diagnosis Checklist
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#priority-assignment-guide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Priority Assignment Guide
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#ticket-creation-at-triage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Ticket Creation at Triage
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#escalate-or-investigate-solo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Escalate or Investigate Solo?
       
     </span>
   </a>
@@ -809,42 +809,127 @@
 
 
 
-<h1 id="triage">Triage<a class="headerlink" href="#triage" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Incident Management Triage notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Triage is the first structured activity after an alert fires or an issue is reported. The goal is to characterise the problem quickly — not to solve it. In 10–15 minutes, triage should produce a clear priority, an initial impact statement, and a decision about whether to escalate or investigate solo. Speed and accuracy both matter.</p>
+<hr />
+<h2 id="triage-process-flow">Triage Process Flow<a class="headerlink" href="#triage-process-flow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Acknowledge the alert or report — stop the escalation timer</li>
+<li>Identify the affected service(s) and their criticality</li>
+<li>Assess current user impact (from monitoring and direct checks)</li>
+<li>Set an initial priority</li>
+<li>Open an incident ticket</li>
+<li>Determine whether to escalate immediately or continue solo investigation</li>
+<li>Post initial update to stakeholders</li>
+</ol>
+<p>Complete steps 1–6 within 15 minutes for P1s and within 30 minutes for P2s.</p>
+<hr />
+<h2 id="initial-diagnosis-checklist">Initial Diagnosis Checklist<a class="headerlink" href="#initial-diagnosis-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Check monitoring dashboard for alerts on the affected service</li>
+<li>[ ] Check the service health endpoint or status page</li>
+<li>[ ] Review recent changes: any deployments, config changes, or infra work in the last 2 hours?</li>
+<li>[ ] Check infrastructure health: CPU, memory, disk, network on affected hosts</li>
+<li>[ ] Check application logs for errors around the time the issue started</li>
+<li>[ ] Check database connectivity and query performance if applicable</li>
+<li>[ ] Check upstream dependencies (are services this one relies on healthy?)</li>
+<li>[ ] Check downstream reports (are services consuming this one reporting issues?)</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="priority-assignment-guide">Priority Assignment Guide<a class="headerlink" href="#priority-assignment-guide" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complete service unavailable to all users</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Error rate &gt; 50% on primary user-facing function</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Partial outage affecting &gt; 30% of users</td>
+<td>P1 or P2</td>
+</tr>
+<tr>
+<td>Performance degraded, service still functional</td>
+<td>P2 or P3</td>
+</tr>
+<tr>
+<td>Single user or team affected</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Alert firing but no confirmed user impact</td>
+<td>P3 or P4</td>
+</tr>
+<tr>
+<td>Capacity warning (no current impact)</td>
+<td>P4</td>
+</tr>
+</tbody>
+</table>
+<p>When in doubt, start higher and de-escalate when you have more information.</p>
+<hr />
+<h2 id="ticket-creation-at-triage">Ticket Creation at Triage<a class="headerlink" href="#ticket-creation-at-triage" title="Permanent link">&para;</a></h2>
+<p>Create the incident ticket before deep investigation begins — not after. Minimum fields to complete at triage:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What to Enter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Short, factual description (e.g., "prod API returning 502")</td>
+</tr>
+<tr>
+<td>Priority</td>
+<td>Based on initial assessment</td>
+</tr>
+<tr>
+<td>Affected service</td>
+<td>CI name from CMDB</td>
+</tr>
+<tr>
+<td>Detection time</td>
+<td>When alert fired or issue was reported</td>
+</tr>
+<tr>
+<td>Impact summary</td>
+<td>Who is affected and how</td>
+</tr>
+<tr>
+<td>Initial findings</td>
+<td>What you have checked so far</td>
+</tr>
+<tr>
+<td>Assigned engineer</td>
+<td>Named individual taking the investigation</td>
+</tr>
+</tbody>
+</table>
+<p>Update the ticket as you learn more. A sparse ticket is better than a delayed one.</p>
+<hr />
+<h2 id="escalate-or-investigate-solo">Escalate or Investigate Solo?<a class="headerlink" href="#escalate-or-investigate-solo" title="Permanent link">&para;</a></h2>
+<p>Make this decision at the end of triage, not after 45 minutes of solo debugging.</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Is the priority P1? → Escalate immediately; open the bridge</li>
+<li>[ ] Has investigation been going 20 minutes with no clear path forward? → Escalate</li>
+<li>[ ] Does the scope suggest multiple services or systems? → Escalate</li>
+<li>[ ] Is a recent change the suspected cause? → Involve the change owner</li>
+<li>[ ] Is the issue in a vendor-managed component? → Open vendor ticket in parallel</li>
+<li>[ ] Is this within your area of expertise and scope is contained? → Proceed solo with a check-in reminder set</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

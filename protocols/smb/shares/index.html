@@ -21,7 +21,7 @@
     
     
       
-        <title>Shares - Chris KB</title>
+        <title>SMB Shares - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Shares · Chris KB">
+  <meta property="og:title" content="SMB Shares · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Shares · Chris KB">
+  <meta name="twitter:title" content="SMB Shares · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#shares" class="md-skip">
+        <a href="#smb-shares" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Shares
+              SMB Shares
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#creating-shares-with-powershell" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Creating Shares with PowerShell
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#creating-shares-with-net-share" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Creating Shares with net share
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#dfs-namespace-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        DFS Namespace Configuration
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#share-enumeration-and-auditing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Share Enumeration and Auditing
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#share-properties-and-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Share Properties and Limits
       
     </span>
   </a>
@@ -809,42 +809,122 @@
 
 
 
-<h1 id="shares">Shares<a class="headerlink" href="#shares" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SMB Shares notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="smb-shares">SMB Shares<a class="headerlink" href="#smb-shares" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SMB shares expose local filesystem paths to network clients. Shares can be created via Server Manager, PowerShell, or <code>net share</code>. DFS namespaces abstract share locations so clients do not need to know which server hosts a share. Hidden shares (trailing <code>$</code>) are not visible in browse lists but are fully accessible.</p>
+<table>
+<thead>
+<tr>
+<th>Share Type</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard</td>
+<td><code>\\server\Finance</code></td>
+<td>Visible in network browse</td>
+</tr>
+<tr>
+<td>Hidden</td>
+<td><code>\\server\Finance$</code></td>
+<td>Not listed; accessed by direct path</td>
+</tr>
+<tr>
+<td>Administrative</td>
+<td><code>C$</code>, <code>ADMIN$</code>, <code>IPC$</code></td>
+<td>Built-in, created automatically</td>
+</tr>
+<tr>
+<td>DFS</td>
+<td><code>\\domain\Finance</code></td>
+<td>Namespace target; redirects to physical share</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creating-shares-with-powershell">Creating Shares with PowerShell<a class="headerlink" href="#creating-shares-with-powershell" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a new share with tiered access</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>             <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>             <span class="n">-Description</span> <span class="s2">&quot;Finance department files&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>             <span class="n">-FullAccess</span> <span class="s2">&quot;DOMAIN\Domain Admins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>             <span class="n">-ChangeAccess</span> <span class="s2">&quot;DOMAIN\Finance_Users&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>             <span class="n">-ReadAccess</span> <span class="s2">&quot;DOMAIN\Auditors&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># List all shares</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Get-SmbShare</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># View a specific share</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># Remove a share (does not delete the folder)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Remove-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Force</span>
+</code></pre></div>
+<h2 id="creating-shares-with-net-share">Creating Shares with net share<a class="headerlink" href="#creating-shares-with-net-share" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create share</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>net<span class="w"> </span>share<span class="w"> </span><span class="nv">Finance</span><span class="o">=</span>C:<span class="se">\S</span>hares<span class="se">\F</span>inance<span class="w"> </span>/REMARK:<span class="s2">&quot;Finance dept&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create hidden share</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>net<span class="w"> </span>share<span class="w"> </span>Finance$<span class="o">=</span>C:<span class="se">\S</span>hares<span class="se">\F</span>inance
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set access grants at creation time</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>net<span class="w"> </span>share<span class="w"> </span><span class="nv">Finance</span><span class="o">=</span>C:<span class="se">\S</span>hares<span class="se">\F</span>inance<span class="w"> </span>/GRANT:<span class="s2">&quot;DOMAIN\Finance_Users,CHANGE&quot;</span><span class="w"> </span>/GRANT:<span class="s2">&quot;DOMAIN\Domain Admins,FULL&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete share</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>net<span class="w"> </span>share<span class="w"> </span>Finance<span class="w"> </span>/DELETE
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List all shares</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>net<span class="w"> </span>share
+</code></pre></div>
+<h2 id="dfs-namespace-configuration">DFS Namespace Configuration<a class="headerlink" href="#dfs-namespace-configuration" title="Permanent link">&para;</a></h2>
+<p>DFS namespaces allow clients to access shares via a unified path regardless of which server hosts the data.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Install DFS Namespaces role</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">FS-DFS-Namespace</span><span class="p">,</span> <span class="n">RSAT-DFS-Mgmt-Con</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Create a domain-based DFS namespace</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">New-DfsnRoot</span> <span class="n">-Path</span> <span class="s2">&quot;\\corp.example.com\Files&quot;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;\\fileserver01\Files&quot;</span> <span class="n">-Type</span> <span class="n">DomainV2</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Add a folder (link) in the namespace</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">New-DfsnFolder</span> <span class="n">-Path</span> <span class="s2">&quot;\\corp.example.com\Files\Finance&quot;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;\\fileserver01\Finance&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Add a second target for redundancy</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">New-DfsnFolderTarget</span> <span class="n">-Path</span> <span class="s2">&quot;\\corp.example.com\Files\Finance&quot;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;\\fileserver02\Finance&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># View all namespace folders</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-DfsnFolder</span> <span class="n">-Path</span> <span class="s2">&quot;\\corp.example.com\Files\*&quot;</span>
+</code></pre></div>
+<h2 id="share-enumeration-and-auditing">Share Enumeration and Auditing<a class="headerlink" href="#share-enumeration-and-auditing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List shares on a remote server</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-SmbShare</span> <span class="n">-CimSession</span> <span class="s2">&quot;fileserver01&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Export share list to CSV</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">ConcurrentUserLimit</span> <span class="p">|</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Audit\Shares_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="o">-f</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Find shares with Everyone having access</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="nv">$name</span> <span class="p">|</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AccountName</span> <span class="o">-eq</span> <span class="s2">&quot;Everyone&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Share&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$name</span><span class="p">}},</span> <span class="n">AccessRight</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="share-properties-and-limits">Share Properties and Limits<a class="headerlink" href="#share-properties-and-limits" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Modify share description and connection limit</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Finance Q2 archive&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">200</span> <span class="n">-Force</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Enable access-based enumeration (users only see files they can access)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-FolderEnumerationMode</span> <span class="n">AccessBased</span> <span class="n">-Force</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Disable access-based enumeration</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-FolderEnumerationMode</span> <span class="n">Unrestricted</span> <span class="n">-Force</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Check share caching setting (offline files)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">CachingMode</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Options: None, Manual, Documents, Programs, BranchCache</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-CachingMode</span> <span class="n">None</span> <span class="n">-Force</span>
+</code></pre></div>
 
 
 

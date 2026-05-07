@@ -21,7 +21,7 @@
     
     
       
-        <title>Practice Notes - Chris KB</title>
+        <title>SAN Practice Notes - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Practice Notes · Chris KB">
+  <meta property="og:title" content="SAN Practice Notes · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Practice Notes · Chris KB">
+  <meta name="twitter:title" content="SAN Practice Notes · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#practice-notes" class="md-skip">
+        <a href="#san-practice-notes" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Practice Notes
+              SAN Practice Notes
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#zoning-exam-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Zoning Exam Questions
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#fabric-login-sequence-common-error-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Fabric Login Sequence — Common Error Scenarios
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#common-wrong-answers-to-avoid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Common Wrong Answers to Avoid
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#key-numbers-to-memorize" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Key Numbers to Memorize
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#quick-reference-brocade-vs-cisco-terminology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Quick Reference: Brocade vs Cisco Terminology
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,179 @@
 
 
 
-<h1 id="practice-notes">Practice Notes<a class="headerlink" href="#practice-notes" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SAN Practice Notes notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="san-practice-notes">SAN Practice Notes<a class="headerlink" href="#san-practice-notes" title="Permanent link">&para;</a></h1>
+<h2 id="zoning-exam-questions">Zoning Exam Questions<a class="headerlink" href="#zoning-exam-questions" title="Permanent link">&para;</a></h2>
+<p>Most SAN exam zoning questions test:
+1. Whether to use WWPN zoning vs port (domain:port) zoning
+2. Single-initiator single-target vs single-initiator multi-target zone design
+3. What happens when a zone set is not activated
+4. Hard vs soft zoning enforcement</p>
+<table>
+<thead>
+<tr>
+<th>Question Type</th>
+<th>Key Discriminator</th>
+<th>Correct Answer Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Zone change not taking effect"</td>
+<td>Zone set activation</td>
+<td>Zone DB changes require zone set activation to take effect</td>
+</tr>
+<tr>
+<td>"New HBA added, no access"</td>
+<td>WWPN must be in zone</td>
+<td>Add new WWPN to zone and re-activate zone set</td>
+</tr>
+<tr>
+<td>"Maximum security"</td>
+<td>Hard zoning</td>
+<td>Hard zoning enforced in hardware; soft zoning in Name Server only</td>
+</tr>
+<tr>
+<td>"HBA replaced"</td>
+<td>WWPN changes</td>
+<td>WWPN-based zones must be updated; port zoning survives HBA swap</td>
+</tr>
+<tr>
+<td>"Zone on wrong switch"</td>
+<td>Fabric-wide zone DB</td>
+<td>Zone DB is distributed across the fabric via RSCNs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fabric-login-sequence-common-error-scenarios">Fabric Login Sequence — Common Error Scenarios<a class="headerlink" href="#fabric-login-sequence-common-error-scenarios" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Investigation Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host not visible in Name Server</td>
+<td>FLOGI not completing</td>
+<td>Check for Domain ID conflict; verify F_Port link</td>
+</tr>
+<tr>
+<td>Host cannot see target LUN</td>
+<td>Zone not including both WWPN</td>
+<td>Check active zone set for both initiator and target WWPN</td>
+</tr>
+<tr>
+<td>Intermittent I/O errors</td>
+<td>ISL congestion or BB_Credit exhaustion</td>
+<td>Check ISL utilization; check buffer-to-buffer credits</td>
+</tr>
+<tr>
+<td>Fabric segmentation</td>
+<td>Domain ID conflict during switch merge</td>
+<td>Verify domain IDs are unique before connecting switches</td>
+</tr>
+<tr>
+<td>RSCN storm</td>
+<td>Too many devices logging in/out</td>
+<td>Check for flapping links; consider RSCN fencing per-zone</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-wrong-answers-to-avoid">Common Wrong Answers to Avoid<a class="headerlink" href="#common-wrong-answers-to-avoid" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Zone set = zone</strong>: A zone set is a collection of zones. Activating a zone set activates all zones in it. Only one zone set can be active at a time per fabric.</li>
+<li><strong>WWNN for zoning</strong>: Always zone by WWPN. WWNN identifies the HBA card; WWPN identifies each individual port.</li>
+<li><strong>Soft zoning = same security as hard</strong>: Soft zoning only prevents Name Server queries; a host with a direct FCID can still communicate. Hard zoning blocks at the ASIC level.</li>
+<li><strong>ISL and E_Port are different things</strong>: E_Port is the port type; ISL is the link between two E_Ports. A trunked ISL uses TE_Ports.</li>
+<li><strong>Domain ID range</strong>: Valid domain IDs are 1–239. Exam questions sometimes include 0 or 240+ as wrong options.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="key-numbers-to-memorize">Key Numbers to Memorize<a class="headerlink" href="#key-numbers-to-memorize" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FCID bit width</td>
+<td>24 bits (Domain 8 + Area 8 + Port 8)</td>
+</tr>
+<tr>
+<td>Valid domain ID range</td>
+<td>1–239</td>
+</tr>
+<tr>
+<td>Max switches in a single FC fabric</td>
+<td>239</td>
+</tr>
+<tr>
+<td>FC frame max payload</td>
+<td>2112 bytes</td>
+</tr>
+<tr>
+<td>BB_Credit default (Brocade)</td>
+<td>16</td>
+</tr>
+<tr>
+<td>FC-16G line rate</td>
+<td>14.025 Gbps (usable after 64B/66B encoding)</td>
+</tr>
+<tr>
+<td>WWPN length</td>
+<td>64 bits (8 bytes), displayed as 16 hex digits</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-reference-brocade-vs-cisco-terminology">Quick Reference: Brocade vs Cisco Terminology<a class="headerlink" href="#quick-reference-brocade-vs-cisco-terminology" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Brocade (FOS)</th>
+<th>Cisco (NX-OS / MDS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Virtual fabric</td>
+<td>Virtual Fabric (VF)</td>
+<td>VSAN</td>
+</tr>
+<tr>
+<td>ISL trunking</td>
+<td>ISL Trunking</td>
+<td>PortChannel</td>
+</tr>
+<tr>
+<td>Zone database</td>
+<td>Zone DB</td>
+<td>Zone DB</td>
+</tr>
+<tr>
+<td>Principal switch</td>
+<td>Fabric Principal</td>
+<td>Principal Switch</td>
+</tr>
+<tr>
+<td>Admin command</td>
+<td>CLI: <code>switchshow</code>, <code>zoneshow</code></td>
+<td>CLI: <code>show flogi database</code>, <code>show zone</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Practice 10 zoning scenario questions and identify the zone set activation trap</li>
+<li>[ ] Memorize FCID structure (24-bit = Domain + Area + Port)</li>
+<li>[ ] Know the difference between hard and soft zoning enforcement</li>
+<li>[ ] Understand why WWPN changes when an HBA is replaced</li>
+<li>[ ] Review Brocade and Cisco equivalent terminology</li>
+<li>[ ] Study RSCN behavior and when RSCN fencing is beneficial</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

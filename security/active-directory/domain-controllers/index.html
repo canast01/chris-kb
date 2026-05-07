@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#fsmo-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        FSMO Roles
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#promoting-a-new-dc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Promoting a New DC
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#demoting-a-dc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Demoting a DC
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#transferring-and-seizing-fsmo-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Transferring and Seizing FSMO Roles
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#dc-health-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        DC Health Validation
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#time-synchronisation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Time Synchronisation
       
     </span>
   </a>
@@ -810,42 +810,122 @@
 
 
 <h1 id="domain-controllers">Domain Controllers<a class="headerlink" href="#domain-controllers" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Active Directory Domain Controllers notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Domain Controllers host the AD DS database (ntds.dit), authenticate users, and hold FSMO roles. Understanding DC roles and how to manage them is essential for AD operations.</p>
+<h2 id="fsmo-roles">FSMO Roles<a class="headerlink" href="#fsmo-roles" title="Permanent link">&para;</a></h2>
+<p>Five Flexible Single Master Operations roles exist across forest and domain levels. Only one DC holds each role at a time.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Scope</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema Master</td>
+<td>Forest</td>
+<td>Controls AD schema changes</td>
+</tr>
+<tr>
+<td>Domain Naming Master</td>
+<td>Forest</td>
+<td>Adds/removes domains in the forest</td>
+</tr>
+<tr>
+<td>PDC Emulator</td>
+<td>Domain</td>
+<td>Password sync, time authority, legacy client support</td>
+</tr>
+<tr>
+<td>RID Master</td>
+<td>Domain</td>
+<td>Allocates RID pools to DCs for new object SIDs</td>
+</tr>
+<tr>
+<td>Infrastructure Master</td>
+<td>Domain</td>
+<td>Resolves cross-domain object references</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Show all FSMO role holders
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>netdom query fsmo
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Show via PowerShell
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-ADDomain | Select-Object PDCEmulator, RIDMaster, InfrastructureMaster
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
+</code></pre></div>
+<h2 id="promoting-a-new-dc">Promoting a New DC<a class="headerlink" href="#promoting-a-new-dc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install AD DS role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Promote as additional DC in existing domain</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Import-Module</span> <span class="n">ADDSDeployment</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Install-ADDSDomainController</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">-DomainName</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">-InstallDns</span><span class="p">:</span><span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">-SafeModeAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
+</code></pre></div>
+<h2 id="demoting-a-dc">Demoting a DC<a class="headerlink" href="#demoting-a-dc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Graceful demotion</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Uninstall-ADDSDomainController</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-LocalAdministratorPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-Force</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Metadata cleanup if DC is already offline</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">ntdsutil</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">metadata</span> <span class="n">cleanup</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="n">remove</span> <span class="n">selected</span> <span class="n">server</span> <span class="n">CN</span><span class="p">=</span><span class="n">DC02</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Servers</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="k">Default</span><span class="n">-First-Site</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Sites</span><span class="p">,</span><span class="n">CN</span><span class="p">=</span><span class="n">Configuration</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">corp</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">example</span><span class="p">,</span><span class="n">DC</span><span class="p">=</span><span class="n">com</span>
+</code></pre></div>
+<h2 id="transferring-and-seizing-fsmo-roles">Transferring and Seizing FSMO Roles<a class="headerlink" href="#transferring-and-seizing-fsmo-roles" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Transfer PDC Emulator gracefully</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Transfer multiple roles</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="s2">&quot;DC02&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Seize a role (only if original holder is permanently offline)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">ntdsutil</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">roles</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">connections</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">connect</span> <span class="n">to</span> <span class="n">server</span> <span class="n">DC02</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  <span class="n">quit</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  <span class="n">seize</span> <span class="n">pdc</span>
+</code></pre></div>
+<h2 id="dc-health-validation">DC Health Validation<a class="headerlink" href="#dc-health-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Run all dcdiag tests
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dcdiag /test:all /v
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Check replication health
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>repadmin /showrepl
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a># Check DC services
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sc query NTDS
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>sc query Netlogon
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>sc query W32Time
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sc query DFSR
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a># Verify AD database integrity
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ntdsutil &quot;activate instance ntds&quot; &quot;files&quot; &quot;integrity&quot; quit quit
+</code></pre></div>
+<h2 id="time-synchronisation">Time Synchronisation<a class="headerlink" href="#time-synchronisation" title="Permanent link">&para;</a></h2>
+<p>The PDC Emulator is the authoritative time source for the domain. All other DCs and clients sync from the hierarchy.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Check current time source
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>w32tm /query /source
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Force resync
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>w32tm /resync /force
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a># Configure PDC Emulator to sync from external NTP
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>w32tm /config /manualpeerlist:&quot;pool.ntp.org&quot; /syncfromflags:manual /reliable:YES /update
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a># Check time skew across DCs
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>w32tm /monitor /computers:dc01,dc02,dc03
+</code></pre></div>
 
 
 

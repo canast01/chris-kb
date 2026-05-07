@@ -21,7 +21,7 @@
     
     
       
-        <title>Sizing - Chris KB</title>
+        <title>GPU Sizing for AI Workloads - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sizing · Chris KB">
+  <meta property="og:title" content="GPU Sizing for AI Workloads · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Sizing · Chris KB">
+  <meta name="twitter:title" content="GPU Sizing for AI Workloads · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sizing" class="md-skip">
+        <a href="#gpu-sizing-for-ai-workloads" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sizing
+              GPU Sizing for AI Workloads
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#training-vs-inference-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Training vs Inference Requirements
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#vram-sizing-guide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        VRAM Sizing Guide
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#gpu-specifications-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        GPU Specifications Reference
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#estimating-tokens-per-second" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Estimating Tokens Per Second
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#cloud-instance-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Cloud Instance Selection
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#multi-gpu-strategies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Multi-GPU Strategies
       
     </span>
   </a>
@@ -809,42 +809,250 @@
 
 
 
-<h1 id="sizing">Sizing<a class="headerlink" href="#sizing" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Gpu Workloads Sizing notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="gpu-sizing-for-ai-workloads">GPU Sizing for AI Workloads<a class="headerlink" href="#gpu-sizing-for-ai-workloads" title="Permanent link">&para;</a></h1>
+<p>Selecting the right GPU — and the right number of them — depends on model size, task type (training vs inference), throughput requirements, and budget. This page provides a practical sizing framework.</p>
+<h2 id="training-vs-inference-requirements">Training vs Inference Requirements<a class="headerlink" href="#training-vs-inference-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Training</th>
+<th>Inference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VRAM per model</td>
+<td>Full weights + gradients + optimiser states (~16-20× param bytes in FP32)</td>
+<td>Weights only (~2× param bytes in FP16/INT8)</td>
+</tr>
+<tr>
+<td>Compute intensity</td>
+<td>Very high, sustained</td>
+<td>Lower, bursty</td>
+</tr>
+<tr>
+<td>Latency tolerance</td>
+<td>High (batch jobs)</td>
+<td>Low (real-time)</td>
+</tr>
+<tr>
+<td>Multi-GPU benefit</td>
+<td>High (data/model parallelism)</td>
+<td>Moderate (batching)</td>
+</tr>
+<tr>
+<td>Preferred GPUs</td>
+<td>A100, H100, H200</td>
+<td>A10G, L4, L40S, T4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vram-sizing-guide">VRAM Sizing Guide<a class="headerlink" href="#vram-sizing-guide" title="Permanent link">&para;</a></h2>
+<p>Rule of thumb for parameter count to VRAM:</p>
+<table>
+<thead>
+<tr>
+<th>Model Params</th>
+<th>FP32 Training VRAM</th>
+<th>FP16 Training VRAM</th>
+<th>FP16 Inference VRAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7B</td>
+<td>~112 GB</td>
+<td>~56 GB</td>
+<td>~14 GB</td>
+</tr>
+<tr>
+<td>13B</td>
+<td>~208 GB</td>
+<td>~104 GB</td>
+<td>~26 GB</td>
+</tr>
+<tr>
+<td>30B</td>
+<td>~480 GB</td>
+<td>~240 GB</td>
+<td>~60 GB</td>
+</tr>
+<tr>
+<td>70B</td>
+<td>~1120 GB</td>
+<td>~560 GB</td>
+<td>~140 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Actual VRAM usage is always higher due to activations, KV cache (inference), and framework overhead. Add 20–30% buffer.</p>
+<h2 id="gpu-specifications-reference">GPU Specifications Reference<a class="headerlink" href="#gpu-specifications-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>VRAM</th>
+<th>FP16 TFLOPS</th>
+<th>Memory BW</th>
+<th>NVLink</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA T4</td>
+<td>16 GB</td>
+<td>65</td>
+<td>300 GB/s</td>
+<td>No</td>
+<td>Low-cost inference</td>
+</tr>
+<tr>
+<td>NVIDIA A10G</td>
+<td>24 GB</td>
+<td>125</td>
+<td>600 GB/s</td>
+<td>No</td>
+<td>Inference, fine-tuning</td>
+</tr>
+<tr>
+<td>NVIDIA L4</td>
+<td>24 GB</td>
+<td>121</td>
+<td>300 GB/s</td>
+<td>No</td>
+<td>Inference, cost-optimised</td>
+</tr>
+<tr>
+<td>NVIDIA L40S</td>
+<td>48 GB</td>
+<td>362</td>
+<td>864 GB/s</td>
+<td>No</td>
+<td>Large model inference</td>
+</tr>
+<tr>
+<td>NVIDIA A100 40GB</td>
+<td>40 GB</td>
+<td>312</td>
+<td>1555 GB/s</td>
+<td>Yes</td>
+<td>Training</td>
+</tr>
+<tr>
+<td>NVIDIA A100 80GB</td>
+<td>80 GB</td>
+<td>312</td>
+<td>2000 GB/s</td>
+<td>Yes</td>
+<td>Large model training</td>
+</tr>
+<tr>
+<td>NVIDIA H100 SXM</td>
+<td>80 GB</td>
+<td>989</td>
+<td>3350 GB/s</td>
+<td>Yes</td>
+<td>Large scale training</td>
+</tr>
+<tr>
+<td>NVIDIA H200</td>
+<td>141 GB</td>
+<td>989</td>
+<td>4800 GB/s</td>
+<td>Yes</td>
+<td>Very large models</td>
+</tr>
+</tbody>
+</table>
+<h2 id="estimating-tokens-per-second">Estimating Tokens Per Second<a class="headerlink" href="#estimating-tokens-per-second" title="Permanent link">&para;</a></h2>
+<p>For LLM inference, throughput depends on memory bandwidth (memory-bound at low batch sizes) and compute (compute-bound at high batch sizes).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Rough tokens/sec estimate for memory-bound inference</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">estimate_tokens_per_sec</span><span class="p">(</span><span class="n">model_params_b</span><span class="p">,</span> <span class="n">gpu_mem_bw_tb_per_s</span><span class="p">,</span> <span class="n">precision_bytes</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="c1"># Bytes per parameter</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">bytes_per_param</span> <span class="o">=</span> <span class="n">precision_bytes</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="c1"># Total model bytes</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">model_size_gb</span> <span class="o">=</span> <span class="n">model_params_b</span> <span class="o">*</span> <span class="mf">1e9</span> <span class="o">*</span> <span class="n">bytes_per_param</span> <span class="o">/</span> <span class="mf">1e9</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># Memory bandwidth in GB/s</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">bw_gb_s</span> <span class="o">=</span> <span class="n">gpu_mem_bw_tb_per_s</span> <span class="o">*</span> <span class="mi">1000</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1"># Approximate tokens/sec (each token requires reading all weights once)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">return</span> <span class="n">bw_gb_s</span> <span class="o">/</span> <span class="n">model_size_gb</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Example: 7B model in FP16 on A100 80GB (2000 GB/s)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">tps</span> <span class="o">=</span> <span class="n">estimate_tokens_per_sec</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;~</span><span class="si">{</span><span class="n">tps</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> tokens/sec&quot;</span><span class="p">)</span>  <span class="c1"># ~285 tokens/sec per GPU at batch=1</span>
+</code></pre></div>
+<h2 id="cloud-instance-selection">Cloud Instance Selection<a class="headerlink" href="#cloud-instance-selection" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Instance</th>
+<th>GPUs</th>
+<th>VRAM</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS</td>
+<td>p3.2xlarge</td>
+<td>1x V100 16GB</td>
+<td>16 GB</td>
+<td>Dev, small models</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>p4d.24xlarge</td>
+<td>8x A100 40GB</td>
+<td>320 GB</td>
+<td>Training</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>p5.48xlarge</td>
+<td>8x H100 80GB</td>
+<td>640 GB</td>
+<td>LLM training</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>g5.xlarge</td>
+<td>1x A10G</td>
+<td>24 GB</td>
+<td>Inference</td>
+</tr>
+<tr>
+<td>GCP</td>
+<td>a2-highgpu-8g</td>
+<td>8x A100 40GB</td>
+<td>320 GB</td>
+<td>Training</td>
+</tr>
+<tr>
+<td>Azure</td>
+<td>Standard_NC96ads_A100_v4</td>
+<td>4x A100 80GB</td>
+<td>320 GB</td>
+<td>Training/inference</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-gpu-strategies">Multi-GPU Strategies<a class="headerlink" href="#multi-gpu-strategies" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check GPU topology before choosing parallelism strategy</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nvidia-smi<span class="w"> </span>topo<span class="w"> </span>-m
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># NV# = NVLink hops, PHB = PCIe host bridge, SYS = cross-socket</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Tensor parallelism splits a single layer across GPUs (requires NVLink)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Use for models that don&#39;t fit on a single GPU</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Pipeline parallelism splits layers across GPUs (works over PCIe)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Use when NVLink is unavailable</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Data parallelism replicates model across GPUs, splits batch</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Use when model fits on one GPU and you need higher throughput</span>
+</code></pre></div>
 
 
 

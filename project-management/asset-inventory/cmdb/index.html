@@ -21,7 +21,7 @@
     
     
       
-        <title>Cmdb - Chris KB</title>
+        <title>CMDB Data Quality and Management - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cmdb · Chris KB">
+  <meta property="og:title" content="CMDB Data Quality and Management · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cmdb · Chris KB">
+  <meta name="twitter:title" content="CMDB Data Quality and Management · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cmdb" class="md-skip">
+        <a href="#cmdb-data-quality-and-management" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cmdb
+              CMDB Data Quality and Management
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#core-data-quality-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Core Data Quality Dimensions
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#ci-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        CI Relationships
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#import-sources-and-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Import Sources and Integration
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#servicenow-integration-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        ServiceNow Integration Notes
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#governance-and-review-cadence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Governance and Review Cadence
       
     </span>
   </a>
@@ -809,42 +809,150 @@
 
 
 
-<h1 id="cmdb">Cmdb<a class="headerlink" href="#cmdb" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Asset Inventory Cmdb notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="cmdb-data-quality-and-management">CMDB Data Quality and Management<a class="headerlink" href="#cmdb-data-quality-and-management" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A CMDB is only valuable if the data in it is trusted. Poor data quality leads to failed changes, missed impact assessments, and incorrect billing. This page covers the practices that keep CI records accurate, relationships meaningful, and import processes reliable.</p>
+<hr />
+<h2 id="core-data-quality-dimensions">Core Data Quality Dimensions<a class="headerlink" href="#core-data-quality-dimensions" title="Permanent link">&para;</a></h2>
+<p>Target these quality dimensions across all CI classes.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Definition</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Completeness</td>
+<td>All mandatory fields populated</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>Attribute values match discovered/actual state</td>
+<td>&gt; 95%</td>
+</tr>
+<tr>
+<td>Timeliness</td>
+<td>Records updated within 48h of change</td>
+<td>&gt; 90%</td>
+</tr>
+<tr>
+<td>Consistency</td>
+<td>Naming and classification follows standards</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Relationship</td>
+<td>CIs linked to upstream/downstream dependencies</td>
+<td>&gt; 80%</td>
+</tr>
+</tbody>
+</table>
+<p>Run a quality report monthly. Flag CIs scoring below threshold for remediation.</p>
+<hr />
+<h2 id="ci-relationships">CI Relationships<a class="headerlink" href="#ci-relationships" title="Permanent link">&para;</a></h2>
+<p>Relationships are what differentiate a CMDB from a flat asset spreadsheet. Common relationship types:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Hosted on</strong> — Application CI hosted on a server CI</li>
+<li><strong>Depends on</strong> — Service depends on a database CI</li>
+<li><strong>Connected to</strong> — Network device connected to another device</li>
+<li><strong>Runs on</strong> — Software running on an OS CI</li>
+<li><strong>Virtualised by</strong> — VM virtualised by a hypervisor CI</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>When onboarding a new CI, always map at minimum one upstream and one downstream relationship before marking the record as active.</p>
+<hr />
+<h2 id="import-sources-and-integration">Import Sources and Integration<a class="headerlink" href="#import-sources-and-integration" title="Permanent link">&para;</a></h2>
+<p>CIs should be populated from authoritative sources, not entered manually where avoidable.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>CI Classes</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ServiceNow Discovery</td>
+<td>Servers, network devices, VMs</td>
+<td>Scheduled probe</td>
+</tr>
+<tr>
+<td>AWS Config</td>
+<td>EC2, RDS, S3, VPC</td>
+<td>API integration</td>
+</tr>
+<tr>
+<td>Azure Resource Graph</td>
+<td>All Azure resource types</td>
+<td>API integration</td>
+</tr>
+<tr>
+<td>Ansible inventory</td>
+<td>Servers, containers</td>
+<td>Playbook fact export</td>
+</tr>
+<tr>
+<td>Manual import (CSV)</td>
+<td>Contracts, hardware not on-net</td>
+<td>Validated template import</td>
+</tr>
+</tbody>
+</table>
+<p>Always validate imports against the CI naming standard before committing. Reject records with missing mandatory fields.</p>
+<hr />
+<h2 id="servicenow-integration-notes">ServiceNow Integration Notes<a class="headerlink" href="#servicenow-integration-notes" title="Permanent link">&para;</a></h2>
+<p>Key configuration items for ServiceNow CMDB integrations:</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Discovery schedules set per environment (not a single global sweep)</li>
+<li>[ ] Identification rules configured to prevent duplicate CI creation</li>
+<li>[ ] IRE (Identification and Reconciliation Engine) rules reviewed for each CI class</li>
+<li>[ ] Transform maps for CSV imports tested in dev before production</li>
+<li>[ ] Stale CI threshold set (e.g., flag CIs not discovered in 30 days)</li>
+<li>[ ] CMDB Health Dashboard reviewed weekly by Asset Manager</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>For reconciliation conflicts, prefer discovered data over manually entered data unless the CI is in a class excluded from discovery (e.g., third-party SaaS).</p>
+<hr />
+<h2 id="governance-and-review-cadence">Governance and Review Cadence<a class="headerlink" href="#governance-and-review-cadence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Frequency</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CMDB health report review</td>
+<td>Weekly</td>
+<td>Asset Manager</td>
+</tr>
+<tr>
+<td>Stale CI remediation sprint</td>
+<td>Monthly</td>
+<td>Infra team</td>
+</tr>
+<tr>
+<td>Relationship coverage review</td>
+<td>Quarterly</td>
+<td>Architect / CMDB Admin</td>
+</tr>
+<tr>
+<td>Full audit reconciliation</td>
+<td>Quarterly</td>
+<td>Asset Manager</td>
+</tr>
+<tr>
+<td>Naming standard review</td>
+<td>Annually</td>
+<td>Configuration Manager</td>
+</tr>
+</tbody>
+</table>
 
 
 

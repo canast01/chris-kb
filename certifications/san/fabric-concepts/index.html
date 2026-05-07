@@ -21,7 +21,7 @@
     
     
       
-        <title>Fabric Concepts - Chris KB</title>
+        <title>SAN Fabric Concepts - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Fabric Concepts · Chris KB">
+  <meta property="og:title" content="SAN Fabric Concepts · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Fabric Concepts · Chris KB">
+  <meta name="twitter:title" content="SAN Fabric Concepts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fabric-concepts" class="md-skip">
+        <a href="#san-fabric-concepts" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Fabric Concepts
+              SAN Fabric Concepts
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#fibre-channel-layer-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Fibre Channel Layer Model
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#port-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Port Types
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#wwpn-vs-wwnn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        WWPN vs WWNN
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#fabric-ids-and-domain-ids" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Fabric IDs and Domain IDs
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#fabric-login-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Fabric Login Sequence
       
     </span>
   </a>
@@ -779,10 +779,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#fabric-services-well-known-addresses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Fabric Services (Well-Known Addresses)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#study-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +820,173 @@
 
 
 
-<h1 id="fabric-concepts">Fabric Concepts<a class="headerlink" href="#fabric-concepts" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SAN Fabric Concepts notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="san-fabric-concepts">SAN Fabric Concepts<a class="headerlink" href="#san-fabric-concepts" title="Permanent link">&para;</a></h1>
+<h2 id="fibre-channel-layer-model">Fibre Channel Layer Model<a class="headerlink" href="#fibre-channel-layer-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Name</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FC-0</td>
+<td>Physical</td>
+<td>Media, connectors, transceivers (SFP+)</td>
+</tr>
+<tr>
+<td>FC-1</td>
+<td>Encode/Decode</td>
+<td>8B/10B or 64B/66B encoding, serial transmission</td>
+</tr>
+<tr>
+<td>FC-2</td>
+<td>Framing and Signaling</td>
+<td>Frame format, flow control, sequencing, error detection</td>
+</tr>
+<tr>
+<td>FC-3</td>
+<td>Common Services</td>
+<td>Hunt groups, multicast (rarely used)</td>
+</tr>
+<tr>
+<td>FC-4</td>
+<td>Upper Layer Protocols</td>
+<td>FCP (SCSI over FC), FICON, NVMe-FC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N_Port</td>
+<td>Node Port</td>
+<td>Host or storage HBA port connecting to the fabric</td>
+</tr>
+<tr>
+<td>F_Port</td>
+<td>Fabric Port</td>
+<td>Switch port connecting to an N_Port (end device)</td>
+</tr>
+<tr>
+<td>E_Port</td>
+<td>Expansion Port</td>
+<td>Switch-to-switch interswitch link (ISL)</td>
+</tr>
+<tr>
+<td>TE_Port</td>
+<td>Trunked E_Port</td>
+<td>ISL carrying multiple VSANs over one physical link (Cisco)</td>
+</tr>
+<tr>
+<td>NL_Port</td>
+<td>Node Loop Port</td>
+<td>Node port on arbitrated loop (FC-AL; legacy)</td>
+</tr>
+<tr>
+<td>G_Port</td>
+<td>Generic Port</td>
+<td>Auto-negotiates to F_Port or E_Port</td>
+</tr>
+<tr>
+<td>U_Port</td>
+<td>Universal Port</td>
+<td>Pre-login, before role is determined</td>
+</tr>
+</tbody>
+</table>
+<h2 id="wwpn-vs-wwnn">WWPN vs WWNN<a class="headerlink" href="#wwpn-vs-wwnn" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Full Name</th>
+<th>Scope</th>
+<th>Used In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WWNN</td>
+<td>World Wide Node Name</td>
+<td>HBA card (host/storage node)</td>
+<td>Identifies the physical HBA; one per HBA</td>
+</tr>
+<tr>
+<td>WWPN</td>
+<td>World Wide Port Name</td>
+<td>Each port on the HBA</td>
+<td>Zoning, LUN masking; one per port</td>
+</tr>
+</tbody>
+</table>
+<p>Key exam rule: Zoning is done using WWPN, not WWNN. A dual-port HBA has 1 WWNN and 2 WWPNs.</p>
+<h2 id="fabric-ids-and-domain-ids">Fabric IDs and Domain IDs<a class="headerlink" href="#fabric-ids-and-domain-ids" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Domain ID</strong>: Unique 8-bit identifier for each switch in a fabric (1–239 valid; 0 and 240–255 reserved)</li>
+<li><strong>Area ID</strong>: 8-bit identifier for a port group within a switch</li>
+<li><strong>Port ID (FCID)</strong>: 24-bit address = Domain ID (8) + Area ID (8) + Port ID (8) — assigned during fabric login</li>
+<li>Fabric Principal Switch: elected via FSPF; assigns Domain IDs to other switches during merge</li>
+<li>Domain ID conflicts cause fabric segmentation — critical exam topic</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="fabric-login-sequence">Fabric Login Sequence<a class="headerlink" href="#fabric-login-sequence" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>FLOGI (Fabric Login)</strong>: N_Port sends FLOGI to well-known address FF:FF:FE requesting a Fibre Channel address (FCID)</li>
+<li><strong>PLOGI (Port Login)</strong>: N_Port logs in to another N_Port or F_Port to establish session</li>
+<li><strong>PRLI (Process Login)</strong>: Upper-layer protocol login (e.g., SCSI-3 or NVMe); establishes exchange parameters</li>
+<li><strong>LOGO (Logout)</strong>: Terminates session; can be implicit (link down) or explicit</li>
+</ol>
+<h2 id="fabric-services-well-known-addresses">Fabric Services (Well-Known Addresses)<a class="headerlink" href="#fabric-services-well-known-addresses" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FF:FF:FE</td>
+<td>Fabric Login (FLOGI)</td>
+</tr>
+<tr>
+<td>FF:FF:FD</td>
+<td>Fabric Controller</td>
+</tr>
+<tr>
+<td>FF:FF:FC</td>
+<td>Name Server (FCNS) — registers WWPNs and FCIDs</td>
+</tr>
+<tr>
+<td>FF:FF:FB</td>
+<td>Fabric Configuration Server</td>
+</tr>
+<tr>
+<td>FF:FF:FA</td>
+<td>Management Server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Explain each FC layer (FC-0 through FC-4) with one sentence</li>
+<li>[ ] Distinguish F_Port, E_Port, N_Port, and G_Port by connection type</li>
+<li>[ ] Explain WWPN vs WWNN and which is used for zoning</li>
+<li>[ ] Describe the FCID 24-bit structure from memory</li>
+<li>[ ] Walk through the complete fabric login sequence (FLOGI → PLOGI → PRLI)</li>
+<li>[ ] Know the Name Server well-known address and its function</li>
+<li>[ ] Explain what triggers fabric segmentation due to Domain ID conflict</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

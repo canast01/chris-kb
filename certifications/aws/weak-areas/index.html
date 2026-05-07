@@ -21,7 +21,7 @@
     
     
       
-        <title>Weak Areas - Chris KB</title>
+        <title>AWS Weak Areas - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Weak Areas · Chris KB">
+  <meta property="og:title" content="AWS Weak Areas · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Weak Areas · Chris KB">
+  <meta name="twitter:title" content="AWS Weak Areas · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#weak-areas" class="md-skip">
+        <a href="#aws-weak-areas" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Weak Areas
+              AWS Weak Areas
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#vpc-peering-vs-privatelink-vs-transit-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        VPC Peering vs PrivateLink vs Transit Gateway
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#s3-storage-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        S3 Storage Classes
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#iam-policy-evaluation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        IAM Policy Evaluation
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#rds-multi-az-vs-read-replicas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RDS Multi-AZ vs Read Replicas
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#security-group-vs-nacl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Security Group vs NACL
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,223 @@
 
 
 
-<h1 id="weak-areas">Weak Areas<a class="headerlink" href="#weak-areas" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical AWS Weak Areas notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="aws-weak-areas">AWS Weak Areas<a class="headerlink" href="#aws-weak-areas" title="Permanent link">&para;</a></h1>
+<h2 id="vpc-peering-vs-privatelink-vs-transit-gateway">VPC Peering vs PrivateLink vs Transit Gateway<a class="headerlink" href="#vpc-peering-vs-privatelink-vs-transit-gateway" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>VPC Peering</th>
+<th>PrivateLink</th>
+<th>Transit Gateway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Traffic path</td>
+<td>Direct VPC-to-VPC</td>
+<td>Private endpoint in your VPC</td>
+<td>Centralized hub routing</td>
+</tr>
+<tr>
+<td>Transitivity</td>
+<td>Non-transitive</td>
+<td>N/A (endpoint-based)</td>
+<td>Transitive</td>
+</tr>
+<tr>
+<td>CIDR overlap</td>
+<td>Not allowed</td>
+<td>Allowed</td>
+<td>Not allowed</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Small-scale VPC connectivity</td>
+<td>Expose service privately at scale</td>
+<td>Hub-and-spoke, many VPCs</td>
+</tr>
+<tr>
+<td>Cross-account</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Data transfer charges</td>
+<td>Per endpoint + data transfer</td>
+<td>Per attachment + data</td>
+</tr>
+</tbody>
+</table>
+<p>Exam pattern: "Company wants 100 VPCs to communicate without managing individual peering connections" → Transit Gateway. "Service provider wants to expose service to customers without VPC peering" → PrivateLink.</p>
+<h2 id="s3-storage-classes">S3 Storage Classes<a class="headerlink" href="#s3-storage-classes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Min Storage</th>
+<th>Min Object Size</th>
+<th>Retrieval Time</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard</td>
+<td>None</td>
+<td>None</td>
+<td>Immediate</td>
+<td>Frequent access</td>
+</tr>
+<tr>
+<td>Intelligent-Tiering</td>
+<td>None</td>
+<td>None (&lt; 128KB stays in Frequent)</td>
+<td>Immediate</td>
+<td>Unknown/changing access patterns</td>
+</tr>
+<tr>
+<td>Standard-IA</td>
+<td>30 days</td>
+<td>128KB</td>
+<td>Immediate</td>
+<td>Infrequent, millisecond access needed</td>
+</tr>
+<tr>
+<td>One Zone-IA</td>
+<td>30 days</td>
+<td>128KB</td>
+<td>Immediate</td>
+<td>Infrequent, single AZ acceptable</td>
+</tr>
+<tr>
+<td>Glacier Instant</td>
+<td>90 days</td>
+<td>128KB</td>
+<td>Milliseconds</td>
+<td>Archive with instant retrieval</td>
+</tr>
+<tr>
+<td>Glacier Flexible</td>
+<td>90 days</td>
+<td>40KB</td>
+<td>Minutes to hours</td>
+<td>Archive, flexible retrieval</td>
+</tr>
+<tr>
+<td>Glacier Deep Archive</td>
+<td>180 days</td>
+<td>40KB</td>
+<td>12 hours</td>
+<td>Long-term, rarely accessed</td>
+</tr>
+</tbody>
+</table>
+<p>Exam gotchas:
+- S3 Lifecycle policies can transition objects between classes automatically
+- Objects &lt; 128KB in Intelligent-Tiering are always billed at Frequent Access tier rate
+- Glacier Flexible has three retrieval options: Expedited (1–5 min), Standard (3–5 hr), Bulk (5–12 hr)</p>
+<h2 id="iam-policy-evaluation">IAM Policy Evaluation<a class="headerlink" href="#iam-policy-evaluation" title="Permanent link">&para;</a></h2>
+<p>Policy evaluation order (most to least restrictive):
+1. Explicit Deny (in any applicable policy)
+2. Service Control Policy (SCP) — if in AWS Organizations
+3. Permission Boundary — if attached to identity
+4. Identity-based policy
+5. Resource-based policy (may allow cross-account without identity policy)</p>
+<p>Key rules:
+- An explicit Deny ALWAYS wins
+- Without an explicit Allow, access is implicitly denied
+- SCPs do not grant permissions; they restrict maximum permissions</p>
+<h2 id="rds-multi-az-vs-read-replicas">RDS Multi-AZ vs Read Replicas<a class="headerlink" href="#rds-multi-az-vs-read-replicas" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Multi-AZ</th>
+<th>Read Replica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>High availability / failover</td>
+<td>Read scaling / reporting</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Synchronous</td>
+<td>Asynchronous</td>
+</tr>
+<tr>
+<td>Readable</td>
+<td>No (standby is passive)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Failover</td>
+<td>Automatic (60–120 sec)</td>
+<td>Manual promotion</td>
+</tr>
+<tr>
+<td>Cross-region</td>
+<td>Yes (with Multi-AZ option)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Aurora difference</td>
+<td>Automatic 6 copies across 3 AZs</td>
+<td>Up to 15 replicas; low replica lag</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-group-vs-nacl">Security Group vs NACL<a class="headerlink" href="#security-group-vs-nacl" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Security Group</th>
+<th>NACL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Applies to</td>
+<td>ENI / instance</td>
+<td>Subnet</td>
+</tr>
+<tr>
+<td>Stateful</td>
+<td>Yes (return traffic automatic)</td>
+<td>No (must explicitly allow both directions)</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>Allow only</td>
+<td>Allow and Deny</td>
+</tr>
+<tr>
+<td>Rule processing</td>
+<td>All rules evaluated</td>
+<td>Rules evaluated in order (lowest number wins)</td>
+</tr>
+<tr>
+<td>Default behavior</td>
+<td>Deny all inbound; allow all outbound</td>
+<td>Allow all (default NACL)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Draw a Transit Gateway vs Peering vs PrivateLink decision diagram from memory</li>
+<li>[ ] Recite S3 storage class minimum durations and retrieval times for each class</li>
+<li>[ ] Walk through 3 IAM policy evaluation scenarios including cross-account</li>
+<li>[ ] Explain why Multi-AZ standby is not a read replica</li>
+<li>[ ] Describe two scenarios where NACL Deny rules are needed (SGs cannot deny)</li>
+<li>[ ] Practice 10 weak-area questions until consistently correct</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

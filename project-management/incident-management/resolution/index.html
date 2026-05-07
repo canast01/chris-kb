@@ -21,7 +21,7 @@
     
     
       
-        <title>Resolution - Chris KB</title>
+        <title>Incident Resolution - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Resolution · Chris KB">
+  <meta property="og:title" content="Incident Resolution · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Resolution · Chris KB">
+  <meta name="twitter:title" content="Incident Resolution · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#resolution" class="md-skip">
+        <a href="#incident-resolution" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Resolution
+              Incident Resolution
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#resolution-vs-workaround" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Resolution vs Workaround
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#resolution-steps-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Resolution Steps Process
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#rca-triggers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RCA Triggers
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#post-resolution-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Post-Resolution Monitoring
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#incident-closure-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Incident Closure Checklist
       
     </span>
   </a>
@@ -809,42 +809,127 @@
 
 
 
-<h1 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Incident Management Resolution notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="incident-resolution">Incident Resolution<a class="headerlink" href="#incident-resolution" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Resolution is the phase where the immediate problem is fixed and service is restored. It is distinct from root cause analysis — resolution focuses on getting users back online; RCA focuses on understanding why the failure happened and preventing recurrence. Both are important, but do not let RCA work delay restoration.</p>
+<hr />
+<h2 id="resolution-vs-workaround">Resolution vs Workaround<a class="headerlink" href="#resolution-vs-workaround" title="Permanent link">&para;</a></h2>
+<p>Be explicit about whether you have applied a permanent fix or a temporary workaround.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Next Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Permanent fix</td>
+<td>Root cause addressed; problem will not recur</td>
+<td>Close incident after validation</td>
+</tr>
+<tr>
+<td>Workaround</td>
+<td>Service restored but root cause still present</td>
+<td>Keep incident open; schedule fix</td>
+</tr>
+<tr>
+<td>Mitigated</td>
+<td>Impact reduced but not fully resolved</td>
+<td>Keep P1 open; re-assess priority</td>
+</tr>
+</tbody>
+</table>
+<p>If a workaround is applied, the incident should not be closed — it should be downgraded to a lower priority with a permanent fix scheduled and tracked.</p>
+<hr />
+<h2 id="resolution-steps-process">Resolution Steps Process<a class="headerlink" href="#resolution-steps-process" title="Permanent link">&para;</a></h2>
+<p>Follow this sequence to restore service methodically.</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Identify the specific component or configuration causing the failure</li>
+<li>[ ] Confirm the proposed fix with a second engineer before applying it</li>
+<li>[ ] Apply the fix in a controlled manner (one step at a time where possible)</li>
+<li>[ ] Validate immediately after each step — do not batch changes during resolution</li>
+<li>[ ] Confirm service health before declaring resolved</li>
+<li>[ ] Document each action taken and its timestamp in the incident ticket</li>
+<li>[ ] Notify stakeholders when service is restored (use communication templates)</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="rca-triggers">RCA Triggers<a class="headerlink" href="#rca-triggers" title="Permanent link">&para;</a></h2>
+<p>A formal Root Cause Analysis is required when any of the following are true:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>RCA Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 incident of any duration</td>
+<td>Infra Lead</td>
+</tr>
+<tr>
+<td>P2 incident exceeding SLA resolution time</td>
+<td>Infra Lead</td>
+</tr>
+<tr>
+<td>Repeat incident (same root cause, third time)</td>
+<td>Engineering Manager</td>
+</tr>
+<tr>
+<td>Data loss or data exposure confirmed</td>
+<td>Security Lead + CTO</td>
+</tr>
+<tr>
+<td>Customer-reported incident (external visibility)</td>
+<td>Engineering Manager</td>
+</tr>
+</tbody>
+</table>
+<p>The RCA document must be started within 24 hours of resolution and completed within 5 business days. Use the RCA template in the project management section.</p>
+<hr />
+<h2 id="post-resolution-monitoring">Post-Resolution Monitoring<a class="headerlink" href="#post-resolution-monitoring" title="Permanent link">&para;</a></h2>
+<p>Service restoration is not the end of the incident window.</p>
+<table>
+<thead>
+<tr>
+<th>Duration</th>
+<th>Monitoring Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First 30 minutes</td>
+<td>Active: engineer watching dashboards</td>
+</tr>
+<tr>
+<td>First 2 hours (P1)</td>
+<td>Active: monitoring alerts, error rate</td>
+</tr>
+<tr>
+<td>First 24 hours (P1)</td>
+<td>On-call aware; alert thresholds lowered</td>
+</tr>
+<tr>
+<td>First 4 hours (P2)</td>
+<td>Active: monitoring alerts</td>
+</tr>
+</tbody>
+</table>
+<p>If the issue recurs during the monitoring window, reopen the incident immediately — do not open a new ticket; continue the original timeline.</p>
+<hr />
+<h2 id="incident-closure-checklist">Incident Closure Checklist<a class="headerlink" href="#incident-closure-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Service confirmed healthy and validated</li>
+<li>[ ] Monitoring observation period completed without recurrence</li>
+<li>[ ] Resolution type documented (permanent fix / workaround)</li>
+<li>[ ] All stakeholders notified of resolution</li>
+<li>[ ] Incident ticket updated with full resolution summary</li>
+<li>[ ] RCA ticket created if required (linked to incident)</li>
+<li>[ ] Any follow-up actions ticketed and assigned</li>
+<li>[ ] Incident ticket closed with accurate start/end times and duration</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Gpu Usage - Chris KB</title>
+        <title>Ollama GPU Acceleration - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Gpu Usage · Chris KB">
+  <meta property="og:title" content="Ollama GPU Acceleration · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Gpu Usage · Chris KB">
+  <meta name="twitter:title" content="Ollama GPU Acceleration · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gpu-usage" class="md-skip">
+        <a href="#ollama-gpu-acceleration" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Gpu Usage
+              Ollama GPU Acceleration
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#confirming-gpu-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Confirming GPU Usage
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#cuda-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        CUDA Setup
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#rocm-amd-gpu-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        ROCm (AMD GPU) Setup
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#vram-requirements-by-model-size" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        VRAM Requirements by Model Size
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#controlling-gpu-layer-count" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Controlling GPU Layer Count
       
     </span>
   </a>
@@ -779,10 +779,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#multi-gpu-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Multi-GPU Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flash-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash Attention
       
     </span>
   </a>
@@ -809,42 +820,133 @@
 
 
 
-<h1 id="gpu-usage">Gpu Usage<a class="headerlink" href="#gpu-usage" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Local Ai Ollama Gpu Usage notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="ollama-gpu-acceleration">Ollama GPU Acceleration<a class="headerlink" href="#ollama-gpu-acceleration" title="Permanent link">&para;</a></h1>
+<p>Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This page covers confirming GPU usage, configuring which GPU(s) to use, VRAM requirements per model, and ROCm support.</p>
+<h2 id="confirming-gpu-usage">Confirming GPU Usage<a class="headerlink" href="#confirming-gpu-usage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># When running a model, check if GPU layers are loaded</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># In a separate terminal, watch GPU utilisation</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>nvidia-smi
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Or query Ollama&#39;s running model info</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>http://localhost:11434/api/show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;llama3.1:8b&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.details&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check Ollama logs for GPU detection</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ollama<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Look for: &quot;detected GPU&quot; or &quot;loaded model ... on GPU&quot;</span>
+</code></pre></div>
+<p>Ollama outputs the number of GPU layers loaded at model start. If <code>num_gpu: 0</code> appears, Ollama is running on CPU only.</p>
+<h2 id="cuda-setup">CUDA Setup<a class="headerlink" href="#cuda-setup" title="Permanent link">&para;</a></h2>
+<p>Ollama bundles its own CUDA libraries and only requires the NVIDIA driver — the CUDA toolkit does not need to be installed separately.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify driver is present</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nvidia-smi
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check Ollama detects the GPU</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>gpu
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set specific GPU(s) (CUDA device index)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">   </span><span class="c1"># Use GPU 0 only</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w"> </span><span class="c1"># Use GPUs 0 and 1</span>
+</code></pre></div>
+<h2 id="rocm-amd-gpu-setup">ROCm (AMD GPU) Setup<a class="headerlink" href="#rocm-amd-gpu-setup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install ROCm 6.x (Ubuntu 22.04)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wget<span class="w"> </span>https://repo.radeon.com/amdgpu-install/6.1.2/ubuntu/jammy/amdgpu-install_6.1.60102-1_all.deb
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dpkg<span class="w"> </span>-i<span class="w"> </span>amdgpu-install_6.1.60102-1_all.deb
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>apt-get<span class="w"> </span>update
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>amdgpu-install<span class="w"> </span>--usecase<span class="o">=</span>rocm
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add user to render and video groups</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>render,video<span class="w"> </span><span class="nv">$USER</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify ROCm</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>rocm-smi
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>rocminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>gfx
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Ollama uses ROCm automatically when detected</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">HSA_OVERRIDE_GFX_VERSION</span><span class="o">=</span><span class="m">11</span>.0.0<span class="w"> </span>ollama<span class="w"> </span>serve<span class="w">  </span><span class="c1"># Override for unsupported gfx version</span>
+</code></pre></div>
+<h2 id="vram-requirements-by-model-size">VRAM Requirements by Model Size<a class="headerlink" href="#vram-requirements-by-model-size" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Quantisation</th>
+<th>VRAM Required</th>
+<th>Minimum GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>llama3.1:8b</td>
+<td>Q4_K_M (default)</td>
+<td>~5 GB</td>
+<td>RTX 3060 12GB</td>
+</tr>
+<tr>
+<td>llama3.1:8b</td>
+<td>F16</td>
+<td>~16 GB</td>
+<td>RTX 3080 / A10G</td>
+</tr>
+<tr>
+<td>llama3.1:70b</td>
+<td>Q4_K_M</td>
+<td>~40 GB</td>
+<td>A100 40GB</td>
+</tr>
+<tr>
+<td>llama3.1:70b</td>
+<td>Q8_0</td>
+<td>~74 GB</td>
+<td>A100 80GB</td>
+</tr>
+<tr>
+<td>mistral:7b</td>
+<td>Q4_K_M</td>
+<td>~4.5 GB</td>
+<td>RTX 3060</td>
+</tr>
+<tr>
+<td>llava:13b (vision)</td>
+<td>Q4_K_M</td>
+<td>~8 GB</td>
+<td>RTX 3080</td>
+</tr>
+<tr>
+<td>codestral:22b</td>
+<td>Q4_K_M</td>
+<td>~13 GB</td>
+<td>RTX 3090</td>
+</tr>
+</tbody>
+</table>
+<h2 id="controlling-gpu-layer-count">Controlling GPU Layer Count<a class="headerlink" href="#controlling-gpu-layer-count" title="Permanent link">&para;</a></h2>
+<p>Ollama automatically calculates how many layers fit in VRAM. Override with <code>OLLAMA_NUM_GPU</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force specific number of layers to GPU (0 = CPU only, 99 = all layers)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">OLLAMA_NUM_GPU</span><span class="o">=</span><span class="m">32</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:8b
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or in Modelfile</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>FROM<span class="w"> </span>llama3.1:8b
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>PARAMETER<span class="w"> </span>num_gpu<span class="w"> </span><span class="m">32</span>
+</code></pre></div>
+<h2 id="multi-gpu-configuration">Multi-GPU Configuration<a class="headerlink" href="#multi-gpu-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ollama distributes layers across multiple GPUs automatically</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Check layer distribution in debug output</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">OLLAMA_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>llama3.1:70b<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;layer&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Restrict to specific GPUs</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>,1,2,3<span class="w"> </span>ollama<span class="w"> </span>serve
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Monitor all GPUs during inference</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nvidia-smi<span class="w"> </span>dmon<span class="w"> </span>-s<span class="w"> </span>u<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<h2 id="flash-attention">Flash Attention<a class="headerlink" href="#flash-attention" title="Permanent link">&para;</a></h2>
+<p>Enable flash attention for lower VRAM usage and faster inference on supported models:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">OLLAMA_FLASH_ATTENTION</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ollama<span class="w"> </span>serve
+</code></pre></div>
+<p>Flash attention reduces the KV cache memory footprint significantly, allowing longer context windows with less VRAM.</p>
 
 
 

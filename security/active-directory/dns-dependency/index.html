@@ -21,7 +21,7 @@
     
     
       
-        <title>DNS Dependency - Chris KB</title>
+        <title>AD DNS Dependency - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DNS Dependency · Chris KB">
+  <meta property="og:title" content="AD DNS Dependency · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="DNS Dependency · Chris KB">
+  <meta name="twitter:title" content="AD DNS Dependency · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dns-dependency" class="md-skip">
+        <a href="#ad-dns-dependency" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DNS Dependency
+              AD DNS Dependency
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#srv-records-and-dc-locator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        SRV Records and DC Locator
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#checking-dns-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Checking DNS Health
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#dc-locator-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        DC Locator Process
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#dns-zone-configuration-for-ad" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        DNS Zone Configuration for AD
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#dns-health-checks-runbook" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        DNS Health Checks Runbook
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#common-dns-caused-ad-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Common DNS-Caused AD Failures
       
     </span>
   </a>
@@ -809,43 +809,113 @@
 
 
 
-<h1 id="dns-dependency">DNS Dependency<a class="headerlink" href="#dns-dependency" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Active Directory DNS Dependency notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="ad-dns-dependency">AD DNS Dependency<a class="headerlink" href="#ad-dns-dependency" title="Permanent link">&para;</a></h1>
+<p>Active Directory is fundamentally dependent on DNS. Every DC registration, client logon, and Kerberos ticket request relies on DNS SRV and A records being correct and resolvable. A broken DNS layer is the most common root cause of AD-wide outages.</p>
+<h2 id="srv-records-and-dc-locator">SRV Records and DC Locator<a class="headerlink" href="#srv-records-and-dc-locator" title="Permanent link">&para;</a></h2>
+<p>DCs register SRV records in DNS automatically via the Netlogon service. The DC Locator process uses these records to find the right DC for a given site and service.</p>
+<p>Key SRV record types:</p>
+<table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_ldap._tcp.&lt;domain&gt;</code></td>
+<td>Generic LDAP over TCP</td>
+</tr>
+<tr>
+<td><code>_kerberos._tcp.&lt;domain&gt;</code></td>
+<td>Kerberos KDC (TCP)</td>
+</tr>
+<tr>
+<td><code>_ldap._tcp.dc._msdcs.&lt;domain&gt;</code></td>
+<td>DC-specific LDAP</td>
+</tr>
+<tr>
+<td><code>_kerberos._udp.&lt;domain&gt;</code></td>
+<td>Kerberos KDC (UDP)</td>
+</tr>
+<tr>
+<td><code>_gc._tcp.&lt;domain&gt;</code></td>
+<td>Global Catalog</td>
+</tr>
+<tr>
+<td><code>_ldap._tcp.&lt;site&gt;._sites.&lt;domain&gt;</code></td>
+<td>Site-scoped LDAP</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># List all AD SRV records in DNS
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup -type=SRV _ldap._tcp.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup -type=SRV _kerberos._tcp.corp.example.com
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>nslookup -type=SRV _gc._tcp.corp.example.com
+</code></pre></div>
+<h2 id="checking-dns-health">Checking DNS Health<a class="headerlink" href="#checking-dns-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Run dcdiag DNS tests on local DC
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dcdiag /test:dns /v
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Run against a specific DC
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dcdiag /test:dns /s:dc01.corp.example.com /v
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Check that Netlogon has registered SRV records
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nltest /dsgetdc:corp.example.com
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Force Netlogon to re-register DNS records
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nltest /dsregdns
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Verify a DC can be found for a specific site
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nltest /dsgetdc:corp.example.com /site:LondonSite
+</code></pre></div>
+<h2 id="dc-locator-process">DC Locator Process<a class="headerlink" href="#dc-locator-process" title="Permanent link">&para;</a></h2>
+<p>When a client needs a DC it sends a DNS query for <code>_ldap._tcp.&lt;site&gt;._sites.&lt;domain&gt;</code>. If no site-scoped record is found it falls back to the domain-wide <code>_ldap._tcp.&lt;domain&gt;</code> SRV records. The client then sends an LDAP ping (CLDAP) to the returned DCs and selects the fastest responder.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Show which DC a machine is currently using</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">(</span><span class="nb">Get-ADDomainController</span> <span class="n">-Discover</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Force rediscovery of a DC</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_reset</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Display the DC locator cache</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dclist</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+</code></pre></div>
+<h2 id="dns-zone-configuration-for-ad">DNS Zone Configuration for AD<a class="headerlink" href="#dns-zone-configuration-for-ad" title="Permanent link">&para;</a></h2>
+<p>AD-integrated DNS zones are recommended. They replicate via AD replication rather than zone transfers and support secure dynamic updates.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Check DNS zone type
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dnscmd /zoneinfo corp.example.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># List all DNS zones on a DC
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dnscmd /enumzones
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># Force dynamic DNS re-registration from a client
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ipconfig /registerdns
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># Check _msdcs zone exists (critical for AD)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nslookup -type=NS _msdcs.corp.example.com
+</code></pre></div>
+<h2 id="dns-health-checks-runbook">DNS Health Checks Runbook<a class="headerlink" href="#dns-health-checks-runbook" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check all DCs have registered A records</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Resolve-DnsName</span> <span class="nv">$_</span><span class="p">.</span><span class="n">HostName</span> <span class="n">-Type</span> <span class="n">A</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Confirm SRV records are present for every DC</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$domain</span> <span class="p">=</span> <span class="s2">&quot;corp.example.com&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Resolve-DnsName</span> <span class="s2">&quot;_ldap._tcp.$domain&quot;</span> <span class="n">-Type</span> <span class="n">SRV</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Resolve-DnsName</span> <span class="s2">&quot;_kerberos._tcp.$domain&quot;</span> <span class="n">-Type</span> <span class="n">SRV</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Check for DNS scavenging (stale record removal)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-DnsServerZoneAging</span> <span class="n">-Name</span> <span class="s2">&quot;corp.example.com&quot;</span>
+</code></pre></div>
+<h2 id="common-dns-caused-ad-failures">Common DNS-Caused AD Failures<a class="headerlink" href="#common-dns-caused-ad-failures" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li>Missing SRV records after DC promotion: restart Netlogon and run <code>nltest /dsregdns</code></li>
+<li>Clients caching old DC addresses: flush with <code>ipconfig /flushdns</code></li>
+<li>Split-brain DNS: internal clients resolving to external IPs — ensure internal DNS is authoritative for the AD domain</li>
+<li>Scavenging too aggressive: valid DC records deleted — review AgingEnabled and NoRefreshInterval settings</li>
+<li>Wrong DNS server on DC NIC: DCs must point to AD-integrated DNS, not a public resolver</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

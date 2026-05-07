@@ -21,7 +21,7 @@
     
     
       
-        <title>Gpos - Chris KB</title>
+        <title>Group Policy Objects - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Gpos · Chris KB">
+  <meta property="og:title" content="Group Policy Objects · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Gpos · Chris KB">
+  <meta name="twitter:title" content="Group Policy Objects · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gpos" class="md-skip">
+        <a href="#group-policy-objects" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Gpos
+              Group Policy Objects
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#gpo-processing-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        GPO Processing Order
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#creating-and-linking-a-gpo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Creating and Linking a GPO
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#viewing-applied-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Viewing Applied Policy
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#rsop-resultant-set-of-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RSoP (Resultant Set of Policy)
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#gpo-backup-and-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        GPO Backup and Restore
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#gpo-inheritance-and-filtering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        GPO Inheritance and Filtering
       
     </span>
   </a>
@@ -809,43 +809,114 @@
 
 
 
-<h1 id="gpos">Gpos<a class="headerlink" href="#gpos" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Active Directory Gpos notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="group-policy-objects">Group Policy Objects<a class="headerlink" href="#group-policy-objects" title="Permanent link">&para;</a></h1>
+<p>GPOs apply configuration to computers and users in AD. They are linked to Sites, Domains, or OUs and processed in that order (SDOU). Understanding GPO inheritance, filtering, and result sets is essential for managing policy reliably.</p>
+<h2 id="gpo-processing-order">GPO Processing Order<a class="headerlink" href="#gpo-processing-order" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Priority (low to high)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local</td>
+<td>1</td>
+<td>Machine-local policy</td>
+</tr>
+<tr>
+<td>Site</td>
+<td>2</td>
+<td>Rarely used in practice</td>
+</tr>
+<tr>
+<td>Domain</td>
+<td>3</td>
+<td>Domain-wide defaults</td>
+</tr>
+<tr>
+<td>OU</td>
+<td>4</td>
+<td>Closest OU wins</td>
+</tr>
+<tr>
+<td>Child OU</td>
+<td>5</td>
+<td>Overrides parent OU</td>
+</tr>
+</tbody>
+</table>
+<p>Later-processed policies win unless Block Inheritance or Enforced (No Override) is set.</p>
+<h2 id="creating-and-linking-a-gpo">Creating and Linking a GPO<a class="headerlink" href="#creating-and-linking-a-gpo" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a new GPO</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Comment</span> <span class="s2">&quot;CIS Level 1 server policy&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Link GPO to an OU</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">New-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Create and link in one step</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">New-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="p">|</span> <span class="nb">New-GPLink</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Set link order (lower number = higher priority)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Workstations,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Order</span> <span class="n">1</span>
+</code></pre></div>
+<h2 id="viewing-applied-policy">Viewing Applied Policy<a class="headerlink" href="#viewing-applied-policy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Show applied GPOs for the current user and computer
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gpresult /r
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Verbose HTML report
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>gpresult /h C:\Temp\gpresult.html /f
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Show GPOs for a specific user on a remote computer
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>gpresult /s DC01 /u corp\jsmith /r
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Force immediate policy refresh
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>gpupdate /force
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Refresh user policy only (no reboot)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>gpupdate /target:user
+</code></pre></div>
+<h2 id="rsop-resultant-set-of-policy">RSoP (Resultant Set of Policy)<a class="headerlink" href="#rsop-resultant-set-of-policy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># RSoP wizard (GUI)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rsop.msc
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Full RSoP output to file
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>gpresult /z &gt; C:\Temp\rsop-full.txt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># Check which GPO set a specific setting
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>gpresult /r /scope computer | findstr /i &quot;password&quot;
+</code></pre></div>
+<h2 id="gpo-backup-and-restore">GPO Backup and Restore<a class="headerlink" href="#gpo-backup-and-restore" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Backup all GPOs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Backup-GPO</span> <span class="n">-All</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Backup a single GPO</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Backup-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Restore a GPO from backup</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Restore-GPO</span> <span class="n">-Name</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Import settings from backup into existing GPO</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Import-GPO</span> <span class="n">-BackupGpoName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">-TargetName</span> <span class="s2">&quot;Security Baseline - Servers&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\GPOBackups&quot;</span>
+</code></pre></div>
+<h2 id="gpo-inheritance-and-filtering">GPO Inheritance and Filtering<a class="headerlink" href="#gpo-inheritance-and-filtering" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Block inheritance on an OU</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Set-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=Test,DC=corp,DC=example,DC=com&quot;</span> <span class="n">-IsBlocked</span> <span class="n">Yes</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Enforce a GPO link (cannot be blocked by child OUs)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-GPLink</span> <span class="n">-Name</span> <span class="s2">&quot;Domain Security Policy&quot;</span> <span class="n">-Target</span> <span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span> <span class="n">-Enforced</span> <span class="n">Yes</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Apply GPO to a specific security group only</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Workstation Admins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">GpoApply</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Remove Authenticated Users (for targeted group filtering)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Set-GPPermission</span> <span class="n">-Name</span> <span class="s2">&quot;Desktop Lockscreen&quot;</span> <span class="n">-TargetName</span> <span class="s2">&quot;Authenticated Users&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">-TargetType</span> <span class="nb">Group </span><span class="n">-PermissionLevel</span> <span class="n">None</span>
+</code></pre></div>
 
 
 

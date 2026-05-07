@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>DNS Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Troubleshooting · Chris KB">
+  <meta property="og:title" content="DNS Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="DNS Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#dns-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              DNS Troubleshooting
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#resolution-failure-triage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Resolution Failure Triage
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#dcdiag-testdns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        dcdiag /test:dns
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#cache-poisoning-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Cache Poisoning Checks
       
     </span>
   </a>
@@ -768,10 +768,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#replication-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Replication Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-error-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Error Reference
       
     </span>
   </a>
@@ -782,7 +793,7 @@
   <a href="#known-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Known Issues
       
     </span>
   </a>
@@ -809,42 +820,115 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical DNS Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="dns-troubleshooting">DNS Troubleshooting<a class="headerlink" href="#dns-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>DNS failures manifest as name resolution errors, application connectivity issues, or authentication failures. Systematic diagnosis starts with isolating whether the problem is client-side cache, server-side zone data, replication, or network connectivity to the resolver.</p>
+<h2 id="resolution-failure-triage">Resolution Failure Triage<a class="headerlink" href="#resolution-failure-triage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1: test from the client</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nslookup<span class="w"> </span>host.corp.local
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Note which server answered and what was returned</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Step 2: query the authoritative server directly</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nslookup<span class="w"> </span>host.corp.local<span class="w"> </span><span class="m">10</span>.0.0.53
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Step 3: check if the record exists on the server</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dig<span class="w"> </span>@10.0.0.53<span class="w"> </span>host.corp.local<span class="w"> </span>+nocmd<span class="w"> </span>+noall<span class="w"> </span>+answer
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Step 4: flush client cache and retry</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ipconfig<span class="w"> </span>/flushdns<span class="w">        </span><span class="c1"># Windows</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>resolvectl<span class="w"> </span>flush-caches<span class="w">   </span><span class="c1"># Linux (systemd-resolved)</span>
+</code></pre></div>
+<h2 id="dcdiag-testdns">dcdiag /test:dns<a class="headerlink" href="#dcdiag-testdns" title="Permanent link">&para;</a></h2>
+<p><code>dcdiag /test:dns</code> is the first tool for DNS issues on Active Directory domains.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Run full DNS test on local DC</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">v</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Run against a specific DC</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">s</span><span class="p">:</span><span class="n">dc02</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">/</span><span class="n">v</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Test all DCs in the forest</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">e</span> <span class="p">/</span><span class="n">v</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Common failures and what they mean</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># DNS_ERROR_RCODE_NAME_ERROR  -&gt; record missing or zone not loaded</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># LDAP bind failed            -&gt; connectivity or credential issue</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Missing delegation          -&gt; child zone not delegated from parent</span>
+</code></pre></div>
+<h2 id="cache-poisoning-checks">Cache Poisoning Checks<a class="headerlink" href="#cache-poisoning-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify DNSSEC validation is enabled (Windows DNS)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-DnsServerResponseRateLimiting</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check if the server accepts non-secure updates only on intended zones</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-DnsServerZone</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">DynamicUpdate</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Inspect cached records (look for unexpected entries)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-DnsServerCache</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">RecordType</span> <span class="o">-eq</span> <span class="s2">&quot;A&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="nb">Sort-Object</span> <span class="n">TimeToLive</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Clear server cache</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Clear-DnsServerCache</span> <span class="n">-Force</span>
+</code></pre></div>
+<h2 id="replication-issues">Replication Issues<a class="headerlink" href="#replication-issues" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Force AD replication (DNS zones stored in AD replicate with AD)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">syncall</span> <span class="p">/</span><span class="n">AdeP</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check replication status</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Verify DNS partitions are replicating</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span> <span class="p">*</span> <span class="p">/</span><span class="n">csv</span> <span class="p">|</span> <span class="nb">ConvertFrom-Csv</span> <span class="p">|</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="s2">&quot;Number of Failures&quot;</span> <span class="o">-gt</span> <span class="n">0</span> <span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Check zone is present on all DCs</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">$zone</span> <span class="p">=</span> <span class="s2">&quot;corp.local&quot;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">(</span><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*).</span><span class="n">HostName</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  <span class="nv">$r</span> <span class="p">=</span> <span class="nb">Resolve-DnsName</span> <span class="nv">$zone</span> <span class="n">-Server</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  <span class="no">[pscustomobject]</span><span class="p">@{</span> <span class="n">DC</span><span class="p">=</span><span class="nv">$_</span><span class="p">;</span> <span class="n">Resolved</span><span class="p">=</span><span class="no">[bool]</span><span class="nv">$r</span> <span class="p">}</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="common-error-reference">Common Error Reference<a class="headerlink" href="#common-error-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SERVFAIL</td>
+<td>Server cannot reach forwarder or root</td>
+<td>Check forwarder connectivity</td>
+</tr>
+<tr>
+<td>NXDOMAIN</td>
+<td>Record does not exist</td>
+<td>Add record or check zone</td>
+</tr>
+<tr>
+<td>REFUSED</td>
+<td>Server not authoritative and no forwarder</td>
+<td>Configure forwarder or check ACL</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Network issue or DNS service down</td>
+<td>Check firewall UDP/TCP 53, DNS service</td>
+</tr>
+<tr>
+<td>Wrong IP returned</td>
+<td>Stale cache or stale record</td>
+<td>Flush cache, remove old record</td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>If <code>dcdiag /test:dns</code> reports "Missing glue record", the NS record for a delegated child zone has no corresponding A record in the parent. Add the glue A record in the parent zone.</li>
+<li>DNS resolution works for some clients but not others on the same subnet: check client DNS server settings — some machines may point to a server that has a stale conditional forwarder.</li>
+<li>After a DC promotion, DNS replication may lag by up to 15 minutes. Use <code>repadmin /syncall</code> to force convergence before testing.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

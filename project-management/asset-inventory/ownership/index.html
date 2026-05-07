@@ -21,7 +21,7 @@
     
     
       
-        <title>Ownership - Chris KB</title>
+        <title>Asset Ownership and Accountability - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ownership · Chris KB">
+  <meta property="og:title" content="Asset Ownership and Accountability · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Ownership · Chris KB">
+  <meta name="twitter:title" content="Asset Ownership and Accountability · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ownership" class="md-skip">
+        <a href="#asset-ownership-and-accountability" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ownership
+              Asset Ownership and Accountability
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#ownership-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Ownership Model
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#ownership-assignment-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Ownership Assignment Process
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#ownership-handover" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Ownership Handover
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#cost-allocation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Cost Allocation
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#accountability-and-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Accountability and Compliance
       
     </span>
   </a>
@@ -809,42 +809,109 @@
 
 
 
-<h1 id="ownership">Ownership<a class="headerlink" href="#ownership" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Asset Inventory Ownership notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="asset-ownership-and-accountability">Asset Ownership and Accountability<a class="headerlink" href="#asset-ownership-and-accountability" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Every CI in the CMDB must have a named owner. Ownership determines who approves changes, who is accountable during incidents, who carries the cost, and who authorises decommission. Unowned assets are a governance risk and a common source of audit findings.</p>
+<hr />
+<h2 id="ownership-model">Ownership Model<a class="headerlink" href="#ownership-model" title="Permanent link">&para;</a></h2>
+<p>Use a two-level ownership model: Technical Owner and Business Owner.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Technical Owner</td>
+<td>Day-to-day operations, patching, incident response, change approval</td>
+</tr>
+<tr>
+<td>Business Owner</td>
+<td>Funding, strategic direction, decommission approval</td>
+</tr>
+<tr>
+<td>Cost Centre</td>
+<td>Chargeback target; not a person but must be set on every CI</td>
+</tr>
+</tbody>
+</table>
+<p>Both owners must be individuals (not team aliases) so that accountability is unambiguous. Use team aliases only in the notification fields, not the owner fields.</p>
+<hr />
+<h2 id="ownership-assignment-process">Ownership Assignment Process<a class="headerlink" href="#ownership-assignment-process" title="Permanent link">&para;</a></h2>
+<p>When a new CI is onboarded:</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Identify technical owner from the team responsible for the service</li>
+<li>[ ] Identify business owner from the sponsoring department</li>
+<li>[ ] Confirm cost centre code with Finance</li>
+<li>[ ] Populate all three fields in CMDB before setting status to Active</li>
+<li>[ ] Send confirmation email to both owners with a link to the CI record</li>
+<li>[ ] Set a 90-day review reminder for newly onboarded CIs</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>For bulk imports, include owner fields in the import template. Do not complete an import that leaves owner fields blank.</p>
+<hr />
+<h2 id="ownership-handover">Ownership Handover<a class="headerlink" href="#ownership-handover" title="Permanent link">&para;</a></h2>
+<p>When an owner changes (role change, team restructure, leaver):</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Identify replacement owner before the current owner departs</li>
+<li>[ ] Raise a CMDB update ticket with old and new owner details</li>
+<li>[ ] Update CMDB within 5 business days of the handover date</li>
+<li>[ ] Notify the new owner by email with CI list and key responsibilities</li>
+<li>[ ] Update any related service catalogue entries and escalation paths</li>
+<li>[ ] Run a 30-day check-in with the new owner to confirm no issues</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Trigger Event</th>
+<th>Action Required</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Staff departure</td>
+<td>Replace owner before last day</td>
+<td>Before last day</td>
+</tr>
+<tr>
+<td>Team restructure</td>
+<td>Bulk update during transition project</td>
+<td>Within 2 weeks</td>
+</tr>
+<tr>
+<td>Service transfer</td>
+<td>Formal handover document required</td>
+<td>Before go-live</td>
+</tr>
+<tr>
+<td>Acquisition / merger</td>
+<td>Asset owner mapping exercise</td>
+<td>Within 30 days</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cost-allocation">Cost Allocation<a class="headerlink" href="#cost-allocation" title="Permanent link">&para;</a></h2>
+<p>Ownership drives chargeback. The cost centre on a CI determines which department is billed for:</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>Cloud compute and storage costs</li>
+<li>Licensing and support contract costs</li>
+<li>Hardware depreciation</li>
+<li>Managed service fees</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Review cost allocation quarterly. Ensure CIs transferred between teams have their cost centre updated promptly — delayed updates create reconciliation disputes at financial year-end.</p>
+<hr />
+<h2 id="accountability-and-compliance">Accountability and Compliance<a class="headerlink" href="#accountability-and-compliance" title="Permanent link">&para;</a></h2>
+<p>During audits, every CI must be traceable to a responsible person.</p>
+<ul>
+<li>[ ] Confirm no CIs have blank owner fields before each quarterly audit</li>
+<li>[ ] Run an "unowned CI" report monthly and assign owners within 10 business days</li>
+<li>[ ] Include ownership accuracy in the CMDB health dashboard</li>
+<li>[ ] Escalate unresolved unowned CIs to the line manager of the relevant team</li>
+<li>[ ] Document owner assignment rationale for shared infrastructure (e.g., shared DB clusters)</li>
+</ul>
 
 
 

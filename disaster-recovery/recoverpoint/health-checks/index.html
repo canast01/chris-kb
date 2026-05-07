@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>RecoverPoint — Health Checks - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Health Checks · Chris KB">
+  <meta property="og:title" content="RecoverPoint — Health Checks · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Health Checks · Chris KB">
+  <meta name="twitter:title" content="RecoverPoint — Health Checks · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#recoverpoint-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              RecoverPoint — Health Checks
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#daily-health-check-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Daily Health Check Commands
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#rest-api-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        REST API Health Checks
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#rpo-compliance-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RPO Compliance Check
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#journal-utilization-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Journal Utilization Check
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#weekly-and-monthly-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Weekly and Monthly Checks
       
     </span>
   </a>
@@ -809,43 +809,197 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Recoverpoint Health Checks notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="recoverpoint-health-checks">RecoverPoint — Health Checks<a class="headerlink" href="#recoverpoint-health-checks" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">RecoverPoint</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>RecoverPoint health checks cover four areas: RPA cluster node health, consistency group (CG) replication state, journal utilization, and inter-site link status. Run these checks daily as a minimum, and before/after any change window.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Tool</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPA cluster nodes</td>
+<td>SSH <code>system status</code></td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>CG replication state</td>
+<td>SSH <code>groups status</code></td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>Journal utilization</td>
+<td>SSH <code>journals list</code></td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>Link statistics</td>
+<td>SSH <code>links statistics</code></td>
+<td>Pre/post change</td>
+</tr>
+<tr>
+<td>RPO compliance</td>
+<td>REST API or RPMA</td>
+<td>Daily (automated)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="daily-health-check-commands">Daily Health Check Commands<a class="headerlink" href="#daily-health-check-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-cluster-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># RPA cluster and node health</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>system<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All CGs — expect ACTIVE for all production CGs</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>groups<span class="w"> </span>status
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Detailed CG view including lag, RPO, and journal fill</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>groups<span class="w"> </span>status<span class="w"> </span>detail
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Journal utilization for all CGs</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>journals<span class="w"> </span>list
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Active alarms (hardware and software)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>alarms<span class="w"> </span>list
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Inter-site link statistics (latency, bandwidth)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>links<span class="w"> </span>statistics
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Cluster quorum state</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>cluster<span class="w"> </span>quorum<span class="w"> </span>check
+</code></pre></div>
+<hr />
+<h2 id="rest-api-health-checks">REST API Health Checks<a class="headerlink" href="#rest-api-health-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">RP</span><span class="o">=</span><span class="s2">&quot;https://&lt;rpa-mgmt-ip&gt;/fapi/rest/5_1&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u admin:password --insecure&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Cluster health summary</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/cluster/all_clusters_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">for c in data.get(&#39;clustersDetails&#39;, []):</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">    print(f\&quot;Cluster: {c.get(&#39;name&#39;,&#39;?&#39;)}  Quorum: {c.get(&#39;quorum&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># All CGs — state and lag</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/group/all_groups_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">for g in data.get(&#39;innerSet&#39;, []):</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s2">    print(f\&quot;CG={g.get(&#39;name&#39;,&#39;?&#39;):30s}  enabled={g.get(&#39;enabled&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s2">&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># RPA node states</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RP</span><span class="s2">/rp/all_rps_details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s2">for r in data.get(&#39;innerSet&#39;, []):</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s2">    print(f\&quot;RPA {r.get(&#39;rpUID&#39;,{}).get(&#39;id&#39;,&#39;?&#39;)}  state={r.get(&#39;rpState&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="rpo-compliance-check">RPO Compliance Check<a class="headerlink" href="#rpo-compliance-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check per-CG RPO against current lag (SSH)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected output fields:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#   Replication state:  ACTIVE</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   Current lag:        3s</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   Configured RPO:     300s</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   Compliant:          YES</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>RPO Tier</th>
+<th>Target</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1 (Critical)</td>
+<td>&lt; 15 seconds</td>
+<td>&gt; 60 seconds</td>
+</tr>
+<tr>
+<td>Tier 2 (Business)</td>
+<td>&lt; 5 minutes</td>
+<td>&gt; 15 minutes</td>
+</tr>
+<tr>
+<td>Tier 3 (Standard)</td>
+<td>&lt; 30 minutes</td>
+<td>&gt; 60 minutes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="journal-utilization-check">Journal Utilization Check<a class="headerlink" href="#journal-utilization-check" title="Permanent link">&para;</a></h2>
+<p>Journal overflow causes CG replication to halt. Alert thresholds:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List journal volumes with utilization</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>journals<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Expected output columns:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">#   Journal Name   CG Name         Used%   Free%   Status</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   JRN-CG-ORA-DR  CG-ORACLE-PROD  34%     66%     OK</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Utilization</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–69%</td>
+<td>OK</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>70–79%</td>
+<td>Warning</td>
+<td>Monitor; investigate write rate spike</td>
+</tr>
+<tr>
+<td>80–89%</td>
+<td>Critical</td>
+<td>Plan journal expansion; check link state</td>
+</tr>
+<tr>
+<td>90%+</td>
+<td>Emergency</td>
+<td>Immediate action — expand or CG will halt</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="weekly-and-monthly-checks">Weekly and Monthly Checks<a class="headerlink" href="#weekly-and-monthly-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm splitter health (for RP4VM software splitters on ESXi)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rp
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm RPA software versions are consistent across cluster</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>boxmgmt<span class="w"> </span>verify_rpa_version
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Review audit log for unexpected operations (logins, image access events)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Confirm DR site RPA cluster is also healthy</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;system status&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;groups status&quot;</span>
+</code></pre></div>
 
 
 

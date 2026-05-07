@@ -21,7 +21,7 @@
     
     
       
-        <title>Validation - Chris KB</title>
+        <title>Post-Change Validation - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Validation · Chris KB">
+  <meta property="og:title" content="Post-Change Validation · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Validation · Chris KB">
+  <meta name="twitter:title" content="Post-Change Validation · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#validation" class="md-skip">
+        <a href="#post-change-validation" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Validation
+              Post-Change Validation
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#validation-principles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Validation Principles
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#standard-validation-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Standard Validation Checklist
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#validation-by-change-type" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Validation by Change Type
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#monitoring-observation-period" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Monitoring Observation Period
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#sign-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Sign-Off
       
     </span>
   </a>
@@ -809,42 +809,114 @@
 
 
 
-<h1 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Change Management Validation notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Validation confirms that a change achieved its intended outcome without introducing new problems. It is distinct from the implementation checklist — implementation confirms tasks were executed; validation confirms the service is healthy and behaving correctly. Both must be completed before a change is closed.</p>
+<hr />
+<h2 id="validation-principles">Validation Principles<a class="headerlink" href="#validation-principles" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Validate against the success criteria defined at the time of change approval — not a retrospective interpretation</li>
+<li>Always check both the directly changed component and its dependencies</li>
+<li>Validation must be performed by someone other than the sole implementer where possible</li>
+<li>Time-box the validation period: agree the duration before the change window starts</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="standard-validation-checklist">Standard Validation Checklist<a class="headerlink" href="#standard-validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Service health endpoint returns expected status</li>
+<li>[ ] Application logs show no new errors or exceptions introduced by the change</li>
+<li>[ ] Key user journeys tested (login, core function, data retrieval)</li>
+<li>[ ] Monitoring dashboards reviewed — no unexpected alerts firing</li>
+<li>[ ] Performance metrics within normal range (latency, error rate, queue depth)</li>
+<li>[ ] Downstream services confirmed unaffected</li>
+<li>[ ] Backup jobs still scheduled and functional</li>
+<li>[ ] DNS, load balancer, and certificate status verified if networking was touched</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="validation-by-change-type">Validation by Change Type<a class="headerlink" href="#validation-by-change-type" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Validation Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS patching</td>
+<td>Services restarted cleanly; no new errors in system logs</td>
+</tr>
+<tr>
+<td>Application deployment</td>
+<td>Smoke test; error rate; key API endpoints return 200</td>
+</tr>
+<tr>
+<td>Network change</td>
+<td>Connectivity between affected segments; routing correct</td>
+</tr>
+<tr>
+<td>Database change</td>
+<td>Query execution; row counts; replication lag (if clustered)</td>
+</tr>
+<tr>
+<td>Certificate renewal</td>
+<td>TLS handshake succeeds; expiry date correct</td>
+</tr>
+<tr>
+<td>Firewall rule change</td>
+<td>Expected traffic permitted; blocked traffic still blocked</td>
+</tr>
+<tr>
+<td>Storage change</td>
+<td>Read/write operations; capacity reported correctly</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="monitoring-observation-period">Monitoring Observation Period<a class="headerlink" href="#monitoring-observation-period" title="Permanent link">&para;</a></h2>
+<p>After validation, maintain an elevated monitoring period proportional to risk.</p>
+<table>
+<thead>
+<tr>
+<th>Risk Level</th>
+<th>Observation Period</th>
+<th>Who Monitors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>1 hour</td>
+<td>Implementing engineer</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>4 hours</td>
+<td>Implementing engineer</td>
+</tr>
+<tr>
+<td>High</td>
+<td>24 hours</td>
+<td>Engineer + on-call team</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>48–72 hours</td>
+<td>On-call team + management</td>
+</tr>
+</tbody>
+</table>
+<p>During the observation period, agree on escalation criteria. If a new alert fires within the observation window that may be related to the change, treat it as a post-change issue and raise an incident.</p>
+<hr />
+<h2 id="sign-off">Sign-Off<a class="headerlink" href="#sign-off" title="Permanent link">&para;</a></h2>
+<p>Validation sign-off must be recorded in the change ticket before the change is closed.</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>[ ] Implementer confirms all validation checks passed</li>
+<li>[ ] Change owner (or delegate) provides written sign-off in the ticket</li>
+<li>[ ] If any check failed, document what was done to resolve it or why risk is accepted</li>
+<li>[ ] Monitoring observation period confirmed active and owner assigned</li>
+<li>[ ] Change status updated to reflect validated outcome</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Cloud - Chris KB</title>
+        <title>Cloud Configuration Baseline - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cloud · Chris KB">
+  <meta property="og:title" content="Cloud Configuration Baseline · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cloud · Chris KB">
+  <meta name="twitter:title" content="Cloud Configuration Baseline · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloud" class="md-skip">
+        <a href="#cloud-configuration-baseline" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cloud
+              Cloud Configuration Baseline
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#azure-policy-required-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Azure Policy Required Settings
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#nsg-baseline-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        NSG Baseline Rules
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#diagnostic-settings-and-log-routing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Diagnostic Settings and Log Routing
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#rbac-minimum-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RBAC Minimum Standards
       
     </span>
   </a>
@@ -768,21 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#tagging-enforcement-and-rbac-audit-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Tagging Enforcement and RBAC Audit Commands
       
     </span>
   </a>
@@ -809,42 +798,161 @@
 
 
 
-<h1 id="cloud">Cloud<a class="headerlink" href="#cloud" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Configuration Baselines Cloud notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="cloud-configuration-baseline">Cloud Configuration Baseline<a class="headerlink" href="#cloud-configuration-baseline" title="Permanent link">&para;</a></h1>
+<h2 id="azure-policy-required-settings">Azure Policy Required Settings<a class="headerlink" href="#azure-policy-required-settings" title="Permanent link">&para;</a></h2>
+<p>All subscriptions in the landing zone management group inherit a baseline policy set. The following policies are enforced (effect: <code>Deny</code> or <code>Audit</code> as noted).</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Effect</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Require tag: <code>env</code></td>
+<td>Deny</td>
+<td>Blocks resource creation without tag</td>
+</tr>
+<tr>
+<td>Require tag: <code>owner</code></td>
+<td>Deny</td>
+<td>Must be a valid email</td>
+</tr>
+<tr>
+<td>Require tag: <code>cost-centre</code></td>
+<td>Deny</td>
+<td>Must match finance code format</td>
+</tr>
+<tr>
+<td>Allowed locations</td>
+<td>Deny</td>
+<td>East US 2, West Europe, UK South only</td>
+</tr>
+<tr>
+<td>Allowed VM SKUs</td>
+<td>Audit</td>
+<td>Non-standard SKUs flagged for review</td>
+</tr>
+<tr>
+<td>Require secure transfer on storage</td>
+<td>Deny</td>
+<td>TLS only; HTTP rejected</td>
+</tr>
+<tr>
+<td>Require HTTPS on App Service</td>
+<td>Deny</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Allowed resource types</td>
+<td>Audit</td>
+<td>Unapproved types trigger alert to platform team</td>
+</tr>
+<tr>
+<td>Enforce Azure Monitor Agent</td>
+<td>AuditIfNotExists</td>
+<td>Non-compliant resources flagged within 24 hours</td>
+</tr>
+<tr>
+<td>No public IPs without approval tag</td>
+<td>Deny</td>
+<td>Tag <code>public-ip-approved: true</code> required</td>
+</tr>
+</tbody>
+</table>
+<p>Policy compliance is reviewed weekly. Subscriptions with a compliance score below 90% are escalated to the workload team.</p>
+<h2 id="nsg-baseline-rules">NSG Baseline Rules<a class="headerlink" href="#nsg-baseline-rules" title="Permanent link">&para;</a></h2>
+<p>Every NSG must include the following baseline rules. These are deployed by the Terraform <code>nsg_baseline</code> module and must not be removed.</p>
+<p><strong>Inbound deny-all rule (lowest priority):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Priority: 4096  Action: Deny  Source: *  Destination: *  Protocol: *
+</code></pre></div></p>
+<p><strong>Required inbound allow rules (applied to management subnets):</strong></p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Allow HTTPS (443) from <code>10.10.0.0/16</code> (corporate network)</li>
+<li>Allow SSH (22) or RDP (3389) from the Bastion subnet only (<code>10.10.8.0/27</code>)</li>
+<li>Allow ICMP from corporate network for monitoring</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p><strong>Required outbound rules:</strong></p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>Allow DNS (UDP 53) to internal resolvers (<code>10.10.0.10</code>, <code>10.10.0.11</code>)</li>
+<li>Allow NTP (UDP 123) to internal NTP servers</li>
+<li>Deny outbound internet by default; exceptions require explicit approval and a named allow rule</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<h2 id="diagnostic-settings-and-log-routing">Diagnostic Settings and Log Routing<a class="headerlink" href="#diagnostic-settings-and-log-routing" title="Permanent link">&para;</a></h2>
+<p>Every Azure resource must send platform logs and metrics to the central Log Analytics workspace. Diagnostic settings are deployed by the <code>diag_baseline</code> Terraform module.</p>
+<p>Required log categories by resource type:</p>
+<table>
+<thead>
+<tr>
+<th>Resource Type</th>
+<th>Log Categories</th>
+<th>Metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Virtual Machine</td>
+<td>Boot diagnostics, Guest OS (via AMA)</td>
+<td>CPU, disk, network</td>
+</tr>
+<tr>
+<td>Storage Account</td>
+<td>StorageRead, StorageWrite, StorageDelete</td>
+<td>Transactions, capacity</td>
+</tr>
+<tr>
+<td>Key Vault</td>
+<td>AuditEvent</td>
+<td>—</td>
+</tr>
+<tr>
+<td>NSG</td>
+<td>NetworkSecurityGroupEvent, NetworkSecurityGroupRuleCounter</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Load Balancer</td>
+<td>LoadBalancerAlertEvent</td>
+<td>Health probe status</td>
+</tr>
+<tr>
+<td>SQL Database</td>
+<td>SQLSecurityAuditEvents, Errors</td>
+<td>DTU, connections</td>
+</tr>
+</tbody>
+</table>
+<p>Log Analytics workspace retention: 90 days (hot). Archive tier: 1 year.</p>
+<h2 id="rbac-minimum-standards">RBAC Minimum Standards<a class="headerlink" href="#rbac-minimum-standards" title="Permanent link">&para;</a></h2>
+<p>Role assignments follow least-privilege. The built-in <code>Contributor</code> role must not be assigned to users at subscription scope; use <code>Reader</code> and narrow custom roles instead.</p>
+<p>Approved role assignments at subscription scope:</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>Platform team SPN: <code>Contributor</code> (for automation only)</li>
+<li>Break-glass account: <code>Owner</code> (two accounts per subscription, Entra PIM)</li>
+<li>Operations team: <code>Reader</code> plus resource-specific roles via PIM</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>All role assignments must have:
+- Justification in the assignment description
+- Expiry set for JIT assignments (maximum 8-hour activation via PIM)
+- No wildcard service principals</p>
+<p>Review all role assignments quarterly. Remove any assignment that cannot be attributed to a current use case.</p>
+<h2 id="tagging-enforcement-and-rbac-audit-commands">Tagging Enforcement and RBAC Audit Commands<a class="headerlink" href="#tagging-enforcement-and-rbac-audit-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List non-compliant resources (missing mandatory tags)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>rg-prod-eus2-app01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[].{resource:resourceId, policy:policyDefinitionName}&quot;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all role assignments in a subscription</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--subscription<span class="w"> </span>&lt;sub-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--include-inherited<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check diagnostic settings on a VM</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--resource<span class="w"> </span>/subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;vm&gt;
+</code></pre></div>
 
 
 

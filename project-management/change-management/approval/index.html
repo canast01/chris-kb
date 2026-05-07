@@ -21,7 +21,7 @@
     
     
       
-        <title>Approval - Chris KB</title>
+        <title>Change Approval Process - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Approval · Chris KB">
+  <meta property="og:title" content="Change Approval Process · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Approval · Chris KB">
+  <meta name="twitter:title" content="Change Approval Process · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#approval" class="md-skip">
+        <a href="#change-approval-process" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Approval
+              Change Approval Process
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#approval-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Approval Tiers
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#cab-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        CAB Process
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#risk-scoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Risk Scoring
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#emergency-change-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Emergency Change Process
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#freeze-periods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Freeze Periods
       
     </span>
   </a>
@@ -809,42 +809,146 @@
 
 
 
-<h1 id="approval">Approval<a class="headerlink" href="#approval" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Change Management Approval notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="change-approval-process">Change Approval Process<a class="headerlink" href="#change-approval-process" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The approval process ensures that changes are reviewed proportionally to their risk and impact before being implemented. Trivial changes should not require weeks of committee review; critical changes to production infrastructure should not be approved by a single engineer. The CAB (Change Advisory Board) and approval tiers below provide a framework for routing changes correctly.</p>
+<hr />
+<h2 id="approval-tiers">Approval Tiers<a class="headerlink" href="#approval-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Change Type</th>
+<th>Approver(s)</th>
+<th>Turnaround SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard</td>
+<td>Pre-approved, low risk</td>
+<td>Auto-approved (CAB pre-auth)</td>
+<td>Same day</td>
+</tr>
+<tr>
+<td>Normal</td>
+<td>Moderate risk</td>
+<td>CAB (weekly meeting)</td>
+<td>5 business days</td>
+</tr>
+<tr>
+<td>Major</td>
+<td>High risk / wide impact</td>
+<td>CAB + Senior Mgmt</td>
+<td>10 business days</td>
+</tr>
+<tr>
+<td>Emergency</td>
+<td>P1 incident response</td>
+<td>Emergency CAB (2 approvers)</td>
+<td>2 hours</td>
+</tr>
+</tbody>
+</table>
+<p>Changes must be submitted with a completed change record before approval is sought. Incomplete records will be returned without review.</p>
+<hr />
+<h2 id="cab-process">CAB Process<a class="headerlink" href="#cab-process" title="Permanent link">&para;</a></h2>
+<p>The CAB meets weekly (typically Thursday) to review Normal and Major changes scheduled for the following week.</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Submit change record at least 5 business days before the CAB meeting</li>
+<li>[ ] Include risk score, implementation plan, backout plan, and test results</li>
+<li>[ ] Confirm change window does not conflict with business freeze periods</li>
+<li>[ ] Attend CAB meeting or nominate a delegate who can answer technical questions</li>
+<li>[ ] Incorporate any CAB feedback before proceeding</li>
+<li>[ ] Obtain written approval (ticket update) before starting implementation</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<p>Minutes from each CAB meeting are stored in the change management log. Approval decisions are recorded directly on the change ticket.</p>
+<hr />
+<h2 id="risk-scoring">Risk Scoring<a class="headerlink" href="#risk-scoring" title="Permanent link">&para;</a></h2>
+<p>Each change is scored on impact and likelihood before submission to CAB.</p>
+<table>
+<thead>
+<tr>
+<th>Score</th>
+<th>Impact Description</th>
+<th>Likelihood Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Minimal — affects a single non-critical CI</td>
+<td>Very unlikely — tested, routine</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Low — affects a service with redundancy</td>
+<td>Unlikely — similar changes done</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Medium — affects multiple users or services</td>
+<td>Possible — some unknowns remain</td>
+</tr>
+<tr>
+<td>4</td>
+<td>High — affects critical service or data</td>
+<td>Likely — new territory</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Critical — potential for widespread outage</td>
+<td>Near certain — high complexity</td>
+</tr>
+</tbody>
+</table>
+<p><code>Risk Score = Impact × Likelihood</code></p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>Score 1–4: Standard or Normal change</li>
+<li>Score 5–9: Normal change with enhanced review</li>
+<li>Score 10–25: Major change; Senior Mgmt approval required</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="emergency-change-process">Emergency Change Process<a class="headerlink" href="#emergency-change-process" title="Permanent link">&para;</a></h2>
+<p>Emergency changes are used only to resolve active P1/P2 incidents or prevent imminent outage.</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>[ ] Confirm P1/P2 incident is open and linked to the change ticket</li>
+<li>[ ] Obtain approval from any two of: Change Manager, Infra Lead, CTO/VP Infra</li>
+<li>[ ] Document what will be done, estimated duration, and backout plan (even if brief)</li>
+<li>[ ] Implement with an engineer and an independent reviewer on the call</li>
+<li>[ ] Retrospectively complete full change record within 24 hours of resolution</li>
+<li>[ ] Emergency change reviewed at next CAB meeting for PIR</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Emergency changes are audited monthly. Excessive use indicates inadequate normal-process capacity.</p>
+<hr />
+<h2 id="freeze-periods">Freeze Periods<a class="headerlink" href="#freeze-periods" title="Permanent link">&para;</a></h2>
+<p>No Normal or Major changes are approved during these periods without explicit executive sign-off:</p>
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Dates (typical)</th>
+<th>Exception Process</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Financial year-end</td>
+<td>Last 2 weeks of fiscal year</td>
+<td>CTO + CFO approval required</td>
+</tr>
+<tr>
+<td>Major product launch</td>
+<td>Defined per project</td>
+<td>Change Manager + Exec sign-off</td>
+</tr>
+<tr>
+<td>Holiday period</td>
+<td>Dec 23 – Jan 3</td>
+<td>On-call team approval only</td>
+</tr>
+</tbody>
+</table>
 
 
 

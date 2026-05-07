@@ -21,7 +21,7 @@
     
     
       
-        <title>Planning - Chris KB</title>
+        <title>Maintenance Window Planning - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Planning · Chris KB">
+  <meta property="og:title" content="Maintenance Window Planning · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Planning · Chris KB">
+  <meta name="twitter:title" content="Maintenance Window Planning · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#planning" class="md-skip">
+        <a href="#maintenance-window-planning" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Planning
+              Maintenance Window Planning
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#planning-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Planning Checklist
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#window-scheduling-guidance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Window Scheduling Guidance
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#dependency-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Dependency Mapping
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#risk-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Risk Review
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#pre-window-communication-schedule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Pre-Window Communication Schedule
       
     </span>
   </a>
@@ -809,42 +809,121 @@
 
 
 
-<h1 id="planning">Planning<a class="headerlink" href="#planning" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Maintenance Windows Planning notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="maintenance-window-planning">Maintenance Window Planning<a class="headerlink" href="#maintenance-window-planning" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Good maintenance windows are won in the planning phase. The execution itself is often the easy part when planning has been thorough — the runbook is clear, dependencies are mapped, risks are understood, and stakeholders are prepared. This page covers the planning checklist and key decisions that must be made before a window is scheduled.</p>
+<hr />
+<h2 id="planning-checklist">Planning Checklist<a class="headerlink" href="#planning-checklist" title="Permanent link">&para;</a></h2>
+<p>Start planning at least 10 business days before the target window for Major changes, and at least 5 for Normal changes.</p>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Define the scope: what specific work will be done?</li>
+<li>[ ] Identify all affected services and CIs (use CMDB relationships)</li>
+<li>[ ] Identify all dependencies: upstream and downstream services</li>
+<li>[ ] Write or review the implementation plan (step-by-step)</li>
+<li>[ ] Write or review the backout plan (step-by-step, with decision triggers)</li>
+<li>[ ] Identify required team members and confirm their availability</li>
+<li>[ ] Identify required vendor support and pre-engage if needed</li>
+<li>[ ] Select the maintenance window time (see scheduling guidance below)</li>
+<li>[ ] Confirm no conflict with business freeze periods or other changes</li>
+<li>[ ] Draft the stakeholder communication (advance notice)</li>
+<li>[ ] Submit change request and obtain approval before sending comms</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="window-scheduling-guidance">Window Scheduling Guidance<a class="headerlink" href="#window-scheduling-guidance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Day of week</td>
+<td>Avoid Monday (post-weekend issues) and Friday (no week buffer)</td>
+</tr>
+<tr>
+<td>Time of day</td>
+<td>Use lowest-traffic period for the service (check analytics)</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>Add 30–50% buffer to estimated task time</td>
+</tr>
+<tr>
+<td>Rollback time</td>
+<td>Rollback must fit within the window; if not, extend the window</td>
+</tr>
+<tr>
+<td>Business events</td>
+<td>Avoid month-end, quarter-end, product launches, peak seasons</td>
+</tr>
+<tr>
+<td>Downstream dependencies</td>
+<td>Check if dependencies have their own freeze or change windows</td>
+</tr>
+</tbody>
+</table>
+<p>Schedule the rollback decision deadline explicitly — not just the window end time.</p>
+<hr />
+<h2 id="dependency-mapping">Dependency Mapping<a class="headerlink" href="#dependency-mapping" title="Permanent link">&para;</a></h2>
+<p>Map dependencies before finalising scope. A change to one service can cascade.</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] List all services that the target system depends on (upstream)</li>
+<li>[ ] List all services that depend on the target system (downstream)</li>
+<li>[ ] Confirm each dependency owner is aware of the maintenance window</li>
+<li>[ ] Identify whether any dependency needs its own maintenance window first</li>
+<li>[ ] Check for any shared infrastructure (load balancers, databases, auth services)</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
+<p>Use the CMDB CI relationship view to generate the dependency list. Supplement with application architecture diagrams for complex services.</p>
+<hr />
+<h2 id="risk-review">Risk Review<a class="headerlink" href="#risk-review" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk Category</th>
+<th>Questions to Ask</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Technical risk</td>
+<td>What is the most likely failure mode? Is it recoverable?</td>
+</tr>
+<tr>
+<td>Time risk</td>
+<td>What if the main task takes 2x as long as estimated?</td>
+</tr>
+<tr>
+<td>Dependency risk</td>
+<td>What if an upstream service degrades during the window?</td>
+</tr>
+<tr>
+<td>Data risk</td>
+<td>Is any data transformation or migration involved?</td>
+</tr>
+<tr>
+<td>People risk</td>
+<td>What if the lead engineer is unavailable 30 min in?</td>
+</tr>
+<tr>
+<td>Vendor risk</td>
+<td>Is any vendor support required? Is it confirmed?</td>
+</tr>
+</tbody>
+</table>
+<p>Rate overall risk (Low/Medium/High/Critical) and document it in the change request.</p>
+<hr />
+<h2 id="pre-window-communication-schedule">Pre-Window Communication Schedule<a class="headerlink" href="#pre-window-communication-schedule" title="Permanent link">&para;</a></h2>
+<p>Agree on the communication schedule as part of planning — not the morning of the window.</p>
 <ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
+<li>[ ] Advance notice date and recipient list agreed</li>
+<li>[ ] 48-hour reminder date and recipient list agreed</li>
+<li>[ ] Day-of confirmation message owner assigned</li>
+<li>[ ] Bridge/war room link created (for Medium risk and above)</li>
+<li>[ ] Escalation contacts confirmed and added to the bridge invite</li>
+<li>[ ] Status page event created with correct maintenance window times</li>
 </ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

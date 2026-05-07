@@ -21,7 +21,7 @@
     
     
       
-        <title>Practice Notes - Chris KB</title>
+        <title>Azure Practice Notes - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Practice Notes · Chris KB">
+  <meta property="og:title" content="Azure Practice Notes · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Practice Notes · Chris KB">
+  <meta name="twitter:title" content="Azure Practice Notes · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#practice-notes" class="md-skip">
+        <a href="#azure-practice-notes" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Practice Notes
+              Azure Practice Notes
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#arm-vs-bicep-vs-terraform" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        ARM vs Bicep vs Terraform
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#rbac-scope-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        RBAC Scope Hierarchy
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#policy-vs-initiative" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Policy vs Initiative
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#common-scenario-mappings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Common Scenario Mappings
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#azure-ad-entra-id-key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Azure AD / Entra ID Key Concepts
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,196 @@
 
 
 
-<h1 id="practice-notes">Practice Notes<a class="headerlink" href="#practice-notes" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Practice Notes notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="azure-practice-notes">Azure Practice Notes<a class="headerlink" href="#azure-practice-notes" title="Permanent link">&para;</a></h1>
+<h2 id="arm-vs-bicep-vs-terraform">ARM vs Bicep vs Terraform<a class="headerlink" href="#arm-vs-bicep-vs-terraform" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>ARM Templates</th>
+<th>Bicep</th>
+<th>Terraform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language</td>
+<td>JSON</td>
+<td>Domain-specific language (DSL)</td>
+<td>HCL</td>
+</tr>
+<tr>
+<td>Azure-native</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No (provider-based)</td>
+</tr>
+<tr>
+<td>Transpiles to</td>
+<td>—</td>
+<td>ARM JSON</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Multi-cloud</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>State management</td>
+<td>None (Azure is source of truth)</td>
+<td>None</td>
+<td>Terraform state file</td>
+</tr>
+<tr>
+<td>Modularity</td>
+<td>Linked templates / nested</td>
+<td>Modules</td>
+<td>Modules</td>
+</tr>
+<tr>
+<td>IDE support</td>
+<td>Good</td>
+<td>Better (VS Code Bicep extension)</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>Recommended for new Azure-only IaC</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes (if multi-cloud needed)</td>
+</tr>
+</tbody>
+</table>
+<p>Exam gotcha: Bicep compiles to ARM; they are functionally equivalent for Azure deployments. Terraform requires a state file — ARM/Bicep do not.</p>
+<h2 id="rbac-scope-hierarchy">RBAC Scope Hierarchy<a class="headerlink" href="#rbac-scope-hierarchy" title="Permanent link">&para;</a></h2>
+<p>RBAC assignments are inherited downward:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Management Group
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Subscription
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Resource Group
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              └── Resource
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Scope Level</th>
+<th>Example Assignment</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Group</td>
+<td>Reader across all subscriptions</td>
+<td>Inherited by all child resources</td>
+</tr>
+<tr>
+<td>Subscription</td>
+<td>Contributor for a dev team</td>
+<td>Inherited by all RGs and resources</td>
+</tr>
+<tr>
+<td>Resource Group</td>
+<td>Owner for an app team</td>
+<td>Inherited by resources in the RG</td>
+</tr>
+<tr>
+<td>Resource</td>
+<td>Reader on a single storage account</td>
+<td>Applies only to that resource</td>
+</tr>
+</tbody>
+</table>
+<p>Key exam points:
+- Owner = all permissions including role assignments; Contributor = all except role assignments
+- Reader can view but not modify any resource
+- A role assignment at a higher scope cannot be blocked by one at a lower scope (no deny in RBAC — use Azure Policy for deny)</p>
+<h2 id="policy-vs-initiative">Policy vs Initiative<a class="headerlink" href="#policy-vs-initiative" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Azure Policy</th>
+<th>Initiative (Policy Set)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Definition</td>
+<td>Single rule defining compliance condition</td>
+<td>Collection of policy definitions</td>
+</tr>
+<tr>
+<td>Assignment</td>
+<td>Can be assigned independently</td>
+<td>Assigned as a group</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Enforce one specific rule</td>
+<td>Enforce a compliance standard (e.g., PCI DSS)</td>
+</tr>
+<tr>
+<td>Effect types</td>
+<td>Deny, Audit, AuditIfNotExists, Modify, DeployIfNotExists</td>
+<td>Inherits effects from member policies</td>
+</tr>
+</tbody>
+</table>
+<p>Policy effects in priority order for exam: Disabled → Append → Modify → Deny → Audit</p>
+<h2 id="common-scenario-mappings">Common Scenario Mappings<a class="headerlink" href="#common-scenario-mappings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prevent creation of public storage accounts organization-wide</td>
+<td>Azure Policy (Deny effect) at Management Group</td>
+</tr>
+<tr>
+<td>Allow a VM to access Key Vault without storing credentials</td>
+<td>Managed Identity</td>
+</tr>
+<tr>
+<td>Route all traffic through a central firewall</td>
+<td>User-Defined Routes (UDR) + Azure Firewall</td>
+</tr>
+<tr>
+<td>Mirror logs from multiple subscriptions to one workspace</td>
+<td>Azure Monitor diagnostic settings → Log Analytics</td>
+</tr>
+<tr>
+<td>Protect against DDoS at Layer 7</td>
+<td>Azure Application Gateway WAF</td>
+</tr>
+<tr>
+<td>Protect against volumetric DDoS</td>
+<td>Azure DDoS Protection Standard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="azure-ad-entra-id-key-concepts">Azure AD / Entra ID Key Concepts<a class="headerlink" href="#azure-ad-entra-id-key-concepts" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>Conditional Access</strong>: Enforce MFA/device compliance based on user, location, app, risk signal</li>
+<li><strong>PIM (Privileged Identity Management)</strong>: Just-in-time elevation; audit privileged role assignments</li>
+<li><strong>Azure AD B2B</strong>: Invite external users to your tenant</li>
+<li><strong>Azure AD B2C</strong>: Customer identity platform for app sign-in</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Draw the RBAC scope hierarchy from memory with four levels</li>
+<li>[ ] Explain the difference between Owner and Contributor roles</li>
+<li>[ ] Describe when Bicep is preferred over ARM and when Terraform is preferred</li>
+<li>[ ] Know Azure Policy effects in priority order</li>
+<li>[ ] Practice 5 Conditional Access scenario questions</li>
+<li>[ ] Understand Managed Identity vs Service Principal for app authentication</li>
+<li>[ ] Map Policy vs Initiative vs Management Group for org-wide governance questions</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

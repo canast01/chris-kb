@@ -21,7 +21,7 @@
     
     
       
-        <title>Weak Areas - Chris KB</title>
+        <title>Azure Weak Areas - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Weak Areas · Chris KB">
+  <meta property="og:title" content="Azure Weak Areas · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Weak Areas · Chris KB">
+  <meta name="twitter:title" content="Azure Weak Areas · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#weak-areas" class="md-skip">
+        <a href="#azure-weak-areas" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Weak Areas
+              Azure Weak Areas
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#nsg-vs-asg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        NSG vs ASG
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#vnet-peering-vs-vpn-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        VNet Peering vs VPN Gateway
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#rbac-vs-azure-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        RBAC vs Azure Policy
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#storage-account-redundancy-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Storage Account Redundancy Options
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#managed-disk-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Managed Disk Types
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#study-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Study Checklist
       
     </span>
   </a>
@@ -809,42 +809,232 @@
 
 
 
-<h1 id="weak-areas">Weak Areas<a class="headerlink" href="#weak-areas" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Weak Areas notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="azure-weak-areas">Azure Weak Areas<a class="headerlink" href="#azure-weak-areas" title="Permanent link">&para;</a></h1>
+<h2 id="nsg-vs-asg">NSG vs ASG<a class="headerlink" href="#nsg-vs-asg" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>NSG (Network Security Group)</th>
+<th>ASG (Application Security Group)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Define inbound/outbound traffic rules</td>
+<td>Group NICs/VMs for use as rule source/destination</td>
+</tr>
+<tr>
+<td>Applied to</td>
+<td>Subnet or NIC</td>
+<td>Referenced inside NSG rules</td>
+</tr>
+<tr>
+<td>Standalone</td>
+<td>Yes</td>
+<td>No — only used as NSG rule member</td>
+</tr>
+<tr>
+<td>Dynamic membership</td>
+<td>No (explicit NIC association)</td>
+<td>Yes (associate NIC to ASG)</td>
+</tr>
+<tr>
+<td>Simplification</td>
+<td>Can have many rules with IP ranges</td>
+<td>Replace IP ranges with logical group names</td>
+</tr>
+</tbody>
+</table>
+<p>Exam pattern: "Simplify NSG rules so you don't need to update IP addresses when VMs change" → Use ASGs. NSG rules reference the ASG; when a VM's NIC joins the ASG, it automatically inherits the rule.</p>
+<h2 id="vnet-peering-vs-vpn-gateway">VNet Peering vs VPN Gateway<a class="headerlink" href="#vnet-peering-vs-vpn-gateway" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>VNet Peering</th>
+<th>VPN Gateway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Traffic path</td>
+<td>Microsoft backbone (no internet)</td>
+<td>IPsec/IKE tunnel</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Very low</td>
+<td>Higher (encryption overhead)</td>
+</tr>
+<tr>
+<td>Bandwidth</td>
+<td>Depends on VM SKU</td>
+<td>Up to 10 Gbps (VpnGw5)</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Per GB transferred</td>
+<td>Hourly gateway cost + data transfer</td>
+</tr>
+<tr>
+<td>Transitivity</td>
+<td>Non-transitive</td>
+<td>Can enable with transit routing and BGP</td>
+</tr>
+<tr>
+<td>Cross-region</td>
+<td>Yes (Global VNet Peering)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>On-premises connectivity</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Setup complexity</td>
+<td>Simple</td>
+<td>Requires GatewaySubnet, Public IP, shared key</td>
+</tr>
+</tbody>
+</table>
+<p>Exam gotcha: VNet Peering is non-transitive. VNet A peered with VNet B, VNet B peered with VNet C, does NOT allow A to reach C. Use Azure Virtual WAN or a hub-and-spoke with Azure Firewall for transitive routing.</p>
+<h2 id="rbac-vs-azure-policy">RBAC vs Azure Policy<a class="headerlink" href="#rbac-vs-azure-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Azure RBAC</th>
+<th>Azure Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controls</td>
+<td>What you CAN DO (permissions)</td>
+<td>What IS ALLOWED to exist (compliance)</td>
+</tr>
+<tr>
+<td>Deny capability</td>
+<td>No explicit deny (deny assignment is separate)</td>
+<td>Yes (Deny effect prevents non-compliant resource creation)</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Management Group → Subscription → RG → Resource</td>
+<td>Same hierarchy</td>
+</tr>
+<tr>
+<td>Example</td>
+<td>Grant Contributor role to a VM admin</td>
+<td>Deny creation of VMs with public IP</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>At action time</td>
+<td>At resource create/modify time</td>
+</tr>
+</tbody>
+</table>
+<p>Key insight: RBAC and Policy are complementary. RBAC grants permissions; Policy governs resource properties. Both are needed for full governance.</p>
+<h2 id="storage-account-redundancy-options">Storage Account Redundancy Options<a class="headerlink" href="#storage-account-redundancy-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Copies</th>
+<th>Locations</th>
+<th>Protection Against</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LRS (Locally Redundant)</td>
+<td>3</td>
+<td>Single datacenter</td>
+<td>Hardware failure in one rack</td>
+</tr>
+<tr>
+<td>ZRS (Zone Redundant)</td>
+<td>3</td>
+<td>3 AZs in one region</td>
+<td>AZ failure</td>
+</tr>
+<tr>
+<td>GRS (Geo-Redundant)</td>
+<td>6 (3+3)</td>
+<td>2 regions (paired)</td>
+<td>Regional failure; secondary is read-only unless failover</td>
+</tr>
+<tr>
+<td>GZRS (Geo-Zone Redundant)</td>
+<td>6</td>
+<td>3 AZs primary + paired region</td>
+<td>AZ + regional failure</td>
+</tr>
+<tr>
+<td>RA-GRS / RA-GZRS</td>
+<td>Same as GRS/GZRS</td>
+<td>Same</td>
+<td>Same + secondary is always readable</td>
+</tr>
+</tbody>
+</table>
+<p>Exam pattern: "Tolerate region failure AND always read from secondary" → RA-GRS or RA-GZRS.</p>
+<h2 id="managed-disk-types">Managed Disk Types<a class="headerlink" href="#managed-disk-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>IOPS Max</th>
+<th>Throughput Max</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard HDD</td>
+<td>500</td>
+<td>60 MB/s</td>
+<td>Dev/test, low-priority workloads</td>
+</tr>
+<tr>
+<td>Standard SSD</td>
+<td>6,000</td>
+<td>750 MB/s</td>
+<td>Web servers, lightly used apps</td>
+</tr>
+<tr>
+<td>Premium SSD (v1)</td>
+<td>20,000</td>
+<td>900 MB/s</td>
+<td>Production databases, ERP</td>
+</tr>
+<tr>
+<td>Premium SSD v2</td>
+<td>80,000</td>
+<td>1,200 MB/s</td>
+<td>Latency-sensitive workloads</td>
+</tr>
+<tr>
+<td>Ultra Disk</td>
+<td>400,000</td>
+<td>4,000 MB/s</td>
+<td>SAP HANA, top-tier OLTP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="study-checklist">Study Checklist<a class="headerlink" href="#study-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] Draw a VNet Peering transitivity diagram and explain the limitation</li>
+<li>[ ] Explain ASG with a worked example (3 VMs, 2 ASGs, 1 NSG rule)</li>
+<li>[ ] List all 5 storage redundancy options with copy counts</li>
+<li>[ ] Describe one scenario each for RBAC and Policy as the correct answer</li>
+<li>[ ] Know when to use Premium SSD v2 vs Ultra Disk</li>
+<li>[ ] Practice 5 weak-area scenario questions without looking at notes</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

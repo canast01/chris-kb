@@ -21,7 +21,7 @@
     
     
       
-        <title>Cleanup - Chris KB</title>
+        <title>Confluence Cleanup - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cleanup · Chris KB">
+  <meta property="og:title" content="Confluence Cleanup · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cleanup · Chris KB">
+  <meta name="twitter:title" content="Confluence Cleanup · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cleanup" class="md-skip">
+        <a href="#confluence-cleanup" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cleanup
+              Confluence Cleanup
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#archiving-pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Archiving Pages
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#removing-orphaned-pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Removing Orphaned Pages
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#bulk-delete-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Bulk Delete Operations
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#quarterly-cleanup-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Quarterly Cleanup Checklist
       
     </span>
   </a>
@@ -768,21 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#handling-attachment-bloat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Handling Attachment Bloat
       
     </span>
   </a>
@@ -809,42 +798,142 @@
 
 
 
-<h1 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Confluence Cleanup notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="confluence-cleanup">Confluence Cleanup<a class="headerlink" href="#confluence-cleanup" title="Permanent link">&para;</a></h1>
+<p>Practical guidance for archiving pages, removing orphaned content, and keeping spaces tidy.</p>
+<h2 id="archiving-pages">Archiving Pages<a class="headerlink" href="#archiving-pages" title="Permanent link">&para;</a></h2>
+<p>Archiving removes a page from navigation without deleting it. Archived pages remain searchable but are hidden from space tree views.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Archive a single page via REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;version&quot;:{&quot;number&quot;:3},&quot;type&quot;:&quot;page&quot;,&quot;status&quot;:&quot;archived&quot;}&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all archived pages in a space</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;status=archived&amp;limit=50&quot;</span>
+</code></pre></div>
+<p>To archive in bulk, use: <strong>Space Settings → Content Tools → Archive</strong>.</p>
+<h2 id="removing-orphaned-pages">Removing Orphaned Pages<a class="headerlink" href="#removing-orphaned-pages" title="Permanent link">&para;</a></h2>
+<p>Orphaned pages have no parent and do not appear in the space tree. They accumulate over migrations and copy-paste operations.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Find pages with no parent using CQL in Advanced Search:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># space = &quot;ENG&quot; AND ancestor = null AND status = current</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Via API — fetch pages and filter for empty ancestors</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=ancestors&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.ancestors == []) | {id, title}&#39;</span>
+</code></pre></div>
+<p>Review each result before deletion — some root-level pages are intentional.</p>
+<h2 id="bulk-delete-operations">Bulk Delete Operations<a class="headerlink" href="#bulk-delete-operations" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Delete a page by ID</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/67890&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Move multiple pages to a new parent</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">for</span><span class="w"> </span>PAGE_ID<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">111</span><span class="w"> </span><span class="m">222</span><span class="w"> </span><span class="m">333</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/</span><span class="si">${</span><span class="nv">PAGE_ID</span><span class="si">}</span><span class="s2">/move/append/TARGET_ID&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">done</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Export a page list to CSV for review</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;limit=200&amp;expand=version,ancestors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[] | [.id, .title, .version.when] | @csv&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>space_audit.csv
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>UI Location</th>
+<th>API Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Archive page</td>
+<td>Page Actions → Archive</td>
+<td>PUT /content/{id} status=archived</td>
+</tr>
+<tr>
+<td>Delete page</td>
+<td>Page Actions → Delete</td>
+<td>DELETE /content/{id}</td>
+</tr>
+<tr>
+<td>Move page</td>
+<td>Page Actions → Move</td>
+<td>PUT /content/{id}/move</td>
+</tr>
+<tr>
+<td>Restore archived</td>
+<td>Space Admin → Archived</td>
+<td>PUT /content/{id} status=current</td>
+</tr>
+<tr>
+<td>Bulk delete</td>
+<td>Space Admin → Content Tools</td>
+<td>Iterate DELETE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quarterly-cleanup-checklist">Quarterly Cleanup Checklist<a class="headerlink" href="#quarterly-cleanup-checklist" title="Permanent link">&para;</a></h2>
+<p>Run these checks every quarter to keep spaces healthy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find pages not updated in 365+ days (paste in Advanced Search CQL box)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># space = &quot;ENG&quot; AND lastModified &lt; &quot;2025-05-01&quot; AND status = current</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find stub pages (under 100 characters of body content)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Use export + jq pipeline to check body length</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&amp;expand=body.storage&amp;limit=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select((.body.storage.value | length) &lt; 100) | {id, title}&#39;</span>
+</code></pre></div>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Remove or archive pages with no views in 12 months</li>
+<li>Merge stub pages (fewer than 3 lines of real content)</li>
+<li>Consolidate duplicate how-to pages</li>
+<li>Update or delete pages with broken links</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="handling-attachment-bloat">Handling Attachment Bloat<a class="headerlink" href="#handling-attachment-bloat" title="Permanent link">&para;</a></h2>
+<p>Attachments are a major source of storage growth. Remove stale versions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List attachments for a page</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/child/attachment&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Delete a specific attachment version</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/ATTACHMENT_ID/version/1&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Attachment Type</th>
+<th>Typical Size</th>
+<th>Recommended Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Old screenshots</td>
+<td>200 KB–2 MB</td>
+<td>Delete superseded versions</td>
+</tr>
+<tr>
+<td>PDF exports</td>
+<td>1–10 MB</td>
+<td>Link externally if still needed</td>
+</tr>
+<tr>
+<td>Log files</td>
+<td>Variable</td>
+<td>Delete; store in object storage</td>
+</tr>
+<tr>
+<td>Video recordings</td>
+<td>50–500 MB</td>
+<td>Move to dedicated media host</td>
+</tr>
+</tbody>
+</table>
 
 
 

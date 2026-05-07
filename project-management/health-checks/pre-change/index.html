@@ -21,7 +21,7 @@
     
     
       
-        <title>Pre Change - Chris KB</title>
+        <title>Pre-Change Health Check - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Pre Change · Chris KB">
+  <meta property="og:title" content="Pre-Change Health Check · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Pre Change · Chris KB">
+  <meta name="twitter:title" content="Pre-Change Health Check · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pre-change" class="md-skip">
+        <a href="#pre-change-health-check" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pre Change
+              Pre-Change Health Check
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#pre-change-check-timeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Pre-Change Check Timeline
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#pre-change-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Pre-Change Checklist
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#go-no-go-decision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Go / No-Go Decision
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#baseline-snapshot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Baseline Snapshot
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#backup-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Backup Verification
       
     </span>
   </a>
@@ -809,42 +809,154 @@
 
 
 
-<h1 id="pre-change">Pre Change<a class="headerlink" href="#pre-change" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Health Checks Pre Change notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="pre-change-health-check">Pre-Change Health Check<a class="headerlink" href="#pre-change-health-check" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The pre-change check confirms that the environment is in a stable, known-good state before a change window opens. Implementing a change into an already-degraded environment makes root cause analysis harder, increases risk, and can breach the backout plan assumptions. If the environment is not healthy, the change should not proceed.</p>
+<hr />
+<h2 id="pre-change-check-timeline">Pre-Change Check Timeline<a class="headerlink" href="#pre-change-check-timeline" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full pre-check sweep</td>
+<td>24 hours before window</td>
+</tr>
+<tr>
+<td>Backup verification</td>
+<td>24 hours before window</td>
+</tr>
+<tr>
+<td>Stakeholder notification sent</td>
+<td>24–48 hours before window</td>
+</tr>
+<tr>
+<td>Go/no-go confirmation check</td>
+<td>30 minutes before window</td>
+</tr>
+<tr>
+<td>Pre-change baseline snapshot</td>
+<td>Immediately before start</td>
+</tr>
+</tbody>
+</table>
+<p>If the 24-hour sweep identifies issues, decide whether to resolve them or postpone the change before the go/no-go check.</p>
+<hr />
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>[ ] All services affected by the change are currently healthy</li>
+<li>[ ] No active incidents or P1/P2 issues on affected systems</li>
+<li>[ ] No monitoring alerts currently firing on affected CIs</li>
+<li>[ ] Recent backup confirmed successful (check backup console, not just schedule)</li>
+<li>[ ] Rollback / backout plan reviewed and tested in non-production</li>
+<li>[ ] Change ticket approved and all required approvals in place</li>
+<li>[ ] Change window confirmed with stakeholders (notification sent)</li>
+<li>[ ] All team members confirmed available and on the change bridge</li>
+<li>[ ] Escalation contacts confirmed available (vendor support, on-call lead)</li>
+<li>[ ] Access to all required systems confirmed (VPN, jump hosts, credentials)</li>
+<li>[ ] Runbook / implementation plan steps reviewed by the implementing engineer</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<hr />
+<h2 id="go-no-go-decision">Go / No-Go Decision<a class="headerlink" href="#go-no-go-decision" title="Permanent link">&para;</a></h2>
+<p>The go/no-go check happens 30 minutes before the change window opens. Anyone on the bridge can call no-go if they have a valid concern.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All pre-checks passed</td>
+<td>Go</td>
+</tr>
+<tr>
+<td>Minor alert firing, unrelated to change scope</td>
+<td>Go (document)</td>
+</tr>
+<tr>
+<td>Backup failed in last 24 hours</td>
+<td>No-Go</td>
+</tr>
+<tr>
+<td>Active incident on an affected service</td>
+<td>No-Go</td>
+</tr>
+<tr>
+<td>Required team member unavailable, no backup</td>
+<td>No-Go</td>
+</tr>
+<tr>
+<td>Approval missing from required approver</td>
+<td>No-Go</td>
+</tr>
+<tr>
+<td>Environment behaving differently than expected</td>
+<td>No-Go pending investigation</td>
+</tr>
+</tbody>
+</table>
+<p>A no-go decision must be recorded in the change ticket with the reason. Reschedule promptly and communicate to stakeholders.</p>
+<hr />
+<h2 id="baseline-snapshot">Baseline Snapshot<a class="headerlink" href="#baseline-snapshot" title="Permanent link">&para;</a></h2>
+<p>Immediately before starting the change, record these values. You will compare against them in the post-change check.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Captured Value</th>
+<th>Timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service error rate</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Response time (p95)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CPU utilisation</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Memory utilisation</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Disk usage</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Active connections</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Store the snapshot in the change ticket. This is your baseline for validating success.</p>
+<hr />
+<h2 id="backup-verification">Backup Verification<a class="headerlink" href="#backup-verification" title="Permanent link">&para;</a></h2>
+<p>Backup verification is not just confirming the backup job ran — it is confirming the backup is restorable.</p>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
+<li>[ ] Backup job completed without errors (check logs, not just status)</li>
+<li>[ ] Backup file is present in the expected location</li>
+<li>[ ] Backup file size is consistent with previous runs (significant deviation is a warning sign)</li>
+<li>[ ] For critical changes, perform a test restore of a representative subset to confirm integrity</li>
+<li>[ ] Record backup timestamp and location in the change ticket</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

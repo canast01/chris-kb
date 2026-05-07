@@ -21,7 +21,7 @@
     
     
       
-        <title>Cycle State - Chris KB</title>
+        <title>SRDF/A Cycle State - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cycle State · Chris KB">
+  <meta property="og:title" content="SRDF/A Cycle State · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cycle State · Chris KB">
+  <meta name="twitter:title" content="SRDF/A Cycle State · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cycle-state" class="md-skip">
+        <a href="#srdfa-cycle-state" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cycle State
+              SRDF/A Cycle State
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#cycle-state-definitions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Cycle State Definitions
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#querying-cycle-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Querying Cycle State
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#cycle-time-configuration-and-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Cycle Time Configuration and Monitoring
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#dse-delta-set-extension-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        DSE (Delta Set Extension) Management
       
     </span>
   </a>
@@ -779,10 +779,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#cycle-state-troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Cycle State Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-issues-and-field-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Issues and Field Notes
       
     </span>
   </a>
@@ -809,43 +820,120 @@
 
 
 
-<h1 id="cycle-state">Cycle State<a class="headerlink" href="#cycle-state" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SRDF/A Cycle State notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="srdfa-cycle-state">SRDF/A Cycle State<a class="headerlink" href="#srdfa-cycle-state" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SRDF/A (asynchronous) replication uses a <strong>delta-set / cycle</strong> model instead of per-write synchronous commit. Writes are accumulated in an in-memory delta set on the R1 array during a cycle period (typically 30 seconds). At the end of each cycle the delta set is transmitted to the R2 array and applied atomically. This guarantees R2 is always in a crash-consistent state corresponding to a previous cycle boundary.</p>
+<p>The <strong>cycle state</strong> describes what the array is currently doing with the delta sets. Monitoring cycle state is the primary way to assess SRDF/A health.</p>
+<h2 id="cycle-state-definitions">Cycle State Definitions<a class="headerlink" href="#cycle-state-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cycle State</th>
+<th>Description</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consistent</td>
+<td>R2 is up to date to the last completed cycle</td>
+<td>Normal; RPO = last cycle time</td>
+</tr>
+<tr>
+<td>Transmitting</td>
+<td>Current delta set is being sent to R2</td>
+<td>Normal; transmission in progress</td>
+</tr>
+<tr>
+<td>Awaiting Cycle</td>
+<td>Array is accumulating writes; cycle timer running</td>
+<td>Normal steady-state</td>
+</tr>
+<tr>
+<td>Suspended</td>
+<td>Replication paused; no cycles transmitting</td>
+<td>R2 stale; RPO growing</td>
+</tr>
+<tr>
+<td>Failed Over</td>
+<td>R1 unavailable; R2 made writable</td>
+<td>Production on R2</td>
+</tr>
+<tr>
+<td>DSE Active</td>
+<td>Delta Set Extension activated; cache overflow to DSE device</td>
+<td>High write load; monitor closely</td>
+</tr>
+<tr>
+<td>Inconsistent</td>
+<td>R2 cannot be brought to a consistent state</td>
+<td>Immediate investigation required</td>
+</tr>
+</tbody>
+</table>
+<h2 id="querying-cycle-state">Querying Cycle State<a class="headerlink" href="#querying-cycle-state" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show cycle state for all devices in an SRDF/A group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed view including cycle time and lag</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show cycle statistics: cycle time, bytes, completion status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Cycle|Delta|Lag&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all RDFG groups and confirm which are type A</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show DSE device assignment for a group</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">20</span><span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DSE
+</code></pre></div>
+<h2 id="cycle-time-configuration-and-monitoring">Cycle Time Configuration and Monitoring<a class="headerlink" href="#cycle-time-configuration-and-monitoring" title="Permanent link">&para;</a></h2>
+<p>The cycle time controls how frequently delta sets are transmitted. A shorter cycle time reduces RPO but increases overhead. Default is 30 seconds.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current configured cycle time</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">20</span><span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cycle Time&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Monitor consecutive cycle completions (10 cycles)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">10</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cycle&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">done</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check if cycles are completing within the configured window</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Cycle Time|Completed&quot;</span>
+</code></pre></div>
+<h2 id="dse-delta-set-extension-management">DSE (Delta Set Extension) Management<a class="headerlink" href="#dse-delta-set-extension-management" title="Permanent link">&para;</a></h2>
+<p>DSE activates when write traffic exceeds the in-memory delta set capacity. DSE uses a dedicated storage device as overflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if DSE is active</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DSE
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List DSE device details</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">20</span><span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;DSE&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Monitor DSE utilization percentage</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DSE
+</code></pre></div>
+<p>If DSE utilization climbs above 70%, throttle application write I/O or investigate whether the cycle time needs adjustment.</p>
+<h2 id="cycle-state-troubleshooting">Cycle State Troubleshooting<a class="headerlink" href="#cycle-state-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Identify stuck or excessively long cycles</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Cycle Age|Elapsed&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Force cycle completion during maintenance</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check for Inconsistent state</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Inconsistent
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Resume from Suspended (starts new cycle)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>resume<span class="w"> </span>-noprompt
+</code></pre></div>
+<h2 id="known-issues-and-field-notes">Known Issues and Field Notes<a class="headerlink" href="#known-issues-and-field-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li><strong>Cycles consistently longer than cycle time setting</strong>: Indicates the link cannot keep up with the write workload. Check link utilization with <code>symstat -rdf</code> and consider increasing the cycle time or adding RDF director bandwidth.</li>
+<li><strong>DSE fills up and triggers Suspended state</strong>: The array suspends SRDF/A automatically if DSE reaches 100%. This is a protection mechanism. Immediately investigate write I/O spike and resume replication as soon as DSE drains.</li>
+<li><strong>Inconsistent state after network outage</strong>: If the link drops during a transmission, the partially transmitted delta set is discarded. Replication resumes from the next cycle boundary on link recovery. Confirm <code>Consistent</code> state before measuring RPO.</li>
+<li><strong>Cycle state shows Consistent but RPO is growing</strong>: This paradox occurs if the cycle time itself is increasing (e.g., cycles taking 5 minutes instead of 30 seconds). Monitor cycle elapsed time, not just the Consistent indicator.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 

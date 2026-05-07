@@ -21,7 +21,7 @@
     
     
       
-        <title>Resync - Chris KB</title>
+        <title>SRDF/S Resync - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Resync · Chris KB">
+  <meta property="og:title" content="SRDF/S Resync · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Resync · Chris KB">
+  <meta name="twitter:title" content="SRDF/S Resync · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#resync" class="md-skip">
+        <a href="#srdfs-resync" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Resync
+              SRDF/S Resync
             
           </span>
         </div>
@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overview
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#pre-resync-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Pre-Resync Checks
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#resync-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Resync Operations
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#monitoring-resync-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Monitoring Resync Progress
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#resync-duration-estimation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Resync Duration Estimation
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#known-issues-and-field-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Known Issues and Field Notes
       
     </span>
   </a>
@@ -809,43 +809,109 @@
 
 
 
-<h1 id="resync">Resync<a class="headerlink" href="#resync" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SRDF/S Resync notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="srdfs-resync">SRDF/S Resync<a class="headerlink" href="#srdfs-resync" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Resynchronization restores a fully synchronized SRDF/S pair after the pair has been suspended, split, or failed over. The resync process copies changed tracks from one volume back to the other, making both sides identical again. The direction of the copy depends on which operation preceded the resync.</p>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li>After <strong>Suspend/Resume</strong>: pairs re-sync R1 to R2 automatically on <code>resume</code>.</li>
+<li>After <strong>Failover</strong> (unplanned): use <code>restore</code> to copy R2 back to R1, then <code>establish</code> or <code>failover -establish</code> to reverse replication.</li>
+<li>After <strong>Split</strong>: use <code>establish</code> to restart replication from R1 to R2.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
+<h2 id="pre-resync-checks">Pre-Resync Checks<a class="headerlink" href="#pre-resync-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm current pair state before deciding resync direction</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check how many invalid tracks need to be copied</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Invalid|Tracks&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm the RDF link is healthy before initiating</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-detail
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Estimate resync duration based on track count and link bandwidth</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-dir<span class="w"> </span>RF-1F<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>Plan the resync during low-utilization periods when possible. A resync under heavy host I/O extends completion time and increases link saturation.</p>
+<h2 id="resync-operations">Resync Operations<a class="headerlink" href="#resync-operations" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Resume from Suspended (incremental resync R1 -&gt; R2)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Establish from Split or after manual intervention (R1 -&gt; R2 full/incremental)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>establish<span class="w"> </span>-noprompt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Restore after Failed Over (copy R2 data back to R1)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>restore<span class="w"> </span>-noprompt
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Monitor resync progress in real time</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s1">&#39;symrdf -g 10 query -detail | grep -E &quot;Pair State|Tracks|SyncInProg&quot;&#39;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Resume a single device rather than the full group</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">0001</span><span class="w"> </span>-dev<span class="w"> </span>0A1<span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>resume<span class="w"> </span>-noprompt
+</code></pre></div>
+<h2 id="monitoring-resync-progress">Monitoring Resync Progress<a class="headerlink" href="#monitoring-resync-progress" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Poll pair state until all pairs show Synchronized</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Track percentage complete (shown in SyncInProg state)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check link throughput during resync</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symstat<span class="w"> </span>-rdf<span class="w"> </span>-i<span class="w"> </span><span class="m">10</span><span class="w"> </span>-c<span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm completion: all pairs Synchronized, 0 tracks</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Invalid Tracks&quot;</span>
+</code></pre></div>
+<p>Expected output during active resync:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Dev    Pair State    % Synced    Invalid Tracks
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>---    ----------    --------    --------------
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>0A1    SyncInProg    73%         2,450
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>0A2    SyncInProg    81%         1,102
+</code></pre></div>
+<p>Expected output after completion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Dev    Pair State     % Synced    Invalid Tracks
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>---    ----------     --------    --------------
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>0A1    Synchronized   100%        0
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>0A2    Synchronized   100%        0
+</code></pre></div>
+<h2 id="resync-duration-estimation">Resync Duration Estimation<a class="headerlink" href="#resync-duration-estimation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Volume</th>
+<th>Link Speed</th>
+<th>Estimated Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100 GB changed</td>
+<td>4 Gbps FC</td>
+<td>~4-6 minutes</td>
+</tr>
+<tr>
+<td>1 TB changed</td>
+<td>4 Gbps FC</td>
+<td>~35-50 minutes</td>
+</tr>
+<tr>
+<td>5 TB changed</td>
+<td>8 Gbps FC</td>
+<td>~90-120 minutes</td>
+</tr>
+<tr>
+<td>10 TB changed</td>
+<td>8 Gbps FC</td>
+<td>~3-4 hours</td>
+</tr>
+</tbody>
+</table>
+<p>Times are approximate and depend on concurrent host I/O and array cache state.</p>
+<h2 id="known-issues-and-field-notes">Known Issues and Field Notes<a class="headerlink" href="#known-issues-and-field-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
+<li><strong>Resync stalls with "Transmit Idle"</strong>: The array has temporarily paused sending tracks due to back-pressure on the remote cache. Usually self-resolves. If it persists &gt; 15 minutes, check remote array cache utilization and free cache percentage.</li>
+<li><strong>Establish fails with "Device in use"</strong>: The R1 device has active host I/O that cannot be quiesced. Schedule the establish during a maintenance window or use <code>symrdf -g &lt;rdfg&gt; establish -force</code> after confirming the application is quiesced.</li>
+<li><strong>Resync repeatedly restarts from 0%</strong>: Indicates the link is dropping mid-resync. Review WAN circuit stability and check for packet loss on the RDF path. Solutions Enabler logs under <code>/var/symapi/log/</code> will show disconnect events.</li>
+<li><strong>Post-restore R1 not coming online</strong>: After a <code>restore</code> command the R1 host may need a SCSI bus rescan and possibly a filesystem check before mounting. Never mount R1 volumes before confirming the restore is 100% complete.</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
 
 
 
