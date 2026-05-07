@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-safes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — Safes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pspas-powershell-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        psPAS PowerShell Module
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pacli-legacy-vault-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PACLI (Legacy Vault CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,125 +786,100 @@
 
 
 <h1 id="cyberark-cli-reference">CyberArk CLI Reference<a class="headerlink" href="#cyberark-cli-reference" title="Permanent link">&para;</a></h1>
-<p>CyberArk's primary programmatic interface is the PVWA REST API (v2), which is the preferred method for automation and integration. The <code>psPAS</code> PowerShell module wraps the REST API with native PowerShell cmdlets, and the legacy PACLI command-line client provides direct Vault operations outside of PVWA.</p>
-<p><strong>PVWA REST API (base: <code>https://&lt;pvwa&gt;/PasswordVault/api</code>)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Endpoint</th>
-<th>Method</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/auth/CyberArk/Logon</code></td>
-<td>POST</td>
-<td>Authenticate and obtain session token</td>
-</tr>
-<tr>
-<td><code>/auth/Logoff</code></td>
-<td>POST</td>
-<td>End session</td>
-</tr>
-<tr>
-<td><code>/accounts</code></td>
-<td>GET</td>
-<td>List managed accounts</td>
-</tr>
-<tr>
-<td><code>/accounts/{id}/password/retrieve</code></td>
-<td>POST</td>
-<td>Retrieve account password</td>
-</tr>
-<tr>
-<td><code>/accounts/{id}/change</code></td>
-<td>POST</td>
-<td>Trigger immediate password rotation</td>
-</tr>
-<tr>
-<td><code>/safes</code></td>
-<td>GET</td>
-<td>List all safes</td>
-</tr>
-<tr>
-<td><code>/safes/{safeName}/members</code></td>
-<td>GET</td>
-<td>List safe members</td>
-</tr>
-<tr>
-<td><code>/recordings</code></td>
-<td>GET</td>
-<td>List PSM session recordings</td>
-</tr>
-</tbody>
-</table>
-<p><strong>psPAS PowerShell Module</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cmdlet</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>New-PASSession</code></td>
-<td>Authenticate to PVWA</td>
-</tr>
-<tr>
-<td><code>Close-PASSession</code></td>
-<td>End session</td>
-</tr>
-<tr>
-<td><code>Get-PASAccount</code></td>
-<td>List or search accounts</td>
-</tr>
-<tr>
-<td><code>Get-PASSafe</code></td>
-<td>List safes</td>
-</tr>
-<tr>
-<td><code>Get-PASSafeMember</code></td>
-<td>List safe members</td>
-</tr>
-<tr>
-<td><code>Invoke-PASCPMOperation</code></td>
-<td>Trigger CPM rotation or verify</td>
-</tr>
-<tr>
-<td><code>Get-PASComponentSummary</code></td>
-<td>Health summary of all components</td>
-</tr>
-</tbody>
-</table>
-<p><strong>PACLI (Legacy CLI)</strong></p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PACLI INIT</code></td>
-<td>Initialise PACLI session</td>
-</tr>
-<tr>
-<td><code>PACLI LOGON</code></td>
-<td>Authenticate to Vault</td>
-</tr>
-<tr>
-<td><code>PACLI OPENFILE</code></td>
-<td>Open a safe</td>
-</tr>
-<tr>
-<td><code>PACLI RETRIEVEFILE</code></td>
-<td>Retrieve a credential file</td>
-</tr>
-</tbody>
-</table>
+<p>CyberArk's primary programmatic interface is the PVWA REST API v2. The <code>psPAS</code> PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.</p>
+<hr />
+<h2 id="rest-api-authentication">REST API — Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
+<p>The PVWA REST API base URL is <code>https://&lt;pvwa&gt;/PasswordVault/api</code>. Always end sessions with a Logoff call.</p>
+<pre><code class="language-bash"># Authenticate with CyberArk auth
+curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/CyberArk/Logon   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
+
+# Authenticate with LDAP
+curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/LDAP/Logon   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
+
+# Logoff
+curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/Logoff   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="rest-api-accounts">REST API — Accounts<a class="headerlink" href="#rest-api-accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List managed accounts
+curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?limit=100&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Search accounts by username
+curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?search=svc_oracle&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Retrieve an account password (CPM must allow retrieval)
+curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/password/retrieve&quot;   -H &quot;Authorization: &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;reason&quot;:&quot;maintenance&quot;,&quot;TicketingSystemName&quot;:&quot;&quot;,&quot;TicketId&quot;:&quot;&quot;}'
+
+# Trigger immediate password rotation
+curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/change&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Verify current password
+curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/verify&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="rest-api-safes">REST API — Safes<a class="headerlink" href="#rest-api-safes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all safes
+curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Get safe details
+curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# List safe members
+curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;/members&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="pspas-powershell-module">psPAS PowerShell Module<a class="headerlink" href="#pspas-powershell-module" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Install module
+Install-Module psPAS
+
+# Authenticate
+$session = New-PASSession -Credential (Get-Credential) -BaseURI &quot;https://&lt;pvwa&gt;&quot;
+
+# List accounts
+Get-PASAccount | Select UserName, Address, SafeName
+
+# Get a specific account
+Get-PASAccount -SafeName &quot;ProdSafe&quot; | Where-Object { $_.UserName -eq &quot;svc_db&quot; }
+
+# Rotate a password
+Invoke-PASCPMOperation -AccountID &lt;id&gt; -ChangeTask
+
+# List safes
+Get-PASSafe | Select SafeName, NumberOfDaysRetention
+
+# Get safe members
+Get-PASSafeMember -SafeName &quot;ProdSafe&quot;
+
+# Component health summary
+Get-PASComponentSummary
+
+# End session
+Close-PASSession
+</code></pre>
+<hr />
+<h2 id="pacli-legacy-vault-cli">PACLI (Legacy Vault CLI)<a class="headerlink" href="#pacli-legacy-vault-cli" title="Permanent link">&para;</a></h2>
+<p>PACLI connects directly to the Vault, bypassing PVWA. Use only when PVWA is unavailable.</p>
+<pre><code class="language-bash"># Initialise PACLI
+PACLI INIT
+
+# Define the Vault server
+PACLI DEFINEVAULT vault=&lt;vault_name&gt; address=&lt;vault_ip&gt;
+
+# Logon
+PACLI LOGON vault=&lt;vault_name&gt; user=admin password=&lt;pass&gt;
+
+# Open a safe
+PACLI OPENFILE vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt;
+
+# List files in safe
+PACLI FILESLIST vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt;
+
+# Retrieve a credential file
+PACLI RETRIEVEFILE vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt; folder=Root file=&lt;account_name&gt; localfolder=/tmp
+
+# Logoff
+PACLI LOGOFF vault=&lt;vault_name&gt; user=admin
+</code></pre>
 
 
 

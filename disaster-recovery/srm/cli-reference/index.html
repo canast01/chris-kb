@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-planned-migration-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery (Planned Migration / Failover)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,53 +797,90 @@
 
 
 <h1 id="srm-cli-reference">SRM CLI Reference<a class="headerlink" href="#srm-cli-reference" title="Permanent link">&para;</a></h1>
-<p>SRM management is primarily performed via PowerCLI cmdlets from the <code>VMware.VimAutomation.Srm</code> module. Connect to the SRM server using <code>Connect-SrmServer</code> before running any cmdlets. The SRM REST API (available from SRM 8.3+) provides equivalent functionality for automation pipelines that prefer HTTP over PowerCLI.</p>
-<table>
-<thead>
-<tr>
-<th>Cmdlet / Endpoint</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Connect-SrmServer -SrmServerAddress &lt;fqdn&gt;</code></td>
-<td>Authenticate to SRM server</td>
-</tr>
-<tr>
-<td><code>Get-SRMProtectionGroup</code></td>
-<td>List all protection groups and their status</td>
-</tr>
-<tr>
-<td><code>Get-SRMRecoveryPlan</code></td>
-<td>List all recovery plans</td>
-</tr>
-<tr>
-<td><code>Test-SRMRecoveryPlan -RecoveryPlan &lt;plan&gt;</code></td>
-<td>Initiate a test failover</td>
-</tr>
-<tr>
-<td><code>Start-SRMRecoveryPlan -RecoveryPlan &lt;plan&gt;</code></td>
-<td>Execute a real recovery (failover/migration)</td>
-</tr>
-<tr>
-<td><code>Stop-SRMRecoveryPlan -RecoveryPlan &lt;plan&gt;</code></td>
-<td>Stop an in-progress recovery plan</td>
-</tr>
-<tr>
-<td><code>GET /api/vms</code></td>
-<td>SRM REST API: list protected VMs</td>
-</tr>
-<tr>
-<td><code>GET /api/protection-groups</code></td>
-<td>SRM REST API: list protection groups and status</td>
-</tr>
-<tr>
-<td><code>POST /api/recovery-plans/{id}/actions/test</code></td>
-<td>SRM REST API: trigger test failover</td>
-</tr>
-</tbody>
-</table>
+<p>SRM management is primarily performed via the <code>VMware.VimAutomation.Srm</code> PowerCLI module. Connect to the SRM server with <code>Connect-SrmServer</code> before running any cmdlets. The SRM REST API (available from SRM 8.3+) provides equivalent functionality for automation pipelines.</p>
+<hr />
+<h2 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h2>
+<p>Establish a session to both vCenter and SRM before running any operations.</p>
+<pre><code class="language-powershell"># Connect to vCenter first
+Connect-VIServer -Server &lt;vcenter_fqdn&gt; -User administrator@vsphere.local -Password &lt;pass&gt;
+
+# Connect to SRM server
+Connect-SrmServer -SrmServerAddress &lt;srm_fqdn&gt; -User administrator@vsphere.local -Password &lt;pass&gt;
+
+# Verify connection
+$defaultSrmServer
+
+# Disconnect when done
+Disconnect-SrmServer
+Disconnect-VIServer
+</code></pre>
+<hr />
+<h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
+<p>Protection groups define which VMs are protected and how they map to the recovery site.</p>
+<pre><code class="language-powershell"># List all protection groups
+Get-SRMProtectionGroup
+
+# Get detail for a specific protection group
+Get-SRMProtectionGroup -Name &lt;group_name&gt;
+
+# List VMs in a protection group
+Get-SRMProtectionGroup -Name &lt;group_name&gt; | Get-SRMProtectedVM
+
+# Check protection group status
+Get-SRMProtectionGroup | Select Name, State, ProtectionState
+</code></pre>
+<hr />
+<h2 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h2>
+<p>Recovery plans define the failover sequence and IP customisation rules.</p>
+<pre><code class="language-powershell"># List all recovery plans
+Get-SRMRecoveryPlan
+
+# Show recovery plan details
+Get-SRMRecoveryPlan -Name &lt;plan_name&gt; | Format-List
+
+# List steps in a recovery plan
+Get-SRMRecoveryPlan -Name &lt;plan_name&gt; | Get-SRMRecoveryPlanStep
+</code></pre>
+<hr />
+<h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
+<p>Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.</p>
+<pre><code class="language-powershell"># Start a test failover
+$plan = Get-SRMRecoveryPlan -Name &lt;plan_name&gt;
+$plan.RecoveryPlanService.Start($plan.MoRef, (New-Object VMware.VimAutomation.Srm.Types.V1.RecoveryPlanRecoveryMode))
+
+# Check test status
+Get-SRMRecoveryPlan -Name &lt;plan_name&gt; | Select State, ActiveHistoryTask
+
+# Clean up (remove test snapshot, restore network)
+$plan.RecoveryPlanService.Cancel($plan.MoRef)
+</code></pre>
+<hr />
+<h2 id="recovery-planned-migration-failover">Recovery (Planned Migration / Failover)<a class="headerlink" href="#recovery-planned-migration-failover" title="Permanent link">&para;</a></h2>
+<p>Real recovery — run only during a DR event or planned migration.</p>
+<pre><code class="language-powershell"># Execute planned migration (graceful, bidirectional)
+Start-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name &lt;plan_name&gt;) -RecoveryMode Planned
+
+# Execute emergency failover (one-way, no replication cleanup)
+Start-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name &lt;plan_name&gt;) -RecoveryMode Failover
+
+# Stop an in-progress plan
+Stop-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name &lt;plan_name&gt;)
+</code></pre>
+<hr />
+<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
+<p>SRM 8.3+ exposes a REST API at <code>https://&lt;srm_fqdn&gt;/api</code>.</p>
+<pre><code class="language-bash"># Authenticate
+curl -k -X POST https://&lt;srm_fqdn&gt;/api/sessions   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
+
+# List protection groups
+curl -k -X GET https://&lt;srm_fqdn&gt;/api/groups   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# List recovery plans
+curl -k -X GET https://&lt;srm_fqdn&gt;/api/plans   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Trigger test failover
+curl -k -X POST &quot;https://&lt;srm_fqdn&gt;/api/plans/&lt;plan_id&gt;/actions/test&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
 
 
 

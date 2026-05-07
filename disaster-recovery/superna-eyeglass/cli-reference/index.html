@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-sync-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication &amp; Sync Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onefs-synciq-supporting-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OneFS SyncIQ (Supporting Commands)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,38 +797,95 @@
 
 
 <h1 id="superna-eyeglass-cli-reference">Superna Eyeglass CLI Reference<a class="headerlink" href="#superna-eyeglass-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Eyeglass provides a REST API and a CLI (<code>igls</code>) accessible from the appliance shell for status checks, failover initiation, failback, synchronisation, and report generation. OneFS SyncIQ CLI commands are used in conjunction with Eyeglass operations to verify the underlying replication state.</p>
-<p><strong>Eyeglass CLI (<code>igls</code>):</strong></p>
-<pre><code class="language-bash"># Check overall Eyeglass system status
-igls adm status
+<p>Eyeglass provides the <code>igls</code> CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the <code>admin</code> user.</p>
+<hr />
+<h2 id="appliance-status">Appliance Status<a class="headerlink" href="#appliance-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show Eyeglass service status
+igls status
 
-# Initiate a DR failover for a configuration group
-igls dr failover --config-group &lt;group-name&gt;
+# Show appliance version and build
+igls version
 
-# Initiate failback after a failover
-igls dr failback --config-group &lt;group-name&gt;
+# Show license status
+igls license show
 
-# Force a sync of share/quota/DNS configuration
-igls sync
+# Show cluster nodes (for multi-node deployments)
+igls cluster show
 
-# Generate a DR readiness report
-igls report --type readiness
+# Show network configuration
+igls network show
 </code></pre>
-<p><strong>OneFS SyncIQ CLI:</strong></p>
-<pre><code class="language-bash"># List all SyncIQ policies
+<hr />
+<h2 id="replication-sync-status">Replication &amp; Sync Status<a class="headerlink" href="#replication-sync-status" title="Permanent link">&para;</a></h2>
+<p>Monitor SyncIQ policy replication state from Eyeglass.</p>
+<pre><code class="language-bash"># List all monitored SyncIQ policies and their status
+igls sync show
+
+# Show sync status for a specific policy
+igls sync show --policy &lt;policy_name&gt;
+
+# Force a manual sync check
+igls sync refresh
+
+# Show last replication run times
+igls sync history
+</code></pre>
+<hr />
+<h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
+<p>Eyeglass-managed failover delegates SyncIQ policy operations and DNS updates to the appliance. Run failover from the UI when possible; CLI is for automation.</p>
+<pre><code class="language-bash"># List available failover jobs
+igls failover list
+
+# Run a failover job
+igls failover run --job &lt;job_name&gt;
+
+# Check failover job status
+igls failover status --job &lt;job_name&gt;
+
+# Cancel an in-progress failover
+igls failover cancel --job &lt;job_name&gt;
+</code></pre>
+<hr />
+<h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
+<p>Failback restores the original source cluster as the active side after a failover.</p>
+<pre><code class="language-bash"># List available failback jobs
+igls failback list
+
+# Run a failback
+igls failback run --job &lt;job_name&gt;
+
+# Monitor failback progress
+igls failback status --job &lt;job_name&gt;
+</code></pre>
+<hr />
+<h2 id="onefs-synciq-supporting-commands">OneFS SyncIQ (Supporting Commands)<a class="headerlink" href="#onefs-synciq-supporting-commands" title="Permanent link">&para;</a></h2>
+<p>Run these on the PowerScale/Isilon cluster to verify the underlying replication state that Eyeglass monitors.</p>
+<pre><code class="language-bash"># List all SyncIQ policies and their status
 isi sync policies list
 
-# View running SyncIQ jobs
-isi sync jobs list
+# Show detail for a policy
+isi sync policies view &lt;policy_name&gt;
 
-# View SyncIQ replication reports
+# List recent sync reports
 isi sync reports list
 
-# View details for a specific policy
-isi sync policies view &lt;policy-name&gt;
+# Start a manual SyncIQ sync
+isi sync policies start &lt;policy_name&gt;
 
-# Manually start a SyncIQ policy job
-isi sync jobs start &lt;policy-name&gt;
+# Check SyncIQ service status
+isi sync settings view
+</code></pre>
+<hr />
+<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
+<p>The Eyeglass REST API is available at <code>https://&lt;eyeglass_ip&gt;/eca/api/v1</code>.</p>
+<pre><code class="language-bash"># Authenticate
+curl -k -X POST https://&lt;eyeglass_ip&gt;/eca/api/v1/auth/login   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
+
+# List sync jobs
+curl -k -X GET https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/sync   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List failover jobs
+curl -k -X GET https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/failover   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
 </code></pre>
 
 

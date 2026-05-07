@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insights-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Insights &amp; Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nodes-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodes &amp; Inventory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#services-insights-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services (Insights / Orchestrator)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,50 +797,71 @@
 
 
 <h1 id="nexus-dashboard-cli-reference">Nexus Dashboard CLI Reference<a class="headerlink" href="#nexus-dashboard-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Nexus Dashboard management is primarily via the web UI and REST API. SSH access to ND nodes is available for platform diagnostics. The NDFC REST API and ACI APIC REST API provide programmatic access to fabric management and health data.</p>
-<p><strong>ND Node SSH Commands</strong></p>
-<pre><code class="language-bash"># Check overall ND platform health
+<p>Nexus Dashboard is managed via its REST API and the <code>nd</code> CLI available on the appliance via SSH. The REST API base URL is <code>https://&lt;nd_fqdn&gt;/login</code>. SSH as <code>rescue-user</code> for appliance-level operations.</p>
+<hr />
+<h2 id="appliance-access">Appliance Access<a class="headerlink" href="#appliance-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to Nexus Dashboard
+ssh rescue-user@&lt;nd_fqdn&gt;
+
+# Check ND services status
 acs health
 
-# Check Kubernetes pod status for ND services
-kubectl get pods -n nd-platform
-
-# Show ND node software version
-show version
-
 # Check cluster node status
-acs status
+acs cluster info
+
+# Show ND version
+cat /var/lib/nd/version.txt
+
+# View logs
+kubectl logs -n nd-base &lt;pod_name&gt;
 </code></pre>
-<p><strong>NDFC REST API — Key Endpoints</strong></p>
-<table>
-<thead>
-<tr>
-<th>Endpoint</th>
-<th>Method</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics</code></td>
-<td>GET</td>
-<td>List all fabrics</td>
-</tr>
-<tr>
-<td><code>/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{fabric}/health</code></td>
-<td>GET</td>
-<td>Fabric health score</td>
-</tr>
-<tr>
-<td><code>/appcenter/cisco/ndfc/api/v1/elastic-service/fabrics/{fabric}/deployment-status</code></td>
-<td>GET</td>
-<td>Policy deployment status</td>
-</tr>
-</tbody>
-</table>
-<p><strong>ACI APIC REST API</strong></p>
-<pre><code class="language-bash"># Query fabric faults via APIC REST API
-GET https://&lt;apic&gt;/api/node/class/faultInst.json?query-target-filter=and(gt(faultInst.severity,&quot;minor&quot;))
+<hr />
+<h2 id="rest-api-authentication">REST API — Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Authenticate and get token
+curl -k -X POST https://&lt;nd_fqdn&gt;/login   -H &quot;Content-Type: application/json&quot;   -d '{&quot;userName&quot;:&quot;admin&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;DefaultAuth&quot;}'
+
+# The response contains a token field — use as Authorization header
+</code></pre>
+<hr />
+<h2 id="fabric-health">Fabric Health<a class="headerlink" href="#fabric-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all fabrics (sites) managed by ND
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/sites   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Get health for all sites
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/sites/health   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Get detail for a specific site
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/sites/&lt;site_id&gt;   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="insights-alerts">Insights &amp; Alerts<a class="headerlink" href="#insights-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all active alerts
+curl -k -X GET &quot;https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/faults?severity=critical&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# List anomalies
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/events/anomalies   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# List advisories
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/advisories   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="nodes-inventory">Nodes &amp; Inventory<a class="headerlink" href="#nodes-inventory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all nodes across managed fabrics
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/nodes   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Get node detail
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/nodes/&lt;node_id&gt;   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Check software versions
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/software-upgrades/compatibility   -H &quot;Authorization: &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="services-insights-orchestrator">Services (Insights / Orchestrator)<a class="headerlink" href="#services-insights-orchestrator" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List installed ND services
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/services   -H &quot;Authorization: &lt;token&gt;&quot;
+
+# Get status of a specific service
+curl -k -X GET https://&lt;nd_fqdn&gt;/nexus/infra/api/api/v1/services/&lt;service_id&gt;   -H &quot;Authorization: &lt;token&gt;&quot;
 </code></pre>
 
 

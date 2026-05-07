@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sessions-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions &amp; History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Points
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,68 +808,89 @@
 
 
 <h1 id="veeam-cli-reference">Veeam CLI Reference<a class="headerlink" href="#veeam-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Veeam is managed via the Veeam PowerShell module (<code>Veeam.Backup.PowerShell</code>), loaded automatically in the Veeam PowerShell Console on the Backup Server. For remote execution, import the snap-in with <code>Add-PSSnapin VeeamPSSnapIn</code>. All cmdlets require a connection established with <code>Connect-VBRServer -Server localhost</code> (or remote server name).</p>
-<table>
-<thead>
-<tr>
-<th>Cmdlet</th>
-<th>Purpose</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Get-VBRJob</code></td>
-<td>List all jobs</td>
-<td><code>Get-VBRJob | Select Name, JobType, LastResult</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRBackupSession</code></td>
-<td>List recent sessions</td>
-<td><code>Get-VBRBackupSession | Sort CreationTime -Desc | Select -First 20</code></td>
-</tr>
-<tr>
-<td><code>Start-VBRJob</code></td>
-<td>Start a job manually</td>
-<td><code>Start-VBRJob -Job (Get-VBRJob -Name "prod-vm-daily")</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRRestorePoint</code></td>
-<td>List restore points</td>
-<td><code>Get-VBRRestorePoint -Name "vm01"</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRBackup</code></td>
-<td>List backup chains</td>
-<td><code>Get-VBRBackup | Select JobName, Id</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRRepository</code></td>
-<td>List repositories</td>
-<td><code>Get-VBRRepository | Select Name, FreeSpace, TotalSpace</code></td>
-</tr>
-<tr>
-<td><code>Add-VBRViProxy</code></td>
-<td>Add vSphere proxy</td>
-<td><code>Add-VBRViProxy -Server "proxy01" -Type Vi</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRSANIntegration</code></td>
-<td>List SAN integrations</td>
-<td><code>Get-VBRSANIntegration</code></td>
-</tr>
-<tr>
-<td><code>Get-VBRJob</code> (filter)</td>
-<td>Find failed jobs</td>
-<td><code>Get-VBRJob | Where {$_.LastResult -eq "Failed"}</code></td>
-</tr>
-<tr>
-<td><code>Export-VBRConfiguration</code></td>
-<td>Export config backup</td>
-<td><code>Export-VBRConfiguration -Path C:\vbr-config-backup.xml</code></td>
-</tr>
-</tbody>
-</table>
+<p>Veeam is managed via the <code>Veeam.Backup.PowerShell</code> module, loaded automatically in the Veeam PowerShell Console on the Backup Server. For remote execution, load it with <code>Add-PSSnapin VeeamPSSnapIn</code> then <code>Connect-VBRServer -Server &lt;backup_server&gt;</code>.</p>
+<hr />
+<h2 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Load the Veeam snap-in (if not already loaded)
+Add-PSSnapin VeeamPSSnapIn
+
+# Connect to local Backup Server
+Connect-VBRServer -Server localhost
+
+# Connect to a remote Backup Server
+Connect-VBRServer -Server &lt;hostname&gt; -User &lt;domain\user&gt; -Password &lt;pass&gt;
+
+# Disconnect
+Disconnect-VBRServer
+</code></pre>
+<hr />
+<h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+<p>Jobs are the primary operational unit in Veeam.</p>
+<pre><code class="language-powershell"># List all backup jobs with last result
+Get-VBRJob | Select Name, JobType, LastResult, NextRun
+
+# Find failed jobs
+Get-VBRJob | Where-Object { $_.LastResult -eq &quot;Failed&quot; }
+
+# Start a job manually
+Start-VBRJob -Job (Get-VBRJob -Name &quot;prod-vm-daily&quot;)
+
+# Stop a running job
+Stop-VBRJob -Job (Get-VBRJob -Name &quot;prod-vm-daily&quot;)
+</code></pre>
+<hr />
+<h2 id="sessions-history">Sessions &amp; History<a class="headerlink" href="#sessions-history" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List recent sessions, newest first
+Get-VBRBackupSession | Sort-Object CreationTime -Descending | Select -First 20
+
+# Show session result and duration for a job
+Get-VBRBackupSession | Where-Object { $_.JobName -eq &quot;prod-vm-daily&quot; } |
+  Select JobName, State, Result, CreationTime, EndTime
+</code></pre>
+<hr />
+<h2 id="restore-points">Restore Points<a class="headerlink" href="#restore-points" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List restore points for a VM
+Get-VBRRestorePoint -Name &quot;vm01&quot; | Select Name, CreationTime, IsCorrupted
+
+# Find latest restore point for a VM
+Get-VBRRestorePoint -Name &quot;vm01&quot; | Sort-Object CreationTime -Descending | Select -First 1
+
+# Find restore points for all VMs in a job
+Get-VBRBackup -Name &quot;prod-vm-daily&quot; | Get-VBRRestorePoint
+</code></pre>
+<hr />
+<h2 id="vm-restore">VM Restore<a class="headerlink" href="#vm-restore" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Instant VM recovery to original location
+$rp = Get-VBRRestorePoint -Name &quot;vm01&quot; | Sort-Object CreationTime -Descending | Select -First 1
+Start-VBRRestoreVM -RestorePoint $rp -Reason &quot;DR test&quot;
+
+# Full VM restore
+Start-VBRVMFLRRestore -RestorePoint $rp
+
+# File-level restore (Windows)
+Start-VBRWindowsFileRestore -RestorePoint $rp
+</code></pre>
+<hr />
+<h2 id="infrastructure">Infrastructure<a class="headerlink" href="#infrastructure" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List repositories with free/total space
+Get-VBRRepository | Select Name,
+  @{N=&quot;FreeTB&quot;; E={[math]::Round($_.FreeSpace/1TB,2)}},
+  @{N=&quot;TotalTB&quot;; E={[math]::Round($_.TotalSpace/1TB,2)}}
+
+# List proxies
+Get-VBRViProxy
+
+# List protected VMs
+Get-VBRProtectedVM
+</code></pre>
+<hr />
+<h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Export configuration backup
+Export-VBRConfiguration -Path &quot;C:\vbr-config-backup.xml&quot;
+
+# Check last config backup
+Get-VBRConfigurationDatabaseBackup
+</code></pre>
 
 
 

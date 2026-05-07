@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arrays-fleet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arrays &amp; Fleet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health &amp; Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-sdk-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python SDK Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,42 +797,77 @@
 
 
 <h1 id="pure1-cli-reference">Pure1 CLI Reference<a class="headerlink" href="#pure1-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Pure1 provides a REST API authenticated via OAuth2 client credentials. The <code>pure1</code> CLI (if installed) wraps common API calls for interactive use. All programmatic integrations should use the REST API directly with token-based authentication.</p>
-<p><strong>Pure1 REST API:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Endpoint</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>POST /oauth2/1.0/token</code></td>
-<td>Obtain OAuth2 access token</td>
-</tr>
-<tr>
-<td><code>GET /api/1.latest/arrays</code></td>
-<td>Fleet health and array inventory</td>
-</tr>
-<tr>
-<td><code>GET /api/1.latest/metrics</code></td>
-<td>Performance metrics data</td>
-</tr>
-<tr>
-<td><code>GET /api/1.latest/alerts</code></td>
-<td>Active alerts</td>
-</tr>
-<tr>
-<td><code>GET /api/1.latest/metrics/history</code></td>
-<td>Historical metric data</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Pure1 CLI (if installed):</strong></p>
-<pre><code>pure1 get arrays          # List all arrays and health status
-pure1 get alerts          # List active alerts
-pure1 get metrics         # Query performance metrics
+<p>Pure1 provides a REST API authenticated via OAuth2 client credentials. The <code>pure1</code> CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is <code>https://api.pure1.purestorage.com/api/1.latest</code>.</p>
+<hr />
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Pure1 uses a self-signed RSA private key and a registered application ID for API access. Register the application at <code>https://pure1.purestorage.com/api-registration</code>.</p>
+<pre><code class="language-bash"># Generate RSA key pair for Pure1 API auth
+openssl genrsa -out pure1-private.pem 2048
+openssl rsa -in pure1-private.pem -pubout -out pure1-public.pem
+
+# Create a JWT assertion (Python example)
+python3 -c &quot;
+import jwt, time
+payload = {'iss': '&lt;application_id&gt;', 'iat': int(time.time()), 'exp': int(time.time()) + 86400}
+token = jwt.encode(payload, open('pure1-private.pem').read(), algorithm='RS256')
+print(token)
+&quot;
+
+# Exchange JWT for access token
+curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d &quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&amp;subject_token=&lt;jwt&gt;&amp;subject_token_type=urn:ietf:params:oauth:token-type:jwt&quot;
+</code></pre>
+<hr />
+<h2 id="arrays-fleet">Arrays &amp; Fleet<a class="headerlink" href="#arrays-fleet" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all arrays registered in Pure1
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Filter by model
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=model%3D%27FlashArray%2F%2FX%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Get a specific array by name
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="health-alerts">Health &amp; Alerts<a class="headerlink" href="#health-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all active alerts across fleet
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state%3D%27open%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List alerts for a specific array
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=arrays.name%3D%27&lt;array_name&gt;%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List available metrics
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/metrics&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Query array-level IOPS
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?ids=&lt;metric_id&gt;&amp;resource_ids=&lt;array_id&gt;&amp;start_time=&lt;epoch&gt;&amp;end_time=&lt;epoch&gt;&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Get capacity metrics for all arrays
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Get capacity for a specific array
+curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&amp;fields=name,capacity,space&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="python-sdk-example">Python SDK Example<a class="headerlink" href="#python-sdk-example" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">from py_pure_client import PureOneClient
+
+client = PureOneClient(private_key_file=&quot;pure1-private.pem&quot;,
+                       private_key_password=None,
+                       app_id=&quot;&lt;application_id&gt;&quot;)
+
+# List all arrays
+arrays = client.get_arrays()
+for a in arrays.items:
+    print(a.name, a.model)
+
+# Get active alerts
+alerts = client.get_alerts(filter=&quot;state='open'&quot;)
+for alert in alerts.items:
+    print(alert.summary, alert.severity)
 </code></pre>
 
 

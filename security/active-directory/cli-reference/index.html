@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#replication-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dc-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DC Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsmo-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FSMO Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#users-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Users &amp; Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Controllers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trusts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trusts
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,81 +808,116 @@
 
 
 <h1 id="active-directory-cli-reference">Active Directory CLI Reference<a class="headerlink" href="#active-directory-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Active Directory management spans native command-line tools (<code>repadmin</code>, <code>dcdiag</code>, <code>nltest</code>, <code>netdom</code>, <code>dsquery</code>, <code>dsget</code>) and the ActiveDirectory PowerShell module, which is the preferred interface for automation and scripting. All commands below assume the RSAT-AD-PowerShell feature is installed or the command is run on a Domain Controller.</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>repadmin /replsummary</code></td>
-<td>High-level replication health across all DCs</td>
-</tr>
-<tr>
-<td><code>repadmin /showrepl &lt;DC&gt;</code></td>
-<td>Full replication partner detail for a specific DC</td>
-</tr>
-<tr>
-<td><code>dcdiag /v</code></td>
-<td>Verbose DC diagnostic across all tests</td>
-</tr>
-<tr>
-<td><code>dcdiag /test:replications</code></td>
-<td>Replication-only diagnostic</td>
-</tr>
-<tr>
-<td><code>nltest /dsgetdc:&lt;domain&gt;</code></td>
-<td>Locate a DC for the specified domain</td>
-</tr>
-<tr>
-<td><code>nltest /sc_verify:&lt;domain&gt;</code></td>
-<td>Verify secure channel to domain</td>
-</tr>
-<tr>
-<td><code>netdom query fsmo</code></td>
-<td>List all FSMO role holders</td>
-</tr>
-<tr>
-<td><code>netdom trust &lt;domain&gt; /verify</code></td>
-<td>Verify trust relationship</td>
-</tr>
-<tr>
-<td><code>dsquery user -inactive 4</code></td>
-<td>Find users inactive for 4+ weeks</td>
-</tr>
-<tr>
-<td><code>dsget group "CN=..." -members</code></td>
-<td>List group members</td>
-</tr>
-<tr>
-<td><code>Get-ADUser -Filter * -Properties PasswordLastSet</code></td>
-<td>Query all users with password metadata</td>
-</tr>
-<tr>
-<td><code>Get-ADGroup -Filter * -SearchBase "OU=..."</code></td>
-<td>List groups in an OU</td>
-</tr>
-<tr>
-<td><code>Get-ADComputer -Filter * -Properties LastLogonDate</code></td>
-<td>List computers with last logon</td>
-</tr>
-<tr>
-<td><code>Get-ADReplicationFailure -Scope Forest</code></td>
-<td>Forest-wide replication failures</td>
-</tr>
-<tr>
-<td><code>Get-ADDomainController -Filter *</code></td>
-<td>List all DCs in the domain</td>
-</tr>
-<tr>
-<td><code>Test-ComputerSecureChannel -Repair</code></td>
-<td>Test and repair machine secure channel</td>
-</tr>
-</tbody>
-</table>
+<p>Active Directory management uses native tools (<code>repadmin</code>, <code>dcdiag</code>, <code>nltest</code>, <code>netdom</code>, <code>dsquery</code>) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.</p>
+<hr />
+<h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
+<p>Replication issues cause authentication failures and stale data. Check replication before and after any DC change.</p>
+<pre><code class="language-bash"># High-level replication health across all DCs
+repadmin /replsummary
+
+# Show replication partners and last sync time for a DC
+repadmin /showrepl &lt;DC_name&gt;
+
+# Show replication failures only
+repadmin /showrepl * /errorsonly
+
+# Force replication from all partners
+repadmin /syncall /AdeP
+
+# Check replication queue
+repadmin /queue
+</code></pre>
+<hr />
+<h2 id="dc-diagnostics">DC Diagnostics<a class="headerlink" href="#dc-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full verbose DC diagnostic
+dcdiag /v
+
+# Replication-only test
+dcdiag /test:replications
+
+# DNS diagnostic
+dcdiag /test:dns /v
+
+# Run all tests on a remote DC
+dcdiag /s:&lt;DC_name&gt; /v
+
+# Locate a DC for a domain
+nltest /dsgetdc:&lt;domain_name&gt;
+
+# Verify secure channel to domain
+nltest /sc_verify:&lt;domain_name&gt;
+
+# Reset secure channel
+nltest /sc_reset:&lt;domain_name&gt;
+</code></pre>
+<hr />
+<h2 id="fsmo-roles">FSMO Roles<a class="headerlink" href="#fsmo-roles" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all FSMO role holders
+netdom query fsmo
+
+# Transfer PDC emulator role (PowerShell)
+Move-ADDirectoryServerOperationMasterRole -Identity &lt;target_dc&gt; -OperationMasterRole PDCEmulator
+
+# Seize a role (only if holder is permanently offline)
+Move-ADDirectoryServerOperationMasterRole -Identity &lt;target_dc&gt; -OperationMasterRole PDCEmulator -Force
+</code></pre>
+<hr />
+<h2 id="users-groups">Users &amp; Groups<a class="headerlink" href="#users-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all users with password metadata
+Get-ADUser -Filter * -Properties PasswordLastSet, PasswordExpired, LastLogonDate |
+  Select SamAccountName, PasswordLastSet, PasswordExpired, LastLogonDate
+
+# Find users inactive for 90+ days
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADUser -Filter {LastLogonDate -lt $cutoff} -Properties LastLogonDate
+
+# Find disabled accounts
+Get-ADUser -Filter {Enabled -eq $false}
+
+# Find users with passwords set to never expire
+Get-ADUser -Filter {PasswordNeverExpires -eq $true} -Properties PasswordNeverExpires
+
+# List members of a group
+Get-ADGroupMember -Identity &quot;&lt;group_name&gt;&quot; -Recursive
+
+# List all groups in an OU
+Get-ADGroup -Filter * -SearchBase &quot;OU=&lt;ou&gt;,DC=&lt;domain&gt;,DC=&lt;tld&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="computers">Computers<a class="headerlink" href="#computers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all computers with last logon
+Get-ADComputer -Filter * -Properties LastLogonDate |
+  Select Name, LastLogonDate | Sort-Object LastLogonDate -Descending
+
+# Find stale computer accounts (90+ days)
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADComputer -Filter {LastLogonDate -lt $cutoff} -Properties LastLogonDate
+
+# Test and repair machine secure channel
+Test-ComputerSecureChannel -Repair
+
+# Check if a computer is joined to the domain
+(Get-WmiObject Win32_ComputerSystem).PartOfDomain
+</code></pre>
+<hr />
+<h2 id="domain-controllers">Domain Controllers<a class="headerlink" href="#domain-controllers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all DCs in the domain
+Get-ADDomainController -Filter * | Select Name, Site, IPv4Address, IsGlobalCatalog
+
+# Show replication failures across the forest
+Get-ADReplicationFailure -Scope Forest
+
+# Check AD services on a DC
+Get-Service adws, kdc, netlogon, dns | Select Name, Status
+</code></pre>
+<hr />
+<h2 id="trusts">Trusts<a class="headerlink" href="#trusts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List domain trusts
+netdom trust &lt;domain&gt; /verify
+
+# List all trusts via PowerShell
+Get-ADTrust -Filter * | Select Name, TrustType, Direction, TrustAttributes
+</code></pre>
 
 
 

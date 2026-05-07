@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clients-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clients &amp; Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commserve-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommServe Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,78 +808,119 @@
 
 
 <h1 id="commvault-cli-reference">CommVault CLI Reference<a class="headerlink" href="#commvault-cli-reference" title="Permanent link">&para;</a></h1>
-<p>CommVault provides the <code>qcommand</code> CLI toolkit (installed with CommServe and MediaAgent) and a REST API for automation. The <code>q*</code> commands connect to the CommServe using the current OS credentials or an explicit login. The REST API base URL is <code>https://&lt;CommServeHostname&gt;/webconsole/api/</code> and requires token-based authentication (obtained via <code>POST /Login</code>).</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>qlogin</code></td>
-<td>Authenticate to CommServe</td>
-<td><code>qlogin -cs &lt;CommServe&gt; -u admin</code></td>
-</tr>
-<tr>
-<td><code>qlist jobs</code></td>
-<td>List recent jobs</td>
-<td><code>qlist jobs -d 1</code> (last 1 day)</td>
-</tr>
-<tr>
-<td><code>qoperation backup</code></td>
-<td>Run backup</td>
-<td><code>qoperation backup -subclient &lt;name&gt; -backuptype full</code></td>
-</tr>
-<tr>
-<td><code>qoperation restore</code></td>
-<td>Run restore</td>
-<td><code>qoperation restore -subclient &lt;name&gt; -totime &lt;time&gt;</code></td>
-</tr>
-<tr>
-<td><code>qmodify subclient</code></td>
-<td>Modify subclient</td>
-<td><code>qmodify subclient -subclient &lt;name&gt; -sp &lt;storagepolicy&gt;</code></td>
-</tr>
-<tr>
-<td><code>qdelete job</code></td>
-<td>Kill a job</td>
-<td><code>qdelete job -j &lt;jobid&gt;</code></td>
-</tr>
-<tr>
-<td><code>qsystem dbbackup</code></td>
-<td>Trigger CommServe DB backup</td>
-<td><code>qsystem dbbackup</code></td>
-</tr>
-<tr>
-<td><code>qcommit</code></td>
-<td>Commit configuration changes</td>
-<td><code>qcommit</code></td>
-</tr>
-<tr>
-<td><code>qlist client</code></td>
-<td>List clients</td>
-<td><code>qlist client</code></td>
-</tr>
-<tr>
-<td><code>qlist storagepolicy</code></td>
-<td>List storage policies</td>
-<td><code>qlist storagepolicy</code></td>
-</tr>
-<tr>
-<td><code>qlist ddb</code></td>
-<td>List deduplication databases</td>
-<td><code>qlist ddb</code></td>
-</tr>
-<tr>
-<td><code>qoperation execscript</code></td>
-<td>Run a script on CommServe</td>
-<td><code>qoperation execscript -sn QS_CheckReadiness</code></td>
-</tr>
-</tbody>
-</table>
+<p>CommVault provides the <code>qcommand</code> CLI toolkit installed with CommServe and MediaAgent. The <code>q*</code> commands connect to CommServe using OS credentials or an explicit login. The REST API base URL is <code>https://&lt;CommServeHostname&gt;/webconsole/api/</code> and requires token-based authentication via <code>POST /Login</code>.</p>
+<hr />
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Authenticate before running any CLI operations. On Windows run from <code>C:\Program Files\Commvault\ContentStore\Base\</code>. On Linux, commands are in <code>/opt/commvault/Base/</code>.</p>
+<pre><code class="language-bash"># Login to CommServe
+qlogin -cs &lt;CommServe&gt; -u admin
+
+# Login non-interactively
+qlogin -cs &lt;CommServe&gt; -u admin -p &lt;password&gt;
+
+# Verify current session
+qlist userid
+
+# Logout
+qlogout
+</code></pre>
+<hr />
+<h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+<p>Jobs are the core operational unit. Monitor with <code>qlist jobs</code>, control with <code>qoperation</code>.</p>
+<pre><code class="language-bash"># List active jobs
+qlist jobs
+
+# List jobs from last 24 hours
+qlist jobs -d 1
+
+# List failed jobs from last 24 hours
+qlist jobs -d 1 -failed
+
+# Kill a running job
+qdelete job -j &lt;jobid&gt;
+
+# List jobs for a specific client
+qlist jobs -c &lt;client_name&gt;
+</code></pre>
+<hr />
+<h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
+<p>Trigger backups manually or validate subclient configuration.</p>
+<pre><code class="language-bash"># Run a full backup on a subclient
+qoperation backup -subclient &lt;name&gt; -backuptype full
+
+# Run an incremental backup
+qoperation backup -subclient &lt;name&gt; -backuptype incremental
+
+# Run backup for all subclients in a client
+qoperation backup -c &lt;client_name&gt; -a
+
+# List subclients for a client
+qlist subclient -c &lt;client_name&gt;
+</code></pre>
+<hr />
+<h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
+<p>Always verify destination and time range before executing a restore.</p>
+<pre><code class="language-bash"># Restore to original location at a point in time
+qoperation restore -subclient &lt;name&gt; -totime &quot;2024-01-01 12:00:00&quot;
+
+# Restore to alternate path
+qoperation restore -subclient &lt;name&gt; -topath /restore/destination
+
+# List recent restore jobs
+qlist jobs -d 1 -restore
+</code></pre>
+<hr />
+<h2 id="clients-policies">Clients &amp; Policies<a class="headerlink" href="#clients-policies" title="Permanent link">&para;</a></h2>
+<p>Manage client registration, storage policies, and schedules.</p>
+<pre><code class="language-bash"># List all clients
+qlist client
+
+# List storage policies
+qlist storagepolicy
+
+# List schedules
+qlist schedule
+
+# List deduplication databases
+qlist ddb
+
+# Check client connectivity readiness
+qoperation execscript -sn QS_CheckReadiness
+
+# List backup sets for a client
+qlist backupset -c &lt;client_name&gt;
+</code></pre>
+<hr />
+<h2 id="commserve-maintenance">CommServe Maintenance<a class="headerlink" href="#commserve-maintenance" title="Permanent link">&para;</a></h2>
+<p>Database backup and health tasks for CommServe.</p>
+<pre><code class="language-bash"># Trigger CommServe database backup
+qsystem dbbackup
+
+# Commit pending configuration changes
+qcommit
+
+# Check CommServe services status
+qlist services
+
+# Check license usage
+qlist license
+</code></pre>
+<hr />
+<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
+<p>All operations are also available via REST API for automation.</p>
+<pre><code class="language-bash"># Authenticate and get token
+curl -X POST &quot;https://&lt;CommServe&gt;/webconsole/api/Login&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;&quot;}'
+
+# List all clients
+curl -X GET &quot;https://&lt;CommServe&gt;/webconsole/api/Client&quot; \
+  -H &quot;Authtoken: &lt;token&gt;&quot;
+
+# List active jobs
+curl -X GET &quot;https://&lt;CommServe&gt;/webconsole/api/Job?jobFilter=Active&quot; \
+  -H &quot;Authtoken: &lt;token&gt;&quot;
+</code></pre>
 
 
 

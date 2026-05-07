@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#job-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catalog-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catalog &amp; Media
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-policy-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client &amp; Policy Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error &amp; Log Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,88 +797,115 @@
 
 
 <h1 id="netbackup-cli-reference">NetBackup CLI Reference<a class="headerlink" href="#netbackup-cli-reference" title="Permanent link">&para;</a></h1>
-<p>NetBackup CLI commands run on the Master Server as root (UNIX) or Administrator (Windows). The <code>bp*</code> family covers backup and restore operations; <code>nb*</code> and <code>tp*</code> commands cover EMM, media, and device management. All commands are located in <code>/usr/openv/netbackup/bin/admincmd/</code> (UNIX) or <code>C:\Program Files\Veritas\NetBackup\bin\admincmd\</code> (Windows).</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-<th>Common Usage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bpjobs</code></td>
-<td>List active and recent jobs</td>
-<td><code>bpjobs -summary</code></td>
-</tr>
-<tr>
-<td><code>bpdbjobs</code></td>
-<td>Query job database</td>
-<td><code>bpdbjobs -report -failed -hoursago 24</code></td>
-</tr>
-<tr>
-<td><code>bpbackup</code></td>
-<td>Initiate manual backup</td>
-<td><code>bpbackup -p &lt;policy&gt; -s &lt;schedule&gt; -c &lt;client&gt;</code></td>
-</tr>
-<tr>
-<td><code>bprestore</code></td>
-<td>Initiate restore</td>
-<td><code>bprestore -C &lt;client&gt; -t &lt;type&gt; -L &lt;log&gt;</code></td>
-</tr>
-<tr>
-<td><code>bpclient</code></td>
-<td>Manage client records</td>
-<td><code>bpclient -L -client &lt;name&gt;</code></td>
-</tr>
-<tr>
-<td><code>bppllist</code></td>
-<td>List policies</td>
-<td><code>bppllist -allpolicies -L</code></td>
-</tr>
-<tr>
-<td><code>bpplinclude</code></td>
-<td>List policy file list</td>
-<td><code>bpplinclude -L -p &lt;policy&gt;</code></td>
-</tr>
-<tr>
-<td><code>bpstulist</code></td>
-<td>List storage units</td>
-<td><code>bpstulist</code> or <code>bpstulist -label &lt;stu&gt;</code></td>
-</tr>
-<tr>
-<td><code>nbemmcmd</code></td>
-<td>EMM host management</td>
-<td><code>nbemmcmd -listhosts</code></td>
-</tr>
-<tr>
-<td><code>tpconfig</code></td>
-<td>Tape device configuration</td>
-<td><code>tpconfig -d</code></td>
-</tr>
-<tr>
-<td><code>vmquery</code></td>
-<td>Media/volume management</td>
-<td><code>vmquery -b -m &lt;media_id&gt;</code></td>
-</tr>
-<tr>
-<td><code>bptestbpcd</code></td>
-<td>Test client/media connectivity</td>
-<td><code>bptestbpcd -client &lt;host&gt;</code></td>
-</tr>
-<tr>
-<td><code>bpps</code></td>
-<td>List NetBackup processes</td>
-<td><code>bpps -a</code></td>
-</tr>
-<tr>
-<td><code>bperror</code></td>
-<td>Error code lookup</td>
-<td><code>bperror -backstat -hoursago 24</code></td>
-</tr>
-</tbody>
-</table>
+<p>NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The <code>bp*</code> family covers backup and restore operations; <code>nb*</code> and <code>tp*</code> commands cover EMM, media, and device management. Commands are in <code>/usr/openv/netbackup/bin/admincmd/</code> on Linux or <code>C:\Program Files\Veritas\NetBackup\bin\admincmd\</code> on Windows.</p>
+<hr />
+<h2 id="job-monitoring">Job Monitoring<a class="headerlink" href="#job-monitoring" title="Permanent link">&para;</a></h2>
+<p>Monitor backup and restore jobs in real time or review recent history.</p>
+<pre><code class="language-bash"># High-level job summary
+bpjobs -summary
+
+# List all active jobs
+bpjobs
+
+# Query job database — failed jobs in last 24 hours
+bpdbjobs -report -failed -hoursago 24
+
+# Query job database — all jobs with verbose output
+bpdbjobs -report -all_columns -hoursago 48
+
+# Kill a running job
+bpdbjobs -cancel -jobid &lt;id&gt;
+
+# Check NetBackup processes
+bpps -a
+</code></pre>
+<hr />
+<h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
+<p>Initiate manual backups and inspect policy configuration.</p>
+<pre><code class="language-bash"># Initiate manual backup for a policy/schedule/client
+bpbackup -p &lt;policy&gt; -s &lt;schedule&gt; -c &lt;client&gt;
+
+# List all policies
+bppllist -allpolicies -L
+
+# List file list for a policy
+bpplinclude -L -p &lt;policy&gt;
+
+# List schedules for a policy
+bpplschedrep &lt;policy&gt;
+
+# List clients assigned to a policy
+bpplclients &lt;policy&gt;
+</code></pre>
+<hr />
+<h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
+<p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
+<pre><code class="language-bash"># Restore files for a client
+bprestore -C &lt;client&gt; -t &lt;policy_type&gt; -L /tmp/restore.log &lt;file_path&gt;
+
+# List available restore points (backup images)
+bpimmedia -U -client &lt;client&gt;
+
+# Browse backups for a client
+bplist -C &lt;client&gt; -t &lt;type&gt; -R /
+
+# Initiate instant access restore
+bprestore -L /tmp/restore.log -R -C &lt;client&gt; &lt;path&gt;
+</code></pre>
+<hr />
+<h2 id="catalog-media">Catalog &amp; Media<a class="headerlink" href="#catalog-media" title="Permanent link">&para;</a></h2>
+<p>Manage media, catalog verification, and storage unit health.</p>
+<pre><code class="language-bash"># List all storage units
+bpstulist
+
+# List storage unit detail
+bpstulist -label &lt;stu_name&gt;
+
+# List media volumes
+vmquery -b -m &lt;media_id&gt;
+
+# List all tape drives
+tpconfig -d
+
+# Run catalog backup
+bpcatarc
+
+# Verify catalog integrity
+bpdbm -consistency_check
+</code></pre>
+<hr />
+<h2 id="client-policy-management">Client &amp; Policy Management<a class="headerlink" href="#client-policy-management" title="Permanent link">&para;</a></h2>
+<p>Inspect and manage client records and policy assignments.</p>
+<pre><code class="language-bash"># List all clients
+bpclient -L
+
+# Show detail for a specific client
+bpclient -L -client &lt;name&gt;
+
+# Test BPCD connectivity to a client
+bptestbpcd -client &lt;host&gt;
+
+# Test client backup connectivity
+bptestnetconn -sv -client &lt;host&gt;
+
+# List media servers
+nbemmcmd -listhosts -machinetype mediaserver
+</code></pre>
+<hr />
+<h2 id="error-log-analysis">Error &amp; Log Analysis<a class="headerlink" href="#error-log-analysis" title="Permanent link">&para;</a></h2>
+<p>Decode errors and review logs.</p>
+<pre><code class="language-bash"># Show backup errors from last 24 hours
+bperror -backstat -hoursago 24
+
+# Look up an error code
+bperror -S &lt;exit_status&gt;
+
+# View unified logs (unilog format)
+vxlogview -i 51216 -d 24:00:00
+
+# Tail legacy job logs
+tail -f /usr/openv/netbackup/logs/bprd/log.&lt;today&gt;
+</code></pre>
 
 
 

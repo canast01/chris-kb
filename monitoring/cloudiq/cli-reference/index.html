@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-automation-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Automation Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,48 +797,76 @@
 
 
 <h1 id="cloudiq-cli-reference">CloudIQ CLI Reference<a class="headerlink" href="#cloudiq-cli-reference" title="Permanent link">&para;</a></h1>
-<p>CloudIQ is accessed programmatically via its REST API, authenticated using OAuth2 client credentials. There is no standalone CLI; all automation uses the REST API directly.</p>
-<p><strong>CloudIQ REST API:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Endpoint</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>POST /oauth2/token</code></td>
-<td>Obtain OAuth2 access token (client credentials)</td>
-</tr>
-<tr>
-<td><code>GET /cloudiq/rest/v1/storage-systems</code></td>
-<td>Fleet inventory and health scores</td>
-</tr>
-<tr>
-<td><code>GET /cloudiq/rest/v1/alerts?state=ACTIVE</code></td>
-<td>Active alerts</td>
-</tr>
-<tr>
-<td><code>GET /cloudiq/rest/v1/storage-systems/{id}/capacity</code></td>
-<td>Capacity data for a specific system</td>
-</tr>
-<tr>
-<td><code>GET /cloudiq/rest/v1/recommendations</code></td>
-<td>AIOps recommendations</td>
-</tr>
-<tr>
-<td><code>GET /cloudiq/rest/v1/anomalies</code></td>
-<td>Detected anomalies</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Authentication example (Python):</strong></p>
+<p>CloudIQ is accessed programmatically via its REST API using OAuth2 client credentials. There is no standalone CLI binary; all automation uses the REST API directly. The API base URL is <code>https://cloudiq.apis.dell.com</code>.</p>
+<hr />
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>CloudIQ uses OAuth2 client credentials. Generate a client ID and secret from the CloudIQ portal under Settings → API Access.</p>
+<pre><code class="language-bash"># Request an access token
+curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H &quot;Content-Type: application/x-www-form-urlencoded&quot;   -d &quot;grant_type=client_credentials&amp;client_id=&lt;client_id&gt;&amp;client_secret=&lt;client_secret&gt;&quot;
+
+# The response contains access_token — use it as Bearer token in all requests
+# Token expires in 3600 seconds (1 hour)
+</code></pre>
+<hr />
+<h2 id="system-health">System Health<a class="headerlink" href="#system-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all systems and their health scores
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Get health score for a specific system
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/&lt;system_id&gt;/health-scores&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List all active issues
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/issues?filter=status%20eq%20%22ACTIVE%22&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List capacity metrics for all systems
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/capacity&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Get capacity for a specific system
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/&lt;system_id&gt;/capacity&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Get capacity forecast
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/&lt;system_id&gt;/capacity/forecast&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Get performance metrics for a system
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/&lt;system_id&gt;/metrics&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Filter by metric type (iops, latency, bandwidth)
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/&lt;system_id&gt;/metrics?filter=metric_name%20eq%20%22iops%22&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all recommendations
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List recommendations for a specific system
+curl -X GET &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=system_id%20eq%20%22&lt;system_id&gt;%22&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="python-automation-example">Python Automation Example<a class="headerlink" href="#python-automation-example" title="Permanent link">&para;</a></h2>
 <pre><code class="language-python">import requests
-resp = requests.post(&quot;https://cloudiq.dell.com/oauth2/token&quot;,
+
+# Authenticate
+token_resp = requests.post(
+    &quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;,
     data={&quot;grant_type&quot;: &quot;client_credentials&quot;,
-          &quot;client_id&quot;: CLIENT_ID, &quot;client_secret&quot;: CLIENT_SECRET})
-token = resp.json()[&quot;access_token&quot;]
+          &quot;client_id&quot;: &quot;&lt;client_id&gt;&quot;,
+          &quot;client_secret&quot;: &quot;&lt;client_secret&gt;&quot;}
+)
+token = token_resp.json()[&quot;access_token&quot;]
+headers = {&quot;Authorization&quot;: f&quot;Bearer {token}&quot;}
+
+# List all systems
+systems = requests.get(
+    &quot;https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems&quot;,
+    headers=headers
+).json()
+
+for s in systems.get(&quot;results&quot;, []):
+    print(s[&quot;system_name&quot;], s.get(&quot;health_score&quot;))
 </code></pre>
 
 

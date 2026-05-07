@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pair-state-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair State &amp; Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#establish-suspend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Establish &amp; Suspend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover &amp; Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swap-metro-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Swap &amp; Metro Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-health-check-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Health Check Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,53 +797,87 @@
 
 
 <h1 id="srdfs-cli-reference">SRDF/S CLI Reference<a class="headerlink" href="#srdfs-cli-reference" title="Permanent link">&para;</a></h1>
-<p>All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the target array. Always specify <code>-g &lt;group&gt;</code> to scope operations to the correct SRDF group and avoid unintended impact to other pairs.</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>symrdf query -g &lt;group&gt;</code></td>
-<td>Show pair states for all devices in the group</td>
-</tr>
-<tr>
-<td><code>symrdf list -v</code></td>
-<td>List all SRDF groups with verbose state detail</td>
-</tr>
-<tr>
-<td><code>symrdf establish -g &lt;group&gt;</code></td>
-<td>Establish (re-sync) an SRDF pair</td>
-</tr>
-<tr>
-<td><code>symrdf suspend -g &lt;group&gt;</code></td>
-<td>Suspend replication (converts to async temporarily)</td>
-</tr>
-<tr>
-<td><code>symrdf failover -g &lt;group&gt;</code></td>
-<td>Perform a failover to the R2 (target) side</td>
-</tr>
-<tr>
-<td><code>symrdf failback -g &lt;group&gt;</code></td>
-<td>Fail back to the original R1 (source) side</td>
-</tr>
-<tr>
-<td><code>symrdf resync -g &lt;group&gt;</code></td>
-<td>Resynchronise after a split or failover</td>
-</tr>
-<tr>
-<td><code>symcfg list -rdfg</code></td>
-<td>List all SRDF groups and port/link states</td>
-</tr>
-<tr>
-<td><code>symdg list</code></td>
-<td>List device groups including SRDF group membership</td>
-</tr>
-</tbody>
-</table>
+<p>All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify <code>-g &lt;group&gt;</code> to scope operations to the correct SRDF group and <code>-sid &lt;sid&gt;</code> to target the correct array.</p>
+<hr />
+<h2 id="pair-state-health">Pair State &amp; Health<a class="headerlink" href="#pair-state-health" title="Permanent link">&para;</a></h2>
+<p>Monitor SRDF/S pair states and link health before and after any change.</p>
+<pre><code class="language-bash"># Show pair states for all devices in an SRDF group
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; query
+
+# Verbose pair state detail
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; query -v
+
+# List all SRDF groups with port and link state
+symcfg -sid &lt;sid&gt; list -rdfg
+
+# List all SRDF groups — both sides
+symcfg list -rdfg -v
+
+# Show SRDF link performance counters
+symstat -sid &lt;sid&gt; -type rdf -v
+</code></pre>
+<hr />
+<h2 id="device-groups">Device Groups<a class="headerlink" href="#device-groups" title="Permanent link">&para;</a></h2>
+<p>Device groups scope SRDF operations. Confirm group membership before running any failover or resync.</p>
+<pre><code class="language-bash"># List all device groups
+symdg list
+
+# Show devices in a specific group
+symdg show &lt;group_name&gt;
+
+# List SRDF group membership
+symrdf -sid &lt;sid&gt; list -v
+
+# Show full device pair detail
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; -v show
+</code></pre>
+<hr />
+<h2 id="establish-suspend">Establish &amp; Suspend<a class="headerlink" href="#establish-suspend" title="Permanent link">&para;</a></h2>
+<p>Use establish to create or re-establish synchronous replication. Use suspend carefully — it stops replication.</p>
+<pre><code class="language-bash"># Establish (initial sync or re-establish after split)
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; establish -noprompt
+
+# Suspend replication (R2 becomes read/write accessible)
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; suspend -noprompt
+
+# Check pair state after suspend
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; query
+</code></pre>
+<hr />
+<h2 id="failover-failback">Failover &amp; Failback<a class="headerlink" href="#failover-failback" title="Permanent link">&para;</a></h2>
+<p>Failover makes R2 the new production side. Always run in a maintenance window except during a real DR event.</p>
+<pre><code class="language-bash"># Planned failover (splits pairs, R2 becomes R/W)
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; failover -noprompt
+
+# Verify R2 is now active
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; query
+
+# Failback to original R1 (after restoring R1 site)
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; failback -noprompt
+
+# Resynchronise after failover or split
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; resync -noprompt
+</code></pre>
+<hr />
+<h2 id="swap-metro-operations">Swap &amp; Metro Operations<a class="headerlink" href="#swap-metro-operations" title="Permanent link">&para;</a></h2>
+<p>For SRDF/Metro or swap operations on bidirectional configurations.</p>
+<pre><code class="language-bash"># Swap R1/R2 roles
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; swap -noprompt
+
+# Set SRDF mode to synchronous
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; setmode -sync -noprompt
+
+# Set SRDF mode to asynchronous (temporary degraded mode)
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; setmode -acp_disk -noprompt
+</code></pre>
+<hr />
+<h2 id="common-health-check-sequence">Common Health Check Sequence<a class="headerlink" href="#common-health-check-sequence" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Full SRDF/S pre-change health check
+symcfg -sid &lt;sid&gt; list -rdfg
+symrdf -sid &lt;sid&gt; -g &lt;group&gt; query
+symrdf -sid &lt;sid&gt; list -v
+symdg show &lt;group_name&gt;
+</code></pre>
 
 
 

@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#openssl-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        openssl — Inspection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openssl-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        openssl — Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openssl-tls-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        openssl — TLS Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certutil-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        certutil — Windows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-windows-certificate-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell — Windows Certificate Store
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-csr-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key &amp; CSR Generation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,48 +797,129 @@
 
 
 <h1 id="certificates-cli-reference">Certificates CLI Reference<a class="headerlink" href="#certificates-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Windows certificate operations use <code>certutil</code> for verification, revocation, and store management, plus <code>certmgr.msc</code> for the GUI store. Linux operations rely on the <code>openssl</code> CLI for inspection, verification, and TLS connectivity testing. PowerShell provides <code>Get-ChildItem Cert:\</code> for browsing the Windows certificate store and <code>Test-Certificate</code> for chain validation.</p>
-<p><strong>Windows (<code>certutil</code>):</strong></p>
-<pre><code class="language-cmd"># Verify a certificate file
-certutil -verify cert.cer
-
-# Display certificate details
-certutil -dump cert.cer
-
-# Revoke a certificate (CA admin)
-certutil -revoke &lt;SerialNumber&gt; &lt;ReasonCode&gt;
-
-# Check CRL freshness
-certutil -urlcache crl
-
-# Verify chain against a CA
-certutil -verify -urlfetch cert.cer
-</code></pre>
-<p><strong>Linux (<code>openssl</code>):</strong></p>
-<pre><code class="language-bash"># Test TLS connectivity and view server certificate
-openssl s_client -connect host:443 -showcerts
-
-# Display certificate details from a PEM file
+<p>Windows certificate operations use <code>certutil</code> for verification, revocation, and store management. Linux operations rely on <code>openssl</code> for inspection, verification, and TLS connectivity testing. PowerShell provides <code>Get-ChildItem Cert:\</code> for the Windows certificate store and <code>Test-Certificate</code> for chain validation.</p>
+<hr />
+<h2 id="openssl-inspection">openssl — Inspection<a class="headerlink" href="#openssl-inspection" title="Permanent link">&para;</a></h2>
+<p>Inspect certificates, keys, and chains before deploying or renewing.</p>
+<pre><code class="language-bash"># View all certificate fields
 openssl x509 -in cert.pem -noout -text
 
-# Verify certificate against a CA chain
-openssl verify -CAfile chain.pem cert.pem
+# Show subject, issuer, and expiry only
+openssl x509 -in cert.pem -noout -subject -issuer -dates
 
-# Check certificate expiry date
-openssl x509 -in cert.pem -noout -enddate
+# Show SANs (Subject Alternative Names)
+openssl x509 -in cert.pem -noout -text | grep -A1 &quot;Subject Alternative&quot;
 
-# Generate a CSR
-openssl req -new -newkey rsa:4096 -keyout key.pem -out csr.pem -subj &quot;/CN=server.example.com&quot;
+# Compute SHA-1 thumbprint
+openssl x509 -in cert.pem -noout -fingerprint -sha1
+
+# Compute SHA-256 fingerprint
+openssl x509 -in cert.pem -noout -fingerprint -sha256
+
+# Inspect a PKCS#12 bundle
+openssl pkcs12 -info -in cert.p12 -noout
+
+# View a CSR
+openssl req -in request.csr -noout -text
 </code></pre>
-<p><strong>PowerShell:</strong></p>
-<pre><code class="language-powershell"># Browse the Windows certificate store
-Get-ChildItem Cert:\LocalMachine\My
+<hr />
+<h2 id="openssl-verification">openssl — Verification<a class="headerlink" href="#openssl-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify certificate matches the private key (moduli must match)
+openssl x509 -noout -modulus -in cert.pem | md5sum
+openssl rsa  -noout -modulus -in key.pem  | md5sum
+
+# Verify certificate against a CA bundle
+openssl verify -CAfile ca-bundle.pem cert.pem
+
+# Verify full chain (intermediate + root)
+openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
+
+# Check days until expiry
+openssl x509 -enddate -noout -in cert.pem |   awk -F= '{print $2}' | xargs -I{} date -d &quot;{}&quot; +%s |   awk -v now=$(date +%s) '{print int(($1-now)/86400)&quot; days remaining&quot;}'
+</code></pre>
+<hr />
+<h2 id="openssl-tls-testing">openssl — TLS Testing<a class="headerlink" href="#openssl-tls-testing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test TLS handshake and show server certificate
+openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;
+
+# Check specific TLS version support
+openssl s_client -connect &lt;host&gt;:443 -tls1_2
+openssl s_client -connect &lt;host&gt;:443 -tls1_3
+
+# Show full certificate chain from a live endpoint
+openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt; 2&gt;/dev/null |   openssl x509 -noout -text
+
+# Test LDAPS
+openssl s_client -connect &lt;ldap_host&gt;:636
+
+# Test SMTPS
+openssl s_client -connect &lt;smtp_host&gt;:465 -starttls smtp
+</code></pre>
+<hr />
+<h2 id="certutil-windows">certutil — Windows<a class="headerlink" href="#certutil-windows" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify a certificate file
+certutil -verify cert.pem
+
+# Display certificate detail
+certutil -dump cert.pem
+
+# Check revocation (CRL/OCSP)
+certutil -verify -urlfetch cert.pem
+
+# Add a certificate to the Trusted Root store
+certutil -addstore Root ca.crt
+
+# Remove a certificate from the store by thumbprint
+certutil -delstore My &lt;thumbprint&gt;
+
+# List all certs in the Personal store
+certutil -store My
+</code></pre>
+<hr />
+<h2 id="powershell-windows-certificate-store">PowerShell — Windows Certificate Store<a class="headerlink" href="#powershell-windows-certificate-store" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all certs in the Personal (My) store
+Get-ChildItem Cert:\LocalMachine\My | Select Subject, Thumbprint, NotAfter
 
 # Find certificates expiring within 30 days
-Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.NotAfter -lt (Get-Date).AddDays(30) }
+$cutoff = (Get-Date).AddDays(30)
+Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.NotAfter -lt $cutoff }
 
-# Validate a certificate chain
-Test-Certificate -Cert (Get-Item Cert:\LocalMachine\My\&lt;Thumbprint&gt;)
+# Find by thumbprint
+Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq &quot;&lt;thumbprint&gt;&quot; }
+
+# Validate certificate chain
+Get-ChildItem Cert:\LocalMachine\My | Test-Certificate
+
+# Export certificate to PEM
+$cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -like &quot;*&lt;cn&gt;*&quot; }
+[System.IO.File]::WriteAllBytes(&quot;C:\cert.cer&quot;, $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))
+</code></pre>
+<hr />
+<h2 id="key-csr-generation">Key &amp; CSR Generation<a class="headerlink" href="#key-csr-generation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Generate a 2048-bit RSA private key
+openssl genrsa -out key.pem 2048
+
+# Generate a 4096-bit RSA key
+openssl genrsa -out key.pem 4096
+
+# Generate an EC key (P-256)
+openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem
+
+# Create a CSR from an existing key
+openssl req -new -key key.pem -out request.csr   -subj &quot;/CN=&lt;common_name&gt;/O=&lt;org&gt;/C=&lt;country&gt;&quot;
+
+# Create a CSR with SANs (using a config file)
+openssl req -new -key key.pem -out request.csr -config &lt;(cat &lt;&lt;EOF
+[req]
+distinguished_name = dn
+req_extensions = v3_req
+prompt = no
+[dn]
+CN = &lt;common_name&gt;
+[v3_req]
+subjectAltName = DNS:&lt;san1&gt;,DNS:&lt;san2&gt;
+EOF
+)
 </code></pre>
 
 

@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sos-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SoS Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-bundles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Bundles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-status-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Status &amp; Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,57 +786,85 @@
 
 
 <h1 id="vmware-cloud-foundation-cli-reference">VMware Cloud Foundation CLI Reference<a class="headerlink" href="#vmware-cloud-foundation-cli-reference" title="Permanent link">&para;</a></h1>
-<p>VCF CLI operations are spread across the SoS (Support and Operations Suite) utility on SDDC Manager, the SDDC Manager REST API, the <code>vcf-support-bundle</code> tool, and direct SSH commands on individual components. SoS is the primary health-check and diagnostic tool and is run from the SDDC Manager appliance. Password management for VCF-managed credentials is performed via the <code>password-manager</code> service or the SDDC Manager UI.</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>python3 /opt/vmware/sddc-support/sos --health-summary</code></td>
-<td>Run SoS full health check across all domains</td>
-</tr>
-<tr>
-<td><code>python3 /opt/vmware/sddc-support/sos --health-check --domain &lt;name&gt;</code></td>
-<td>Run health check for a specific workload domain</td>
-</tr>
-<tr>
-<td><code>python3 /opt/vmware/sddc-support/sos --help</code></td>
-<td>List all SoS flags and options</td>
-</tr>
-<tr>
-<td><code>vcf-support-bundle --type lcm</code></td>
-<td>Collect LCM-specific support bundle</td>
-</tr>
-<tr>
-<td><code>vcf-support-bundle --type sddc</code></td>
-<td>Collect full SDDC Manager support bundle</td>
-</tr>
-<tr>
-<td><code>curl -sk -u 'admin:&lt;pass&gt;' https://sddc-mgr/v1/domains</code></td>
-<td>List all VCF domains via API</td>
-</tr>
-<tr>
-<td><code>curl -sk -u 'admin:&lt;pass&gt;' https://sddc-mgr/v1/clusters</code></td>
-<td>List all clusters via API</td>
-</tr>
-<tr>
-<td><code>curl -sk -u 'admin:&lt;pass&gt;' https://sddc-mgr/v1/credentials</code></td>
-<td>List managed credentials via API</td>
-</tr>
-<tr>
-<td><code>systemctl status sddc-manager</code></td>
-<td>Check SDDC Manager service status</td>
-</tr>
-<tr>
-<td><code>tail -f /var/log/vmware/vcf/lcm/lcm-debug.log</code></td>
-<td>Follow LCM debug log on SDDC Manager</td>
-</tr>
-</tbody>
-</table>
+<p>VCF CLI operations use the SoS (Support and Operations Suite) utility on SDDC Manager, the SDDC Manager REST API, the <code>vcf-support-bundle</code> tool, and direct SSH commands on individual components. SoS is the primary health-check and diagnostic tool, run from the SDDC Manager appliance as root.</p>
+<hr />
+<h2 id="sos-health-checks">SoS Health Checks<a class="headerlink" href="#sos-health-checks" title="Permanent link">&para;</a></h2>
+<p>SoS performs cross-domain health validation across all VCF components. Run from the SDDC Manager appliance.</p>
+<pre><code class="language-bash"># SSH to SDDC Manager
+ssh vcf@&lt;sddc-mgr-fqdn&gt;
+
+# Full health summary across all domains
+sudo python3 /opt/vmware/sddc-support/sos --health-summary
+
+# Health check for a specific workload domain
+sudo python3 /opt/vmware/sddc-support/sos --health-check --domain &lt;domain_name&gt;
+
+# Password validation check
+sudo python3 /opt/vmware/sddc-support/sos --password-health
+
+# Certificate validation
+sudo python3 /opt/vmware/sddc-support/sos --certificate-health
+
+# List all available SoS flags
+sudo python3 /opt/vmware/sddc-support/sos --help
+</code></pre>
+<hr />
+<h2 id="support-bundles">Support Bundles<a class="headerlink" href="#support-bundles" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Collect LCM-specific support bundle
+sudo vcf-support-bundle --type lcm
+
+# Collect full SDDC Manager support bundle
+sudo vcf-support-bundle --type sddc
+
+# Collect bundle for a specific component
+sudo vcf-support-bundle --type nsx
+
+# List available bundle types
+sudo vcf-support-bundle --help
+</code></pre>
+<hr />
+<h2 id="sddc-manager-rest-api">SDDC Manager REST API<a class="headerlink" href="#sddc-manager-rest-api" title="Permanent link">&para;</a></h2>
+<p>The SDDC Manager API runs at <code>https://&lt;sddc-mgr&gt;/v1</code>. Authenticate with the <code>vcf</code> admin account.</p>
+<pre><code class="language-bash"># Authenticate and get token
+curl -k -X POST https://&lt;sddc-mgr&gt;/v1/tokens   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
+
+# List all domains
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/domains   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List all clusters
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/clusters   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List managed credentials
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List hosts
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/hosts   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# List workload domains
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/domains   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all managed credentials via API
+curl -k -X GET https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
+
+# Rotate a credential
+curl -k -X PATCH https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;operationType&quot;:&quot;ROTATE&quot;,&quot;elements&quot;:[{&quot;resourceName&quot;:&quot;&lt;name&gt;&quot;,&quot;resourceType&quot;:&quot;&lt;type&gt;&quot;,&quot;credentials&quot;:[{&quot;credentialType&quot;:&quot;&lt;type&gt;&quot;,&quot;username&quot;:&quot;&lt;user&gt;&quot;}]}]}'
+</code></pre>
+<hr />
+<h2 id="service-status-logs">Service Status &amp; Logs<a class="headerlink" href="#service-status-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SDDC Manager service
+systemctl status sddc-manager
+
+# Follow LCM debug log
+tail -f /var/log/vmware/vcf/lcm/lcm-debug.log
+
+# Follow SDDC Manager application log
+tail -f /var/log/vmware/vcf/sddc-manager/sddc-manager.log
+
+# View recent system events
+journalctl -u sddc-manager --since &quot;2 hours ago&quot;
+</code></pre>
 
 
 

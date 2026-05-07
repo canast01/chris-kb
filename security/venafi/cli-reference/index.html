@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vcert-cli-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vcert CLI — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Renewal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tpp-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TPP REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-inspection-openssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Inspection (openssl)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,43 +797,71 @@
 
 
 <h1 id="venafi-cli-reference">Venafi CLI Reference<a class="headerlink" href="#venafi-cli-reference" title="Permanent link">&para;</a></h1>
-<p>The VCert CLI is the primary command-line tool for interacting with Venafi TPP and VaaS. Key commands cover credential management, certificate enrolment, renewal, and revocation. The Venafi REST API (VEDSK) provides the same capabilities for automation and integration workflows.</p>
-<p>PowerShell module commands (<code>VenafiPS</code>) are available for Windows-based automation and wrap both the REST API and VCert functionality.</p>
-<p><strong>VCert CLI:</strong></p>
-<pre><code class="language-bash"># Obtain API credentials
-vcert getcredential --tpp-url https://tpp.example.com --username admin
+<p>Venafi is managed via the <code>vcert</code> CLI (Trust Protection Platform and Venafi as a Service), the TPP REST API, and PowerShell cmdlets. The <code>vcert</code> CLI is the primary tool for certificate request, renewal, and retrieval automation.</p>
+<hr />
+<h2 id="vcert-cli-authentication">vcert CLI — Authentication<a class="headerlink" href="#vcert-cli-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Authenticate to Venafi as a Service (VaaS)
+vcert getcred --platform vaas --apiKey &lt;api_key&gt;
 
-# Enrol a new certificate
-vcert enroll --tpp-url https://tpp.example.com \
-  --token &lt;token&gt; \
-  --zone &quot;\VED\Policy\Internal\Production&quot; \
-  --cn server.example.com \
-  --san-dns server.example.com
+# Authenticate to Trust Protection Platform (TPP)
+vcert getcred --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   --username &lt;user&gt; --password &lt;pass&gt;
 
-# Renew an existing certificate
-vcert renew --tpp-url https://tpp.example.com \
-  --token &lt;token&gt; \
-  --id &quot;\VED\Policy\Internal\Production\server.example.com&quot;
-
-# Revoke a certificate
-vcert revoke --tpp-url https://tpp.example.com \
-  --token &lt;token&gt; \
-  --id &quot;\VED\Policy\Internal\Production\server.example.com&quot;
+# Verify credentials
+vcert checkcred --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;
 </code></pre>
-<p><strong>Venafi REST API (VEDSDK):</strong></p>
-<pre><code class="language-bash"># List certificates
-GET /vedsdk/certificates?Limit=100&amp;Offset=0
+<hr />
+<h2 id="certificate-requests">Certificate Requests<a class="headerlink" href="#certificate-requests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Request a certificate (TPP)
+vcert enroll --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;   --zone &quot;\VED\Policy\Certificates\&lt;policy_folder&gt;&quot;   --cn &lt;common_name&gt;   --san-dns &lt;san1&gt; --san-dns &lt;san2&gt;   --key-type rsa --key-size 2048   --cert-file cert.pem --key-file key.pem --chain-file chain.pem
+
+# Request a certificate (VaaS)
+vcert enroll --platform vaas --apiKey &lt;key&gt;   --zone &quot;&lt;application&gt;\&lt;issuing_template&gt;&quot;   --cn &lt;common_name&gt;   --cert-file cert.pem --key-file key.pem
+</code></pre>
+<hr />
+<h2 id="certificate-renewal">Certificate Renewal<a class="headerlink" href="#certificate-renewal" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Renew a certificate by thumbprint
+vcert renew --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;   --thumbprint &lt;sha1_thumbprint&gt;   --cert-file renewed.pem --key-file renewed-key.pem
+
+# Renew by certificate DN (TPP path)
+vcert renew --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;   --id &quot;\VED\Policy\Certificates\&lt;policy_folder&gt;\&lt;cn&gt;&quot;   --cert-file renewed.pem
+</code></pre>
+<hr />
+<h2 id="certificate-retrieval">Certificate Retrieval<a class="headerlink" href="#certificate-retrieval" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Retrieve an existing certificate
+vcert retrieve --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;   --id &quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;   --cert-file cert.pem --key-file key.pem --chain-file chain.pem
+
+# Retrieve in PKCS#12 format
+vcert retrieve --platform tpp --url https://&lt;tpp_fqdn&gt;/vedsdk   -t &lt;token&gt;   --id &quot;\VED\Policy\Certificates\&lt;folder&gt;\&lt;cn&gt;&quot;   --format pkcs12 --file cert.p12 --password &lt;p12_pass&gt;
+</code></pre>
+<hr />
+<h2 id="tpp-rest-api">TPP REST API<a class="headerlink" href="#tpp-rest-api" title="Permanent link">&para;</a></h2>
+<p>The TPP REST API base URL is <code>https://&lt;tpp_fqdn&gt;/vedsdk</code>.</p>
+<pre><code class="language-bash"># Authenticate and get token
+curl -X POST https://&lt;tpp_fqdn&gt;/vedauth/authorize/integrated   -H &quot;Content-Type: application/json&quot;   -d '{&quot;Username&quot;:&quot;&lt;user&gt;&quot;,&quot;Password&quot;:&quot;&lt;pass&gt;&quot;,&quot;client_id&quot;:&quot;vcert-cli&quot;,&quot;scope&quot;:&quot;certificate:manage,delete,discover&quot;}'
+
+# List certificates in a policy folder
+curl -X POST https://&lt;tpp_fqdn&gt;/vedsdk/certificates/retrieve   -H &quot;X-Venafi-Api-Key: &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;}'
+
+# Get certificate details
+curl -X GET &quot;https://&lt;tpp_fqdn&gt;/vedsdk/certificates/&lt;cert_guid&gt;&quot;   -H &quot;X-Venafi-Api-Key: &lt;token&gt;&quot;
 
 # Request a new certificate
-POST /vedsdk/certificates/request
-Content-Type: application/json
-{ &quot;PolicyDN&quot;: &quot;\\VED\\Policy\\Internal\\Production&quot;, &quot;Subject&quot;: &quot;CN=server.example.com&quot; }
+curl -X POST https://&lt;tpp_fqdn&gt;/vedsdk/certificates/request   -H &quot;X-Venafi-Api-Key: &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Certificates\\&lt;folder&gt;&quot;,&quot;Subject&quot;:&quot;CN=&lt;cn&gt;&quot;}'
 </code></pre>
-<p><strong>PowerShell (VenafiPS):</strong></p>
-<pre><code class="language-powershell">Import-Module VenafiPS
-New-VenafiSession -Server 'tpp.example.com' -Credential $cred
-Find-VcCertificate -ExpireBefore (Get-Date).AddDays(30)
-Invoke-VcCertificateAction -CertificateId $id -Renew
+<hr />
+<h2 id="certificate-inspection-openssl">Certificate Inspection (openssl)<a class="headerlink" href="#certificate-inspection-openssl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify a retrieved certificate
+openssl x509 -in cert.pem -noout -text | grep -E &quot;Subject:|Issuer:|Not After&quot;
+
+# Check certificate matches the private key
+openssl x509 -noout -modulus -in cert.pem | md5sum
+openssl rsa -noout -modulus -in key.pem | md5sum
+
+# Verify certificate chain
+openssl verify -CAfile chain.pem cert.pem
+
+# Test TLS with the certificate
+openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;
 </code></pre>
 
 

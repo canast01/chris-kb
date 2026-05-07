@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clusters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reports
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,32 +797,72 @@
 
 
 <h1 id="insightiq-cli-reference">InsightIQ CLI Reference<a class="headerlink" href="#insightiq-cli-reference" title="Permanent link">&para;</a></h1>
-<p>InsightIQ provides a CLI on the appliance for cluster management and data export. OneFS CLI commands are used on the PowerScale cluster itself for correlated performance data when deeper investigation is needed.</p>
-<p><strong>InsightIQ Appliance CLI</strong></p>
-<pre><code class="language-bash"># List all monitored clusters
-iiq cluster list
+<p>InsightIQ is the Dell EMC analytics platform for PowerScale (Isilon) performance monitoring. It exposes a REST API and SSH access to the InsightIQ appliance for direct management. The API base URL is <code>https://&lt;insightiq_fqdn&gt;/api/json/v2</code>.</p>
+<hr />
+<h2 id="appliance-access">Appliance Access<a class="headerlink" href="#appliance-access" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSH to the InsightIQ appliance
+ssh administrator@&lt;insightiq_fqdn&gt;
 
-# Add a new cluster connection
-iiq cluster add --host &lt;cluster-mgmt-ip&gt; --user svc-insightiq
+# Check InsightIQ service status
+sudo service insightiq status
 
-# Export performance data to CSV
-iiq export --cluster &lt;cluster-name&gt; --start 2024-01-01 --end 2024-01-07 --output /tmp/export.csv
+# Restart InsightIQ service
+sudo service insightiq restart
+
+# View logs
+tail -f /var/log/insightiq/insightiq.log
+
+# Check disk space (InsightIQ database can grow large)
+df -h /home/insightiq
 </code></pre>
-<p><strong>OneFS CLI — Correlated Performance Commands</strong></p>
-<pre><code class="language-bash"># Real-time statistics summary
-isi statistics summary
+<hr />
+<h2 id="rest-api-authentication">REST API — Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Authenticate (HTTP Basic Auth — base64 encode user:pass)
+curl -k -X GET https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters   -u &quot;admin:&lt;password&gt;&quot;
 
-# Protocol-level performance breakdown
-isi statistics protocol --nodes all
+# Or pass credentials explicitly
+curl -k -X GET https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters   -H &quot;Authorization: Basic $(echo -n 'admin:&lt;password&gt;' | base64)&quot;
+</code></pre>
+<hr />
+<h2 id="clusters">Clusters<a class="headerlink" href="#clusters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all monitored clusters
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters
 
-# Active client connections
-isi statistics client list
+# Get detail for a specific cluster
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters/&lt;cluster_guid&gt;
 
-# Job engine status (check for background load)
-isi job list
+# List nodes in a cluster
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters/&lt;cluster_guid&gt;/nodes
+</code></pre>
+<hr />
+<h2 id="performance-data">Performance Data<a class="headerlink" href="#performance-data" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List available performance breakouts
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/performance/breakouts&quot;
 
-# Drive and node performance
-isi performance
+# Query CPU utilisation for a cluster (last hour)
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/performance/breakouts/cluster.cpu.user?cluster=&lt;guid&gt;&amp;begin=&lt;epoch&gt;&amp;end=&lt;epoch&gt;&quot;
+
+# Query disk throughput
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/performance/breakouts/cluster.disk.bytes.in.rate?cluster=&lt;guid&gt;&amp;begin=&lt;epoch&gt;&amp;end=&lt;epoch&gt;&quot;
+
+# Query client protocol operations
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/performance/breakouts/cluster.protostats.nfs.ops.rate?cluster=&lt;guid&gt;&amp;begin=&lt;epoch&gt;&amp;end=&lt;epoch&gt;&quot;
+</code></pre>
+<hr />
+<h2 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Get capacity summary for a cluster
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters/&lt;guid&gt;/capacity&quot;
+
+# Get per-node capacity
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/clusters/&lt;guid&gt;/nodes/&lt;node_id&gt;/capacity&quot;
+</code></pre>
+<hr />
+<h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List available reports
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   https://&lt;insightiq_fqdn&gt;/api/json/v2/reports
+
+# Download a report
+curl -k -u &quot;admin:&lt;pass&gt;&quot;   &quot;https://&lt;insightiq_fqdn&gt;/api/json/v2/reports/&lt;report_id&gt;/download&quot;   -o report.csv
 </code></pre>
 
 
