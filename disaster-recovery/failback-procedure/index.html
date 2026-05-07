@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#decision-gate-when-to-failback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Decision Gate — When to Failback
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#phase-1-prepare-primary-site" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Phase 1 — Prepare Primary Site
       
     </span>
   </a>
@@ -734,10 +734,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-failback-checks" class="md-nav__link">
+  <a href="#phase-2-resync-data-to-primary-reverse-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Post-Failback Checks
+        Phase 2 — Resync Data to Primary (Reverse Replication)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-plan-the-cutover-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Plan the Cutover Window
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-initiate-failback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Initiate Failback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-post-failback-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Post-Failback Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-restore-normal-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Restore Normal Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -764,23 +830,166 @@
 
 
 <h1 id="disaster-recovery-failback-procedure">Disaster Recovery Failback Procedure<a class="headerlink" href="#disaster-recovery-failback-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure documents the process of returning workloads to the primary site after recovery operations.</p>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm primary site readiness</li>
-<li>Synchronize replication data</li>
-<li>Initiate failback</li>
-<li>Validate system stability</li>
-<li>Resume normal operations</li>
-</ol>
-<h2 id="post-failback-checks">Post-Failback Checks<a class="headerlink" href="#post-failback-checks" title="Permanent link">&para;</a></h2>
+<p>A controlled process for returning production workloads to the primary site after an outage has been resolved.</p>
+<h2 id="decision-gate-when-to-failback">Decision Gate — When to Failback<a class="headerlink" href="#decision-gate-when-to-failback" title="Permanent link">&para;</a></h2>
+<p>Before initiating failback, confirm:
+- [ ] Primary site fully restored and tested (power, network, storage, compute)
+- [ ] Root cause of original outage identified and resolved
+- [ ] Management approval obtained
+- [ ] Maintenance window or low-impact window planned
+- [ ] All DR-site changes documented (data written to DR since failover)</p>
+<blockquote>
+<p><strong>Failback is not urgent.</strong> Running stable on DR is better than a rushed failback that causes a second outage.</p>
+</blockquote>
+<h2 id="phase-1-prepare-primary-site">Phase 1 — Prepare Primary Site<a class="headerlink" href="#phase-1-prepare-primary-site" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm primary storage arrays healthy
+# ONTAP
+system health status show
+storage disk show -broken
+
+# Pure FlashArray
+purecli array get
+purecli drive list | grep -v healthy
+
+# Confirm primary SAN fabric healthy
+show interface fc brief           # Cisco MDS
+switchshow                        # Brocade
+</code></pre>
+<h2 id="phase-2-resync-data-to-primary-reverse-replication">Phase 2 — Resync Data to Primary (Reverse Replication)<a class="headerlink" href="#phase-2-resync-data-to-primary-reverse-replication" title="Permanent link">&para;</a></h2>
+<p><strong>NetApp SnapMirror — resync from DR back to primary:</strong></p>
+<pre><code class="language-bash"># On DR system — confirm current mirror state
+snapmirror show -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
+
+# Resync in reverse: DR becomes source, primary becomes destination
+snapmirror resync -source-path &lt;dr-svm&gt;:&lt;dr-vol&gt; -destination-path &lt;primary-svm&gt;:&lt;primary-vol&gt;
+
+# Monitor transfer
+snapmirror show -fields state,transfer-bytes,last-transfer-duration
+
+# Wait for state: SnapMirrored and lag within RPO
+</code></pre>
+<p><strong>SRDF — restore R1 as source:</strong></p>
+<pre><code class="language-bash"># Restore normal direction after failover
+symrdf -g &lt;rdfgroup&gt; restore -noprompt
+
+# Confirm R1 is synchronized
+symrdf -g &lt;rdfgroup&gt; query
+</code></pre>
+<p><strong>Veeam — run a final backup at DR before failback:</strong>
+1. Veeam Backup &amp; Replication → Replication jobs → Run job
+2. Confirm backup completes before proceeding</p>
+<h2 id="phase-3-plan-the-cutover-window">Phase 3 — Plan the Cutover Window<a class="headerlink" href="#phase-3-plan-the-cutover-window" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Application functionality</li>
-<li>Data integrity</li>
-<li>Monitoring systems</li>
-<li>Backup schedules</li>
+<li>Agree on maintenance window with application owners</li>
+<li>Set DNS TTL to 60 seconds at least 1 hour before cutover</li>
+<li>Notify users of planned outage window</li>
+<li>Have rollback plan documented: if failback fails, return to DR</li>
 </ul>
+<h2 id="phase-4-initiate-failback">Phase 4 — Initiate Failback<a class="headerlink" href="#phase-4-initiate-failback" title="Permanent link">&para;</a></h2>
+<p><strong>Graceful shutdown at DR:</strong></p>
+<pre><code class="language-bash">systemctl stop &lt;application-service&gt;
+# Confirm no active sessions
+ss -tnp | grep &lt;port&gt;
+</code></pre>
+<p><strong>Wait for replication to catch up:</strong></p>
+<pre><code class="language-bash"># ONTAP — confirm lag is zero before breaking
+snapmirror show -destination-path &lt;primary-svm&gt;:&lt;primary-vol&gt; -fields lag-time
+# lag-time should be 00:00:00 or very small
+
+# Break mirror — primary volume becomes writable
+snapmirror break -destination-path &lt;primary-svm&gt;:&lt;primary-vol&gt;
+</code></pre>
+<p><strong>VMware SRM — reprotect and failback:</strong>
+1. Site Recovery → Recovery Plans → select plan
+2. Click <strong>Reprotect</strong> (reverses protection direction)
+3. After reprotect completes — <strong>Run</strong> → choose <strong>Planned Migration</strong></p>
+<p><strong>Manual VM failback (PowerCLI):</strong></p>
+<pre><code class="language-powershell"># Shut down VM at DR
+Stop-VM -VM &quot;&lt;vm-name&gt;&quot; -Confirm:$false
+
+# Power on at primary (VM should already be registered from original config)
+Start-VM -VM &quot;&lt;vm-name&gt;&quot; -Server &lt;primary-vcenter&gt;
+</code></pre>
+<h2 id="phase-5-post-failback-validation">Phase 5 — Post-Failback Validation<a class="headerlink" href="#phase-5-post-failback-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Storage visible at primary hosts
+multipath -ll
+lsblk
+df -h
+
+# Application services
+systemctl start &lt;service&gt;
+systemctl status &lt;service&gt;
+
+# Application health
+curl -vk https://&lt;primary-app-url&gt;/health
+</code></pre>
+<p><strong>Database integrity check:</strong></p>
+<pre><code class="language-bash"># PostgreSQL
+psql -U &lt;user&gt; -c &quot;SELECT pg_database_size('&lt;db&gt;');&quot;
+
+# MSSQL (PowerShell)
+Invoke-Sqlcmd -Query &quot;DBCC CHECKDB('&lt;db&gt;') WITH NO_INFOMSGS&quot; -ServerInstance &lt;primary-sql&gt;
+</code></pre>
+<h2 id="phase-6-restore-normal-replication">Phase 6 — Restore Normal Replication<a class="headerlink" href="#phase-6-restore-normal-replication" title="Permanent link">&para;</a></h2>
+<p>Once primary is confirmed stable, re-establish replication from primary → DR:</p>
+<pre><code class="language-bash"># ONTAP — resync back to original direction
+snapmirror resync -source-path &lt;primary-svm&gt;:&lt;primary-vol&gt; -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
+
+# Confirm
+snapmirror show -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
+</code></pre>
+<h2 id="failback-checklist">Failback Checklist<a class="headerlink" href="#failback-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Primary site confirmed stable — hardware, network, storage</li>
+<li>[ ] Root cause resolved and documented</li>
+<li>[ ] Reverse replication running and lag within RPO</li>
+<li>[ ] Application gracefully stopped at DR</li>
+<li>[ ] Final sync completed (lag = 0)</li>
+<li>[ ] Mirror broken; primary volumes writable</li>
+<li>[ ] VMs powered on at primary</li>
+<li>[ ] Application responding at primary endpoints</li>
+<li>[ ] DNS reverted to primary IPs</li>
+<li>[ ] Monitoring reverted to primary targets</li>
+<li>[ ] Forward replication (primary → DR) re-established</li>
+<li>[ ] Incident ticket closed with full timeline and RTO/RPO met</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Replication lag won't close</td>
+<td>Large data written at DR during outage</td>
+<td>Plan longer sync window; extend maintenance window</td>
+</tr>
+<tr>
+<td>Primary LUNs not visible</td>
+<td>SAN zoning issue</td>
+<td>Verify zones include primary HBAs; rescan</td>
+</tr>
+<tr>
+<td>Application data inconsistency</td>
+<td>DR writes not in sync</td>
+<td>Check consistency group membership; investigate missing writes</td>
+</tr>
+<tr>
+<td>DNS not resolving to primary</td>
+<td>TTL still cached</td>
+<td>Wait for TTL expiry or flush DNS</td>
+</tr>
+<tr>
+<td>VMs won't start at primary</td>
+<td>Snapshot/delta files from DR</td>
+<td>Consolidate VM snapshots before failing back</td>
+</tr>
+</tbody>
+</table>
 
 
 

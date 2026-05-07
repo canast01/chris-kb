@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#decision-gate-when-to-invoke-dr-failover" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Decision Gate — When to Invoke DR Failover
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#phase-1-validate-replication-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Phase 1 — Validate Replication State
       
     </span>
   </a>
@@ -734,10 +734,104 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-failover-checks" class="md-nav__link">
+  <a href="#phase-2-notify-stakeholders" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Post-Failover Checks
+        Phase 2 — Notify Stakeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-initiate-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Initiate Failover
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Initiate Failover">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vm-failover-vmware-srm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Failover — VMware SRM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vm-failover-manual-powercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Failover — Manual (PowerCLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-post-failover-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Post-Failover Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-dr-site-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — DR Site Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failover-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -764,23 +858,147 @@
 
 
 <h1 id="disaster-recovery-failover-procedure">Disaster Recovery Failover Procedure<a class="headerlink" href="#disaster-recovery-failover-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure documents the controlled process of moving production workloads to a recovery site during an outage.</p>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm incident severity</li>
-<li>Validate replication status</li>
-<li>Initiate failover</li>
-<li>Verify system availability</li>
-<li>Notify stakeholders</li>
-</ol>
-<h2 id="post-failover-checks">Post-Failover Checks<a class="headerlink" href="#post-failover-checks" title="Permanent link">&para;</a></h2>
+<p>A controlled process for moving production workloads to the recovery site during an outage or declared disaster.</p>
+<h2 id="decision-gate-when-to-invoke-dr-failover">Decision Gate — When to Invoke DR Failover<a class="headerlink" href="#decision-gate-when-to-invoke-dr-failover" title="Permanent link">&para;</a></h2>
+<p>Before initiating failover, confirm:
+- [ ] Primary site is confirmed unavailable or severely degraded (not a transient blip)
+- [ ] Incident severity declared by management or incident commander
+- [ ] RPO/RTO requirements reviewed — is failover the right action vs. wait-and-restore?
+- [ ] Change authority (CAB emergency or delegated approver) has approved</p>
+<h2 id="phase-1-validate-replication-state">Phase 1 — Validate Replication State<a class="headerlink" href="#phase-1-validate-replication-state" title="Permanent link">&para;</a></h2>
+<p><strong>SRDF (PowerMax):</strong></p>
+<pre><code class="language-bash">symrdf -g &lt;rdfgroup&gt; query
+# Confirm R2 volumes are Synchronized or Consistent before failing over
+</code></pre>
+<p><strong>NetApp SnapMirror:</strong></p>
+<pre><code class="language-bash">snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt;
+# Confirm relationship is SnapMirrored (not broken or lagging &gt;RPO)
+</code></pre>
+<p><strong>Veeam — check last successful backup:</strong>
+Navigate to: Home → Jobs → check Last Result and Last Run columns</p>
+<p><strong>VMware SRM:</strong>
+- Protection Groups → check replication state of all protected VMs
+- Recovery Plan → Review plan before executing</p>
+<h2 id="phase-2-notify-stakeholders">Phase 2 — Notify Stakeholders<a class="headerlink" href="#phase-2-notify-stakeholders" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Application health</li>
-<li>Network connectivity</li>
-<li>Monitoring alerts</li>
-<li>Backup validation</li>
+<li>Application owners (impact notification)</li>
+<li>Service desk (user-facing message, expected RTO)</li>
+<li>Management chain</li>
+<li>Vendor TAC if array/fabric fault is involved</li>
 </ul>
+<h2 id="phase-3-initiate-failover">Phase 3 — Initiate Failover<a class="headerlink" href="#phase-3-initiate-failover" title="Permanent link">&para;</a></h2>
+<h3 id="storage-failover">Storage Failover<a class="headerlink" href="#storage-failover" title="Permanent link">&para;</a></h3>
+<p><strong>NetApp SnapMirror — break and make R2 writeable:</strong></p>
+<pre><code class="language-bash"># Break mirror (R2 becomes writable, R1 no longer replicating)
+snapmirror break -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
+
+# Verify
+snapmirror show -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
+# State should show: Broken-off
+</code></pre>
+<p><strong>SRDF — failover to R2:</strong></p>
+<pre><code class="language-bash"># Planned failover (R1 accessible)
+symrdf -g &lt;rdfgroup&gt; failover -force
+
+# Unplanned (R1 unavailable)
+symrdf -g &lt;rdfgroup&gt; failover -noprompt -immediate
+</code></pre>
+<h3 id="vm-failover-vmware-srm">VM Failover — VMware SRM<a class="headerlink" href="#vm-failover-vmware-srm" title="Permanent link">&para;</a></h3>
+<ol>
+<li>vCenter → Site Recovery → Recovery Plans</li>
+<li>Select plan → <strong>Run</strong> → choose <strong>Disaster Recovery</strong> (not test)</li>
+<li>Monitor progress in Recovery Steps panel</li>
+<li>SRM will: power off protected VMs at primary, register VMs at recovery, start VMs in priority order</li>
+</ol>
+<h3 id="vm-failover-manual-powercli">VM Failover — Manual (PowerCLI)<a class="headerlink" href="#vm-failover-manual-powercli" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># Register and power on VM from replica datastore
+$ds = Get-Datastore -Name &quot;&lt;dr-datastore&gt;&quot;
+$vmx = &quot;[&lt;dr-datastore&gt;] &lt;vm-name&gt;/&lt;vm-name&gt;.vmx&quot;
+$vm = New-VM -VMFilePath $vmx -VMHost (Get-VMHost &quot;&lt;dr-host&gt;&quot;) -Datastore $ds -RunAsync
+Start-VM -VM &quot;&lt;vm-name&gt;&quot;
+</code></pre>
+<h2 id="phase-4-post-failover-validation">Phase 4 — Post-Failover Validation<a class="headerlink" href="#phase-4-post-failover-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm storage volumes visible to DR hosts
+multipath -ll
+lsblk
+
+# Confirm filesystems mounted
+df -h | grep &lt;expected-mount&gt;
+
+# Start application services
+systemctl start &lt;service&gt;
+systemctl status &lt;service&gt;
+</code></pre>
+<p><strong>Application health checks:</strong></p>
+<pre><code class="language-bash"># HTTP health check
+curl -vk https://&lt;dr-app-url&gt;/health
+
+# DB connectivity
+psql -h &lt;dr-db-host&gt; -U &lt;user&gt; -c &quot;SELECT 1;&quot;
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell"># Confirm services started
+Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
+
+# Test connectivity
+Test-NetConnection -ComputerName &lt;dr-app-server&gt; -Port 443
+</code></pre>
+<h2 id="phase-5-dr-site-monitoring">Phase 5 — DR Site Monitoring<a class="headerlink" href="#phase-5-dr-site-monitoring" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Update monitoring targets to DR site IPs/hostnames</li>
+<li>Confirm alerts are firing to correct on-call</li>
+<li>Validate backup jobs are redirected to DR protection</li>
+</ul>
+<h2 id="failover-checklist">Failover Checklist<a class="headerlink" href="#failover-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] DR decision approved by incident commander</li>
+<li>[ ] Replication state validated — acceptable lag</li>
+<li>[ ] Stakeholders notified (users, app owners, management)</li>
+<li>[ ] Storage mirrors broken / SRDF failed over</li>
+<li>[ ] VMs registered and powered on at DR site</li>
+<li>[ ] Applications responding on DR endpoints</li>
+<li>[ ] DNS cutover completed (if required)</li>
+<li>[ ] Monitoring updated to DR targets</li>
+<li>[ ] RTO met — time from decision to application available documented</li>
+<li>[ ] Incident ticket updated with timeline</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SnapMirror lag &gt; RPO</td>
+<td>Last successful transfer time</td>
+<td>Break anyway; note data loss window in ticket</td>
+</tr>
+<tr>
+<td>SRDF volumes not in sync</td>
+<td>R-link state</td>
+<td>Check SRDF link; break and activate R2</td>
+</tr>
+<tr>
+<td>VMs fail to start at DR</td>
+<td>Datastore not presented</td>
+<td>Present LUN to DR hosts; rescan</td>
+</tr>
+<tr>
+<td>Application config points to primary</td>
+<td>App config files</td>
+<td>Update DB/app configs to DR endpoints</td>
+</tr>
+<tr>
+<td>DNS still resolving to primary</td>
+<td>TTL cached</td>
+<td>Flush DNS or update DNS at registrar/AD</td>
+</tr>
+</tbody>
+</table>
 
 
 

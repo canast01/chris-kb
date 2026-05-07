@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#core-principle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Core Principle
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#time-synchronisation-prerequisite" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Time Synchronisation — Prerequisite
       
     </span>
   </a>
@@ -734,10 +734,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#correlation-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Correlation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-correlation-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a Correlation Timeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-correlation-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Correlation Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#siem-correlation-rules-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SIEM Correlation Rules (Examples)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-map-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Map (template)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-platform-log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Platform Log Locations
       
     </span>
   </a>
@@ -764,21 +819,131 @@
 
 
 <h1 id="event-correlation">Event Correlation<a class="headerlink" href="#event-correlation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Event correlation links related alerts and logs to identify root causes quickly.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review correlated alerts</li>
-<li>Validate event timestamps</li>
-<li>Confirm time synchronization</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Event correlation links related alerts and log entries across systems to identify root causes rather than treating each symptom individually.</p>
+<h2 id="core-principle">Core Principle<a class="headerlink" href="#core-principle" title="Permanent link">&para;</a></h2>
+<p>An alert is a symptom. Event correlation reveals whether multiple alerts share a single cause — a storage array losing a controller causes host I/O errors, application timeouts, and monitoring alerts simultaneously. Without correlation, that's 20 tickets instead of 1.</p>
+<h2 id="time-synchronisation-prerequisite">Time Synchronisation — Prerequisite<a class="headerlink" href="#time-synchronisation-prerequisite" title="Permanent link">&para;</a></h2>
+<p>All correlation depends on accurate timestamps. Verify NTP before investigating any multi-system event.</p>
+<pre><code class="language-bash"># Linux
+timedatectl status
+chronyc tracking
+
+# Windows
+w32tm /query /status
+
+# Cisco IOS / NX-OS
+show ntp status
+show clock detail
+</code></pre>
+<h2 id="correlation-workflow">Correlation Workflow<a class="headerlink" href="#correlation-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Collect related events</li>
-<li>Identify common patterns</li>
-<li>Determine root cause</li>
-<li>Implement corrective actions</li>
+<li><strong>Collect timeline</strong> — gather events from all affected systems within the suspected window (use UTC timestamps)</li>
+<li><strong>Identify common start time</strong> — when did the first alert fire?</li>
+<li><strong>Map dependencies</strong> — which systems feed into each other?</li>
+<li><strong>Narrow to single root cause</strong> — storage, network, or compute failure?</li>
+<li><strong>Confirm by elimination</strong> — does resolving the root cause clear all downstream alerts?</li>
 </ol>
+<h2 id="building-a-correlation-timeline">Building a Correlation Timeline<a class="headerlink" href="#building-a-correlation-timeline" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — extract events from a specific window across log files
+journalctl --since &quot;2026-05-05 14:00:00&quot; --until &quot;2026-05-05 14:30:00&quot; -p err --no-pager
+
+# Grep multiple log files for a time window
+grep &quot;May  5 14:0[0-9]&quot; /var/log/messages /var/log/syslog /var/log/nginx/error.log
+</code></pre>
+<h2 id="common-correlation-patterns">Common Correlation Patterns<a class="headerlink" href="#common-correlation-patterns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom Cluster</th>
+<th>Probable Root Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multiple hosts: I/O errors + application timeouts</td>
+<td>Storage array or fabric fault</td>
+</tr>
+<tr>
+<td>Multiple hosts: network unreachable at same time</td>
+<td>Upstream switch / router failure</td>
+</tr>
+<tr>
+<td>VM slowness + storage latency on one array</td>
+<td>Array controller issue or disk rebuild</td>
+</tr>
+<tr>
+<td>Authentication failures across multiple services</td>
+<td>AD / LDAP / DNS failure</td>
+</tr>
+<tr>
+<td>Backup failures + high host CPU</td>
+<td>Resource contention during backup window</td>
+</tr>
+<tr>
+<td>One host: multiple service alerts simultaneously</td>
+<td>Host hardware (memory/disk) or kernel panic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="siem-correlation-rules-examples">SIEM Correlation Rules (Examples)<a class="headerlink" href="#siem-correlation-rules-examples" title="Permanent link">&para;</a></h2>
+<p><strong>Graylog / Splunk — correlated alert logic:</strong></p>
+<pre><code># Multiple auth failures from same source within 5 minutes
+index=security sourcetype=auth action=failure
+| stats count by src_ip, user
+| where count &gt; 10
+| eval alert=&quot;Possible brute force&quot;
+
+# Storage latency spike + host I/O error within 2-minute window
+index=infra (sourcetype=ontap OR sourcetype=os_ioerr)
+| transaction maxspan=2m host
+| where eventcount &gt; 1
+</code></pre>
+<h2 id="dependency-map-template">Dependency Map (template)<a class="headerlink" href="#dependency-map-template" title="Permanent link">&para;</a></h2>
+<p>Document for each critical service:</p>
+<pre><code>Service: ERP Application
+  → App server: app01, app02
+      → Database: db01 (Oracle)
+          → Storage: ONTAP SVM prod-svm, volume erp-data
+              → SAN fabric: MDS-A, MDS-B, Zone: erp_zone
+      → Load balancer: F5-prod VIP 10.10.10.100
+  → Auth: AD domain controllers dc01, dc02
+  → DNS: 10.10.10.53
+</code></pre>
+<h2 id="cross-platform-log-locations">Cross-Platform Log Locations<a class="headerlink" href="#cross-platform-log-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Log location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux OS</td>
+<td><code>/var/log/messages</code>, <code>/var/log/syslog</code>, <code>journalctl</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Event Viewer: System, Application, Security</td>
+</tr>
+<tr>
+<td>ONTAP</td>
+<td>EMS: <code>event log show -severity error</code></td>
+</tr>
+<tr>
+<td>VMware</td>
+<td><code>/var/log/vmkernel.log</code>, vCenter Events</td>
+</tr>
+<tr>
+<td>Cisco NX-OS</td>
+<td><code>show logging last 100</code></td>
+</tr>
+<tr>
+<td>Brocade FOS</td>
+<td><code>errShow</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

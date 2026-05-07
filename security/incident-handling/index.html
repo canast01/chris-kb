@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#severity-classification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Severity Classification
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-types" class="md-nav__link">
+  <a href="#phase-1-identify-and-triage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident Types
+        Phase 1 — Identify and Triage
       
     </span>
   </a>
@@ -734,10 +734,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#response-workflow" class="md-nav__link">
+  <a href="#phase-2-contain" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Response Workflow
+        Phase 2 — Contain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-investigate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Investigate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-eradicate-and-recover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Eradicate and Recover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-post-incident" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Post-Incident
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-contacts-fill-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Contacts (fill in)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-notification-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Notification Requirements
       
     </span>
   </a>
@@ -764,23 +819,193 @@
 
 
 <h1 id="security-incident-handling">Security Incident Handling<a class="headerlink" href="#security-incident-handling" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Security incident handling defines steps to detect, contain, and recover from security events.</p>
-<h2 id="incident-types">Incident Types<a class="headerlink" href="#incident-types" title="Permanent link">&para;</a></h2>
+<h2 id="severity-classification">Severity Classification<a class="headerlink" href="#severity-classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Definition</th>
+<th>Example</th>
+<th>Response Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 — Critical</td>
+<td>Active breach, ransomware, data exfiltration in progress</td>
+<td>Ransomware spreading, admin credential stolen</td>
+<td>Immediate (call on-call now)</td>
+</tr>
+<tr>
+<td>P2 — High</td>
+<td>Confirmed compromise with limited scope, or high-confidence threat</td>
+<td>Single workstation infected, phishing link clicked</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>P3 — Medium</td>
+<td>Suspicious activity, potential threat, no confirmed impact</td>
+<td>Anomalous login from foreign IP, port scan</td>
+<td>Business day</td>
+</tr>
+<tr>
+<td>P4 — Low</td>
+<td>Informational security event, policy violation</td>
+<td>Password policy violation, USB insertion</td>
+<td>Within 1 week</td>
+</tr>
+</tbody>
+</table>
+<h2 id="phase-1-identify-and-triage">Phase 1 — Identify and Triage<a class="headerlink" href="#phase-1-identify-and-triage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check for active suspicious processes (Linux)
+ps aux | grep -E &quot;nc|ncat|nmap|metasploit|mimikatz|powersploit&quot;
+
+# Recent logins from unusual IPs
+last -n 50
+grep &quot;Failed password\|Accepted password&quot; /var/log/auth.log | tail -50
+
+# Windows — check for active remote sessions
+query session /server:&lt;hostname&gt;
+Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 50
+</code></pre>
+<h2 id="phase-2-contain">Phase 2 — Contain<a class="headerlink" href="#phase-2-contain" title="Permanent link">&para;</a></h2>
+<p><strong>Network isolation (do not power off — preserve forensic state):</strong></p>
+<pre><code class="language-powershell"># Windows — disable NIC (keeps system running but disconnected)
+Get-NetAdapter | Disable-NetAdapter -Confirm:$false
+
+# Or block at firewall / network switch level
+# Contact network team to port-isolate the switch port
+</code></pre>
+<pre><code class="language-bash"># Linux — drop all traffic except management (use with caution)
+iptables -I INPUT -s &lt;mgmt-ip&gt; -j ACCEPT
+iptables -I OUTPUT -d &lt;mgmt-ip&gt; -j ACCEPT
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+</code></pre>
+<p><strong>CyberArk — rotate or suspend compromised accounts immediately:</strong>
+1. CyberArk PVWA → Accounts → locate account → Change password (immediate rotation)
+2. For suspected account compromise: suspend account in AD and rotate all credentials</p>
+<h2 id="phase-3-investigate">Phase 3 — Investigate<a class="headerlink" href="#phase-3-investigate" title="Permanent link">&para;</a></h2>
+<p><strong>Windows event IDs to review:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4624</td>
+<td>Successful logon</td>
+</tr>
+<tr>
+<td>4625</td>
+<td>Failed logon</td>
+</tr>
+<tr>
+<td>4648</td>
+<td>Logon with explicit credentials</td>
+</tr>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+</tr>
+<tr>
+<td>4728</td>
+<td>Member added to security-enabled global group</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>User account locked out</td>
+</tr>
+<tr>
+<td>7045</td>
+<td>New service installed</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Pull security events from last 4 hours
+Get-WinEvent -FilterHashtable @{LogName='Security'; StartTime=(Get-Date).AddHours(-4)} |
+  Where-Object {$_.Id -in @(4624,4625,4648,4720,4728,7045)} |
+  Select-Object TimeCreated, Id, Message | Format-List
+</code></pre>
+<p><strong>Linux — audit log:</strong></p>
+<pre><code class="language-bash"># Recent sudo usage
+grep sudo /var/log/auth.log | tail -50
+
+# File access audit (if auditd running)
+ausearch -k &lt;audit-key&gt; -ts recent
+
+# Network connections at time of incident
+ss -tnp
+netstat -anp | grep ESTABLISHED
+</code></pre>
+<h2 id="phase-4-eradicate-and-recover">Phase 4 — Eradicate and Recover<a class="headerlink" href="#phase-4-eradicate-and-recover" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Malware infection</li>
-<li>Unauthorized access</li>
-<li>Data breach</li>
-<li>Suspicious network activity</li>
+<li>Remove malicious files, scheduled tasks, persistence mechanisms</li>
+<li>Re-image if full compromise suspected (do not trust a compromised OS)</li>
+<li>Restore from known-good backup (verify backup pre-dates compromise)</li>
+<li>Apply patches that were exploited</li>
+<li>Reset all passwords for affected accounts and service accounts</li>
 </ul>
-<h2 id="response-workflow">Response Workflow<a class="headerlink" href="#response-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Detect incident</li>
-<li>Contain threat</li>
-<li>Investigate cause</li>
-<li>Restore services</li>
-<li>Document incident</li>
-</ol>
+<h2 id="phase-5-post-incident">Phase 5 — Post-Incident<a class="headerlink" href="#phase-5-post-incident" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Incident Report (template):
+- Date/time detected:
+- Date/time contained:
+- Systems affected:
+- Data at risk / confirmed exfiltrated:
+- Root cause:
+- Attack vector:
+- Timeline:
+- Actions taken:
+- Lessons learned:
+- Remediation items (with owners and due dates):
+</code></pre>
+<h2 id="escalation-contacts-fill-in">Escalation Contacts (fill in)<a class="headerlink" href="#escalation-contacts-fill-in" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Contact</th>
+<th>When to Escalate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security Lead</td>
+<td></td>
+<td>Any P1/P2</td>
+</tr>
+<tr>
+<td>CISO</td>
+<td></td>
+<td>P1 — confirmed breach</td>
+</tr>
+<tr>
+<td>Legal / Compliance</td>
+<td></td>
+<td>Any data exfiltration risk</td>
+</tr>
+<tr>
+<td>PR / Comms</td>
+<td></td>
+<td>External disclosure required</td>
+</tr>
+<tr>
+<td>Vendor TAC</td>
+<td></td>
+<td>Platform-specific technical response</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-notification-requirements">Key Notification Requirements<a class="headerlink" href="#key-notification-requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>GDPR</strong>: 72 hours from awareness of personal data breach to supervisory authority</li>
+<li><strong>PCI-DSS</strong>: Notify card brands within 24 hours of suspected cardholder data compromise</li>
+<li><strong>Internal SLA</strong>: Management notified within 1 hour of P1 identification</li>
+</ul>
 
 
 

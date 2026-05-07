@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#what-to-capture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        What to Capture
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-metrics" class="md-nav__link">
+  <a href="#baseline-collection-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Metrics
+        Baseline Collection Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#documenting-the-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Documenting the Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-thresholds-from-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Thresholds from Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baseline-review-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline Review Cadence
       
     </span>
   </a>
@@ -764,22 +786,127 @@
 
 
 <h1 id="performance-metrics-baseline">Performance Metrics Baseline<a class="headerlink" href="#performance-metrics-baseline" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>A metrics baseline defines normal system performance levels used to detect anomalies.</p>
-<h2 id="core-metrics">Core Metrics<a class="headerlink" href="#core-metrics" title="Permanent link">&para;</a></h2>
-<ul>
-<li>CPU utilization</li>
-<li>Memory usage</li>
-<li>Disk latency</li>
-<li>Network throughput</li>
-<li>Response time</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Compare current metrics to baseline</li>
-<li>Identify abnormal trends</li>
-<li>Validate monitoring thresholds</li>
-</ul>
+<p>A documented baseline allows you to distinguish normal variation from genuine anomalies and set meaningful alert thresholds.</p>
+<h2 id="what-to-capture">What to Capture<a class="headerlink" href="#what-to-capture" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Capture Period</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU utilisation</td>
+<td>30-day rolling avg + peak</td>
+<td>Separate weekday vs weekend</td>
+</tr>
+<tr>
+<td>Memory utilisation</td>
+<td>30-day rolling avg</td>
+<td>Include swap</td>
+</tr>
+<tr>
+<td>Disk I/O latency</td>
+<td>30-day avg (read/write separately)</td>
+<td>Per LUN / volume</td>
+</tr>
+<tr>
+<td>Disk throughput (MB/s)</td>
+<td>30-day avg + peak</td>
+<td>Per volume</td>
+</tr>
+<tr>
+<td>Disk IOPS</td>
+<td>30-day avg + peak</td>
+<td>Critical for storage sizing</td>
+</tr>
+<tr>
+<td>Network utilisation</td>
+<td>30-day avg per interface</td>
+<td>Flag sustained &gt;60%</td>
+</tr>
+<tr>
+<td>Application response time</td>
+<td>30-day avg per endpoint</td>
+<td>P95 / P99 is more useful than avg</td>
+</tr>
+</tbody>
+</table>
+<h2 id="baseline-collection-commands">Baseline Collection Commands<a class="headerlink" href="#baseline-collection-commands" title="Permanent link">&para;</a></h2>
+<p><strong>Linux — CPU and memory snapshot:</strong></p>
+<pre><code class="language-bash"># 60-second sample, 5 intervals
+vmstat -S M 10 6
+
+# Or sar if sysstat installed
+sar -u 5 12      # CPU every 5 sec, 12 samples
+sar -r 5 12      # Memory
+sar -d 5 12      # Disk I/O
+</code></pre>
+<p><strong>Linux — disk latency:</strong></p>
+<pre><code class="language-bash">iostat -xz 5 6   # extended stats, 5 sec interval, 6 samples
+# key fields: await (avg I/O wait ms), r_await, w_await, util%
+</code></pre>
+<p><strong>Windows — performance counters:</strong></p>
+<pre><code class="language-powershell"># CPU
+Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 5 -MaxSamples 12
+
+# Memory available
+Get-Counter '\Memory\Available MBytes' -SampleInterval 5 -MaxSamples 12
+
+# Disk latency
+Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Read','\PhysicalDisk(*)\Avg. Disk sec/Write' -SampleInterval 5 -MaxSamples 12
+</code></pre>
+<p><strong>NetApp ONTAP — workload stats:</strong></p>
+<pre><code class="language-bash">qos statistics workload latency show -iterations 5 -interval 5
+statistics show -object system -counter total_ops,read_ops,write_ops,latency
+</code></pre>
+<p><strong>Pure FlashArray:</strong></p>
+<pre><code class="language-bash">purecli array get --mirrored
+purecli volume list --performance    # per-volume latency, IOPS, BW
+</code></pre>
+<h2 id="documenting-the-baseline">Documenting the Baseline<a class="headerlink" href="#documenting-the-baseline" title="Permanent link">&para;</a></h2>
+<p>Record for each system / service:</p>
+<pre><code>System:          app-db01
+Date captured:   YYYY-MM-DD
+Period:          Mon–Fri business hours, 4 weeks
+
+CPU avg:         22%   | peak: 68% (month-end batch)
+Memory avg:      71%   | peak: 84%
+Disk read lat:   0.8ms | peak: 3ms
+Disk write lat:  1.2ms | peak: 5ms
+IOPS avg:        3,200 | peak: 12,000
+Network (eth0):  120 Mbps avg | 450 Mbps peak
+</code></pre>
+<h2 id="setting-thresholds-from-baseline">Setting Thresholds from Baseline<a class="headerlink" href="#setting-thresholds-from-baseline" title="Permanent link">&para;</a></h2>
+<p>Recommended starting point:
+- <strong>Warning</strong>: avg + (2 × std deviation), or &gt;75% of peak
+- <strong>Critical</strong>: avg + (3 × std deviation), or &gt;90% of peak</p>
+<p>Avoid static thresholds that ignore daily/weekly patterns — use dynamic baselines in tools like vROps, Zabbix, or Datadog where available.</p>
+<h2 id="baseline-review-cadence">Baseline Review Cadence<a class="headerlink" href="#baseline-review-cadence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quarterly</td>
+<td>Review and update baselines for all production systems</td>
+</tr>
+<tr>
+<td>After major change (hardware refresh, app version)</td>
+<td>Re-capture within 2 weeks</td>
+</tr>
+<tr>
+<td>After sustained alert activity</td>
+<td>Investigate: real anomaly or stale baseline</td>
+</tr>
+</tbody>
+</table>
 
 
 

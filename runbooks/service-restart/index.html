@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#graceful-stop-and-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Graceful Stop and Start
       
     </span>
   </a>
@@ -745,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#post-restart-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Post-Restart Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-application-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Application Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-service-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Service Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,28 +808,104 @@
 
 
 <h1 id="service-restart-runbook">Service Restart Runbook<a class="headerlink" href="#service-restart-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook provides a controlled process for restarting infrastructure or application services.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm service owner approval</li>
-<li>Check active users or jobs</li>
-<li>Review recent alerts</li>
-<li>Confirm rollback plan</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">systemctl status service-name
-systemctl restart service-name
-systemctl status service-name
-journalctl -u service-name -n 50
+<pre><code class="language-bash"># Current service status
+systemctl status &lt;service&gt;
+
+# Check for active connections or jobs before restarting
+ss -tnp | grep &lt;port&gt;
+
+# Review recent logs for errors
+journalctl -u &lt;service&gt; -n 50 --no-pager
+
+# Windows
+Get-Service &lt;service&gt;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm service running</li>
-<li>Check application response</li>
-<li>Review logs</li>
-<li>Confirm monitoring is clear</li>
-</ol>
+<p>Confirm service owner approval and check for active users or in-flight jobs before proceeding.</p>
+<h2 id="graceful-stop-and-start">Graceful Stop and Start<a class="headerlink" href="#graceful-stop-and-start" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Preferred: stop then start (allows clean shutdown)
+systemctl stop &lt;service&gt;
+systemctl start &lt;service&gt;
+
+# Or restart in one command
+systemctl restart &lt;service&gt;
+
+# Reload config without full restart (if supported)
+systemctl reload &lt;service&gt;
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell">Stop-Service &lt;service&gt; -Force
+Start-Service &lt;service&gt;
+# or
+Restart-Service &lt;service&gt;
+</code></pre>
+<h2 id="post-restart-validation">Post-Restart Validation<a class="headerlink" href="#post-restart-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm service is running
+systemctl status &lt;service&gt;
+
+# Confirm listening on expected port
+ss -tnlp | grep &lt;port&gt;
+
+# Check recent logs for errors
+journalctl -u &lt;service&gt; -n 50 --no-pager --since &quot;5 minutes ago&quot;
+</code></pre>
+<h2 id="test-application-response">Test Application Response<a class="headerlink" href="#test-application-response" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># HTTP service check
+curl -vk https://&lt;app_host&gt;/health
+
+# TCP port check
+nc -zv &lt;host&gt; &lt;port&gt;
+</code></pre>
+<h2 id="windows-service-validation">Windows Service Validation<a class="headerlink" href="#windows-service-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-Service &lt;service&gt;
+# Should show: Running
+
+# Check event log for service errors
+Get-EventLog -LogName System -Source 'Service Control Manager' -Newest 10
+</code></pre>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Service owner notified</li>
+<li>[ ] Active jobs/connections confirmed clear</li>
+<li>[ ] Service stopped cleanly</li>
+<li>[ ] Service restarted</li>
+<li>[ ] Service shows Running</li>
+<li>[ ] Port listening confirmed</li>
+<li>[ ] Application response confirmed</li>
+<li>[ ] Monitoring alert cleared</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service won't stop</td>
+<td>Active connections</td>
+<td>Kill active sessions; force stop</td>
+</tr>
+<tr>
+<td>Service fails to start</td>
+<td>Logs show error</td>
+<td>Check <code>journalctl -u &lt;svc&gt; -n 100</code></td>
+</tr>
+<tr>
+<td>Port not listening</td>
+<td>Config file</td>
+<td>Verify config is valid; check file permissions</td>
+</tr>
+<tr>
+<td>Restart loop</td>
+<td>Critical dependency missing</td>
+<td>Check service dependencies</td>
+</tr>
+</tbody>
+</table>
 
 
 

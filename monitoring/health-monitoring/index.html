@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#daily-health-check-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Daily Health Check Checklist
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components-monitored" class="md-nav__link">
+  <a href="#server-health-linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Components Monitored
+        Server Health (Linux)
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#server-health-windows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Server Health (Windows)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-array-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Array Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-agent-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Agent Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-thresholds-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Thresholds (reference)
       
     </span>
   </a>
@@ -764,22 +808,145 @@
 
 
 <h1 id="infrastructure-health-monitoring">Infrastructure Health Monitoring<a class="headerlink" href="#infrastructure-health-monitoring" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Health monitoring continuously checks infrastructure components to ensure availability and performance.</p>
-<h2 id="components-monitored">Components Monitored<a class="headerlink" href="#components-monitored" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Servers</li>
-<li>Storage systems</li>
-<li>Network devices</li>
-<li>Applications</li>
-<li>Cloud services</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review health dashboards</li>
-<li>Confirm monitoring agents running</li>
-<li>Validate alert thresholds</li>
-</ul>
+<h2 id="daily-health-check-checklist">Daily Health Check Checklist<a class="headerlink" href="#daily-health-check-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>What to Check</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Servers</td>
+<td>CPU, memory, disk — no thresholds breached</td>
+<td>CloudIQ / vROps / Zabbix</td>
+</tr>
+<tr>
+<td>Storage arrays</td>
+<td>Controller health, drive faults, capacity %</td>
+<td>CloudIQ / Pure1 / ONTAP</td>
+</tr>
+<tr>
+<td>SAN fabric</td>
+<td>Port errors, ISL utilisation, zoning</td>
+<td>DCNM / Network Advisor</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Interface errors, BGP/OSPF neighbour state</td>
+<td>Nexus Dashboard / SolarWinds</td>
+</tr>
+<tr>
+<td>Backup jobs</td>
+<td>Last backup status, RPO met</td>
+<td>Commvault / Veeam</td>
+</tr>
+<tr>
+<td>Certificates</td>
+<td>Expiry within 60 days</td>
+<td>OpenSSL / Venafi</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-health-linux">Server Health (Linux)<a class="headerlink" href="#server-health-linux" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># High-level — one line per host
+uptime
+free -h
+df -h | grep -vE '^tmpfs|^devtmpfs'
+
+# Failed services
+systemctl --failed
+
+# Recent kernel errors
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<h2 id="server-health-windows">Server Health (Windows)<a class="headerlink" href="#server-health-windows" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Services not running that should be
+Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
+
+# Disk usage
+Get-Volume | Select-Object DriveLetter, FileSystemLabel, @{N='UsedGB';E={[math]::Round(($_.Size - $_.SizeRemaining)/1GB,1)}}, @{N='FreeGB';E={[math]::Round($_.SizeRemaining/1GB,1)}}, @{N='Size';E={[math]::Round($_.Size/1GB,1)}}
+
+# Recent system errors
+Get-EventLog -LogName System -EntryType Error -Newest 20
+</code></pre>
+<h2 id="storage-array-health">Storage Array Health<a class="headerlink" href="#storage-array-health" title="Permanent link">&para;</a></h2>
+<p><strong>NetApp ONTAP:</strong></p>
+<pre><code class="language-bash">system health status show          # overall health
+system health alert show           # open alerts
+storage disk show -broken          # failed disks
+volume show -percent-used &gt;85      # volumes near capacity
+</code></pre>
+<p><strong>Pure FlashArray:</strong></p>
+<pre><code class="language-bash">purecli array get                  # overall status
+purecli drive list | grep -v healthy
+purecli volume list --space        # capacity view
+</code></pre>
+<p><strong>Dell PowerMax / Unity:</strong></p>
+<pre><code class="language-bash"># PowerMax — Solutions Enabler
+symcfg list -health
+symsys -sid &lt;sid&gt; list -failed
+
+# Unity — CLI
+uemcli -d &lt;ip&gt; /sys/general show
+uemcli -d &lt;ip&gt; /sys/alert show
+</code></pre>
+<h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># OSPF neighbours (Cisco IOS / NX-OS)
+show ip ospf neighbor
+
+# BGP summary
+show bgp ipv4 unicast summary
+
+# Interface error counters
+show interface | include &quot;line protocol|input errors|output errors|CRC&quot;
+</code></pre>
+<h2 id="monitoring-agent-validation">Monitoring Agent Validation<a class="headerlink" href="#monitoring-agent-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check monitoring agent is running (Zabbix example)
+systemctl status zabbix-agent2
+
+# Check last contact with monitoring server
+grep &quot;sending data&quot; /var/log/zabbix/zabbix_agent2.log | tail -5
+</code></pre>
+<h2 id="escalation-thresholds-reference">Escalation Thresholds (reference)<a class="headerlink" href="#escalation-thresholds-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU (sustained 15 min)</td>
+<td>&gt;70%</td>
+<td>&gt;90%</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>&gt;80%</td>
+<td>&gt;95%</td>
+</tr>
+<tr>
+<td>Disk usage</td>
+<td>&gt;75%</td>
+<td>&gt;90%</td>
+</tr>
+<tr>
+<td>Storage latency (avg)</td>
+<td>&gt;5ms</td>
+<td>&gt;20ms</td>
+</tr>
+<tr>
+<td>Backup failure</td>
+<td>1 job</td>
+<td>2+ consecutive</td>
+</tr>
+</tbody>
+</table>
 
 
 

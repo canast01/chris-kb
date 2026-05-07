@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#identify-locked-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Identify Locked Accounts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#find-the-lockout-source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Find the Lockout Source
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#unlock-an-account" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Unlock an Account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bulk-unlock-with-caution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Unlock (with caution)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-password-and-unlock-combined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Password and Unlock (combined)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-ldap-account-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux / LDAP Account (if applicable)
       
     </span>
   </a>
@@ -749,6 +782,28 @@
     <span class="md-ellipsis">
       
         Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Causes
       
     </span>
   </a>
@@ -775,26 +830,104 @@
 
 
 <h1 id="account-unlock-runbook">Account Unlock Runbook<a class="headerlink" href="#account-unlock-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook provides a standard process for handling locked user or service accounts.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm requester identity</li>
-<li>Check lockout source</li>
-<li>Validate account ownership</li>
-<li>Review failed login pattern</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Search-ADAccount -LockedOut
-Unlock-ADAccount -Identity username
-Get-ADUser username -Properties LockedOut
+<h2 id="identify-locked-accounts">Identify Locked Accounts<a class="headerlink" href="#identify-locked-accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Find all locked-out accounts
+Search-ADAccount -LockedOut | Select-Object Name, SamAccountName, LockedOut, LastLogonDate
+
+# Check a specific account
+Get-ADUser -Identity &lt;username&gt; -Properties LockedOut, BadLogonCount, BadPasswordTime, LockedOut, LastLogonDate
+</code></pre>
+<h2 id="find-the-lockout-source">Find the Lockout Source<a class="headerlink" href="#find-the-lockout-source" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># On the PDC Emulator — query Security event log for lockout events (4740)
+Get-WinEvent -ComputerName (Get-ADDomain).PDCEmulator -FilterHashtable @{
+    LogName = 'Security'
+    Id      = 4740
+} | Where-Object { $_.Properties[0].Value -eq '&lt;username&gt;' } | Select-Object TimeCreated, Message | Select-Object -First 10
+</code></pre>
+<p>Key fields in Event 4740:
+- <strong>Caller Computer Name</strong> — the source machine generating the bad password
+- <strong>Account Name</strong> — the locked-out account</p>
+<h2 id="unlock-an-account">Unlock an Account<a class="headerlink" href="#unlock-an-account" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Unlock single account
+Unlock-ADAccount -Identity &lt;username&gt;
+
+# Confirm unlock
+Get-ADUser -Identity &lt;username&gt; -Properties LockedOut | Select-Object Name, LockedOut
+</code></pre>
+<h2 id="bulk-unlock-with-caution">Bulk Unlock (with caution)<a class="headerlink" href="#bulk-unlock-with-caution" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Unlock all locked accounts — use only after reviewing list
+Search-ADAccount -LockedOut | Unlock-ADAccount
+</code></pre>
+<h2 id="reset-password-and-unlock-combined">Reset Password and Unlock (combined)<a class="headerlink" href="#reset-password-and-unlock-combined" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Set-ADAccountPassword -Identity &lt;username&gt; -Reset -NewPassword (ConvertTo-SecureString &quot;&lt;NewPass&gt;&quot; -AsPlainText -Force)
+Unlock-ADAccount -Identity &lt;username&gt;
+</code></pre>
+<h2 id="linux-ldap-account-if-applicable">Linux / LDAP Account (if applicable)<a class="headerlink" href="#linux-ldap-account-if-applicable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check account status (PAM / pam_tally2)
+pam_tally2 --user &lt;username&gt;
+
+# Unlock
+pam_tally2 --user &lt;username&gt; --reset
+
+# faillock (RHEL 8+)
+faillock --user &lt;username&gt;
+faillock --user &lt;username&gt; --reset
 </code></pre>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm account unlocked</li>
-<li>Confirm user can authenticate</li>
-<li>Review lockout source if issue repeats</li>
-</ol>
+<pre><code class="language-powershell"># Confirm unlocked and can authenticate
+Get-ADUser -Identity &lt;username&gt; -Properties LockedOut, BadLogonCount | Select-Object Name, LockedOut, BadLogonCount
+
+# Test authentication (requires PSCredential)
+$cred = Get-Credential -UserName &quot;&lt;domain&gt;\&lt;username&gt;&quot; -Message &quot;Test auth&quot;
+(New-Object DirectoryServices.DirectoryEntry(&quot;LDAP://DC=domain,DC=com&quot;, $cred.UserName, $cred.GetNetworkCredential().Password)).distinguishedName
+</code></pre>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Requester identity confirmed</li>
+<li>[ ] Account ownership verified (not a shared/service account without approval)</li>
+<li>[ ] Lockout source identified</li>
+<li>[ ] Root cause noted (stale cached credentials, scheduled task, bad app config, etc.)</li>
+<li>[ ] Account unlocked</li>
+<li>[ ] User confirmed able to authenticate</li>
+<li>[ ] Ticket updated with lockout source</li>
+</ul>
+<h2 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stale cached credentials</td>
+<td>Mobile device / remote session</td>
+<td>Clear saved credentials on device</td>
+</tr>
+<tr>
+<td>Scheduled task with old password</td>
+<td>Task Scheduler / cron</td>
+<td>Update task credentials</td>
+</tr>
+<tr>
+<td>Service account bad password</td>
+<td>Services console / SC config</td>
+<td>Update service password</td>
+</tr>
+<tr>
+<td>Mapped drive with old creds</td>
+<td><code>net use</code> output</td>
+<td>Remove and re-add drive mapping</td>
+</tr>
+<tr>
+<td>Repeated failed MFA push</td>
+<td>Azure AD Sign-In logs</td>
+<td>Check for unauthorized attempts</td>
+</tr>
+</tbody>
+</table>
 
 
 

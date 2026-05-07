@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#daily-review-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Daily Review Checklist
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#key-windows-security-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Key Windows Security Events
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monitoring-workflow" class="md-nav__link">
+  <a href="#linux-security-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Monitoring Workflow
+        Linux Security Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#correlation-rules-siem-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlation Rules (SIEM Examples)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#threat-detection-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat Detection Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerting-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerting Thresholds
       
     </span>
   </a>
@@ -764,22 +797,228 @@
 
 
 <h1 id="security-monitoring">Security Monitoring<a class="headerlink" href="#security-monitoring" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Security monitoring detects threats, suspicious behavior, and policy violations across infrastructure systems.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review security alerts</li>
-<li>Validate log ingestion</li>
-<li>Confirm alert thresholds</li>
-<li>Check detection rules</li>
-</ul>
-<h2 id="monitoring-workflow">Monitoring Workflow<a class="headerlink" href="#monitoring-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Collect security events</li>
-<li>Analyze alerts</li>
-<li>Escalate incidents</li>
-<li>Document findings</li>
-</ol>
+<h2 id="daily-review-checklist">Daily Review Checklist<a class="headerlink" href="#daily-review-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Tool</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SIEM alert queue</td>
+<td>Splunk / Graylog / Sentinel</td>
+<td>No unacknowledged High/Critical</td>
+</tr>
+<tr>
+<td>Failed login spikes</td>
+<td>SIEM / AD event log</td>
+<td>No unusual spike pattern</td>
+</tr>
+<tr>
+<td>Privileged account activity</td>
+<td>CyberArk / AD event log 4648</td>
+<td>All activity matches known change windows</td>
+</tr>
+<tr>
+<td>New admin accounts created</td>
+<td>AD event log 4720</td>
+<td>Only approved accounts</td>
+</tr>
+<tr>
+<td>Firewall deny logs</td>
+<td>Firewall / SIEM</td>
+<td>No unexpected internal→external attempts</td>
+</tr>
+<tr>
+<td>EDR / AV alert queue</td>
+<td>CrowdStrike / Defender</td>
+<td>No active threats unacknowledged</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-windows-security-events">Key Windows Security Events<a class="headerlink" href="#key-windows-security-events" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Description</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4624</td>
+<td>Successful logon</td>
+<td>Baseline; flag off-hours or remote logons</td>
+</tr>
+<tr>
+<td>4625</td>
+<td>Failed logon</td>
+<td>Brute force detection</td>
+</tr>
+<tr>
+<td>4648</td>
+<td>Explicit credential logon</td>
+<td>Pass-the-hash / lateral movement</td>
+</tr>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+<td>Persistence mechanism</td>
+</tr>
+<tr>
+<td>4728</td>
+<td>Added to global security group</td>
+<td>Privilege escalation</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>Account locked out</td>
+<td>Brute force or stale credential</td>
+</tr>
+<tr>
+<td>4776</td>
+<td>NTLM auth attempt</td>
+<td>Downgrade attack detection</td>
+</tr>
+<tr>
+<td>7045</td>
+<td>New service installed</td>
+<td>Malware persistence</td>
+</tr>
+<tr>
+<td>4698</td>
+<td>Scheduled task created</td>
+<td>Persistence</td>
+</tr>
+<tr>
+<td>4663</td>
+<td>Object access</td>
+<td>File/folder auditing (if enabled)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Pull recent high-priority security events
+Get-WinEvent -FilterHashtable @{
+  LogName = 'Security'
+  Id      = @(4720, 4728, 7045, 4698)
+  StartTime = (Get-Date).AddHours(-24)
+} | Select-Object TimeCreated, Id, Message | Format-List
+</code></pre>
+<h2 id="linux-security-monitoring">Linux Security Monitoring<a class="headerlink" href="#linux-security-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Failed SSH attempts in last hour
+grep &quot;Failed password&quot; /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -10
+
+# Successful root logins
+grep &quot;session opened for user root&quot; /var/log/auth.log | tail -20
+
+# New users created
+grep &quot;useradd\|adduser&quot; /var/log/auth.log | tail -20
+
+# Sudo usage
+grep &quot;sudo:&quot; /var/log/auth.log | grep -v &quot;pam_unix&quot; | tail -30
+
+# Check auditd rules
+auditctl -l
+</code></pre>
+<h2 id="correlation-rules-siem-examples">Correlation Rules (SIEM Examples)<a class="headerlink" href="#correlation-rules-siem-examples" title="Permanent link">&para;</a></h2>
+<p><strong>Brute force detection:</strong></p>
+<pre><code># &gt;10 failed logons from same source in 5 minutes
+index=security EventCode=4625
+| stats count by src_ip, user
+| where count &gt; 10
+</code></pre>
+<p><strong>Lateral movement — new admin account:</strong></p>
+<pre><code># Account created then added to privileged group within 60 minutes
+index=security (EventCode=4720 OR EventCode=4728)
+| transaction user maxspan=60m
+| where eventcount &gt; 1
+</code></pre>
+<p><strong>Off-hours privileged access:</strong></p>
+<pre><code>index=security EventCode=4648
+| eval hour=strftime(_time,&quot;%H&quot;)
+| where hour &lt; 6 OR hour &gt; 20
+| table _time, user, src_ip, dest
+</code></pre>
+<h2 id="threat-detection-sources">Threat Detection Sources<a class="headerlink" href="#threat-detection-sources" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What It Monitors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows Event Log</td>
+<td>Logon events, privilege use, object access</td>
+</tr>
+<tr>
+<td>Linux auditd</td>
+<td>Syscall-level audit, file access, exec</td>
+</tr>
+<tr>
+<td>Firewall deny logs</td>
+<td>Blocked traffic, port scans</td>
+</tr>
+<tr>
+<td>EDR / AV</td>
+<td>Process-level threat detection, behavioural</td>
+</tr>
+<tr>
+<td>DNS logs</td>
+<td>C2 domain queries, DNS tunnelling</td>
+</tr>
+<tr>
+<td>Netflow</td>
+<td>Lateral movement, data exfiltration volume</td>
+</tr>
+<tr>
+<td>AD audit log</td>
+<td>Group changes, password resets, account creation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alerting-thresholds">Alerting Thresholds<a class="headerlink" href="#alerting-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Failed logins per host / 5 min</td>
+<td>&gt;5</td>
+<td>&gt;20</td>
+</tr>
+<tr>
+<td>New admin account created</td>
+<td>Any</td>
+<td>—</td>
+</tr>
+<tr>
+<td>External connection from server (unexpected)</td>
+<td>Any</td>
+<td>—</td>
+</tr>
+<tr>
+<td>AV/EDR detection</td>
+<td>Any</td>
+<td>Active threat (not quarantined)</td>
+</tr>
+<tr>
+<td>Privileged account used outside change window</td>
+<td>Any</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 
 
 

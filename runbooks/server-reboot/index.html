@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#graceful-service-shutdown-if-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Graceful Service Shutdown (if required)
       
     </span>
   </a>
@@ -745,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#reboot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Reboot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-reboot-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Reboot Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,28 +797,101 @@
 
 
 <h1 id="server-reboot-runbook">Server Reboot Runbook<a class="headerlink" href="#server-reboot-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook provides a safe process for rebooting servers during maintenance or troubleshooting.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm maintenance approval</li>
-<li>Verify backups completed</li>
-<li>Check logged-in users</li>
-<li>Confirm application owner awareness</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">who
+<pre><code class="language-bash"># Who is logged in
+who
+w
+
+# System load and uptime
 uptime
+
+# Failed services
 systemctl --failed
-sudo reboot
+
+# Active jobs (backup agents, scheduled tasks)
+ps aux | grep -E &quot;backup|job|agent&quot;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm server responds to ping</li>
-<li>Confirm SSH or RDP access</li>
-<li>Validate services</li>
-<li>Review system logs</li>
-</ol>
+<p>Notify application owners and confirm maintenance window approval before proceeding.</p>
+<h2 id="graceful-service-shutdown-if-required">Graceful Service Shutdown (if required)<a class="headerlink" href="#graceful-service-shutdown-if-required" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">systemctl stop &lt;service&gt;
+systemctl status &lt;service&gt;    # confirm stopped
+</code></pre>
+<h2 id="reboot">Reboot<a class="headerlink" href="#reboot" title="Permanent link">&para;</a></h2>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">sudo reboot
+# Scheduled with warning:
+sudo shutdown -r +5 &quot;Rebooting for maintenance&quot;
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell">Restart-Computer -Force
+# Scheduled:
+shutdown /r /t 300 /c &quot;Rebooting for maintenance&quot;
+</code></pre>
+<p><strong>VMware VM (PowerCLI):</strong></p>
+<pre><code class="language-powershell">Restart-VMGuest -VM &lt;vmname&gt;
+</code></pre>
+<h2 id="post-reboot-validation">Post-Reboot Validation<a class="headerlink" href="#post-reboot-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm server is responding
+ping -c 4 &lt;server_ip&gt;
+
+# Boot time
+uptime
+who -b
+
+# Failed services
+systemctl --failed
+
+# Check critical services
+systemctl status &lt;service1&gt; &lt;service2&gt;
+
+# Review boot errors
+journalctl -b -p err
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell"># Check any auto-start service not running
+Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
+
+# Recent system errors
+Get-EventLog -LogName System -EntryType Error -Newest 20
+</code></pre>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Change approval confirmed</li>
+<li>[ ] Active users notified and logged off</li>
+<li>[ ] Application services gracefully stopped</li>
+<li>[ ] Reboot initiated</li>
+<li>[ ] Server responds to ping</li>
+<li>[ ] All services running</li>
+<li>[ ] Application health confirmed</li>
+<li>[ ] Monitoring alert cleared</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server doesn't respond</td>
+<td>Console/iDRAC</td>
+<td>Check BMC console for boot errors</td>
+</tr>
+<tr>
+<td>Service fails after reboot</td>
+<td><code>systemctl --failed</code></td>
+<td>Investigate; manual start if needed</td>
+</tr>
+<tr>
+<td>Boot loop or fsck running</td>
+<td>Console</td>
+<td>Wait for fsck to complete; investigate disk</td>
+</tr>
+</tbody>
+</table>
 
 
 

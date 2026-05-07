@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#step-1-expand-the-lun-on-the-array" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Step 1 — Expand the LUN on the Array
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-rescan-on-the-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Rescan on the Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-resize-partition-and-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Resize Partition and Filesystem
       
     </span>
   </a>
@@ -749,6 +760,17 @@
     <span class="md-ellipsis">
       
         Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,27 +797,103 @@
 
 
 <h1 id="storage-volume-expansion-runbook">Storage Volume Expansion Runbook<a class="headerlink" href="#storage-volume-expansion-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook provides a controlled process for expanding storage volumes.</p>
+<p>Controlled process for expanding a storage volume and resizing the filesystem on the host.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm requested size</li>
-<li>Validate pool capacity</li>
-<li>Confirm host multipathing</li>
-<li>Confirm filesystem expansion plan</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">df -h
+<pre><code class="language-bash"># Current host disk state
+df -h
 lsblk
+multipath -ll          # confirm all paths healthy
+
+# Check array pool capacity (confirm space available)
+# On the array management console or CLI before expanding
+</code></pre>
+<h2 id="step-1-expand-the-lun-on-the-array">Step 1 — Expand the LUN on the Array<a class="headerlink" href="#step-1-expand-the-lun-on-the-array" title="Permanent link">&para;</a></h2>
+<p><strong>NetApp ONTAP:</strong></p>
+<pre><code class="language-bash">volume size -vserver &lt;svm&gt; -volume &lt;vol&gt; -new-size &lt;size&gt;
+</code></pre>
+<p><strong>Pure FlashArray:</strong></p>
+<pre><code class="language-bash">purecli volume setattr &lt;volume_name&gt; --size &lt;new_size&gt;
+</code></pre>
+<p><strong>Dell Unity:</strong></p>
+<pre><code class="language-bash">uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; set -size &lt;new_size&gt;
+</code></pre>
+<p><strong>Dell PowerMax (Solutions Enabler):</strong></p>
+<pre><code class="language-bash">symconfigure -sid &lt;sid&gt; commit -noprompt \
+    &quot;modify dev &lt;dev_id&gt;, size=&lt;new_size_cyl&gt;;&quot;
+</code></pre>
+<h2 id="step-2-rescan-on-the-host">Step 2 — Rescan on the Host<a class="headerlink" href="#step-2-rescan-on-the-host" title="Permanent link">&para;</a></h2>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash"># Rescan SCSI bus
+echo 1 &gt; /sys/class/scsi_device/&lt;host:bus:target:lun&gt;/device/rescan
+
+# Or rescan all
+for host in /sys/class/scsi_host/host*/; do
+    echo &quot;- - -&quot; &gt; ${host}scan
+done
+
+# Refresh multipath
+multipathd reconfigure
 multipath -ll
 </code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell">Update-HostStorageCache
+Get-Disk | Where-Object Size -GT 0
+</code></pre>
+<h2 id="step-3-resize-partition-and-filesystem">Step 3 — Resize Partition and Filesystem<a class="headerlink" href="#step-3-resize-partition-and-filesystem" title="Permanent link">&para;</a></h2>
+<p><strong>Linux (LVM):</strong></p>
+<pre><code class="language-bash"># Resize physical volume (if using multipath device)
+pvresize /dev/mapper/&lt;mpathX&gt;
+
+# Extend logical volume
+lvextend -l +100%FREE /dev/&lt;vg&gt;/&lt;lv&gt;
+
+# Resize filesystem
+resize2fs /dev/&lt;vg&gt;/&lt;lv&gt;          # ext4
+xfs_growfs /dev/&lt;vg&gt;/&lt;lv&gt;         # xfs
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell"># Expand partition to max available
+$disk = Get-Disk -Number &lt;n&gt;
+$part = Get-Partition -DiskNumber $disk.Number
+Resize-Partition -DiskNumber $disk.Number -PartitionNumber $part.PartitionNumber -Size ($part | Get-PartitionSupportedSize).SizeMax
+</code></pre>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Expand storage volume</li>
-<li>Rescan host storage</li>
-<li>Expand filesystem</li>
-<li>Confirm application sees new capacity</li>
-</ol>
+<pre><code class="language-bash">df -h                     # confirm new size visible
+lsblk                     # confirm partition expanded
+multipath -ll             # confirm no path issues post-rescan
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rescan shows old size</td>
+<td>Rescan not complete</td>
+<td>Re-run rescan; check multipath</td>
+</tr>
+<tr>
+<td>pvresize fails</td>
+<td>PV device name</td>
+<td>Verify <code>/dev/mapper/</code> path</td>
+</tr>
+<tr>
+<td>Filesystem won't grow</td>
+<td>Partition not extended first</td>
+<td>Extend partition before filesystem</td>
+</tr>
+<tr>
+<td>Windows disk shows unallocated</td>
+<td>Partition not extended</td>
+<td>Use <code>Resize-Partition</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

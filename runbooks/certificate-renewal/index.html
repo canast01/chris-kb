@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#renewal-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Renewal Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Renewal Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#self-signed-internal-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Signed / Internal CA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-public-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External / Public CA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Certificate
       
     </span>
   </a>
@@ -745,10 +773,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#post-renewal-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Post-Renewal Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,27 +814,89 @@
 
 
 <h1 id="certificate-renewal-runbook">Certificate Renewal Runbook<a class="headerlink" href="#certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook covers renewing and validating certificates used by applications and infrastructure services.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm certificate expiration date</li>
-<li>Identify certificate owner</li>
-<li>Confirm issuing CA</li>
-<li>Confirm services using the certificate</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">openssl x509 -in cert.pem -text -noout
-openssl s_client -connect server:443
-curl -vk https://server
+<pre><code class="language-bash"># Check certificate expiration date
+openssl x509 -in &lt;cert.pem&gt; -noout -dates
+
+# Check expiry on a live service
+echo | openssl s_client -connect &lt;hostname&gt;:443 2&gt;/dev/null | openssl x509 -noout -dates
+
+# Check via curl
+curl -vk https://&lt;hostname&gt;/ 2&gt;&amp;1 | grep -i &quot;expire\|valid\|issuer&quot;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<p>Alert threshold: begin renewal at <strong>30 days</strong> before expiry; escalate at <strong>14 days</strong>.</p>
+<h2 id="renewal-process">Renewal Process<a class="headerlink" href="#renewal-process" title="Permanent link">&para;</a></h2>
+<h3 id="self-signed-internal-ca">Self-Signed / Internal CA<a class="headerlink" href="#self-signed-internal-ca" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Install renewed certificate</li>
-<li>Restart affected service</li>
-<li>Validate TLS connection</li>
-<li>Confirm monitoring alert cleared</li>
+<li>Generate CSR:
+   <code>bash
+   openssl req -new -newkey rsa:2048 -nodes \
+       -keyout &lt;hostname&gt;.key \
+       -out &lt;hostname&gt;.csr \
+       -subj "/CN=&lt;hostname&gt;/O=&lt;org&gt;/C=US"</code></li>
+<li>Submit CSR to internal CA (AD CS, Venafi, etc.)</li>
+<li>Download signed certificate (PEM format)</li>
 </ol>
+<h3 id="external-public-ca">External / Public CA<a class="headerlink" href="#external-public-ca" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Generate CSR as above</li>
+<li>Submit to CA via web portal or ACME (Let's Encrypt)</li>
+<li>Complete domain validation</li>
+<li>Download signed certificate + chain</li>
+</ol>
+<h2 id="install-certificate">Install Certificate<a class="headerlink" href="#install-certificate" title="Permanent link">&para;</a></h2>
+<p><strong>Linux service (nginx/apache):</strong></p>
+<pre><code class="language-bash">cp &lt;hostname&gt;.crt /etc/ssl/certs/
+cp &lt;hostname&gt;.key /etc/ssl/private/
+systemctl reload nginx
+</code></pre>
+<p><strong>VMware vCenter:</strong>
+- Managed via vSphere Client → Administration → Certificate Management</p>
+<p><strong>NetApp ONTAP:</strong></p>
+<pre><code class="language-bash">security certificate install -vserver &lt;svm&gt; -type server
+</code></pre>
+<h2 id="post-renewal-validation">Post-Renewal Validation<a class="headerlink" href="#post-renewal-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm new certificate is live
+echo | openssl s_client -connect &lt;hostname&gt;:443 2&gt;/dev/null | openssl x509 -noout -dates
+
+# Confirm chain is valid
+openssl verify -CAfile &lt;ca-chain.pem&gt; &lt;hostname&gt;.crt
+
+# Check from browser — verify no certificate warning
+curl -v https://&lt;hostname&gt;/
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certificate chain incomplete</td>
+<td>Intermediate CA missing</td>
+<td>Include full chain in cert file</td>
+</tr>
+<tr>
+<td>Wrong hostname</td>
+<td>CN or SAN mismatch</td>
+<td>Reissue cert with correct SAN</td>
+</tr>
+<tr>
+<td>Private key mismatch</td>
+<td>Key doesn't match cert</td>
+<td>Re-generate CSR with correct key</td>
+</tr>
+<tr>
+<td>Service still showing old cert</td>
+<td>Service not reloaded</td>
+<td>Restart / reload the service</td>
+</tr>
+</tbody>
+</table>
 
 
 

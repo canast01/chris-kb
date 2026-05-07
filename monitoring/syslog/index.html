@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#syslog-service-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Syslog Service Health
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#configure-rsyslog-to-forward-to-central-collector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Configure rsyslog to Forward to Central Collector
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#journald-to-syslog-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        journald to Syslog Bridge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-event-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Event Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-severity-levels-rfc-5424" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog Severity Levels (RFC 5424)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-logs-not-arriving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting — Logs Not Arriving
       
     </span>
   </a>
@@ -775,29 +819,177 @@
 
 
 <h1 id="syslog-and-centralized-logging">Syslog and Centralized Logging<a class="headerlink" href="#syslog-and-centralized-logging" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Centralized logging collects system and application logs for troubleshooting, auditing, and security monitoring.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify log ingestion</li>
-<li>Check disk utilization on log servers</li>
-<li>Confirm time synchronization</li>
-<li>Review critical error logs</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">systemctl status rsyslog
-df -h
-tail -n 50 /var/log/messages
-logger test-message
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<pre><code>Hosts (rsyslog / syslog-ng / journald)
+    → Syslog server / SIEM (Splunk / Graylog / ELK / Syslog-NG)
+        → Long-term archive (object storage / NFS)
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm log service running</li>
-<li>Verify network connectivity to log collector</li>
-<li>Check log file permissions</li>
-<li>Validate time synchronization</li>
-<li>Review error logs</li>
-</ol>
+<h2 id="syslog-service-health">Syslog Service Health<a class="headerlink" href="#syslog-service-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check rsyslog running
+systemctl status rsyslog
+
+# Check syslog-ng
+systemctl status syslog-ng
+
+# Test log ingestion — inject a test message and verify receipt
+logger -t TEST &quot;Health check message&quot;
+grep &quot;Health check message&quot; /var/log/messages
+
+# Check disk on log server
+df -h /var/log
+</code></pre>
+<h2 id="configure-rsyslog-to-forward-to-central-collector">Configure rsyslog to Forward to Central Collector<a class="headerlink" href="#configure-rsyslog-to-forward-to-central-collector" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># /etc/rsyslog.conf or /etc/rsyslog.d/forward.conf
+
+# UDP (less reliable)
+*.* @&lt;syslog-server&gt;:514
+
+# TCP (preferred)
+*.* @@&lt;syslog-server&gt;:514
+
+# TLS (secure)
+*.* action(type=&quot;omfwd&quot; target=&quot;&lt;syslog-server&gt;&quot; port=&quot;6514&quot; protocol=&quot;tcp&quot;
+         StreamDriver=&quot;gtls&quot; StreamDriverMode=&quot;1&quot; StreamDriverAuthMode=&quot;anon&quot;)
+</code></pre>
+<pre><code class="language-bash"># Apply after editing
+systemctl restart rsyslog
+
+# Test
+logger -t TEST &quot;Forwarding test from $(hostname)&quot;
+</code></pre>
+<h2 id="journald-to-syslog-bridge">journald to Syslog Bridge<a class="headerlink" href="#journald-to-syslog-bridge" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Forward journald to rsyslog (already default on most distros)
+# /etc/systemd/journald.conf:
+# ForwardToSyslog=yes
+
+# Verify journal disk usage
+journalctl --disk-usage
+
+# Vacuum old entries
+journalctl --vacuum-time=30d
+journalctl --vacuum-size=2G
+</code></pre>
+<h2 id="windows-event-forwarding">Windows Event Forwarding<a class="headerlink" href="#windows-event-forwarding" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Configure Windows Event Collector
+winrm quickconfig
+
+# Subscription on collector (WEF)
+wecutil cs subscription.xml
+
+# View forwarded events
+Get-WinEvent -LogName ForwardedEvents -MaxEvents 20
+</code></pre>
+<h2 id="syslog-severity-levels-rfc-5424">Syslog Severity Levels (RFC 5424)<a class="headerlink" href="#syslog-severity-levels-rfc-5424" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Emergency</td>
+<td>0</td>
+<td>System unusable</td>
+</tr>
+<tr>
+<td>Alert</td>
+<td>1</td>
+<td>Immediate action required</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>2</td>
+<td>Critical condition</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>3</td>
+<td>Error condition</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>4</td>
+<td>Warning condition</td>
+</tr>
+<tr>
+<td>Notice</td>
+<td>5</td>
+<td>Normal but significant</td>
+</tr>
+<tr>
+<td>Informational</td>
+<td>6</td>
+<td>Informational</td>
+</tr>
+<tr>
+<td>Debug</td>
+<td>7</td>
+<td>Debug messages</td>
+</tr>
+</tbody>
+</table>
+<p>Filter to errors and above: <code>*.err</code> or severity ≤ 3.</p>
+<h2 id="querying-logs">Querying Logs<a class="headerlink" href="#querying-logs" title="Permanent link">&para;</a></h2>
+<p><strong>Linux — journalctl:</strong></p>
+<pre><code class="language-bash"># Filter by unit
+journalctl -u nginx -n 100 --no-pager
+
+# Filter by priority
+journalctl -p err -b --no-pager
+
+# Filter by time
+journalctl --since &quot;2026-05-01 08:00:00&quot; --until &quot;2026-05-01 10:00:00&quot;
+
+# Follow live
+journalctl -f -u &lt;service&gt;
+</code></pre>
+<p><strong>Graylog / Splunk search examples:</strong></p>
+<pre><code># Graylog GELF query
+source:&lt;hostname&gt; AND level:&lt;4 AND facility:daemon
+
+# Splunk SPL
+index=infra host=&lt;hostname&gt; sourcetype=syslog level=error | timechart count by host
+</code></pre>
+<h2 id="troubleshooting-logs-not-arriving">Troubleshooting — Logs Not Arriving<a class="headerlink" href="#troubleshooting-logs-not-arriving" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No logs from host</td>
+<td>rsyslog running?</td>
+<td><code>systemctl start rsyslog</code></td>
+</tr>
+<tr>
+<td>Logs stopped mid-stream</td>
+<td>Disk full on collector?</td>
+<td><code>df -h /var/log</code> — rotate or expand</td>
+</tr>
+<tr>
+<td>Time mismatch in logs</td>
+<td>NTP sync?</td>
+<td><code>timedatectl status</code>; fix NTP</td>
+</tr>
+<tr>
+<td>TLS forwarding fails</td>
+<td>Cert expired / CA mismatch</td>
+<td>Check cert chain; renew</td>
+</tr>
+<tr>
+<td>UDP packets dropped</td>
+<td>Firewall rule</td>
+<td>Open UDP/514 or switch to TCP</td>
+</tr>
+</tbody>
+</table>
 
 
 

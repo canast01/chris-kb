@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#create-snapshot-powercli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Create Snapshot (PowerCLI)
       
     </span>
   </a>
@@ -745,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#create-snapshot-esxi-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Create Snapshot (ESXi CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert-to-snapshot-if-change-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert to Snapshot (if change fails)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-snapshot-after-successful-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Snapshot (after successful change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,27 +808,88 @@
 
 
 <h1 id="vm-snapshot-runbook">VM Snapshot Runbook<a class="headerlink" href="#vm-snapshot-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook defines safe use of VM snapshots before changes.</p>
+<p>Snapshots capture a point-in-time VM state before a change. They are not backups — remove within 24–72 hours. Large delta disks degrade performance.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm VM owner approval</li>
-<li>Check existing snapshots</li>
-<li>Confirm datastore capacity</li>
-<li>Define snapshot removal time</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">vim-cmd vmsvc/getallvms
-vim-cmd vmsvc/snapshot.get VMID
-vim-cmd vmsvc/snapshot.create VMID pre-change '' 0 0
+<pre><code class="language-powershell"># Confirm no existing snapshots
+Get-VM &lt;vmname&gt; | Get-Snapshot
+
+# Check datastore free space (need ≥ 20% free)
+Get-Datastore | Select Name, @{N=&quot;FreePct&quot;;E={[math]::Round($_.FreeSpaceMB / $_.CapacityMB * 100,1)}}
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm snapshot created</li>
-<li>Complete change</li>
-<li>Remove snapshot after validation</li>
-<li>Confirm snapshot consolidation is clean</li>
-</ol>
+<h2 id="create-snapshot-powercli">Create Snapshot (PowerCLI)<a class="headerlink" href="#create-snapshot-powercli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Crash-consistent
+New-Snapshot -VM &lt;vmname&gt; \
+    -Name &quot;pre-change-$(Get-Date -Format yyyyMMdd-HHmm)&quot; \
+    -Description &quot;Before &lt;change&gt;&quot;
+
+# App-consistent (quiesce with VMware Tools)
+New-Snapshot -VM &lt;vmname&gt; \
+    -Name &quot;pre-change-$(Get-Date -Format yyyyMMdd-HHmm)&quot; \
+    -Quiesce -Memory:$false
+</code></pre>
+<h2 id="create-snapshot-esxi-cli">Create Snapshot (ESXi CLI)<a class="headerlink" href="#create-snapshot-esxi-cli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Get VM ID
+vim-cmd vmsvc/getallvms | grep &lt;vmname&gt;
+
+# Take snapshot (VMID, name, description, memory, quiesce)
+vim-cmd vmsvc/snapshot.create &lt;VMID&gt; &quot;pre-change&quot; &quot;Before change&quot; 0 0
+
+# List snapshots
+vim-cmd vmsvc/snapshot.get &lt;VMID&gt;
+</code></pre>
+<h2 id="revert-to-snapshot-if-change-fails">Revert to Snapshot (if change fails)<a class="headerlink" href="#revert-to-snapshot-if-change-fails" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">$snap = Get-VM &lt;vmname&gt; | Get-Snapshot -Name &quot;pre-change*&quot;
+Set-VM &lt;vmname&gt; -Snapshot $snap -Confirm:$false
+</code></pre>
+<h2 id="remove-snapshot-after-successful-change">Remove Snapshot (after successful change)<a class="headerlink" href="#remove-snapshot-after-successful-change" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Get-VM &lt;vmname&gt; | Get-Snapshot | Remove-Snapshot -Confirm:$false
+
+# Confirm no consolidation needed
+(Get-VM &lt;vmname&gt;).Extensiondata.Runtime.ConsolidationNeeded
+# Should return: False
+</code></pre>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] No existing snapshots on VM</li>
+<li>[ ] Datastore ≥ 20% free</li>
+<li>[ ] Snapshot created and confirmed</li>
+<li>[ ] Change completed</li>
+<li>[ ] Application validated</li>
+<li>[ ] Snapshot removed within change window</li>
+<li>[ ] Consolidation clean</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Snapshot fails</td>
+<td>Datastore space</td>
+<td>Clear space; use different datastore</td>
+</tr>
+<tr>
+<td>Consolidation needed</td>
+<td>Delta disks</td>
+<td>Run vSphere consolidation</td>
+</tr>
+<tr>
+<td>Old snapshot exists</td>
+<td>Missed cleanup</td>
+<td>Remove immediately</td>
+</tr>
+<tr>
+<td>Quiesce fails</td>
+<td>VMware Tools</td>
+<td>Use crash-consistent instead</td>
+</tr>
+</tbody>
+</table>
 
 
 

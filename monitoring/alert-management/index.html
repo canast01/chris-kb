@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#alert-severity-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Alert Severity Levels
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#alert-response-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Alert Response Workflow
       
     </span>
   </a>
@@ -734,10 +734,104 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#response-workflow" class="md-nav__link">
+  <a href="#silencing-and-suppression-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Response Workflow
+        Silencing and Suppression Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-alert-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Alert Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Alert Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High CPU
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-latency-ontap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Latency (ONTAP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-interface-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Interface Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-noise-reduction-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Noise Reduction Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-matrix-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Matrix (template)
       
     </span>
   </a>
@@ -764,23 +858,123 @@
 
 
 <h1 id="alert-management">Alert Management<a class="headerlink" href="#alert-management" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Alert management ensures infrastructure alerts are detected, prioritized, and resolved quickly.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review open alerts</li>
-<li>Validate notification delivery</li>
-<li>Confirm escalation paths</li>
-<li>Check alert thresholds</li>
-</ul>
-<h2 id="response-workflow">Response Workflow<a class="headerlink" href="#response-workflow" title="Permanent link">&para;</a></h2>
+<h2 id="alert-severity-levels">Alert Severity Levels<a class="headerlink" href="#alert-severity-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Meaning</th>
+<th>Response Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Service impact or imminent outage</td>
+<td>Immediate (15 min)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Degraded performance or threshold approaching</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Warning — trend needs attention</td>
+<td>Business day</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Informational / advisory</td>
+<td>Next scheduled review</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-response-workflow">Alert Response Workflow<a class="headerlink" href="#alert-response-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Identify alert source</li>
-<li>Confirm impact</li>
-<li>Assign owner</li>
-<li>Resolve issue</li>
-<li>Document incident</li>
+<li><strong>Acknowledge</strong> — claim the alert so others know it's owned</li>
+<li><strong>Assess impact</strong> — is a service affected? How many users?</li>
+<li><strong>Triage root cause</strong> — use the relevant runbook or dashboard</li>
+<li><strong>Resolve or escalate</strong> — fix, or hand to the right team with context</li>
+<li><strong>Close and document</strong> — note root cause and action taken in the ticket</li>
 </ol>
+<h2 id="silencing-and-suppression-rules">Silencing and Suppression Rules<a class="headerlink" href="#silencing-and-suppression-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Never silence without a linked ticket and expiry time</li>
+<li>Maintenance window suppressions: set duration = window + 30 min buffer</li>
+<li>Recurring false positives: fix the threshold, don't silence permanently</li>
+</ul>
+<pre><code class="language-bash"># Zabbix — suppress a host for 2 hours (API example via curl)
+curl -s -X POST -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;maintenance.create&quot;,&quot;params&quot;:{...},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}' \
+  http://&lt;zabbix&gt;/api_jsonrpc.php
+</code></pre>
+<h2 id="common-alert-sources">Common Alert Sources<a class="headerlink" href="#common-alert-sources" title="Permanent link">&para;</a></h2>
+<h3 id="high-cpu">High CPU<a class="headerlink" href="#high-cpu" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Top processes
+ps aux --sort=-%cpu | head -15
+top -bn1 | head -20
+
+# Historical (sar)
+sar -u 1 10
+</code></pre>
+<h3 id="high-memory">High Memory<a class="headerlink" href="#high-memory" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">free -h
+ps aux --sort=-%mem | head -10
+# Check for swap usage
+swapon --show
+</code></pre>
+<h3 id="disk-space">Disk Space<a class="headerlink" href="#disk-space" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">df -h | awk '$5+0 &gt; 75'       # filesystems over 75%
+du -sh /var/* | sort -rh | head -10
+</code></pre>
+<h3 id="storage-latency-ontap">Storage Latency (ONTAP)<a class="headerlink" href="#storage-latency-ontap" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">statistics show -object volume -counter read_latency,write_latency -interval 5
+qos statistics workload latency show
+</code></pre>
+<h3 id="network-interface-errors">Network Interface Errors<a class="headerlink" href="#network-interface-errors" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Linux
+ip -s link show &lt;interface&gt;
+ethtool -S &lt;interface&gt; | grep -i error
+
+# Cisco NX-OS
+show interface &lt;int&gt; counters errors
+</code></pre>
+<h2 id="alert-noise-reduction-checklist">Alert Noise Reduction Checklist<a class="headerlink" href="#alert-noise-reduction-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Are thresholds based on documented baselines?</li>
+<li>[ ] Are there duplicate alerts from multiple tools for the same condition?</li>
+<li>[ ] Are acknowledged-but-not-resolved alerts being tracked?</li>
+<li>[ ] Are low-severity alerts reviewed at least weekly, not just critical ones?</li>
+<li>[ ] Are any suppressions older than 30 days without a ticket?</li>
+</ul>
+<h2 id="escalation-matrix-template">Escalation Matrix (template)<a class="headerlink" href="#escalation-matrix-template" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>On-call</th>
+<th>Escalate After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>Infra on-call</td>
+<td>30 min no progress</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Platform / storage team</td>
+<td>1 hour on Critical</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Vendor TAC / architect</td>
+<td>2 hours on Critical</td>
+</tr>
+</tbody>
+</table>
 
 
 

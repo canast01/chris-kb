@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#review-schedule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Review Schedule
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#review-checklist" class="md-nav__link">
+  <a href="#active-directory-export-and-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Review Checklist
+        Active Directory — Export and Review
       
     </span>
   </a>
@@ -734,10 +734,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#privileged-account-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Privileged Account Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-account-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inactive-and-stale-account-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inactive and Stale Account Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-posix-account-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux / POSIX Account Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
       
     </span>
   </a>
@@ -764,22 +819,109 @@
 
 
 <h1 id="access-review-procedure">Access Review Procedure<a class="headerlink" href="#access-review-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Access reviews validate that users have appropriate permissions for their roles.</p>
-<h2 id="review-checklist">Review Checklist<a class="headerlink" href="#review-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Active users verified</li>
-<li>Privileged accounts reviewed</li>
-<li>Inactive accounts removed</li>
-<li>Role assignments validated</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Periodic access reviews ensure that users and service accounts hold only the permissions required for their current role. Reviews reduce the blast radius of credential compromise and satisfy audit requirements.</p>
+<h2 id="review-schedule">Review Schedule<a class="headerlink" href="#review-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Frequency</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Privileged / admin accounts</td>
+<td>Quarterly</td>
+<td>Security team</td>
+</tr>
+<tr>
+<td>Standard user accounts</td>
+<td>Semi-annual</td>
+<td>IT operations</td>
+</tr>
+<tr>
+<td>Service accounts</td>
+<td>Quarterly</td>
+<td>Application owners</td>
+</tr>
+<tr>
+<td>External / contractor accounts</td>
+<td>Monthly</td>
+<td>IT operations</td>
+</tr>
+<tr>
+<td>Shared / generic accounts</td>
+<td>Quarterly</td>
+<td>Security team</td>
+</tr>
+</tbody>
+</table>
+<h2 id="active-directory-export-and-review">Active Directory — Export and Review<a class="headerlink" href="#active-directory-export-and-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Export all enabled users with last logon and group membership
+Get-ADUser -Filter {Enabled -eq $true} -Properties LastLogonDate, MemberOf |
+  Select-Object Name, SamAccountName, LastLogonDate,
+    @{N='Groups';E={($_.MemberOf | ForEach-Object { (Get-ADGroup $_).Name }) -join '; '}} |
+  Export-Csv C:\access-review\users-$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
+
+# Find accounts inactive for &gt;90 days
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -lt $cutoff} -Properties LastLogonDate |
+  Select-Object Name, SamAccountName, LastLogonDate | Sort-Object LastLogonDate
+</code></pre>
+<h2 id="privileged-account-review">Privileged Account Review<a class="headerlink" href="#privileged-account-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List all Domain Admins
+Get-ADGroupMember -Identity &quot;Domain Admins&quot; | Select-Object Name, SamAccountName, ObjectClass
+
+# List all members of Administrators group
+Get-ADGroupMember -Identity &quot;Administrators&quot; | Select-Object Name, SamAccountName, ObjectClass
+
+# Find accounts with AdminCount=1 (had privileged group at some point)
+Get-ADUser -Filter {AdminCount -eq 1 -and Enabled -eq $true} | Select-Object Name, SamAccountName
+</code></pre>
+<h2 id="service-account-review">Service Account Review<a class="headerlink" href="#service-account-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Find service accounts (by naming convention or OU)
+Get-ADUser -Filter * -SearchBase &quot;OU=ServiceAccounts,DC=domain,DC=com&quot; -Properties PasswordLastSet, LastLogonDate, Description |
+  Select-Object Name, SamAccountName, PasswordLastSet, LastLogonDate, Description
+</code></pre>
+<h2 id="inactive-and-stale-account-cleanup">Inactive and Stale Account Cleanup<a class="headerlink" href="#inactive-and-stale-account-cleanup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Disable accounts inactive &gt; 90 days (after review and approval)
+$cutoff = (Get-Date).AddDays(-90)
+Get-ADUser -Filter {Enabled -eq $true -and LastLogonDate -lt $cutoff} -Properties LastLogonDate |
+  Disable-ADAccount -WhatIf   # Remove -WhatIf to execute
+
+# Move disabled accounts to a holding OU before deletion
+Get-ADUser -Filter {Enabled -eq $false} -SearchBase &quot;OU=Users,DC=domain,DC=com&quot; |
+  Move-ADObject -TargetPath &quot;OU=Disabled,DC=domain,DC=com&quot; -WhatIf
+</code></pre>
+<h2 id="linux-posix-account-review">Linux / POSIX Account Review<a class="headerlink" href="#linux-posix-account-review" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all non-system users
+awk -F: '$3 &gt;= 1000 {print $1, $3, $6, $7}' /etc/passwd
+
+# Last login for all users
+lastlog | grep -v &quot;Never logged in&quot; | sort -k4 -r
+
+# Sudoers with unrestricted access
+grep -E &quot;^\w+.*ALL.*ALL&quot; /etc/sudoers /etc/sudoers.d/* 2&gt;/dev/null
+</code></pre>
+<h2 id="review-workflow">Review Workflow<a class="headerlink" href="#review-workflow" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Export user list</li>
-<li>Validate permissions</li>
-<li>Remove unauthorized access</li>
-<li>Document approval</li>
+<li><strong>Export</strong> — generate user/access report from AD and relevant systems</li>
+<li><strong>Distribute</strong> — send lists to line managers and application owners for sign-off</li>
+<li><strong>Collect decisions</strong> — approved / revoke / transfer for each account</li>
+<li><strong>Remediate</strong> — disable or remove accounts per decisions; update group memberships</li>
+<li><strong>Document</strong> — record approvals, changes made, and reviewer sign-off in the ticket</li>
+<li><strong>Verify</strong> — re-run export after changes; confirm no accounts missed</li>
 </ol>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Privileged accounts reviewed and approved by security team</li>
+<li>[ ] Inactive accounts (&gt;90 days) disabled and moved to holding OU</li>
+<li>[ ] Service accounts confirmed still required; passwords within rotation policy</li>
+<li>[ ] External/contractor accounts checked against active contractors list</li>
+<li>[ ] Shared/generic accounts reviewed; owners documented</li>
+<li>[ ] Evidence of review stored (CSV exports, approval records) for audit</li>
+</ul>
 
 
 

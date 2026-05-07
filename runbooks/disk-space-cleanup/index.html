@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#identify-the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Identify the Problem
       
     </span>
   </a>
@@ -723,10 +723,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#common-cleanup-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Common Cleanup Targets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Cleanup Targets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#old-log-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Old Log Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#package-cache-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Cache (Linux)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#old-kernel-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Old Kernel Packages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-dumps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Dumps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temp-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temp Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-disk-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Disk Cleanup
       
     </span>
   </a>
@@ -734,10 +806,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#post-cleanup-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Post-Cleanup Validation
       
     </span>
   </a>
@@ -745,10 +817,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#safety-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Safety Rules
       
     </span>
   </a>
@@ -775,26 +847,78 @@
 
 
 <h1 id="disk-space-cleanup-runbook">Disk Space Cleanup Runbook<a class="headerlink" href="#disk-space-cleanup-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook helps identify and clean up disk space issues safely.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm affected filesystem</li>
-<li>Identify largest directories</li>
-<li>Avoid deleting application data without approval</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">df -h
-du -sh /* 2&gt;/dev/null | sort -h
-find /var/log -type f -name '*.gz' -mtime +30
-journalctl --disk-usage
+<h2 id="identify-the-problem">Identify the Problem<a class="headerlink" href="#identify-the-problem" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Filesystem usage overview
+df -h
+
+# Find top consumers by directory
+du -sh /* 2&gt;/dev/null | sort -rh | head -20
+du -sh /var/* 2&gt;/dev/null | sort -rh | head -10
+du -sh /home/* 2&gt;/dev/null | sort -rh | head -10
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm free space improved</li>
-<li>Confirm application still running</li>
-<li>Document files removed</li>
-</ol>
+<h2 id="common-cleanup-targets">Common Cleanup Targets<a class="headerlink" href="#common-cleanup-targets" title="Permanent link">&para;</a></h2>
+<h3 id="old-log-files">Old Log Files<a class="headerlink" href="#old-log-files" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Find compressed logs older than 30 days
+find /var/log -type f -name '*.gz' -mtime +30 -ls
+
+# Delete them (after review)
+find /var/log -type f -name '*.gz' -mtime +30 -delete
+
+# Check journald size
+journalctl --disk-usage
+
+# Vacuum old journal entries
+journalctl --vacuum-time=30d
+journalctl --vacuum-size=500M
+</code></pre>
+<h3 id="package-cache-linux">Package Cache (Linux)<a class="headerlink" href="#package-cache-linux" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># RHEL/CentOS
+yum clean all
+dnf clean all
+
+# Ubuntu/Debian
+apt-get clean
+apt-get autoremove
+</code></pre>
+<h3 id="old-kernel-packages">Old Kernel Packages<a class="headerlink" href="#old-kernel-packages" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Show installed kernels (keep at least current + 1)
+rpm -q kernel
+dpkg --list 'linux-image*'
+
+# Remove old kernels (RHEL)
+dnf remove --oldinstallonly --setopt installonly_limit=2 kernel
+</code></pre>
+<h3 id="core-dumps">Core Dumps<a class="headerlink" href="#core-dumps" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">find / -name &quot;core&quot; -type f -mtime +7 -ls
+find /var/crash -type f -ls
+</code></pre>
+<h3 id="temp-files">Temp Files<a class="headerlink" href="#temp-files" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">find /tmp -type f -mtime +7 -ls
+find /var/tmp -type f -mtime +30 -ls
+</code></pre>
+<h2 id="windows-disk-cleanup">Windows Disk Cleanup<a class="headerlink" href="#windows-disk-cleanup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Show disk usage by volume
+Get-Volume | Select DriveLetter, FileSystemLabel, Size, SizeRemaining
+
+# Clean Windows Update cache
+Stop-Service wuauserv
+Remove-Item C:\Windows\SoftwareDistribution\Download\* -Recurse -Force
+Start-Service wuauserv
+
+# Temp files
+Remove-Item $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue
+</code></pre>
+<h2 id="post-cleanup-validation">Post-Cleanup Validation<a class="headerlink" href="#post-cleanup-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">df -h         # confirm free space improved
+ls -lt /var/log/ | head -20    # confirm logs still present and current
+# Confirm application still running and logging correctly
+</code></pre>
+<h2 id="safety-rules">Safety Rules<a class="headerlink" href="#safety-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Never delete files in <code>/proc</code>, <code>/sys</code>, <code>/dev</code></li>
+<li>Never delete active database files or application data without approval</li>
+<li>Document all files removed with reason</li>
+</ul>
 
 
 
