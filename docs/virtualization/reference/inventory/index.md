@@ -2,3 +2,36 @@
 
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cluster-inventory/">
+  <strong>Cluster Inventory</strong>
+  <span>Cluster list, purpose, owner, version, capacity, and notes.</span>
+</a>
+
+<a class="kb-card" href="host-inventory/">
+  <strong>Host Inventory</strong>
+  <span>ESXi host list, hardware, version, cluster, warranty, and notes.</span>
+</a>
+
+<a class="kb-card" href="datastore-inventory/">
+  <strong>Datastore Inventory</strong>
+  <span>Datastore list, type, backing storage, capacity, owner, and usage.</span>
+</a>
+
+<a class="kb-card" href="network-inventory/">
+  <strong>Network Inventory</strong>
+  <span>Port groups, VLANs, segments, distributed switches, and uplinks.</span>
+</a>
+
+<a class="kb-card" href="management-tools/">
+  <strong>Management Tools</strong>
+  <span>vCenter, VxRail Manager, NSX, Aria, collectors, and URLs.</span>
+</a>
+
+<a class="kb-card" href="version-inventory/">
+  <strong>Version Inventory</strong>
+  <span>Current and target versions across VMware, VxRail, NSX, and Aria.</span>
+</a>
+
+</div>
