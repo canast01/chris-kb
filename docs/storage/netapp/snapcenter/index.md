@@ -1,23 +1,5 @@
 # NetApp SnapCenter
 
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>PowerShell backup job monitor, failed job alert, and resource health check scripts.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
-</a>
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>SnapCenter PowerShell cmdlets, REST API reference, backup and clone operations.</span>
-</a>
-
-</div>
 
 ## Overview
 
