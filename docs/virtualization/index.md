@@ -1,6 +1,8 @@
 # Virtualization
 
-Virtualization platform notes for VMware and VxRail.
+<div class="kb-summary">
+Virtualization knowledge base articles, operational references, troubleshooting notes, and procedures for VMware, VxRail, Hyper-V, and container platforms.
+</div>
 
 <div class="kb-grid kb-grid-4">
 <a class="kb-card" href="vmware/"><strong>VMware Platform</strong><span>vCenter, ESXi, vSAN, NSX, VCF, Aria Suite — architecture, standards, lifecycle, CLI, scripts, and security.</span></a>
