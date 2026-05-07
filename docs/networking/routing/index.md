@@ -2,29 +2,87 @@
 
 ## Overview
 
-Routing determines how traffic moves between networks. It is required for server access, storage replication, cloud connectivity, backup traffic, and application communication.
+Routing determines how traffic moves between subnets. All storage replication, backup traffic, vMotion, and cloud connectivity depend on correct routing.
 
-## Daily Checks
+## View Route Table
 
-- Confirm default gateway reachability
-- Review route tables
-- Check dynamic routing neighbor state
-- Validate critical path connectivity
-
-## Health Commands
-
+**Linux:**
 ```bash
-ip route
-route print
-show ip route
-show ip ospf neighbor
-show bgp summary
+ip route show
+ip route get <destination_ip>    # show which route would be used
 ```
 
-## Troubleshooting Workflow
+**Windows:**
+```cmd
+route print
+```
 
-1. Confirm source subnet
-2. Confirm destination subnet
-3. Check local route table
-4. Trace path
-5. Review firewall and ACL rules
+**Cisco IOS / NX-OS:**
+```bash
+show ip route
+show ip route <destination>
+show ip route summary
+```
+
+## Default Gateway
+
+```bash
+# Linux — confirm default route
+ip route show default
+
+# Windows
+route print 0.0.0.0
+```
+
+## OSPF
+
+```bash
+# Check OSPF neighbor state
+show ip ospf neighbor
+
+# Verify OSPF routes
+show ip route ospf
+
+# OSPF interface status
+show ip ospf interface brief
+```
+
+All OSPF neighbors should be in `FULL` state. `EXSTART`, `EXCHANGE`, or stuck `2WAY` indicates an adjacency issue.
+
+## BGP
+
+```bash
+# BGP summary (neighbor states)
+show bgp summary
+show bgp neighbors <ip>
+
+# BGP routes
+show bgp
+show bgp routes
+```
+
+## Static Routes
+
+```bash
+# Linux — add a static route
+ip route add <network>/<prefix> via <gateway>
+
+# Persist (add to /etc/network/interfaces or nmcli)
+nmcli connection modify <conn> +ipv4.routes "<network>/<prefix> <gateway>"
+```
+
+## Path Tracing
+
+```bash
+traceroute <destination>    # Linux
+tracert <destination>       # Windows
+```
+
+## Common Issues
+
+| Issue | Check | Action |
+|---|---|---|
+| No route to host | `ip route get <dest>` | Add missing static route or fix OSPF |
+| OSPF neighbor stuck | MTU mismatch or auth | Match MTU and OSPF auth config |
+| Default gateway unreachable | Physical link and ARP | Check interface and ARP table |
+| Asymmetric routing | `traceroute` both directions | Review route policy |
