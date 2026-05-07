@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version &amp; Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nx-os-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NX-OS Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checkpoint-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checkpoint &amp; Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,23 +787,83 @@
 
 <h1 id="firmware-configuration">Firmware &amp; Configuration<a class="headerlink" href="#firmware-configuration" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Firmware
-show version
-show install all status
-install all kickstart &lt;url&gt; system &lt;url&gt;
+<h2 id="version-status">Version &amp; Status<a class="headerlink" href="#version-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show version                    # NX-OS version, compiled time, uptime
+show install all status         # result of last install operation
+</code></pre>
+<h2 id="nx-os-upgrade">NX-OS Upgrade<a class="headerlink" href="#nx-os-upgrade" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Stage and install from URL (TFTP/SCP/HTTP)
+install all kickstart &lt;kickstart_url&gt; system &lt;system_url&gt;
 
-# Config backup
+# Non-disruptive upgrade check (ISSU)
+install all nxos &lt;url&gt; non-disruptive
+
+# Preview impact before committing
+install all kickstart &lt;url&gt; system &lt;url&gt; status
+</code></pre>
+<p>MDS supports non-disruptive upgrades (ISSU) for most NX-OS releases — always verify the Cisco upgrade compatibility matrix for the specific version pair.</p>
+<h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Save running to startup (before any change)
 copy running-config startup-config
+
+# Copy config off-switch via TFTP
 copy running-config tftp://&lt;server&gt;/&lt;filename&gt;
+
+# Copy config off-switch via SCP
+copy running-config scp://&lt;user&gt;@&lt;server&gt;/&lt;path&gt;/&lt;filename&gt;
+
+# Restore from TFTP
 copy tftp://&lt;server&gt;/&lt;filename&gt; running-config
 
 # Show full config
 show running-config
 show startup-config
 </code></pre>
+<h2 id="configuration-checkpoint-rollback">Configuration Checkpoint &amp; Rollback<a class="headerlink" href="#configuration-checkpoint-rollback" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Save a named checkpoint
+checkpoint &lt;checkpoint_name&gt;
+show checkpoint summary
+
+# Rollback to checkpoint
+rollback running-config checkpoint &lt;checkpoint_name&gt;
+
+# Rollback to a saved file
+rollback running-config file &lt;filename&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upgrade fails pre-check</td>
+<td>Incompatible versions</td>
+<td>Check Cisco upgrade matrix</td>
+</tr>
+<tr>
+<td>Config lost after reboot</td>
+<td>Not saved to startup</td>
+<td>Run <code>copy run start</code> before reload</td>
+</tr>
+<tr>
+<td>TFTP backup fails</td>
+<td>Network reachability</td>
+<td>Verify TFTP server and MDS OOB routing</td>
+</tr>
+<tr>
+<td>ISSU fails</td>
+<td>Feature or traffic mismatch</td>
+<td>Check ISSU compatibility; schedule maintenance</td>
+</tr>
+</tbody>
+</table>
 
 
 

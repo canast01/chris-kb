@@ -21,7 +21,7 @@
     
     
       
-        <title>VLAN - Chris KB</title>
+        <title>VLANs - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vlan" class="md-skip">
+        <a href="#vlans" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VLAN
+              VLANs
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#view-vlans-cisco-iosnx-os" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        View VLANs (Cisco IOS/NX-OS)
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#create-a-vlan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Create a VLAN
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#assign-a-port-to-a-vlan-access-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Assign a Port to a VLAN (Access Port)
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#configure-a-trunk-port" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Configure a Trunk Port
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-remove-vlans-on-a-trunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add / Remove VLANs on a Trunk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vlan-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-vlan-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common VLAN Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -774,30 +818,121 @@
 
 
 
-<h1 id="vlan">VLAN<a class="headerlink" href="#vlan" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>VLANs segment network traffic into logical broadcast domains. They are commonly used to separate management, storage, server, user, backup, and replication networks.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm VLAN exists on required switches</li>
-<li>Verify trunk allowed VLANs</li>
-<li>Check access port assignments</li>
-<li>Validate tagging configuration</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
+<h1 id="vlans">VLANs<a class="headerlink" href="#vlans" title="Permanent link">&para;</a></h1>
+<p>VLANs segment network traffic into logical broadcast domains. In an enterprise infrastructure, separate VLANs are standard practice for management, storage (iSCSI, NFS), replication, vMotion, backup, SAN, and production traffic.</p>
+<h2 id="view-vlans-cisco-iosnx-os">View VLANs (Cisco IOS/NX-OS)<a class="headerlink" href="#view-vlans-cisco-iosnx-os" title="Permanent link">&para;</a></h2>
 <pre><code class="language-bash">show vlan brief
+show vlan id &lt;id&gt;
 show interfaces trunk
-show interface status
-show running-config interface INTERFACE
+show interface &lt;int&gt; status
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm VLAN ID</li>
-<li>Check port mode access or trunk</li>
-<li>Verify VLAN allowed on trunk</li>
-<li>Confirm endpoint IP configuration</li>
-<li>Test connectivity</li>
-</ol>
+<h2 id="create-a-vlan">Create a VLAN<a class="headerlink" href="#create-a-vlan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vlan &lt;id&gt;
+  name &lt;vlan_name&gt;
+</code></pre>
+<h2 id="assign-a-port-to-a-vlan-access-port">Assign a Port to a VLAN (Access Port)<a class="headerlink" href="#assign-a-port-to-a-vlan-access-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport mode access
+  switchport access vlan &lt;id&gt;
+</code></pre>
+<h2 id="configure-a-trunk-port">Configure a Trunk Port<a class="headerlink" href="#configure-a-trunk-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface &lt;int&gt;
+  switchport mode trunk
+  switchport trunk allowed vlan &lt;id1&gt;,&lt;id2&gt;
+  switchport trunk native vlan &lt;native_id&gt;
+</code></pre>
+<h2 id="add-remove-vlans-on-a-trunk">Add / Remove VLANs on a Trunk<a class="headerlink" href="#add-remove-vlans-on-a-trunk" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">switchport trunk allowed vlan add &lt;id&gt;
+switchport trunk allowed vlan remove &lt;id&gt;
+</code></pre>
+<h2 id="vlan-validation">VLAN Validation<a class="headerlink" href="#vlan-validation" title="Permanent link">&para;</a></h2>
+<p>After creating or modifying VLANs:</p>
+<pre><code class="language-bash"># Confirm VLAN exists
+show vlan brief | include &lt;id&gt;
+
+# Confirm port is in correct VLAN
+show interface &lt;int&gt; status
+
+# Confirm VLAN crosses trunk
+show interfaces trunk | include &lt;id&gt;
+
+# End-to-end test
+ping &lt;ip_on_same_vlan&gt;
+</code></pre>
+<h2 id="common-vlan-use-cases">Common VLAN Use Cases<a class="headerlink" href="#common-vlan-use-cases" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>VLAN</th>
+<th>Traffic Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>OOB switch/server management</td>
+<td>Strictly controlled access</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>iSCSI, NFS</td>
+<td>Jumbo frames (MTU 9000) required</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>VMware live migration</td>
+<td>Dedicated, no other traffic</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>SRDF, SnapMirror, vSphere replication</td>
+<td>May share with storage</td>
+</tr>
+<tr>
+<td>Backup</td>
+<td>Backup agents and media servers</td>
+<td>High-bandwidth bursts</td>
+</tr>
+<tr>
+<td>Production</td>
+<td>Application traffic</td>
+<td>Standard MTU (1500)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host unreachable</td>
+<td>VLAN on trunk?</td>
+<td><code>show interfaces trunk</code></td>
+</tr>
+<tr>
+<td>VLAN not in FLOGI / iSCSI</td>
+<td>Wrong VLAN on port</td>
+<td>Check access or trunk assignment</td>
+</tr>
+<tr>
+<td>Native VLAN mismatch</td>
+<td>CDP/LLDP log</td>
+<td>Match native VLAN on both trunk ends</td>
+</tr>
+<tr>
+<td>VLAN not propagated</td>
+<td>VTP or manual config</td>
+<td>Check VTP domain or add VLAN manually</td>
+</tr>
+</tbody>
+</table>
 
 
 

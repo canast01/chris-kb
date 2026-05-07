@@ -21,7 +21,7 @@
     
     
       
-        <title>DNS Troubleshooting Runbook - Chris KB</title>
+        <title>DNS Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dns-troubleshooting-runbook" class="md-skip">
+        <a href="#dns-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DNS Troubleshooting Runbook
+              DNS Troubleshooting
             
           </span>
         </div>
@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#symptoms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Symptoms
       
     </span>
   </a>
@@ -723,32 +723,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#triage-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Triage Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Triage Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-test-resolution-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Test Resolution Directly
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2-check-configured-dns-servers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        2. Check Configured DNS Servers
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#3-test-dns-server-reachability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        3. Test DNS Server Reachability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-forward-and-reverse-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Forward and Reverse Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-flush-dns-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Flush DNS Cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-test-from-multiple-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Test from Multiple Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -774,28 +835,90 @@
 
 
 
-<h1 id="dns-troubleshooting-runbook">DNS Troubleshooting Runbook<a class="headerlink" href="#dns-troubleshooting-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook provides a structured process for diagnosing DNS resolution failures.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
+<h1 id="dns-troubleshooting">DNS Troubleshooting<a class="headerlink" href="#dns-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm hostname being queried</li>
-<li>Confirm DNS server configuration</li>
-<li>Verify network connectivity</li>
-<li>Identify recent DNS changes</li>
+<li>Hostname fails to resolve; application errors by name but not by IP</li>
+<li>Intermittent resolution failures — services randomly unreachable</li>
+<li>NFS/CIFS mounts failing (PTR record missing)</li>
+<li>Authentication failures (Kerberos requires working forward + reverse DNS)</li>
 </ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">nslookup hostname
-dig hostname
-cat /etc/resolv.conf
-ping dns-server
+<h2 id="triage-steps">Triage Steps<a class="headerlink" href="#triage-steps" title="Permanent link">&para;</a></h2>
+<h3 id="1-test-resolution-directly">1. Test Resolution Directly<a class="headerlink" href="#1-test-resolution-directly" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">nslookup &lt;hostname&gt;
+dig &lt;hostname&gt;
+dig &lt;hostname&gt; @&lt;dns_server_ip&gt;    # query a specific server directly
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm hostname resolves correctly</li>
-<li>Confirm application connectivity restored</li>
-<li>Monitor logs for repeated failures</li>
-</ol>
+<h3 id="2-check-configured-dns-servers">2. Check Configured DNS Servers<a class="headerlink" href="#2-check-configured-dns-servers" title="Permanent link">&para;</a></h3>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">cat /etc/resolv.conf
+resolvectl status
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-powershell">Get-DnsClientServerAddress
+ipconfig /all | findstr DNS
+</code></pre>
+<h3 id="3-test-dns-server-reachability">3. Test DNS Server Reachability<a class="headerlink" href="#3-test-dns-server-reachability" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">ping &lt;dns_server_ip&gt;
+nslookup &lt;hostname&gt; &lt;dns_server_ip&gt;
+</code></pre>
+<h3 id="4-forward-and-reverse-resolution">4. Forward and Reverse Resolution<a class="headerlink" href="#4-forward-and-reverse-resolution" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Forward: name → IP
+dig &lt;hostname&gt;
+
+# Reverse: IP → name (PTR)
+dig -x &lt;ip&gt;
+nslookup &lt;ip&gt;
+</code></pre>
+<p>Missing PTR records cause Kerberos failures and NFS/CIFS auth issues.</p>
+<h3 id="5-flush-dns-cache">5. Flush DNS Cache<a class="headerlink" href="#5-flush-dns-cache" title="Permanent link">&para;</a></h3>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-cmd">ipconfig /flushdns
+</code></pre>
+<p><strong>Linux (systemd-resolved):</strong></p>
+<pre><code class="language-bash">resolvectl flush-caches
+# or
+systemctl restart systemd-resolved
+</code></pre>
+<h3 id="6-test-from-multiple-systems">6. Test from Multiple Systems<a class="headerlink" href="#6-test-from-multiple-systems" title="Permanent link">&para;</a></h3>
+<p>If one server resolves but another doesn't, the issue is host-specific — wrong server configured, stale cache, or host firewall blocking UDP 53.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NXDOMAIN</td>
+<td>Record missing or wrong zone</td>
+<td>Add/fix DNS record</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>DNS server unreachable</td>
+<td>Check firewall and DNS health</td>
+</tr>
+<tr>
+<td>Wrong IP returned</td>
+<td>Stale or duplicate record</td>
+<td>Flush cache; fix record</td>
+</tr>
+<tr>
+<td>Reverse lookup fails</td>
+<td>Missing PTR record</td>
+<td>Add PTR in DNS</td>
+</tr>
+<tr>
+<td>Works by IP not name</td>
+<td>Wrong DNS configured</td>
+<td>Fix <code>/etc/resolv.conf</code> or DHCP</td>
+</tr>
+</tbody>
+</table>
 
 
 

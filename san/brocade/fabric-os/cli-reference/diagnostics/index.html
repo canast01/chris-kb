@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#switch-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Health Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maps-monitoring-and-alerting-policy-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAPS (Monitoring and Alerting Policy Suite)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temperature-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature / Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buffer-credit-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffer Credit Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,26 +820,88 @@
 
 <h1 id="diagnostics-health">Diagnostics &amp; Health<a class="headerlink" href="#diagnostics-health" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Brocade Fabric OS CLI Reference</a>.</p>
+<p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Switch health check
-switchStatusShow
-supportShow        # Full diagnostic dump
-supportSave        # Save diagnostics to file
-
-# Port diagnostics
-portTest &lt;slot/port&gt;
-spinFab --help
-
-# Error isolation
-errShow
-errClear
-errDump
-
-# Link reset
-portLogClear &lt;slot/port&gt;
+<h2 id="switch-health-summary">Switch Health Summary<a class="headerlink" href="#switch-health-summary" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">switchStatusShow       # overall health: HEALTHY / MARGINAL / DOWN
+supportShow            # full diagnostic dump (used when opening support cases)
+supportSave            # save diagnostics bundle to FTP/SCP for TAC
 </code></pre>
+<h2 id="event-log">Event Log<a class="headerlink" href="#event-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">errShow                # show all error log entries
+errDump                # dump full error log
+errClear               # clear error log (use with caution)
+</code></pre>
+<h2 id="port-diagnostics">Port Diagnostics<a class="headerlink" href="#port-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run a port loopback test (port must be offline)
+portTest &lt;slot/port&gt;
+
+# Spin fabric test (inter-switch frame forwarding)
+spinFab &lt;slot/port&gt;
+
+# View port event history
+portLogShow &lt;slot/port&gt;
+portLogClear &lt;slot/port&gt;    # clear port log
+</code></pre>
+<h2 id="maps-monitoring-and-alerting-policy-suite">MAPS (Monitoring and Alerting Policy Suite)<a class="headerlink" href="#maps-monitoring-and-alerting-policy-suite" title="Permanent link">&para;</a></h2>
+<p>MAPS provides threshold-based alerting for fabric health:</p>
+<pre><code class="language-bash"># Show MAPS policy status
+mapsPolicy --show
+
+# Show MAPS alerts
+mapsDb --show
+
+# Show current dashboard (health summary)
+mapsDashboard --show
+</code></pre>
+<h2 id="fabric-diagnostics">Fabric Diagnostics<a class="headerlink" href="#fabric-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">fabricShow             # all switches in fabric, domain IDs, state
+nsShow                 # name server — all logged-in devices
+nsAllShow              # name server across entire fabric
+topologyShow           # ISL topology and domain connections
+</code></pre>
+<h2 id="temperature-environment">Temperature / Environment<a class="headerlink" href="#temperature-environment" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">sensorShow             # all environmental sensors
+tempShow
+fanShow
+psShow
+</code></pre>
+<h2 id="buffer-credit-diagnostics">Buffer Credit Diagnostics<a class="headerlink" href="#buffer-credit-diagnostics" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portBufShow &lt;slot/port&gt;     # buffer-to-buffer credits
+</code></pre>
+<p>Low BB credits cause I/O delays. Check during performance issues.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Switch status MARGINAL</td>
+<td><code>errShow</code></td>
+<td>Investigate hardware errors</td>
+</tr>
+<tr>
+<td>Port diagnostics fail</td>
+<td>Port offline</td>
+<td>Disable port before running <code>portTest</code></td>
+</tr>
+<tr>
+<td>MAPS alert firing</td>
+<td><code>mapsDb --show</code></td>
+<td>Investigate threshold breach</td>
+</tr>
+<tr>
+<td>High error rate</td>
+<td><code>errShow</code></td>
+<td>Correlate with port errors</td>
+</tr>
+</tbody>
+</table>
 
 
 

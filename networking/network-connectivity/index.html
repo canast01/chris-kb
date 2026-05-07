@@ -21,7 +21,7 @@
     
     
       
-        <title>Network Connectivity Troubleshooting - Chris KB</title>
+        <title>Network Connectivity - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#network-connectivity-troubleshooting" class="md-skip">
+        <a href="#network-connectivity" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Network Connectivity Troubleshooting
+              Network Connectivity
             
           </span>
         </div>
@@ -712,10 +712,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#layer-by-layer-triage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Layer-by-Layer Triage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layer-by-Layer Triage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-physical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Physical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Switching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-ip-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — IP / Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-tracing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Tracing
       
     </span>
   </a>
@@ -723,10 +784,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#common-connectivity-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Common Connectivity Tests
       
     </span>
   </a>
@@ -734,10 +795,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#connectivity-from-windows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Connectivity from Windows
       
     </span>
   </a>
@@ -745,10 +806,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Common Issues
       
     </span>
   </a>
@@ -774,28 +835,108 @@
 
 
 
-<h1 id="network-connectivity-troubleshooting">Network Connectivity Troubleshooting<a class="headerlink" href="#network-connectivity-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook identifies and resolves network connectivity issues between systems.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm source and destination systems</li>
-<li>Verify IP addresses</li>
-<li>Confirm routing configuration</li>
-<li>Check firewall policies</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ping destination-host
-traceroute destination-host
-ip route
-netstat -rn
+<h1 id="network-connectivity">Network Connectivity<a class="headerlink" href="#network-connectivity" title="Permanent link">&para;</a></h1>
+<p>Structured approach to diagnosing end-to-end connectivity failures.</p>
+<h2 id="layer-by-layer-triage">Layer-by-Layer Triage<a class="headerlink" href="#layer-by-layer-triage" title="Permanent link">&para;</a></h2>
+<h3 id="layer-1-physical">Layer 1 — Physical<a class="headerlink" href="#layer-1-physical" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Linux — check interface link state
+ip link show
+ethtool &lt;interface&gt;    # speed, duplex, link detected
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm connectivity restored</li>
-<li>Confirm application communication functioning</li>
-<li>Document root cause</li>
-</ol>
+<h3 id="layer-2-switching">Layer 2 — Switching<a class="headerlink" href="#layer-2-switching" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Check ARP table (confirm MAC resolved)
+arp -a
+ip neigh show
+
+# Check interface is in correct VLAN
+# On switch: show interface status, show vlan brief
+</code></pre>
+<h3 id="layer-3-ip-routing">Layer 3 — IP / Routing<a class="headerlink" href="#layer-3-ip-routing" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Confirm IP configuration
+ip addr show
+
+# Confirm route exists
+ip route show
+ip route get &lt;destination_ip&gt;
+
+# Default gateway
+ip route show default
+ping &lt;gateway_ip&gt;
+</code></pre>
+<h3 id="layer-4-transport">Layer 4 — Transport<a class="headerlink" href="#layer-4-transport" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Test specific TCP port
+nc -zv &lt;host&gt; &lt;port&gt;
+telnet &lt;host&gt; &lt;port&gt;
+curl -v http://&lt;host&gt;:&lt;port&gt;/
+
+# Check local firewall
+iptables -L -n | grep &lt;port&gt;
+firewall-cmd --list-all
+</code></pre>
+<h2 id="path-tracing">Path Tracing<a class="headerlink" href="#path-tracing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">traceroute &lt;destination&gt;    # Linux/Mac
+tracert &lt;destination&gt;       # Windows
+mtr &lt;destination&gt;           # continuous path trace
+</code></pre>
+<h2 id="common-connectivity-tests">Common Connectivity Tests<a class="headerlink" href="#common-connectivity-tests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># ICMP ping
+ping -c 4 &lt;host&gt;
+
+# MTU test (verify no fragmentation)
+ping -M do -s 1472 &lt;host&gt;    # Linux (1500 MTU = 1472 payload + 28 headers)
+ping -f -l 1472 &lt;host&gt;       # Windows
+
+# DNS and then connect
+curl -v https://&lt;fqdn&gt;/
+</code></pre>
+<h2 id="connectivity-from-windows">Connectivity from Windows<a class="headerlink" href="#connectivity-from-windows" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell">Test-NetConnection -ComputerName &lt;host&gt; -Port &lt;port&gt;
+Test-NetConnection &lt;host&gt;    # ICMP test
+Resolve-DnsName &lt;host&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>No link</td>
+<td><code>ethtool</code></td>
+<td>Check cable, SFP, port status</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>No ARP</td>
+<td><code>ip neigh</code></td>
+<td>Check VLAN, switch port config</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>No route</td>
+<td><code>ip route get</code></td>
+<td>Add route or fix gateway</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Firewall blocking</td>
+<td>Deny logs</td>
+<td>Add firewall rule</td>
+</tr>
+<tr>
+<td>L4</td>
+<td>Port blocked</td>
+<td><code>nc -zv</code></td>
+<td>Check host and network firewall</td>
+</tr>
+</tbody>
+</table>
 
 
 

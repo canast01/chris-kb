@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#isl-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-interface-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Interface Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-te-port-trunking-isl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a TE Port (Trunking ISL)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restrict-vsans-on-an-isl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict VSANs on an ISL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-error-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Error Counters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-channel-lag-for-isls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Channel (LAG for ISLs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,20 +809,82 @@
 
 <h1 id="isls-trunking">ISLs &amp; Trunking<a class="headerlink" href="#isls-trunking" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># ISL status
-show topology
-show trunk
-show interface trunk
-
-# TE port (trunking)
-interface fc&lt;slot/port&gt;
-  switchport trunk allowed vsan &lt;id&gt;
+<h2 id="isl-status">ISL Status<a class="headerlink" href="#isl-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show topology          # fabric-wide ISL topology
+show trunk             # trunk port states and allowed VSANs
+show interface trunk   # trunk interface detail
+</code></pre>
+<h2 id="isl-interface-status">ISL Interface Status<a class="headerlink" href="#isl-interface-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show interface fc&lt;slot/port&gt;            # single port detail
+show interface brief | include E        # E-port (ISL) ports only
+</code></pre>
+<h2 id="configure-a-te-port-trunking-isl">Configure a TE Port (Trunking ISL)<a class="headerlink" href="#configure-a-te-port-trunking-isl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface fc&lt;slot/port&gt;
   switchport mode TE
+  switchport trunk allowed vsan &lt;vsan_id&gt;
   no shutdown
 </code></pre>
+<h2 id="restrict-vsans-on-an-isl">Restrict VSANs on an ISL<a class="headerlink" href="#restrict-vsans-on-an-isl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface fc&lt;slot/port&gt;
+  switchport trunk allowed vsan add &lt;vsan_id&gt;
+  switchport trunk allowed vsan remove &lt;vsan_id&gt;
+</code></pre>
+<h2 id="isl-error-counters">ISL Error Counters<a class="headerlink" href="#isl-error-counters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show interface fc&lt;slot/port&gt; counters          # TX/RX frames, errors
+show interface fc&lt;slot/port&gt; counters errors
+</code></pre>
+<p>Watch for:
+- <code>link-failures</code> — physical link instability
+- <code>loss-of-sync</code> — signal issues; check SFP and cable
+- <code>input-crc</code> — bad frames; replace SFP or cable</p>
+<h2 id="port-channel-lag-for-isls">Port Channel (LAG for ISLs)<a class="headerlink" href="#port-channel-lag-for-isls" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a port channel
+interface port-channel &lt;id&gt;
+  switchport mode E
+  no shutdown
+
+# Add FC ports to channel
+interface fc&lt;slot/port&gt;
+  channel-group &lt;id&gt;
+  no shutdown
+
+show port-channel summary
+show interface port-channel &lt;id&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ISL down</td>
+<td>Port mode and status</td>
+<td>Verify <code>switchport mode TE/E</code></td>
+</tr>
+<tr>
+<td>VSAN not crossing ISL</td>
+<td>Trunk allowed VSANs</td>
+<td>Add VSAN to trunk: <code>vsan add</code></td>
+</tr>
+<tr>
+<td>CRC errors</td>
+<td>SFP and cable</td>
+<td>Replace SFP; check cable quality</td>
+</tr>
+<tr>
+<td>Port channel member not up</td>
+<td>Channel-group config</td>
+<td>Verify all members in same channel</td>
+</tr>
+</tbody>
+</table>
 
 
 

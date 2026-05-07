@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flogi-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FLOGI Database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-name-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Name Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpreting-flogi-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting FLOGI Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-host-to-storage-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Host-to-Storage Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,22 +787,104 @@
 
 <h1 id="flogi-name-server">FLOGI &amp; Name Server<a class="headerlink" href="#flogi-name-server" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Login database
+<h2 id="flogi-database">FLOGI Database<a class="headerlink" href="#flogi-database" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All logged-in initiators and targets
 show flogi database
+
+# Filter to a specific VSAN
 show flogi database vsan &lt;id&gt;
 
-# Name server
+# Confirm a specific WWN is logged in
+show flogi database | grep &lt;wwn&gt;
+</code></pre>
+<p>FLOGI (Fabric Login) shows every device that has registered with the fabric. If a host HBA or storage target port is missing here, it has not successfully logged into the fabric.</p>
+<h2 id="fc-name-server">FC Name Server<a class="headerlink" href="#fc-name-server" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All registered devices in the fabric
 show fcns database
 show fcns database vsan &lt;id&gt;
-show fcns database detail
+show fcns database detail         # includes port type, symbolic name
+
+# Name server statistics
 show fcns statistics
 
-# Zone member lookup
+# Look up a specific WWN
 show fcns database | grep &lt;wwn&gt;
 </code></pre>
+<h2 id="interpreting-flogi-output">Interpreting FLOGI Output<a class="headerlink" href="#interpreting-flogi-output" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface</td>
+<td>Which MDS port the device logged into</td>
+</tr>
+<tr>
+<td>VSAN</td>
+<td>VSAN the device is in</td>
+</tr>
+<tr>
+<td>FCID</td>
+<td>Fabric-assigned address (N_Port ID)</td>
+</tr>
+<tr>
+<td>Port Name (PWWN)</td>
+<td>Port WWN of the device</td>
+</tr>
+<tr>
+<td>Node Name (NWWN)</td>
+<td>Node WWN of the device</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verifying-host-to-storage-visibility">Verifying Host-to-Storage Visibility<a class="headerlink" href="#verifying-host-to-storage-visibility" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Find the host HBA WWN in FLOGI
+show flogi database | grep &lt;host_wwn&gt;
+
+# Confirm storage port is in the name server
+show fcns database | grep &lt;storage_wwn&gt;
+
+# Confirm both are in the same VSAN
+show vsan membership
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host WWN not in FLOGI</td>
+<td>HBA link, VSAN membership</td>
+<td>Check port state; verify VSAN assignment</td>
+</tr>
+<tr>
+<td>Storage target not visible</td>
+<td>FLOGI and FCNS</td>
+<td>Check array port and zoning</td>
+</tr>
+<tr>
+<td>FCID missing</td>
+<td>FLOGI failed</td>
+<td>Check port state, VSAN config</td>
+</tr>
+<tr>
+<td>Duplicate FCID</td>
+<td>Fabric merge conflict</td>
+<td>Investigate VSAN merges</td>
+</tr>
+</tbody>
+</table>
 
 
 

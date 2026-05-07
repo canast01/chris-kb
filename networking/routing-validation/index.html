@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pre-change-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pre-Change Baseline
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#post-change-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Post-Change Validation
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#validate-default-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Validate Default Gateway
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#ospf-neighbor-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        OSPF Neighbor Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bgp-route-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BGP Route Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-application-level-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Application-Level Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,25 +819,88 @@
 
 
 <h1 id="routing-validation">Routing Validation<a class="headerlink" href="#routing-validation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook verifies routing paths between network segments.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm destination network</li>
-<li>Verify routing configuration</li>
-<li>Identify gateway address</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ip route show
-traceroute destination-network
-netstat -rn
+<p>Verify routing paths are correct before and after network changes.</p>
+<h2 id="pre-change-baseline">Pre-Change Baseline<a class="headerlink" href="#pre-change-baseline" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Capture current route table
+ip route show &gt; /tmp/routes-before.txt
+
+# Capture traceroute to critical destinations
+traceroute &lt;production_host&gt; &gt;&gt; /tmp/routes-before.txt
+traceroute &lt;storage_vip&gt; &gt;&gt; /tmp/routes-before.txt
+traceroute &lt;replication_peer&gt; &gt;&gt; /tmp/routes-before.txt
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm correct routing path</li>
-<li>Confirm network reachability</li>
-<li>Document routing changes</li>
-</ol>
+<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Compare route tables
+ip route show &gt; /tmp/routes-after.txt
+diff /tmp/routes-before.txt /tmp/routes-after.txt
+
+# Confirm specific routes still present
+ip route get &lt;destination&gt;
+
+# Trace paths to critical systems
+traceroute &lt;production_host&gt;
+traceroute &lt;storage_vip&gt;
+</code></pre>
+<h2 id="validate-default-gateway">Validate Default Gateway<a class="headerlink" href="#validate-default-gateway" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ip route show default
+ping &lt;gateway_ip&gt;
+</code></pre>
+<h2 id="ospf-neighbor-validation">OSPF Neighbor Validation<a class="headerlink" href="#ospf-neighbor-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show ip ospf neighbor            # all neighbors in FULL state
+show ip ospf neighbor &lt;id&gt;       # specific neighbor detail
+show ip route ospf               # routes learned via OSPF
+</code></pre>
+<h2 id="bgp-route-validation">BGP Route Validation<a class="headerlink" href="#bgp-route-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show bgp summary                  # peer state: Established
+show bgp neighbors &lt;ip&gt; routes    # routes received from peer
+</code></pre>
+<h2 id="test-application-level-connectivity">Test Application-Level Connectivity<a class="headerlink" href="#test-application-level-connectivity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm key services reachable after routing change
+nc -zv &lt;storage_vip&gt; 443    # storage management
+nc -zv &lt;vcenter_fqdn&gt; 443   # vCenter
+curl -k https://&lt;app_vip&gt;/  # application VIP
+</code></pre>
+<h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Route table contains all expected routes</li>
+<li>[ ] Default gateway reachable</li>
+<li>[ ] OSPF/BGP neighbors in expected state</li>
+<li>[ ] Traceroute paths unchanged (or correctly changed)</li>
+<li>[ ] Storage, backup, and replication traffic routing correctly</li>
+<li>[ ] Application connectivity confirmed</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route missing post-change</td>
+<td>Route table diff</td>
+<td>Restore static route or fix dynamic routing</td>
+</tr>
+<tr>
+<td>OSPF adjacency lost</td>
+<td>MTU, auth, hello timers</td>
+<td>Match config on both ends</td>
+</tr>
+<tr>
+<td>BGP peer down</td>
+<td>Peer state</td>
+<td>Check ACLs, peer address, ASN</td>
+</tr>
+<tr>
+<td>Traffic taking wrong path</td>
+<td>Metric or admin distance</td>
+<td>Adjust metric or route preference</td>
+</tr>
+</tbody>
+</table>
 
 
 

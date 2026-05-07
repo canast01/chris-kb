@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#switch-identity-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Identity &amp; Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fan-power-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fan, Power, Temperature
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uptime-system-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uptime &amp; System Stats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP &amp; Syslog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,24 +820,81 @@
 
 <h1 id="switch-status-identity">Switch Status &amp; Identity<a class="headerlink" href="#switch-status-identity" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Brocade Fabric OS CLI Reference</a>.</p>
+<p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Switch overview
-switchshow
-switchstatusshow
-version
-ipAddrShow
-licenseShow
-chassisShow
-slotShow
-
-# Fan, power, temperature
-psShow
-fanShow
-tempShow
-sensorShow
+<h2 id="switch-identity-overview">Switch Identity &amp; Overview<a class="headerlink" href="#switch-identity-overview" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">switchshow         # ports, state, speed, and connected WWNs
+switchstatusshow   # overall switch health status
+version            # Fabric OS version
+ipAddrShow         # management IP addresses
+licenseShow        # installed licenses
+chassisShow        # chassis hardware inventory
+slotShow           # blade/slot population
 </code></pre>
+<h2 id="health-status">Health Status<a class="headerlink" href="#health-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">switchstatusshow
+</code></pre>
+<p>Expected: <code>HEALTHY</code>. Any status other than <code>HEALTHY</code> requires investigation.</p>
+<h2 id="firmware-version">Firmware Version<a class="headerlink" href="#firmware-version" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">version
+# or
+firmwareShow
+</code></pre>
+<h2 id="fan-power-temperature">Fan, Power, Temperature<a class="headerlink" href="#fan-power-temperature" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">psShow      # power supplies
+fanShow     # fan status
+tempShow    # temperature sensors
+sensorShow  # all environmental sensors
+</code></pre>
+<p>All sensors should show <code>OK</code> or <code>absent</code> (for empty slots). Any sensor in <code>FAILED</code> or <code>ABSENT</code> (for expected hardware) state requires immediate action.</p>
+<h2 id="uptime-system-stats">Uptime &amp; System Stats<a class="headerlink" href="#uptime-system-stats" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">uptime
+# or from switchShow: look for &quot;Up Time&quot;
+</code></pre>
+<h2 id="snmp-syslog">SNMP &amp; Syslog<a class="headerlink" href="#snmp-syslog" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">snmpConfig --show
+syslogDIPShow    # syslog destinations
+</code></pre>
+<h2 id="pre-change-baseline">Pre-Change Baseline<a class="headerlink" href="#pre-change-baseline" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">switchshow
+switchstatusshow
+fabricshow
+nsShow
+aliShow
+zoneShow --all
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Switch status not HEALTHY</td>
+<td>Environmental or hardware</td>
+<td>Check <code>psShow</code>, <code>fanShow</code>, <code>tempShow</code></td>
+</tr>
+<tr>
+<td>Firmware version mismatch</td>
+<td><code>version</code></td>
+<td>Schedule Fabric OS upgrade</td>
+</tr>
+<tr>
+<td>License missing</td>
+<td><code>licenseShow</code></td>
+<td>Add license key via <code>licenseAdd</code></td>
+</tr>
+<tr>
+<td>IP not reachable</td>
+<td><code>ipAddrShow</code></td>
+<td>Verify OOB network and gateway</td>
+</tr>
+</tbody>
+</table>
 
 
 

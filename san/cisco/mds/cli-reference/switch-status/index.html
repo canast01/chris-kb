@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#switch-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-slot-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module / Slot Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU &amp; Memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Health Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,16 +820,81 @@
 
 <h1 id="switch-status-identity">Switch Status &amp; Identity<a class="headerlink" href="#switch-status-identity" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Switch info
-show version
-show inventory
-show environment
+<h2 id="switch-identity">Switch Identity<a class="headerlink" href="#switch-identity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show version           # NX-OS version, uptime, hardware
+show inventory         # chassis, modules, transceivers
 show system uptime
 show license usage
-show feature
+show feature           # enabled features
+</code></pre>
+<h2 id="environment-health">Environment Health<a class="headerlink" href="#environment-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show environment       # fans, power, temperature
+show environment fan
+show environment power
+show environment temperature
+</code></pre>
+<h2 id="module-slot-status">Module / Slot Status<a class="headerlink" href="#module-slot-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show module            # all line cards and supervisor modules
+show module &lt;slot&gt;
+</code></pre>
+<p>All modules should show status <code>ok</code>. A <code>failed</code> or <code>powered-dn</code> module requires immediate investigation.</p>
+<h2 id="cpu-memory">CPU &amp; Memory<a class="headerlink" href="#cpu-memory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show system resources   # CPU and memory utilization
+show processes cpu      # per-process CPU breakdown
+show processes memory   # per-process memory
+</code></pre>
+<h2 id="running-configuration">Running Configuration<a class="headerlink" href="#running-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show running-config
+show startup-config
+</code></pre>
+<h2 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show logging            # recent syslog events
+show logging last 50    # last 50 log entries
+</code></pre>
+<h2 id="quick-health-summary">Quick Health Summary<a class="headerlink" href="#quick-health-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version</td>
+<td><code>show version</code></td>
+<td>Expected NX-OS release</td>
+</tr>
+<tr>
+<td>Modules</td>
+<td><code>show module</code></td>
+<td>All <code>ok</code></td>
+</tr>
+<tr>
+<td>Environment</td>
+<td><code>show environment</code></td>
+<td>No alerts</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td><code>show system resources</code></td>
+<td>&lt; 70%</td>
+</tr>
+<tr>
+<td>Recent logs</td>
+<td><code>show logging last 50</code></td>
+<td>No error storms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pre-change-baseline">Pre-Change Baseline<a class="headerlink" href="#pre-change-baseline" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show version &gt; /tmp/pre-change-version.txt
+show running-config &gt; /tmp/pre-change-config.txt
+show interface brief
+show flogi database
 </code></pre>
 
 

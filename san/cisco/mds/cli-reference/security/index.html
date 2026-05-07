@@ -705,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#local-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tacacs-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TACACS+ / RADIUS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmpv3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMPv3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,23 +787,97 @@
 
 <h1 id="security-users">Security &amp; Users<a class="headerlink" href="#security-users" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Local users
+<h2 id="local-users">Local Users<a class="headerlink" href="#local-users" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show all local users
 show users
+
+# Show defined roles
 show role
+
+# Create a local user
 username &lt;user&gt; password &lt;pass&gt; role &lt;role&gt;
 
-# RADIUS / TACACS+
-show tacacs-server
-show radius-server
+# Delete a user
+no username &lt;user&gt;
+
+# Assign admin role
+username &lt;user&gt; role network-admin
+</code></pre>
+<h2 id="tacacs-radius">TACACS+ / RADIUS<a class="headerlink" href="#tacacs-radius" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show AAA config
 show aaa
 
-# SSH keys
-show ssh server
-show crypto key mypubkey rsa
+# Show TACACS+ servers
+show tacacs-server
+
+# Show RADIUS servers
+show radius-server
+
+# Configure TACACS+ server
+tacacs-server host &lt;ip&gt; key &lt;key&gt;
+aaa group server tacacs+ &lt;group_name&gt;
+  server &lt;ip&gt;
+aaa authentication login default group &lt;group_name&gt;
 </code></pre>
+<h2 id="ssh">SSH<a class="headerlink" href="#ssh" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show SSH server status
+show ssh server
+
+# Show SSH sessions
+show users
+
+# Generate RSA keys
+crypto key generate rsa
+show crypto key mypubkey rsa
+
+# Restrict SSH access by source IP
+ip access-list &lt;acl_name&gt;
+  permit ip &lt;mgmt_subnet&gt; any
+line vty 0 4
+  access-class &lt;acl_name&gt; in
+</code></pre>
+<h2 id="snmpv3">SNMPv3<a class="headerlink" href="#snmpv3" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show SNMP community/user config
+show snmp user
+show snmp community
+
+# Create SNMPv3 user
+snmp-server user &lt;user&gt; &lt;group&gt; v3 auth sha &lt;auth_pass&gt; priv aes 128 &lt;priv_pass&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login fails</td>
+<td>Local account or TACACS reachability</td>
+<td>Check <code>show tacacs-server</code>; test locally</td>
+</tr>
+<tr>
+<td>SSH key error</td>
+<td>Key mismatch</td>
+<td>Regenerate: <code>crypto key generate rsa</code></td>
+</tr>
+<tr>
+<td>AAA lockout</td>
+<td>TACACS down</td>
+<td>Ensure local fallback: <code>aaa authentication login default group tacacs+ local</code></td>
+</tr>
+<tr>
+<td>Unauthorized access</td>
+<td>Role config</td>
+<td>Audit <code>show role</code>; remove unnecessary accounts</td>
+</tr>
+</tbody>
+</table>
 
 
 

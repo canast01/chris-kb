@@ -705,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#view-vsan-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View VSAN Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a VSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assign-a-port-to-a-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign a Port to a VSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suspend-resume-a-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suspend / Resume a VSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a VSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-on-isl-trunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN on ISL Trunks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inter-vsan-routing-ivr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inter-VSAN Routing (IVR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,23 +831,99 @@
 
 <h1 id="vsans">VSANs<a class="headerlink" href="#vsans" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># VSAN status
+<h2 id="view-vsan-status">View VSAN Status<a class="headerlink" href="#view-vsan-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All VSANs on the switch
 show vsan
 show vsan &lt;id&gt;
+
+# VSAN port membership
 show vsan membership
 show vsan membership interface fc&lt;slot/port&gt;
-
-# Create VSAN
-vsan database
+</code></pre>
+<h2 id="vsan-states">VSAN States<a class="headerlink" href="#vsan-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>active</td>
+<td>VSAN is running normally</td>
+</tr>
+<tr>
+<td>suspended</td>
+<td>VSAN administratively suspended</td>
+</tr>
+</tbody>
+</table>
+<h2 id="create-a-vsan">Create a VSAN<a class="headerlink" href="#create-a-vsan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vsan database
   vsan &lt;id&gt; name &quot;&lt;name&gt;&quot;
-
-# Assign port to VSAN
-vsan database
+</code></pre>
+<h2 id="assign-a-port-to-a-vsan">Assign a Port to a VSAN<a class="headerlink" href="#assign-a-port-to-a-vsan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vsan database
   vsan &lt;id&gt; interface fc&lt;slot/port&gt;
 </code></pre>
+<h2 id="suspend-resume-a-vsan">Suspend / Resume a VSAN<a class="headerlink" href="#suspend-resume-a-vsan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vsan database
+  vsan &lt;id&gt; suspend
+  no vsan &lt;id&gt; suspend
+</code></pre>
+<h2 id="delete-a-vsan">Delete a VSAN<a class="headerlink" href="#delete-a-vsan" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vsan database
+  no vsan &lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Deleting a VSAN disrupts all devices in that VSAN. Confirm no active traffic before deleting.</p>
+</blockquote>
+<h2 id="vsan-on-isl-trunks">VSAN on ISL Trunks<a class="headerlink" href="#vsan-on-isl-trunks" title="Permanent link">&para;</a></h2>
+<p>VSANs must be allowed on ISL trunk ports to traverse between switches:</p>
+<pre><code class="language-bash">interface fc&lt;slot/port&gt;
+  switchport trunk allowed vsan add &lt;id&gt;
+</code></pre>
+<h2 id="inter-vsan-routing-ivr">Inter-VSAN Routing (IVR)<a class="headerlink" href="#inter-vsan-routing-ivr" title="Permanent link">&para;</a></h2>
+<p>IVR allows devices in different VSANs to communicate (e.g., tape libraries shared across zones):</p>
+<pre><code class="language-bash">show ivr
+show ivr vsan-topology
+ivr enable
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host not seeing storage</td>
+<td>Same VSAN?</td>
+<td><code>show vsan membership</code> on both ports</td>
+</tr>
+<tr>
+<td>VSAN not crossing ISL</td>
+<td>Trunk allowed VSANs</td>
+<td>Add VSAN to trunk</td>
+</tr>
+<tr>
+<td>VSAN suspended</td>
+<td>Admin state</td>
+<td>Check and <code>no vsan suspend</code></td>
+</tr>
+<tr>
+<td>IVR not working</td>
+<td>IVR topology</td>
+<td>Verify <code>show ivr vsan-topology</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

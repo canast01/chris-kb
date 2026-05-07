@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#view-route-table" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        View Route Table
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#default-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Default Gateway
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#ospf" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        OSPF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bgp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BGP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Routes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-tracing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Tracing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -776,29 +820,90 @@
 
 <h1 id="routing">Routing<a class="headerlink" href="#routing" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Routing determines how traffic moves between networks. It is required for server access, storage replication, cloud connectivity, backup traffic, and application communication.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm default gateway reachability</li>
-<li>Review route tables</li>
-<li>Check dynamic routing neighbor state</li>
-<li>Validate critical path connectivity</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ip route
-route print
-show ip route
-show ip ospf neighbor
-show bgp summary
+<p>Routing determines how traffic moves between subnets. All storage replication, backup traffic, vMotion, and cloud connectivity depend on correct routing.</p>
+<h2 id="view-route-table">View Route Table<a class="headerlink" href="#view-route-table" title="Permanent link">&para;</a></h2>
+<p><strong>Linux:</strong></p>
+<pre><code class="language-bash">ip route show
+ip route get &lt;destination_ip&gt;    # show which route would be used
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm source subnet</li>
-<li>Confirm destination subnet</li>
-<li>Check local route table</li>
-<li>Trace path</li>
-<li>Review firewall and ACL rules</li>
-</ol>
+<p><strong>Windows:</strong></p>
+<pre><code class="language-cmd">route print
+</code></pre>
+<p><strong>Cisco IOS / NX-OS:</strong></p>
+<pre><code class="language-bash">show ip route
+show ip route &lt;destination&gt;
+show ip route summary
+</code></pre>
+<h2 id="default-gateway">Default Gateway<a class="headerlink" href="#default-gateway" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — confirm default route
+ip route show default
+
+# Windows
+route print 0.0.0.0
+</code></pre>
+<h2 id="ospf">OSPF<a class="headerlink" href="#ospf" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check OSPF neighbor state
+show ip ospf neighbor
+
+# Verify OSPF routes
+show ip route ospf
+
+# OSPF interface status
+show ip ospf interface brief
+</code></pre>
+<p>All OSPF neighbors should be in <code>FULL</code> state. <code>EXSTART</code>, <code>EXCHANGE</code>, or stuck <code>2WAY</code> indicates an adjacency issue.</p>
+<h2 id="bgp">BGP<a class="headerlink" href="#bgp" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># BGP summary (neighbor states)
+show bgp summary
+show bgp neighbors &lt;ip&gt;
+
+# BGP routes
+show bgp
+show bgp routes
+</code></pre>
+<h2 id="static-routes">Static Routes<a class="headerlink" href="#static-routes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — add a static route
+ip route add &lt;network&gt;/&lt;prefix&gt; via &lt;gateway&gt;
+
+# Persist (add to /etc/network/interfaces or nmcli)
+nmcli connection modify &lt;conn&gt; +ipv4.routes &quot;&lt;network&gt;/&lt;prefix&gt; &lt;gateway&gt;&quot;
+</code></pre>
+<h2 id="path-tracing">Path Tracing<a class="headerlink" href="#path-tracing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">traceroute &lt;destination&gt;    # Linux
+tracert &lt;destination&gt;       # Windows
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No route to host</td>
+<td><code>ip route get &lt;dest&gt;</code></td>
+<td>Add missing static route or fix OSPF</td>
+</tr>
+<tr>
+<td>OSPF neighbor stuck</td>
+<td>MTU mismatch or auth</td>
+<td>Match MTU and OSPF auth config</td>
+</tr>
+<tr>
+<td>Default gateway unreachable</td>
+<td>Physical link and ARP</td>
+<td>Check interface and ARP table</td>
+</tr>
+<tr>
+<td>Asymmetric routing</td>
+<td><code>traceroute</code> both directions</td>
+<td>Review route policy</td>
+</tr>
+</tbody>
+</table>
 
 
 

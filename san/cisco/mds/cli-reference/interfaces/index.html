@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interface-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Port
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#administratively-enabledisable-a-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Administratively Enable/Disable a Port
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#range-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Range Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-counter-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Counter Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,29 +820,142 @@
 
 <h1 id="interfaces-ports">Interfaces &amp; Ports<a class="headerlink" href="#interfaces-ports" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Cisco MDS NX-OS CLI Reference</a>.</p>
+<p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Interface status
+<h2 id="interface-status">Interface Status<a class="headerlink" href="#interface-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Summary of all interfaces
 show interface brief
-show interface fc&lt;slot/port&gt;
-show interface fc&lt;slot/port&gt; counters
-show interface fc&lt;slot/port&gt; transceiver
 
-# Port configuration
-interface fc&lt;slot/port&gt;
-  switchport mode {auto | E | F | Fx | NP | TE | SD | ST}
+# Detailed single port
+show interface fc&lt;slot/port&gt;
+
+# Error counters
+show interface fc&lt;slot/port&gt; counters
+show interface fc&lt;slot/port&gt; counters errors
+
+# Transceiver / SFP details
+show interface fc&lt;slot/port&gt; transceiver
+</code></pre>
+<h2 id="port-modes">Port Modes<a class="headerlink" href="#port-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F</td>
+<td>Host / initiator (N_Port)</td>
+</tr>
+<tr>
+<td>E</td>
+<td>ISL to another switch (E_Port)</td>
+</tr>
+<tr>
+<td>TE</td>
+<td>Trunking ISL (VSAN-aware)</td>
+</tr>
+<tr>
+<td>NP</td>
+<td>N-Port Virtualization (NPV mode)</td>
+</tr>
+<tr>
+<td>auto</td>
+<td>Auto-detect (default)</td>
+</tr>
+<tr>
+<td>SD</td>
+<td>SPAN destination</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configure-a-port">Configure a Port<a class="headerlink" href="#configure-a-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface fc&lt;slot/port&gt;
+  switchport mode F         # force F-port for host
   shutdown
   no shutdown
-
-# Bulk operations
-show interface fc&lt;slot/port&gt; - fc&lt;slot/port&gt; brief
-
-# Physical topology
-show topology
-show fcdomain
-show fcdomain domain-list
 </code></pre>
+<h2 id="administratively-enabledisable-a-port">Administratively Enable/Disable a Port<a class="headerlink" href="#administratively-enabledisable-a-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">interface fc&lt;slot/port&gt;
+  shutdown
+  no shutdown
+</code></pre>
+<h2 id="range-operations">Range Operations<a class="headerlink" href="#range-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Apply config to a range of ports
+interface fc&lt;slot/port&gt; - fc&lt;slot/port&gt;
+  shutdown
+</code></pre>
+<h2 id="fc-domain">FC Domain<a class="headerlink" href="#fc-domain" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show fcdomain               # domain IDs across fabric
+show fcdomain domain-list   # all domain IDs in VSAN
+</code></pre>
+<p>Each switch in a fabric must have a unique domain ID per VSAN.</p>
+<h2 id="error-counter-reference">Error Counter Reference<a class="headerlink" href="#error-counter-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Counter</th>
+<th>Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>link-failures</td>
+<td>Cable/SFP; port resets</td>
+<td>Replace SFP; check cable</td>
+</tr>
+<tr>
+<td>loss-of-sync</td>
+<td>Signal quality</td>
+<td>Check SFP power levels</td>
+</tr>
+<tr>
+<td>input-crc</td>
+<td>Bad frames</td>
+<td>Replace SFP; check cable</td>
+</tr>
+<tr>
+<td>bb-credit-zero</td>
+<td>Buffer-to-buffer credit depleted</td>
+<td>Increase BB credits; check ISL design</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Port stays down</td>
+<td>SFP, cable, peer</td>
+<td><code>show interface</code> — check reason</td>
+</tr>
+<tr>
+<td>Port mode mismatch</td>
+<td>Expected F, got E</td>
+<td>Force mode: <code>switchport mode F</code></td>
+</tr>
+<tr>
+<td>CRC errors</td>
+<td>SFP quality</td>
+<td>Replace SFP</td>
+</tr>
+<tr>
+<td>No FLOGI on F-port</td>
+<td>Host HBA not sending login</td>
+<td>Check host HBA and driver</td>
+</tr>
+</tbody>
+</table>
 
 
 

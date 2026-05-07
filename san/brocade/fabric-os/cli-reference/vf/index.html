@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-fabric-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Fabric Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-logical-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Logical Switch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-logical-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Logical Switch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assign-a-port-to-a-logical-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign a Port to a Logical Switch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xisl-inter-switch-links-between-vfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XISL (Inter-Switch Links Between VFs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Switching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-port-assignments-per-fid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Port Assignments per FID
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,18 +820,66 @@
 
 <h1 id="virtual-fabrics-vf">Virtual Fabrics (VF)<a class="headerlink" href="#virtual-fabrics-vf" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Brocade Fabric OS CLI Reference</a>.</p>
+<p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Virtual Fabrics
-lscfg --show
-lscfg --create &lt;fid&gt;
-lscfg --delete &lt;fid&gt;
-setContext &lt;fid&gt;
-
-# XISL (inter-switch links between VFs)
-lscfg --port &lt;slot/port&gt; -lport &lt;fid&gt;
+<p>Virtual Fabrics partition a physical Brocade chassis into multiple logical switches (Logical Switches), each with its own Fabric ID (FID) and independent FLOGI domain.</p>
+<h2 id="virtual-fabric-status">Virtual Fabric Status<a class="headerlink" href="#virtual-fabric-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lscfg --show           # list all logical switches and their FIDs
+setContext &lt;fid&gt;       # switch CLI context to a specific logical switch
 </code></pre>
+<h2 id="create-a-logical-switch">Create a Logical Switch<a class="headerlink" href="#create-a-logical-switch" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lscfg --create &lt;fid&gt; [-base]    # -base creates a base fabric
+</code></pre>
+<h2 id="delete-a-logical-switch">Delete a Logical Switch<a class="headerlink" href="#delete-a-logical-switch" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lscfg --delete &lt;fid&gt;
+</code></pre>
+<h2 id="assign-a-port-to-a-logical-switch">Assign a Port to a Logical Switch<a class="headerlink" href="#assign-a-port-to-a-logical-switch" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lscfg --config &lt;fid&gt; -port &lt;slot/port&gt;
+</code></pre>
+<h2 id="xisl-inter-switch-links-between-vfs">XISL (Inter-Switch Links Between VFs)<a class="headerlink" href="#xisl-inter-switch-links-between-vfs" title="Permanent link">&para;</a></h2>
+<p>XISLs allow different logical switches on the same chassis to communicate:</p>
+<pre><code class="language-bash">lscfg --port &lt;slot/port&gt; -lport &lt;fid&gt;    # assign port as XISL
+</code></pre>
+<h2 id="context-switching">Context Switching<a class="headerlink" href="#context-switching" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">setContext &lt;fid&gt;       # enter the context of logical switch &lt;fid&gt;
+# All subsequent commands run in context of that FID
+setContext 128         # 128 = default/base fabric
+</code></pre>
+<h2 id="check-port-assignments-per-fid">Check Port Assignments per FID<a class="headerlink" href="#check-port-assignments-per-fid" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">lscfg --show -slot &lt;slot&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device not visible</td>
+<td>Wrong FID context</td>
+<td><code>setContext &lt;fid&gt;</code> then <code>switchshow</code></td>
+</tr>
+<tr>
+<td>Port in wrong FID</td>
+<td><code>lscfg --show</code></td>
+<td>Reassign port to correct FID</td>
+</tr>
+<tr>
+<td>VF not enabled</td>
+<td>License</td>
+<td>Verify VF license with <code>licenseShow</code></td>
+</tr>
+<tr>
+<td>XISL down</td>
+<td>Port state</td>
+<td>Check port with <code>portShow</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

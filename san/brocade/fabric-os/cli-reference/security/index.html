@@ -705,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#user-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-radius-tacacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication (RADIUS / TACACS+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secure-fabric-os-scc-dcc-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Fabric OS (SCC / DCC Policies)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,20 +798,95 @@
 
 <h1 id="security-users">Security &amp; Users<a class="headerlink" href="#security-users" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Brocade Fabric OS CLI Reference</a>.</p>
+<p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># User accounts
+<h2 id="user-accounts">User Accounts<a class="headerlink" href="#user-accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all user accounts
 userConfig --show
+
+# Change a user's password
 passwd &lt;username&gt;
 
-# Roles
-roleConfig --show
+# Create a user
+userConfig --add &lt;username&gt; -r &lt;role&gt; -l &lt;chassis|switch&gt;
 
-# Auth / RADIUS
-aaaConfig --show
-authUtil --show
+# Delete a user
+userConfig --delete &lt;username&gt;
 </code></pre>
+<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List available roles
+roleConfig --show
+</code></pre>
+<p>Built-in roles:
+| Role | Permissions |
+|---|---|
+| admin | Full access |
+| switchadmin | Switch-level operations |
+| zoneadmin | Zone management only |
+| fabricadmin | Fabric-wide read/write |
+| operator | Read-only + basic operations |
+| user | Read-only |</p>
+<h2 id="authentication-radius-tacacs">Authentication (RADIUS / TACACS+)<a class="headerlink" href="#authentication-radius-tacacs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show AAA configuration
+aaaConfig --show
+
+# Show auth settings
+authUtil --show
+
+# Configure RADIUS
+aaaConfig --add &lt;server_ip&gt; -p &lt;port&gt; -s &lt;secret&gt; -t radius
+
+# Configure TACACS+
+aaaConfig --add &lt;server_ip&gt; -p &lt;port&gt; -s &lt;secret&gt; -t tacacs+
+
+# Test authentication
+authUtil --authenlogout
+</code></pre>
+<h2 id="secure-fabric-os-scc-dcc-policies">Secure Fabric OS (SCC / DCC Policies)<a class="headerlink" href="#secure-fabric-os-scc-dcc-policies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show security policies
+secPolicyShow
+secPolicyShow &quot;SCC_POLICY&quot;    # Switch Connection Control — which switches can join fabric
+secPolicyShow &quot;DCC_POLICY&quot;    # Device Connection Control — which WWNs can log in
+</code></pre>
+<h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show SSH status
+sshUtil --show
+
+# Generate SSH host keys
+sshUtil --genkey -t rsa
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login fails</td>
+<td>RADIUS/TACACS reachable</td>
+<td>Check <code>aaaConfig --show</code>; test fallback to local</td>
+</tr>
+<tr>
+<td>Account locked</td>
+<td>Failed attempts</td>
+<td>Reset via console or admin account</td>
+</tr>
+<tr>
+<td>Unauthorized device joining</td>
+<td>DCC policy</td>
+<td>Review and restrict <code>DCC_POLICY</code></td>
+</tr>
+<tr>
+<td>SSH key error</td>
+<td>Host key</td>
+<td>Regenerate with <code>sshUtil --genkey</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

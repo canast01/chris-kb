@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#check-traffic-sessions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Check Traffic Sessions
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#view-security-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        View Security Policy
       
     </span>
   </a>
@@ -745,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#test-connectivity-through-a-firewall" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Test Connectivity Through a Firewall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-deny-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Deny Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-rule-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Rule Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nat-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -776,29 +831,89 @@
 
 <h1 id="firewalls">Firewalls<a class="headerlink" href="#firewalls" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Firewalls control traffic between networks using rules, policies, zones, objects, and inspection profiles.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review blocked traffic logs</li>
-<li>Validate rule hit counts</li>
-<li>Check VPN tunnel health</li>
-<li>Confirm policy changes</li>
-<li>Review expired objects</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show session all
-show running security-policy
+<p>Firewalls control traffic between zones using rules, policies, NAT, and inspection profiles. In enterprise infrastructure, firewalls govern traffic between:
+- Production and management networks
+- On-premises and cloud
+- Internet egress
+- Storage replication paths across sites</p>
+<h2 id="check-traffic-sessions">Check Traffic Sessions<a class="headerlink" href="#check-traffic-sessions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active sessions (Palo Alto / PAN-OS)
+show session all
+show session id &lt;id&gt;
+
+# Traffic logs
 show log traffic
-show system info
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm source, destination, port, and protocol</li>
-<li>Check policy match</li>
-<li>Review NAT rules</li>
-<li>Validate route path</li>
-<li>Review deny logs</li>
-</ol>
+<h2 id="view-security-policy">View Security Policy<a class="headerlink" href="#view-security-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show running security-policy    # PAN-OS
+show security policies          # Juniper SRX
+show access-list                # Cisco ASA
+</code></pre>
+<h2 id="test-connectivity-through-a-firewall">Test Connectivity Through a Firewall<a class="headerlink" href="#test-connectivity-through-a-firewall" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># From a host behind the firewall
+ping &lt;destination&gt;
+traceroute &lt;destination&gt;
+curl -v telnet://&lt;dest&gt;:&lt;port&gt;    # test specific TCP port
+
+# From Linux — test TCP port
+nc -zv &lt;host&gt; &lt;port&gt;
+</code></pre>
+<h2 id="review-deny-logs">Review Deny Logs<a class="headerlink" href="#review-deny-logs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PAN-OS
+show log traffic action=deny | last 100
+
+# Linux iptables
+iptables -L -v -n | grep DROP
+journalctl | grep &quot;DPT=&lt;port&gt;&quot;
+</code></pre>
+<h2 id="common-rule-troubleshooting">Common Rule Troubleshooting<a class="headerlink" href="#common-rule-troubleshooting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Identify which policy matched a session (PAN-OS)
+show session all filter destination &lt;ip&gt; destination-port &lt;port&gt;
+</code></pre>
+<h2 id="nat-verification">NAT Verification<a class="headerlink" href="#nat-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">show running nat-policy           # PAN-OS
+show ip nat translations          # Cisco IOS
+</code></pre>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Confirm source, destination, port, and protocol needed</li>
+<li>[ ] Identify which policy/zone applies</li>
+<li>[ ] Capture current rule hit counts</li>
+<li>[ ] Test connectivity before change (baseline)</li>
+<li>[ ] Test connectivity after change</li>
+</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Traffic blocked</td>
+<td>Deny logs</td>
+<td>Identify rule; add permit if authorized</td>
+</tr>
+<tr>
+<td>Rule exists but traffic still blocked</td>
+<td>Rule order</td>
+<td>Check rule priority — most specific first</td>
+</tr>
+<tr>
+<td>NAT failing</td>
+<td>NAT policy</td>
+<td>Verify NAT translation and route</td>
+</tr>
+<tr>
+<td>VPN tunnel down</td>
+<td>IKE/IPSEC logs</td>
+<td>Check PSK, crypto policy, peer IP</td>
+</tr>
+</tbody>
+</table>
 
 
 

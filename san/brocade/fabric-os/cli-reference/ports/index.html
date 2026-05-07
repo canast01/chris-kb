@@ -705,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#port-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-disable-a-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable / Disable a Port
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Speed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-distance-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long Distance Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-error-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Error Counters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-port-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Port Stats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistent-disable-enable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistent Disable / Enable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -724,26 +831,113 @@
 
 <h1 id="ports">Ports<a class="headerlink" href="#ports" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Brocade Fabric OS CLI Reference</a>.</p>
+<p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Port status
-portShow &lt;slot/port&gt;
-portStatsShow &lt;slot/port&gt;
-portErrShow
-portLogShow &lt;slot/port&gt;
-portLogDump
-portCfgShow &lt;slot/port&gt;
-
-# Port admin
-portDisable &lt;slot/port&gt;
-portEnable &lt;slot/port&gt;
-portCfgSpeed &lt;slot/port&gt; &lt;speed&gt;    # 0=auto, 4, 8, 16, 32
-portCfgLongDistance &lt;slot/port&gt; &lt;mode&gt;
-
-# Port stats reset
-portStatsReset &lt;slot/port&gt;
+<h2 id="port-status">Port Status<a class="headerlink" href="#port-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portShow &lt;slot/port&gt;           # detailed port info (state, speed, WWN)
+portStatsShow &lt;slot/port&gt;      # TX/RX frames, errors
+portErrShow                    # error summary across all ports
+portLogShow &lt;slot/port&gt;        # port event log
+portLogDump                    # dump full port log to console
+portCfgShow &lt;slot/port&gt;        # port configuration
 </code></pre>
+<h2 id="port-states">Port States<a class="headerlink" href="#port-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Online</td>
+<td>Healthy, device logged in</td>
+</tr>
+<tr>
+<td>No_Light</td>
+<td>No SFP or no signal</td>
+</tr>
+<tr>
+<td>No_Module</td>
+<td>No SFP installed</td>
+</tr>
+<tr>
+<td>Offline (Admin)</td>
+<td>Administratively disabled</td>
+</tr>
+<tr>
+<td>In_Sync</td>
+<td>Link up but no device logged in</td>
+</tr>
+<tr>
+<td>Faulty</td>
+<td>Hardware fault</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enable-disable-a-port">Enable / Disable a Port<a class="headerlink" href="#enable-disable-a-port" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portDisable &lt;slot/port&gt;
+portEnable &lt;slot/port&gt;
+</code></pre>
+<h2 id="port-speed">Port Speed<a class="headerlink" href="#port-speed" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portCfgSpeed &lt;slot/port&gt; &lt;speed&gt;
+# speed: 0=auto, 4, 8, 16, 32 (Gbps)
+</code></pre>
+<h2 id="long-distance-mode">Long Distance Mode<a class="headerlink" href="#long-distance-mode" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portCfgLongDistance &lt;slot/port&gt; &lt;mode&gt;
+# modes: L0 (normal), L1, L2, LE, LD, LS
+</code></pre>
+<h2 id="port-error-counters">Port Error Counters<a class="headerlink" href="#port-error-counters" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portStatsShow &lt;slot/port&gt;
+portErrShow
+</code></pre>
+<p>Key error fields:
+| Field | Cause | Action |
+|---|---|---|
+| LossSignal | SFP or cable issue | Replace SFP; check cable |
+| LossSync | Signal quality | Check SFP power level |
+| EncInFrm | Encoding errors | Replace SFP |
+| TooLong | Jumbo frame or fabric issue | Investigate MTU |</p>
+<h2 id="reset-port-stats">Reset Port Stats<a class="headerlink" href="#reset-port-stats" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portStatsReset &lt;slot/port&gt;
+</code></pre>
+<h2 id="persistent-disable-enable">Persistent Disable / Enable<a class="headerlink" href="#persistent-disable-enable" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">portPersistentDisable &lt;slot/port&gt;    # survives reboot
+portPersistentEnable &lt;slot/port&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Port shows No_Light</td>
+<td>SFP installed?</td>
+<td>Seat SFP; check cable</td>
+</tr>
+<tr>
+<td>Port flapping</td>
+<td>Signal quality</td>
+<td>Replace SFP; check cable</td>
+</tr>
+<tr>
+<td>High error count</td>
+<td>Encoding or signal</td>
+<td><code>portErrShow</code>; replace SFP</td>
+</tr>
+<tr>
+<td>Device not logging in</td>
+<td>Port state = Offline</td>
+<td><code>portEnable</code>; check zoning</td>
+</tr>
+</tbody>
+</table>
 
 
 
