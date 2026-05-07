@@ -2,12 +2,6 @@
 
 Isolated Recovery Environment Ire operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="isolation/">Isolation</a></h3>
-    <p>Isolation notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="clean-room/">Clean Room</a></h3>
