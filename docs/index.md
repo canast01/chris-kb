@@ -26,11 +26,6 @@
   <span>Dell, Pure, NetApp — block, file, object, and replication.</span>
 </a>
 
-<a class="kb-card" href="cloud/">
-  <strong>Cloud</strong>
-  <span>AWS and Azure — identity, compute, networking, storage, and cost.</span>
-</a>
-
 <a class="kb-card" href="san/">
   <strong>SAN</strong>
   <span>Cisco, Brocade, zoning, fabrics, ISLs, ports, and host paths.</span>
@@ -39,6 +34,11 @@
 <a class="kb-card" href="compute/">
   <strong>Compute</strong>
   <span>Windows Server, Linux, host operations, and server support.</span>
+</a>
+
+<a class="kb-card" href="cloud/">
+  <strong>Cloud</strong>
+  <span>AWS and Azure — identity, compute, networking, storage, and cost.</span>
 </a>
 
 <a class="kb-card" href="networking/">
