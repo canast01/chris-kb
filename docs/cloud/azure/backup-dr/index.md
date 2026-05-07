@@ -2,12 +2,6 @@
 
 Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation.
 
-<div class="kb-grid kb-grid-3">
-
-  <div class="kb-card">
-    <h3><a href="azure-backup/">Azure Backup</a></h3>
-    <p>Azure Backup notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="recovery-services-vault/">Recovery Services Vault</a></h3>
