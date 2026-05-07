@@ -2,43 +2,15 @@
 
 ## Daily Checks
 
-### 1. Service Health
 
-Log in to the Aria Automation admin UI (`https://<aria-auto>/csp/gateway/am/ui/`) or the appliance vracli:
-
-```bash
-vracli status
-```
-
-Confirm all services show as **UP** — IaaS gateway, Cloud Assembly, Orchestrator, and the underlying Kubernetes pods in namespace `prelude`.
-
-```bash
-kubectl get pods -n prelude
-```
-
-All pods should be in `Running` or `Completed` state. Investigate any pods in `CrashLoopBackOff` or `Error`.
-
-### 2. Failed Deployment Requests
-
-In the Aria Automation UI navigate to **Deployments > All Deployments** and filter by status **Failed** with a date range of the last 24 hours.
-
-For each failure:
-- Review the deployment event log.
-- Check if failure is user error (wrong inputs, quota exceeded) or platform error (cloud account unreachable, NSX segment missing).
-
-### 3. Integration Endpoint Health
-
-Navigate to **Infrastructure > Connections > Cloud Accounts**.
-
-- All vCenter cloud accounts should show a green status indicator.
-- All NSX cloud accounts should show a green status indicator.
-- Investigate any accounts showing a warning or error — re-validate credentials or connectivity.
-
-### 4. Pipeline Run Status (if Pipelines are in use)
-
-Navigate to **Pipelines > Executions** and review the most recent 24 hours of pipeline runs. Investigate failures.
-
----
+| Check | Command | Notes |
+|---|---|---|
+| Review the deployment event log. |  |  |
+| Check if failure is user error (wrong inputs, quota exceeded) or platf |  |  |
+| All vCenter cloud accounts should show a green status indicator. |  |  |
+| All NSX cloud accounts should show a green status indicator. |  |  |
+| Investigate any accounts showing a warning or error |  | re-validate credentials or connectivity. |
+| -- |  |  |
 
 ## Weekly Checks
 

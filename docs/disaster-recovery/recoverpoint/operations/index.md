@@ -6,12 +6,15 @@
 
 ## Daily Checks
 
-- [ ] All Consistency Groups (CGs) are in ACTIVE replication state — none suspended, in error, or paused without a corresponding change ticket
-- [ ] All RPA nodes are online and clustered — no degraded or faulted RPA
-- [ ] Journal capacity: no journal is above 80% full (a full journal causes replication to pause)
-- [ ] Replication lag / RPO is within the acceptable threshold (typically < 15 minutes for production CGs)
-- [ ] No image access sessions are left enabled from a previous DR test (image access left open degrades replication)
-- [ ] Confirm both production and DR site RecoverPoint clusters are reachable
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] All Consistency Groups (CGs) are in ACTIVE replication state |  | none suspended, in error, or paused without a corresponding change ticket |
+| [ ] All RPA nodes are online and clustered |  | no degraded or faulted RPA |
+| [ ] Journal capacity |  |  |
+| [ ] Replication lag / RPO is within the acceptable threshold (typicall |  |  |
+| [ ] No image access sessions are left enabled from a previous DR test |  |  |
+| [ ] Confirm both production and DR site RecoverPoint clusters are reac |  |  |
 
 ## Health Check
 

@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Verify scheduled PowerShell tasks are not disabled: `Get-ScheduledTask | Where-Object {$_.State -eq 'Disabled'}`
-- [ ] Check execution policy on managed hosts: `Get-ExecutionPolicy -List`
-- [ ] Review script error logs and transcript files for failed scheduled runs
-- [ ] Confirm PSGallery or internal module feed is accessible
-- [ ] Validate service account credentials used by scheduled scripts are not expired
-- [ ] Review PowerShell event log for script block logging errors: `Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50`
-- [ ] Confirm WinRM is running on remote targets if remoting is in use
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Verify scheduled PowerShell tasks are not disabled | `Get-ScheduledTask | Where-Object {$_.State -eq 'Disabled'}` |  |
+| [ ] Check execution policy on managed hosts | `Get-ExecutionPolicy -List` |  |
+| [ ] Review script error logs and transcript files for failed scheduled |  |  |
+| [ ] Confirm PSGallery or internal module feed is accessible |  |  |
+| [ ] Validate service account credentials used by scheduled scripts are |  |  |
+| [ ] Review PowerShell event log for script block logging errors | `Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50` |  |
+| [ ] Confirm WinRM is running on remote targets if remoting is in use |  |  |
 
 ## Health Check
 

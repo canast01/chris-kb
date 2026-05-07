@@ -2,6 +2,16 @@
 
 > Part of the Cisco MDS NX-OS CLI Reference.
 
+```mermaid
+flowchart LR
+    Configuration["Configuration"]
+    Configuration --> S0["Version and Status"]
+    Configuration --> S1["NX-OS Upgrade"]
+    Configuration --> S2["Configuration Backup"]
+    Configuration --> S3["Configuration Checkpoint and Rollback"]
+    Configuration --> S4["Common Issues"]
+```
+
 ## Version & Status
 
 ```bash

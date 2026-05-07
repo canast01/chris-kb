@@ -2,6 +2,17 @@
 
 > Part of the Brocade Fabric OS CLI Reference.
 
+```mermaid
+flowchart LR
+    Users["Users"]
+    Users --> S0["User Accounts"]
+    Users --> S1["Roles"]
+    Users --> S2["Authentication (RADIUS / TACACS+)"]
+    Users --> S3["Secure Fabric OS (SCC / DCC Policies)"]
+    Users --> S4["SSH Configuration"]
+    Users --> S5["Common Issues"]
+```
+
 ## User Accounts
 
 ```bash

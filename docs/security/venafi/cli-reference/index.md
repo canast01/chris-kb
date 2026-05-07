@@ -2,6 +2,17 @@
 
 Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a Service), the TPP REST API, and PowerShell cmdlets. The `vcert` CLI is the primary tool for certificate request, renewal, and retrieval automation.
 
+```mermaid
+flowchart LR
+    Venafi["Venafi"]
+    Venafi --> S0["vcert CLI — Authentication"]
+    Venafi --> S1["Certificate Requests"]
+    Venafi --> S2["Certificate Renewal"]
+    Venafi --> S3["Certificate Retrieval"]
+    Venafi --> S4["TPP REST API"]
+    Venafi --> S5["Certificate Inspection (openssl)"]
+```
+
 ---
 
 ## vcert CLI — Authentication

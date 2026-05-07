@@ -13,9 +13,12 @@ This policy defines how long data is stored to meet business, legal, and complia
 
 ## Daily Checks
 
-- Verify retention policies applied
-- Confirm archive jobs completed
-- Check storage utilization
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify retention policies applied |  |  |
+| Confirm archive jobs completed |  |  |
+| Check storage utilization |  |  |
 
 ## Workflow
 

@@ -2,6 +2,17 @@
 
 Aria Operations for Logs (formerly vRealize Log Insight) exposes a REST API and a `vracli` / `li-admin` CLI available on the virtual appliance via SSH. The Ingestion API receives log data from agents and third-party sources.
 
+```mermaid
+flowchart LR
+    Logs["Logs"]
+    Logs --> S0["Appliance CLI (SSH Access)"]
+    Logs --> S1["vracli (Aria Suite Appliance CLI)"]
+    Logs --> S2["REST API — Authentication"]
+    Logs --> S3["REST API — Queries and Alerts"]
+    Logs --> S4["REST API — Ingestion"]
+    Logs --> S5["REST API — Administration"]
+```
+
 ---
 
 ## Appliance CLI (SSH Access)

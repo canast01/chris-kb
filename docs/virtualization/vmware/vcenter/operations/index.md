@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Confirm vCenter GUI is accessible and all VCSA services are healthy (VAMI → Summary)
-- [ ] Run `Get-Cluster | Select Name,DrsEnabled,HAEnabled` — DRS and HA enabled on all clusters
-- [ ] Run `Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected"}` — result should be empty; any non-connected hosts require investigation
-- [ ] Run `Get-VM | Where-Object {$_.PowerState -eq "PoweredOff"} | Where-Object {$_.Notes -notmatch "intentional"}` — flag unexpected powered-off VMs
-- [ ] Run `Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)}` — flag snapshots older than 3 days
-- [ ] Check vCenter alarms dashboard — no critical unacknowledged alarms outstanding
-- [ ] Check certificate expiry for VCSA and ESXi hosts — flag any expiring within 60 days
-- [ ] Review vCenter Monitor → Tasks for recent task failures or error-state operations
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Confirm vCenter GUI is accessible and all VCSA services are health |  |  |
+| [ ] Run `Get-Cluster | Select Name,DrsEnabled,HAEnabled` | `Get-Cluster | Select Name,DrsEnabled,HAEnabled` | DRS and HA enabled on all clusters |
+| [ ] Run `Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected" | `Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected"}` | result should be empty; any non-connected hosts require investigation |
+| [ ] Run `Get-VM | Where-Object {$_.PowerState -eq "PoweredOff"} | Wher | `Get-VM | Where-Object {$_.PowerState -eq "PoweredOff"} | Where-Object {$_.Notes -notmatch "intentional"}` | flag unexpected powered-off VMs |
+| [ ] Run `Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Dat | `Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Date).AddDays(-3)}` | flag snapshots older than 3 days |
+| [ ] Check vCenter alarms dashboard |  | no critical unacknowledged alarms outstanding |
+| [ ] Check certificate expiry for VCSA and ESXi hosts |  | flag any expiring within 60 days |
+| [ ] Review vCenter Monitor → Tasks for recent task failures or error-s |  |  |
 
 ## Health Check
 

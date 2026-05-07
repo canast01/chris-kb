@@ -2,6 +2,20 @@
 
 Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage systems. Connect via SSH to the array's management IP and log in as `pureuser` or another admin account.
 
+```mermaid
+flowchart LR
+    FlashArray["FlashArray"]
+    FlashArray --> S0["Array and System Management"]
+    FlashArray --> S1["Admin Accounts"]
+    FlashArray --> S2["Alerts and Audit"]
+    FlashArray --> S3["Configuration and Directory Services"]
+    FlashArray --> S4["Drives and Hardware"]
+    FlashArray --> S5["Hosts and Host Groups"]
+    FlashArray --> S6["Network and Ports"]
+    FlashArray --> S7["Pods (ActiveCluster)"]
+    FlashArray --> S8["Volumes and Snapshots"]
+```
+
 ---
 
 

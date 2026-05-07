@@ -2,6 +2,16 @@
 
 VCF CLI operations use the SoS (Support and Operations Suite) utility on SDDC Manager, the SDDC Manager REST API, the `vcf-support-bundle` tool, and direct SSH commands on individual components. SoS is the primary health-check and diagnostic tool, run from the SDDC Manager appliance as root.
 
+```mermaid
+flowchart LR
+    Foundation["Foundation"]
+    Foundation --> S0["SoS Health Checks"]
+    Foundation --> S1["Support Bundles"]
+    Foundation --> S2["SDDC Manager REST API"]
+    Foundation --> S3["Password Management"]
+    Foundation --> S4["Service Status and Logs"]
+```
+
 ---
 
 ## SoS Health Checks

@@ -94,13 +94,16 @@ Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax
 
 ## Daily Checks
 
-- Open Unisphere for PowerMax and review the Dashboard for active alerts and system health status
-- Run `symcfg -sid <SID> show` to confirm array-level health and director status
-- Run `symdf list -sid <SID>` to check SRDF pair states — all R1 pairs should be `Synchronized` (SRDF/S) or `Consistent` (SRDF/A)
-- Review `sympd list -sid <SID>` to confirm no physical drives are in a `Failed` or `Degraded` state
-- Check storage group thin device pool utilisation via Unisphere or `symsg list -sid <SID>`
-- Confirm any SnapVX sessions that are no longer needed have been terminated to avoid hitting per-device limits
-- Review Unisphere → Performance → Array to check I/O response time and throughput against baselines
+
+| Check | Command | Notes |
+|---|---|---|
+| Open Unisphere for PowerMax and review the Dashboard for active alerts |  |  |
+| Run `symcfg -sid <SID> show` to confirm array-level health and directo | `symcfg -sid <SID> show` |  |
+| Run `symdf list -sid <SID>` to check SRDF pair states | `symdf list -sid <SID>` | all R1 pairs should be `Synchronized` (SRDF/S) or `Consistent` (SRDF/A) |
+| Review `sympd list -sid <SID>` to confirm no physical drives are in a | `sympd list -sid <SID>` |  |
+| Check storage group thin device pool utilisation via Unisphere or `sym | `symsg list -sid <SID>` |  |
+| Confirm any SnapVX sessions that are no longer needed have been termin |  |  |
+| Review Unisphere → Performance → Array to check I/O response time and |  |  |
 
 ## Health Commands
 
@@ -149,24 +152,30 @@ symreplicate list -sid <SID>
 
 ## Operational Tasks
 
-- Create a new storage group with `symsg -sid <SID> create <sg-name>` and add thin devices
-- Create a masking view to present a storage group to a host: configure initiator group, port group, storage group, then create the masking view in Unisphere or with `symmask`
-- Create a SnapVX snapshot: `symsnap -sid <SID> create -sg <sg-name> -name <snap-name>`
-- Link a SnapVX snapshot to a target storage group for dev/test or restore
-- Establish an SRDF pair: define RDF groups on both arrays, then use `symrdf -sid <SID> createpair` or Unisphere wizard
-- Change SRDF mode between synchronous and asynchronous via `symrdf -sid <SID> -rdfg <group> set mode`
-- Perform a planned SRDF failover (split) and failback via `symrdf split` and `symrdf restore` during DR tests
-- Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modify
+
+| Task | Command |
+|---|---|
+| Create a new storage group with `symsg -sid <SID> create <sg-name>` and add thin |  |
+| Create a masking view to present a storage group to a host | `symmask` |
+| Create a SnapVX snapshot | `symsnap -sid <SID> create -sg <sg-name> -name <snap-name>` |
+| Link a SnapVX snapshot to a target storage group for dev/test or restore |  |
+| Establish an SRDF pair | `symrdf -sid <SID> createpair` |
+| Change SRDF mode between synchronous and asynchronous via `symrdf -sid <SID> -rd |  |
+| Perform a planned SRDF failover (split) and failback via `symrdf split` and `sym |  |
+| Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modi |  |
 
 ## Upgrade Notes
 
-1. Record the current PowerMaxOS and Solutions Enabler version from `symcfg list` and the Unisphere About page
-2. Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions
-3. Confirm all SRDF pairs are in `Synchronized` or `Consistent` state before upgrade; suspend replication if advised by release notes
-4. Back up the Solutions Enabler database and Unisphere configuration files to an external location
-5. Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes
-6. Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push
-7. After the upgrade completes, run `symcfg list`, `symdf list -sid <SID>`, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy
+
+| Step | Action |
+|---|---|
+| 1 | Record the current PowerMaxOS and Solutions Enabler version from `symcfg list` and the Unisphere About page |
+| 2 | Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions |
+| 3 | Confirm all SRDF pairs are in `Synchronized` or `Consistent` state before upgrade; suspend replication if advised by release notes |
+| 4 | Back up the Solutions Enabler database and Unisphere configuration files to an external location |
+| 5 | Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes |
+| 6 | Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push |
+| 7 | After the upgrade completes, run `symcfg list`, `symdf list -sid <SID>`, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy |
 
 ## Best Practices
 

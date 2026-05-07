@@ -2,6 +2,17 @@
 
 NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The `bp*` family covers backup and restore operations; `nb*` and `tp*` commands cover EMM, media, and device management. Commands are in `/usr/openv/netbackup/bin/admincmd/` on Linux or `C:\Program Files\Veritas\NetBackup\bin\admincmd\` on Windows.
 
+```mermaid
+flowchart LR
+    NetBackup["NetBackup"]
+    NetBackup --> S0["Job Monitoring"]
+    NetBackup --> S1["Backup Operations"]
+    NetBackup --> S2["Restore Operations"]
+    NetBackup --> S3["Catalog and Media"]
+    NetBackup --> S4["Client and Policy Management"]
+    NetBackup --> S5["Error and Log Analysis"]
+```
+
 ---
 
 ## Job Monitoring

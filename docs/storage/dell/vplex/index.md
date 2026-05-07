@@ -64,13 +64,16 @@ Dell VPLEX is a storage virtualization platform that presents a federated storag
 
 ## Daily Checks
 
-- Check cluster health indications: `ll /clusters/*/health-indications/`
-- Review director hardware and port status: `ll /engines/*/directors/*/hardware/`
-- Verify distributed device health and sync state: `ll /distributed-storage/distributed-devices/*/health-indications/`
-- Confirm storage view integrity and host connectivity: `ll /clusters/*/exports/storage-views/`
-- Validate Witness connectivity status for VPLEX Metro deployments
-- Review active system alerts via Unisphere for VPLEX or email notifications
-- Check inter-cluster link (ICL) bandwidth and latency between Metro sites
+
+| Check | Command | Notes |
+|---|---|---|
+| Check cluster health indications | `ll /clusters/*/health-indications/` |  |
+| Review director hardware and port status | `ll /engines/*/directors/*/hardware/` |  |
+| Verify distributed device health and sync state | `ll /distributed-storage/distributed-devices/*/health-indications/` |  |
+| Confirm storage view integrity and host connectivity | `ll /clusters/*/exports/storage-views/` |  |
+| Validate Witness connectivity status for VPLEX Metro deployments |  |  |
+| Review active system alerts via Unisphere for VPLEX or email notificat |  |  |
+| Check inter-cluster link (ICL) bandwidth and latency between Metro sit |  |  |
 
 ## Health Commands
 
@@ -110,24 +113,30 @@ ll /distributed-storage/consistency-groups/
 
 ## Operational Tasks
 
-- Create and present new virtual volumes by claiming storage volumes, building local devices, and adding them to storage views
-- Add initiators to storage views when onboarding new hosts or HBA replacements
-- Migrate data non-disruptively by creating a distributed device and detaching the source leg after full sync
-- Group related distributed volumes into consistency groups to ensure write-order consistency across sites
-- Expand virtual volume capacity by expanding the underlying storage volume on the back-end array and then the VPLEX extent
-- Monitor and manage ICL bandwidth between Metro clusters to prevent replication bottlenecks
-- Decommission storage views and release virtual volumes when retiring hosts or applications
-- Document storage view-to-initiator-port mappings after every configuration change
+
+| Task | Command |
+|---|---|
+| Create and present new virtual volumes by claiming storage volumes, building loc |  |
+| Add initiators to storage views when onboarding new hosts or HBA replacements |  |
+| Migrate data non-disruptively by creating a distributed device and detaching the |  |
+| Group related distributed volumes into consistency groups to ensure write-order |  |
+| Expand virtual volume capacity by expanding the underlying storage volume on the |  |
+| Monitor and manage ICL bandwidth between Metro clusters to prevent replication b |  |
+| Decommission storage views and release virtual volumes when retiring hosts or ap |  |
+| Document storage view-to-initiator-port mappings after every configuration chang |  |
 
 ## Upgrade Notes
 
-1. Download the target GeoSynchrony release notes and verify compatibility with back-end array firmware, hypervisor versions, and host OS multipath drivers
-2. Confirm a valid Witness is configured and reachable from both clusters before starting a Metro upgrade
-3. Place consistency groups into suspended I/O mode or confirm the upgrade procedure supports rolling NDU (non-disruptive upgrade) for your topology
-4. Upgrade one director at a time per engine, verifying director health before proceeding to the next
-5. After each director upgrade, confirm distributed device sync state and storage view accessibility from hosts
-6. Upgrade the management server (VMS) after all directors are at the new code level
-7. Post-upgrade, run `health-check --full` and validate all distributed devices show `health-state: ok` before closing the maintenance window
+
+| Step | Action |
+|---|---|
+| 1 | Download the target GeoSynchrony release notes and verify compatibility with back-end array firmware, hypervisor versions, and host OS multipath drivers |
+| 2 | Confirm a valid Witness is configured and reachable from both clusters before starting a Metro upgrade |
+| 3 | Place consistency groups into suspended I/O mode or confirm the upgrade procedure supports rolling NDU (non-disruptive upgrade) for your topology |
+| 4 | Upgrade one director at a time per engine, verifying director health before proceeding to the next |
+| 5 | After each director upgrade, confirm distributed device sync state and storage view accessibility from hosts |
+| 6 | Upgrade the management server (VMS) after all directors are at the new code level |
+| 7 | Post-upgrade, run `health-check --full` and validate all distributed devices show `health-state: ok` before closing the maintenance window |
 
 ## Best Practices
 

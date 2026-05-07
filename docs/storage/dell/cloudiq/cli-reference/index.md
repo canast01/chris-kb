@@ -2,6 +2,17 @@
 
 > Part of the [CloudIQ](../) reference.
 
+```mermaid
+flowchart LR
+    API["API"]
+    API --> S0["Quick-Reference Command Table"]
+    API --> S1["Systems API"]
+    API --> S2["Alerts API"]
+    API --> S3["Capacity API"]
+    API --> S4["Performance API"]
+    API --> S5["Tags API"]
+```
+
 ---
 
 CloudIQ has no local CLI. All programmatic interaction is via the **CloudIQ REST API** at `https://cloudiq.apis.dell.com`. Authentication uses the OAuth2 **client credentials** flow. API keys (client ID + secret) are generated in the CloudIQ web portal under **Settings → API Keys**.

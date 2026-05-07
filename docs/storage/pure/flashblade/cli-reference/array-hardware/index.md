@@ -2,6 +2,13 @@
 
 > Part of the [Pure FlashBlade CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Hardware["Hardware"]
+    Hardware --> S0["Array Status and Identity"]
+    Hardware --> S1["Blades and Hardware"]
+```
+
 ---
 
 ## Array Status & Identity

@@ -81,14 +81,17 @@ NetApp ONTAP is the enterprise storage operating system running on AFF (all-flas
 
 ## Daily Checks
 
-- Check overall cluster health: `cluster show`
-- Review broken or failed disks: `storage disk show -broken`
-- Verify storage failover state: `storage failover show`
-- Check volumes approaching capacity: `volume show -fields used-percent`
-- Review active health alerts: `system health alert show`
-- Confirm SnapMirror relationships are healthy: `snapmirror show`
-- Check recent EMS events or AutoSupport callhome messages: `event log show -messagename callhome.*`
-- Verify all SVMs and network interfaces are online: `svm show` and `network interface show`
+
+| Check | Command | Notes |
+|---|---|---|
+| Check overall cluster health | `cluster show` |  |
+| Review broken or failed disks | `storage disk show -broken` |  |
+| Verify storage failover state | `storage failover show` |  |
+| Check volumes approaching capacity | `volume show -fields used-percent` |  |
+| Review active health alerts | `system health alert show` |  |
+| Confirm SnapMirror relationships are healthy | `snapmirror show` |  |
+| Check recent EMS events or AutoSupport callhome messages | `event log show -messagename callhome.*` |  |
+| Verify all SVMs and network interfaces are online | `svm show` |  |
 
 ## Health Commands
 
@@ -133,24 +136,30 @@ system node run -node local sysconfig -a
 
 ## Operational Tasks
 
-- Create and mount a new FlexVol: `volume create` with junction-path, then verify with `volume show`
-- Provision an iSCSI or FC LUN: `lun create` under a volume, then map with `lun mapping create` to an igroup
-- Configure SnapMirror replication: peer clusters and SVMs, then create relationship with `snapmirror create` and initialize with `snapmirror initialize`
-- Expand a volume or enable autogrow: `volume modify -volume <name> -size <new> -autosize-mode grow_shrink`
-- Move a volume between aggregates non-disruptively: `volume move start -volume <name> -destination-aggregate <agg>`
-- Create a FlexClone for test/dev: `volume clone create -parent-volume <vol> -junction-path <path>`
-- Run storage efficiency (dedup/compression): `storage aggregate efficiency show`; schedule with `volume efficiency on`
-- Perform a planned storage failover and giveback: `storage failover takeover` then `storage failover giveback`
+
+| Task | Command |
+|---|---|
+| Create and mount a new FlexVol | `volume create`, `volume show` |
+| Provision an iSCSI or FC LUN | `lun create`, `lun mapping create` |
+| Configure SnapMirror replication | `snapmirror create`, `snapmirror initialize` |
+| Expand a volume or enable autogrow | `volume modify -volume <name> -size <new> -autosize-mode grow_shrink` |
+| Move a volume between aggregates non-disruptively | `volume move start -volume <name> -destination-aggregate <agg>` |
+| Create a FlexClone for test/dev | `volume clone create -parent-volume <vol> -junction-path <path>` |
+| Run storage efficiency (dedup/compression) | `storage aggregate efficiency show`, `volume efficiency on` |
+| Perform a planned storage failover and giveback | `storage failover takeover`, `storage failover giveback` |
 
 ## Upgrade Notes
 
-1. Check the NetApp Interoperability Matrix Tool (IMT) and ONTAP upgrade advisor in Active IQ / BlueXP to identify the recommended target release and any required intermediate versions
-2. Review the target release notes for known issues, deprecated features, and any manual steps required before or after the upgrade
-3. Confirm all SnapMirror relationships are healthy and aggregates are below 90% capacity before beginning
-4. Take an AutoSupport message to mark the start of the maintenance window: `autosupport invoke -node * -type all -message "Starting ONTAP upgrade"`
-5. Use the automated non-disruptive upgrade (ANDU) path in System Manager or CLI (`system image update-package`) to upgrade one HA pair at a time; verify takeover/giveback completes cleanly after each node
-6. After each node upgrade, validate cluster health with `cluster show`, check for any new health alerts, and confirm SnapMirror resumes
-7. Post-upgrade, send a closing AutoSupport and review EMS logs for unexpected events
+
+| Step | Action |
+|---|---|
+| 1 | Check the NetApp Interoperability Matrix Tool (IMT) and ONTAP upgrade advisor in Active IQ / BlueXP to identify the recommended target release and any required intermediate versions |
+| 2 | Review the target release notes for known issues, deprecated features, and any manual steps required before or after the upgrade |
+| 3 | Confirm all SnapMirror relationships are healthy and aggregates are below 90% capacity before beginning |
+| 4 | Take an AutoSupport message to mark the start of the maintenance window: `autosupport invoke -node * -type all -message "Starting ONTAP upgrade"` |
+| 5 | Use the automated non-disruptive upgrade (ANDU) path in System Manager or CLI (`system image update-package`) to upgrade one HA pair at a time; verify takeover/giveback completes cleanly after each node |
+| 6 | After each node upgrade, validate cluster health with `cluster show`, check for any new health alerts, and confirm SnapMirror resumes |
+| 7 | Post-upgrade, send a closing AutoSupport and review EMS logs for unexpected events |
 
 ## Best Practices
 

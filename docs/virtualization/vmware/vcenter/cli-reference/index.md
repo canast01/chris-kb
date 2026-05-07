@@ -4,6 +4,20 @@ VMware PowerCLI is the official PowerShell module for managing vSphere from the 
 
 > Install with `Install-Module VMware.PowerCLI -Scope CurrentUser`. Run `Connect-VIServer -Server <vcenter>` before any other commands.
 
+```mermaid
+flowchart LR
+    DCLI["DCLI)"]
+    DCLI --> S0["Connection and Session"]
+    DCLI --> S1["Hosts"]
+    DCLI --> S2["Clusters"]
+    DCLI --> S3["Virtual Machines"]
+    DCLI --> S4["Snapshots"]
+    DCLI --> S5["Datastores"]
+    DCLI --> S6["Networks"]
+    DCLI --> S7["Alarms and Events"]
+    DCLI --> S8["Permissions and Roles"]
+```
+
 ---
 
 

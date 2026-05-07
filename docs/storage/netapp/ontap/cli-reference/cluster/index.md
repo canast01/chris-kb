@@ -2,6 +2,13 @@
 
 > Part of the [NetApp ONTAP CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Nodes["Nodes"]
+    Nodes --> S0["Cluster"]
+    Nodes --> S1["Nodes"]
+```
+
 ---
 
 ## Cluster

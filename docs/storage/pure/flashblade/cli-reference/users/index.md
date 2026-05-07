@@ -2,6 +2,18 @@
 
 > Part of the [Pure FlashBlade CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Authentication["Authentication"]
+    Authentication --> S0["Local Admin Users"]
+    Authentication --> S1["Roles"]
+    Authentication --> S2["API Tokens"]
+    Authentication --> S3["Directory Services (LDAP / Active Directory)"]
+    Authentication --> S4["Multi-Factor Authentication"]
+    Authentication --> S5["Session Management"]
+    Authentication --> S6["Audit Log"]
+```
+
 ## Local Admin Users
 
 ```bash

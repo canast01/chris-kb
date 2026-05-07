@@ -6,14 +6,15 @@
 
 ## Daily Checks
 
-Run these checks on hosts running PowerPath to confirm multipath health, path counts, and load balancing policy are correct.
 
-- [ ] Run `powermt display dev=all` on each managed host and scan for any paths in `dead` or `unlic` state — a dead path requires investigation before the next maintenance window
-- [ ] Verify all pseudo devices show the expected number of active paths — compare against the site baseline (typically 4 or 8 paths per device depending on array and fabric redundancy)
-- [ ] Confirm the load balancing policy is `CLAROpt` (co) for all Dell/EMC array classes: check the Policy field in `powermt display dev=all` output
-- [ ] Check for devices in `pseudo` state with no backing paths — this indicates a LUN that was removed at the array but not yet cleaned up on the host
-- [ ] Review host OS multipath logs for path flaps: `/var/log/messages` (Linux) or Windows Event Viewer (System log) — recurring path flap events indicate a marginal cable, SFP, or switch port
-- [ ] Run `powermt check_registration` on recently upgraded or newly deployed hosts to confirm the license is valid and not expired
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `powermt display dev=all` on each managed host and scan for an | `powermt display dev=all` | a dead path requires investigation before the next maintenance window |
+| [ ] Verify all pseudo devices show the expected number of active paths |  | compare against the site baseline (typically 4 or 8 paths per device depending on array and fabric redundancy) |
+| [ ] Confirm the load balancing policy is `CLAROpt` (co) for all Dell/EMC array classes | `CLAROpt` |  |
+| [ ] Check for devices in `pseudo` state with no backing paths | `pseudo` | this indicates a LUN that was removed at the array but not yet cleaned up on the host |
+| [ ] Review host OS multipath logs for path flaps | `/var/log/messages` | recurring path flap events indicate a marginal cable, SFP, or switch port |
+| [ ] Run `powermt check_registration` on recently upgraded or newly dep | `powermt check_registration` |  |
 
 ## Health Check
 

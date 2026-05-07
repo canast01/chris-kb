@@ -6,10 +6,13 @@
 
 ## Daily Checks
 
-- [ ] Check if FOD burst is currently active on any array — burst should only be active if a planned workload increase justified it
-- [ ] Review what percentage of the burst ceiling is consumed — flag if above 80% of the burst allowance
-- [ ] Confirm whether the current month's consumption report is available in the Dell APEX console or from the Dell account team
-- [ ] Check that base capacity allocation has not changed unexpectedly
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Check if FOD burst is currently active on any array |  | burst should only be active if a planned workload increase justified it |
+| [ ] Review what percentage of the burst ceiling is consumed |  | flag if above 80% of the burst allowance |
+| [ ] Confirm whether the current month's consumption report is availabl |  |  |
+| [ ] Check that base capacity allocation has not changed unexpectedly |  |  |
 
 ## Health Check
 

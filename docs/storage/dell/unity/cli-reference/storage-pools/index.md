@@ -2,6 +2,18 @@
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
 
+```mermaid
+flowchart LR
+    Storage_Pools["Storage Pools"]
+    Storage_Pools --> S0["List Pools"]
+    Storage_Pools --> S1["Capacity Monitoring"]
+    Storage_Pools --> S2["Create a Pool"]
+    Storage_Pools --> S3["Expand a Pool"]
+    Storage_Pools --> S4["Modify and Delete"]
+    Storage_Pools --> S5["RAID Types"]
+    Storage_Pools --> S6["Pool Health States"]
+```
+
 ## List Pools
 
 ```bash

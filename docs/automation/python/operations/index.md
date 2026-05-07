@@ -6,10 +6,13 @@
 
 ## Daily Checks
 
-- [ ] Confirm all scheduled Python automation jobs ran successfully in the last 24 hours — check cron logs, output files, or email alert summaries
-- [ ] Review any error output or non-zero exit codes from yesterday's runs (check `/var/log/cron`, job-specific log files, or email delivery)
-- [ ] Confirm API tokens used by production scripts have not expired (check token expiry dates in the secrets store or config files)
-- [ ] Review any scripts that interact with external APIs — confirm the API endpoints are reachable and returning expected responses
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Confirm all scheduled Python automation jobs ran successfully in t |  | check cron logs, output files, or email alert summaries |
+| [ ] Review any error output or non-zero exit codes from yesterday's ru | `/var/log/cron` |  |
+| [ ] Confirm API tokens used by production scripts have not expired (ch |  |  |
+| [ ] Review any scripts that interact with external APIs |  | confirm the API endpoints are reachable and returning expected responses |
 
 ## Health Check
 

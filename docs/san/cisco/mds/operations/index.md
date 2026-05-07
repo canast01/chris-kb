@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `show interface brief` — confirm all FC interfaces are in connected/up state, flag any that are down or errDisabled
-- [ ] Run `show flogi database` — verify all expected hosts and storage devices have logged in, note any missing entries
-- [ ] Run `show topology` — confirm fabric topology matches expected, no unexpected ISL changes
-- [ ] Run `show zoneset active vsan all` — verify active zone configuration matches expected across all VSANs
-- [ ] Run `show logging last 50` — review recent syslog entries for critical or error-level messages
-- [ ] Run `show environment` — confirm power supplies, fans, and temperature sensors are all normal
-- [ ] Run `show version` — verify NX-OS version is consistent across all switches in the fabric
-- [ ] Check Nexus Dashboard or DCNM for any active alarms or fabric health events
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `show interface brief` | `show interface brief` | confirm all FC interfaces are in connected/up state, flag any that are down or errDisabled |
+| [ ] Run `show flogi database` | `show flogi database` | verify all expected hosts and storage devices have logged in, note any missing entries |
+| [ ] Run `show topology` | `show topology` | confirm fabric topology matches expected, no unexpected ISL changes |
+| [ ] Run `show zoneset active vsan all` | `show zoneset active vsan all` | verify active zone configuration matches expected across all VSANs |
+| [ ] Run `show logging last 50` | `show logging last 50` | review recent syslog entries for critical or error-level messages |
+| [ ] Run `show environment` | `show environment` | confirm power supplies, fans, and temperature sensors are all normal |
+| [ ] Run `show version` | `show version` | verify NX-OS version is consistent across all switches in the fabric |
+| [ ] Check Nexus Dashboard or DCNM for any active alarms or fabric heal |  |  |
 
 ## Health Check
 

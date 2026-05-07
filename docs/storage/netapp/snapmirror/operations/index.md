@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Run `snapmirror show -fields lag-time,healthy,state` — confirm all relationships are healthy with lag within RPO thresholds
-- [ ] Flag any relationship with `healthy: false` — review the reason field for root cause
-- [ ] Flag any relationship with lag exceeding the defined RPO (typically 1 hour for async, 0 for sync)
-- [ ] Check for relationships in `broken-off` state from DR tests that have not been resynced: `snapmirror show -relationship-status broken-off`
-- [ ] Check XDP (SnapVault) relationships are up to date: `snapmirror show -type XDP -fields lag-time,healthy`
-- [ ] Verify transfer schedules are running as expected: `snapmirror show -fields schedule,last-transfer-end-timestamp`
-- [ ] For SMBC/AutomatedFailOver: verify mediator connectivity and pod state are healthy
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `snapmirror show -fields lag-time,healthy,state` | `snapmirror show -fields lag-time,healthy,state` | confirm all relationships are healthy with lag within RPO thresholds |
+| [ ] Flag any relationship with `healthy | `healthy: false` | review the reason field for root cause |
+| [ ] Flag any relationship with lag exceeding the defined RPO (typicall |  |  |
+| [ ] Check for relationships in `broken-off` state from DR tests that have not been resynced | `snapmirror show -relationship-status broken-off` |  |
+| [ ] Check XDP (SnapVault) relationships are up to date | `snapmirror show -type XDP -fields lag-time,healthy` |  |
+| [ ] Verify transfer schedules are running as expected | `snapmirror show -fields schedule,last-transfer-end-timestamp` |  |
+| [ ] For SMBC/AutomatedFailOver |  |  |
 
 ## Health Check
 

@@ -4,6 +4,18 @@
 
 Pure FlashBlade supports asynchronous replication (snapshot-based) and ActiveDR (near-synchronous) for NFS/SMB file replication.
 
+```mermaid
+flowchart LR
+    Replication__ActiveD["Replication (ActiveD"]
+    Replication__ActiveD --> S0["Remote Array (Replication Target)"]
+    Replication__ActiveD --> S1["File System Replica Links"]
+    Replication__ActiveD --> S2["Replication Status"]
+    Replication__ActiveD --> S3["Pause and Resume"]
+    Replication__ActiveD --> S4["Delete a Replica Link"]
+    Replication__ActiveD --> S5["Monitoring Lag"]
+    Replication__ActiveD --> S6["Object Store Replication (Buckets)"]
+```
+
 ## Remote Array (Replication Target)
 
 ```bash

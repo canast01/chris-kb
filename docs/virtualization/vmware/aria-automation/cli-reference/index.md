@@ -1,5 +1,15 @@
 # Aria Automation — CLI Reference
 
+```mermaid
+flowchart LR
+    N["—"]
+    N --> S0["vracli (Appliance CLI)"]
+    N --> S1["Kubernetes (On-Premises Appliance)"]
+    N --> S2["REST API"]
+    N --> S3["PowerShell (PowervRA Module)"]
+    N --> S4["Useful Log Paths"]
+```
+
 ## vracli (Appliance CLI)
 
 SSH to the Aria Automation appliance and use `vracli` for appliance-level management.

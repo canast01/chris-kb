@@ -2,6 +2,19 @@
 
 > Part of the Brocade Fabric OS CLI Reference.
 
+```mermaid
+flowchart LR
+    Identity["Identity"]
+    Identity --> S0["Switch Identity and Overview"]
+    Identity --> S1["Health Status"]
+    Identity --> S2["Firmware Version"]
+    Identity --> S3["Fan, Power, Temperature"]
+    Identity --> S4["Uptime and System Stats"]
+    Identity --> S5["SNMP and Syslog"]
+    Identity --> S6["Pre-Change Baseline"]
+    Identity --> S7["Common Issues"]
+```
+
 ## Switch Identity & Overview
 
 ```bash

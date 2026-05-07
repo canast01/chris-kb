@@ -2,6 +2,17 @@
 
 > Part of the [ECS](../) reference.
 
+```mermaid
+flowchart LR
+    ECS["ECS"]
+    ECS --> S0["Quick-Reference Command Table"]
+    ECS --> S1["ECS Management Shell (ecscli)"]
+    ECS --> S2["S3 API (aws cli / s3cmd)"]
+    ECS --> S3["Object Store Admin API (curl)"]
+    ECS --> S4["System CLI (SSH — Node-Level Access)"]
+    ECS --> S5["Common Troubleshooting Commands"]
+```
+
 ---
 
 ECS administration is split across three interfaces: the **ECS Management Shell** (`ecscli`), the **ECS Management REST API** (port 4443), and the **S3-compatible object API** (port 9020 HTTP / 9021 HTTPS). For system-level diagnostics, SSH access to individual nodes is also available.

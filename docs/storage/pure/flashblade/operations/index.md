@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Run `purefb alert list` — review all active alerts; flag any hardware, capacity, or replication warnings
-- [ ] Run `purefb blade list` — confirm all blades are in `healthy` state; flag any `failed` or `missing` blades
-- [ ] Run `purefb hardware list` — confirm all hardware components (power supplies, fans, fabric modules) are healthy
-- [ ] Run `purefb filesystem list` — review filesystem utilization; flag any filesystem above 80% of provisioned limit
-- [ ] Run `purefb bucket list` — check S3 bucket count and data growth trends
-- [ ] Run `purefb replication list` — confirm all ActiveDR links are in `active` status with lag within RPO
-- [ ] Check Pure1 portal for capacity growth forecasts, anomalies, and hardware health insights
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `purefb alert list` | `purefb alert list` | review all active alerts; flag any hardware, capacity, or replication warnings |
+| [ ] Run `purefb blade list` | `purefb blade list` | confirm all blades are in `healthy` state; flag any `failed` or `missing` blades |
+| [ ] Run `purefb hardware list` | `purefb hardware list` | confirm all hardware components (power supplies, fans, fabric modules) are healthy |
+| [ ] Run `purefb filesystem list` | `purefb filesystem list` | review filesystem utilization; flag any filesystem above 80% of provisioned limit |
+| [ ] Run `purefb bucket list` | `purefb bucket list` | check S3 bucket count and data growth trends |
+| [ ] Run `purefb replication list` | `purefb replication list` | confirm all ActiveDR links are in `active` status with lag within RPO |
+| [ ] Check Pure1 portal for capacity growth forecasts, anomalies, and h |  |  |
 
 ## Health Check
 

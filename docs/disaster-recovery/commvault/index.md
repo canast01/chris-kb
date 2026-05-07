@@ -57,11 +57,14 @@ Commvault provides enterprise backup, recovery, replication, archive, and data p
 
 ## Daily Checks
 
-- Review failed jobs
-- Check storage policy capacity
-- Confirm client connectivity
-- Validate deduplication database health
-- Review restore readiness
+
+| Check | Command | Notes |
+|---|---|---|
+| Review failed jobs |  |  |
+| Check storage policy capacity |  |  |
+| Confirm client connectivity |  |  |
+| Validate deduplication database health |  |  |
+| Review restore readiness |  |  |
 
 ## Health Commands
 

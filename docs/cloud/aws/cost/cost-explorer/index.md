@@ -6,19 +6,25 @@ AWS Cost Explorer is a core cloud infrastructure service used for production ope
 
 ## Daily Checks
 
-- Review service health
-- Check active alerts
-- Validate access permissions
-- Confirm backup or recovery coverage where applicable
-- Review recent configuration changes
+
+| Check | Command | Notes |
+|---|---|---|
+| Review service health |  |  |
+| Check active alerts |  |  |
+| Validate access permissions |  |  |
+| Confirm backup or recovery coverage where applicable |  |  |
+| Review recent configuration changes |  |  |
 
 ## Operational Tasks
 
-- Confirm resource status
-- Review logs and metrics
-- Validate security configuration
-- Check cost or capacity trends
-- Document changes
+
+| Task | Command |
+|---|---|
+| Confirm resource status |  |
+| Review logs and metrics |  |
+| Validate security configuration |  |
+| Check cost or capacity trends |  |
+| Document changes |  |
 
 ## Common Issues
 

@@ -6,10 +6,13 @@
 
 ## Daily Checks
 
-- [ ] Review current COD utilization vs licensed capacity using SYMCLI or Unisphere — confirm no unexpected consumption increase
-- [ ] Confirm no new COD activations have occurred without an associated approved change ticket
-- [ ] Check system capacity headroom — flag if utilized capacity exceeds 80% of licensed capacity
-- [ ] Verify Unisphere connectivity to Dell (required for COD activation requests)
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Review current COD utilization vs licensed capacity using SYMCLI o |  | confirm no unexpected consumption increase |
+| [ ] Confirm no new COD activations have occurred without an associated |  |  |
+| [ ] Check system capacity headroom |  | flag if utilized capacity exceeds 80% of licensed capacity |
+| [ ] Verify Unisphere connectivity to Dell (required for COD activation |  |  |
 
 ## Health Check
 

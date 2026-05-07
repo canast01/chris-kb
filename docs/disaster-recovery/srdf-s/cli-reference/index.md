@@ -2,6 +2,17 @@
 
 All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify `-g <group>` to scope operations to the correct SRDF group and `-sid <sid>` to target the correct array.
 
+```mermaid
+flowchart LR
+    SRDF_S["SRDF/S"]
+    SRDF_S --> S0["Pair State and Health"]
+    SRDF_S --> S1["Device Groups"]
+    SRDF_S --> S2["Establish and Suspend"]
+    SRDF_S --> S3["Failover and Failback"]
+    SRDF_S --> S4["Swap and Metro Operations"]
+    SRDF_S --> S5["Common Health Check Sequence"]
+```
+
 ---
 
 ## Pair State & Health

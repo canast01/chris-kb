@@ -2,6 +2,16 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    FC["FC)"]
+    FC --> S0["Fibre Channel"]
+    FC --> S1["iSCSI"]
+    FC --> S2["Storage Paths and Multipathing"]
+    FC --> S3["LUN and Device Info"]
+    FC --> S4["Troubleshooting"]
+```
+
 ## Fibre Channel
 
 ```bash

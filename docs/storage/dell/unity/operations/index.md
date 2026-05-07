@@ -6,16 +6,17 @@
 
 ## Daily Checks
 
-Run these checks each morning to confirm the Unity array, both SPs, pools, and replication sessions are healthy.
 
-- [ ] Run `uemcli /env/health show -filter "health.value ne OK"` — any non-OK result requires immediate investigation before proceeding with other work
-- [ ] Check active alerts: `uemcli /sys/alert show` — triage by severity; acknowledge alerts that have been resolved to keep the alert list clean
-- [ ] Check pool capacity: `uemcli /stor/pool show -detail` — alert if any pool is above 80% consumed or over-subscribed
-- [ ] Verify both SPs are Active: `uemcli /env/sp show` — SP A and SP B should both report `Active`; a single SP active indicates a failover has occurred
-- [ ] Check replication sessions: `uemcli /rep/session show` — all sessions should show `Active` state; investigate any session in `Error`, `Paused`, or `Interrupted` state
-- [ ] Check disk health: `uemcli /stor/disk show` — confirm no disks in `Faulted` or `Degraded` state
-- [ ] Review snapshot capacity consumption: `uemcli /stor/snap show` — confirm snapshots are not consuming unexpected pool space
-- [ ] Review Unisphere Dashboard for any threshold warnings or capacity alerts not yet surfaced as active alerts
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `uemcli /env/health show -filter "health.value ne OK"` | `uemcli /env/health show -filter "health.value ne OK"` | any non-OK result requires immediate investigation before proceeding with other work |
+| [ ] Check active alerts | `uemcli /sys/alert show` | triage by severity; acknowledge alerts that have been resolved to keep the alert list clean |
+| [ ] Check pool capacity | `uemcli /stor/pool show -detail` | alert if any pool is above 80% consumed or over-subscribed |
+| [ ] Verify both SPs are Active | `uemcli /env/sp show` | SP A and SP B should both report `Active`; a single SP active indicates a failover has occurred |
+| [ ] Check replication sessions | `uemcli /rep/session show` | all sessions should show `Active` state; investigate any session in `Error`, `Paused`, or `Interrupted` state |
+| [ ] Check disk health | `uemcli /stor/disk show` | confirm no disks in `Faulted` or `Degraded` state |
+| [ ] Review snapshot capacity consumption | `uemcli /stor/snap show` | confirm snapshots are not consuming unexpected pool space |
+| [ ] Review Unisphere Dashboard for any threshold warnings or capacity |  |  |
 
 ## Health Check
 

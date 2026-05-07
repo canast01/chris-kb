@@ -2,6 +2,18 @@
 
 Veeam is managed via the `Veeam.Backup.PowerShell` module, loaded automatically in the Veeam PowerShell Console on the Backup Server. For remote execution, load it with `Add-PSSnapin VeeamPSSnapIn` then `Connect-VBRServer -Server <backup_server>`.
 
+```mermaid
+flowchart LR
+    Veeam["Veeam"]
+    Veeam --> S0["Connection"]
+    Veeam --> S1["Jobs"]
+    Veeam --> S2["Sessions and History"]
+    Veeam --> S3["Restore Points"]
+    Veeam --> S4["VM Restore"]
+    Veeam --> S5["Infrastructure"]
+    Veeam --> S6["Configuration Backup"]
+```
+
 ---
 
 ## Connection

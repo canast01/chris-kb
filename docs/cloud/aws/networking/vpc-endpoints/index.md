@@ -10,10 +10,13 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Daily Checks
 
-- Confirm service health.
-- Review alerts.
-- Check recent changes.
-- Confirm capacity and performance are within normal range.
+
+| Check | Command | Notes |
+|---|---|---|
+| Confirm service health. |  |  |
+| Review alerts. |  |  |
+| Check recent changes. |  |  |
+| Confirm capacity and performance are within normal range. |  |  |
 
 ## Health Commands
 
@@ -30,10 +33,13 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-- Review current configuration.
-- Validate dependencies.
-- Record changes.
-- Confirm monitoring coverage.
+
+| Task | Command |
+|---|---|
+| Review current configuration. |  |
+| Validate dependencies. |  |
+| Record changes. |  |
+| Confirm monitoring coverage. |  |
 
 ## Upgrade Notes
 

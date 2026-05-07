@@ -2,6 +2,18 @@
 
 > Part of the NetApp ONTAP CLI Reference.
 
+```mermaid
+flowchart LR
+    NFS["NFS"]
+    NFS --> S0["NFS Service"]
+    NFS --> S1["Export Policies"]
+    NFS --> S2["Export Rules"]
+    NFS --> S3["Assign Policy to Volume"]
+    NFS --> S4["NFS Client Verification"]
+    NFS --> S5["Connected NFS Clients"]
+    NFS --> S6["Common Issues"]
+```
+
 ## NFS Service
 
 ```bash

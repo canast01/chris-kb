@@ -2,6 +2,17 @@
 
 > Part of the NetApp ONTAP CLI Reference.
 
+```mermaid
+flowchart LR
+    SMB["SMB"]
+    SMB --> S0["CIFS Server"]
+    SMB --> S1["Shares"]
+    SMB --> S2["Sessions and Connections"]
+    SMB --> S3["CIFS Server Options"]
+    SMB --> S4["AD Connectivity"]
+    SMB --> S5["Common Issues"]
+```
+
 ## CIFS Server
 
 ```bash

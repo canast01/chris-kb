@@ -69,14 +69,17 @@ NetApp SnapCenter is centralized backup and recovery software that leverages app
 
 ## Daily Checks
 
-- Review backup job results in Jobs → Monitor for any failures or warnings from overnight schedules
-- Confirm all resource groups ran successfully and no jobs are stuck in a queued or running state
-- Check the dashboard for any unprotected resources or resources missing a recent backup
-- Verify SnapVault/SnapMirror relationship health on secondary storage using ONTAP System Manager
-- Review any plugin host connectivity alerts under Settings → Hosts
-- Confirm storage capacity on both primary and secondary ONTAP systems is within threshold
-- Check retention counts — ensure older snapshots are being expired per policy
-- Review audit logs for any unauthorized access or configuration changes
+
+| Check | Command | Notes |
+|---|---|---|
+| Review backup job results in Jobs → Monitor for any failures or warnin |  |  |
+| Confirm all resource groups ran successfully and no jobs are stuck in |  |  |
+| Check the dashboard for any unprotected resources or resources missing |  |  |
+| Verify SnapVault/SnapMirror relationship health on secondary storage u |  |  |
+| Review any plugin host connectivity alerts under Settings → Hosts |  |  |
+| Confirm storage capacity on both primary and secondary ONTAP systems i |  |  |
+| Check retention counts |  | ensure older snapshots are being expired per policy |
+| Review audit logs for any unauthorized access or configuration changes |  |  |
 
 ## Health Commands
 
@@ -113,24 +116,30 @@ Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, Stat
 
 ## Operational Tasks
 
-- Register new plugin hosts via Settings → Hosts → Add and deploy the appropriate plugin package
-- Create backup policies defining snapshot frequency, retention count, and SnapMirror/SnapVault replication options
-- Assign resources (databases, VMs, filesystems) to resource groups and attach backup policies
-- Execute on-demand backups from Resource Groups → Back Up Now for urgent protection requirements
-- Perform granular restores from Jobs → Monitor or Resources → Restore, selecting the desired snapshot point
-- Clone a database or volume from a backup snapshot for dev/test provisioning using the Clone workflow
-- Update plugin packages on registered hosts when upgrading SnapCenter server version
-- Configure RBAC roles to delegate restore and clone operations to application owners without full admin access
+
+| Task | Command |
+|---|---|
+| Register new plugin hosts via Settings → Hosts → Add and deploy the appropriate |  |
+| Create backup policies defining snapshot frequency, retention count, and SnapMir |  |
+| Assign resources (databases, VMs, filesystems) to resource groups and attach bac |  |
+| Execute on-demand backups from Resource Groups → Back Up Now for urgent protecti |  |
+| Perform granular restores from Jobs → Monitor or Resources → Restore, selecting |  |
+| Clone a database or volume from a backup snapshot for dev/test provisioning usin |  |
+| Update plugin packages on registered hosts when upgrading SnapCenter server vers |  |
+| Configure RBAC roles to delegate restore and clone operations to application own |  |
 
 ## Upgrade Notes
 
-1. Review the NetApp Interoperability Matrix Tool (IMT) to confirm the new SnapCenter version is compatible with your ONTAP, OS, and application plugin versions
-2. Take a full backup of the SnapCenter repository database (MySQL) before beginning the upgrade
-3. Upgrade the SnapCenter server first — download the installer from the NetApp Support site and run on the Windows server hosting SnapCenter
-4. After server upgrade, update all host plugin packages via Settings → Hosts → Update Plug-in; plugins must match the server version
-5. Verify all resource groups, policies, and schedules are intact post-upgrade by reviewing the dashboard
-6. Run a manual backup job on a representative resource group to confirm end-to-end functionality
-7. Update SnapCenter PowerShell cmdlets on any automation hosts to the version matching the new server
+
+| Step | Action |
+|---|---|
+| 1 | Review the NetApp Interoperability Matrix Tool (IMT) to confirm the new SnapCenter version is compatible with your ONTAP, OS, and application plugin versions |
+| 2 | Take a full backup of the SnapCenter repository database (MySQL) before beginning the upgrade |
+| 3 | Upgrade the SnapCenter server first — download the installer from the NetApp Support site and run on the Windows server hosting SnapCenter |
+| 4 | After server upgrade, update all host plugin packages via Settings → Hosts → Update Plug-in; plugins must match the server version |
+| 5 | Verify all resource groups, policies, and schedules are intact post-upgrade by reviewing the dashboard |
+| 6 | Run a manual backup job on a representative resource group to confirm end-to-end functionality |
+| 7 | Update SnapCenter PowerShell cmdlets on any automation hosts to the version matching the new server |
 
 ## Best Practices
 

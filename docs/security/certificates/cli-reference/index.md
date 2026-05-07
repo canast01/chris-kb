@@ -2,6 +2,17 @@
 
 Windows certificate operations use `certutil` for verification, revocation, and store management. Linux operations rely on `openssl` for inspection, verification, and TLS connectivity testing. PowerShell provides `Get-ChildItem Cert:\` for the Windows certificate store and `Test-Certificate` for chain validation.
 
+```mermaid
+flowchart LR
+    Certificates["Certificates"]
+    Certificates --> S0["openssl — Inspection"]
+    Certificates --> S1["openssl — Verification"]
+    Certificates --> S2["openssl — TLS Testing"]
+    Certificates --> S3["certutil — Windows"]
+    Certificates --> S4["PowerShell — Windows Certificate Store"]
+    Certificates --> S5["Key and CSR Generation"]
+```
+
 ---
 
 ## openssl — Inspection

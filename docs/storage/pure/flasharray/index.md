@@ -69,14 +69,17 @@ Pure Storage FlashArray is an all-flash block storage platform running Purity//F
 
 ## Daily Checks
 
-- Check active alerts: `purealert list` — resolve any critical or warning alerts before they escalate
-- Review drive health: `puredrive list` — confirm no drives are in `failed` or `recovering` state
-- Review array capacity and data reduction ratio: `purearray list --space`
-- Check ActiveCluster pod replication status: `purepod list --replicating` — confirm pods show `replicating: true`
-- Review recent snapshots and confirm retention policies are expiring older snaps as expected: `puresnap list`
-- Check host and host group connectivity: `purehost list`, `purehgroup list` — confirm expected volume connections
-- Review performance metrics for latency or throughput anomalies: `purearray monitor`
-- Confirm both controllers are healthy and running the same Purity version: `purearray list --controller`
+
+| Check | Command | Notes |
+|---|---|---|
+| Check active alerts | `purealert list` | resolve any critical or warning alerts before they escalate |
+| Review drive health | `puredrive list` | confirm no drives are in `failed` or `recovering` state |
+| Review array capacity and data reduction ratio | `purearray list --space` |  |
+| Check ActiveCluster pod replication status | `purepod list --replicating` | confirm pods show `replicating: true` |
+| Review recent snapshots and confirm retention policies are expiring older snaps as expected | `puresnap list` |  |
+| Check host and host group connectivity | `purehost list` | confirm expected volume connections |
+| Review performance metrics for latency or throughput anomalies | `purearray monitor` |  |
+| Confirm both controllers are healthy and running the same Purity version | `purearray list --controller` |  |
 
 ## Health Commands
 
@@ -131,24 +134,30 @@ purearray monitor
 
 ## Operational Tasks
 
-- Provision a new volume: `purevol create --size <size> <volname>` then connect to host group: `purehgroup addvol --vollist <volname> <hgroupname>`
-- Register a new host and add its initiators: `purehost create <hostname>`, then `purehost setifs --wwn <wwn> <hostname>` (FC) or `--iqn` (iSCSI)
-- Create and stretch an ActiveCluster pod: `purepod create <podname>` on one array, then `purepod stretch --add-array <remote_array> <podname>`
-- Take an on-demand snapshot: `puresnap create --vol <volname> <snapname>`
-- Create a volume clone from snapshot for dev/test: `purevol copy <snapname> <newvolname>`
-- Perform a Purity upgrade: download the upgrade package from Pure Support, stage with `purearray upgrade --check`, then run during a maintenance window
-- Manage admin accounts and API tokens: `pureadmin list`, `pureadmin create`, `pureadmin setattr --role <role> <username>`
-- Review and acknowledge alerts: `purealert list`, then `purealert flag --flagged false <alert_id>` once resolved
+
+| Task | Command |
+|---|---|
+| Provision a new volume | `purevol create --size <size> <volname>`, `purehgroup addvol --vollist <volname> <hgroupname>` |
+| Register a new host and add its initiators | `purehost create <hostname>`, `purehost setifs --wwn <wwn> <hostname>` |
+| Create and stretch an ActiveCluster pod | `purepod create <podname>`, `purepod stretch --add-array <remote_array> <podname>` |
+| Take an on-demand snapshot | `puresnap create --vol <volname> <snapname>` |
+| Create a volume clone from snapshot for dev/test | `purevol copy <snapname> <newvolname>` |
+| Perform a Purity upgrade | `purearray upgrade --check` |
+| Manage admin accounts and API tokens | `pureadmin list`, `pureadmin create` |
+| Review and acknowledge alerts | `purealert list`, `purealert flag --flagged false <alert_id>` |
 
 ## Upgrade Notes
 
-1. Log into Pure1 to review the upgrade readiness report for your array — Pure1 pre-checks compatibility and flags any blockers before you start
-2. Confirm your target Purity version is within the supported N-2 window relative to the current release to maintain support coverage
-3. Verify host multipathing is active and each host has at least two active paths to the array — the NDU process performs a rolling controller restart and hosts with a single path will see an I/O pause
-4. For ActiveCluster environments, confirm both arrays in the pod are healthy and replicating before upgrading; upgrade one array at a time
-5. Download the Purity upgrade image from Pure Support portal and stage it on the array: `purearray upgrade --stage <image>`
-6. Run the pre-upgrade check: `purearray upgrade --check` to validate readiness and identify any warnings
-7. Execute the upgrade during a maintenance window: `purearray upgrade --exec`; monitor progress with `purearray list` until both controllers return to the new version
+
+| Step | Action |
+|---|---|
+| 1 | Log into Pure1 to review the upgrade readiness report for your array — Pure1 pre-checks compatibility and flags any blockers before you start |
+| 2 | Confirm your target Purity version is within the supported N-2 window relative to the current release to maintain support coverage |
+| 3 | Verify host multipathing is active and each host has at least two active paths to the array — the NDU process performs a rolling controller restart and hosts with a single path will see an I/O pause |
+| 4 | For ActiveCluster environments, confirm both arrays in the pod are healthy and replicating before upgrading; upgrade one array at a time |
+| 5 | Download the Purity upgrade image from Pure Support portal and stage it on the array: `purearray upgrade --stage <image>` |
+| 6 | Run the pre-upgrade check: `purearray upgrade --check` to validate readiness and identify any warnings |
+| 7 | Execute the upgrade during a maintenance window: `purearray upgrade --exec`; monitor progress with `purearray list` until both controllers return to the new version |
 
 ## Best Practices
 

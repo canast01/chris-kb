@@ -19,11 +19,14 @@ Veeam provides backup, replication, recovery, and disaster recovery capabilities
 
 ## Daily Checks
 
-- Review failed backup jobs
-- Check repository capacity
-- Confirm restore points exist
-- Validate replication jobs
-- Review backup copy jobs
+
+| Check | Command | Notes |
+|---|---|---|
+| Review failed backup jobs |  |  |
+| Check repository capacity |  |  |
+| Confirm restore points exist |  |  |
+| Validate replication jobs |  |  |
+| Review backup copy jobs |  |  |
 
 ## Health Commands
 

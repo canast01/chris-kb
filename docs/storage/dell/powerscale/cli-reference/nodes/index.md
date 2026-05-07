@@ -2,6 +2,18 @@
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
 
+```mermaid
+flowchart LR
+    Nodes["Nodes"]
+    Nodes --> S0["Node List and Status"]
+    Nodes --> S1["Node Hardware"]
+    Nodes --> S2["Disk States"]
+    Nodes --> S3["Smartfailing a Drive"]
+    Nodes --> S4["Smartfailing a Node"]
+    Nodes --> S5["Node Network"]
+    Nodes --> S6["Node Performance"]
+```
+
 ## Node List and Status
 
 ```bash

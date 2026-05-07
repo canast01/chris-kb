@@ -2,6 +2,19 @@
 
 > Part of the [Pure FlashBlade CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Diagnostics["Diagnostics"]
+    Diagnostics --> S0["Phone Home (Call Home)"]
+    Diagnostics --> S1["Support Connectivity"]
+    Diagnostics --> S2["Log Collection"]
+    Diagnostics --> S3["System Diagnostics"]
+    Diagnostics --> S4["Alerts"]
+    Diagnostics --> S5["Software Version"]
+    Diagnostics --> S6["Connecting to Pure1"]
+    Diagnostics --> S7["Common Support Scenarios"]
+```
+
 ## Phone Home (Call Home)
 
 Pure FlashBlade proactively sends diagnostic data to Pure Support:

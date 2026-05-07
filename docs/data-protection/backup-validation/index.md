@@ -6,9 +6,12 @@ Backup validation ensures recovery capability and data integrity.
 
 ## Daily Checks
 
-- Verify successful backup jobs
-- Confirm restore points exist
-- Check repository capacity
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify successful backup jobs |  |  |
+| Confirm restore points exist |  |  |
+| Check repository capacity |  |  |
 
 ## Health Commands
 

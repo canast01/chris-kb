@@ -2,6 +2,14 @@
 
 Dell AIOps does not provide a dedicated CLI tool. All interaction is via the CloudIQ web portal or CloudIQ REST API. This page documents the key REST API endpoints used for AIOps operations.
 
+```mermaid
+flowchart LR
+    Dell_AIOps["Dell AIOps"]
+    Dell_AIOps --> S0["Key API Endpoints"]
+    Dell_AIOps --> S1["Endpoint Summary"]
+    Dell_AIOps --> S2["Filtering and Pagination"]
+```
+
 ## Authentication
 
 All API requests require an OAuth2 Bearer token obtained via the client credentials flow.

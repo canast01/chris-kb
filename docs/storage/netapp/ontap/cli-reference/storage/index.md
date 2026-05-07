@@ -2,6 +2,15 @@
 
 > Part of the [NetApp ONTAP CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Disks["Disks"]
+    Disks --> S0["Aggregates"]
+    Disks --> S1["Disks"]
+    Disks --> S2["RAID Groups"]
+    Disks --> S3["Shelf and Enclosure"]
+```
+
 ## Aggregates
 
 An aggregate is the physical RAID group that holds one or more volumes.

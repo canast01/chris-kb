@@ -2,6 +2,19 @@
 
 > Part of the Dell PowerPath CLI Reference.
 
+```mermaid
+flowchart LR
+    Policies["Policies"]
+    Policies --> S0["Policy Overview"]
+    Policies --> S1["Available Policies"]
+    Policies --> S2["View Current Policy"]
+    Policies --> S3["Set Policy"]
+    Policies --> S4["Verifying Load Distribution"]
+    Policies --> S5["Recommended Policies by Array"]
+    Policies --> S6["Dynamic Path Prioritization"]
+    Policies --> S7["Troubleshooting Uneven Load"]
+```
+
 ## Policy Overview
 
 PowerPath distributes I/O across available paths using a configurable policy. The right policy depends on the storage array type and workload characteristics.

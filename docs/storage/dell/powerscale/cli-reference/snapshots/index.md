@@ -2,6 +2,19 @@
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
 
+```mermaid
+flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --> S0["List Snapshots"]
+    Snapshots --> S1["Create a Snapshot"]
+    Snapshots --> S2["Delete a Snapshot"]
+    Snapshots --> S3["Restore Files from a Snapshot"]
+    Snapshots --> S4["Snapshot Schedules"]
+    Snapshots --> S5["Snapshot Aliases"]
+    Snapshots --> S6["Snapshot Space Usage"]
+    Snapshots --> S7["Common Issues"]
+```
+
 ## List Snapshots
 
 ```bash

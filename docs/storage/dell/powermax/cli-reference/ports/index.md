@@ -2,6 +2,13 @@
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI).
 
+```mermaid
+flowchart LR
+    Hardware["Hardware"]
+    Hardware --> S0["Ports"]
+    Hardware --> S1["Physical Disks and Hardware"]
+```
+
 ---
 
 ## Ports

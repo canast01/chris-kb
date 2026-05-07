@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `switchshow` — confirm all expected ports are online/active, flag any unexpected offline or faulty ports
-- [ ] Run `fabricshow` — verify fabric membership is stable and the correct switch holds the principal role
-- [ ] Run `islshow` — confirm all ISLs are up and running at expected speed (e.g. 32G)
-- [ ] Run `porterrshow` — review error counters; flag any increments in `enc_in`, `loss_sync`, or `link_fail`
-- [ ] Run `errshow` — scan recent error log entries for hardware or fabric events
-- [ ] Run `cfgshow | head -20` — confirm active zone config name matches expected, no unexpected changes
-- [ ] Verify firmware level is consistent across all switches in the fabric: `version`
-- [ ] Check management platform (DCNM or BNA) for any active alerts or fabric events
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `switchshow` | `switchshow` | confirm all expected ports are online/active, flag any unexpected offline or faulty ports |
+| [ ] Run `fabricshow` | `fabricshow` | verify fabric membership is stable and the correct switch holds the principal role |
+| [ ] Run `islshow` | `islshow` | confirm all ISLs are up and running at expected speed (e.g. 32G) |
+| [ ] Run `porterrshow` | `porterrshow` | review error counters; flag any increments in `enc_in`, `loss_sync`, or `link_fail` |
+| [ ] Run `errshow` | `errshow` | scan recent error log entries for hardware or fabric events |
+| [ ] Run `cfgshow | head -20` | `cfgshow | head -20` | confirm active zone config name matches expected, no unexpected changes |
+| [ ] Verify firmware level is consistent across all switches in the fabric | `version` |  |
+| [ ] Check management platform (DCNM or BNA) for any active alerts or f |  |  |
 
 ## Health Check
 

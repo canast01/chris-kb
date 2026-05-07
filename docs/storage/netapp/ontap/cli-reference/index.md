@@ -4,6 +4,20 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 
 > SSH to the cluster management IP and log in as `admin`. Use `cluster-name::>` as your prompt. Commands that affect a specific SVM typically require `-vserver <svm>`.
 
+```mermaid
+flowchart LR
+    NetApp_ONTAP["NetApp ONTAP"]
+    NetApp_ONTAP --> S0["Cluster and Nodes"]
+    NetApp_ONTAP --> S1["System Health and Events"]
+    NetApp_ONTAP --> S2["Storage — Aggregates and Disks"]
+    NetApp_ONTAP --> S3["Volumes"]
+    NetApp_ONTAP --> S4["Snapshots"]
+    NetApp_ONTAP --> S5["SVMs (Storage Virtual Machines)"]
+    NetApp_ONTAP --> S6["Network"]
+    NetApp_ONTAP --> S7["NFS"]
+    NetApp_ONTAP --> S8["CIFS / SMB"]
+```
+
 ---
 
 

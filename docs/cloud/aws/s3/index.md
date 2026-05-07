@@ -6,11 +6,14 @@ AWS S3 is object storage used for backups, logs, application data, static sites,
 
 ## Daily Checks
 
-- Review bucket access policies
-- Check lifecycle rules
-- Confirm replication status
-- Review storage growth
-- Validate encryption settings
+
+| Check | Command | Notes |
+|---|---|---|
+| Review bucket access policies |  |  |
+| Check lifecycle rules |  |  |
+| Confirm replication status |  |  |
+| Review storage growth |  |  |
+| Validate encryption settings |  |  |
 
 ## Health Commands
 

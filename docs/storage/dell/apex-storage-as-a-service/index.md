@@ -20,11 +20,14 @@ Dell APEX Storage as a Service (STaaS) is a consumption-based storage model wher
 
 ## Daily Checks
 
-- Log in to the APEX Console and review the Dashboard for any active service alerts or infrastructure health warnings
-- Check current committed vs. consumed capacity to confirm usage is within the subscription tier
-- Review the Billing & Usage page for any unexpected burst consumption events
-- Confirm the on-premises infrastructure is connected and reporting telemetry to APEX (APEX requires Secure Connect Gateway connectivity)
-- Review any pending service requests or open incidents in the APEX Console support portal
+
+| Check | Command | Notes |
+|---|---|---|
+| Log in to the APEX Console and review the Dashboard for any active ser |  |  |
+| Check current committed vs. consumed capacity to confirm usage is with |  |  |
+| Review the Billing & Usage page for any unexpected burst consumption e |  |  |
+| Confirm the on-premises infrastructure is connected and reporting tele |  |  |
+| Review any pending service requests or open incidents in the APEX Cons |  |  |
 
 ## Health Commands
 
@@ -64,19 +67,25 @@ curl -s -H "Authorization: Bearer <token>" \
 
 ## Operational Tasks
 
-- Raise a capacity increase request via APEX Console → Subscriptions → Request Capacity Increase
-- Review monthly usage report from APEX Console → Billing & Usage and export for finance reconciliation
-- Add or modify user access to the APEX Console under Administration → Users & Roles
-- Open a support case for hardware or service issues via APEX Console → Support → Create Service Request
-- Download the APEX API specification from the Console developer portal to build custom monitoring integrations
-- Review the underlying platform health (PowerStore/PowerScale/PowerFlex) directly on the on-premises management interfaces if deeper diagnostics are needed
+
+| Task | Command |
+|---|---|
+| Raise a capacity increase request via APEX Console → Subscriptions → Request Cap |  |
+| Review monthly usage report from APEX Console → Billing & Usage and export for f |  |
+| Add or modify user access to the APEX Console under Administration → Users & Rol |  |
+| Open a support case for hardware or service issues via APEX Console → Support → |  |
+| Download the APEX API specification from the Console developer portal to build c |  |
+| Review the underlying platform health (PowerStore/PowerScale/PowerFlex) directly |  |
 
 ## Upgrade Notes
 
-1. Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibility — do not initiate firmware changes on APEX-managed infrastructure without coordination
-2. Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows for upgrades and communicate via the Console
-3. Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface
-4. After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side
+
+| Step | Action |
+|---|---|
+| 1 | Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibility — do not initiate firmware changes on APEX-managed infrastructure without coordination |
+| 2 | Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows for upgrades and communicate via the Console |
+| 3 | Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface |
+| 4 | After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side |
 
 ## Best Practices
 

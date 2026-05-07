@@ -2,6 +2,17 @@
 
 > Part of the Dell PowerPath CLI Reference.
 
+```mermaid
+flowchart LR
+    Sequences["Sequences"]
+    Sequences --> S0["Quick Health Check"]
+    Sequences --> S1["Path Count Per Device"]
+    Sequences --> S2["Configuration Verification"]
+    Sequences --> S3["Service and Driver Status"]
+    Sequences --> S4["Per-Device Detail"]
+    Sequences --> S5["Post-Maintenance Validation"]
+```
+
 ## Quick Health Check
 
 Run this sequence to assess PowerPath state on a Linux host:

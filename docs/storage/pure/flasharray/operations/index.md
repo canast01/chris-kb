@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `purealert list` — review all active alerts; flag any with severity `error` or `warning`
-- [ ] Run `puredrive list` — confirm all drives are in `healthy` state; flag any `failed`, `recovering`, or `missing` drives
-- [ ] Run `purearray list --space` — review array capacity and data reduction ratio; flag if used capacity > 80%
-- [ ] Run `purepod list` — confirm all ActiveCluster pods are `stretched` and online (if configured)
-- [ ] Check Pure1 portal for AI-driven health recommendations, anomalies, or capacity forecasts
-- [ ] Run `purevol list --space` — review volume space usage; flag any volumes approaching their allocated limit
-- [ ] Run `puresnap list` — check snapshot count; flag runaway snapshot growth from misconfigured protection group schedules
-- [ ] Confirm replication to the secondary array is current: `purepod list --replicating` or check replication links in Pure1
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `purealert list` | `purealert list` | review all active alerts; flag any with severity `error` or `warning` |
+| [ ] Run `puredrive list` | `puredrive list` | confirm all drives are in `healthy` state; flag any `failed`, `recovering`, or `missing` drives |
+| [ ] Run `purearray list --space` | `purearray list --space` | review array capacity and data reduction ratio; flag if used capacity > 80% |
+| [ ] Run `purepod list` | `purepod list` | confirm all ActiveCluster pods are `stretched` and online (if configured) |
+| [ ] Check Pure1 portal for AI-driven health recommendations, anomalies |  |  |
+| [ ] Run `purevol list --space` | `purevol list --space` | review volume space usage; flag any volumes approaching their allocated limit |
+| [ ] Run `puresnap list` | `puresnap list` | check snapshot count; flag runaway snapshot growth from misconfigured protection group schedules |
+| [ ] Confirm replication to the secondary array is current | `purepod list --replicating` |  |
 
 ## Health Check
 

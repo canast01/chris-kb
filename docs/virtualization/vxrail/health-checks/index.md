@@ -10,11 +10,14 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Daily Checks
 
-- Review active alerts.
-- Confirm management access.
-- Check capacity, health, and recent task failures.
-- Review backup, replication, or protection status where applicable.
-- Confirm recent changes did not create new warnings.
+
+| Check | Command | Notes |
+|---|---|---|
+| Review active alerts. |  |  |
+| Confirm management access. |  |  |
+| Check capacity, health, and recent task failures. |  |  |
+| Review backup, replication, or protection status where applicable. |  |  |
+| Confirm recent changes did not create new warnings. |  |  |
 
 ## Health Commands
 
@@ -33,11 +36,14 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Operational Tasks
 
-- Check service health.
-- Review inventory and ownership.
-- Validate monitoring coverage.
-- Confirm backup or recovery posture.
-- Document changes after maintenance work.
+
+| Task | Command |
+|---|---|
+| Check service health. |  |
+| Review inventory and ownership. |  |
+| Validate monitoring coverage. |  |
+| Confirm backup or recovery posture. |  |
+| Document changes after maintenance work. |  |
 
 ## Upgrade Notes
 

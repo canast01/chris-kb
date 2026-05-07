@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Apply standard FlashArray daily checks: `purealert list`, `puredrive list`, `purearray list --space` — Evergreen is a subscription model; the underlying FlashArray or FlashBlade operations apply
-- [ ] Run `purearray list --hardware` — confirm all hardware components are healthy
-- [ ] Run `purepod list` — confirm ActiveCluster pods are stretched and replicating (if configured)
-- [ ] Verify subscription status is current in the Pure1 portal: no expiry warnings or renewal actions outstanding
-- [ ] Confirm Pure1 phone-home (support tunnel) is active — Pure Support visibility depends on continuous telemetry
-- [ ] Check Pure Support contract status — confirm support is active and the renewal date is tracked
-- [ ] Review Pure1 for any proactive recommendations or upgrade eligibility notifications from Pure
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Apply standard FlashArray daily checks | `purealert list` | Evergreen is a subscription model; the underlying FlashArray or FlashBlade operations apply |
+| [ ] Run `purearray list --hardware` | `purearray list --hardware` | confirm all hardware components are healthy |
+| [ ] Run `purepod list` | `purepod list` | confirm ActiveCluster pods are stretched and replicating (if configured) |
+| [ ] Verify subscription status is current in the Pure1 portal |  |  |
+| [ ] Confirm Pure1 phone-home (support tunnel) is active |  | Pure Support visibility depends on continuous telemetry |
+| [ ] Check Pure Support contract status |  | confirm support is active and the renewal date is tracked |
+| [ ] Review Pure1 for any proactive recommendations or upgrade eligibil |  |  |
 
 ## Health Check
 

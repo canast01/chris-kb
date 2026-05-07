@@ -2,6 +2,17 @@
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). Run `symcfg discover` when a new array is added to the environment or after a network change that affects Solutions Enabler connectivity.
 
+```mermaid
+flowchart LR
+    Info["Info"]
+    Info --> S0["Array Discovery"]
+    Info --> S1["Directors and Front-End Ports"]
+    Info --> S2["Cache and Memory"]
+    Info --> S3["Array Software and Licenses"]
+    Info --> S4["SymmWin / Gatekeeper"]
+    Info --> S5["Quick Reference"]
+```
+
 ## Array Discovery
 
 ```bash

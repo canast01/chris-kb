@@ -10,12 +10,15 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Daily Checks
 
-- Review VxRail Manager health.
-- Check vCenter and ESXi host health.
-- Review vSAN health.
-- Confirm no active failed tasks.
-- Review hardware alerts.
-- Check recent lifecycle or support events.
+
+| Check | Command | Notes |
+|---|---|---|
+| Review VxRail Manager health. |  |  |
+| Check vCenter and ESXi host health. |  |  |
+| Review vSAN health. |  |  |
+| Confirm no active failed tasks. |  |  |
+| Review hardware alerts. |  |  |
+| Check recent lifecycle or support events. |  |  |
 
 ## Health Commands
 
@@ -35,12 +38,15 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-- Review cluster health.
-- Validate node status.
-- Confirm support connectivity.
-- Check upgrade readiness.
-- Collect support evidence.
-- Document changes and follow-up items.
+
+| Task | Command |
+|---|---|
+| Review cluster health. |  |
+| Validate node status. |  |
+| Confirm support connectivity. |  |
+| Check upgrade readiness. |  |
+| Collect support evidence. |  |
+| Document changes and follow-up items. |  |
 
 ## Upgrade Notes
 

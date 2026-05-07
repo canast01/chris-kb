@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `cluster show` — verify all nodes are healthy and HA pairs are configured
-- [ ] Run `storage disk show -broken` — confirm zero broken or failed disks
-- [ ] Run `storage aggregate show -fields used-percent` — flag any aggregate above 85% used
-- [ ] Run `snapmirror show -fields lag-time,healthy` — confirm all relationships healthy and lag within RPO
-- [ ] Run `system health alert show` — review and action any active health alerts
-- [ ] Run `storage failover show` — confirm HA takeover state is normal on all nodes
-- [ ] Run `volume show -fields volume,state,percent-used` — confirm all volumes are online and below threshold
-- [ ] Run `event log show -messagename callhome.*` — check for any callhome EMS events since last check
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `cluster show` | `cluster show` | verify all nodes are healthy and HA pairs are configured |
+| [ ] Run `storage disk show -broken` | `storage disk show -broken` | confirm zero broken or failed disks |
+| [ ] Run `storage aggregate show -fields used-percent` | `storage aggregate show -fields used-percent` | flag any aggregate above 85% used |
+| [ ] Run `snapmirror show -fields lag-time,healthy` | `snapmirror show -fields lag-time,healthy` | confirm all relationships healthy and lag within RPO |
+| [ ] Run `system health alert show` | `system health alert show` | review and action any active health alerts |
+| [ ] Run `storage failover show` | `storage failover show` | confirm HA takeover state is normal on all nodes |
+| [ ] Run `volume show -fields volume,state,percent-used` | `volume show -fields volume,state,percent-used` | confirm all volumes are online and below threshold |
+| [ ] Run `event log show -messagename callhome.*` | `event log show -messagename callhome.*` | check for any callhome EMS events since last check |
 
 ## Health Check
 

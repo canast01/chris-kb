@@ -13,9 +13,12 @@ Data governance defines how data is managed, protected, and controlled across sy
 
 ## Daily Checks
 
-- Review data access logs
-- Confirm policy compliance
-- Validate audit records
+
+| Check | Command | Notes |
+|---|---|---|
+| Review data access logs |  |  |
+| Confirm policy compliance |  |  |
+| Validate audit records |  |  |
 
 ## Workflow
 

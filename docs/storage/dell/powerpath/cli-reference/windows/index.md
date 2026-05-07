@@ -4,6 +4,20 @@
 
 PowerPath for Windows (PowerPath/VE for Windows in virtual environments) installs as a Windows service and driver, manageable via `powermt` in PowerShell or CMD.
 
+```mermaid
+flowchart LR
+    Windows_PowerPath["Windows PowerPath"]
+    Windows_PowerPath --> S0["Basic Status"]
+    Windows_PowerPath --> S1["Health and Recovery"]
+    Windows_PowerPath --> S2["Save Configuration"]
+    Windows_PowerPath --> S3["Service Management"]
+    Windows_PowerPath --> S4["Device Management"]
+    Windows_PowerPath --> S5["Policy Configuration"]
+    Windows_PowerPath --> S6["Event Log Integration"]
+    Windows_PowerPath --> S7["Disk Management Integration"]
+    Windows_PowerPath --> S8["Common Issues"]
+```
+
 ## Basic Status
 
 ```powershell

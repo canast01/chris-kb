@@ -38,12 +38,15 @@ NetApp Keystone (Keystone STaaS) is a storage-as-a-service subscription offering
 
 ## Daily Checks
 
-- Verify Keystone Collector service is running and last reported telemetry within the expected interval
-- Review current consumed capacity vs. committed tier per service level in the BlueXP Keystone dashboard
-- Check whether burst capacity is active and how close burst consumption is to the burst limit
-- Confirm no service-level SLA breaches are flagged (availability, latency, IOPS/TB)
-- Validate that recently provisioned volumes are assigned to the correct performance service level via AQoS policy in ONTAP
-- Review any open support tickets or notifications from NetApp regarding the Keystone subscription
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify Keystone Collector service is running and last reported telemet |  |  |
+| Review current consumed capacity vs. committed tier per service level |  |  |
+| Check whether burst capacity is active and how close burst consumption |  |  |
+| Confirm no service-level SLA breaches are flagged (availability, laten |  |  |
+| Validate that recently provisioned volumes are assigned to the correct |  |  |
+| Review any open support tickets or notifications from NetApp regarding |  |  |
 
 ## Health Commands
 
@@ -80,23 +83,29 @@ volume show -fields size,used,percent-used
 
 ## Operational Tasks
 
-- Monitor current and trended capacity consumption per service level from the BlueXP Keystone dashboard or digital wallet
-- Request a subscription amendment (capacity increase or service level change) through NetApp sales or the BlueXP portal — upgrades to higher performance tiers are allowed mid-term; downgrades are not
-- Validate new volume provisioning assigns the correct AQoS policy-group (`qos-policy-group`) matching the intended Keystone service level
-- Review and reduce burst usage before the monthly billing close by decommissioning unused volumes or snapshots
-- Update Keystone Collector credentials and software version when notified by NetApp to maintain telemetry continuity
-- Generate and archive monthly consumption reports from BlueXP digital wallet for internal chargeback or showback
-- Coordinate with NetApp to add StorageGRID object capacity tiers to an existing Keystone subscription
+
+| Task | Command |
+|---|---|
+| Monitor current and trended capacity consumption per service level from the Blue |  |
+| Request a subscription amendment (capacity increase or service level change) thr |  |
+| Validate new volume provisioning assigns the correct AQoS policy-group (`qos-pol |  |
+| Review and reduce burst usage before the monthly billing close by decommissionin |  |
+| Update Keystone Collector credentials and software version when notified by NetA |  |
+| Generate and archive monthly consumption reports from BlueXP digital wallet for |  |
+| Coordinate with NetApp to add StorageGRID object capacity tiers to an existing K |  |
 
 ## Upgrade Notes
 
-1. Monitor NetApp release notes for Keystone Collector updates — the Collector is a separate software component from ONTAP and has its own release cadence
-2. Before upgrading the Collector, back up the Collector configuration file and record the current reporting status and last successful telemetry timestamp
-3. Download the new Collector package from the NetApp support site and follow the installation guide for the target OS (Linux RPM/DEB)
-4. After upgrade, confirm the Collector service restarts cleanly with `systemctl status keystone-collector` and that telemetry resumes within the next reporting interval
-5. For ONTAP upgrades on Keystone-managed clusters, follow the standard ONTAP ANDU upgrade path and verify AQoS policy-group assignments are intact post-upgrade with `volume show -fields qos-policy-group`
-6. Notify NetApp Keystone operations team before any major infrastructure change (node additions, aggregate rebuilds) that could affect reported capacity
-7. After any significant change, validate the BlueXP Keystone dashboard reflects accurate consumption within one reporting cycle before closing the maintenance window
+
+| Step | Action |
+|---|---|
+| 1 | Monitor NetApp release notes for Keystone Collector updates — the Collector is a separate software component from ONTAP and has its own release cadence |
+| 2 | Before upgrading the Collector, back up the Collector configuration file and record the current reporting status and last successful telemetry timestamp |
+| 3 | Download the new Collector package from the NetApp support site and follow the installation guide for the target OS (Linux RPM/DEB) |
+| 4 | After upgrade, confirm the Collector service restarts cleanly with `systemctl status keystone-collector` and that telemetry resumes within the next reporting interval |
+| 5 | For ONTAP upgrades on Keystone-managed clusters, follow the standard ONTAP ANDU upgrade path and verify AQoS policy-group assignments are intact post-upgrade with `volume show -fields qos-policy-group` |
+| 6 | Notify NetApp Keystone operations team before any major infrastructure change (node additions, aggregate rebuilds) that could affect reported capacity |
+| 7 | After any significant change, validate the BlueXP Keystone dashboard reflects accurate consumption within one reporting cycle before closing the maintenance window |
 
 ## Best Practices
 

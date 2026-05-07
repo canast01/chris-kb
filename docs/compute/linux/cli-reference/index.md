@@ -2,6 +2,20 @@
 
 Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.
 
+```mermaid
+flowchart LR
+    Linux["Linux"]
+    Linux --> S0["Service Management (systemctl)"]
+    Linux --> S1["Package Management"]
+    Linux --> S2["Process Management"]
+    Linux --> S3["Disk and Filesystem"]
+    Linux --> S4["LVM"]
+    Linux --> S5["Networking"]
+    Linux --> S6["Logging (journalctl)"]
+    Linux --> S7["User and Session Management"]
+    Linux --> S8["Firewall"]
+```
+
 ## Service Management (systemctl)
 
 ```bash

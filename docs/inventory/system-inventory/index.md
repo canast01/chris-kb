@@ -16,9 +16,12 @@ System inventory management tracks servers, storage, network devices, and infras
 
 ## Daily Checks
 
-- Verify inventory records updated
-- Confirm new systems added
-- Validate decommissioned systems removed
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify inventory records updated |  |  |
+| Confirm new systems added |  |  |
+| Validate decommissioned systems removed |  |  |
 
 ## Workflow
 

@@ -4,6 +4,18 @@
 
 MTrees are logical partitions of the Data Domain filesystem. Each MTree has its own quota, replication, and retention settings. All backup data lives under `/data/col1/`.
 
+```mermaid
+flowchart LR
+    Units["Units)"]
+    Units --> S0["List and View MTrees"]
+    Units --> S1["Create and Delete"]
+    Units --> S2["Quotas"]
+    Units --> S3["MTree Retention Lock (Compliance / Enterprise)"]
+    Units --> S4["MTree Replication"]
+    Units --> S5["Capacity Summary"]
+    Units --> S6["Common Operations Table"]
+```
+
 ## List and View MTrees
 
 ```bash

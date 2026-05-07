@@ -6,10 +6,13 @@ Email relay services deliver system alerts, notifications, and automated message
 
 ## Daily Checks
 
-- Verify SMTP service running
-- Check mail queue status
-- Confirm relay permissions
-- Review failed message logs
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify SMTP service running |  |  |
+| Check mail queue status |  |  |
+| Confirm relay permissions |  |  |
+| Review failed message logs |  |  |
 
 ## Health Commands
 

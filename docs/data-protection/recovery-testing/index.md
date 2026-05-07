@@ -13,8 +13,11 @@ Recovery testing confirms systems can be restored after failure.
 
 ## Daily Checks
 
-- Verify scheduled tests completed
-- Confirm recovery procedures documented
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify scheduled tests completed |  |  |
+| Confirm recovery procedures documented |  |  |
 
 ## Workflow
 

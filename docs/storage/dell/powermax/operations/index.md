@@ -6,16 +6,17 @@
 
 ## Daily Checks
 
-Open Unisphere and run the SYMCLI checks below to confirm the array is healthy before the business day starts.
 
-- [ ] Open Unisphere for PowerMax → Dashboard and review the Alerts panel for any active or unacknowledged alerts
-- [ ] Run `symcfg list` to confirm all registered arrays are online and reachable from Solutions Enabler
-- [ ] Check SRDF pair states: `symrdf list -sid XXXX` — all R1/R2 pairs should show `Synchronized` (SRDF/S) or `Consistent` (SRDF/A); investigate any pair showing `Transmit Idle`, `R1 Updated`, or `Suspended`
-- [ ] Check failed or degraded physical drives: `sympd list -sid XXXX -failed` — output should be empty
-- [ ] Review active SnapVX sessions: `symsnap list -sid XXXX` — confirm no device is approaching the 256-snapshot limit; expire stale snaps
-- [ ] Check thin device pool utilisation in Unisphere → Storage → Thin Pools — alert if any pool exceeds 80% consumed
-- [ ] Review Unisphere → Performance → Array for I/O response time and throughput outliers against yesterday's baseline
-- [ ] Confirm CloudIQ shows no critical findings for the array; review any new performance or health recommendations
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Open Unisphere for PowerMax → Dashboard and review the Alerts pane |  |  |
+| [ ] Run `symcfg list` to confirm all registered arrays are online and | `symcfg list` |  |
+| [ ] Check SRDF pair states | `symrdf list -sid XXXX` | all R1/R2 pairs should show `Synchronized` (SRDF/S) or `Consistent` (SRDF/A); investigate any pair showing `Transmit Idle`, `R1 Updated`, or `Suspended` |
+| [ ] Check failed or degraded physical drives | `sympd list -sid XXXX -failed` | output should be empty |
+| [ ] Review active SnapVX sessions | `symsnap list -sid XXXX` | confirm no device is approaching the 256-snapshot limit; expire stale snaps |
+| [ ] Check thin device pool utilisation in Unisphere → Storage → Thin P |  | alert if any pool exceeds 80% consumed |
+| [ ] Review Unisphere → Performance → Array for I/O response time and t |  |  |
+| [ ] Confirm CloudIQ shows no critical findings for the array; review a |  |  |
 
 ## Health Check
 

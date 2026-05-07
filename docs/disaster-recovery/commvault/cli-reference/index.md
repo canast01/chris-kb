@@ -2,6 +2,17 @@
 
 CommVault provides the `qcommand` CLI toolkit installed with CommServe and MediaAgent. The `q*` commands connect to CommServe using OS credentials or an explicit login. The REST API base URL is `https://<CommServeHostname>/webconsole/api/` and requires token-based authentication via `POST /Login`.
 
+```mermaid
+flowchart LR
+    CommVault["CommVault"]
+    CommVault --> S0["Jobs"]
+    CommVault --> S1["Backup Operations"]
+    CommVault --> S2["Restore Operations"]
+    CommVault --> S3["Clients and Policies"]
+    CommVault --> S4["CommServe Maintenance"]
+    CommVault --> S5["REST API"]
+```
+
 ---
 
 ## Authentication

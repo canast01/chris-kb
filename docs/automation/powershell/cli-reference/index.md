@@ -4,6 +4,19 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 > Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires `Install-Module VMware.PowerCLI`.
 
+```mermaid
+flowchart LR
+    PowerShell["PowerShell"]
+    PowerShell --> S0["Core"]
+    PowerShell --> S1["Variables, Output and Pipeline"]
+    PowerShell --> S2["Files and Filesystem"]
+    PowerShell --> S3["Remoting (PSSession)"]
+    PowerShell --> S4["Services and Processes"]
+    PowerShell --> S5["Error Handling"]
+    PowerShell --> S6["VMware PowerCLI"]
+    PowerShell --> S7["Reporting"]
+```
+
 ---
 
 

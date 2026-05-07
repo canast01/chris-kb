@@ -6,10 +6,13 @@
 
 ## Daily Checks
 
-- [ ] Log in to the Dell APEX console ([console.dell.com/apex](https://console.dell.com/apex)) and review the dashboard for any health alerts on APEX storage systems
-- [ ] Check consumed capacity vs contracted capacity — flag if consumed capacity exceeds 80% of the contracted amount
-- [ ] Confirm all APEX systems are showing healthy in CloudIQ (health score >= 80, no CRITICAL alerts)
-- [ ] Confirm no Dell-scheduled maintenance windows are active or pending without prior notification to your team
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Log in to the Dell APEX console ([console.dell.com/apex](https |  |  |
+| [ ] Check consumed capacity vs contracted capacity |  | flag if consumed capacity exceeds 80% of the contracted amount |
+| [ ] Confirm all APEX systems are showing healthy in CloudIQ (health sc |  |  |
+| [ ] Confirm no Dell-scheduled maintenance windows are active or pendin |  |  |
 
 ## Health Check
 

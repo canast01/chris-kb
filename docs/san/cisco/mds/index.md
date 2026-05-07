@@ -39,9 +39,12 @@ Cisco MDS switches provide Fibre Channel connectivity for SAN environments.
 
 ## Daily Checks
 
-- Verify fabric health
-- Check port errors
-- Confirm zoning configuration
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify fabric health |  |  |
+| Check port errors |  |  |
+| Confirm zoning configuration |  |  |
 
 ## Health Commands
 

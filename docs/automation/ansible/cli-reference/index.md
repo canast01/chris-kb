@@ -4,6 +4,17 @@ Ansible is an agentless automation tool — it connects to remote hosts over SSH
 
 > Install with `pip install ansible` or your distro's package manager. Requires SSH access to managed hosts and a valid inventory file.
 
+```mermaid
+flowchart LR
+    Ansible["Ansible"]
+    Ansible --> S0["ansible (Ad-Hoc)"]
+    Ansible --> S1["ansible-playbook"]
+    Ansible --> S2["ansible-inventory"]
+    Ansible --> S3["ansible-galaxy"]
+    Ansible --> S4["ansible-vault"]
+    Ansible --> S5["Tools, Lint and Config"]
+```
+
 ---
 
 

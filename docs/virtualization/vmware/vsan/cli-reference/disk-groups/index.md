@@ -2,6 +2,18 @@
 
 > Part of the [vSAN CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Disk_Groups["Disk Groups"]
+    Disk_Groups --> S0["List Disk Groups and Devices"]
+    Disk_Groups --> S1["Disk and Group Statistics"]
+    Disk_Groups --> S2["Add Disks / Create Disk Group"]
+    Disk_Groups --> S3["Evacuate Before Removal"]
+    Disk_Groups --> S4["Remove a Disk Group"]
+    Disk_Groups --> S5["Disk Group Health"]
+    Disk_Groups --> S6["Disk Group Best Practices"]
+```
+
 ## List Disk Groups and Devices
 
 ```bash

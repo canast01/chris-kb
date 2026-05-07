@@ -2,6 +2,16 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    VMDK["VMDK"]
+    VMDK --> S0["Browse Datastores"]
+    VMDK --> S1["vmkfstools — VMDK Operations"]
+    VMDK --> S2["Datastore Info via vim-cmd"]
+    VMDK --> S3["Snapshot Files"]
+    VMDK --> S4["VMFS Troubleshooting"]
+```
+
 ## Browse Datastores
 
 ```bash

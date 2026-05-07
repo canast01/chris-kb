@@ -25,10 +25,13 @@ NTP keeps infrastructure time synchronized. Time drift can break authentication,
 
 ## Daily Checks
 
-- Confirm time source is reachable
-- Check drift offset
-- Validate domain time hierarchy
-- Review time sync errors
+
+| Check | Command | Notes |
+|---|---|---|
+| Confirm time source is reachable |  |  |
+| Check drift offset |  |  |
+| Validate domain time hierarchy |  |  |
+| Review time sync errors |  |  |
 
 ## Health Commands
 

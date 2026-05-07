@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Check active AWS service health events: `aws health describe-events --filter eventStatusCodes=open`
-- [ ] Review active CloudWatch alarms: `aws cloudwatch describe-alarms --state-value ALARM`
-- [ ] Verify running EC2 instance health: `aws ec2 describe-instance-status --filter Name=instance-state-name,Values=running`
-- [ ] Check RDS instance status: `aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'`
-- [ ] Verify ELB target health: `aws elbv2 describe-target-health --target-group-arn <arn>`
-- [ ] Review AWS Backup job status for the last 24 hours
-- [ ] Check Cost Explorer for unexpected spend spikes vs. prior day/week
-- [ ] Review CloudTrail for unexpected IAM changes or privilege escalations
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Check active AWS service health events | `aws health describe-events --filter eventStatusCodes=open` |  |
+| [ ] Review active CloudWatch alarms | `aws cloudwatch describe-alarms --state-value ALARM` |  |
+| [ ] Verify running EC2 instance health | `aws ec2 describe-instance-status --filter Name=instance-state-name,Values=running` |  |
+| [ ] Check RDS instance status | `aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus]'` |  |
+| [ ] Verify ELB target health | `aws elbv2 describe-target-health --target-group-arn <arn>` |  |
+| [ ] Review AWS Backup job status for the last 24 hours |  |  |
+| [ ] Check Cost Explorer for unexpected spend spikes vs. prior day/week |  |  |
+| [ ] Review CloudTrail for unexpected IAM changes or privilege escalati |  |  |
 
 ## Health Check
 

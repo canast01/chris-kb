@@ -6,16 +6,17 @@
 
 ## Daily Checks
 
-Run these checks on the PowerScale cluster each morning to confirm cluster health, SyncIQ compliance, and capacity headroom.
 
-- [ ] Run `isi status` — confirm all nodes show `ONLINE` and no node is in `SMARTFAIL` or `DOWN` state; note any drive alerts
-- [ ] Run `isi job list` — confirm no active cluster jobs are in `ERROR` or `PAUSED` state; note unusually long-running Restripe or MultiScan jobs
-- [ ] Check SyncIQ policies: `isi sync policies list` — confirm each policy shows `Last Success` with a timestamp within the expected RPO window
-- [ ] Review recent events: `isi event list --limit 20` — triage any CRITICAL or ERROR severity events
-- [ ] Check storage pool capacity: `isi storagepool list` — alert if any pool or tier exceeds 80% used
-- [ ] Check SmartQuota violations: `isi quota quotas list` — look for directories that have exceeded soft or hard thresholds
-- [ ] Review InsightIQ or CloudIQ for performance anomalies — flag any node with sustained CPU utilisation above 85% or latency spikes
-- [ ] Confirm SyncIQ RPO compliance by checking `isi sync reports list --limit 5` for the most recent report per policy and comparing the finish timestamp against the required RPO
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `isi status` | `isi status` | confirm all nodes show `ONLINE` and no node is in `SMARTFAIL` or `DOWN` state; note any drive alerts |
+| [ ] Run `isi job list` | `isi job list` | confirm no active cluster jobs are in `ERROR` or `PAUSED` state; note unusually long-running Restripe or MultiScan jobs |
+| [ ] Check SyncIQ policies | `isi sync policies list` | confirm each policy shows `Last Success` with a timestamp within the expected RPO window |
+| [ ] Review recent events | `isi event list --limit 20` | triage any CRITICAL or ERROR severity events |
+| [ ] Check storage pool capacity | `isi storagepool list` | alert if any pool or tier exceeds 80% used |
+| [ ] Check SmartQuota violations | `isi quota quotas list` | look for directories that have exceeded soft or hard thresholds |
+| [ ] Review InsightIQ or CloudIQ for performance anomalies |  | flag any node with sustained CPU utilisation above 85% or latency spikes |
+| [ ] Confirm SyncIQ RPO compliance by checking `isi sync reports list - | `isi sync reports list --limit 5` |  |
 
 ## Health Check
 

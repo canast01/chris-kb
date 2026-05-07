@@ -2,6 +2,17 @@
 
 > Part of the [NSX-T CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Segments["Segments"]
+    Segments --> S0["Segments (NSX Manager CLI)"]
+    Segments --> S1["Logical Ports (VMs connected to a segment)"]
+    Segments --> S2["Geneve Tunnels (Overlay)"]
+    Segments --> S3["Transport Zones"]
+    Segments --> S4["Segment Troubleshooting"]
+    Segments --> S5["Replication Modes"]
+```
+
 ## Segments (NSX Manager CLI)
 
 ```bash

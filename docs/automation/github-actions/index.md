@@ -15,11 +15,14 @@ GitHub Actions runs CI/CD workflows for validation, builds, publishing, automati
 
 ## Daily Checks
 
-- Review failed workflows
-- Check secrets and variables
-- Validate runner availability
-- Review deployment history
-- Confirm branch protection rules
+
+| Check | Command | Notes |
+|---|---|---|
+| Review failed workflows |  |  |
+| Check secrets and variables |  |  |
+| Validate runner availability |  |  |
+| Review deployment history |  |  |
+| Confirm branch protection rules |  |  |
 
 ## Health Commands
 

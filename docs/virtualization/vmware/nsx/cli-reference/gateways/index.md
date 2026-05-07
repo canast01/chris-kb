@@ -2,6 +2,20 @@
 
 > Part of the [NSX-T CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Gateways["Gateways"]
+    Gateways --> S0["List Gateways (NSX Manager)"]
+    Gateways --> S1["Enter Gateway Context on Edge Node"]
+    Gateways --> S2["Routing"]
+    Gateways --> S3["BGP"]
+    Gateways --> S4["Static Routes"]
+    Gateways --> S5["Interfaces"]
+    Gateways --> S6["HA and Failover"]
+    Gateways --> S7["NAT on Tier-0 / Tier-1"]
+    Gateways --> S8["Quick Reference"]
+```
+
 ## List Gateways (NSX Manager)
 
 ```bash

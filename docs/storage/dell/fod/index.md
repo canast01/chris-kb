@@ -20,11 +20,14 @@ Dell Flex on Demand (FOD) is a consumption-based capacity model in which additio
 
 ## Daily Checks
 
-- Review CloudIQ → Capacity for current metered consumption vs. committed baseline across all FOD-enrolled arrays
-- Check for burst usage events in the current billing period that may increase the monthly charge
-- Verify CloudIQ telemetry is active and reporting — FOD metering depends entirely on CloudIQ connectivity
-- Confirm FOD-enrolled arrays are not approaching the physical installed ceiling (above which no more burst is available)
-- Review the Dell MyAccount / APEX Console billing summary at month-end to validate metered charges
+
+| Check | Command | Notes |
+|---|---|---|
+| Review CloudIQ → Capacity for current metered consumption vs. committe |  |  |
+| Check for burst usage events in the current billing period that may in |  |  |
+| Verify CloudIQ telemetry is active and reporting |  | FOD metering depends entirely on CloudIQ connectivity |
+| Confirm FOD-enrolled arrays are not approaching the physical installed |  |  |
+| Review the Dell MyAccount / APEX Console billing summary at month-end |  |  |
 
 ## Health Commands
 
@@ -59,17 +62,23 @@ systemctl status dell-cloudiq-agent 2>/dev/null || \
 
 ## Operational Tasks
 
-- Enrol an array in FOD by working with the Dell account team to set the committed baseline and install pre-burst capacity
-- Review monthly metered usage report from CloudIQ or APEX Console and compare to committed baseline
-- Adjust the committed baseline up or down at contract renewal based on observed consumption patterns
-- Request physical capacity addition when burst headroom is running low — Dell adds capacity under the FOD agreement
-- Export CloudIQ usage data via API for internal chargeback or capacity planning reporting
+
+| Task | Command |
+|---|---|
+| Enrol an array in FOD by working with the Dell account team to set the committed |  |
+| Review monthly metered usage report from CloudIQ or APEX Console and compare to |  |
+| Adjust the committed baseline up or down at contract renewal based on observed c |  |
+| Request physical capacity addition when burst headroom is running low — Dell add |  |
+| Export CloudIQ usage data via API for internal chargeback or capacity planning r |  |
 
 ## Upgrade Notes
 
-1. FOD billing is unaffected by firmware upgrades, but confirm CloudIQ telemetry resumes promptly after any maintenance that takes the array offline
-2. After adding physical burst capacity under a FOD agreement, confirm CloudIQ reflects the new total installed capacity
-3. If the array is migrated or replaced, work with Dell to transfer the FOD contract to the new system SID
+
+| Step | Action |
+|---|---|
+| 1 | FOD billing is unaffected by firmware upgrades, but confirm CloudIQ telemetry resumes promptly after any maintenance that takes the array offline |
+| 2 | After adding physical burst capacity under a FOD agreement, confirm CloudIQ reflects the new total installed capacity |
+| 3 | If the array is migrated or replaced, work with Dell to transfer the FOD contract to the new system SID |
 
 ## Best Practices
 

@@ -2,6 +2,14 @@
 
 > Part of the [Ansible CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Config["Config"]
+    Config --> S0["ansible-lint"]
+    Config --> S1["ansible-doc"]
+    Config --> S2["ansible-config"]
+```
+
 ---
 
 ## ansible-lint

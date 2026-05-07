@@ -2,6 +2,17 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Logs["Logs"]
+    Logs --> S0["Key Log Files"]
+    Logs --> S1["Live Tailing"]
+    Logs --> S2["Searching for Issues"]
+    Logs --> S3["Collect Support Bundle"]
+    Logs --> S4["Remote Syslog"]
+    Logs --> S5["Log Rotation and Persistence"]
+```
+
 ## Key Log Files
 
 | Log | Path | Content |

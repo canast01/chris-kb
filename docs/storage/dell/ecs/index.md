@@ -79,13 +79,16 @@ Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object st
 
 ## Daily Checks
 
-- Log in to the ECS Portal and review the Dashboard → Alerts panel for any active hardware or software alarms
-- Check the ECS Portal Dashboard → Capacity view to confirm cluster utilisation is below 70% of usable capacity
-- Check ECS Portal → Geo Monitoring to verify geo-replication lag between VDCs is within acceptable thresholds
-- Query `GET /vdc/capacity` via the Management REST API to retrieve current cluster capacity metrics programmatically
-- Query `GET /vdc/nodes` to confirm all nodes report as `GOOD` status
-- Review ECS Portal → Hardware to confirm all node disks are healthy with no `FAILED` or `SUSPECT` disks
-- Check namespace and bucket usage growth trends to identify unexpected capacity spikes (versioning, multipart uploads)
+
+| Check | Command | Notes |
+|---|---|---|
+| Log in to the ECS Portal and review the Dashboard → Alerts panel for a |  |  |
+| Check the ECS Portal Dashboard → Capacity view to confirm cluster util |  |  |
+| Check ECS Portal → Geo Monitoring to verify geo-replication lag betwee |  |  |
+| Query `GET /vdc/capacity` via the Management REST API to retrieve curr | `GET /vdc/capacity` |  |
+| Query `GET /vdc/nodes` to confirm all nodes report as `GOOD` status | `GET /vdc/nodes` |  |
+| Review ECS Portal → Hardware to confirm all node disks are healthy wit | `FAILED` |  |
+| Check namespace and bucket usage growth trends to identify unexpected |  |  |
 
 ## Health Commands
 
@@ -129,24 +132,30 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 
 ## Operational Tasks
 
-- Create a namespace per team or application via ECS Portal → Namespace → New, and assign a replication group
-- Create a bucket within a namespace, configure replication group, versioning, and quota at creation time
-- Create IAM users and assign S3 access keys within the namespace for application authentication
-- Configure a lifecycle policy on a bucket to transition or expire objects after a defined retention period
-- Add a new node to an existing VDC via ECS Portal → Hardware → Add Node; ECS will automatically rebalance data
-- Configure geo-replication by adding a remote VDC to the replication group and setting the replication mode (sync or async)
-- Rotate object user secret keys with `ecscli user secret-key create` and update consuming applications
-- Run capacity and performance reports from ECS Portal → Dashboard for capacity planning input
+
+| Task | Command |
+|---|---|
+| Create a namespace per team or application via ECS Portal → Namespace → New, and |  |
+| Create a bucket within a namespace, configure replication group, versioning, and |  |
+| Create IAM users and assign S3 access keys within the namespace for application |  |
+| Configure a lifecycle policy on a bucket to transition or expire objects after a |  |
+| Add a new node to an existing VDC via ECS Portal → Hardware → Add Node; ECS will |  |
+| Configure geo-replication by adding a remote VDC to the replication group and se |  |
+| Rotate object user secret keys with `ecscli user secret-key create` and update c |  |
+| Run capacity and performance reports from ECS Portal → Dashboard for capacity pl |  |
 
 ## Upgrade Notes
 
-1. Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding
-2. Review the Dell ECS release notes for the target version; note any configuration changes or mandatory interim upgrades required
-3. Verify all nodes are healthy (`GOOD`) and geo-replication lag is at zero before starting the upgrade
-4. Download the upgrade package from Dell Support and upload it to the ECS upgrade staging area via the Portal
-5. ECS upgrades are rolling (one node at a time); the portal will indicate per-node progress — do not force simultaneous node upgrades
-6. After all nodes upgrade, confirm all nodes return to `GOOD` status and geo-replication resumes with no lag
-7. Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace
+
+| Step | Action |
+|---|---|
+| 1 | Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding |
+| 2 | Review the Dell ECS release notes for the target version; note any configuration changes or mandatory interim upgrades required |
+| 3 | Verify all nodes are healthy (`GOOD`) and geo-replication lag is at zero before starting the upgrade |
+| 4 | Download the upgrade package from Dell Support and upload it to the ECS upgrade staging area via the Portal |
+| 5 | ECS upgrades are rolling (one node at a time); the portal will indicate per-node progress — do not force simultaneous node upgrades |
+| 6 | After all nodes upgrade, confirm all nodes return to `GOOD` status and geo-replication resumes with no lag |
+| 7 | Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace |
 
 ## Best Practices
 

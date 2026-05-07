@@ -4,6 +4,20 @@
 
 SnapVX provides near-instantaneous, space-efficient snapshots of storage groups on PowerMax.
 
+```mermaid
+flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --> S0["List Snapshots"]
+    Snapshots --> S1["Create a Snapshot"]
+    Snapshots --> S2["Delete a Snapshot"]
+    Snapshots --> S3["Link Snapshot to a Target SG (Expose for Testing)"]
+    Snapshots --> S4["Unlink a Target SG"]
+    Snapshots --> S5["Restore from Snapshot"]
+    Snapshots --> S6["Rename a Snapshot"]
+    Snapshots --> S7["Snapshot Policies (TimeFinder)"]
+    Snapshots --> S8["Common Issues"]
+```
+
 ## List Snapshots
 
 ```bash

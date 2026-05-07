@@ -10,11 +10,14 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Daily Checks
 
-- Review active alarms.
-- Check recent failed tasks.
-- Confirm service health.
-- Confirm capacity and performance are normal.
-- Check recent changes.
+
+| Check | Command | Notes |
+|---|---|---|
+| Review active alarms. |  |  |
+| Check recent failed tasks. |  |  |
+| Confirm service health. |  |  |
+| Confirm capacity and performance are normal. |  |  |
+| Check recent changes. |  |  |
 
 ## Health Commands
 
@@ -33,11 +36,14 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Operational Tasks
 
-- Review alarms and events.
-- Confirm ownership and support notes.
-- Validate dependencies.
-- Document changes.
-- Confirm monitoring coverage.
+
+| Task | Command |
+|---|---|
+| Review alarms and events. |  |
+| Confirm ownership and support notes. |  |
+| Validate dependencies. |  |
+| Document changes. |  |
+| Confirm monitoring coverage. |  |
 
 ## Upgrade Notes
 

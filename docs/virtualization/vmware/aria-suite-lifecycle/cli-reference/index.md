@@ -2,6 +2,17 @@
 
 The primary CLI tool on the LCM appliance is `vracli`, which provides sub-commands for certificate management, cluster status, service control, and configuration. SSH to the LCM appliance as root. All `vracli` commands must be run as root on the LCM appliance.
 
+```mermaid
+flowchart LR
+    Lifecycle["Lifecycle"]
+    Lifecycle --> S0["Appliance Status"]
+    Lifecycle --> S1["Services"]
+    Lifecycle --> S2["Certificates"]
+    Lifecycle --> S3["Proxy and Network"]
+    Lifecycle --> S4["NTP and Time"]
+    Lifecycle --> S5["Logs"]
+```
+
 ---
 
 ## Appliance Status

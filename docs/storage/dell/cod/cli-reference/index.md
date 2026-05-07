@@ -2,6 +2,17 @@
 
 > Part of the [COD](../) reference.
 
+```mermaid
+flowchart LR
+    N["—"]
+    N --> S0["Quick-Reference Command Table"]
+    N --> S1["SYMCLI — Discovering Arrays and Capacity"]
+    N --> S2["SYMCLI — Viewing Licensed Capacity"]
+    N --> S3["SYMCLI — COD Activation"]
+    N --> S4["Unisphere REST API"]
+    N --> S5["License Commands — Summary"]
+```
+
 ---
 
 Capacity on Demand is managed through **Solutions Enabler (SYMCLI)** and the **Unisphere REST API**. COD allows pre-installed but locked capacity on PowerMax/VMAX arrays to be unlocked via a license key without physical hardware installation. This page covers the commands used to inspect COD entitlement, activate capacity, and verify the result.

@@ -2,6 +2,14 @@
 
 > Part of the [vSAN CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Capacity["Capacity"]
+    Capacity --> S0["Cluster Status"]
+    Capacity --> S1["Capacity and Objects"]
+    Capacity --> S2["Skyline Health (vSphere Client Context)"]
+```
+
 ---
 
 ## Cluster Status

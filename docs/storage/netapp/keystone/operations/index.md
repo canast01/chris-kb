@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Verify Keystone Collector service is running: `systemctl status keystone-collector`
-- [ ] Check last collection timestamp in collector logs: `journalctl -u keystone-collector -n 50 | grep -i "collection\|reported\|error"`
-- [ ] Open BlueXP → Digital Wallet → Keystone: review consumed vs. committed capacity per service level
-- [ ] Check burst usage — flag if any service level is consuming burst > 10% above committed tier
-- [ ] Run `volume show -fields qos-policy-group` on the ONTAP cluster — confirm all Keystone volumes have an AQoS policy assigned
-- [ ] Check for unclassified volumes (missing or incorrect QoS policy group = incorrect billing tier)
-- [ ] Review the Keystone Collector health dashboard in BlueXP for any collection errors or gaps
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Verify Keystone Collector service is running | `systemctl status keystone-collector` |  |
+| [ ] Check last collection timestamp in collector logs | `journalctl -u keystone-collector -n 50 | grep -i "collection\|reported\|error"` |  |
+| [ ] Open BlueXP → Digital Wallet → Keystone |  |  |
+| [ ] Check burst usage |  | flag if any service level is consuming burst > 10% above committed tier |
+| [ ] Run `volume show -fields qos-policy-group` on the ONTAP cluster | `volume show -fields qos-policy-group` | confirm all Keystone volumes have an AQoS policy assigned |
+| [ ] Check for unclassified volumes (missing or incorrect QoS policy gr |  |  |
+| [ ] Review the Keystone Collector health dashboard in BlueXP for any c |  |  |
 
 ## Health Check
 

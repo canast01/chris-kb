@@ -2,6 +2,13 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    NTP["NTP"]
+    NTP --> S0["Firewall"]
+    NTP --> S1["NTP"]
+```
+
 ---
 
 ## Firewall

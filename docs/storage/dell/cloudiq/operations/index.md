@@ -6,11 +6,14 @@
 
 ## Daily Checks
 
-- [ ] Log in to CloudIQ ([cloudiq.dell.com](https://cloudiq.dell.com)) and review the main dashboard for any systems with health score below 80
-- [ ] Review all active CRITICAL alerts — none should be outstanding at EOD without an open change or incident ticket
-- [ ] Check capacity forecast panel — flag any system projected to reach full capacity within 30 days
-- [ ] Confirm all expected systems are reporting (a system showing as "Not Reporting" or "No Data" indicates an SCG connectivity issue)
-- [ ] If automation scripts use the CloudIQ REST API, check that the API token expiry date is more than 7 days away
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Log in to CloudIQ ([cloudiq.dell.com](https |  |  |
+| [ ] Review all active CRITICAL alerts |  | none should be outstanding at EOD without an open change or incident ticket |
+| [ ] Check capacity forecast panel |  | flag any system projected to reach full capacity within 30 days |
+| [ ] Confirm all expected systems are reporting (a system showing as "N |  |  |
+| [ ] If automation scripts use the CloudIQ REST API, check that the API |  |  |
 
 ## Health Check
 

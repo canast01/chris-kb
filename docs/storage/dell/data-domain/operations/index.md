@@ -6,16 +6,17 @@
 
 ## Daily Checks
 
-Run these checks each morning to confirm the Data Domain filesystem, dedup health, replication, and DDBoost client connectivity are all healthy.
 
-- [ ] Run `filesys show space` — check pre- and post-compression capacity; alert if post-compression used exceeds 80% of usable capacity
-- [ ] Run `filesys show compression` — confirm the global dedup ratio is above 10:1 (healthy target is 20:1+); a significant drop compared to the previous day warrants investigation
-- [ ] Run `alerts show current` — review all active hardware and software alerts; triage by severity
-- [ ] Run `replication show` — confirm all replication contexts are in `Normal` or `Replicating` state; investigate any context in `Error` or `Warning` state
-- [ ] Run `ddboost show clients` — confirm all expected backup servers are connected and authenticated
-- [ ] Confirm backup software jobs (Avamar, NetWorker, Veeam, Commvault) completed successfully overnight — check backup application logs if DDBoost clients show unexpected disconnects
-- [ ] Run `filesys status` to confirm the filesystem is `Enabled` and `Running`
-- [ ] Review ESRS / CloudIQ / Smart Connect for any proactive support alerts or health recommendations
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `filesys show space` | `filesys show space` | check pre- and post-compression capacity; alert if post-compression used exceeds 80% of usable capacity |
+| [ ] Run `filesys show compression` | `filesys show compression` | confirm the global dedup ratio is above 10:1 (healthy target is 20:1+); a significant drop compared to the previous day warrants investigation |
+| [ ] Run `alerts show current` | `alerts show current` | review all active hardware and software alerts; triage by severity |
+| [ ] Run `replication show` | `replication show` | confirm all replication contexts are in `Normal` or `Replicating` state; investigate any context in `Error` or `Warning` state |
+| [ ] Run `ddboost show clients` | `ddboost show clients` | confirm all expected backup servers are connected and authenticated |
+| [ ] Confirm backup software jobs (Avamar, NetWorker, Veeam, Commvault) |  | check backup application logs if DDBoost clients show unexpected disconnects |
+| [ ] Run `filesys status` to confirm the filesystem is `Enabled` and `R | `filesys status` |  |
+| [ ] Review ESRS / CloudIQ / Smart Connect for any proactive support al |  |  |
 
 ## Health Check
 

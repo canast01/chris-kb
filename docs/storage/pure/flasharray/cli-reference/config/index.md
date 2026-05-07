@@ -2,6 +2,14 @@
 
 > Part of the [Pure FlashArray CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Services["Services"]
+    Services --> S0["pureconfig — Configuration"]
+    Services --> S1["pureds — Directory Services"]
+    Services --> S2["puredns — DNS"]
+```
+
 ---
 
 ## pureconfig — Configuration

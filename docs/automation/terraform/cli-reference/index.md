@@ -4,6 +4,18 @@ Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired 
 
 > Install with `brew install terraform` (macOS), `apt install terraform` (Debian), or download from terraform.io. Run `terraform init` in any new working directory before other commands.
 
+```mermaid
+flowchart LR
+    Terraform["Terraform"]
+    Terraform --> S0["Init and Setup"]
+    Terraform --> S1["Plan"]
+    Terraform --> S2["Apply and Destroy"]
+    Terraform --> S3["Validate, Format and Providers"]
+    Terraform --> S4["State and Output"]
+    Terraform --> S5["Workspaces"]
+    Terraform --> S6["Console, Debug and Patterns"]
+```
+
 ---
 
 ## Init & Setup

@@ -2,6 +2,13 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    SSH["SSH"]
+    SSH --> S0["Certificates"]
+    SSH --> S1["SSH"]
+```
+
 ---
 
 ## Certificates

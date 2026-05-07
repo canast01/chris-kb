@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `Get-VsanClusterHealthSummary` — all health tests should return green; any yellow or red requires investigation
-- [ ] Check vSAN object health in vCenter → vSAN → Monitor → Virtual Objects — flag any inaccessible or degraded objects
-- [ ] Run `Get-VsanDiskGroup` — all disk groups healthy, no drives in evacuating or absent state
-- [ ] vCenter → vSAN → Monitor → Resyncing Objects — confirm no resync is in progress from previous failure or change
-- [ ] Check capacity per host: flag any disk group exceeding 70% used capacity in vCenter → vSAN → Monitor → Capacity
-- [ ] Verify vSAN witness appliance is reachable (2-node or stretched cluster): check witness host connection state
-- [ ] Review vSAN performance dashboard for latency or throughput anomalies over the last 24 hours
-- [ ] Confirm vSAN Health Service is running and the health check data is current
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `Get-VsanClusterHealthSummary` | `Get-VsanClusterHealthSummary` | all health tests should return green; any yellow or red requires investigation |
+| [ ] Check vSAN object health in vCenter → vSAN → Monitor → Virtual Obj |  | flag any inaccessible or degraded objects |
+| [ ] Run `Get-VsanDiskGroup` | `Get-VsanDiskGroup` | all disk groups healthy, no drives in evacuating or absent state |
+| [ ] vCenter → vSAN → Monitor → Resyncing Objects |  | confirm no resync is in progress from previous failure or change |
+| [ ] Check capacity per host |  |  |
+| [ ] Verify vSAN witness appliance is reachable (2-node or stretched cluster) |  |  |
+| [ ] Review vSAN performance dashboard for latency or throughput anomal |  |  |
+| [ ] Confirm vSAN Health Service is running and the health check data i |  |  |
 
 ## Health Check
 

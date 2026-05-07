@@ -39,10 +39,13 @@ Venafi manages machine identities and automates certificate lifecycle management
 
 ## Daily Checks
 
-- Review certificate expiration alerts
-- Check trust store synchronization
-- Validate automated certificate renewals
-- Monitor integration status
+
+| Check | Command | Notes |
+|---|---|---|
+| Review certificate expiration alerts |  |  |
+| Check trust store synchronization |  |  |
+| Validate automated certificate renewals |  |  |
+| Monitor integration status |  |  |
 
 ## Health Commands
 

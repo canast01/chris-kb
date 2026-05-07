@@ -39,11 +39,14 @@ Windows Server provides core operating system services for enterprise workloads,
 
 ## Daily Checks
 
-- Review Event Viewer critical and error logs
-- Check disk capacity
-- Verify Windows services are running
-- Confirm backup status
-- Review patch compliance
+
+| Check | Command | Notes |
+|---|---|---|
+| Review Event Viewer critical and error logs |  |  |
+| Check disk capacity |  |  |
+| Verify Windows services are running |  |  |
+| Confirm backup status |  |  |
+| Review patch compliance |  |  |
 
 ## Health Commands
 

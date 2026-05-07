@@ -4,6 +4,18 @@
 
 The Data Domain filesystem (DDFS) manages all deduplication and compression. All user data lives in the active tier under `/data/col1/`.
 
+```mermaid
+flowchart LR
+    Filesystem["Filesystem"]
+    Filesystem --> S0["Filesystem Status"]
+    Filesystem --> S1["Enable and Disable"]
+    Filesystem --> S2["Cleaning (Garbage Collection)"]
+    Filesystem --> S3["Capacity and Compression Analysis"]
+    Filesystem --> S4["Compression Ratio Fields"]
+    Filesystem --> S5["Space Recovery Actions"]
+    Filesystem --> S6["Filesystem Checks"]
+```
+
 ## Filesystem Status
 
 ```bash

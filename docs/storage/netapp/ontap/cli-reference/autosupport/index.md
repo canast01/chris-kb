@@ -4,6 +4,17 @@
 
 AutoSupport is NetApp's telemetry and support system. It sends system health, configuration, and event data to NetApp support and can trigger proactive support cases.
 
+```mermaid
+flowchart LR
+    AutoSupport["AutoSupport"]
+    AutoSupport --> S0["View AutoSupport Status"]
+    AutoSupport --> S1["Send AutoSupport Messages"]
+    AutoSupport --> S2["History"]
+    AutoSupport --> S3["Configuration"]
+    AutoSupport --> S4["AutoSupport Delivery Methods"]
+    AutoSupport --> S5["Active IQ and AutoSupport"]
+```
+
 ## View AutoSupport Status
 
 ```bash

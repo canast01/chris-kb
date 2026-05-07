@@ -33,14 +33,17 @@ NetApp SnapMirror is ONTAP's native replication engine for volume and SVM-level 
 
 ## Daily Checks
 
-- Check all relationship health and lag times: `snapmirror show -fields lag-time,healthy`
-- Confirm no relationships are in `broken-off` state after a DR test that was not resynced
-- Verify scheduled transfers completed successfully; look for `Last Transfer Type: scheduled` and recent timestamps
-- Review the lag time on critical volumes against your defined RPO thresholds
-- Check for any `unhealthy` relationships and review the reason field for root cause
-- Confirm SnapMirror synchronous relationships show `In-Sync` status
-- Review transfer queue depth on the destination cluster for any backlogged updates
-- Verify SMBC mediator connectivity if AutomatedFailOver policies are in use
+
+| Check | Command | Notes |
+|---|---|---|
+| Check all relationship health and lag times | `snapmirror show -fields lag-time,healthy` |  |
+| Confirm no relationships are in `broken-off` state after a DR test tha | `broken-off` |  |
+| Verify scheduled transfers completed successfully; look for `Last Transfer Type | `Last Transfer Type: scheduled` |  |
+| Review the lag time on critical volumes against your defined RPO thres |  |  |
+| Check for any `unhealthy` relationships and review the reason field fo | `unhealthy` |  |
+| Confirm SnapMirror synchronous relationships show `In-Sync` status | `In-Sync` |  |
+| Review transfer queue depth on the destination cluster for any backlog |  |  |
+| Verify SMBC mediator connectivity if AutomatedFailOver policies are in |  |  |
 
 ## Health Commands
 
@@ -86,24 +89,30 @@ snapmirror show-history -destination-path svm_dst:vol_dst
 
 ## Operational Tasks
 
-- Create new async XDP relationship: create destination DP volume, create relationship with `snapmirror create -type XDP -policy MirrorAllSnapshots`, then initialize
-- Break a relationship for DR failover: `snapmirror quiesce` then `snapmirror break`; mount destination volumes on hosts
-- Resync after DR test: ensure source volumes are accessible, run `snapmirror resync -destination-path` — this reverses direction and re-establishes the relationship
-- Update lag-critical volumes outside schedule: use `snapmirror update` to trigger an immediate incremental transfer
-- Reverse resync for failback: after a real DR event with source repaired, use `snapmirror resync` with reversed source/destination to replicate changes back
-- Modify transfer schedule or throttle bandwidth by updating the SnapMirror policy or job schedule on the destination cluster
-- Monitor all relationships centrally from ONTAP System Manager or use the ONTAP REST API for programmatic health checks
-- Delete a relationship cleanly: `snapmirror quiesce`, `snapmirror break`, `snapmirror delete -destination-path`; then delete destination volume separately
+
+| Task | Command |
+|---|---|
+| Create new async XDP relationship | `snapmirror create -type XDP -policy MirrorAllSnapshots` |
+| Break a relationship for DR failover | `snapmirror quiesce`, `snapmirror break` |
+| Resync after DR test | `snapmirror resync -destination-path` |
+| Update lag-critical volumes outside schedule | `snapmirror update` |
+| Reverse resync for failback | `snapmirror resync` |
+| Modify transfer schedule or throttle bandwidth by updating the SnapMirror policy |  |
+| Monitor all relationships centrally from ONTAP System Manager or use the ONTAP R |  |
+| Delete a relationship cleanly | `snapmirror quiesce`, `snapmirror break` |
 
 ## Upgrade Notes
 
-1. Review the ONTAP Interoperability Matrix — SnapMirror requires the destination cluster ONTAP version to be equal to or newer than the source; never replicate to a lower version
-2. Quiesce non-critical SnapMirror relationships before upgrading the source cluster to avoid transfer failures during the rolling upgrade
-3. Upgrade the destination cluster first if upgrading both clusters, then upgrade the source — this maintains replication compatibility
-4. After ONTAP upgrade, verify all relationships return to healthy state: `snapmirror show -fields healthy` should show `true` for all
-5. For SMBC/AutomatedFailOver relationships, confirm the ONTAP Mediator service is updated to the version compatible with the new ONTAP release before upgrading clusters
-6. Test a manual `snapmirror update` on a representative volume post-upgrade to confirm transfers are functioning correctly
-7. Review the ONTAP release notes for any SnapMirror policy or command deprecations that affect your automation scripts
+
+| Step | Action |
+|---|---|
+| 1 | Review the ONTAP Interoperability Matrix — SnapMirror requires the destination cluster ONTAP version to be equal to or newer than the source; never replicate to a lower version |
+| 2 | Quiesce non-critical SnapMirror relationships before upgrading the source cluster to avoid transfer failures during the rolling upgrade |
+| 3 | Upgrade the destination cluster first if upgrading both clusters, then upgrade the source — this maintains replication compatibility |
+| 4 | After ONTAP upgrade, verify all relationships return to healthy state: `snapmirror show -fields healthy` should show `true` for all |
+| 5 | For SMBC/AutomatedFailOver relationships, confirm the ONTAP Mediator service is updated to the version compatible with the new ONTAP release before upgrading clusters |
+| 6 | Test a manual `snapmirror update` on a representative volume post-upgrade to confirm transfers are functioning correctly |
+| 7 | Review the ONTAP release notes for any SnapMirror policy or command deprecations that affect your automation scripts |
 
 ## Best Practices
 

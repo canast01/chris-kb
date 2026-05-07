@@ -2,6 +2,13 @@
 
 > Part of the [Terraform CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Destroy["Destroy"]
+    Destroy --> S0["Apply"]
+    Destroy --> S1["Destroy"]
+```
+
 ---
 
 ## Apply

@@ -24,11 +24,14 @@ Dell Capacity on Demand (COD) is a flexible capacity licensing model that allows
 
 ## Daily Checks
 
-- Review total installed vs. activated capacity on each array with COD pre-installed drives
-- Check for COD license keys that are approaching expiry (some COD licenses have term limits)
-- Confirm activated capacity is being utilised; unused activated capacity still incurs license cost
-- Review array capacity utilisation trend — if approaching the activated ceiling, plan the next COD activation
-- Verify COD inventory in Dell Support/MyService360 matches what is physically installed in each array
+
+| Check | Command | Notes |
+|---|---|---|
+| Review total installed vs. activated capacity on each array with COD p |  |  |
+| Check for COD license keys that are approaching expiry (some COD licen |  |  |
+| Confirm activated capacity is being utilised; unused activated capacit |  |  |
+| Review array capacity utilisation trend |  | if approaching the activated ceiling, plan the next COD activation |
+| Verify COD inventory in Dell Support/MyService360 matches what is phys |  |  |
 
 ## Health Commands
 
@@ -63,11 +66,14 @@ isi storagepool list
 
 ## Operational Tasks
 
-- Purchase a COD activation license from the Dell account team, specifying the target array SID and capacity increment
-- Apply the COD license key: `symlicense -sid <SID> install -file <license.xml>` (PowerMax) or via Unisphere
-- Verify activated capacity after applying: `symcfg -sid <SID> show` and confirm the new pool or device capacity is visible
-- Add newly activated drives to the appropriate thin pool or storage group to make capacity available to hosts
-- Track COD inventory and activation history in a runbook to avoid double-purchasing or activating already-active keys
+
+| Task | Command |
+|---|---|
+| Purchase a COD activation license from the Dell account team, specifying the tar |  |
+| Apply the COD license key | `symlicense -sid <SID> install -file <license.xml>` |
+| Verify activated capacity after applying | `symcfg -sid <SID> show` |
+| Add newly activated drives to the appropriate thin pool or storage group to make |  |
+| Track COD inventory and activation history in a runbook to avoid double-purchasi |  |
 
 ## Best Practices
 

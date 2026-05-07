@@ -2,6 +2,18 @@
 
 > Part of the Dell Data Domain CLI Reference.
 
+```mermaid
+flowchart LR
+    Security["Security"]
+    Security --> S0["Local Users"]
+    Security --> S1["User Roles"]
+    Security --> S2["Authentication Settings"]
+    Security --> S3["Password Policy"]
+    Security --> S4["SSH Keys"]
+    Security --> S5["Login and Session Management"]
+    Security --> S6["Audit Log"]
+```
+
 ## Local Users
 
 ```bash

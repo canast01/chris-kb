@@ -2,6 +2,19 @@
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
 
+```mermaid
+flowchart LR
+    Network_Interfaces["Network Interfaces"]
+    Network_Interfaces --> S0["List Interfaces"]
+    Network_Interfaces --> S1["Interface Types"]
+    Network_Interfaces --> S2["Create an iSCSI Interface"]
+    Network_Interfaces --> S3["Modify an Interface"]
+    Network_Interfaces --> S4["Delete an Interface"]
+    Network_Interfaces --> S5["iSCSI Portals"]
+    Network_Interfaces --> S6["Ethernet Ports"]
+    Network_Interfaces --> S7["Troubleshooting"]
+```
+
 ## List Interfaces
 
 ```bash

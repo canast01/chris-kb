@@ -2,6 +2,13 @@
 
 > Part of the PowerShell CLI Reference.
 
+```mermaid
+flowchart LR
+    Pipeline["Pipeline"]
+    Pipeline --> S0["Variables and Output"]
+    Pipeline --> S1["Pipeline and Filtering"]
+```
+
 ---
 
 ## Variables & Output

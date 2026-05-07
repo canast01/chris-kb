@@ -2,6 +2,19 @@
 
 > Part of the Dell Data Domain CLI Reference.
 
+```mermaid
+flowchart LR
+    System_Status["System Status"]
+    System_Status --> S0["System Information"]
+    System_Status --> S1["Health Checks"]
+    System_Status --> S2["Alert Levels"]
+    System_Status --> S3["Software and Licensing"]
+    System_Status --> S4["Power and Environment"]
+    System_Status --> S5["System Time and NTP"]
+    System_Status --> S6["Rebooting and Shutdown"]
+    System_Status --> S7["Support Bundle"]
+```
+
 ## System Information
 
 ```bash

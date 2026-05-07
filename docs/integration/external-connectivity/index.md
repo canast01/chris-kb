@@ -6,10 +6,13 @@ External connectivity allows infrastructure systems to communicate with cloud se
 
 ## Daily Checks
 
-- Verify outbound connectivity
-- Check firewall rules
-- Confirm DNS resolution
-- Review latency metrics
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify outbound connectivity |  |  |
+| Check firewall rules |  |  |
+| Confirm DNS resolution |  |  |
+| Review latency metrics |  |  |
 
 ## Health Commands
 

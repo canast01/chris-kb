@@ -4,6 +4,18 @@
 
 FlashBlade snapshots are instant point-in-time copies of file systems or object store buckets. They are read-only and space-efficient (copy-on-write).
 
+```mermaid
+flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --> S0["List Snapshots"]
+    Snapshots --> S1["Create a Snapshot"]
+    Snapshots --> S2["Restore from Snapshot"]
+    Snapshots --> S3["Destroy and Eradicate"]
+    Snapshots --> S4["Scheduled Snapshot Policies"]
+    Snapshots --> S5["Accessing Snapshots from NFS"]
+    Snapshots --> S6["Capacity Monitoring"]
+```
+
 ## List Snapshots
 
 ```bash

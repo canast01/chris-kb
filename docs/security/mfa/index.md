@@ -6,10 +6,13 @@ MFA adds an additional authentication factor beyond passwords to protect account
 
 ## Daily Checks
 
-- Review authentication failures
-- Validate MFA service availability
-- Confirm token synchronization
-- Review access logs
+
+| Check | Command | Notes |
+|---|---|---|
+| Review authentication failures |  |  |
+| Validate MFA service availability |  |  |
+| Confirm token synchronization |  |  |
+| Review access logs |  |  |
 
 ## Health Commands
 

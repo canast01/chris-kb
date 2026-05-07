@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Check Azure Service Health for active events in your subscription regions
-- [ ] Review VM power states: `az vm list --show-details --query '[*].[name,powerState]' -o table`
-- [ ] Check Azure Monitor activity log alerts: `az monitor activity-log alert list -o table`
-- [ ] Review failed backup jobs: `az backup job list --vault-name $VAULT -g $RG --query '[?properties.status==\`Failed\`]'`
-- [ ] Review Azure Advisor for new high-severity recommendations
-- [ ] Check Key Vault certificate expiry — flag any certificates expiring within 30 days
-- [ ] Review Cost Management for anomalies vs. the prior week
-- [ ] Check Entra ID sign-in logs for failed or suspicious authentication activity
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Check Azure Service Health for active events in your subscription |  |  |
+| [ ] Review VM power states | `az vm list --show-details --query '[*].[name,powerState]' -o table` |  |
+| [ ] Check Azure Monitor activity log alerts | `az monitor activity-log alert list -o table` |  |
+| [ ] Review failed backup jobs | `az backup job list --vault-name $VAULT -g $RG --query '[?properties.status==\` |  |
+| [ ] Review Azure Advisor for new high-severity recommendations |  |  |
+| [ ] Check Key Vault certificate expiry |  | flag any certificates expiring within 30 days |
+| [ ] Review Cost Management for anomalies vs. the prior week |  |  |
+| [ ] Check Entra ID sign-in logs for failed or suspicious authenticatio |  |  |
 
 ## Health Check
 

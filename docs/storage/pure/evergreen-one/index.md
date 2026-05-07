@@ -69,12 +69,15 @@ Evergreen//One is Pure Storage's Storage-as-a-Service consumption model: Pure ow
 
 ## Daily Checks
 
-- Review consumption vs. committed tier in Pure1 (used TB vs. reserved TB)
-- Check burst usage trend — confirm burst is not being consumed unexpectedly
-- Confirm no open SLA breach events in Pure1 under the Evergreen//One dashboard
-- Review Pure1 health alerts for the arrays under the service
-- Validate data protection status — snapshots, replication, and SafeMode configuration in Pure1
-- Confirm Pure1 phone-home is active for all arrays in the subscription
+
+| Check | Command | Notes |
+|---|---|---|
+| Review consumption vs. committed tier in Pure1 (used TB vs. reserved T |  |  |
+| Check burst usage trend |  | confirm burst is not being consumed unexpectedly |
+| Confirm no open SLA breach events in Pure1 under the Evergreen//One da |  |  |
+| Review Pure1 health alerts for the arrays under the service |  |  |
+| Validate data protection status |  | snapshots, replication, and SafeMode configuration in Pure1 |
+| Confirm Pure1 phone-home is active for all arrays in the subscription |  |  |
 
 ## Health Commands
 
@@ -106,23 +109,29 @@ purepod list                   # replication pod and ActiveCluster status
 
 ## Operational Tasks
 
-- Monitor consumption vs. committed tier in Pure1 weekly and before monthly billing close
-- Review burst usage weekly to identify unexpected growth before it impacts the invoice
-- Submit capacity increase requests through the Pure portal with sufficient lead time (typically 30 days)
-- Review SLA compliance reports monthly and log any breach credits with the Pure account team
-- Work with the Pure account team quarterly to review capacity trends and adjust committed tier if needed
-- Validate SafeMode and data protection settings in Pure1 after any major workload change
-- Review Pure1 AIOps recommendations for anomaly detection and performance optimisation
-- Maintain accurate workload-to-tier mapping documentation for audit and billing validation
+
+| Task | Command |
+|---|---|
+| Monitor consumption vs. committed tier in Pure1 weekly and before monthly billin |  |
+| Review burst usage weekly to identify unexpected growth before it impacts the in |  |
+| Submit capacity increase requests through the Pure portal with sufficient lead t |  |
+| Review SLA compliance reports monthly and log any breach credits with the Pure a |  |
+| Work with the Pure account team quarterly to review capacity trends and adjust c |  |
+| Validate SafeMode and data protection settings in Pure1 after any major workload |  |
+| Review Pure1 AIOps recommendations for anomaly detection and performance optimis |  |
+| Maintain accurate workload-to-tier mapping documentation for audit and billing v |  |
 
 ## Upgrade Notes
 
-1. Evergreen//One has no customer-managed upgrade process — Pure handles all hardware and Purity software upgrades non-disruptively
-2. Upgrades are scheduled and executed by Pure Support; customers receive advance notification through Pure1 and email
-3. Validate that no change freezes or maintenance windows conflict with Pure's scheduled upgrade date
-4. Confirm all host paths are redundant and multipathing is active before Pure executes any upgrade (Pure will validate, but customer confirmation is good practice)
-5. After upgrade, confirm Pure1 shows the new software version and no new alerts are open
-6. Review SLA compliance report post-upgrade to confirm no availability events were recorded
+
+| Step | Action |
+|---|---|
+| 1 | Evergreen//One has no customer-managed upgrade process — Pure handles all hardware and Purity software upgrades non-disruptively |
+| 2 | Upgrades are scheduled and executed by Pure Support; customers receive advance notification through Pure1 and email |
+| 3 | Validate that no change freezes or maintenance windows conflict with Pure's scheduled upgrade date |
+| 4 | Confirm all host paths are redundant and multipathing is active before Pure executes any upgrade (Pure will validate, but customer confirmation is good practice) |
+| 5 | After upgrade, confirm Pure1 shows the new software version and no new alerts are open |
+| 6 | Review SLA compliance report post-upgrade to confirm no availability events were recorded |
 
 ## Best Practices
 

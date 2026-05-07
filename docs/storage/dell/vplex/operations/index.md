@@ -6,15 +6,16 @@
 
 ## Daily Checks
 
-Run these vplexcli checks each morning to confirm cluster health, director status, distributed device sync, and Witness connectivity.
 
-- [ ] Check cluster health indications: `ll /clusters/*/health-indications/` — all health-indications should show `health-state: ok`; investigate any cluster showing a non-ok state
-- [ ] Check distributed device health: `ll /distributed-storage/distributed-devices/*/health-indications/` — all distributed devices should show `health-state: ok` and `rebuild-allowed: true`; an `out-of-sync` device requires immediate attention
-- [ ] Check director hardware health: `ll /engines/*/directors/*/hardware/` — all directors should show healthy component states; a faulted director reduces redundancy and must be escalated
-- [ ] Verify Witness connectivity for Metro deployments: `ll /metro-node/*/witness/` — Witness should show `connected: true` and `reachable: true`; loss of Witness connectivity risks I/O suspension on a subsequent site failure
-- [ ] Check consistency group state: `ll /distributed-storage/consistency-groups/` — all groups should show `operational-status: ok`
-- [ ] Verify storage views are intact for all hosts: `ll /clusters/*/exports/storage-views/` — confirm the expected number of storage views and initiator-to-port mappings
-- [ ] Review any active alerts in Unisphere for VPLEX or from email/SNMP notifications for alerts generated overnight
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Check cluster health indications | `ll /clusters/*/health-indications/` | all health-indications should show `health-state: ok`; investigate any cluster showing a non-ok state |
+| [ ] Check distributed device health | `ll /distributed-storage/distributed-devices/*/health-indications/` | all distributed devices should show `health-state: ok` and `rebuild-allowed: true`; an `out-of-sync` device requires immediate attention |
+| [ ] Check director hardware health | `ll /engines/*/directors/*/hardware/` | all directors should show healthy component states; a faulted director reduces redundancy and must be escalated |
+| [ ] Verify Witness connectivity for Metro deployments | `ll /metro-node/*/witness/` | Witness should show `connected: true` and `reachable: true`; loss of Witness connectivity risks I/O suspension on a subsequent site failure |
+| [ ] Check consistency group state | `ll /distributed-storage/consistency-groups/` | all groups should show `operational-status: ok` |
+| [ ] Verify storage views are intact for all hosts | `ll /clusters/*/exports/storage-views/` | confirm the expected number of storage views and initiator-to-port mappings |
+| [ ] Review any active alerts in Unisphere for VPLEX or from email/SNMP |  |  |
 
 ## Health Check
 

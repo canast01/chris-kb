@@ -4,6 +4,20 @@ The ESXi shell gives you direct access to a hypervisor host via SSH. `esxcli` is
 
 > SSH to the ESXi host management IP. Enable SSH via vSphere Client → Host → Actions → Services → Enable Secure Shell (SSH), or via the ESXi DCUI console.
 
+```mermaid
+flowchart LR
+    VMware_ESXi["VMware ESXi"]
+    VMware_ESXi --> S0["System, Services and Maintenance"]
+    VMware_ESXi --> S1["Network"]
+    VMware_ESXi --> S2["Firewall and NTP"]
+    VMware_ESXi --> S3["Storage — Devices and Paths"]
+    VMware_ESXi --> S4["SAN Connectivity (iSCSI / FC)"]
+    VMware_ESXi --> S5["Datastores and VMDK"]
+    VMware_ESXi --> S6["VM Management (vim-cmd)"]
+    VMware_ESXi --> S7["Hardware and Health"]
+    VMware_ESXi --> S8["Performance and Troubleshooting"]
+```
+
 ---
 
 

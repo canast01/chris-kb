@@ -6,11 +6,14 @@ Core operational reference for VxRail infrastructure.
 
 ## Daily Checks
 
-- Review alerts
-- Confirm services healthy
-- Check capacity
-- Validate connectivity
-- Review recent changes
+
+| Check | Command | Notes |
+|---|---|---|
+| Review alerts |  |  |
+| Confirm services healthy |  |  |
+| Check capacity |  |  |
+| Validate connectivity |  |  |
+| Review recent changes |  |  |
 
 ## Dependencies
 

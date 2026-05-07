@@ -2,6 +2,18 @@
 
 > Part of the [NSX-T CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Fabric["Fabric"]
+    Fabric --> S0["Transport Nodes (NSX Manager CLI)"]
+    Fabric --> S1["Transport Zones"]
+    Fabric --> S2["Tunnel Endpoints (TEPs)"]
+    Fabric --> S3["ESXi Host Fabric Verification"]
+    Fabric --> S4["Edge Node Fabric Status"]
+    Fabric --> S5["Common Issues"]
+    Fabric --> S6["Maintenance Mode Workflow"]
+```
+
 ## Transport Nodes (NSX Manager CLI)
 
 ```bash

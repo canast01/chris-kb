@@ -2,6 +2,13 @@
 
 > Part of the [Cisco MDS NX-OS CLI Reference](../).
 
+```mermaid
+flowchart LR
+    SPAN["SPAN"]
+    SPAN --> S0["Diagnostics and Counters"]
+    SPAN --> S1["SPAN and Monitoring"]
+```
+
 ---
 
 ## Diagnostics & Counters

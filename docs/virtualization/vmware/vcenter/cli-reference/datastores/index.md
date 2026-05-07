@@ -2,6 +2,18 @@
 
 > Part of the [vCenter CLI Reference (PowerCLI & DCLI)](../).
 
+```mermaid
+flowchart LR
+    Datastores["Datastores"]
+    Datastores --> S0["List Datastores"]
+    Datastores --> S1["Datastore Clusters (SDRS)"]
+    Datastores --> S2["Datastore to VM Mapping"]
+    Datastores --> S3["Datastore Hosts"]
+    Datastores --> S4["Export Datastore Report"]
+    Datastores --> S5["Datastore Maintenance"]
+    Datastores --> S6["Capacity Thresholds"]
+```
+
 ## List Datastores
 
 ```powershell

@@ -6,10 +6,13 @@
 
 ## Daily Checks
 
-- [ ] Confirm SCG appliance service is running (`dsagw status` — expect `active (running)`)
-- [ ] Confirm all expected devices are listed and show a CONNECTED state (`dsagw list-devices`)
-- [ ] Confirm no connectivity failures in the last 24 hours (review SCG event log or CloudIQ for "Not Reporting" systems)
-- [ ] Confirm proactive alert forwarding is active — at least one SupportAssist test event should have forwarded successfully this week
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Confirm SCG appliance service is running (`dsagw status` | `dsagw status` | expect `active (running)`) |
+| [ ] Confirm all expected devices are listed and show a CONNECTED state | `dsagw list-devices` |  |
+| [ ] Confirm no connectivity failures in the last 24 hours (review SCG |  |  |
+| [ ] Confirm proactive alert forwarding is active |  | at least one SupportAssist test event should have forwarded successfully this week |
 
 ## Health Check
 

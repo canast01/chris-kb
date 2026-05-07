@@ -43,13 +43,16 @@ Dell Unity is a mid-range unified storage platform supporting block (Fibre Chann
 
 ## Daily Checks
 
-- Check system health: `uemcli /env/health show -filter "health.value ne OK"` — any non-OK component requires investigation
-- Review active alerts: `uemcli /sys/alert show` — triage by severity and acknowledge resolved alerts
-- Check pool capacity: `uemcli /stor/pool show -detail` — alert if any pool approaches 80% subscribed or consumed
-- Verify both storage processors are online and in a normal state in Unisphere or via `uemcli /env/sp show`
-- Check replication session status: `uemcli /rep/session show` — confirm all sessions are in Active state with no errors
-- Review current software version and pending updates: `uemcli /sys/sw show`
-- Confirm snapshot schedules are running and snapshots are not consuming unexpected capacity: `uemcli /stor/snap show`
+
+| Check | Command | Notes |
+|---|---|---|
+| Check system health | `uemcli /env/health show -filter "health.value ne OK"` | any non-OK component requires investigation |
+| Review active alerts | `uemcli /sys/alert show` | triage by severity and acknowledge resolved alerts |
+| Check pool capacity | `uemcli /stor/pool show -detail` | alert if any pool approaches 80% subscribed or consumed |
+| Verify both storage processors are online and in a normal state in Uni | `uemcli /env/sp show` |  |
+| Check replication session status | `uemcli /rep/session show` | confirm all sessions are in Active state with no errors |
+| Review current software version and pending updates | `uemcli /sys/sw show` |  |
+| Confirm snapshot schedules are running and snapshots are not consuming unexpected capacity | `uemcli /stor/snap show` |  |
 
 ## Health Commands
 
@@ -92,24 +95,30 @@ uemcli /rep/session show
 
 ## Operational Tasks
 
-- Create a new storage pool with drive selection and RAID type via `uemcli /stor/config/pool create`
-- Provision a block LUN and map it to a host: `uemcli /store/lun create` then `uemcli /map/lunhostmap create`
-- Create an NFS export for a NAS server: `uemcli /net/nas/nfs create`
-- Expand an existing pool by adding drives: `uemcli /stor/config/pool -id <pool_id> expand`
-- Create a snapshot of a LUN or file system on demand: `uemcli /stor/snap create -storRes <resource_id> -name <snap_name>`
-- Configure or expand FAST Cache: `uemcli /stor/config/fastcache create` (requires SAS Flash 2 drives in RAID 1 pairs)
-- Enable data reduction on a pool: ensure flash tier is at least 10% of total pool capacity, then enable via Unisphere or `uemcli /stor/config/pool`
-- Test SP failover by triggering a manual SP restart in Unisphere during a maintenance window and confirming LUN access is maintained
+
+| Task | Command |
+|---|---|
+| Create a new storage pool with drive selection and RAID type via `uemcli /stor/c |  |
+| Provision a block LUN and map it to a host | `uemcli /store/lun create`, `uemcli /map/lunhostmap create` |
+| Create an NFS export for a NAS server | `uemcli /net/nas/nfs create` |
+| Expand an existing pool by adding drives | `uemcli /stor/config/pool -id <pool_id> expand` |
+| Create a snapshot of a LUN or file system on demand | `uemcli /stor/snap create -storRes <resource_id> -name <snap_name>` |
+| Configure or expand FAST Cache | `uemcli /stor/config/fastcache create` |
+| Enable data reduction on a pool | `uemcli /stor/config/pool` |
+| Test SP failover by triggering a manual SP restart in Unisphere during a mainten |  |
 
 ## Upgrade Notes
 
-1. Run `uemcli /env/health show -filter "health.value ne OK"` and resolve all faults before beginning; do not upgrade with a degraded pool or faulted SP
-2. Confirm both SP A and SP B are online and in normal state — the upgrade process restarts each SP sequentially and requires both to be healthy
-3. Download the OE upgrade package from Dell support and upload it to the array via Unisphere or `uemcli /sys/sw upload`
-4. Verify the upgrade package checksum against the Dell-published hash before proceeding
-5. Initiate the upgrade from Unisphere (Maintenance > Software Upgrades) or `uemcli /sys/sw upgrade` — the system upgrades SP B first, then SP A, with I/O continuing via the active SP throughout
-6. Monitor upgrade progress in Unisphere; each SP restart takes several minutes — do not interrupt the process
-7. After upgrade, verify both SPs return to normal health, confirm `uemcli /sys/sw show` shows the new version, and re-check all replication sessions and pool health
+
+| Step | Action |
+|---|---|
+| 1 | Run `uemcli /env/health show -filter "health.value ne OK"` and resolve all faults before beginning; do not upgrade with a degraded pool or faulted SP |
+| 2 | Confirm both SP A and SP B are online and in normal state — the upgrade process restarts each SP sequentially and requires both to be healthy |
+| 3 | Download the OE upgrade package from Dell support and upload it to the array via Unisphere or `uemcli /sys/sw upload` |
+| 4 | Verify the upgrade package checksum against the Dell-published hash before proceeding |
+| 5 | Initiate the upgrade from Unisphere (Maintenance > Software Upgrades) or `uemcli /sys/sw upgrade` — the system upgrades SP B first, then SP A, with I/O continuing via the active SP throughout |
+| 6 | Monitor upgrade progress in Unisphere; each SP restart takes several minutes — do not interrupt the process |
+| 7 | After upgrade, verify both SPs return to normal health, confirm `uemcli /sys/sw show` shows the new version, and re-check all replication sessions and pool health |
 
 ## Best Practices
 

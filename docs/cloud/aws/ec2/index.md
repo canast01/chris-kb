@@ -6,11 +6,14 @@ AWS EC2 provides virtual machine compute capacity in AWS. It supports applicatio
 
 ## Daily Checks
 
-- Review instance status checks
-- Check CPU, memory, and disk trends
-- Validate backups and AMIs
-- Review security groups
-- Confirm patch compliance
+
+| Check | Command | Notes |
+|---|---|---|
+| Review instance status checks |  |  |
+| Check CPU, memory, and disk trends |  |  |
+| Validate backups and AMIs |  |  |
+| Review security groups |  |  |
+| Confirm patch compliance |  |  |
 
 ## Health Commands
 

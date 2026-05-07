@@ -20,11 +20,14 @@ Dell Secure Connect Gateway (SCG) is the outbound-only connectivity appliance th
 
 ## Daily Checks
 
-- Confirm SCG appliance is running and reachable from the management network
-- Check SCG appliance GUI (HTTPS port 9443) for connectivity status: all devices should show as Connected
-- Review the SCG event log for any failed telemetry uploads or device registration errors
-- Confirm outbound HTTPS (port 443) to Dell endpoints (`esrs.emc.com`, `cloudiq.dell.com`) is reachable
-- Check that all registered devices are actively sending telemetry — a device showing as offline in CloudIQ is usually an SCG connectivity issue
+
+| Check | Command | Notes |
+|---|---|---|
+| Confirm SCG appliance is running and reachable from the management net |  |  |
+| Check SCG appliance GUI (HTTPS port 9443) for connectivity status |  |  |
+| Review the SCG event log for any failed telemetry uploads or device re |  |  |
+| Confirm outbound HTTPS (port 443) to Dell endpoints (`esrs.emc.com`, ` | `esrs.emc.com` |  |
+| Check that all registered devices are actively sending telemetry |  | a device showing as offline in CloudIQ is usually an SCG connectivity issue |
 
 ## Health Commands
 
@@ -64,12 +67,15 @@ symcfg -sid <SID> -esrs list
 
 ## Operational Tasks
 
-- Deploy a new SCG virtual appliance: download OVA from Dell Support, deploy to vSphere, configure IP/DNS/gateway via the initial setup wizard
-- Register a new array to SCG: from the array management interface (e.g., Unisphere, SYMCLI), specify the SCG hostname/IP and complete the registration
-- Upgrade SCG: download the update bundle from Dell Support and apply via SCG GUI → Software Update
-- Add a second SCG for redundancy and configure failover registration on each array (primary/secondary SCG)
-- Review and export SCG event logs for audit or troubleshooting via SCG GUI → Logs → Export
-- Decommission an SCG: remove all device registrations before shutting down to avoid orphaned records in Dell's support back-end
+
+| Task | Command |
+|---|---|
+| Deploy a new SCG virtual appliance: download OVA from Dell Support, deploy to vS |  |
+| Register a new array to SCG: from the array management interface (e.g., Unispher |  |
+| Upgrade SCG: download the update bundle from Dell Support and apply via SCG GUI |  |
+| Add a second SCG for redundancy and configure failover registration on each arra |  |
+| Review and export SCG event logs for audit or troubleshooting via SCG GUI → Logs |  |
+| Decommission an SCG: remove all device registrations before shutting down to avo |  |
 
 ## Best Practices
 

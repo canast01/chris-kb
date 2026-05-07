@@ -2,6 +2,15 @@
 
 > Part of the Git CLI Reference.
 
+```mermaid
+flowchart LR
+    Submodules["Submodules)"]
+    Submodules --> S0["Cherry-pick"]
+    Submodules --> S1["Bisect"]
+    Submodules --> S2["Submodules"]
+    Submodules --> S3["Useful Aliases"]
+```
+
 ---
 
 ## Cherry-pick

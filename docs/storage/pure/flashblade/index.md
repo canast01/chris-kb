@@ -84,14 +84,17 @@ Pure Storage FlashBlade is an all-flash scale-out storage platform running Purit
 
 ## Daily Checks
 
-- Check active alerts: `purefb alert list` — review any hardware, capacity, or replication warnings
-- Check blade health: `purefb blade list` — confirm all blades are in `healthy` state with no `failed` or `missing` entries
-- Review hardware component status: `purefb hardware list` — confirm no failed power supplies, fans, or FMs (fabric modules)
-- Check filesystem capacity and utilization: `purefb filesystem list` — confirm no filesystems are approaching their limit
-- Check S3 bucket usage and object counts: `purefb bucket list`
-- Review replication status: `purefb replication list` — confirm ActiveDR links are healthy and lag is within RPO
-- Review recent snapshots and confirm expiry policy is functioning: `purefb snap list`
-- Check network interface status: `purefb network interface list` — confirm all data and replication interfaces are `up`
+
+| Check | Command | Notes |
+|---|---|---|
+| Check active alerts | `purefb alert list` | review any hardware, capacity, or replication warnings |
+| Check blade health | `purefb blade list` | confirm all blades are in `healthy` state with no `failed` or `missing` entries |
+| Review hardware component status | `purefb hardware list` | confirm no failed power supplies, fans, or FMs (fabric modules) |
+| Check filesystem capacity and utilization | `purefb filesystem list` | confirm no filesystems are approaching their limit |
+| Check S3 bucket usage and object counts | `purefb bucket list` |  |
+| Review replication status | `purefb replication list` | confirm ActiveDR links are healthy and lag is within RPO |
+| Review recent snapshots and confirm expiry policy is functioning | `purefb snap list` |  |
+| Check network interface status | `purefb network interface list` | confirm all data and replication interfaces are `up` |
 
 ## Health Commands
 
@@ -137,24 +140,30 @@ purefb network interface list
 
 ## Operational Tasks
 
-- Create a new NFS filesystem: `purefb filesystem create --size <size> --nfs --nfs-rules '<export_policy>' <fsname>`
-- Create a new S3 bucket: `purefb bucket create --account <account_name> <bucketname>`
-- Create an S3 object store account and access key: `purefb objectstoreaccount create <account>` then `purefb objectstoreuser create --account <account> <username>`
-- Set up an ActiveDR replication link to a remote FlashBlade: configure a connection on both arrays, then create a filesystem replica link with `purefb replication fslink create`
-- Take a filesystem snapshot on demand: `purefb snap create --filesystem <fsname> <snapname>`
-- Restore a filesystem from snapshot: create a new filesystem from the snapshot or overwrite using `purefb filesystem copy`
-- Expand an existing filesystem: `purefb filesystem setattr --size <new_size> <fsname>` — expansion is non-disruptive to connected clients
-- Add a new blade to scale capacity: insert blade physically, then use `purefb blade add` — the system automatically rebalances data across blades
+
+| Task | Command |
+|---|---|
+| Create a new NFS filesystem | `purefb filesystem create --size <size> --nfs --nfs-rules '<export_policy>' <fsname>` |
+| Create a new S3 bucket | `purefb bucket create --account <account_name> <bucketname>` |
+| Create an S3 object store account and access key | `purefb objectstoreaccount create <account>`, `purefb objectstoreuser create --account <account> <username>` |
+| Set up an ActiveDR replication link to a remote FlashBlade | `purefb replication fslink create` |
+| Take a filesystem snapshot on demand | `purefb snap create --filesystem <fsname> <snapname>` |
+| Restore a filesystem from snapshot | `purefb filesystem copy` |
+| Expand an existing filesystem | `purefb filesystem setattr --size <new_size> <fsname>` |
+| Add a new blade to scale capacity | `purefb blade add` |
 
 ## Upgrade Notes
 
-1. Log into Pure1 to review the FlashBlade upgrade readiness report — Pure1 pre-checks the target Purity//FB version against your configuration and flags any blockers
-2. Confirm all blades are in `healthy` state (`purefb blade list`) and no hardware alerts are open before beginning the upgrade
-3. Notify NFS, SMB, and S3 clients of a potential brief reconnection event during the upgrade; FlashBlade upgrades are non-disruptive but protocol sessions may briefly re-establish
-4. Download the Purity//FB upgrade image from the Pure Support portal and stage it on the array
-5. Run the pre-upgrade validation to confirm the system is ready to upgrade without warnings
-6. Execute the upgrade during a maintenance window and monitor progress from the Purity GUI or CLI
-7. After upgrade, verify all filesystems, buckets, and replication links are healthy: `purefb filesystem list`, `purefb replication list`, and `purefb alert list`
+
+| Step | Action |
+|---|---|
+| 1 | Log into Pure1 to review the FlashBlade upgrade readiness report — Pure1 pre-checks the target Purity//FB version against your configuration and flags any blockers |
+| 2 | Confirm all blades are in `healthy` state (`purefb blade list`) and no hardware alerts are open before beginning the upgrade |
+| 3 | Notify NFS, SMB, and S3 clients of a potential brief reconnection event during the upgrade; FlashBlade upgrades are non-disruptive but protocol sessions may briefly re-establish |
+| 4 | Download the Purity//FB upgrade image from the Pure Support portal and stage it on the array |
+| 5 | Run the pre-upgrade validation to confirm the system is ready to upgrade without warnings |
+| 6 | Execute the upgrade during a maintenance window and monitor progress from the Purity GUI or CLI |
+| 7 | After upgrade, verify all filesystems, buckets, and replication links are healthy: `purefb filesystem list`, `purefb replication list`, and `purefb alert list` |
 
 ## Best Practices
 

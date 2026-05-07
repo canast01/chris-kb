@@ -2,6 +2,18 @@
 
 Commonly used `powermt` commands for managing Dell PowerPath multipathing on Linux and Windows hosts. PowerPath is a multipathing driver — it sits between the OS and the storage array, managing multiple physical paths to each disk to ensure high availability and load balancing.
 
+```mermaid
+flowchart LR
+    Dell_PowerPath["Dell PowerPath"]
+    Dell_PowerPath --> S0["Status and Devices"]
+    Dell_PowerPath --> S1["Paths"]
+    Dell_PowerPath --> S2["HBA Ports"]
+    Dell_PowerPath --> S3["Load Balancing and Policies"]
+    Dell_PowerPath --> S4["Configuration and Checks"]
+    Dell_PowerPath --> S5["Windows PowerPath"]
+    Dell_PowerPath --> S6["Common Check Sequences"]
+```
+
 ---
 
 

@@ -6,12 +6,15 @@
 
 ## Daily Checks
 
-- [ ] Open Pure1 portal (pure1.purestorage.com) → Evergreen//One → Consumption: review used TB vs. committed reserved tier
-- [ ] Check burst usage trend — confirm burst capacity is not being consumed unexpectedly or accelerating
-- [ ] Review SLA compliance metrics in Pure1 → Evergreen//One → SLA: confirm availability and latency targets are being met
-- [ ] Check for any open support cases or Pure-initiated action items in the Pure1 support portal
-- [ ] Review Pure1 capacity forecasting — flag if growth rate puts the subscription on track to exceed the committed tier within the next 30 days
-- [ ] Confirm Pure1 phone-home is active for all arrays under the subscription
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Open Pure1 portal (pure1.purestorage.com) → Evergreen//One → Consumption |  |  |
+| [ ] Check burst usage trend |  | confirm burst capacity is not being consumed unexpectedly or accelerating |
+| [ ] Review SLA compliance metrics in Pure1 → Evergreen//One → SLA |  |  |
+| [ ] Check for any open support cases or Pure-initiated action items in |  |  |
+| [ ] Review Pure1 capacity forecasting |  | flag if growth rate puts the subscription on track to exceed the committed tier within the next 30 days |
+| [ ] Confirm Pure1 phone-home is active for all arrays under the subscr |  |  |
 
 ## Health Check
 

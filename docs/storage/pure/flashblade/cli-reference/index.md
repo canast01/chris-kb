@@ -4,6 +4,19 @@ Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. Fla
 
 > Connect via SSH to the FlashBlade management IP, or use `purefb` from a host with the CLI installed and configured.
 
+```mermaid
+flowchart LR
+    Pure_FlashBlade["Pure FlashBlade"]
+    Pure_FlashBlade --> S0["Array Status and Hardware"]
+    Pure_FlashBlade --> S1["File Systems (NFS / SMB)"]
+    Pure_FlashBlade --> S2["Object Store (S3)"]
+    Pure_FlashBlade --> S3["Snapshots"]
+    Pure_FlashBlade --> S4["Replication (ActiveDR)"]
+    Pure_FlashBlade --> S5["Network"]
+    Pure_FlashBlade --> S6["Users and Authentication"]
+    Pure_FlashBlade --> S7["Support and Diagnostics"]
+```
+
 ---
 
 

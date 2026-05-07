@@ -2,6 +2,15 @@
 
 > Part of the [NSX-T CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Balancing["Balancing"]
+    Balancing --> S0["NAT"]
+    Balancing --> S1["Load Balancer"]
+    Balancing --> S2["Troubleshooting NAT"]
+    Balancing --> S3["Troubleshooting Load Balancer"]
+```
+
 ## NAT
 
 NAT rules are configured on Tier-0 or Tier-1 gateways. CLI inspection runs on the Edge node.

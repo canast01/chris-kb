@@ -2,6 +2,14 @@
 
 > Part of the [SnapMirror](../) reference.
 
+```mermaid
+flowchart LR
+    SnapMirror["SnapMirror"]
+    SnapMirror --> S0["ONTAP CLI"]
+    SnapMirror --> S1["Lag Monitoring and Alerts"]
+    SnapMirror --> S2["REST API"]
+```
+
 ---
 
 ## ONTAP CLI

@@ -4,6 +4,20 @@
 
 Data Domain replication runs at the MTree level and uses a source-destination model. Both systems must have network connectivity and matching software versions.
 
+```mermaid
+flowchart LR
+    Replication["Replication"]
+    Replication --> S0["Status Overview"]
+    Replication --> S1["Replication States"]
+    Replication --> S2["Configure a Replication Context"]
+    Replication --> S3["Ongoing Operations"]
+    Replication --> S4["Monitoring Replication Lag"]
+    Replication --> S5["Failover (Passive Site Activation)"]
+    Replication --> S6["Re-establishing Replication After Failover"]
+    Replication --> S7["Replication Certificates"]
+    Replication --> S8["Troubleshooting"]
+```
+
 ## Status Overview
 
 ```bash

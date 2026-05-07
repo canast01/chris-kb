@@ -2,6 +2,18 @@
 
 > Part of the [VMware ESXi CLI Reference](../).
 
+```mermaid
+flowchart LR
+    vSAN_Commands["vSAN Commands"]
+    vSAN_Commands --> S0["Cluster Status"]
+    vSAN_Commands --> S1["Storage and Disk Groups"]
+    vSAN_Commands --> S2["Objects and Resyncing"]
+    vSAN_Commands --> S3["Networking"]
+    vSAN_Commands --> S4["Datastore"]
+    vSAN_Commands --> S5["Quick Triage Checklist"]
+    vSAN_Commands --> S6["Status Indicators"]
+```
+
 ## Cluster Status
 
 ```bash

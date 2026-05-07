@@ -2,6 +2,17 @@
 
 SRM management is primarily performed via the `VMware.VimAutomation.Srm` PowerCLI module. Connect to the SRM server with `Connect-SrmServer` before running any cmdlets. The SRM REST API (available from SRM 8.3+) provides equivalent functionality for automation pipelines.
 
+```mermaid
+flowchart LR
+    SRM["SRM"]
+    SRM --> S0["Connection"]
+    SRM --> S1["Protection Groups"]
+    SRM --> S2["Recovery Plans"]
+    SRM --> S3["Test Failover"]
+    SRM --> S4["Recovery (Planned Migration / Failover)"]
+    SRM --> S5["REST API"]
+```
+
 ---
 
 ## Connection

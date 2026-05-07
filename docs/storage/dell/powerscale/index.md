@@ -43,13 +43,16 @@ Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS 
 
 ## Daily Checks
 
-- Run `isi status` to confirm all nodes are online and no node is in a SMARTFAIL or DOWN state
-- Run `isi event list` and filter for CRITICAL or ERROR severity events that require action
-- Check cluster capacity with `isi storagepool list` — alert if any tier exceeds 80% used
-- Verify SyncIQ policy health with `isi sync policies list` and review recent job outcomes with `isi sync reports list`
-- Check for quota violations with `isi quota list` — look for directories that have exceeded soft or hard thresholds
-- Confirm active cluster jobs with `isi job list` — note any jobs in a PAUSED or FAILED state
-- Review CPU and throughput statistics with `isi statistics query current --keys CPU` for any nodes showing sustained high utilisation
+
+| Check | Command | Notes |
+|---|---|---|
+| Run `isi status` to confirm all nodes are online and no node is in a S | `isi status` |  |
+| Run `isi event list` and filter for CRITICAL or ERROR severity events | `isi event list` |  |
+| Check cluster capacity with `isi storagepool list` | `isi storagepool list` | alert if any tier exceeds 80% used |
+| Verify SyncIQ policy health with `isi sync policies list` and review r | `isi sync policies list` |  |
+| Check for quota violations with `isi quota list` | `isi quota list` | look for directories that have exceeded soft or hard thresholds |
+| Confirm active cluster jobs with `isi job list` | `isi job list` | note any jobs in a PAUSED or FAILED state |
+| Review CPU and throughput statistics with `isi statistics query curren | `isi statistics query current --keys CPU` |  |
 
 ## Health Commands
 
@@ -98,24 +101,30 @@ isi license list
 
 ## Operational Tasks
 
-- Add a new access zone for a client group with `isi zone zones create` and assign a dedicated SmartConnect zone and IP pool
-- Create a SmartQuota with advisory, soft, and hard thresholds: `isi quota quotas create --path /ifs/data/project --type directory --hard-threshold 10T --soft-threshold 9T --advisory-threshold 8T`
-- Create and run a SyncIQ replication policy: `isi sync policies create` and trigger with `isi sync policies run <name>`
-- Create a point-in-time snapshot: `isi snapshot snapshots create --path /ifs/data/project --name daily-$(date +%Y%m%d)`
-- Review and modify SmartPool tiering policies to ensure hot data resides on SSD nodes
-- Expand the cluster by adding a new node and running `isi devices drive format` once hardware is cabled
-- Monitor SmartConnect load balancing across IP pools with `isi network pools list`
-- Confirm OneFS patch level and schedule upgrades using `isi upgrade cluster upgrade` in parallel upgrade mode
+
+| Task | Command |
+|---|---|
+| Add a new access zone for a client group with `isi zone zones create` and assign |  |
+| Create a SmartQuota with advisory, soft, and hard thresholds | `isi quota quotas create --path /ifs/data/project --type directory --hard-threshold 10T --soft-threshold 9T --advisory-threshold 8T` |
+| Create and run a SyncIQ replication policy | `isi sync policies create`, `isi sync policies run <name>` |
+| Create a point-in-time snapshot | `isi snapshot snapshots create --path /ifs/data/project --name daily-$(date +%Y%m%d)` |
+| Review and modify SmartPool tiering policies to ensure hot data resides on SSD n |  |
+| Expand the cluster by adding a new node and running `isi devices drive format` o |  |
+| Monitor SmartConnect load balancing across IP pools with `isi network pools list |  |
+| Confirm OneFS patch level and schedule upgrades using `isi upgrade cluster upgra |  |
 
 ## Upgrade Notes
 
-1. Run `isi status` and resolve all node and drive errors before beginning; do not upgrade with a node in SMARTFAIL or DOWN state
-2. Verify the target OneFS version is within the supported upgrade path from the current version using the Dell upgrade compatibility matrix
-3. Confirm all SyncIQ policies are in a healthy completed state; pause scheduled policies during the upgrade window
-4. Download the upgrade image to `/ifs/data/` and verify the checksum against the Dell-published hash
-5. Initiate a parallel upgrade (recommended for OneFS 8.2.2 and later): `isi upgrade cluster upgrade --parallel` — this upgrades all nodes simultaneously with a smaller maintenance window than rolling upgrades
-6. Monitor progress with `isi upgrade view` until all nodes report the new version
-7. After upgrade, run `isi status`, `isi license list`, and re-enable any SyncIQ policies that were paused; verify client NFS and SMB access
+
+| Step | Action |
+|---|---|
+| 1 | Run `isi status` and resolve all node and drive errors before beginning; do not upgrade with a node in SMARTFAIL or DOWN state |
+| 2 | Verify the target OneFS version is within the supported upgrade path from the current version using the Dell upgrade compatibility matrix |
+| 3 | Confirm all SyncIQ policies are in a healthy completed state; pause scheduled policies during the upgrade window |
+| 4 | Download the upgrade image to `/ifs/data/` and verify the checksum against the Dell-published hash |
+| 5 | Initiate a parallel upgrade (recommended for OneFS 8.2.2 and later): `isi upgrade cluster upgrade --parallel` — this upgrades all nodes simultaneously with a smaller maintenance window than rolling upgrades |
+| 6 | Monitor progress with `isi upgrade view` until all nodes report the new version |
+| 7 | After upgrade, run `isi status`, `isi license list`, and re-enable any SyncIQ policies that were paused; verify client NFS and SMB access |
 
 ## Best Practices
 

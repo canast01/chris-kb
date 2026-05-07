@@ -2,6 +2,15 @@
 
 > Part of the Dell PowerMax CLI Reference (SYMCLI). Device groups are the legacy SYMCLI grouping mechanism (pre-Unisphere for PowerMax). For current deployments, prefer Storage Groups via `symsg`. Device groups remain relevant for SRDF operations and Solutions Enabler scripts.
 
+```mermaid
+flowchart LR
+    Legacy["(Legacy)"]
+    Legacy --> S0["List and Inspect"]
+    Legacy --> S1["Create and Delete"]
+    Legacy --> S2["Add and Remove Devices"]
+    Legacy --> S3["SRDF Operations via Device Group"]
+```
+
 ## List and Inspect
 
 ```bash

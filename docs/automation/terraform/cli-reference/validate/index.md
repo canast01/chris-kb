@@ -2,6 +2,14 @@
 
 > Part of the [Terraform CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Providers["Providers"]
+    Providers --> S0["Validate and Format"]
+    Providers --> S1["Providers and Modules"]
+    Providers --> S2["Graph"]
+```
+
 ---
 
 ## Validate & Format

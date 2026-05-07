@@ -4,6 +4,17 @@
 
 RVC (Ruby vSphere Console) was the primary vSAN diagnostic tool before vSAN 6.7. It remains available on vCenter appliances for backwards-compatible diagnostics but most workflows have moved to `esxcli vsan` and the vSAN health service UI.
 
+```mermaid
+flowchart LR
+    Legacy["(Legacy)"]
+    Legacy --> S0["Connecting to RVC"]
+    Legacy --> S1["Health Checks"]
+    Legacy --> S2["Disk and Object Status"]
+    Legacy --> S3["Resync Dashboard"]
+    Legacy --> S4["Rebalance"]
+    Legacy --> S5["RVC vs Modern Alternatives"]
+```
+
 ## Connecting to RVC
 
 ```bash

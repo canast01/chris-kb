@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] NSX-T Manager UI → System → Overview — confirm overall system health is green, no component warnings
-- [ ] `GET /api/v1/cluster/status` — management cluster status should show `STABLE`; flag any `DEGRADED` or `UNSTABLE` nodes
-- [ ] `GET /api/v1/transport-nodes/status` — all transport nodes should report `UP`; flag any `DOWN` or `DEGRADED`
-- [ ] Check Edge cluster health: `GET /api/v1/edge-clusters` — all Edge nodes reachable and healthy
-- [ ] `GET /api/v1/alarms?status=OPEN` — review all open alarms; action any at HIGH or CRITICAL severity
-- [ ] Verify T0/T1 BGP sessions are established (if BGP in use): NSX-T UI → Networking → T0 Gateways → BGP Neighbors, or from Edge CLI: `get logical-router <id> bgp neighbor summary`
-- [ ] Check DFW rule count is not approaching platform limits: NSX-T UI → Security → Distributed Firewall → Statistics
-- [ ] Review NSX Manager backup status: confirm automated backups are completing successfully
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] NSX-T Manager UI → System → Overview |  | confirm overall system health is green, no component warnings |
+| [ ] `GET /api/v1/cluster/status` | `GET /api/v1/cluster/status` | management cluster status should show `STABLE`; flag any `DEGRADED` or `UNSTABLE` nodes |
+| [ ] `GET /api/v1/transport-nodes/status` | `GET /api/v1/transport-nodes/status` | all transport nodes should report `UP`; flag any `DOWN` or `DEGRADED` |
+| [ ] Check Edge cluster health | `GET /api/v1/edge-clusters` | all Edge nodes reachable and healthy |
+| [ ] `GET /api/v1/alarms?status=OPEN` | `GET /api/v1/alarms?status=OPEN` | review all open alarms; action any at HIGH or CRITICAL severity |
+| [ ] Verify T0/T1 BGP sessions are established (if BGP in use): NSX-T UI → Networking → T0 Gateways → BGP Neighbors, or from Edge CLI | `get logical-router <id> bgp neighbor summary` |  |
+| [ ] Check DFW rule count is not approaching platform limits |  |  |
+| [ ] Review NSX Manager backup status |  |  |
 
 ## Health Check
 

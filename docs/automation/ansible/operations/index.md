@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Review scheduled playbook run results in AWX/Tower job history or cron logs
-- [ ] Check AWX/Tower dashboard for job failures and review failure output
-- [ ] Validate dynamic inventory sources are returning the expected host count
-- [ ] Review Vault-encrypted variable files for secrets nearing expiry
-- [ ] Confirm Galaxy roles and collections are current and not deprecated
-- [ ] Verify control node SSH key access to all critical host groups
-- [ ] Check for playbooks pinned to deprecated module names or legacy syntax
-- [ ] Confirm Python version on target hosts meets minimum Ansible requirements
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Review scheduled playbook run results in AWX/Tower job history or |  |  |
+| [ ] Check AWX/Tower dashboard for job failures and review failure outp |  |  |
+| [ ] Validate dynamic inventory sources are returning the expected host |  |  |
+| [ ] Review Vault-encrypted variable files for secrets nearing expiry |  |  |
+| [ ] Confirm Galaxy roles and collections are current and not deprecate |  |  |
+| [ ] Verify control node SSH key access to all critical host groups |  |  |
+| [ ] Check for playbooks pinned to deprecated module names or legacy sy |  |  |
+| [ ] Confirm Python version on target hosts meets minimum Ansible requi |  |  |
 
 ## Health Check
 

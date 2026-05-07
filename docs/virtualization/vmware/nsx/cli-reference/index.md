@@ -4,6 +4,20 @@ Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing
 
 > NSX Manager and Edge Node CLIs are accessed via SSH. Log in as `admin`. Run `nsxcli` on the Manager to enter the NSX management shell.
 
+```mermaid
+flowchart LR
+    NSX_T["NSX-T"]
+    NSX_T --> S0["NSX Manager — System"]
+    NSX_T --> S1["Transport Nodes and Fabric"]
+    NSX_T --> S2["Logical Switches and Segments"]
+    NSX_T --> S3["Tier-0 and Tier-1 Gateways"]
+    NSX_T --> S4["Edge Nodes"]
+    NSX_T --> S5["Distributed Firewall (DFW)"]
+    NSX_T --> S6["NAT and Load Balancing"]
+    NSX_T --> S7["Diagnostics and Troubleshooting"]
+    NSX_T --> S8["IPAM, Certificates and Backup"]
+```
+
 ---
 
 

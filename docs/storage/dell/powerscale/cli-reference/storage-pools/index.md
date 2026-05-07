@@ -2,6 +2,17 @@
 
 > Part of the Dell PowerScale (Isilon) CLI Reference. SmartPools (requires license) enables tiering across node pools with different media types.
 
+```mermaid
+flowchart LR
+    Tiers["Tiers"]
+    Tiers --> S0["Node Pools"]
+    Tiers --> S1["Tiers"]
+    Tiers --> S2["File Pool Policies"]
+    Tiers --> S3["SmartPools Job"]
+    Tiers --> S4["Spillover Configuration"]
+    Tiers --> S5["SSD Strategy Options"]
+```
+
 ## Node Pools
 
 ```bash

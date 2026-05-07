@@ -2,6 +2,19 @@
 
 > Part of the [NSX-T CLI Reference](../).
 
+```mermaid
+flowchart LR
+    System["System"]
+    System --> S0["Cluster and Manager Health"]
+    System --> S1["Version and Node Info"]
+    System --> S2["Appliance Configuration"]
+    System --> S3["NTP and Time"]
+    System --> S4["Certificates"]
+    System --> S5["Syslog"]
+    System --> S6["Backup Status"]
+    System --> S7["Quick Reference"]
+```
+
 ## Cluster and Manager Health
 
 ```bash

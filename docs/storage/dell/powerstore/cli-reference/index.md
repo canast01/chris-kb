@@ -2,6 +2,18 @@
 
 PowerStore management uses the PowerStore Manager web UI, REST API, and the `pstcli` command-line interface. `pstcli` connects to the PowerStore management IP and supports scripting and automation for all array operations.
 
+```mermaid
+flowchart LR
+    Dell_PowerStore["Dell PowerStore"]
+    Dell_PowerStore --> S0["Connection"]
+    Dell_PowerStore --> S1["Array and System Management"]
+    Dell_PowerStore --> S2["Volume Operations"]
+    Dell_PowerStore --> S3["Host Management"]
+    Dell_PowerStore --> S4["Snapshots and Protection"]
+    Dell_PowerStore --> S5["Capacity and Performance"]
+    Dell_PowerStore --> S6["REST API (Alternative)"]
+```
+
 ---
 
 ## Connection

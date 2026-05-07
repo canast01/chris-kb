@@ -79,13 +79,16 @@ Pure Storage Evergreen is a hardware subscription model for FlashArray and Flash
 
 ## Daily Checks
 
-- Confirm no open hardware alerts in Pure1 or the FlashArray/FlashBlade GUI
-- Review array capacity: used, provisioned, and data reduction ratio
-- Validate replication pod and ActiveCluster status are healthy
-- Check host connectivity — confirm no offline or degraded paths via `purehost list` or GUI
-- Review Purity software version against Pure support-recommended range
-- Confirm Pure1 phone-home connectivity (support tunnel active)
-- Check snapshot schedule completion and retention policy compliance
+
+| Check | Command | Notes |
+|---|---|---|
+| Confirm no open hardware alerts in Pure1 or the FlashArray/FlashBlade |  |  |
+| Review array capacity |  |  |
+| Validate replication pod and ActiveCluster status are healthy |  |  |
+| Check host connectivity |  | confirm no offline or degraded paths via `purehost list` or GUI |
+| Review Purity software version against Pure support-recommended range |  |  |
+| Confirm Pure1 phone-home connectivity (support tunnel active) |  |  |
+| Check snapshot schedule completion and retention policy compliance |  |  |
 
 ## Health Commands
 
@@ -127,24 +130,30 @@ purearray list
 
 ## Operational Tasks
 
-- Schedule Ever Modern controller upgrade with Pure support at least 30 days before subscription renewal date
-- Plan and validate host multipathing before entering any controller upgrade window
-- Validate ActiveCluster mediator and pod status before upgrade
-- Confirm Purity software is within the upgrade-supported range (check Pure compatibility matrix)
-- Review and clean up stale snapshots and destroyed volumes before capacity review
-- Validate replication pod resume after upgrade completion
-- Confirm all host paths are restored post-upgrade using `purehostconnection list`
-- Update subscription documentation with new controller generation and renewal date
+
+| Task | Command |
+|---|---|
+| Schedule Ever Modern controller upgrade with Pure support at least 30 days befor |  |
+| Plan and validate host multipathing before entering any controller upgrade windo |  |
+| Validate ActiveCluster mediator and pod status before upgrade |  |
+| Confirm Purity software is within the upgrade-supported range (check Pure compat |  |
+| Review and clean up stale snapshots and destroyed volumes before capacity review |  |
+| Validate replication pod resume after upgrade completion |  |
+| Confirm all host paths are restored post-upgrade using `purehostconnection list` | `purehostconnection list` |
+| Update subscription documentation with new controller generation and renewal dat |  |
 
 ## Upgrade Notes
 
-1. Confirm Purity software version is within the supported range for the target controller generation using Pure's compatibility matrix
-2. Validate all host paths are redundant and multipathing is active on every connected host
-3. Confirm ActiveCluster mediator is reachable and pods are in sync before upgrade window
-4. Pause or validate replication schedules so lag does not trigger alerts during the upgrade
-5. Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap)
-6. Monitor host I/O during the upgrade using `purearray monitor` to confirm no latency impact
-7. After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed
+
+| Step | Action |
+|---|---|
+| 1 | Confirm Purity software version is within the supported range for the target controller generation using Pure's compatibility matrix |
+| 2 | Validate all host paths are redundant and multipathing is active on every connected host |
+| 3 | Confirm ActiveCluster mediator is reachable and pods are in sync before upgrade window |
+| 4 | Pause or validate replication schedules so lag does not trigger alerts during the upgrade |
+| 5 | Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap) |
+| 6 | Monitor host I/O during the upgrade using `purearray monitor` to confirm no latency impact |
+| 7 | After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed |
 
 ## Best Practices
 

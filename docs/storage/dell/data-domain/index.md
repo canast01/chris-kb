@@ -43,13 +43,16 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance that perf
 
 ## Daily Checks
 
-- Run `alerts show current` to review any active hardware or software alerts
-- Run `filesys show space` to confirm pre- and post-compression capacity usage and headroom
-- Run `filesys show compression` to verify the global dedup ratio (healthy is 20:1+; investigate if it drops significantly)
-- Run `replication show` to confirm all replication contexts are in `Normal` or `Replicating` state
-- Run `ddboost show clients` to verify DDBoost-connected backup servers are active and authenticated
-- Check `filesys status` to confirm the filesystem is enabled and running
-- Review `system show` for hardware health (fans, PSUs, disk status)
+
+| Check | Command | Notes |
+|---|---|---|
+| Run `alerts show current` to review any active hardware or software al | `alerts show current` |  |
+| Run `filesys show space` to confirm pre- and post-compression capacity | `filesys show space` |  |
+| Run `filesys show compression` to verify the global dedup ratio (healthy is 20 | `filesys show compression` |  |
+| Run `replication show` to confirm all replication contexts are in `Nor | `replication show` |  |
+| Run `ddboost show clients` to verify DDBoost-connected backup servers | `ddboost show clients` |  |
+| Check `filesys status` to confirm the filesystem is enabled and runnin | `filesys status` |  |
+| Review `system show` for hardware health (fans, PSUs, disk status) | `system show` |  |
 
 ## Health Commands
 
@@ -103,24 +106,30 @@ adminaccess show
 
 ## Operational Tasks
 
-- Create a new MTree with `mtree create /data/col1/<name>` and set soft/hard quotas
-- Register a DDBoost storage unit in the backup application and map it to the new MTree
-- Configure MTree replication: `replication add source mtree://<src-dd>/data/col1/<name> destination mtree://<dst-dd>/data/col1/<name>`
-- Schedule filesystem cleaning: `filesys clean set-frequency weeks 1` (default is weekly on Tuesday at 06:00)
-- Monitor and adjust replication throttle schedules with `replication throttle`
-- Expand shelf capacity: run `disk show state` to confirm new shelf is recognised, then `filesys expand`
-- Rotate DDBoost user credentials and update all backup server registrations
-- Review and age out expired MTrees or storage units no longer used by backup jobs
+
+| Task | Command |
+|---|---|
+| Create a new MTree with `mtree create /data/col1/<name>` and set soft/hard quota |  |
+| Register a DDBoost storage unit in the backup application and map it to the new |  |
+| Configure MTree replication | `replication add source mtree://<src-dd>/data/col1/<name> destination mtree://<dst-dd>/data/col1/<name>` |
+| Schedule filesystem cleaning | `filesys clean set-frequency weeks 1` |
+| Monitor and adjust replication throttle schedules with `replication throttle` | `replication throttle` |
+| Expand shelf capacity | `disk show state`, `filesys expand` |
+| Rotate DDBoost user credentials and update all backup server registrations |  |
+| Review and age out expired MTrees or storage units no longer used by backup jobs |  |
 
 ## Upgrade Notes
 
-1. Run `system show` and `adminaccess show` to record current DDOS version and admin configuration before starting
-2. Download the target DDOS upgrade package from Dell Support and verify the MD5 checksum
-3. Confirm all replication contexts are in `Normal` state with `replication show`; suspend replication with `replication sync` if needed to avoid mid-upgrade inconsistencies
-4. Run `filesys clean start` and wait for it to complete before upgrade to reduce post-upgrade clean time
-5. Upload the upgrade package via `system upgrade` or the System Manager GUI; DDOS upgrades are non-disruptive for most minor versions but verify the release notes
-6. After upgrade, run `filesys status`, `replication show`, and `alerts show current` to confirm all services are healthy
-7. Re-validate DDBoost connectivity from each backup server and run a test backup and restore
+
+| Step | Action |
+|---|---|
+| 1 | Run `system show` and `adminaccess show` to record current DDOS version and admin configuration before starting |
+| 2 | Download the target DDOS upgrade package from Dell Support and verify the MD5 checksum |
+| 3 | Confirm all replication contexts are in `Normal` state with `replication show`; suspend replication with `replication sync` if needed to avoid mid-upgrade inconsistencies |
+| 4 | Run `filesys clean start` and wait for it to complete before upgrade to reduce post-upgrade clean time |
+| 5 | Upload the upgrade package via `system upgrade` or the System Manager GUI; DDOS upgrades are non-disruptive for most minor versions but verify the release notes |
+| 6 | After upgrade, run `filesys status`, `replication show`, and `alerts show current` to confirm all services are healthy |
+| 7 | Re-validate DDBoost connectivity from each backup server and run a test backup and restore |
 
 ## Best Practices
 

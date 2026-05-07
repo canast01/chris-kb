@@ -6,15 +6,16 @@
 
 ## Daily Checks
 
-Review the ECS Portal and REST API each morning to confirm node health, capacity, geo-replication, and S3 endpoint availability.
 
-- [ ] Log in to ECS Portal → Dashboard and review the Alerts panel for any active hardware or software alarms — triage by severity
-- [ ] ECS Portal → Dashboard → Capacity: confirm cluster utilisation is below 70% of usable capacity; alert if approaching or above 80%
-- [ ] Query `GET /vdc/nodes` via the Management REST API (or check ECS Portal → Hardware → Nodes) — all nodes should report `GOOD`; a `DEGRADED` or offline node requires immediate investigation
-- [ ] Query `GET /vdc/capacity` to retrieve current cluster capacity metrics; compare against yesterday's value to identify unexpected capacity growth
-- [ ] ECS Portal → Geo Monitoring: verify geo-replication lag between VDCs is at zero or within the acceptable threshold for each replication group
-- [ ] Confirm the S3 endpoint is responding: send a test `HEAD` or `ListBuckets` request to the S3 load balancer VIP and confirm HTTP 200 (or 403 with valid credentials)
-- [ ] Review bucket-level capacity for fast-growing buckets — identify any namespace where week-over-week growth is accelerating beyond expected rates
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Log in to ECS Portal → Dashboard and review the Alerts panel for a |  | triage by severity |
+| [ ] ECS Portal → Dashboard → Capacity |  |  |
+| [ ] Query `GET /vdc/nodes` via the Management REST API (or check ECS P | `GET /vdc/nodes` | all nodes should report `GOOD`; a `DEGRADED` or offline node requires immediate investigation |
+| [ ] Query `GET /vdc/capacity` to retrieve current cluster capacity met | `GET /vdc/capacity` |  |
+| [ ] ECS Portal → Geo Monitoring |  |  |
+| [ ] Confirm the S3 endpoint is responding | `HEAD` |  |
+| [ ] Review bucket-level capacity for fast-growing buckets |  | identify any namespace where week-over-week growth is accelerating beyond expected rates |
 
 ## Health Check
 

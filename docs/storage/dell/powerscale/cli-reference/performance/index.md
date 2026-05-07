@@ -2,6 +2,19 @@
 
 > Part of the Dell PowerScale (Isilon) CLI Reference.
 
+```mermaid
+flowchart LR
+    Statistics["Statistics"]
+    Statistics --> S0["Cluster-Level Stats"]
+    Statistics --> S1["Node-Level Stats"]
+    Statistics --> S2["Drive and Disk Stats"]
+    Statistics --> S3["Throughput and IOPS"]
+    Statistics --> S4["Historical Performance"]
+    Statistics --> S5["Performance Thresholds"]
+    Statistics --> S6["InsightIQ / CloudPools Analysis"]
+    Statistics --> S7["Common Issues"]
+```
+
 ## Cluster-Level Stats
 
 ```bash

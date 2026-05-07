@@ -6,11 +6,14 @@ Azure Virtual Machines provide compute resources for Windows and Linux workloads
 
 ## Daily Checks
 
-- Review VM health
-- Check disk capacity and performance
-- Validate backup status
-- Review update compliance
-- Confirm monitoring alerts
+
+| Check | Command | Notes |
+|---|---|---|
+| Review VM health |  |  |
+| Check disk capacity and performance |  |  |
+| Validate backup status |  |  |
+| Review update compliance |  |  |
+| Confirm monitoring alerts |  |  |
 
 ## Health Commands
 

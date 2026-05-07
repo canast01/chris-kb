@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Review backup jobs from the last 24 hours: `Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId,JobType,Status,StartDateTime,EndDateTime`
-- [ ] Flag any failed or stuck jobs (Status = `Failed`, `Running` for > 4 hours, or `Queued` overnight)
-- [ ] Check plugin host connectivity: `Get-SmHost | Select HostName,HostType,PlugInStatus` — all hosts should show `Running`
-- [ ] Verify secondary (SnapVault/SnapMirror) copies exist for critical resources: `Get-SmBackup -ResourceName <resource>`
-- [ ] Check SnapCenter Server disk usage — review log partition growth (default logs under `C:\Program Files\NetApp\SnapCenter\SMCore\logs\`)
-- [ ] Confirm all resources are within their backup SLA window — no resource should be missing a backup beyond the defined retention interval
-- [ ] Check certificate expiry on the SnapCenter Server (GUI: Settings → Global Settings → HTTPS Certificate)
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Review backup jobs from the last 24 hours | `Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId,JobType,Status,StartDateTime,EndDateTime` |  |
+| [ ] Flag any failed or stuck jobs (Status = `Failed`, `Running` for > | `Failed` |  |
+| [ ] Check plugin host connectivity | `Get-SmHost | Select HostName,HostType,PlugInStatus` | all hosts should show `Running` |
+| [ ] Verify secondary (SnapVault/SnapMirror) copies exist for critical resources | `Get-SmBackup -ResourceName <resource>` |  |
+| [ ] Check SnapCenter Server disk usage |  | review log partition growth (default logs under `C:\Program Files\NetApp\SnapCenter\SMCore\logs\`) |
+| [ ] Confirm all resources are within their backup SLA window |  | no resource should be missing a backup beyond the defined retention interval |
+| [ ] Check certificate expiry on the SnapCenter Server (GUI |  |  |
 
 ## Health Check
 

@@ -6,11 +6,14 @@
 
 ## Daily Checks
 
-- [ ] All SRDF/A pairs are in Consistent or Synchronized state — no pairs in Transmit Idle, Split, or Mixed state without an open change ticket
-- [ ] Delta mark count is stable — a steadily growing delta mark count indicates the link cannot keep pace with writes
-- [ ] Cycle time is within the expected range (default 30 seconds) — confirm via `symrdf queryall`
-- [ ] No pairs in Transmit Idle state (indicates link saturation or bandwidth exhaustion)
-- [ ] SRDF/A link utilization is below saturation threshold — check that bandwidth headroom exists for peak write periods
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] All SRDF/A pairs are in Consistent or Synchronized state |  | no pairs in Transmit Idle, Split, or Mixed state without an open change ticket |
+| [ ] Delta mark count is stable |  | a steadily growing delta mark count indicates the link cannot keep pace with writes |
+| [ ] Cycle time is within the expected range (default 30 seconds) |  | confirm via `symrdf queryall` |
+| [ ] No pairs in Transmit Idle state (indicates link saturation or band |  |  |
+| [ ] SRDF/A link utilization is below saturation threshold |  | check that bandwidth headroom exists for peak write periods |
 
 ## Health Check
 

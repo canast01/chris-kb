@@ -39,11 +39,14 @@ Linux servers provide operating system services for applications, databases, aut
 
 ## Daily Checks
 
-- Check system load
-- Review disk usage
-- Confirm key services are running
-- Review logs
-- Validate patch status
+
+| Check | Command | Notes |
+|---|---|---|
+| Check system load |  |  |
+| Review disk usage |  |  |
+| Confirm key services are running |  |  |
+| Review logs |  |  |
+| Validate patch status |  |  |
 
 ## Health Commands
 

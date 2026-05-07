@@ -6,13 +6,16 @@
 
 ## Daily Checks
 
-- [ ] Review `terraform plan` output in CI pipeline for any unexpected or unintended changes
-- [ ] Confirm remote backend (S3, Azure Blob, or Terraform Cloud) is accessible and state is not locked
-- [ ] Review active workspace: `terraform workspace list` — confirm correct workspace is selected
-- [ ] Check `.terraform.lock.hcl` for expired provider versions or deprecated resources flagged by `terraform validate`
-- [ ] Review open pull requests that modify Terraform code for pending unplanned changes
-- [ ] Check for stale state lock files that may indicate a stuck or abandoned operation
-- [ ] Confirm sensitive variable sources (Vault, SSM Parameter Store, env vars) are accessible
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Review `terraform plan` output in CI pipeline for any unexpected o | `terraform plan` |  |
+| [ ] Confirm remote backend (S3, Azure Blob, or Terraform Cloud) is acc |  |  |
+| [ ] Review active workspace | `terraform workspace list` | confirm correct workspace is selected |
+| [ ] Check `.terraform.lock.hcl` for expired provider versions or depre | `.terraform.lock.hcl` |  |
+| [ ] Review open pull requests that modify Terraform code for pending u |  |  |
+| [ ] Check for stale state lock files that may indicate a stuck or aban |  |  |
+| [ ] Confirm sensitive variable sources (Vault, SSM Parameter Store, en |  |  |
 
 ## Health Check
 

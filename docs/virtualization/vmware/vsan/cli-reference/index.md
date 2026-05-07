@@ -4,6 +4,17 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 
 > All `esxcli vsan` commands run from the ESXi host shell (SSH as root). PowerCLI commands run from a Windows/Linux workstation with the VMware.PowerCLI module installed.
 
+```mermaid
+flowchart LR
+    vSAN["vSAN"]
+    vSAN --> S0["Cluster Status and Capacity"]
+    vSAN --> S1["Health and Diagnostics"]
+    vSAN --> S2["Disk Groups"]
+    vSAN --> S3["Networking (vSAN VMkernel)"]
+    vSAN --> S4["PowerCLI — vSAN"]
+    vSAN --> S5["RVC Commands (Legacy)"]
+```
+
 ---
 
 

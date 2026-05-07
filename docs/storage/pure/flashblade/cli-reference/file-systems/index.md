@@ -2,6 +2,18 @@
 
 > Part of the Pure FlashBlade CLI Reference.
 
+```mermaid
+flowchart LR
+    SMB["SMB)"]
+    SMB --> S0["List File Systems"]
+    SMB --> S1["Create a File System"]
+    SMB --> S2["Resize a File System"]
+    SMB --> S3["Update NFS Export Rules"]
+    SMB --> S4["SMB Shares"]
+    SMB --> S5["Destroy and Eradicate"]
+    SMB --> S6["Common Issues"]
+```
+
 ## List File Systems
 
 ```bash

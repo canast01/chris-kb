@@ -2,6 +2,17 @@
 
 > Part of the [NetApp ONTAP CLI Reference](../).
 
+```mermaid
+flowchart LR
+    QoS["QoS"]
+    QoS --> S0["Statistics Collection"]
+    QoS --> S1["Common Statistics Objects"]
+    QoS --> S2["QoS Policy Groups"]
+    QoS --> S3["Apply QoS to a Volume"]
+    QoS --> S4["QoS Workload Monitoring"]
+    QoS --> S5["Performance Thresholds Reference"]
+```
+
 ## Statistics Collection
 
 ONTAP statistics require a sample to be collected before viewing:

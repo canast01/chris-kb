@@ -6,14 +6,17 @@
 
 ## Daily Checks
 
-- [ ] Run `Get-VMHost | Select Name,ConnectionState,PowerState` — confirm all hosts are Connected and PoweredOn
-- [ ] Check hardware health alerts in vCenter — flag any red or yellow alarms on ESXi host objects
-- [ ] Run `esxcli storage core path list | grep -c dead` — result should be 0; any dead paths require immediate investigation
-- [ ] Run `esxcli network vswitch dvs vmware list` — verify dvSwitch uplinks are all connected with expected active NICs
-- [ ] Review vCenter alarms dashboard for any triggered host-level alarms
-- [ ] Verify NTP sync on all hosts: `esxcli system ntp get` — confirm `Running: true` and servers configured
-- [ ] Review ESXi vmkernel log for NMP, SCSI, or network errors: check `/var/log/vmkernel.log`
-- [ ] Confirm no hosts are in maintenance mode unexpectedly
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `Get-VMHost | Select Name,ConnectionState,PowerState` | `Get-VMHost | Select Name,ConnectionState,PowerState` | confirm all hosts are Connected and PoweredOn |
+| [ ] Check hardware health alerts in vCenter |  | flag any red or yellow alarms on ESXi host objects |
+| [ ] Run `esxcli storage core path list | grep -c dead` | `esxcli storage core path list | grep -c dead` | result should be 0; any dead paths require immediate investigation |
+| [ ] Run `esxcli network vswitch dvs vmware list` | `esxcli network vswitch dvs vmware list` | verify dvSwitch uplinks are all connected with expected active NICs |
+| [ ] Review vCenter alarms dashboard for any triggered host-level alarm |  |  |
+| [ ] Verify NTP sync on all hosts | `esxcli system ntp get` | confirm `Running: true` and servers configured |
+| [ ] Review ESXi vmkernel log for NMP, SCSI, or network errors | `/var/log/vmkernel.log` |  |
+| [ ] Confirm no hosts are in maintenance mode unexpectedly |  |  |
 
 ## Health Check
 

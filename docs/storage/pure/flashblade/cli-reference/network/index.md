@@ -2,6 +2,19 @@
 
 > Part of the [Pure FlashBlade CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Network["Network"]
+    Network --> S0["Network Interfaces"]
+    Network --> S1["Subnets"]
+    Network --> S2["DNS"]
+    Network --> S3["NTP"]
+    Network --> S4["VIPs (Virtual IPs) for NFS/SMB"]
+    Network --> S5["Routing"]
+    Network --> S6["Network Troubleshooting"]
+    Network --> S7["Common Issues"]
+```
+
 ## Network Interfaces
 
 ```bash

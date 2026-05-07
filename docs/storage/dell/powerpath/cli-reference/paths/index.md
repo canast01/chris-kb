@@ -2,6 +2,18 @@
 
 > Part of the Dell PowerPath CLI Reference.
 
+```mermaid
+flowchart LR
+    Paths["Paths"]
+    Paths --> S0["Path Status"]
+    Paths --> S1["Path State Values"]
+    Paths --> S2["Restore and Recover Paths"]
+    Paths --> S3["Manual Path Failover and Unblock"]
+    Paths --> S4["Path Detail"]
+    Paths --> S5["Multipath Configuration Verification"]
+    Paths --> S6["Common Path Issues"]
+```
+
 ## Path Status
 
 ```bash

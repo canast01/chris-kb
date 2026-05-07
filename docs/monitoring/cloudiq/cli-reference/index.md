@@ -2,6 +2,16 @@
 
 CloudIQ is accessed programmatically via its REST API using OAuth2 client credentials. There is no standalone CLI binary; all automation uses the REST API directly. The API base URL is `https://cloudiq.apis.dell.com`.
 
+```mermaid
+flowchart LR
+    CloudIQ["CloudIQ"]
+    CloudIQ --> S0["System Health"]
+    CloudIQ --> S1["Capacity"]
+    CloudIQ --> S2["Performance"]
+    CloudIQ --> S3["Recommendations"]
+    CloudIQ --> S4["Python Automation Example"]
+```
+
 ---
 
 ## Authentication

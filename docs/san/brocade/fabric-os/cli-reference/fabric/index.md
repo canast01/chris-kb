@@ -2,6 +2,14 @@
 
 > Part of the [Brocade Fabric OS CLI Reference](../).
 
+```mermaid
+flowchart LR
+    Server["Server"]
+    Server --> S0["Fabric and Topology"]
+    Server --> S1["ISLs and Trunks"]
+    Server --> S2["Name Server and FLOGI"]
+```
+
 ---
 
 ## Fabric & Topology

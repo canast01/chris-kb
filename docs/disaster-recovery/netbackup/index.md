@@ -29,11 +29,14 @@ NetBackup provides enterprise backup and recovery for servers, databases, virtua
 
 ## Daily Checks
 
-- Review failed jobs
-- Check storage unit capacity
-- Confirm catalog backup status
-- Validate media server health
-- Review policy schedules
+
+| Check | Command | Notes |
+|---|---|---|
+| Review failed jobs |  |  |
+| Check storage unit capacity |  |  |
+| Confirm catalog backup status |  |  |
+| Validate media server health |  |  |
+| Review policy schedules |  |  |
 
 ## Health Commands
 

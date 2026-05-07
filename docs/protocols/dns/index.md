@@ -20,11 +20,14 @@ DNS resolves names to IP addresses and is a critical dependency for authenticati
 
 ## Daily Checks
 
-- Verify forward and reverse lookup
-- Confirm DNS server availability
-- Review stale or duplicate records
-- Check zone replication
-- Validate conditional forwarders
+
+| Check | Command | Notes |
+|---|---|---|
+| Verify forward and reverse lookup |  |  |
+| Confirm DNS server availability |  |  |
+| Review stale or duplicate records |  |  |
+| Check zone replication |  |  |
+| Validate conditional forwarders |  |  |
 
 ## Health Commands
 

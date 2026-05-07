@@ -2,6 +2,18 @@
 
 Commands for viewing HBA port information and path status in Dell PowerPath/VE.
 
+```mermaid
+flowchart LR
+    Ports["Ports"]
+    Ports --> S0["List All HBA Ports"]
+    Ports --> S1["Show Path Information"]
+    Ports --> S2["Check Path State"]
+    Ports --> S3["Path Statistics"]
+    Ports --> S4["HBA Port to WWPN Mapping"]
+    Ports --> S5["Common PowerPath CLI Quick Reference"]
+    Ports --> S6["Troubleshooting Dead Paths"]
+```
+
 ## List All HBA Ports
 
 ```bash

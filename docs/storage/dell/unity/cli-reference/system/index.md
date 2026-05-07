@@ -2,6 +2,19 @@
 
 > Part of the Dell Unity CLI Reference (Unisphere CLI).
 
+```mermaid
+flowchart LR
+    Status["Status"]
+    Status --> S0["System Information"]
+    Status --> S1["Alerts and Events"]
+    Status --> S2["Licenses"]
+    Status --> S3["ESRS (Remote Support)"]
+    Status --> S4["NTP and DNS"]
+    Status --> S5["SP Failover (Trespass)"]
+    Status --> S6["Upgrade Status"]
+    Status --> S7["Health Summary"]
+```
+
 ## System Information
 
 ```bash

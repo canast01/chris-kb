@@ -39,10 +39,13 @@ Brocade Fabric OS is the operating system for Brocade Fibre Channel SAN switches
 
 ## Daily Checks
 
-- Review switch health
-- Check port errors
-- Validate zoning configuration
-- Confirm fabric membership
+
+| Check | Command | Notes |
+|---|---|---|
+| Review switch health |  |  |
+| Check port errors |  |  |
+| Validate zoning configuration |  |  |
+| Confirm fabric membership |  |  |
 
 ## Health Commands
 

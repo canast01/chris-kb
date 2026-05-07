@@ -2,6 +2,13 @@
 
 > Part of the Dell PowerPath CLI Reference.
 
+```mermaid
+flowchart LR
+    Devices["Devices"]
+    Devices --> S0["Status and Overview"]
+    Devices --> S1["Devices"]
+```
+
 ---
 
 ## Status & Overview

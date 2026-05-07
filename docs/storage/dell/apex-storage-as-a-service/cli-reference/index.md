@@ -2,6 +2,18 @@
 
 > Part of the [APEX Storage as a Service](../) reference.
 
+```mermaid
+flowchart LR
+    API["API"]
+    API --> S0["Quick-Reference Table"]
+    API --> S1["Dell API Authentication"]
+    API --> S2["APEX Systems API"]
+    API --> S3["Subscription API"]
+    API --> S4["Metrics API"]
+    API --> S5["CloudIQ Integration"]
+    API --> S6["Notes on APEX Management Boundaries"]
+```
+
 ---
 
 APEX Storage as a Service has no local CLI. All management is through the **Dell APEX Console** (web portal at console.dell.com) or the **Dell Technologies Cloud API** at `api.dell.com`. The API follows REST conventions and uses OAuth2 client credentials for authentication.
