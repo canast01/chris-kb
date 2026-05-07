@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#common-ldapsearch-queries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Common ldapsearch Queries
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#ldaps-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        LDAPS Verification
       
     </span>
   </a>
@@ -745,10 +745,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
+  <a href="#application-ldap-integration-linux-pamsssd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Workflow
+        Application LDAP Integration (Linux PAM/SSSD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,26 +786,151 @@
 
 
 <h1 id="ldap">LDAP<a class="headerlink" href="#ldap" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>LDAP provides directory services used for authentication, authorization, and identity management across applications and infrastructure.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify directory service availability</li>
-<li>Check replication status</li>
-<li>Review authentication errors</li>
-<li>Validate directory synchronization</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ldapsearch -x -h server -b dc=example,dc=com
-systemctl status slapd
+<p>Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DN (Distinguished Name)</td>
+<td>Full path to an object: <code>CN=user,OU=Users,DC=domain,DC=com</code></td>
+</tr>
+<tr>
+<td>BaseDN</td>
+<td>Search starting point in the directory tree</td>
+</tr>
+<tr>
+<td>Bind DN</td>
+<td>Service account used to authenticate to LDAP</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Search expression: <code>(&amp;(objectClass=user)(sAMAccountName=user01))</code></td>
+</tr>
+<tr>
+<td>Attribute</td>
+<td>Field on a directory object (e.g., <code>mail</code>, <code>memberOf</code>, <code>sAMAccountName</code>)</td>
+</tr>
+<tr>
+<td>LDAPS</td>
+<td>LDAP over TLS (port 636) — required for credential queries</td>
+</tr>
+<tr>
+<td>SASL</td>
+<td>Simple Authentication and Security Layer — Kerberos/GSSAPI bind</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-ldapsearch-queries">Common ldapsearch Queries<a class="headerlink" href="#common-ldapsearch-queries" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Basic connectivity test (anonymous bind)
+ldapsearch -x -H ldap://&lt;dc-host&gt; -b &quot;dc=domain,dc=com&quot; -s base &quot;(objectclass=*)&quot;
+
+# Authenticated search — find a user
+ldapsearch -x -H ldap://&lt;dc-host&gt; \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(sAMAccountName=username)&quot; \
+  cn mail memberOf
+
+# Find all members of a group
+ldapsearch -x -H ldap://&lt;dc-host&gt; \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(cn=Domain Admins)&quot; \
+  member
+
+# List all OUs
+ldapsearch -x -H ldap://&lt;dc-host&gt; \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(objectClass=organizationalUnit)&quot; \
+  ou
+
+# Find disabled accounts
+ldapsearch -x -H ldap://&lt;dc-host&gt; \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(&amp;(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=2))&quot; \
+  sAMAccountName
 </code></pre>
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Backup directory database</li>
-<li>Verify replication health</li>
-<li>Apply software updates</li>
-<li>Validate authentication services</li>
-</ol>
+<h2 id="ldaps-verification">LDAPS Verification<a class="headerlink" href="#ldaps-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test LDAPS connectivity
+openssl s_client -connect &lt;dc-host&gt;:636 -showcerts
+
+# ldapsearch over TLS
+ldapsearch -H ldaps://&lt;dc-host&gt;:636 \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(sAMAccountName=username)&quot;
+
+# Test LDAP StartTLS (port 389)
+ldapsearch -H ldap://&lt;dc-host&gt;:389 -Z \
+  -D &quot;CN=svc-ldap,OU=ServiceAccounts,DC=domain,DC=com&quot; \
+  -W \
+  -b &quot;DC=domain,DC=com&quot; \
+  &quot;(sAMAccountName=username)&quot;
+</code></pre>
+<h2 id="application-ldap-integration-linux-pamsssd">Application LDAP Integration (Linux PAM/SSSD)<a class="headerlink" href="#application-ldap-integration-linux-pamsssd" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check SSSD status
+systemctl status sssd
+
+# Test user lookup via SSSD
+id username
+getent passwd username
+
+# Clear SSSD cache
+sssctl cache-remove -y
+
+# SSSD debug log
+tail -f /var/log/sssd/sssd_&lt;domain&gt;.log
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid credentials</code></td>
+<td>Bind DN and password</td>
+<td>Verify svc account password; confirm account not locked</td>
+</tr>
+<tr>
+<td><code>No such object</code></td>
+<td>BaseDN</td>
+<td>Verify DN exists; check for typo in domain components</td>
+</tr>
+<tr>
+<td><code>Confidentiality required</code></td>
+<td>LDAPS/StartTLS</td>
+<td>Application requires LDAPS — configure TLS on directory port</td>
+</tr>
+<tr>
+<td>Authentication failing for all users</td>
+<td>DC connectivity</td>
+<td><code>ping &lt;dc&gt;</code>, <code>nslookup &lt;domain&gt;</code> — check DNS resolution</td>
+</tr>
+<tr>
+<td>SSSD not resolving users</td>
+<td>SSSD service / cache</td>
+<td><code>systemctl restart sssd</code>; <code>sssctl cache-remove -y</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
