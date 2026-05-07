@@ -6,30 +6,21 @@ Dell PowerPath is a host-side multipath I/O driver that sits between the operati
 
 ## Host-Side MPIO Stack
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                      Host (Windows / Linux / AIX)                        │
-  │                                                                          │
-  │  ┌──────────────────────────────────────────────────────────────────┐   │
-  │  │  Application (Oracle / SQL Server / File System)                 │   │
-  │  └──────────────────────────────────┬───────────────────────────── ┘   │
-  │                                     │  I/O                              │
-  │  ┌──────────────────────────────────▼───────────────────────────────┐   │
-  │  │  PowerPath Virtual Device (pseudo device, single LUN view)       │   │
-  │  │  Intelligent load balancing  |  Automatic failover               │   │
-  │  │  ALUA-aware path selection   |  Policy: CLAROpt / RoundRobin     │   │
-  │  └───────────────┬──────────────────────────┬────────────────────── ┘   │
-  │                  │  Active path              │  Standby / secondary path │
-  │  ┌───────────────▼──────────┐  ┌────────────▼──────────────────────┐    │
-  │  │  HBA0 (Fabric A)         │  │  HBA1 (Fabric B)                  │    │
-  │  │  FC / NVMe-oF            │  │  FC / NVMe-oF                     │    │
-  │  └───────────────┬──────────┘  └────────────┬──────────────────────┘    │
-  └──────────────────┼─────────────────────────┼────────────────────────────┘
-                     │  FC / NVMe-oF            │
-             ┌───────▼──────────────────────────▼───────┐
-             │  PowerMax  (CT0 → Fabric A, CT1 → Fab B)  │
-             │  ALUA: preferred port = owning director   │
-             └──────────────────────────────────────────┘
+```mermaid
+graph LR
+  HOST(["Host — Linux / Windows / VMware"]) --> PP["PowerPath\n(MPIO driver)"]
+  PP --> P1["HBA0 → Fabric A → SP-A"]
+  PP --> P2["HBA0 → Fabric A → SP-B"]
+  PP --> P3["HBA1 → Fabric B → SP-A"]
+  PP --> P4["HBA1 → Fabric B → SP-B"]
+  P1 & P2 & P3 & P4 --> ARRAY["Storage Array\nPowerMax / Unity"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class PP net
+  class P1,P2,P3,P4 net
+  class HOST host
+  class ARRAY ctrl
 ```
 
 ## Components

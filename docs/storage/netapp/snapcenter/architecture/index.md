@@ -25,20 +25,20 @@ SnapCenter Server itself is not natively HA in the open way a cluster is. Recomm
 - **VM-based resilience**: Run SnapCenter Server as a VM protected by VMware HA; RPO is the last SnapCenter Server backup; RTO is VM restart time (~5 minutes)
 - **SnapCenter Server backup**: Use the built-in `SnapCenter Server backup` feature to snapshot the repository and application configuration daily; store on secondary ONTAP
 
-```
-  ┌────────────────────────────────────┐
-  │        SnapCenter Server           │
-  │  (Windows Server / IIS + MySQL)    │
-  │         Port 8146 (GUI/API)        │
-  └──────┬───────────────┬─────────────┘
-         │               │
-   ONTAP API        TCP 8145
-   (REST/ZAPI)      (Agent)
-         │               │
-  ┌──────▼──────┐  ┌─────▼─────────────┐
-  │ ONTAP       │  │ Protected Hosts   │
-  │ Cluster(s)  │  │ (Win/Linux/VMware)│
-  └─────────────┘  └───────────────────┘
+```mermaid
+graph TB
+  SCW["SnapCenter Server\n(Windows / Linux VM)"]
+  SCW --> PL1["Plug-in for SQL Server"]
+  SCW --> PL2["Plug-in for Oracle"]
+  SCW --> PL3["Plug-in for VMware"]
+  PL1 & PL2 & PL3 --> ONTAP["NetApp ONTAP\nSnapshot · SnapMirror · SnapVault"]
+  ADMIN(["DBA / Storage Admin"]) -->|"web UI / REST API"| SCW
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class SCW,PL1,PL2,PL3 ctrl
+  class ONTAP store
+  class ADMIN host
 ```
 
 ## Connectivity

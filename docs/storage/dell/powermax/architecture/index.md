@@ -1,38 +1,24 @@
 # PowerMax Architecture
 ## PowerMax Architecture
 
-```
-  ┌──────────────────────────────────────────────────────────────────────┐
-  │                     PowerMax 8000 Array                              │
-  │                                                                      │
-  │  ┌──────────────────────────────────────────────────────────────┐    │
-  │  │             Director Layer (active-active)                    │    │
-  │  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │    │
-  │  │  │  FA Dir   │  │  FA Dir   │  │  SRDF Dir │  │  SRDF Dir │ │    │
-  │  │  │ (FC/NVMe) │  │ (FC/NVMe) │  │(replication│  │(replication│ │    │
-  │  │  │  ports)   │  │  ports)   │  │  ports)   │  │  ports)   │ │    │
-  │  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │    │
-  │  └────────┼──────────────┼──────────────┼──────────────┼────────┘    │
-  │           │              │              │              │             │
-  │  ┌────────▼──────────────▼──────────────▼──────────────▼────────┐    │
-  │  │              Crossbar Interconnect (low-latency)              │    │
-  │  └───────────────────────────┬───────────────────────────────────┘    │
-  │                              │                                        │
-  │  ┌───────────────────────────▼───────────────────────────────────┐    │
-  │  │              NVMe Flash Drives (NVMe-SCM / eTLC)              │    │
-  │  │           (data + FAST VP tiering, SnapVX metadata)           │    │
-  │  └───────────────────────────────────────────────────────────────┘    │
-  └─────────────────────┬─────────────────────┬────────────────────────── ┘
-                        │  FC / NVMe-oF        │ SRDF replication
-           ┌────────────▼──────────┐   ┌───────▼───────────────────┐
-           │    SAN Fabric          │   │   Remote PowerMax Array   │
-           │  (Brocade / Cisco MDS) │   │   (SRDF/S or SRDF/A)      │
-           └────────────┬──────────┘   └───────────────────────────┘
-                        │
-           ┌────────────▼──────────────────────────┐
-           │  Hosts (MPIO / PowerPath)              │
-           │  Oracle RAC / SQL Server / SAP HANA    │
-           └───────────────────────────────────────┘
+```mermaid
+graph TB
+  FA1["FA Director A\nFC / NVMe-oF"] & FA2["FA Director B\nFC / NVMe-oF"] --> XB["Crossbar Interconnect"]
+  SR1["SRDF Director A"] & SR2["SRDF Director B"] --> XB
+  XB --> FLASH[("NVMe Flash\nNVMe-SCM / eTLC")]
+  FA1 & FA2 --> FAB["SAN Fabric\n(Brocade / Cisco)"]
+  FAB --> H(["Hosts — Oracle / SQL / SAP"])
+  SR1 & SR2 -->|"SRDF/S or SRDF/A"| REMOTE["Remote PowerMax"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class FA1,FA2,SR1,SR2 ctrl
+  class XB,FAB net
+  class FLASH store
+  class H host
+  class REMOTE dr
 ```
 
 ## Overview

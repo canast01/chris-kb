@@ -12,26 +12,23 @@ VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a 
 
 ## SRM Topology
 
-```
-  Site A (Protected)                          Site B (Recovery)
-  ──────────────────────────────────          ──────────────────────────────────
-  ┌──────────────────────────────┐            ┌──────────────────────────────┐
-  │  vCenter A                   │◄──────────►│  vCenter B                   │
-  │  SRM A (plugin + server)     │  paired    │  SRM B (plugin + server)     │
-  │  Storage Manager A (SRA)     │            │  Storage Manager B (SRA)     │
-  └──────────────┬───────────────┘            └───────────────┬──────────────┘
-                 │  SRA communicates                          │  SRA communicates
-                 │  with storage array                        │  with storage array
-  ┌──────────────▼───────────────┐            ┌───────────────▼──────────────┐
-  │  Production Storage          │            │  DR Storage                  │
-  │  FlashArray / PowerMax       │──replication│  FlashArray / PowerMax (DR)  │
-  │  ONTAP / vSAN                │────────────►│  ONTAP / vSAN (DR)           │
-  └──────────────────────────────┘            └──────────────────────────────┘
-         │  VMs running                               │  VMs recovered here
-  ┌──────▼───────────────────┐             ┌──────────▼──────────────────┐
-  │  Protection Group        │  SRM plan   │  Recovery Plan              │
-  │  (VMs + replication)     │────────────►│  (power-on order, IP remap) │
-  └──────────────────────────┘             └────────────────────────────┘
+```mermaid
+graph LR
+  VC_A["vCenter A\n+ SRM Server A + SRA"] --> STG_A[("Storage A")]
+  VC_B["vCenter B\n+ SRM Server B + SRA"] --> STG_B[("Storage B")]
+  VC_A <-->|"SRM pairing"| VC_B
+  STG_A -->|"replication\nvSphere Rep / array"| STG_B
+  H_A(["Production VMs\nSite A"]) --> VC_A
+  H_B(["DR VMs\nSite B"]) -.-> VC_B
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class VC_A ctrl
+  class VC_B dr
+  class STG_A,STG_B store
+  class H_A host
+  class H_B dr
 ```
 
 ## Core Components

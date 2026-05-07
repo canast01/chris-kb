@@ -19,21 +19,21 @@ Aria Operations (formerly vRealize Operations) is deployed as an analytics clust
 
 ## Component Topology
 
-```
-┌─────────────────────────────────────────────────────┐
-│                Analytics Cluster                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  │
-│  │ Primary  │  │ Replica  │  │  Data Node(s)    │  │
-│  └────┬─────┘  └──────────┘  └──────────────────┘  │
-└───────┼─────────────────────────────────────────────┘
-        │
-        ├── Remote Collector (remote site / DMZ)
-        ├── Cloud Proxy (cloud accounts)
-        │
-        ├── vCenter Adapter (SDDC adapter)
-        ├── NSX Adapter
-        ├── vSAN Adapter (built-in)
-        └── Third-party adapters (storage, network, OS)
+```mermaid
+graph TB
+  ADP1["vCenter Adapter"] & ADP2["NSX Adapter"] & ADP3["Storage Adapter"] --> COL["Remote Collector\n(cloud proxy)"]
+  COL --> ANAL["Aria Operations\nAnalytics Cluster"]
+  ANAL --> DATA[("Metrics Store")]
+  ANAL --> ALERTS["Alerts · Capacity · Rightsizing"]
+  ADMIN(["vSphere Admin"]) -->|"browser"| ANAL
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class ANAL,COL ctrl
+  class DATA store
+  class ADP1,ADP2,ADP3,ALERTS mgmt
+  class ADMIN host
 ```
 
 ---

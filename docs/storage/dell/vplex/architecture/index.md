@@ -6,25 +6,19 @@ Dell VPLEX is a storage virtualisation and federation platform that presents uni
 
 ## Storage Federation Topology
 
-```
-  Site A                                          Site B
-  ──────────────────────────────────              ──────────────────────────────
-  ┌──────────────────────────────┐               ┌──────────────────────────────┐
-  │   VPLEX VS2 Cluster (Geo)    │               │   VPLEX VS2 Cluster (Geo)    │
-  │   Director Pair 1  Dir Pair 2│◄──WAN/DS3────►│   Director Pair 1  Dir Pair 2│
-  │   GeoSynchrony OS            │  synchronous  │   GeoSynchrony OS            │
-  └───────┬──────────────────────┘  replication  └──────────┬───────────────────┘
-          │  FC (back-end)                                   │  FC (back-end)
-  ┌───────▼────────────┐                          ┌──────────▼───────────────┐
-  │  Local Arrays      │                          │  Local Arrays (DR site)  │
-  │  PowerMax / Unity  │                          │  PowerMax / Unity        │
-  │  (physical volumes)│                          │  (mirrored extent)       │
-  └────────────────────┘                          └──────────────────────────┘
-          │  FC (front-end)                                  │
-  ┌───────▼─────────────────────────────────────────────────▼──────────────┐
-  │  Hosts — see single virtual volume regardless of which site owns it    │
-  │  Active/Active cross-site — no host changes during site migration      │
-  └─────────────────────────────────────────────────────────────────────── ┘
+```mermaid
+graph LR
+  H1(["Hosts Site A"]) --> DIR1["VPLEX Director Pair\nCluster 1 — Site A"]
+  H2(["Hosts Site B"]) --> DIR2["VPLEX Director Pair\nCluster 2 — Site B"]
+  DIR1 <-->|"WAN link\nGeoSynchrony"| DIR2
+  DIR1 --> STG1[("Local Storage A")]
+  DIR2 --> STG2[("Local Storage B")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class DIR1,DIR2 ctrl
+  class STG1,STG2 store
+  class H1,H2 host
 ```
 
 ## Components

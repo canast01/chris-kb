@@ -5,17 +5,19 @@ Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from 
 
 ## Architecture Diagram
 
-```
-On-Premises                           Dell Cloud
-┌─────────────────────────────┐       ┌─────────────────────────────┐
-│  Dell Arrays / Servers       │       │  CloudIQ SaaS Platform       │
-│  (PowerStore, PowerMax,      │──────►│  - Health scoring engine     │
-│   PowerScale, Unity XT,      │       │  - AI/AIOps recommendations  │
-│   Data Domain, PowerEdge)    │       │  - Capacity forecasting      │
-│                              │       │  - REST API                  │
-│  Secure Connect Gateway(SCG) │──────►│  - Web dashboard             │
-│  (OVA on-prem)               │ HTTPS │                              │
-└─────────────────────────────┘  443   └─────────────────────────────┘
+```mermaid
+graph TB
+  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale"] -->|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
+  CLOUDIQ --> HEALTH["Health Score & Alerts"]
+  CLOUDIQ --> CAP["Capacity Forecasting"]
+  CLOUDIQ --> REC["AI Recommendations"]
+  ADMIN(["IT Admin"]) -->|"web portal"| CLOUDIQ
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAYS ctrl
+  class CLOUDIQ,HEALTH,CAP,REC cloud
+  class ADMIN host
 ```
 
 ## Component Roles

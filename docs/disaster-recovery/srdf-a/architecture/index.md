@@ -85,14 +85,18 @@ SRDF/A requires:
 
 ## Architecture Diagram (Logical)
 
-```
-Production Site                           DR Site
-┌──────────────────────┐                 ┌──────────────────────┐
-│  Host writes         │                 │                      │
-│      ↓               │   FCIP/WAN      │                      │
-│  PowerMax R1  ──────────────────────►  PowerMax R2            │
-│  (active delta set)  │  (delta sets    │  (R2 receives        │
-│                      │   transmitted)  │   cycles in order)   │
-└──────────────────────┘                 └──────────────────────┘
-        RPO = time since last completed cycle (default: ~30s)
+```mermaid
+graph LR
+  PM_A["PowerMax Primary\nSite A — R1"] -->|"writes buffered"| CYCLE["Delta Set Extension\n(DSE — WAN buffer)"]
+  CYCLE -->|"cycle flush\n~30s"| PM_B["PowerMax Secondary\nSite B — R2"]
+  PM_B -.->|"RPO / lag monitor"| LAG["SRDF/A Cycle State"]
+  PM_A --> HA(["Production Hosts"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class PM_A ctrl
+  class PM_B dr
+  class CYCLE,LAG mgmt
+  class HA host
 ```

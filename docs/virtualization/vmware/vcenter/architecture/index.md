@@ -1,36 +1,22 @@
 # vCenter Architecture
 ## vSphere Cluster Topology
 
-```
-  ┌─────────────────────────────────────────────────────────────────────────────┐
-  │                          vSphere Cluster                                    │
-  │                                                                             │
-  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
-  │  │   ESXi-01    │  │   ESXi-02    │  │   ESXi-03    │  │   ESXi-04    │   │
-  │  │  vmnic0/1    │  │  vmnic0/1    │  │  vmnic0/1    │  │  vmnic0/1    │   │
-  │  │  vmnic2/3    │  │  vmnic2/3    │  │  vmnic2/3    │  │  vmnic2/3    │   │
-  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘   │
-  │         │  VDS             │                 │                 │           │
-  └─────────┼──────────────────┼─────────────────┼─────────────────┼───────────┘
-            │                  │                 │                 │
-  ┌─────────▼──────────────────▼─────────────────▼─────────────────▼───────────┐
-  │                   vSphere Distributed Switch (VDS)                          │
-  │   ┌───────────┐  ┌────────────┐  ┌─────────────┐  ┌──────────────────┐    │
-  │   │  VM Net   │  │ vMotion    │  │  Storage    │  │  Management      │    │
-  │   │  (dvPG)   │  │ VMkernel   │  │  VMkernel   │  │  VMkernel        │    │
-  │   └───────────┘  └────────────┘  └─────────────┘  └──────────────────┘    │
-  └───────────────────────────────────────────────────────────────────────────┘
-            │ Management & API                          │ Storage
-  ┌─────────▼──────────────────────────────┐  ┌────────▼──────────────────────┐
-  │  vCenter Server                        │  │  Shared Storage               │
-  │  ┌────────────┐  ┌────────────────┐   │  │  ┌────────────┐  ┌─────────┐  │
-  │  │  vSphere   │  │  Lifecycle Mgr │   │  │  │ FlashArray │  │  vSAN   │  │
-  │  │  Client    │  │  (patching)    │   │  │  │ (VMFS/vVol)│  │ (local) │  │
-  │  └────────────┘  └────────────────┘   │  │  └────────────┘  └─────────┘  │
-  │  ┌────────────┐  ┌────────────────┐   │  └───────────────────────────────┘
-  │  │  DRS / HA  │  │  NSX Manager   │   │
-  │  └────────────┘  └────────────────┘   │
-  └────────────────────────────────────────┘
+```mermaid
+graph TB
+  VCSA["vCenter Server Appliance\n(VCSA)"] --> CL["vSphere Cluster\nDRS · HA enabled"]
+  VCSA --> LCM["Lifecycle Manager\n(patching)"]
+  VCSA --> NSX["NSX Manager\n(optional)"]
+  CL --> ESX1["ESXi-01"] & ESX2["ESXi-02"] & ESX3["ESXi-03"] & ESX4["ESXi-04"]
+  ESX1 & ESX2 & ESX3 & ESX4 --> VDS["vSphere Distributed Switch\nVM Net · vMotion · Storage · Mgmt"]
+  VDS --> STORE["Shared Storage\nFlashArray · vSAN · NFS"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class VCSA,LCM,NSX mgmt
+  class CL,VDS net
+  class ESX1,ESX2,ESX3,ESX4 ctrl
+  class STORE store
 ```
 
 ## Deployment Model

@@ -5,18 +5,19 @@ InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Is
 
 ## Deployment Architecture
 
-```
-PowerScale Clusters                   InsightIQ Virtual Appliance
-┌────────────────────┐                ┌──────────────────────────────────┐
-│  Cluster A (Isilon) │──[REST pull]──►│  Data Collector                  │
-│  Cluster B (Isilon) │──[REST pull]──►│  (polls OneFS performance API)   │
-│  Cluster C (Isilon) │──[REST pull]──►│                                  │
-└────────────────────┘                │  PostgreSQL Database              │
-                                      │  (local — stores time-series data)│
-                                      │                                   │
-                                      │  Web Dashboard (HTTP/HTTPS)       │
-                                      │  (performance charts, reports)    │
-                                      └──────────────────────────────────┘
+```mermaid
+graph TB
+  PS["PowerScale Cluster\n(OneFS API)"] -->|"performance telemetry"| IIQ["InsightIQ Server\n(analytics VM)"]
+  IIQ --> PERF["Performance Dashboards\nIOPS · Throughput · Latency"]
+  IIQ --> CAP["Capacity Trending\n& Protocol Breakdown"]
+  IIQ --> REP["Scheduled Reports\nPDF / CSV export"]
+  ADMIN(["Storage Admin"]) -->|"browser"| IIQ
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class PS ctrl
+  class IIQ,PERF,CAP,REP cloud
+  class ADMIN host
 ```
 
 ## Component Roles

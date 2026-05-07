@@ -10,33 +10,20 @@ FlashBlade serves multiple protocols natively from a single platform without any
 
 ## Scale-Out Blade Architecture
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                     FlashBlade Chassis (17U)                             │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Fabric Management Module (FMM)  /  Blade Mgmt Module (BMM)     │    │
-  │  │  NVMe-oF internal fabric  |  Out-of-band management plane       │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
-  │  │ Blade 01 │ │ Blade 02 │ │ Blade 03 │ │  ...     │ │ Blade 15 │     │
-  │  │ CPU+NVMe │ │ CPU+NVMe │ │ CPU+NVMe │ │          │ │ CPU+NVMe │     │
-  │  │ 17 / 52T │ │ 17 / 52T │ │ 17 / 52T │ │          │ │ 17 / 52T │     │
-  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘     │
-  │       └────────────┴────────────┴─────────────┴────────────┘           │
-  │                         internal NVMe-oF fabric                        │
-  └──────────────────────────────┬──────────────────────────────────────────┘
-                                 │  10 / 25 / 100 GbE
-               ┌─────────────────▼───────────────────────┐
-               │  Ethernet Fabric (leaf-spine)            │
-               │  NFS v3/v4.1  |  S3  |  SMB  |  NFS/S3  │
-               └────────────────┬────────────────────────┘
-                                │
-        ┌───────────────────────▼────────────────────────────┐
-        │  Clients                                            │
-        │  GPU nodes (AI/ML)  Hadoop  Backup  Analytics       │
-        └─────────────────────────────────────────────────────┘
-  Scale: 1 to 15 blades per chassis, up to 20 chassis in a cluster
+```mermaid
+graph TB
+  FMM["Fabric Management Module\n(NVMe-oF internal fabric)"]
+  B1["Blade 1"] & B2["Blade 2"] & B3["Blade 3"] & BN["Blade N…"] --> FMM
+  FMM --> ETH["10 / 25 / 100 GbE\nData Ports"]
+  ETH --> NFS(["NFS v3/v4.1 Clients"])
+  ETH --> S3(["S3 / Object Clients"])
+  ETH --> SMB(["SMB Clients"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FMM,B1,B2,B3,BN ctrl
+  class ETH net
+  class NFS,S3,SMB host
 ```
 
 ## Components

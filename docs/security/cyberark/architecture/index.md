@@ -19,34 +19,19 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
 
 ## PAM Component Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                         CyberArk PAM Platform                           │
-  │                                                                          │
-  │  ┌────────────────────────────────────────────────────────────────┐     │
-  │  │  Digital Vault Server (DVS)                                    │     │
-  │  │  Encrypted credential store  |  Hardened OS  |  No network FS  │     │
-  │  │  DR Vault (async replication) ◄────────────────────────────    │     │
-  │  └───────┬──────────────────────────────────────────┬────────────┘     │
-  │          │  Vault API (TCP 1858)                    │                  │
-  │  ┌───────▼──────────┐                    ┌──────────▼─────────────┐    │
-  │  │  PVWA            │                    │  CPM                   │    │
-  │  │  Web UI + REST   │                    │  Password rotation      │    │
-  │  │  API gateway     │                    │  Verification & change │    │
-  │  │  (IIS on Windows)│                    │  Platform plugins       │    │
-  │  └───────┬──────────┘                    └────────────────────────┘    │
-  │          │  session launch                                              │
-  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
-  │  │  PSM  (Privileged Session Manager)                               │  │
-  │  │  RDP / SSH proxy  |  Session recording  |  Keystroke logging     │  │
-  │  │  No credential reaches end user — PSM injects transparently      │  │
-  │  └──────────────────────────────────────────────────────────────────┘  │
-  │          │  proxied session to target                                   │
-  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
-  │  │  Target Systems                                                   │  │
-  │  │  Windows servers  Linux / Unix  Network devices  Databases        │  │
-  │  └──────────────────────────────────────────────────────────────────┘  │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  PVWA["PVWA\n(web interface)"] & PSM["PSM\n(session proxy)"] & CPM["CPM\n(rotation engine)"] --> VAULT["CyberArk Vault\n(encrypted credential store)"]
+  USER(["Privileged User"]) -->|"browser"| PVWA
+  PSM -->|"RDP / SSH proxy\nsession recording"| TARGET(["Target Servers"])
+  CPM -->|"password rotation"| TARGET
+  VAULT -.->|"audit stream"| SIEM(["SIEM"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class VAULT store
+  class PVWA,PSM,CPM ctrl
+  class USER,TARGET,SIEM host
 ```
 
 ## Network Topology

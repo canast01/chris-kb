@@ -6,34 +6,20 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built aro
 
 ## Deduplication Pipeline
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                  Data Domain (PowerProtect DD) Architecture              │
-  │                                                                          │
-  │  Ingest                                                                  │
-  │  ┌──────────────────────────────────────────────────────────────────┐   │
-  │  │  Backup clients / media servers                                  │   │
-  │  │  Veeam  NetBackup  CommVault  TSM  Oracle RMAN  NFS / CIFS / VTL│   │
-  │  └────────────────────────────────┬─────────────────────────────── ┘   │
-  │                                   │  data stream                       │
-  │  ┌────────────────────────────────▼─────────────────────────────────┐  │
-  │  │  SISL Inline Deduplication Engine                                │  │
-  │  │  1. Segment stream into variable-length chunks                   │  │
-  │  │  2. Fingerprint each chunk (SHA)                                 │  │
-  │  │  3. Lookup FP in dedup index (DRAM + SSD cache)                  │  │
-  │  │  4. If match: store reference only (no write to disk)            │  │
-  │  │  5. If new: compress + write to active tier                      │  │
-  │  └───────────────────────────────┬──────────────────────────────── ┘  │
-  │                                  │  deduplicated + compressed data     │
-  │  ┌─────────────────────────────── ▼────────────────────────────────┐   │
-  │  │  Storage Tiers                                                   │   │
-  │  │  ┌──────────────────┐  ┌───────────────────┐  ┌──────────────┐  │   │
-  │  │  │  Active Tier     │  │  Retention Tier   │  │  Cloud Tier  │  │   │
-  │  │  │  (SSD / NL-SAS)  │  │  (NL-SAS archive) │  │  (S3 / Azure)│  │   │
-  │  │  └──────────────────┘  └───────────────────┘  └──────────────┘  │   │
-  │  └──────────────────────────────────────────────────────────────────┘  │
-  │  Typical dedupe ratio: 20:1 across mixed backup workloads               │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  BU(["Backup Servers\nNetBackup / Commvault / Veeam"]) -->|"DDBoost / NFS / CIFS / VTL"| DD["Dell Data Domain\n(dedup + compression)"]
+  DD -->|"DD Replicator"| DDDR["Remote Data Domain\n(DR copy)"]
+  DD --> CLOUD["Cloud Tier\nS3 / Azure Blob — long-term"]
+  DD --> VTL["Virtual Tape Library\n(optional)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class DD ctrl
+  class BU host
+  class CLOUD cloud
+  class DDDR dr
 ```
 
 ## Core Components

@@ -5,31 +5,20 @@
 ---
 ## SAN Fabric Topology
 
-```
-  Site A                                          Site B
-  ─────────────────────────────────               ──────────────────────────────
-  ┌──────────────┐   ┌──────────────┐             ┌──────────────┐   ┌──────────────┐
-  │  ESXi-01     │   │  ESXi-02     │             │  ESXi-03     │   │  ESXi-04     │
-  │  HBA0  HBA1  │   │  HBA0  HBA1  │             │  HBA0  HBA1  │   │  HBA0  HBA1  │
-  └──┬──────┬────┘   └──┬──────┬────┘             └──┬──────┬────┘   └──┬──────┬────┘
-     │      │           │      │                     │      │           │      │
-  Fab-A   Fab-B       Fab-A   Fab-B               Fab-A   Fab-B       Fab-A   Fab-B
-     │      │           │      │                     │      │           │      │
-  ┌──▼──────▼───────────▼──┐  ┌▼────────────────────▼──────▼───────────▼──┐
-  │  Brocade Director A    │  │  Brocade Director B                        │
-  │  (Fabric A — primary)  │  │  (Fabric B — secondary)                    │
-  └──────────┬─────────────┘  └───────────┬────────────────────────────────┘
-             │  E_Port ISL (10/40 Gbps)   │  E_Port ISL
-             │                            │
-  ┌──────────▼─────────────┐  ┌───────────▼────────────────────────────────┐
-  │  Brocade Director C    │  │  Brocade Director D                        │
-  │  (Fabric A — DR site)  │  │  (Fabric B — DR site)                      │
-  └──────┬─────────────────┘  └────────┬───────────────────────────────────┘
-         │  FC                         │  FC
-  ┌──────▼──────┐               ┌──────▼──────┐
-  │ FlashArray  │               │  PowerMax   │
-  │  (FA-DR-1)  │               │  (PM-DR-1)  │
-  └─────────────┘               └─────────────┘
+```mermaid
+graph TB
+  H1(["ESXi-01\nHBA0 · HBA1"]) & H2(["ESXi-02\nHBA0 · HBA1"]) --> DIRA["Brocade Director A\n(Fabric A)"]
+  H1 & H2 --> DIRB["Brocade Director B\n(Fabric B)"]
+  DIRA <-->|"ISL — 10/40 Gbps"| DIRC["Brocade Director C\n(Fabric A — DR)"]
+  DIRB <-->|"ISL — 10/40 Gbps"| DIRD["Brocade Director D\n(Fabric B — DR)"]
+  DIRA & DIRB --> FA[("FlashArray")]
+  DIRC & DIRD --> PM[("PowerMax")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class DIRA,DIRB,DIRC,DIRD ctrl
+  class FA,PM store
+  class H1,H2 host
 ```
 
 <div class="kb-grid kb-grid-3">

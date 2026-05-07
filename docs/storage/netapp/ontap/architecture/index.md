@@ -1,36 +1,21 @@
 # ONTAP Architecture
 ## HA Pair Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────┐
-  │                      ONTAP Cluster (2-node HA)                       │
-  │                                                                      │
-  │  ┌───────────────────────────┐     ┌────────────────────────────┐    │
-  │  │   Node 1 (Controller)     │     │   Node 2 (Controller)      │    │
-  │  │                           │◄───►│                            │    │
-  │  │  Cluster interconnect     │ HA  │  Cluster interconnect      │    │
-  │  │  (100 GbE / cluster net)  │ hb  │  (100 GbE / cluster net)   │    │
-  │  │                           │     │                            │    │
-  │  │  SVM-1 (NFS / CIFS)       │     │  SVM-1 replicated (takeover│    │
-  │  │  SVM-2 (iSCSI / FC)       │     │  if Node 1 fails)          │    │
-  │  └──────┬────────────────────┘     └────────────────┬───────────┘    │
-  │         │  FC / SAS                                 │  FC / SAS      │
-  │  ┌──────▼────────────────────────────────────────────▼───────────┐   │
-  │  │                    Shared Disk Shelves                         │   │
-  │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐      │   │
-  │  │  │  DS224C  │  │  DS224C  │  │  DS460C  │  │  DS460C  │      │   │
-  │  │  │ (NVMe    │  │  (NVMe)  │  │  (SAS    │  │  (SAS)   │      │   │
-  │  │  │  SSDs)   │  │          │  │  HDDs)   │  │          │      │   │
-  │  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘      │   │
-  │  └────────────────────────────────────────────────────────────────┘   │
-  └──────────────────────────────────────────────────────────────────────┘
-       │  NFS / CIFS                    │  iSCSI / FC / NVMe-oF
-  ┌────▼────────────────────────────────▼────┐
-  │   Clients / Hosts                        │
-  │   VMware NFS datastores                  │
-  │   Windows/Linux CIFS shares              │
-  │   SAN hosts (LUNs / NVMe namespaces)     │
-  └──────────────────────────────────────────┘
+```mermaid
+graph TB
+  N1["Node 1 (Controller)\nSVM-1 · SVM-2"] <-->|"HA interconnect\n100GbE cluster net"| N2["Node 2 (Controller)\n(takeover on failover)"]
+  N1 & N2 --> SHELVES[("Disk Shelves\nNVMe SSD / SAS HDD")]
+  N1 --> NAS["NFS · SMB/CIFS"]
+  N1 --> SAN["iSCSI · FC · NVMe-oF"]
+  N2 --> NAS & SAN
+  NAS --> NC(["NAS Clients"])
+  SAN --> SC(["SAN Hosts"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2 ctrl
+  class SHELVES store
+  class NC,SC host
 ```
 
 ## Overview

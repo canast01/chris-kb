@@ -14,28 +14,22 @@ VxRail is sold exclusively as a pre-configured appliance and is managed as a sys
 
 ## HCI Node Cluster
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                       VxRail Cluster                                     │
-  │                                                                          │
-  │  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐ │
-  │  │   VxRail Node 1    │  │   VxRail Node 2    │  │   VxRail Node N    │ │
-  │  │   ESXi             │  │   ESXi             │  │   ESXi             │ │
-  │  │   NVMe cache       │  │   NVMe cache       │  │   NVMe cache       │ │
-  │  │   SSD / NL-SAS cap │  │   SSD / NL-SAS cap │  │   SSD / NL-SAS cap │ │
-  │  │   25 GbE NICs      │  │   25 GbE NICs      │  │   25 GbE NICs      │ │
-  │  └─────────┬──────────┘  └─────────┬──────────┘  └─────────┬──────────┘ │
-  └────────────┼─────────────────────── ┼────────────────────────┼───────────┘
-               └─────────────────────────────────────────────────┘
-                        25 GbE ToR switch (leaf-spine)
-                        vSAN, vMotion, VM, management traffic
-
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │  VxRail Manager (VM on cluster)                                          │
-  │  Lifecycle management  |  Day-0 bring-up  |  vCenter integration        │
-  │  HW firmware + ESXi + vSAN coordinated upgrade via VxRail LCM           │
-  └──────────────────────────────────────────────────────────────────────────┘
-  Part of VCF on VxRail: SDDC Manager orchestrates workload domains
+```mermaid
+graph TB
+  VXM["VxRail Manager\n(lifecycle management)"] --> VCSA["vCenter Server"]
+  VXM --> NODES["VxRail Cluster\n3 – 64 nodes"]
+  NODES --> N1["VxRail Node 1\nvSAN cache + capacity"]
+  NODES --> N2["Node 2"]
+  NODES --> N3["Node N…"]
+  N1 & N2 & N3 --> DS[("vSAN Datastore")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class VXM,VCSA mgmt
+  class NODES ctrl
+  class N1,N2,N3 host
+  class DS store
 ```
 
 ## Cluster Topology

@@ -6,30 +6,19 @@ Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives t
 
 ## Data Pipeline Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │  On-Premises                                                             │
-  │                                                                          │
-  │  ┌──────────────────────────────────────────────────────────────────┐   │
-  │  │  Secure Connect Gateway (SCG) — virtual appliance               │   │
-  │  │  Collects telemetry via REST from:                               │   │
-  │  │  PowerMax  PowerStore  Unity  PowerScale  PowerFlex  Networking  │   │
-  │  └─────────────────────────────────┬────────────────────────────── ┘   │
-  │                                    │  HTTPS outbound (port 443)        │
-  └────────────────────────────────────┼──────────────────────────────────┘
-                                       │
-  ┌────────────────────────────────────▼──────────────────────────────────┐
-  │  Dell Cloud (CloudIQ SaaS)                                             │
-  │                                                                        │
-  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐    │
-  │  │  Telemetry Store │  │  AI / ML Engine  │  │  REST API        │    │
-  │  │  (time-series)   │  │  Anomaly detect  │  │  (customer use)  │    │
-  │  │                  │  │  Capacity fcst   │  │                  │    │
-  │  └──────────────────┘  └──────────────────┘  └──────────────────┘    │
-  │                                                                        │
-  │  Health Scores  |  Capacity Forecasts  |  Anomaly Alerts               │
-  │  Web Dashboard  |  Email / Webhook notifications                       │
-  └────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale · PowerStore"] -->|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
+  CLOUDIQ --> HEALTH["Health Score & Alerts"]
+  CLOUDIQ --> CAP["Capacity Forecasting"]
+  CLOUDIQ --> REC["AI Recommendations"]
+  ADMIN(["IT Admin"]) -->|"web portal"| CLOUDIQ
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAYS ctrl
+  class CLOUDIQ,HEALTH,CAP,REC cloud
+  class ADMIN host
 ```
 
 ## Components

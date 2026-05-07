@@ -31,27 +31,27 @@ Architecture knowledge base landing page.
 
 ## Enterprise Architecture Overview
 
-```
-  ┌────────────────────────────────────────────────────────────────────────────┐
-  │                        Enterprise Data Centre                              │
-  │                                                                            │
-  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐     │
-  │  │   Compute Tier   │  │   Storage Tier   │  │   Network Tier       │     │
-  │  │                  │  │                  │  │                      │     │
-  │  │  vSphere Cluster │  │  FlashArray      │  │  Core (leaf/spine)   │     │
-  │  │  ESXi hosts      │  │  PowerMax        │  │  FC fabric (SAN)     │     │
-  │  │  VCF / HCI       │  │  ONTAP AFF       │  │  NSX overlay         │     │
-  │  └────────┬─────────┘  └────────┬─────────┘  └──────────┬───────────┘     │
-  │           │                     │                       │                 │
-  │  ┌────────▼─────────────────────▼───────────────────────▼───────────┐     │
-  │  │                     Management Plane                              │     │
-  │  │   vCenter   Pure1   CloudIQ   Aria Operations   NSX Manager      │     │
-  │  └──────────────────────────────────────────────────────────────────┘     │
-  │                                                                            │
-  │  ┌──────────────────────────────────────────────────────────────────┐     │
-  │  │                    DR / Data Protection                           │     │
-  │  │   SRDF (PowerMax)  SnapMirror (ONTAP)  ActiveCluster (FlashArray)│     │
-  │  │   Veeam / NetBackup / CommVault         SRM (VMware)             │     │
-  │  └──────────────────────────────────────────────────────────────────┘     │
-  └────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  COMP["Compute\nESXi · Linux · Windows"] --> FABRIC["SAN Fabric\nBrocade · Cisco MDS"]
+  COMP --> NET["Network\nVDS · NSX · VLANs"]
+  FABRIC --> STORE["Storage\nFlashArray · PowerMax · ONTAP"]
+  NET --> STORE
+  STORE -->|"replication"| DR["Disaster Recovery\nSRM · SRDF · RecoverPoint"]
+  COMP --> MON["Monitoring\nAria Ops · CloudIQ · Pure1"]
+  STORE --> MON
+  COMP --> SEC["Security\nAD · CyberArk · PKI"]
+  NET --> SEC
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef mon fill:#b45309,stroke:#92400e,color:#fff
+  classDef sec fill:#15803d,stroke:#166534,color:#fff
+  class COMP,FABRIC ctrl
+  class STORE store
+  class NET net
+  class DR dr
+  class MON mon
+  class SEC sec
 ```

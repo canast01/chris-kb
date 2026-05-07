@@ -16,27 +16,18 @@ Key distinctions from standard Evergreen:
 
 ## STaaS Delivery Model
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │  Customer Site (or colocation)                                           │
-  │                                                                          │
-  │  ┌────────────────────────────────────────────────────────────────┐     │
-  │  │  Pure-owned FlashArray / FlashBlade hardware                   │     │
-  │  │  Installed + monitored + maintained by Pure Storage            │     │
-  │  │  Controller refreshes happen non-disruptively at EOG           │     │
-  │  └──────────────────────────────┬─────────────────────────────── ┘     │
-  │                                 │  phone-home (HTTPS 443)               │
-  │  ┌──────────────────────────────▼──────────────────────────────────┐   │
-  │  │  Pure1 Cloud (telemetry + AIOps)                                │   │
-  │  │  Consumption metering  Health monitoring  Capacity forecasting  │   │
-  │  └──────────────────────────────┬───────────────────────────────── ┘   │
-  └────────────────────────────────┼────────────────────────────────────── ┘
-                                   │  usage data ──► monthly invoice
-  ┌────────────────────────────────▼──────────────────────────────────────┐
-  │  Pure Storage Billing Portal                                           │
-  │  Committed reserve tier + burst + professional services               │
-  └────────────────────────────────────────────────────────────────────────┘
-  Customer: no CapEx, no hardware ownership, Pure responsible for SLAs
+```mermaid
+graph TB
+  FA["FlashArray / FlashBlade\n(on-premises)"] -->|"telemetry"| PURE1["Pure1 Cloud\n(subscription management)"]
+  PURE1 -->|"capacity orders · firmware · support"| FA
+  ADMIN(["Storage Admin"]) -->|"portal"| PURE1
+  PURE1 -->|"alerts · forecasting · health score"| ADMIN
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FA ctrl
+  class PURE1 cloud
+  class ADMIN host
 ```
 
 ## Components

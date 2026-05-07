@@ -6,28 +6,17 @@ Capacity on Demand (COD) is a software-defined capacity licensing model for Dell
 
 ## Capacity on Demand Model
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                  PowerMax COD — Capacity Unlock Model                    │
-  │                                                                          │
-  │  Physical drives installed at factory                                    │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  NVMe Drive Bay (all drives present in chassis)                 │    │
-  │  │  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐  │    │
-  │  │  │ Drv 1 │ │ Drv 2 │ │ Drv 3 │ │ Drv 4 │ │ Drv 5 │ │ Drv 6 │  │    │
-  │  │  │ACTIVE │ │ACTIVE │ │ACTIVE │ │ LOCKED│ │ LOCKED│ │ LOCKED│  │    │
-  │  │  │licensed│ │licensed│ │licensed│ │no lic │ │no lic │ │no lic │  │    │
-  │  │  └───────┘ └───────┘ └───────┘ └───────┘ └───────┘ └───────┘  │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │                                                                          │
-  │  Unlock process (no truck roll):                                         │
-  │                                                                          │
-  │  Purchase COD licence ──► Apply via SYMCLI / Unisphere                   │
-  │                       ──► Array controller unlocks capacity instantly    │
-  │                       ──► New storage available within minutes           │
-  │                                                                          │
-  │  symconfigure -cmd "unlock cod -capacity <TB>" commit                    │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+  ARRAY["Dell Array\nPowerStore / PowerMax\n(on-premises)"] <-->|"Dell APEX portal\ncapacity-on-demand"| APEX["Dell APEX\nCloud Console"]
+  ADMIN(["Storage Admin"]) -->|"portal"| APEX
+  APEX --> BILL["Usage-based Billing\n& Reporting"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAY ctrl
+  class APEX,BILL cloud
+  class ADMIN host
 ```
 
 ## How COD Works

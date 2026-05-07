@@ -1,17 +1,21 @@
 # Azure Architecture
 ## Management Group Hierarchy
 
-```
-Tenant Root Group
-└── Corp Root
-    ├── Platform
-    │   ├── Connectivity Subscription     (hub VNet, ExpressRoute, VPN, Azure Firewall)
-    │   ├── Identity Subscription         (AD Connect, Entra ID P2, PIM)
-    │   └── Management Subscription       (Defender for Cloud, Log Analytics, Automation)
-    └── Workloads
-        ├── Production Subscription
-        ├── Staging Subscription
-        └── Development Subscription
+```mermaid
+graph TB
+  TENANT["Azure Tenant\n(Entra ID)"] --> MG["Management Groups\nCorp > Prod > Non-Prod"]
+  MG --> SUBP["Production Subscription"]
+  MG --> SUBD["Dev/Test Subscription"]
+  SUBP --> HUB["Hub VNet\nFirewall · Bastion · VPN GW"]
+  SUBP --> SP1["Spoke VNet 1\n(Workload A)"]
+  SUBP --> SP2["Spoke VNet 2\n(Workload B)"]
+  HUB <-->|"VNet peering"| SP1 & SP2
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class TENANT,MG ctrl
+  class SUBP,SUBD cloud
+  class HUB,SP1,SP2 net
 ```
 
 Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.

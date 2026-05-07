@@ -12,21 +12,22 @@
 
 ## Architecture Diagram
 
-```
-vCenter / Hyper-V / Physical hosts
-        │
-        ▼ (VADP / agent)
-Backup Proxies (data movement layer)
-        │
-        ├──► Backup Repository (performance tier — fast disk)
-        │         └──► SOBR Capacity Tier offload (S3 / Azure / object storage)
-        │
-        └──► Offsite Backup Copy Repository (secondary site or cloud)
-        │
-Backup Server (orchestration + config DB)
-        │
-        ▼
-Veeam ONE (monitoring dashboards + alerting)
+```mermaid
+graph TB
+  VBR["Veeam Backup & Replication Server"] --> PROXY["Backup Proxy\n(data mover)"]
+  PROXY --> REPO[("Backup Repository\nSOBR / immutable")]
+  VCTR(["VMware vCenter\nsource VMs"]) --> PROXY
+  REPO -->|"capacity tier"| OBJ[("Object Storage\nS3 / Azure Blob")]
+  REPO -->|"tape offload"| TAPE[("Tape Library")]
+  ADMIN(["Backup Admin"]) -->|"console"| VBR
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class VBR,PROXY ctrl
+  class REPO,TAPE store
+  class VCTR,ADMIN host
+  class OBJ cloud
 ```
 
 ## Backup Proxy

@@ -6,31 +6,21 @@ VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comp
 
 ## Analytics Cluster Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                     Aria Operations Cluster                              │
-  │                                                                          │
-  │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
-  │  │  Primary Node    │  │  Replica Node    │  │  Data Node(s)        │   │
-  │  │  UI / scheduler  │  │  failover target │  │  additional capacity  │   │
-  │  │  REST API        │  │                  │  │  for large fleets     │   │
-  │  └─────────┬────────┘  └─────────┬────────┘  └──────────┬───────────┘   │
-  │            └─────────────────────┴───────────────────────┘               │
-  │                          cluster bus                                     │
-  └───────────────────────────────────┬──────────────────────────────────────┘
-                                      │  metrics pull
-                    ┌─────────────────┼──────────────────────────┐
-                    │                 │                           │
-           ┌────────▼────────┐ ┌──────▼──────────┐  ┌───────────▼──────────┐
-           │  Remote         │ │  Cloud Proxy     │  │  SNMP / REST         │
-           │  Collector A    │ │  (SaaS / cloud)  │  │  Adapters            │
-           │  (Site A)       │ │                  │  │  (network, storage)  │
-           └────────┬────────┘ └──────────────────┘  └──────────────────────┘
-                    │  collect
-          ┌─────────▼────────────────────────────────────────────┐
-          │  vCenter / ESXi / vSAN / NSX / Physical hosts        │
-          │  Applications / Log sources / Storage endpoints       │
-          └──────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  ADP1["vCenter Adapter"] & ADP2["NSX Adapter"] & ADP3["Third-party Adapters"] --> COL["Remote Collector\n(cloud proxy)"]
+  COL --> ANAL["Aria Operations\nAnalytics Cluster"]
+  ANAL --> DATA[("Metrics Store")]
+  ANAL --> ALERTS["Alert Engine\nCapacity · Compliance"]
+  ADMIN(["Admin"]) -->|"browser"| ANAL
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class ANAL,COL ctrl
+  class DATA store
+  class ADP1,ADP2,ADP3,ALERTS mgmt
+  class ADMIN host
 ```
 
 ## Component Roles

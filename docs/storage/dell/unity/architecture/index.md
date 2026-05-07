@@ -6,27 +6,21 @@ Dell Unity XT is a mid-range unified storage platform delivering block (Fibre Ch
 
 ## Dual Storage Processor Architecture
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                      Dell Unity XT Chassis                               │
-  │                                                                          │
-  │  ┌───────────────────────────────────────────────────────────────────┐  │
-  │  │                    System Bay                                     │  │
-  │  │  ┌───────────────────────┐     ┌───────────────────────┐         │  │
-  │  │  │  Storage Processor A  │◄───►│  Storage Processor B  │         │  │
-  │  │  │  (active for set A)   │ HA  │  (active for set B)   │         │  │
-  │  │  │  FC / iSCSI / NFS     │ peer│  FC / iSCSI / NFS     │         │  │
-  │  │  │  SMB ports            │ link│  SMB ports             │         │  │
-  │  │  └──────────┬────────────┘     └────────────┬──────────┘         │  │
-  │  └─────────────┼────────────────────────────────┼────────────────────┘  │
-  │                │  SAS / FC-AL                   │                       │
-  │  ┌─────────────▼────────────────────────────────▼────────────────────┐  │
-  │  │  Drive Enclosures                                                  │  │
-  │  │  SSD (all-flash)  NL-SAS (hybrid)  Tightly coupled to chassis     │  │
-  │  └────────────────────────────────────────────────────────────────── ┘  │
-  └──────────────────────────────────────────────────────────────────────────┘
-  Block: Fibre Channel / iSCSI LUNs  |  File: NFS / SMB (via NAS head)
-  Managed via Unisphere for Unity GUI  |  uemcli (CLI)  |  REST API
+```mermaid
+graph TB
+  SPA["Storage Processor A\n(active for pool set A)"] <-->|"HA heartbeat"| SPB["Storage Processor B\n(standby / active)"]
+  SPA & SPB --> POOL[("Drive Pool\nSSD / NL-SAS / SAS")]
+  SPA --> NAS["NFS · SMB · FTP\nData Mover"]
+  SPA --> SAN["iSCSI · FC\nBlock LUNs"]
+  SPB --> NAS & SAN
+  NAS --> NH(["NAS Clients"])
+  SAN --> SH(["SAN Hosts"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class SPA,SPB ctrl
+  class POOL store
+  class NH,SH host
 ```
 
 ## Components

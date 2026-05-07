@@ -3,14 +3,18 @@
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:
 
-```
-Forest (security boundary)
-└── Forest Root Domain (corp.local)
-    ├── Enterprise Admins (forest-wide admin group)
-    ├── Schema Master (schema changes — DC in root domain)
-    ├── Domain Naming Master
-    └── Regional/Child Domains (optional)
-        └── domain.corp.local
+```mermaid
+graph TB
+  FOREST["AD Forest\n(security boundary)"] --> ROOT["Forest Root Domain\ncorp.example.com"]
+  ROOT --> DC1["DC-01 Site A\nPDC · RID · Infra Master"]
+  ROOT --> DC2["DC-02 Site A\nGlobal Catalog"]
+  ROOT -->|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
+  ROOT --> CHILD["Child Domain\ndivision.corp.example.com"]
+  CHILD --> CDC["Child DC"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class DC1,DC2,DC3,CDC ctrl
+  class FOREST,ROOT,CHILD mgmt
 ```
 
 The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.

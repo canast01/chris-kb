@@ -6,31 +6,21 @@ Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and
 
 ## Product Management Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                  Aria Suite Lifecycle (LCM) Appliance                    │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  LCM Core Services                                              │    │
-  │  │  Deployment engine  |  Certificate manager  |  Password manager │    │
-  │  │  Inventory / environment registry  |  Upgrade orchestrator      │    │
-  │  └──────────────────────────────────────────────────────────────── ┘    │
-  │          │  deploy / upgrade / configure                                │
-  │  ┌───────┴─────────────────────────────────────────────────────────┐   │
-  │  │  Managed Products                                               │   │
-  │  │  ┌─────────────────┐  ┌────────────────────┐  ┌──────────────┐  │   │
-  │  │  │  Aria Operations│  │  Aria Automation   │  │  Aria Ops    │  │   │
-  │  │  │  (vROps)        │  │  (vRA)             │  │  for Logs    │  │   │
-  │  │  └─────────────────┘  └────────────────────┘  └──────────────┘  │   │
-  │  │  ┌─────────────────┐  ┌────────────────────┐                    │   │
-  │  │  │  Identity Mgr   │  │  Other Aria suite  │                    │   │
-  │  │  │  (Workspace ONE)│  │  products          │                    │   │
-  │  │  └─────────────────┘  └────────────────────┘                    │   │
-  │  └─────────────────────────────────────────────────────────────────┘   │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  NFS content library  ←  Binary store / patch bundles           │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  LCM["Aria Suite Lifecycle\n(LCM appliance)"]
+  LCM --> VROPS["Aria Operations"]
+  LCM --> VRLI["Aria Ops for Logs"]
+  LCM --> VRA["Aria Automation"]
+  LCM --> VRNI["Aria Ops for Networks"]
+  LCM --> REPO["Product Binaries Repo"]
+  ADMIN(["vSphere Admin"]) -->|"web UI"| LCM
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class LCM mgmt
+  class VROPS,VRLI,VRA,VRNI ctrl
+  class ADMIN host
 ```
 
 ## Core Components

@@ -5,16 +5,20 @@ Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operation
 
 ## Architecture
 
-```
-On-Premises                              Dell Cloud AI Pipeline
-┌──────────────────────────┐             ┌──────────────────────────────────┐
-│  Dell Storage Arrays      │             │  Anomaly Detection Engine         │
-│  (PowerStore, PowerMax,   │──[SCG]─────►│  Root Cause Analysis (RCA)        │
-│   PowerScale, Unity XT)   │  HTTPS      │  Capacity Forecasting (ML models) │
-│                           │  443        │  Recommendation Generator         │
-│  Secure Connect Gateway   │             │                                   │
-│  (On-premises OVA)        │             │  CloudIQ / APEX Console (Web UI)  │
-└──────────────────────────┘             └──────────────────────────────────┘
+```mermaid
+graph TB
+  ARRAYS["Dell Storage Arrays\n(telemetry streams)"] --> AIOPS["Dell AIOps\n(AI analytics engine)"]
+  AIOPS --> ANOM["Anomaly Detection"]
+  AIOPS --> PRED["Predictive Insights"]
+  AIOPS --> RECS["Actionable Recommendations"]
+  AIOPS --> CIQ["CloudIQ Integration"]
+  ADMIN(["Storage Team"]) -->|"dashboard"| AIOPS
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAYS ctrl
+  class AIOPS,ANOM,PRED,RECS,CIQ cloud
+  class ADMIN host
 ```
 
 ## Component Roles

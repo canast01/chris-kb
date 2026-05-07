@@ -5,50 +5,22 @@ Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-g
 ---
 ## PKI Hierarchy
 
-```
-[Offline Root CA]          (air-gapped, powered off when not in use)
-       |
-[Issuing / Intermediate CA]  (online, ADCS on Server 2019/2022)
-       |
-[End-Entity Certificates]    (servers, services, users, devices)
-```
-
-| Tier | Role | Online? |
-|---|---|---|
-| Root CA | Trust anchor; signs Intermediate CA certificates | Offline / air-gapped |
-| Issuing / Intermediate CA | Issues end-entity certificates | Online |
-| Registration Authority (RA) | Enrolment approval, identity verification | Online (optional) |
-| Internal PKI | ADCS for internal services | Online |
-| External PKI | DigiCert, Entrust, Let's Encrypt for public services | Cloud / SaaS |
-
----
-
-
-## PKI Hierarchy
-
-```
-  ┌─────────────────────────────────────────────────────────────────────────┐
-  │                        Enterprise PKI                                   │
-  │                                                                         │
-  │  ┌──────────────────────────────────────────────────────────────────┐  │
-  │  │  Root CA  (offline — HSM or dedicated server, air-gapped)        │  │
-  │  │  Self-signed, 4096-bit RSA or P-384 EC, 20yr validity            │  │
-  │  │  Stored: locked cabinet / HSM — never brought online to issue    │  │
-  │  └──────────────────────────┬───────────────────────────────────────┘  │
-  │                             │  signed by Root CA                       │
-  │  ┌──────────────────────────▼───────────────────────────────────────┐  │
-  │  │  Issuing / Intermediate CA  (ADCS — Windows Server online)       │  │
-  │  │  Enterprise CA — integrated with AD for auto-enrolment           │  │
-  │  │  CRL published to CDP  |  OCSP responder on IIS                  │  │
-  │  └───────┬────────────────────────────┬────────────────────────┬────┘  │
-  │          │                            │                        │       │
-  │  ┌───────▼────────┐  ┌───────────────▼──────┐  ┌─────────────▼──────┐ │
-  │  │  Server Certs  │  │  User Certs           │  │  Code Signing      │ │
-  │  │  TLS (2yr)     │  │  Smart card / S/MIME  │  │  CI/CD pipeline    │ │
-  │  │  HTTPS/LDAPS   │  │  (1yr)                │  │  (1yr)             │ │
-  │  └────────────────┘  └───────────────────────┘  └────────────────────┘ │
-  └─────────────────────────────────────────────────────────────────────────┘
-  Venafi / manual inventory monitors all certs for expiry and policy drift
+```mermaid
+graph TB
+  ROOT[("Root CA\n(offline — HSM)")] -->|"signs"| INT1["Intermediate CA 1\nInternal Issuing CA"]
+  ROOT -->|"signs"| INT2["Intermediate CA 2\nPublic / External CA"]
+  INT1 -->|"issues"| CERT1["Server Certificate"]
+  INT1 -->|"issues"| CERT2["Client Certificate"]
+  INT2 -->|"issues"| CERT3["Publicly Trusted Cert"]
+  CERT1 & CERT2 & CERT3 -.->|"OCSP / CRL"| CRL["Revocation\nCRL / OCSP Responder"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class ROOT store
+  class INT1,INT2 ctrl
+  class CERT1,CERT2,CERT3 host
+  class CRL mgmt
 ```
 
 ## ADCS Role Components

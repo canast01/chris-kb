@@ -13,30 +13,15 @@ Evergreen//One (STaaS consumption model) is covered in a separate section of thi
 
 ## Controller Refresh Model
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                  Evergreen — Non-Disruptive Controller Swap              │
-  │                                                                          │
-  │  Before refresh                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Chassis: Gen 5 CT0 + CT1  │  NVMe Drive Shelf (customer-owned) │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │                                                                          │
-  │  During refresh (hosts stay connected, I/O continues)                   │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Step 1: Pure installs Gen 6 CT0 alongside Gen 5 CT0            │    │
-  │  │  Step 2: Ownership migrates non-disruptively                    │    │
-  │  │  Step 3: Gen 5 CT0 removed; repeat for CT1                      │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │                                                                          │
-  │  After refresh                                                           │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Chassis: Gen 6 CT0 + CT1  │  Same NVMe Drive Shelf (unchanged) │    │
-  │  │  Data unchanged — no migration, no downtime, no host rescan      │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │                                                                          │
-  │  Subscription covers: controller hardware, Purity upgrades, support     │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+  A["FlashArray Gen N\n(current)"] -->|"Non-disruptive\nhardware swap"| B["FlashArray Gen N+1\n(upgraded blades/controllers)"]
+  B -->|"Evergreen//Forever"| C["FlashArray Gen N+2"]
+  A & B & C --> DATA[("Data — always online\nno migration required")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class A,B,C ctrl
+  class DATA store
 ```
 
 ## Components

@@ -28,20 +28,22 @@ Per-host configuration; does not synchronise across hosts. Each host has its own
 
 Managed at vCenter cluster level; consistent configuration across all hosts in the cluster. Required for vMotion reliability, NSX-T, NIOC, and LACP.
 
-```
-Physical NICs (pNICs/vmnic0, vmnic1, ...)
-        │
-    vDS Uplink Port Group
-        │
-    ┌───┴──────────────────────┐
-    │   vSphere Distributed    │
-    │         Switch           │
-    │  ┌──────────────────┐   │
-    │  │ Port Group A     │   │  ← VM Network
-    │  │ Port Group B     │   │  ← vMotion
-    │  │ Port Group C     │   │  ← vSAN
-    │  └──────────────────┘   │
-    └──────────────────────────┘
+```mermaid
+graph TB
+  ESXI["ESXi Hypervisor\n(VMkernel)"]
+  ESXI --> VMK0["vmk0 — Management"]
+  ESXI --> VMK1["vmk1 — vMotion"]
+  ESXI --> VMK2["vmk2 — Storage iSCSI/NFS"]
+  ESXI --> VMS(["Virtual Machines"])
+  ESXI --> VSWITCH["vSwitch / VDS\n(port groups)"]
+  VSWITCH --> VMNIC["Physical NICs\nvmnic0 · vmnic1 · vmnic2 · vmnic3"]
+  ESXI --> HBA["FC HBAs\n(SAN connectivity)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ESXI ctrl
+  class VMK0,VMK1,VMK2,VSWITCH,VMNIC,HBA net
+  class VMS host
 ```
 
 ### NIOC (Network I/O Control)

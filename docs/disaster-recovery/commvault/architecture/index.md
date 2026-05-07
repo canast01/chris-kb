@@ -12,30 +12,22 @@
 
 ## Component Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                     CommVault Architecture                               │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  CommServe (CS) — SQL Server backend                            │    │
-  │  │  Job Manager / Scheduler / Index Cache / Web Console            │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │          │  job control              │  REST API                        │
-  │  ┌───────▼──────────────────┐  ┌────▼──────────────────────────────┐   │
-  │  │  Media Agents (MA)       │  │  Access Nodes (proxy)             │   │
-  │  │  Dedup DB (DDB)          │  │  VSA proxy (VMware)               │   │
-  │  │  Aux copy / replication  │  │  DB agent hosts                   │   │
-  │  └───────┬──────────────────┘  └────────────────────────────────── ┘   │
-  │          │  data path                                                   │
-  │  ┌───────▼──────────────────────────────────────────────────────────┐   │
-  │  │  Backup Targets                                                   │   │
-  │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │   │
-  │  │  │ Disk Library │  │  Tape / VTL │  │  Cloud (S3 / Azure Blob)│  │   │
-  │  │  │ (Data Domain)│  │             │  │                         │  │   │
-  │  │  └─────────────┘  └─────────────┘  └─────────────────────────┘  │   │
-  │  └──────────────────────────────────────────────────────────────────┘   │
-  └──────────────────────────────────────────────────────────────────────────┘
-  Sources: VMware VMs, SQL/Oracle/SAP HANA, Windows/Linux file systems, NAS
+```mermaid
+graph TB
+  CS["CommServe\n(command & control)"] --> WEBCON["Web Console\n& Command Center"]
+  MA1["Media Agent 1\n(data mover)"] & MA2["Media Agent 2"] --> CS
+  SRC(["Source — VMs / DBs / Files"]) --> MA1 & MA2
+  MA1 & MA2 --> DISK[("Disk Library\nDDB dedup")]
+  DISK -->|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
+  ADMIN(["Backup Admin"]) --> WEBCON
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class CS,MA1,MA2 ctrl
+  class DISK,TAPE store
+  class SRC,ADMIN host
+  class WEBCON mgmt
 ```
 
 ## CommServe

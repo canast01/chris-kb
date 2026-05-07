@@ -7,16 +7,19 @@ Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI an
 
 A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point regardless of which node the client connects to.
 
-```
-          ┌─────────────────────────────────────────┐
-          │          Management VIP                  │
-          └────────────┬────────────────────────────┘
-                       │
-          ┌────────────┼──────────────┐
-     ND Node 01    ND Node 02    ND Node 03
-   (Master)      (Worker)       (Worker)
-   [API GW]      [Services]    [Services]
-   [UI]          [NDFC]        [NDI]
+```mermaid
+graph TB
+  ND["Cisco Nexus Dashboard\n(3-node cluster)"] --> NDFC["NDFC — Fabric Controller"]
+  ND --> NDI["ND Insights\ntelemetry · flow analysis"]
+  ND --> NDO["ND Orchestrator\nmulti-site ACI"]
+  NDFC & NDI & NDO --> FABRICS["Managed Fabrics\nNexus · ACI · MDS"]
+  ADMIN(["Network Admin"]) -->|"browser"| ND
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ND ctrl
+  class NDFC,NDI,NDO mgmt
+  class ADMIN,FABRICS host
 ```
 
 | Cluster Size | Use Case |

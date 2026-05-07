@@ -6,31 +6,22 @@ Use this page for practical Vmware Cloud Foundation Architecture notes, checks, 
 
 ## SDDC Stack Architecture
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                  VMware Cloud Foundation (VCF)                           │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  SDDC Manager                                                   │    │
-  │  │  Lifecycle orchestration  |  Workload domain management         │    │
-  │  │  Certificate / password management  |  API / UI                 │    │
-  │  └───────────────────────────────────────────────────────────────── ┘    │
-  │          │  manages                                                      │
-  │  ┌───────┴────────────────────────────────────────────────────────┐     │
-  │  │  Workload Domains                                              │     │
-  │  │  ┌──────────────────────┐    ┌──────────────────────────────┐  │     │
-  │  │  │  Management Domain   │    │  VI Workload Domain(s)       │  │     │
-  │  │  │  vCenter (mgmt)      │    │  vCenter (workload)          │  │     │
-  │  │  │  NSX Manager cluster │    │  NSX (per domain or shared)  │  │     │
-  │  │  │  vSAN (mgmt)         │    │  vSAN / external storage     │  │     │
-  │  │  └──────────────────────┘    └──────────────────────────────┘  │     │
-  │  └────────────────────────────────────────────────────────────────┘     │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Shared Services (Cloud Builder automates day-0 bring-up)       │    │
-  │  │  vCenter  NSX  vSAN  SDDC Manager  Aria Ops  Aria Automation    │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  SDDC["SDDC Manager\n(VCF orchestration)"] --> MGMT["Management Domain\nvCenter · NSX · vSAN"]
+  SDDC --> WL1["Workload Domain I\n(VI workloads)"]
+  SDDC --> WL2["Workload Domain II\n(VVF cloud workloads)"]
+  MGMT --> EMH["ESXi Mgmt Hosts\n(4 minimum)"]
+  WL1 --> EWH["ESXi Workload Hosts"]
+  SDDC --> CLOUD["VMware Cloud\n(optional hybrid)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class SDDC mgmt
+  class MGMT,WL1,WL2 ctrl
+  class EMH,EWH host
+  class CLOUD cloud
 ```
 
 ## Common checks

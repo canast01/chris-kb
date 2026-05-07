@@ -7,30 +7,19 @@ NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-
 
 ## STaaS Consumption Model
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │  Customer Data Centre (or colocation)                                    │
-  │                                                                          │
-  │  ┌────────────────────────────────────────────────────────────────┐     │
-  │  │  NetApp-owned Hardware (managed by NetApp or partner)          │     │
-  │  │  AFF (block/file)   FAS (hybrid)   StorageGRID (object)        │     │
-  │  │  Installed, monitored, and maintained by NetApp                │     │
-  │  └───────────────────────────────────┬──────────────────────────── ┘     │
-  │                                      │  HTTPS telemetry                 │
-  │  ┌───────────────────────────────────▼─────────────────────────────┐    │
-  │  │  Keystone Collector (lightweight agent VM)                      │    │
-  │  │  Measures consumed capacity per service tier per hour           │    │
-  │  └───────────────────────────────────┬─────────────────────────────┘    │
-  └─────────────────────────────────────┼──────────────────────────────────┘
-                                        │  usage data
-  ┌─────────────────────────────────────▼──────────────────────────────────┐
-  │  NetApp Cloud / ActiveIQ                                                │
-  │  ┌───────────────────┐  ┌───────────────────┐  ┌─────────────────────┐ │
-  │  │  Consumption      │  │  Billing Engine   │  │  Customer Portal    │ │
-  │  │  Metering         │  │  Committed + burst│  │  Capacity dashboard │ │
-  │  └───────────────────┘  └───────────────────┘  └─────────────────────┘ │
-  └────────────────────────────────────────────────────────────────────────┘
-  Customer pays for committed reserve + burst overage; no CapEx
+```mermaid
+graph TB
+  ONTAP["NetApp ONTAP\n(on-premises / colocation)"] -->|"telemetry"| KS["NetApp Keystone\n(STaaS portal)"]
+  KS --> COMMIT["Committed Capacity Tier"]
+  KS --> BURST["Burst Capacity\n(on-demand)"]
+  KS --> BILL["Monthly Billing"]
+  ADMIN(["Customer Admin"]) -->|"portal"| KS
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ONTAP ctrl
+  class KS,COMMIT,BURST,BILL cloud
+  class ADMIN host
 ```
 
 ## Service Tiers

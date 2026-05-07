@@ -1,30 +1,22 @@
 # VMware vSAN Architecture
 ## vSAN Cluster Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                         vSAN Cluster (3-host minimum)                   │
-  │                                                                          │
-  │  ┌───────────────────────┐  ┌───────────────────────┐  ┌─────────────── │
-  │  │       ESXi-01         │  │       ESXi-02         │  │  ESXi-03       │
-  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌── │
-  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Ca │
-  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SS │
-  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └── │
-  │  │     └────┬────┘       │  │     └────┬────┘       │  │     └────┬──── │
-  │  │    Disk Group 1       │  │    Disk Group 1       │  │    Disk Group 1 │
-  │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1 │
-  │  └────┬────────┬─────────┘  └────┬────────┬─────────┘  └────┬────────┬─ │
-  └───────┼────────┼─────────────────┼────────┼─────────────────┼────────┼──┘
-          │        │                 │        │                 │        │
-  ┌───────▼────────▼─────────────────▼────────▼─────────────────▼────────▼──┐
-  │             vSAN VMkernel Network (dedicated 10/25 GbE VLAN)            │
-  │              [object components distributed across all hosts]           │
-  └──────────────────────────────────────────────────────────────────────────┘
-
-  FTT=1 (RAID-1): object has 2 data replicas + 1 witness — survives 1 host loss
-  FTT=1 (RAID-5): 4+ hosts required — more space-efficient than RAID-1
-  FTT=2 (RAID-6): 6+ hosts required — survives 2 concurrent host failures
+```mermaid
+graph TB
+  H1["ESXi-01\nCache NVMe + Capacity SSD"] & H2["ESXi-02\nCache NVMe + Capacity SSD"] & H3["ESXi-03\nCache NVMe + Capacity SSD"] --> VSANNET["vSAN VMkernel Network\n25 / 10 GbE dedicated"]
+  VSANNET --> DS[("vSAN Datastore\nFTT policy — RAID-1 / RAID-5 / RAID-6")]
+  DS --> VM(["VM Workloads"])
+  VCSA["vCenter\n(vSAN management)"] --> VSANNET
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class H1,H2,H3 ctrl
+  class VSANNET net
+  class DS store
+  class VM host
+  class VCSA mgmt
 ```
 
 <div class="kb-grid kb-grid-15">

@@ -6,29 +6,17 @@ Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object st
 
 ## Scale-Out Object Storage Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                      ECS Scale-Out Architecture                          │
-  │                                                                          │
-  │  VDC 1 (Site A)                          VDC 2 (Site B)                  │
-  │  ─────────────────────────────           ─────────────────────────────── │
-  │  ┌─────────────────────────┐             ┌─────────────────────────┐     │
-  │  │  ECS Node 1  Node 2     │◄────────────►│  ECS Node 5  Node 6     │     │
-  │  │  Node 3      Node 4     │  geo-replic  │  Node 7      Node 8     │     │
-  │  │  (x86 commodity)        │             │  (x86 commodity)        │     │
-  │  └────────────┬────────────┘             └─────────────────────────┘     │
-  │               │                                                          │
-  │  ┌────────────▼─────────────────────────────────────────────────────┐   │
-  │  │  ECS Data Services                                               │   │
-  │  │  S3 API  |  Swift  |  Atmos  |  CAS (content-addressable)       │   │
-  │  │  Erasure coding (4+2 / 12+4)  |  Metadata indexing              │   │
-  │  └────────────┬─────────────────────────────────────────────────── ┘   │
-  │               │  HTTPS / S3                                             │
-  │  ┌────────────▼──────────────────────────────────────────────────────┐  │
-  │  │  Clients                                                           │  │
-  │  │  Backup (Data Domain Cloud Tier)  Analytics  Archive  Media/CDN   │  │
-  │  └───────────────────────────────────────────────────────────────────┘  │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  CLT(["S3 / Swift / Atmos Clients"]) --> GW["Load Balancer\n(optional)"]
+  GW --> N1["ECS Node 1"] & N2["ECS Node 2"] & N3["ECS Node 3"] & NN["Node N…"]
+  N1 & N2 & N3 & NN --> RING[("Object Ring\ndistributed erasure coding")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2,N3,NN ctrl
+  class GW,RING net
+  class CLT host
 ```
 
 ## Components

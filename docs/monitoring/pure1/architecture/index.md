@@ -5,17 +5,20 @@ Pure1 is Pure Storage's cloud-based management and analytics platform for FlashA
 
 ## Architecture
 
-```
-On-Premises                                Pure Storage Cloud
-┌──────────────────────────┐              ┌──────────────────────────────────┐
-│  FlashArray//X            │──[HTTPS]────►│  Pure1 SaaS Platform             │
-│  FlashArray//C            │──[HTTPS]────►│  - Health monitoring              │
-│  FlashBlade/S             │──[HTTPS]────►│  - Capacity forecasting           │
-│  FlashArray//XL           │──[HTTPS]────►│  - Performance analytics          │
-└──────────────────────────┘              │  - Alert engine                   │
-                                          │  - Pure1 Meta (AI/ML engine)      │
-                                          │  - REST API v1/v2                 │
-                                          └──────────────────────────────────┘
+```mermaid
+graph TB
+  FA["FlashArray / FlashBlade\n(on-premises)"] -->|"telemetry HTTPS"| PURE1["Pure1 Cloud\n(SaaS analytics)"]
+  PURE1 --> HEALTH["Health Score & Alerts"]
+  PURE1 --> CAP["Capacity Forecasting\n(Evergreen model)"]
+  PURE1 --> PERF["Performance Analytics"]
+  PURE1 --> SUP["Support Integration\n(log collection · auto-case)"]
+  ADMIN(["Storage Admin"]) -->|"browser / mobile"| PURE1
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FA ctrl
+  class PURE1,HEALTH,CAP,PERF,SUP cloud
+  class ADMIN host
 ```
 
 ## Component Roles

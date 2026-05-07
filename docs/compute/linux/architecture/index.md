@@ -15,28 +15,25 @@ Linux servers fulfill multiple infrastructure roles:
 
 ## Server Role Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                       Linux Infrastructure                               │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Identity & Access                                               │    │
-  │  │  SSSD ──► Active Directory (Kerberos / LDAP)                    │    │
-  │  │  PAM  ──► MFA / CyberArk PSM proxy                              │    │
-  │  └─────────────────────────────────────────────────────────────────┘    │
-  │                                                                          │
-  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
-  │  │  App Server  │  │  DB Server   │  │  Web Server  │  │  Bastion   │  │
-  │  │  RHEL / Ubuntu│  │ Oracle/PGSQL │  │  Nginx/Apache│  │  SSH jump  │  │
-  │  │  systemd     │  │  ASM / data  │  │  TLS cert    │  │  host      │  │
-  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └─────┬──────┘  │
-  │         │                 │                  │                │         │
-  │  ┌──────▼─────────────────▼──────────────────▼────────────────▼──────┐  │
-  │  │                    Shared Services                                  │  │
-  │  │  NFS mounts (ONTAP)   iSCSI/FC LUNs   Syslog ──► SIEM             │  │
-  │  │  NTP (Chrony)         DNS (resolv.conf) Monitoring (node exporter) │  │
-  │  └─────────────────────────────────────────────────────────────────── ┘  │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
+  KERNEL --> STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
+  KERNEL --> NET["Network Stack\nnm · bonding · firewalld"]
+  KERNEL --> SVCS["systemd Services\nsshd · rsyslog · cron"]
+  KERNEL --> SEC["Security\nSELinux / AppArmor · auditd · PAM"]
+  STORAGE --> DISK[("Block Devices\n/dev/sd* / /dev/mapper/*")]
+  NET --> NIC["Physical NICs\neth0 / bond0 / enp*"]
+  ADMIN(["Sysadmin"]) -->|"SSH / console"| KERNEL
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class KERNEL ctrl
+  class STORAGE,SVCS,SEC net
+  class DISK store
+  class NIC,NET net
+  class ADMIN host
 ```
 
 ## Disk Layout

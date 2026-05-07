@@ -3,16 +3,22 @@
 
 AWS Organizations with a management account at the root; all production workloads in member accounts:
 
-```
-Management Account (root — SCPs and billing only)
-├── Platform OU
-│   ├── Log Archive Account      (centralised CloudTrail and Config logs)
-│   └── Security Tooling Account (Security Hub, GuardDuty, IAM Access Analyzer)
-├── Workloads OU
-│   ├── Production Account
-│   ├── Staging Account
-│   └── Development Account
-└── Shared Services Account      (shared VPCs, DNS, AD, CI/CD)
+```mermaid
+graph TB
+  ORG["AWS Organization\n(management account)"] --> LOG["Log Archive Account"]
+  ORG --> AUDIT["Audit / Security Account"]
+  ORG --> PROD["Production Account\n(workload VPC)"]
+  PROD --> VPC["VPC — 10.0.0.0/16"]
+  VPC --> PUB["Public Subnets\nALB · NAT GW"]
+  VPC --> PRIV["Private Subnets\nEC2 · RDS · EKS"]
+  PUB --> IGW["Internet Gateway"]
+  PRIV --> TGW["Transit Gateway\nhub-and-spoke"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class ORG,LOG,AUDIT,PROD ctrl
+  class VPC,PUB,PRIV net
+  class IGW,TGW cloud
 ```
 
 - Management account hosts no workloads — only SCPs and consolidated billing

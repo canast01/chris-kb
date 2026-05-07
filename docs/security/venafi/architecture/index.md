@@ -19,30 +19,22 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 
 ## Trust Protection Platform Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                    Venafi Trust Protection Platform (TPP)                │
-  │                                                                          │
-  │  ┌───────────────────────────────────────────────────────────────────┐  │
-  │  │  TPP Server Cluster  (Windows — 2+ nodes for HA)                  │  │
-  │  │  Policy Engine  |  Certificate Inventory  |  Workflow Engine      │  │
-  │  │  REST API (Aperture)  |  Web Console (Aperture)                   │  │
-  │  └───────────┬─────────────────────────────┬──────────────────────── ┘  │
-  │              │  CA connector                │  discovery / agent        │
-  │   ┌──────────▼──────────────────┐  ┌────────▼──────────────────────┐   │
-  │   │  CA Backends                │  │  Discovery & Agents           │   │
-  │   │  Microsoft ADCS             │  │  Network scan (port 443)      │   │
-  │   │  DigiCert / Entrust         │  │  TPP Agent (on hosts)         │   │
-  │   │  Let's Encrypt (ACME)       │  │  Adaptable CA (custom)        │   │
-  │   │  HashiCorp Vault            │  │                               │   │
-  │   └─────────────────────────────┘  └───────────────────────────────┘   │
-  │              │  issue / renew                │  cert found               │
-  │   ┌──────────▼──────────────────────────────▼──────────────────────┐   │
-  │   │  Certificate Consumers                                          │   │
-  │   │  IIS / Apache / Nginx   F5 / NetScaler   vCenter   Kubernetes   │   │
-  │   │  Automation: Ansible playbooks  |  ACME clients  |  REST API   │   │
-  │   └─────────────────────────────────────────────────────────────── ┘   │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  TPP["Venafi Trust Protection Platform"]
+  TPP --> DISC["Discovery Engine\n(network scan / agent)"]
+  TPP --> CA1["CA Connector — ADCS"]
+  TPP --> CA2["CA Connector — DigiCert / Entrust"]
+  TPP --> AUTO["Automation\n(renewal / provisioning)"]
+  DISC -->|"found certs"| TPP
+  ADMIN(["Security Admin"]) -->|"portal"| TPP
+  TPP -->|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class TPP,DISC ctrl
+  class CA1,CA2,AUTO mgmt
+  class ADMIN,SIEM host
 ```
 
 ## Policy Tree Structure

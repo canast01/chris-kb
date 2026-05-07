@@ -1,35 +1,22 @@
 # FlashArray Architecture
 ## ActiveCluster Topology
 
-```
-  Site A                                                  Site B
-  ──────────────────────────────────────────────────────────────────────────
-  ┌─────────────────────────────┐        ┌─────────────────────────────┐
-  │   FlashArray (FA-A)         │        │   FlashArray (FA-B)         │
-  │   CT0         CT1           │        │   CT0         CT1           │
-  │   ┌──────┐  ┌──────┐        │        │   ┌──────┐  ┌──────┐        │
-  │   │ pod1 │  │ pod1 │  ◄─────┼────────┼─► │ pod1 │  │ pod1 │        │
-  │   └──────┘  └──────┘        │        │   └──────┘  └──────┘        │
-  └─────────────┬───────────────┘        └───────────────┬─────────────┘
-                │  FC / NVMe-oF                           │  FC / NVMe-oF
-        ┌───────▼───────┐                        ┌───────▼───────┐
-        │  FC Fabric A  │                        │  FC Fabric A  │
-        │  FC Fabric B  │                        │  FC Fabric B  │
-        └───────┬───────┘                        └───────┬───────┘
-                │                                        │
-  ┌─────────────▼──────────────────────────────────────────────────────┐
-  │   Hosts (MPIO — both fabrics, both sites)                          │
-  │   ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐      │
-  │   │  ESXi-01  │  │  ESXi-02  │  │  ESXi-03  │  │  ESXi-04  │      │
-  │   │  (Site A) │  │  (Site A) │  │  (Site B) │  │  (Site B) │      │
-  │   └───────────┘  └───────────┘  └───────────┘  └───────────┘      │
-  └────────────────────────────────────────────────────────────────────┘
-                        │ heartbeat / tiebreak
-                ┌───────▼────────┐
-                │  Purity Mediator│
-                │  (Pure1 / VM)  │
-                └────────────────┘
-  Synchronous replication (≤5ms RTT) — zero RPO, transparent failover
+```mermaid
+graph LR
+  H1(["ESXi-01"]) & H2(["ESXi-02"]) --> FabA["FC Fabric A"] & FabB["FC Fabric B"]
+  H3(["ESXi-03"]) & H4(["ESXi-04"]) --> FabA & FabB
+  FabA & FabB --> FA_A["FlashArray Site A\nCT0 · CT1"]
+  FabA & FabB --> FA_B["FlashArray Site B\nCT0 · CT1"]
+  FA_A <-->|"ActiveCluster\nsync replication"| FA_B
+  FA_A & FA_B -.->|"heartbeat"| MED(["Purity Mediator"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef med fill:#b45309,stroke:#92400e,color:#fff
+  class FA_A,FA_B ctrl
+  class FabA,FabB net
+  class H1,H2,H3,H4 host
+  class MED med
 ```
 
 ## Overview

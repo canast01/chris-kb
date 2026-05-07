@@ -7,29 +7,17 @@ SnapMirror is ONTAP's built-in replication engine, providing volume-level and SV
 
 ## Replication Modes
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                    SnapMirror Architecture                               │
-  │                                                                          │
-  │  Source Cluster                            Destination Cluster           │
-  │  ─────────────────────────────────         ────────────────────────────  │
-  │  ┌───────────────────────────────┐         ┌──────────────────────────┐  │
-  │  │  SVM / Volume (R/W)           │         │  SVM / Volume (DP/RO)    │  │
-  │  │                               │         │                          │  │
-  │  │  SnapMirror Async  ───────────┼─────────►  RPO = schedule interval │  │
-  │  │  (XDP / SnapVault)            │         │  (hourly / daily)        │  │
-  │  │                               │         │                          │  │
-  │  │  SnapMirror Sync  ◄───────────┼─────────►  RPO = 0 (synchronous)  │  │
-  │  │  (SM-S / SMBC)                │  NVLOG  │  AutomatedFailOver (SAN) │  │
-  │  │                               │  mirror │                          │  │
-  │  └───────────────────────────────┘         └──────────────────────────┘  │
-  │                                                                          │
-  │  Relationship management always from destination:                        │
-  │  snapmirror create / initialize / update / resync / break / quiesce     │
-  │                                                                          │
-  │  Mediator (SM-S): third cluster or host — tiebreak for transparent      │
-  │  failover when both clusters disagree on primary state                  │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+  SRC["Source Volume\nSVM / Cluster A"] -->|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
+  SRC --> SNAP[("Local Snapshots")]
+  DST -->|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class SRC,DST ctrl
+  class SNAP store
+  class DRACT dr
 ```
 
 ## Replication Types
