@@ -1,34 +1,83 @@
 # Service Restart Runbook
-## Pre-Checks
 
-```bash
-# Current service status
-systemctl status <service>
+| Field | Value |
+|---|---|
+| Risk | Low–Medium |
+| Approval | Notify service owner; standard change for planned restarts |
+| Estimated time | 5–20 minutes |
+| Impact | Service unavailable during restart (seconds to minutes depending on startup time) |
 
-# Check for active connections or jobs before restarting
-ss -tnp | grep <port>
+## Process Flow
 
-# Review recent logs for errors
-journalctl -u <service> -n 50 --no-pager
-
-# Windows
-Get-Service <service>
+```
+  Service degraded or restart required
+           │
+           ▼
+  Check service status and recent logs ── Error requires fix? ──► Fix first, then restart
+           │ No (config reload / clear transient state)
+           ▼
+  Active connections or in-flight jobs?  ── Yes ──► Wait for drain or notify users
+           │ No
+           ▼
+  Try: reload (if supported) ── Success? ──► Done
+           │ Reload not supported / failed
+           ▼
+  Stop service
+           │
+           ▼
+  Start service
+           │
+           ▼
+  Service running + port listening?  ── No ──► Check logs; escalate if unrecoverable
+           │ Yes
+           ▼
+  Application responds to health check
+           │
+           ▼
+  Confirm with owner; clear monitoring alert
 ```
 
-Confirm service owner approval and check for active users or in-flight jobs before proceeding.
-
-## Graceful Stop and Start
+## Step 1 — Assess Current State
 
 ```bash
-# Preferred: stop then start (allows clean shutdown)
+# Service status
+systemctl status <service>
+
+# Check for active connections
+ss -tnp | grep <port>
+
+# Recent errors
+journalctl -u <service> -n 100 --no-pager
+```
+
+**Windows:**
+```powershell
+Get-Service <service>
+Get-EventLog -LogName Application -Source <service> -Newest 20
+```
+
+**Stop here if** logs show a configuration error or missing dependency — fix the root cause before restarting, otherwise the service will fail again immediately.
+
+## Step 2 — Attempt Config Reload (preferred — no downtime)
+
+```bash
+# If the service supports reload (nginx, apache, haproxy, etc.)
+systemctl reload <service>
+systemctl status <service>
+```
+
+Only proceed to a full restart if reload is not supported or did not resolve the issue.
+
+## Step 3 — Full Restart
+
+```bash
+# Preferred: explicit stop then start (cleaner than restart for some services)
 systemctl stop <service>
+sleep 2
 systemctl start <service>
 
-# Or restart in one command
+# Or combined
 systemctl restart <service>
-
-# Reload config without full restart (if supported)
-systemctl reload <service>
 ```
 
 **Windows:**
@@ -39,55 +88,62 @@ Start-Service <service>
 Restart-Service <service>
 ```
 
-## Post-Restart Validation
+## Step 4 — Validate
 
 ```bash
-# Confirm service is running
+# Service status
 systemctl status <service>
 
-# Confirm listening on expected port
+# Listening on expected port
 ss -tnlp | grep <port>
 
-# Check recent logs for errors
+# No errors in recent logs
 journalctl -u <service> -n 50 --no-pager --since "5 minutes ago"
 ```
 
-## Test Application Response
-
+**Application-level check:**
 ```bash
-# HTTP service check
-curl -vk https://<app_host>/health
-
-# TCP port check
+curl -sf https://<app-host>/health && echo OK
 nc -zv <host> <port>
 ```
 
-## Windows Service Validation
-
+**Windows:**
 ```powershell
-Get-Service <service>
-# Should show: Running
-
-# Check event log for service errors
+Get-Service <service>    # should show: Running
 Get-EventLog -LogName System -Source 'Service Control Manager' -Newest 10
 ```
 
-## Checklist
+## Rollback
 
-- [ ] Service owner notified
-- [ ] Active jobs/connections confirmed clear
-- [ ] Service stopped cleanly
-- [ ] Service restarted
-- [ ] Service shows Running
-- [ ] Port listening confirmed
-- [ ] Application response confirmed
-- [ ] Monitoring alert cleared
+If the restart made things worse (e.g., bad config loaded on start):
+
+```bash
+# Restore previous config from backup
+cp /etc/<service>/<service>.conf.bak /etc/<service>/<service>.conf
+
+# Validate config before starting
+<service> -t                  # nginx, apache
+systemctl start <service>
+```
 
 ## Common Issues
 
 | Issue | Check | Action |
 |---|---|---|
-| Service won't stop | Active connections | Kill active sessions; force stop |
-| Service fails to start | Logs show error | Check `journalctl -u <svc> -n 100` |
-| Port not listening | Config file | Verify config is valid; check file permissions |
-| Restart loop | Critical dependency missing | Check service dependencies |
+| Service won't stop cleanly | Active connections or hung threads | `systemctl kill -s SIGKILL <service>`; check for orphaned processes |
+| Service fails to start | Config error | `journalctl -u <service> -n 100`; validate config file |
+| Port not listening after start | Wrong port in config / bind error | Check config; confirm no other process holds the port (`ss -tnlp`) |
+| Restart loop (rapid crash) | Critical dependency missing | Check for missing files, certs, DB connections |
+
+## Checklist
+
+- [ ] Service owner notified
+- [ ] Current state and logs reviewed
+- [ ] Root cause identified (or confirmed transient)
+- [ ] Active connections drained
+- [ ] Reload attempted (if applicable)
+- [ ] Service restarted
+- [ ] Service shows Running
+- [ ] Port listening confirmed
+- [ ] Application health check passed
+- [ ] Monitoring alert cleared

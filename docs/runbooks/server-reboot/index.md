@@ -1,5 +1,43 @@
 # Server Reboot Runbook
-## Pre-Checks
+
+| Field | Value |
+|---|---|
+| Risk | Medium |
+| Approval | Change ticket required; maintenance window recommended for production |
+| Estimated time | 15–30 minutes (excludes application validation) |
+| Impact | Server and hosted services unavailable during reboot |
+
+## Process Flow
+
+```
+  Reboot request received
+           │
+           ▼
+  Change approved + window confirmed? ─── No ──► Stop. Obtain approval.
+           │ Yes
+           ▼
+  Active users or in-flight jobs? ──────── Yes ──► Wait or force-notify; schedule
+           │ No
+           ▼
+  Stop dependent application services gracefully
+           │
+           ▼
+  Initiate reboot
+           │
+           ▼
+  Server responds to ping within 15 min? ── No ──► Check console / iDRAC / BMC
+           │ Yes
+           ▼
+  All services running? ─────────────────── No ──► Investigate; restart manually
+           │ Yes
+           ▼
+  Application health confirmed?
+           │
+           ▼
+  Close change ticket + clear monitoring alert
+```
+
+## Step 1 — Pre-Checks
 
 ```bash
 # Who is logged in
@@ -12,54 +50,66 @@ uptime
 # Failed services
 systemctl --failed
 
-# Active jobs (backup agents, scheduled tasks)
-ps aux | grep -E "backup|job|agent"
+# Active backup agents or scheduled jobs
+ps aux | grep -E "backup|job|agent|oracle|sql"
 ```
 
-Notify application owners and confirm maintenance window approval before proceeding.
+**Stop here if:** critical jobs are running and cannot be deferred. Reschedule the reboot.
 
-## Graceful Service Shutdown (if required)
+## Step 2 — Graceful Service Shutdown
+
+Stop application services in dependency order (app → middleware → DB):
 
 ```bash
-systemctl stop <service>
-systemctl status <service>    # confirm stopped
+systemctl stop <app-service>
+systemctl stop <middleware>
+systemctl stop <db-service>
+
+# Confirm each is stopped before continuing
+systemctl status <service>
 ```
 
-## Reboot
+**Windows:**
+```powershell
+Stop-Service <service> -Force
+Get-Service <service>    # confirm Stopped
+```
+
+## Step 3 — Reboot
 
 **Linux:**
 ```bash
+sudo shutdown -r +1 "Rebooting for maintenance — <reason>"
+# or immediate:
 sudo reboot
-# Scheduled with warning:
-sudo shutdown -r +5 "Rebooting for maintenance"
 ```
 
 **Windows:**
 ```powershell
 Restart-Computer -Force
-# Scheduled:
-shutdown /r /t 300 /c "Rebooting for maintenance"
+# With delay:
+shutdown /r /t 60 /c "Rebooting for maintenance"
 ```
 
-**VMware VM (PowerCLI):**
+**VMware VM via PowerCLI:**
 ```powershell
 Restart-VMGuest -VM <vmname>
 ```
 
-## Post-Reboot Validation
+## Step 4 — Post-Reboot Validation
 
 ```bash
-# Confirm server is responding
+# Confirm online
 ping -c 4 <server_ip>
 
-# Boot time
+# Boot time and uptime
 uptime
 who -b
 
 # Failed services
 systemctl --failed
 
-# Check critical services
+# Critical service status
 systemctl status <service1> <service2>
 
 # Review boot errors
@@ -68,28 +118,38 @@ journalctl -b -p err
 
 **Windows:**
 ```powershell
-# Check any auto-start service not running
+# Services set to Automatic but not running
 Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
 
-# Recent system errors
+# Recent system errors since boot
 Get-EventLog -LogName System -EntryType Error -Newest 20
 ```
 
+## Step 5 — Application Health Confirmation
+
+Confirm with the application owner or run the service's own health check before closing the ticket.
+
+```bash
+curl -sf https://<app-host>/health && echo OK
+```
+
+## Rollback
+
+A reboot is inherently non-reversible. If a service fails to start post-reboot:
+
+1. Check `journalctl -u <service> -n 100` or Windows Event Viewer
+2. Restore from last known-good config backup if a config change caused the failure
+3. Escalate to application owner if service cannot be recovered within SLA
+
 ## Checklist
 
-- [ ] Change approval confirmed
+- [ ] Change approved and maintenance window confirmed
 - [ ] Active users notified and logged off
-- [ ] Application services gracefully stopped
+- [ ] Active jobs confirmed clear
+- [ ] Application services stopped gracefully
 - [ ] Reboot initiated
 - [ ] Server responds to ping
 - [ ] All services running
-- [ ] Application health confirmed
+- [ ] Application health confirmed by owner
 - [ ] Monitoring alert cleared
-
-## Common Issues
-
-| Issue | Check | Action |
-|---|---|---|
-| Server doesn't respond | Console/iDRAC | Check BMC console for boot errors |
-| Service fails after reboot | `systemctl --failed` | Investigate; manual start if needed |
-| Boot loop or fsck running | Console | Wait for fsck to complete; investigate disk |
+- [ ] Change ticket closed
