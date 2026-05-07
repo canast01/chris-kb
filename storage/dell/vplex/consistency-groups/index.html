@@ -821,44 +821,44 @@
 <h1 id="vplex-consistency-groups">VPLEX Consistency Groups<a class="headerlink" href="#vplex-consistency-groups" title="Permanent link">&para;</a></h1>
 <p>Consistency groups (CGs) in VPLEX ensure that a set of virtual volumes is treated as a crash-consistent unit during failover and recovery operations.</p>
 <h2 id="list-consistency-groups">List Consistency Groups<a class="headerlink" href="#list-consistency-groups" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/
-VPlexcli:/&gt; ll /clusters/cluster-2/consistency-groups/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-2/consistency-groups/
+</code></pre></div>
 <h2 id="view-cg-details">View CG Details<a class="headerlink" href="#view-cg-details" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+</code></pre></div>
 <p>Key attributes:
 - <code>operational-status</code> — should be <code>ok</code>
 - <code>type</code> — <code>local</code> or <code>distributed</code>
 - <code>virtual-volumes</code> — list of member volumes</p>
 <h2 id="create-a-consistency-group">Create a Consistency Group<a class="headerlink" href="#create-a-consistency-group" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; consistency-group create --name &lt;cg_name&gt; --cluster-name cluster-1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--cluster-name<span class="w"> </span>cluster-1
+</code></pre></div>
 <h2 id="add-volumes-to-a-cg">Add Volumes to a CG<a class="headerlink" href="#add-volumes-to-a-cg" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; consistency-group add-virtual-volume \
-    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt; \
-    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>add-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="remove-a-volume-from-a-cg">Remove a Volume from a CG<a class="headerlink" href="#remove-a-volume-from-a-cg" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; consistency-group remove-virtual-volume \
-    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt; \
-    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>remove-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="distributed-consistency-groups">Distributed Consistency Groups<a class="headerlink" href="#distributed-consistency-groups" title="Permanent link">&para;</a></h2>
 <p>For Metro configurations, CGs span both clusters:</p>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
-# Check: type = distributed
-# Check: operational-status = ok on both clusters
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Check: type = distributed</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check: operational-status = ok on both clusters</span>
+</code></pre></div>
 <h2 id="detach-re-attach-cg-metro-failover">Detach / Re-attach CG (Metro Failover)<a class="headerlink" href="#detach-re-attach-cg-metro-failover" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Detach from cluster-2 (planned maintenance or failover)
-VPlexcli:/&gt; consistency-group detach \
-    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
-
-# Re-attach after recovery
-VPlexcli:/&gt; consistency-group attach \
-    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Detach from cluster-2 (planned maintenance or failover)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>detach<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Re-attach after recovery</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>VPlexcli:/&gt;<span class="w"> </span>consistency-group<span class="w"> </span>attach<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--consistency-group<span class="w"> </span>/clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

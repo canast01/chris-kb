@@ -790,6 +790,13 @@
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
 </blockquote>
 <p>SRDF (Symmetrix Remote Data Facility) provides synchronous and asynchronous replication between PowerMax arrays.</p>
+<pre class="mermaid"><code>flowchart LR
+    Replication["Replication"]
+    Replication --&gt; S0["SRDF Modes"]
+    Replication --&gt; S1["List SRDF Groups and Devices"]
+    Replication --&gt; S2["Storage Group Operations"]
+    Replication --&gt; S3["SRDF/A Specific"]
+    Replication --&gt; S4["Common Issues"]</code></pre>
 <h2 id="srdf-modes">SRDF Modes<a class="headerlink" href="#srdf-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -818,54 +825,54 @@
 </tbody>
 </table>
 <h2 id="list-srdf-groups-and-devices">List SRDF Groups and Devices<a class="headerlink" href="#list-srdf-groups-and-devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all SRDF groups on the array
-symrdf -sid &lt;sid&gt; list
-
-# List devices in a specific SRDF group
-symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list
-
-# Query status of all devices in an SRDF group
-symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; query
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all SRDF groups on the array</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List devices in a specific SRDF group</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_num&gt;<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query status of all devices in an SRDF group</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_num&gt;<span class="w"> </span>query
+</code></pre></div>
 <h2 id="storage-group-operations">Storage Group Operations<a class="headerlink" href="#storage-group-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Query SRDF status for an SG
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query
-
-# Establish (start replication)
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; establish
-
-# Split (make R2 writable — local copy for testing)
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; split
-
-# Suspend replication
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; suspend
-
-# Resume replication after suspend
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; resume
-
-# Force a delta resync
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; update
-
-# Planned failover (R2 becomes primary)
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failover
-
-# Failback to original R1
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failback
-
-# Swap R1/R2 roles
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; swap
-
-# Verify consistency
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; verify
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Query SRDF status for an SG</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>query
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Establish (start replication)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>establish
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Split (make R2 writable — local copy for testing)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>split
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Suspend replication</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Resume replication after suspend</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>resume
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Force a delta resync</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>update
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Planned failover (R2 becomes primary)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>failover
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Failback to original R1</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>failback
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Swap R1/R2 roles</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>swap
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Verify consistency</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>verify
+</code></pre></div>
 <h2 id="srdfa-specific">SRDF/A Specific<a class="headerlink" href="#srdfa-specific" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Query SRDF/A cycle and lag info
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query -srdf_a
-symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; verify -srdf_a
-
-# Show SRDF/A cycle details (lag time, delta)
-symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list -v
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query SRDF/A cycle and lag info</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>query<span class="w"> </span>-srdf_a
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_num&gt;<span class="w"> </span>verify<span class="w"> </span>-srdf_a
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show SRDF/A cycle details (lag time, delta)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_num&gt;<span class="w"> </span>list<span class="w"> </span>-v
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

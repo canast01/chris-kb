@@ -834,93 +834,104 @@
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
 <p>SVMs (also called Vservers) are the data access layer in ONTAP. Each SVM has its own namespace, protocols, network interfaces, and security configuration.</p>
+<pre class="mermaid"><code>flowchart LR
+    Machines["Machines)"]
+    Machines --&gt; S0["List and View SVMs"]
+    Machines --&gt; S1["Create an SVM"]
+    Machines --&gt; S2["Delete an SVM"]
+    Machines --&gt; S3["Protocol Management"]
+    Machines --&gt; S4["Network Interfaces (LIFs)"]
+    Machines --&gt; S5["CIFS / Active Directory Join"]
+    Machines --&gt; S6["NFS Service"]
+    Machines --&gt; S7["SVM State Management"]
+    Machines --&gt; S8["SVM DR (Disaster Recovery)"]</code></pre>
 <h2 id="list-and-view-svms">List and View SVMs<a class="headerlink" href="#list-and-view-svms" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All SVMs
-vserver show
-
-# SVM with protocol and state info
-vserver show -fields vserver, type, state, allowed-protocols
-
-# Specific SVM detail
-vserver show -vserver &lt;svm&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All SVMs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vserver<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># SVM with protocol and state info</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,<span class="w"> </span>type,<span class="w"> </span>state,<span class="w"> </span>allowed-protocols
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specific SVM detail</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vserver<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+</code></pre></div>
 <h2 id="create-an-svm">Create an SVM<a class="headerlink" href="#create-an-svm" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create with NFS and CIFS protocols
-vserver create \
-    -vserver &lt;svm_name&gt; \
-    -rootvolume &lt;vol_name&gt; \
-    -aggregate &lt;aggr_name&gt; \
-    -rootvolume-security-style unix \
-    -language C.UTF-8
-
-# Set allowed protocols
-vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs, cifs
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create with NFS and CIFS protocols</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-rootvolume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-rootvolume-security-style<span class="w"> </span>unix<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-language<span class="w"> </span>C.UTF-8
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Set allowed protocols</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,<span class="w"> </span>cifs
+</code></pre></div>
 <h2 id="delete-an-svm">Delete an SVM<a class="headerlink" href="#delete-an-svm" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Stop the SVM first
-vserver stop -vserver &lt;svm_name&gt;
-
-# Delete (removes all volumes and configuration)
-vserver delete -vserver &lt;svm_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Stop the SVM first</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Delete (removes all volumes and configuration)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vserver<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+</code></pre></div>
 <h2 id="protocol-management">Protocol Management<a class="headerlink" href="#protocol-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View protocols enabled on an SVM
-vserver show-protocols -vserver &lt;svm_name&gt;
-
-# Modify allowed protocols
-vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs, cifs, iscsi
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View protocols enabled on an SVM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vserver<span class="w"> </span>show-protocols<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Modify allowed protocols</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vserver<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-allowed-protocols<span class="w"> </span>nfs,<span class="w"> </span>cifs,<span class="w"> </span>iscsi
+</code></pre></div>
 <h2 id="network-interfaces-lifs">Network Interfaces (LIFs)<a class="headerlink" href="#network-interfaces-lifs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List LIFs for an SVM
-network interface show -vserver &lt;svm_name&gt;
-
-# Create a data LIF
-network interface create \
-    -vserver &lt;svm_name&gt; \
-    -lif &lt;lif_name&gt; \
-    -role data \
-    -data-protocol nfs \
-    -home-node &lt;node_name&gt; \
-    -home-port &lt;port&gt; \
-    -address &lt;ip&gt; \
-    -netmask &lt;mask&gt;
-
-# Migrate a LIF to another port
-network interface migrate \
-    -vserver &lt;svm_name&gt; \
-    -lif &lt;lif_name&gt; \
-    -dest-node &lt;node_name&gt; \
-    -dest-port &lt;port&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List LIFs for an SVM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a data LIF</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>-role<span class="w"> </span>data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>-data-protocol<span class="w"> </span>nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span>-home-port<span class="w"> </span>&lt;port&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Migrate a LIF to another port</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>network<span class="w"> </span>interface<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span>-dest-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span>-dest-port<span class="w"> </span>&lt;port&gt;
+</code></pre></div>
 <h2 id="cifs-active-directory-join">CIFS / Active Directory Join<a class="headerlink" href="#cifs-active-directory-join" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Join SVM to Active Directory
-vserver cifs create \
-    -vserver &lt;svm_name&gt; \
-    -cifs-server &lt;netbios_name&gt; \
-    -domain corp.local \
-    -ou &quot;OU=StorageServers,DC=corp,DC=local&quot;
-
-# Check AD join status
-vserver cifs show -vserver &lt;svm_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Join SVM to Active Directory</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-cifs-server<span class="w"> </span>&lt;netbios_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>-domain<span class="w"> </span>corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-ou<span class="w"> </span><span class="s2">&quot;OU=StorageServers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check AD join status</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+</code></pre></div>
 <h2 id="nfs-service">NFS Service<a class="headerlink" href="#nfs-service" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable NFS on an SVM
-vserver nfs create -vserver &lt;svm_name&gt; -access true -v3 enabled -v4.1 enabled
-
-# NFS status
-vserver nfs show -vserver &lt;svm_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable NFS on an SVM</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-access<span class="w"> </span><span class="nb">true</span><span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># NFS status</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+</code></pre></div>
 <h2 id="svm-state-management">SVM State Management<a class="headerlink" href="#svm-state-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Stop an SVM (client access suspended)
-vserver stop -vserver &lt;svm_name&gt;
-
-# Start an SVM
-vserver start -vserver &lt;svm_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Stop an SVM (client access suspended)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vserver<span class="w"> </span>stop<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Start an SVM</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+</code></pre></div>
 <h2 id="svm-dr-disaster-recovery">SVM DR (Disaster Recovery)<a class="headerlink" href="#svm-dr-disaster-recovery" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SnapMirror relationships on an SVM
-snapmirror show -destination-vserver &lt;svm_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SnapMirror relationships on an SVM</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-vserver<span class="w"> </span>&lt;svm_name&gt;
+</code></pre></div>
 
 
 

@@ -802,15 +802,52 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Review backup jobs from the last 24 hours: <code>Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId,JobType,Status,StartDateTime,EndDateTime</code></li>
-<li>[ ] Flag any failed or stuck jobs (Status = <code>Failed</code>, <code>Running</code> for &gt; 4 hours, or <code>Queued</code> overnight)</li>
-<li>[ ] Check plugin host connectivity: <code>Get-SmHost | Select HostName,HostType,PlugInStatus</code> — all hosts should show <code>Running</code></li>
-<li>[ ] Verify secondary (SnapVault/SnapMirror) copies exist for critical resources: <code>Get-SmBackup -ResourceName &lt;resource&gt;</code></li>
-<li>[ ] Check SnapCenter Server disk usage — review log partition growth (default logs under <code>C:\Program Files\NetApp\SnapCenter\SMCore\logs\</code>)</li>
-<li>[ ] Confirm all resources are within their backup SLA window — no resource should be missing a backup beyond the defined retention interval</li>
-<li>[ ] Check certificate expiry on the SnapCenter Server (GUI: Settings → Global Settings → HTTPS Certificate)</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Review backup jobs from the last 24 hours</td>
+<td><code>Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId,JobType,Status,StartDateTime,EndDateTime</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Flag any failed or stuck jobs (Status = <code>Failed</code>, <code>Running</code> for &gt;</td>
+<td><code>Failed</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check plugin host connectivity</td>
+<td><code>Get-SmHost | Select HostName,HostType,PlugInStatus</code></td>
+<td>all hosts should show <code>Running</code></td>
+</tr>
+<tr>
+<td>[ ] Verify secondary (SnapVault/SnapMirror) copies exist for critical resources</td>
+<td><code>Get-SmBackup -ResourceName &lt;resource&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check SnapCenter Server disk usage</td>
+<td></td>
+<td>review log partition growth (default logs under <code>C:\Program Files\NetApp\SnapCenter\SMCore\logs\</code>)</td>
+</tr>
+<tr>
+<td>[ ] Confirm all resources are within their backup SLA window</td>
+<td></td>
+<td>no resource should be missing a backup beyond the defined retention interval</td>
+</tr>
+<tr>
+<td>[ ] Check certificate expiry on the SnapCenter Server (GUI</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All backup jobs in the last 24 hours completed with <code>Completed</code> status</li>
@@ -821,27 +858,27 @@
 <li>[ ] No unprotected resources flagged in the SnapCenter Dashboard</li>
 <li>[ ] Server TLS certificate is valid and not expiring within 30 days</li>
 </ul>
-<pre><code class="language-bash"># Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)
-Open-SmConnection -SMSbaseurl https://&lt;snapcenter-server&gt;:8146
-
-# List all backup jobs from the last 24 hours with status
-Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId, JobType, Status, StartDateTime, EndDateTime
-
-# List all jobs currently in Running or Queued state
-Get-SmJob | Where-Object { $_.Status -in @(&quot;Running&quot;,&quot;Queued&quot;) } | Select JobId, JobType, Status, StartDateTime
-
-# Check plugin host connectivity and status
-Get-SmHost | Select HostName, HostType, PlugInStatus, OverallStatus
-
-# List all resource groups and their protection status
-Get-SmResourceGroup | Select ResourceGroupName, PluginCode, Status
-
-# List available backups for a specific resource
-Get-SmBackup -ResourceName &lt;resource_name&gt; | Select BackupName, BackupTime, Status
-
-# Check all policies
-Get-SmPolicy | Select PolicyName, PluginType, BackupType
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Open-SmConnection<span class="w"> </span>-SMSbaseurl<span class="w"> </span>https://&lt;snapcenter-server&gt;:8146
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all backup jobs from the last 24 hours with status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-SmJob<span class="w"> </span>-StartTime<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-24<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime,<span class="w"> </span>EndDateTime
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all jobs currently in Running or Queued state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-SmJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-in<span class="w"> </span>@<span class="o">(</span><span class="s2">&quot;Running&quot;</span>,<span class="s2">&quot;Queued&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check plugin host connectivity and status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-SmHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>HostName,<span class="w"> </span>HostType,<span class="w"> </span>PlugInStatus,<span class="w"> </span>OverallStatus
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all resource groups and their protection status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-SmResourceGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ResourceGroupName,<span class="w"> </span>PluginCode,<span class="w"> </span>Status
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List available backups for a specific resource</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Get-SmBackup<span class="w"> </span>-ResourceName<span class="w"> </span>&lt;resource_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BackupName,<span class="w"> </span>BackupTime,<span class="w"> </span>Status
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check all policies</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-SmPolicy<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>PolicyName,<span class="w"> </span>PluginType,<span class="w"> </span>BackupType
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All backup jobs are succeeding — no failures in the last 24 hours before the change window</li>

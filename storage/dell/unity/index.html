@@ -859,40 +859,77 @@
 <li>Dev/test environments that benefit from thin-cloned snapshots for rapid provisioning</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Check system health: <code>uemcli /env/health show -filter "health.value ne OK"</code> — any non-OK component requires investigation</li>
-<li>Review active alerts: <code>uemcli /sys/alert show</code> — triage by severity and acknowledge resolved alerts</li>
-<li>Check pool capacity: <code>uemcli /stor/pool show -detail</code> — alert if any pool approaches 80% subscribed or consumed</li>
-<li>Verify both storage processors are online and in a normal state in Unisphere or via <code>uemcli /env/sp show</code></li>
-<li>Check replication session status: <code>uemcli /rep/session show</code> — confirm all sessions are in Active state with no errors</li>
-<li>Review current software version and pending updates: <code>uemcli /sys/sw show</code></li>
-<li>Confirm snapshot schedules are running and snapshots are not consuming unexpected capacity: <code>uemcli /stor/snap show</code></li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check system health</td>
+<td><code>uemcli /env/health show -filter "health.value ne OK"</code></td>
+<td>any non-OK component requires investigation</td>
+</tr>
+<tr>
+<td>Review active alerts</td>
+<td><code>uemcli /sys/alert show</code></td>
+<td>triage by severity and acknowledge resolved alerts</td>
+</tr>
+<tr>
+<td>Check pool capacity</td>
+<td><code>uemcli /stor/pool show -detail</code></td>
+<td>alert if any pool approaches 80% subscribed or consumed</td>
+</tr>
+<tr>
+<td>Verify both storage processors are online and in a normal state in Uni</td>
+<td><code>uemcli /env/sp show</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Check replication session status</td>
+<td><code>uemcli /rep/session show</code></td>
+<td>confirm all sessions are in Active state with no errors</td>
+</tr>
+<tr>
+<td>Review current software version and pending updates</td>
+<td><code>uemcli /sys/sw show</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm snapshot schedules are running and snapshots are not consuming unexpected capacity</td>
+<td><code>uemcli /stor/snap show</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show all components that are not in an OK health state
-uemcli /env/health show -filter &quot;health.value ne OK&quot;
-
-# Show detailed pool capacity, health, and FAST Cache status
-uemcli /stor/pool show -detail
-
-# Show all LUNs with their pool assignment and capacity
-uemcli /store/lun show
-
-# Show all network interfaces and their SP assignment
-uemcli /net/if show
-
-# Show all active system alerts
-uemcli /sys/alert show
-
-# Show installed software version and pending OE upgrades
-uemcli /sys/sw show
-
-# Show all snapshots and their parent resource
-uemcli /stor/snap show
-
-# Show all replication sessions and their current state
-uemcli /rep/session show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all components that are not in an OK health state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show detailed pool capacity, health, and FAST Cache status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>/stor/pool<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show all LUNs with their pool assignment and capacity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>/store/lun<span class="w"> </span>show
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show all network interfaces and their SP assignment</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>/net/if<span class="w"> </span>show
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show all active system alerts</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>uemcli<span class="w"> </span>/sys/alert<span class="w"> </span>show
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show installed software version and pending OE upgrades</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>uemcli<span class="w"> </span>/sys/sw<span class="w"> </span>show
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show all snapshots and their parent resource</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>uemcli<span class="w"> </span>/stor/snap<span class="w"> </span>show
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show all replication sessions and their current state</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>uemcli<span class="w"> </span>/rep/session<span class="w"> </span>show
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -936,26 +973,87 @@ uemcli /rep/session show
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create a new storage pool with drive selection and RAID type via <code>uemcli /stor/config/pool create</code></li>
-<li>Provision a block LUN and map it to a host: <code>uemcli /store/lun create</code> then <code>uemcli /map/lunhostmap create</code></li>
-<li>Create an NFS export for a NAS server: <code>uemcli /net/nas/nfs create</code></li>
-<li>Expand an existing pool by adding drives: <code>uemcli /stor/config/pool -id &lt;pool_id&gt; expand</code></li>
-<li>Create a snapshot of a LUN or file system on demand: <code>uemcli /stor/snap create -storRes &lt;resource_id&gt; -name &lt;snap_name&gt;</code></li>
-<li>Configure or expand FAST Cache: <code>uemcli /stor/config/fastcache create</code> (requires SAS Flash 2 drives in RAID 1 pairs)</li>
-<li>Enable data reduction on a pool: ensure flash tier is at least 10% of total pool capacity, then enable via Unisphere or <code>uemcli /stor/config/pool</code></li>
-<li>Test SP failover by triggering a manual SP restart in Unisphere during a maintenance window and confirming LUN access is maintained</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a new storage pool with drive selection and RAID type via `uemcli /stor/c</td>
+<td></td>
+</tr>
+<tr>
+<td>Provision a block LUN and map it to a host</td>
+<td><code>uemcli /store/lun create</code>, <code>uemcli /map/lunhostmap create</code></td>
+</tr>
+<tr>
+<td>Create an NFS export for a NAS server</td>
+<td><code>uemcli /net/nas/nfs create</code></td>
+</tr>
+<tr>
+<td>Expand an existing pool by adding drives</td>
+<td><code>uemcli /stor/config/pool -id &lt;pool_id&gt; expand</code></td>
+</tr>
+<tr>
+<td>Create a snapshot of a LUN or file system on demand</td>
+<td><code>uemcli /stor/snap create -storRes &lt;resource_id&gt; -name &lt;snap_name&gt;</code></td>
+</tr>
+<tr>
+<td>Configure or expand FAST Cache</td>
+<td><code>uemcli /stor/config/fastcache create</code></td>
+</tr>
+<tr>
+<td>Enable data reduction on a pool</td>
+<td><code>uemcli /stor/config/pool</code></td>
+</tr>
+<tr>
+<td>Test SP failover by triggering a manual SP restart in Unisphere during a mainten</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Run <code>uemcli /env/health show -filter "health.value ne OK"</code> and resolve all faults before beginning; do not upgrade with a degraded pool or faulted SP</li>
-<li>Confirm both SP A and SP B are online and in normal state — the upgrade process restarts each SP sequentially and requires both to be healthy</li>
-<li>Download the OE upgrade package from Dell support and upload it to the array via Unisphere or <code>uemcli /sys/sw upload</code></li>
-<li>Verify the upgrade package checksum against the Dell-published hash before proceeding</li>
-<li>Initiate the upgrade from Unisphere (Maintenance &gt; Software Upgrades) or <code>uemcli /sys/sw upgrade</code> — the system upgrades SP B first, then SP A, with I/O continuing via the active SP throughout</li>
-<li>Monitor upgrade progress in Unisphere; each SP restart takes several minutes — do not interrupt the process</li>
-<li>After upgrade, verify both SPs return to normal health, confirm <code>uemcli /sys/sw show</code> shows the new version, and re-check all replication sessions and pool health</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Run <code>uemcli /env/health show -filter "health.value ne OK"</code> and resolve all faults before beginning; do not upgrade with a degraded pool or faulted SP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Confirm both SP A and SP B are online and in normal state — the upgrade process restarts each SP sequentially and requires both to be healthy</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Download the OE upgrade package from Dell support and upload it to the array via Unisphere or <code>uemcli /sys/sw upload</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Verify the upgrade package checksum against the Dell-published hash before proceeding</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Initiate the upgrade from Unisphere (Maintenance &gt; Software Upgrades) or <code>uemcli /sys/sw upgrade</code> — the system upgrades SP B first, then SP A, with I/O continuing via the active SP throughout</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Monitor upgrade progress in Unisphere; each SP restart takes several minutes — do not interrupt the process</td>
+</tr>
+<tr>
+<td>7</td>
+<td>After upgrade, verify both SPs return to normal health, confirm <code>uemcli /sys/sw show</code> shows the new version, and re-check all replication sessions and pool health</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Set pool capacity alerts at 70% and 80% consumed — Unity will automatically invalidate snapshots and replication sessions when a pool falls below 5% free, which can cause data loss</li>

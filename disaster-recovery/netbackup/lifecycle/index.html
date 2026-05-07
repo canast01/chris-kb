@@ -853,17 +853,17 @@
 <ol>
 <li>
 <p><strong>Pre-upgrade</strong>: Run catalog backup; verify it completes successfully
-   <code>bash
-   bpbackup -i -h &lt;master_server&gt; -p NBU_Catalog_Backup   # Force catalog backup
-   bperror -r -backstat -l | head -20                        # Verify recent backup success</code></p>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bpbackup<span class="w"> </span>-i<span class="w"> </span>-h<span class="w"> </span>&lt;master_server&gt;<span class="w"> </span>-p<span class="w"> </span>NBU_Catalog_Backup<span class="w">   </span><span class="c1"># Force catalog backup</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bperror<span class="w"> </span>-r<span class="w"> </span>-backstat<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">                        </span><span class="c1"># Verify recent backup success</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Upgrade Master Server</strong> — download installer from Veritas portal; run upgrade wizard</p>
 </li>
 <li>
 <p><strong>Upgrade Media Servers</strong> — one at a time; verify connectivity after each:
-   <code>bash
-   bpclntcmd -hn &lt;media_server&gt; -chk   # Verify after each media server upgrade</code></p>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bpclntcmd<span class="w"> </span>-hn<span class="w"> </span>&lt;media_server&gt;<span class="w"> </span>-chk<span class="w">   </span><span class="c1"># Verify after each media server upgrade</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Upgrade Clients</strong> — deploy via push from NetBackup Admin Console or manual installation</p>
@@ -928,16 +928,16 @@
 <li>[ ] Rollback plan: catalog backup can restore previous state if upgrade fails</li>
 </ul>
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check NBU version across master and media servers
-bpclntcmd -self   # On each server
-/usr/openv/netbackup/bin/version   # Version file
-
-# Run test backup after upgrade
-bpbackup -p &lt;policy_name&gt; -s &lt;schedule_name&gt; -h &lt;client&gt;
-
-# Verify catalog integrity post-upgrade
-bpdbm -consistency_check   # Check for catalog corruption
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NBU version across master and media servers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpclntcmd<span class="w"> </span>-self<span class="w">   </span><span class="c1"># On each server</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>/usr/openv/netbackup/bin/version<span class="w">   </span><span class="c1"># Version file</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Run test backup after upgrade</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>-h<span class="w"> </span>&lt;client&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify catalog integrity post-upgrade</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>bpdbm<span class="w"> </span>-consistency_check<span class="w">   </span><span class="c1"># Check for catalog corruption</span>
+</code></pre></div>
 <h2 id="migration-physical-master-to-appliance">Migration: Physical Master to Appliance<a class="headerlink" href="#migration-physical-master-to-appliance" title="Permanent link">&para;</a></h2>
 <p>Migrating from physical NetBackup installation to a NetBackup appliance requires catalog migration — do NOT upgrade and migrate in the same maintenance window:</p>
 <ol>

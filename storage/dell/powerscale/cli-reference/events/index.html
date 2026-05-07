@@ -800,78 +800,86 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Alerts["Alerts"]
+    Alerts --&gt; S0["View Events"]
+    Alerts --&gt; S1["Resolve and Acknowledge Events"]
+    Alerts --&gt; S2["Alert Channels"]
+    Alerts --&gt; S3["Alert Rules"]
+    Alerts --&gt; S4["SNMP Configuration"]
+    Alerts --&gt; S5["Event Log in syslog"]</code></pre>
 <h2 id="view-events">View Events<a class="headerlink" href="#view-events" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All active events
-isi event events list
-
-# Critical events only
-isi event events list --severity critical
-
-# Warning and above
-isi event events list --severity warning
-
-# Events since a specific date
-isi event events list --start-time 2026-05-01
-
-# Verbose output with full description
-isi event events list -v
-
-# Filter by event type
-isi event events list | grep -i &quot;disk\|node\|network\|quota&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All active events</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Critical events only</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>critical
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Warning and above</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>warning
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Events since a specific date</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--start-time<span class="w"> </span><span class="m">2026</span>-05-01
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verbose output with full description</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Filter by event type</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;disk\|node\|network\|quota&quot;</span>
+</code></pre></div>
 <h2 id="resolve-and-acknowledge-events">Resolve and Acknowledge Events<a class="headerlink" href="#resolve-and-acknowledge-events" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Resolve an event (marks it as handled)
-isi event events resolve &lt;event_id&gt;
-
-# Resolve all events of a specific type
-isi event events list | grep &lt;event_type&gt; | awk '{print $1}' | xargs -I{} isi event events resolve {}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Resolve an event (marks it as handled)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>resolve<span class="w"> </span>&lt;event_id&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Resolve all events of a specific type</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;event_type&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>resolve<span class="w"> </span><span class="o">{}</span>
+</code></pre></div>
 <h2 id="alert-channels">Alert Channels<a class="headerlink" href="#alert-channels" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List configured alert channels (email, SNMP, etc.)
-isi event channels list
-
-# View details of a specific channel
-isi event channels view &lt;channel_name&gt;
-
-# Create an email alert channel
-isi event channels create email-ops \
-    --type smtp \
-    --address ops-team@corp.local \
-    --send-test yes
-
-# Modify a channel
-isi event channels modify &lt;channel_name&gt; --address new@corp.local
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List configured alert channels (email, SNMP, etc.)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View details of a specific channel</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>view<span class="w"> </span>&lt;channel_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create an email alert channel</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>create<span class="w"> </span>email-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--type<span class="w"> </span>smtp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--address<span class="w"> </span>ops-team@corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--send-test<span class="w"> </span>yes
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Modify a channel</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>modify<span class="w"> </span>&lt;channel_name&gt;<span class="w"> </span>--address<span class="w"> </span>new@corp.local
+</code></pre></div>
 <h2 id="alert-rules">Alert Rules<a class="headerlink" href="#alert-rules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List alert rules (which events trigger which channels)
-isi event alerts list
-
-# View a specific alert rule
-isi event alerts view &lt;alert_name&gt;
-
-# Create an alert rule — send critical events to email channel
-isi event alerts create critical-to-email \
-    --event-category all \
-    --severity critical \
-    --channels email-ops
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List alert rules (which events trigger which channels)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View a specific alert rule</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>view<span class="w"> </span>&lt;alert_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Create an alert rule — send critical events to email channel</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>create<span class="w"> </span>critical-to-email<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--event-category<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--severity<span class="w"> </span>critical<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>--channels<span class="w"> </span>email-ops
+</code></pre></div>
 <h2 id="snmp-configuration">SNMP Configuration<a class="headerlink" href="#snmp-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View SNMP settings
-isi snmp settings view
-
-# Modify SNMP community and target
-isi snmp settings modify \
-    --snmp-v3-access-enable yes \
-    --system-contact &quot;infra-team@corp.local&quot; \
-    --system-location &quot;DC1-Row3-Rack5&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View SNMP settings</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Modify SNMP community and target</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--system-contact<span class="w"> </span><span class="s2">&quot;infra-team@corp.local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>--system-location<span class="w"> </span><span class="s2">&quot;DC1-Row3-Rack5&quot;</span>
+</code></pre></div>
 <h2 id="event-log-in-syslog">Event Log in syslog<a class="headerlink" href="#event-log-in-syslog" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Events are also forwarded to syslog if configured
-isi audit settings global view | grep syslog
-
-# Modify syslog forwarding
-isi audit settings global modify --syslog-forwarding-enabled yes
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Events are also forwarded to syslog if configured</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>syslog
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Modify syslog forwarding</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--syslog-forwarding-enabled<span class="w"> </span>yes
+</code></pre></div>
 
 
 

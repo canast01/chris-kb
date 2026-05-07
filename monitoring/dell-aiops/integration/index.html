@@ -840,52 +840,52 @@
 <p>Dell AIOps is integrated into the broader operational toolchain via CloudIQ's notification and API layers. All telemetry flows inbound through the Secure Connect Gateway; alerts and recommendations flow outbound to ITSM, notification, and observability platforms.</p>
 <h2 id="cloudiq-scg-inbound-telemetry">CloudIQ / SCG (Inbound Telemetry)<a class="headerlink" href="#cloudiq-scg-inbound-telemetry" title="Permanent link">&para;</a></h2>
 <p>All Dell storage systems must be registered in CloudIQ via the SCG. This is the prerequisite for all AIOps capabilities — without SCG-connected telemetry, AIOps has no data source.</p>
-<pre><code class="language-text">Verify collection status:
-CloudIQ portal &gt; Assets &gt; [System] — check &quot;Last Seen&quot; timestamp
-SCG admin UI &gt; Systems &gt; [System] &gt; Connection Status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Verify collection status:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>CloudIQ portal &gt; Assets &gt; [System] — check &quot;Last Seen&quot; timestamp
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>SCG admin UI &gt; Systems &gt; [System] &gt; Connection Status
+</code></pre></div>
 <h2 id="servicenow-itsm-integration">ServiceNow ITSM Integration<a class="headerlink" href="#servicenow-itsm-integration" title="Permanent link">&para;</a></h2>
 <p>AIOps generates recommendations that may require infrastructure changes. ServiceNow integration automates incident and change request creation.</p>
 <h3 id="webhook-based-auto-ticketing">Webhook-Based Auto-Ticketing<a class="headerlink" href="#webhook-based-auto-ticketing" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
-- Trigger: Recommendation Severity = Critical OR High
-- Action: Webhook to ServiceNow
-- URL: https://&lt;instance&gt;.service-now.com/api/now/table/change_request
-- Auth: Basic Auth or OAuth token (service account: svc-cloudiq-snow)
-- Payload:
-  {
-    &quot;short_description&quot;: &quot;Dell AIOps {{recommendation.severity}}: {{recommendation.title}}&quot;,
-    &quot;description&quot;: &quot;System: {{system.name}}\nRecommendation: {{recommendation.description}}\nCloudIQ ID: {{recommendation.id}}&quot;,
-    &quot;category&quot;: &quot;Storage&quot;,
-    &quot;assignment_group&quot;: &quot;storage-ops&quot;
-  }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CloudIQ portal &gt; Settings &gt; Notifications &gt; Add Notification Rule
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Trigger: Recommendation Severity = Critical OR High
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Action: Webhook to ServiceNow
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- URL: https://&lt;instance&gt;.service-now.com/api/now/table/change_request
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Auth: Basic Auth or OAuth token (service account: svc-cloudiq-snow)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Payload:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  {
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;short_description&quot;: &quot;Dell AIOps {{recommendation.severity}}: {{recommendation.title}}&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;description&quot;: &quot;System: {{system.name}}\nRecommendation: {{recommendation.description}}\nCloudIQ ID: {{recommendation.id}}&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;category&quot;: &quot;Storage&quot;,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &quot;assignment_group&quot;: &quot;storage-ops&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  }
+</code></pre></div>
 <p>For Critical recommendations, target the <strong>incident</strong> table rather than change_request for immediate response.</p>
 <h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
 <p>The Dell CloudIQ management pack for Aria Operations pulls AIOps health score and recommendation data into vROps, enabling correlated VMware + Dell storage views.</p>
-<pre><code class="language-text">Aria Operations &gt; Admin &gt; Solutions &gt; Dell CloudIQ Management Pack
-- API URL: https://api.cloudiq.dell.com
-- Client ID / Secret: (from CloudIQ API client — read-only)
-- Collection interval: 15 minutes
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Aria Operations &gt; Admin &gt; Solutions &gt; Dell CloudIQ Management Pack
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- API URL: https://api.cloudiq.dell.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Client ID / Secret: (from CloudIQ API client — read-only)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Collection interval: 15 minutes
+</code></pre></div>
 <p>This integration allows correlating VM workload contention in Aria Operations with storage anomalies detected by Dell AIOps, enabling end-to-end root cause analysis across the VMware + Dell stack.</p>
 <h2 id="email-and-webhook-notifications">Email and Webhook Notifications<a class="headerlink" href="#email-and-webhook-notifications" title="Permanent link">&para;</a></h2>
-<pre><code class="language-text"># Critical recommendations → PagerDuty
-CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-Critical
-- Trigger: Recommendation Severity = Critical
-- Action: Webhook (PagerDuty Events API v2)
-
-# High recommendations → Email + Teams
-CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-High
-- Trigger: Recommendation Severity = High
-- Action: Email (storage-ops@company.com) + Webhook (Teams channel)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Critical recommendations → PagerDuty
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-Critical
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Trigger: Recommendation Severity = Critical
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Action: Webhook (PagerDuty Events API v2)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># High recommendations → Email + Teams
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>CloudIQ &gt; Settings &gt; Notifications &gt; Rule: AIOps-High
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>- Trigger: Recommendation Severity = High
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>- Action: Email (storage-ops@company.com) + Webhook (Teams channel)
+</code></pre></div>
 <h2 id="siem-integration">SIEM Integration<a class="headerlink" href="#siem-integration" title="Permanent link">&para;</a></h2>
 <p>AIOps audit events are available from the CloudIQ audit log. Export to SIEM for long-term retention and correlation with security events.</p>
-<pre><code class="language-text"># Automated audit log export (weekly):
-GET https://api.cloudiq.dell.com/cloudiq/rest/v1/audit-logs?filter=created_at gt &lt;timestamp&gt;
-Authorization: Bearer &lt;token&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Automated audit log export (weekly):
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>GET https://api.cloudiq.dell.com/cloudiq/rest/v1/audit-logs?filter=created_at gt &lt;timestamp&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Authorization: Bearer &lt;token&gt;
+</code></pre></div>
 <p>Forward the export to Splunk or Elastic via the existing log pipeline.</p>
 <h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -936,11 +936,11 @@ Authorization: Bearer &lt;token&gt;
 </table>
 <h2 id="integration-health-checks">Integration Health Checks<a class="headerlink" href="#integration-health-checks" title="Permanent link">&para;</a></h2>
 <p>Verify all integrations are functional as part of the monthly ops review:</p>
-<pre><code class="language-text">- ServiceNow: trigger a test notification and confirm ticket creation
-- PagerDuty: verify the integration key is current and test alert fires correctly
-- Aria Operations CloudIQ MP: confirm adapter is in Collecting state
-- SIEM: confirm audit log export job completed successfully
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>- ServiceNow: trigger a test notification and confirm ticket creation
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- PagerDuty: verify the integration key is current and test alert fires correctly
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- Aria Operations CloudIQ MP: confirm adapter is in Collecting state
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- SIEM: confirm audit log export job completed successfully
+</code></pre></div>
 
 
 

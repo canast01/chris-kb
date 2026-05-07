@@ -821,62 +821,62 @@
 <h1 id="powermax-health-checks">PowerMax Health Checks<a class="headerlink" href="#powermax-health-checks" title="Permanent link">&para;</a></h1>
 <p>Daily and pre/post-change checks for Dell PowerMax arrays.</p>
 <h2 id="array-connectivity-and-status">Array Connectivity and Status<a class="headerlink" href="#array-connectivity-and-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify Solutions Enabler can reach the array
-symcfg list
-symcfg -sid &lt;sid&gt; show | grep -E &quot;Product|Microcode|Online&quot;
-
-# Check array health via Unisphere REST (requires curl + valid token)
-curl -sk -X GET &quot;https://&lt;unisphere-ip&gt;:8443/univmax/restapi/system/symmetrix/&lt;sid&gt;&quot; \
-    -H &quot;Authorization: Bearer &lt;token&gt;&quot; | python3 -m json.tool | grep -E &quot;model|health|microcode&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify Solutions Enabler can reach the array</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Product|Microcode|Online&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check array health via Unisphere REST (requires curl + valid token)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;unisphere-ip&gt;:8443/univmax/restapi/system/symmetrix/&lt;sid&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;model|health|microcode&quot;</span>
+</code></pre></div>
 <h2 id="director-and-port-status">Director and Port Status<a class="headerlink" href="#director-and-port-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check all directors — flag any offline
-symcfg -sid &lt;sid&gt; list -dir all | grep -v Online
-
-# Check all ports — flag any not RDY
-symcfg -sid &lt;sid&gt; list -port all | grep -v RDY
-
-# FA port login count (host connectivity)
-symcfg -sid &lt;sid&gt; list -fa -online | grep -E &quot;Port|Logins&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all directors — flag any offline</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Online
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check all ports — flag any not RDY</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-port<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RDY
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># FA port login count (host connectivity)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fa<span class="w"> </span>-online<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Port|Logins&quot;</span>
+</code></pre></div>
 <h2 id="events-and-alerts">Events and Alerts<a class="headerlink" href="#events-and-alerts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Active/uncleared events
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;uncleared\|Warning\|Error\|Fatal&quot; | head -20
-
-# Events in last 24 hours
-symevent list -sid &lt;sid&gt; -start_time &quot;$(date -d 'yesterday' '+%m/%d/%Y') 00:00:00&quot; -v | head -30
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Active/uncleared events</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;uncleared\|Warning\|Error\|Fatal&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Events in last 24 hours</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;yesterday&#39;</span><span class="w"> </span><span class="s1">&#39;+%m/%d/%Y&#39;</span><span class="k">)</span><span class="s2"> 00:00:00&quot;</span><span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+</code></pre></div>
 <h2 id="storage-pool-srp-capacity">Storage Pool (SRP) Capacity<a class="headerlink" href="#storage-pool-srp-capacity" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SRP subscription and free capacity
-symcfg -sid &lt;sid&gt; list -srp
-
-# Thin pool usage detail
-symcfg -sid &lt;sid&gt; show -pool -thin -demand
-
-# Flag SRP above 80% subscribed
-symcfg -sid &lt;sid&gt; list -srp | awk '$5+0 &gt; 80 {print &quot;WARNING:&quot;, $0}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SRP subscription and free capacity</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Thin pool usage detail</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-demand
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Flag SRP above 80% subscribed</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 80 {print &quot;WARNING:&quot;, $0}&#39;</span>
+</code></pre></div>
 <h2 id="srdf-replication-state">SRDF Replication State<a class="headerlink" href="#srdf-replication-state" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check all SRDF groups
-symrdf -sid &lt;sid&gt; list -rdfg all
-
-# Check for any pairs not in Synchronized state
-symrdf -sid &lt;sid&gt; query -rdfg all | grep -v &quot;Synchronized\|InSync&quot; | grep -v &quot;^$\|Group\|Pair\|---&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all SRDF groups</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check for any pairs not in Synchronized state</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>query<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Synchronized\|InSync&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">\|Group\|Pair\|---&quot;</span>
+</code></pre></div>
 <h2 id="device-status">Device Status<a class="headerlink" href="#device-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Failed or degraded devices
-symdev list -sid &lt;sid&gt; -failed
-
-# Devices not ready
-symdev list -sid &lt;sid&gt; -NR
-
-# Spare devices available
-symdev list -sid &lt;sid&gt; -spare
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Failed or degraded devices</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-failed
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Devices not ready</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-NR
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Spare devices available</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-spare
+</code></pre></div>
 <h2 id="cache-health">Cache Health<a class="headerlink" href="#cache-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Cache write pending percentage — alert if &gt; 50%
-symstat -sid &lt;sid&gt; list -type cache | grep -E &quot;WP\|Write Pending&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Cache write pending percentage — alert if &gt; 50%</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>cache<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;WP\|Write Pending&quot;</span>
+</code></pre></div>
 <h2 id="health-check-summary">Health Check Summary<a class="headerlink" href="#health-check-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -813,24 +813,24 @@
 </blockquote>
 <hr />
 <h2 id="quick-diagnosis">Quick Diagnosis<a class="headerlink" href="#quick-diagnosis" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check vCenter certificate expiry (run from VCSA shell)
-for store in MACHINE_SSL_CERT VMCA_ROOT data-encipherment; do
-  echo &quot;=== $store ===&quot;
-  /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -E &quot;Subject:|Not After&quot;
-done
-
-# Check current Machine SSL cert expiry via OpenSSL
-openssl s_client -connect &lt;vcenter-fqdn&gt;:443 -showcerts &lt;/dev/null 2&gt;/dev/null \
-  | openssl x509 -noout -subject -dates
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check vCenter certificate expiry (run from VCSA shell)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>store<span class="w"> </span><span class="k">in</span><span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>VMCA_ROOT<span class="w"> </span>data-encipherment<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$store</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span><span class="nv">$store</span><span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">done</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check current Machine SSL cert expiry via OpenSSL</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+</code></pre></div>
 <hr />
 <h2 id="browser-certificate-warning-on-vcenter-login">Browser Certificate Warning on vCenter Login<a class="headerlink" href="#browser-certificate-warning-on-vcenter-login" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Browser shows <code>NET::ERR_CERT_AUTHORITY_INVALID</code> or an untrusted certificate warning when opening the vCenter FQDN.</p>
 <p><strong>Likely cause:</strong> Machine SSL certificate is self-signed, expired, or the CA is not trusted by the browser.</p>
 <p><strong>Step 1 — Check expiry:</strong></p>
-<pre><code class="language-bash">openssl s_client -connect &lt;vcenter-fqdn&gt;:443 -showcerts &lt;/dev/null 2&gt;/dev/null \
-  | openssl x509 -noout -dates
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+</code></pre></div>
 <p><strong>Step 2 — Renew via VAMI if expired:</strong></p>
 <ol>
 <li>Browse to <code>https://&lt;vcenter-fqdn&gt;:5480</code></li>
@@ -841,12 +841,12 @@ openssl s_client -connect &lt;vcenter-fqdn&gt;:443 -showcerts &lt;/dev/null 2&gt
 <hr />
 <h2 id="login-failure-after-certificate-renewal">Login Failure After Certificate Renewal<a class="headerlink" href="#login-failure-after-certificate-renewal" title="Permanent link">&para;</a></h2>
 <p>Renewing the Machine SSL cert can break SSO if the STS (Security Token Service) certificate is also expired or not updated.</p>
-<pre><code class="language-bash"># Check STS signing certificate expiry
-/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS --text | grep &quot;Not After&quot;
-
-# Restart all vCenter services after cert changes
-service-control --stop --all &amp;&amp; service-control --start --all
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check STS signing certificate expiry</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>TRUSTED_ROOTS<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Not After&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Restart all vCenter services after cert changes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+</code></pre></div>
 <p><strong>If STS cert is expired</strong> — this requires special remediation:</p>
 <ol>
 <li>Reference VMware KB 79248 for the <code>fixsts.sh</code> procedure.</li>
@@ -859,9 +859,9 @@ service-control --stop --all &amp;&amp; service-control --start --all
 <p><strong>Affected integrations:</strong> Aria Operations, Aria Ops for Logs, Veeam, SRM, NSX, Horizon.</p>
 <p>When the Machine SSL cert is replaced, products registered against the old thumbprint will fail.</p>
 <p><strong>Step 1 — Get current cert thumbprint:</strong></p>
-<pre><code class="language-bash">openssl s_client -connect &lt;vcenter-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
-  | openssl x509 -fingerprint -sha256 -noout
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256<span class="w"> </span>-noout
+</code></pre></div>
 <p><strong>Step 2 — Re-register or accept the new certificate in each product:</strong></p>
 <table>
 <thead>
@@ -891,10 +891,10 @@ service-control --stop --all &amp;&amp; service-control --start --all
 </table>
 <hr />
 <h2 id="nsx-certificate-thumbprint-mismatch">NSX Certificate Thumbprint Mismatch<a class="headerlink" href="#nsx-certificate-thumbprint-mismatch" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check compute manager status via NSX API
-GET /api/v1/fabric/compute-managers
-# Look for connection_status — should be &quot;UP&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check compute manager status via NSX API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>GET<span class="w"> </span>/api/v1/fabric/compute-managers
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Look for connection_status — should be &quot;UP&quot;</span>
+</code></pre></div>
 <p>If the thumbprint mismatch persists after resync:
 1. Remove the compute manager from NSX Manager (Infrastructure → vCenter Server → Delete).
 2. Re-add it — NSX will prompt to accept the new certificate.
@@ -902,18 +902,18 @@ GET /api/v1/fabric/compute-managers
 <hr />
 <h2 id="esxi-host-certificate-issues">ESXi Host Certificate Issues<a class="headerlink" href="#esxi-host-certificate-issues" title="Permanent link">&para;</a></h2>
 <p>ESXi host certificates can expire independently. An expired host cert causes vCenter warnings, breaks vSAN encryption, and can disrupt HA heartbeats.</p>
-<pre><code class="language-bash"># Check ESXi host cert expiry from the host CLI
-openssl s_client -connect &lt;esxi-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
-  | openssl x509 -noout -dates
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check ESXi host cert expiry from the host CLI</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;esxi-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+</code></pre></div>
 <p><strong>Renew from vCenter UI:</strong>
 - Select host → Configure → Certificate → Renew</p>
 <p><strong>Bulk renewal via VCSA certificate-manager:</strong></p>
-<pre><code class="language-bash"># On VCSA — renew all host certificates (re-issues via VMCA)
-/usr/lib/vmware-vmca/bin/certificate-manager
-# Choose option 3 — Replace Machine SSL certificate with VMCA Certificate
-# Or option 8 — Reset all certificates (use only in break-glass scenarios)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On VCSA — renew all host certificates (re-issues via VMCA)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Choose option 3 — Replace Machine SSL certificate with VMCA Certificate</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or option 8 — Reset all certificates (use only in break-glass scenarios)</span>
+</code></pre></div>
 <hr />
 <h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
 <p>Key lead times:</p>
@@ -943,11 +943,11 @@ openssl s_client -connect &lt;esxi-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># PowerCLI — quick check on vCenter Machine SSL expiry
-$certBytes = (Connect-VIServer -Server &lt;vcenter-fqdn&gt;).ExtensionData.Config.Certificate
-$cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new([byte[]]$certBytes)
-$cert | Select Subject, NotBefore, NotAfter
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI — quick check on vCenter Machine SSL expiry</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$certBytes</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">Certificate</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[System.Security.Cryptography.X509Certificates.X509Certificate2]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[byte[]]</span><span class="nv">$certBytes</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$cert</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Subject</span><span class="p">,</span> <span class="n">NotBefore</span><span class="p">,</span> <span class="n">NotAfter</span>
+</code></pre></div>
 
 
 

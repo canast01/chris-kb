@@ -846,17 +846,17 @@
 <li>Create a consistency group (CG) via the vSphere Client → RecoverPoint → New Consistency Group</li>
 </ol>
 <h3 id="consistency-group-configuration">Consistency Group Configuration<a class="headerlink" href="#consistency-group-configuration" title="Permanent link">&para;</a></h3>
-<pre><code>CG settings:
-  - Production volumes: select VMDKs or datastores to protect
-  - Replica volumes: select equivalent capacity at recovery site
-  - Journal volumes: minimum 10GB per volume pair (size for required retention window)
-  - Target RPO: continuous (near-zero) or user-defined bookmarks
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>CG settings:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  - Production volumes: select VMDKs or datastores to protect
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  - Replica volumes: select equivalent capacity at recovery site
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  - Journal volumes: minimum 10GB per volume pair (size for required retention window)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  - Target RPO: continuous (near-zero) or user-defined bookmarks
+</code></pre></div>
 <h3 id="verify-replication-state">Verify Replication State<a class="headerlink" href="#verify-replication-state" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Via RecoverPoint CLI (SSH to RPA)
-get_group_info -g &quot;&lt;CG_name&gt;&quot;    # Full CG status
-monitor_group -g &quot;&lt;CG_name&gt;&quot;     # Live lag monitor
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via RecoverPoint CLI (SSH to RPA)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get_group_info<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;&lt;CG_name&gt;&quot;</span><span class="w">    </span><span class="c1"># Full CG status</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>monitor_group<span class="w"> </span>-g<span class="w"> </span><span class="s2">&quot;&lt;CG_name&gt;&quot;</span><span class="w">     </span><span class="c1"># Live lag monitor</span>
+</code></pre></div>
 <h2 id="vplex-integration">VPLEX Integration<a class="headerlink" href="#vplex-integration" title="Permanent link">&para;</a></h2>
 <p>RecoverPoint splitter on VPLEX director enables distributed CGs spanning VPLEX metro/geo fabrics:</p>
 <ul>
@@ -864,9 +864,9 @@ monitor_group -g &quot;&lt;CG_name&gt;&quot;     # Live lag monitor
 <li>Supports metro (synchronous) and geo (asynchronous) configurations</li>
 <li>Mixed topologies: VPLEX Metro + RecoverPoint → three-site continuous replication</li>
 </ul>
-<p>Configure VPLEX splitter via RecoverPoint CLI:</p>
-<pre><code class="language-bash">add_splitter_vplex -site production -vplex_ip &lt;vplex_mgmt_ip&gt;
-</code></pre>
+<p>Configure VPLEX splitter via RecoverPoint CLI:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>add_splitter_vplex<span class="w"> </span>-site<span class="w"> </span>production<span class="w"> </span>-vplex_ip<span class="w"> </span>&lt;vplex_mgmt_ip&gt;
+</code></pre></div></p>
 <h2 id="vmware-srm-integration">VMware SRM Integration<a class="headerlink" href="#vmware-srm-integration" title="Permanent link">&para;</a></h2>
 <p>The RecoverPoint SRA enables SRM to use RecoverPoint consistency groups as protection sources:</p>
 <ol>
@@ -918,16 +918,16 @@ monitor_group -g &quot;&lt;CG_name&gt;&quot;     # Live lag monitor
 <p>Install from Aria Marketplace: Solutions → Browse → "RecoverPoint" → Deploy.</p>
 <h2 id="api-integration">API Integration<a class="headerlink" href="#api-integration" title="Permanent link">&para;</a></h2>
 <p>RecoverPoint REST API for automation:</p>
-<pre><code class="language-bash"># Authenticate
-curl -k -u admin:password -X POST https://&lt;rpa-ip&gt;/rest/users/sessions
-
-# List consistency groups
-GET /rest/consistency_groups
-
-# Enable image access (for test failover)
-PUT /rest/consistency_groups/{id}/clusters/{clusterId}/image_access/enable
-Body: {&quot;scenario&quot;: &quot;LOGGED_ACCESS&quot;, &quot;consistency&quot;: &quot;CRASH_CONSISTENT&quot;}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;rpa-ip&gt;/rest/users/sessions
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List consistency groups</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>GET<span class="w"> </span>/rest/consistency_groups
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enable image access (for test failover)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>PUT<span class="w"> </span>/rest/consistency_groups/<span class="o">{</span>id<span class="o">}</span>/clusters/<span class="o">{</span>clusterId<span class="o">}</span>/image_access/enable
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Body:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;scenario&quot;</span>:<span class="w"> </span><span class="s2">&quot;LOGGED_ACCESS&quot;</span>,<span class="w"> </span><span class="s2">&quot;consistency&quot;</span>:<span class="w"> </span><span class="s2">&quot;CRASH_CONSISTENT&quot;</span><span class="o">}</span>
+</code></pre></div>
 
 
 

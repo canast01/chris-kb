@@ -787,84 +787,91 @@
 
 <h1 id="vmware-cloud-foundation-cli-reference">VMware Cloud Foundation CLI Reference<a class="headerlink" href="#vmware-cloud-foundation-cli-reference" title="Permanent link">&para;</a></h1>
 <p>VCF CLI operations use the SoS (Support and Operations Suite) utility on SDDC Manager, the SDDC Manager REST API, the <code>vcf-support-bundle</code> tool, and direct SSH commands on individual components. SoS is the primary health-check and diagnostic tool, run from the SDDC Manager appliance as root.</p>
+<pre class="mermaid"><code>flowchart LR
+    Foundation["Foundation"]
+    Foundation --&gt; S0["SoS Health Checks"]
+    Foundation --&gt; S1["Support Bundles"]
+    Foundation --&gt; S2["SDDC Manager REST API"]
+    Foundation --&gt; S3["Password Management"]
+    Foundation --&gt; S4["Service Status and Logs"]</code></pre>
 <hr />
 <h2 id="sos-health-checks">SoS Health Checks<a class="headerlink" href="#sos-health-checks" title="Permanent link">&para;</a></h2>
 <p>SoS performs cross-domain health validation across all VCF components. Run from the SDDC Manager appliance.</p>
-<pre><code class="language-bash"># SSH to SDDC Manager
-ssh vcf@&lt;sddc-mgr-fqdn&gt;
-
-# Full health summary across all domains
-sudo python3 /opt/vmware/sddc-support/sos --health-summary
-
-# Health check for a specific workload domain
-sudo python3 /opt/vmware/sddc-support/sos --health-check --domain &lt;domain_name&gt;
-
-# Password validation check
-sudo python3 /opt/vmware/sddc-support/sos --password-health
-
-# Certificate validation
-sudo python3 /opt/vmware/sddc-support/sos --certificate-health
-
-# List all available SoS flags
-sudo python3 /opt/vmware/sddc-support/sos --help
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to SDDC Manager</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>vcf@&lt;sddc-mgr-fqdn&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Full health summary across all domains</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>python3<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-summary
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Health check for a specific workload domain</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sudo<span class="w"> </span>python3<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--domain<span class="w"> </span>&lt;domain_name&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Password validation check</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>sudo<span class="w"> </span>python3<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--password-health
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Certificate validation</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>sudo<span class="w"> </span>python3<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--certificate-health
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all available SoS flags</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>sudo<span class="w"> </span>python3<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--help
+</code></pre></div>
 <hr />
 <h2 id="support-bundles">Support Bundles<a class="headerlink" href="#support-bundles" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Collect LCM-specific support bundle
-sudo vcf-support-bundle --type lcm
-
-# Collect full SDDC Manager support bundle
-sudo vcf-support-bundle --type sddc
-
-# Collect bundle for a specific component
-sudo vcf-support-bundle --type nsx
-
-# List available bundle types
-sudo vcf-support-bundle --help
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collect LCM-specific support bundle</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>vcf-support-bundle<span class="w"> </span>--type<span class="w"> </span>lcm
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Collect full SDDC Manager support bundle</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>vcf-support-bundle<span class="w"> </span>--type<span class="w"> </span>sddc
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Collect bundle for a specific component</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sudo<span class="w"> </span>vcf-support-bundle<span class="w"> </span>--type<span class="w"> </span>nsx
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List available bundle types</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>sudo<span class="w"> </span>vcf-support-bundle<span class="w"> </span>--help
+</code></pre></div>
 <hr />
 <h2 id="sddc-manager-rest-api">SDDC Manager REST API<a class="headerlink" href="#sddc-manager-rest-api" title="Permanent link">&para;</a></h2>
 <p>The SDDC Manager API runs at <code>https://&lt;sddc-mgr&gt;/v1</code>. Authenticate with the <code>vcf</code> admin account.</p>
-<pre><code class="language-bash"># Authenticate and get token
-curl -k -X POST https://&lt;sddc-mgr&gt;/v1/tokens   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
-
-# List all domains
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/domains   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List all clusters
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/clusters   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List managed credentials
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List hosts
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/hosts   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List workload domains
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/domains   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/tokens<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List all domains</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/domains<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List all clusters</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/clusters<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># List managed credentials</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/credentials<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List hosts</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/hosts<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># List workload domains</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/domains<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all managed credentials via API
-curl -k -X GET https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# Rotate a credential
-curl -k -X PATCH https://&lt;sddc-mgr&gt;/v1/credentials   -H &quot;Authorization: Bearer &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;operationType&quot;:&quot;ROTATE&quot;,&quot;elements&quot;:[{&quot;resourceName&quot;:&quot;&lt;name&gt;&quot;,&quot;resourceType&quot;:&quot;&lt;type&gt;&quot;,&quot;credentials&quot;:[{&quot;credentialType&quot;:&quot;&lt;type&gt;&quot;,&quot;username&quot;:&quot;&lt;user&gt;&quot;}]}]}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all managed credentials via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/credentials<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Rotate a credential</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>https://&lt;sddc-mgr&gt;/v1/credentials<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;operationType&quot;:&quot;ROTATE&quot;,&quot;elements&quot;:[{&quot;resourceName&quot;:&quot;&lt;name&gt;&quot;,&quot;resourceType&quot;:&quot;&lt;type&gt;&quot;,&quot;credentials&quot;:[{&quot;credentialType&quot;:&quot;&lt;type&gt;&quot;,&quot;username&quot;:&quot;&lt;user&gt;&quot;}]}]}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="service-status-logs">Service Status &amp; Logs<a class="headerlink" href="#service-status-logs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check SDDC Manager service
-systemctl status sddc-manager
-
-# Follow LCM debug log
-tail -f /var/log/vmware/vcf/lcm/lcm-debug.log
-
-# Follow SDDC Manager application log
-tail -f /var/log/vmware/vcf/sddc-manager/sddc-manager.log
-
-# View recent system events
-journalctl -u sddc-manager --since &quot;2 hours ago&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SDDC Manager service</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sddc-manager
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Follow LCM debug log</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm-debug.log
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Follow SDDC Manager application log</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/sddc-manager/sddc-manager.log
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># View recent system events</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sddc-manager<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span>
+</code></pre></div>
 
 
 

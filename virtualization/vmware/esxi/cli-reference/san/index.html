@@ -789,96 +789,103 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    FC["FC)"]
+    FC --&gt; S0["Fibre Channel"]
+    FC --&gt; S1["iSCSI"]
+    FC --&gt; S2["Storage Paths and Multipathing"]
+    FC --&gt; S3["LUN and Device Info"]
+    FC --&gt; S4["Troubleshooting"]</code></pre>
 <h2 id="fibre-channel">Fibre Channel<a class="headerlink" href="#fibre-channel" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List HBAs and WWPNs
-esxcli storage san fc list
-
-# FC HBA stats (errors, logins)
-esxcli storage san fc stats get -A vmhba0
-esxcli storage san fc stats get -A vmhba1
-
-# FC device paths
-esxcli storage nmp device list | grep vmhba
-
-# Path status to all LUNs
-esxcli storage nmp path list
-
-# Paths to a specific device
-esxcli storage nmp path list -d &lt;naa.xxx&gt;
-
-# Dead paths
-esxcli storage core path list | grep &quot;dead\|Dead&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List HBAs and WWPNs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># FC HBA stats (errors, logins)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba1
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># FC device paths</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmhba
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Path status to all LUNs</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Paths to a specific device</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Dead paths</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dead\|Dead&quot;</span>
+</code></pre></div>
 <h2 id="iscsi">iSCSI<a class="headerlink" href="#iscsi" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List iSCSI adapters
-esxcli iscsi adapter list
-
-# iSCSI adapter details (IQN, status)
-esxcli iscsi adapter get -A vmhba64
-
-# List discovery targets
-esxcli iscsi adapter discovery sendtarget list -A vmhba64
-
-# Add a send-target (static discovery)
-esxcli iscsi adapter discovery sendtarget add \
-    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
-
-# Remove a send-target
-esxcli iscsi adapter discovery sendtarget remove \
-    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
-
-# List active iSCSI sessions
-esxcli iscsi session list
-
-# iSCSI network portals (bound VMkernel adapters)
-esxcli iscsi logicalnetworkportal list -A vmhba64
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List iSCSI adapters</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># iSCSI adapter details (IQN, status)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List discovery targets</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Add a send-target (static discovery)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>--address<span class="w"> </span>&lt;iscsi_target_ip&gt;:3260<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Remove a send-target</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>remove<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>--address<span class="w"> </span>&lt;iscsi_target_ip&gt;:3260<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># List active iSCSI sessions</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># iSCSI network portals (bound VMkernel adapters)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>logicalnetworkportal<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64
+</code></pre></div>
 <h2 id="storage-paths-and-multipathing">Storage Paths and Multipathing<a class="headerlink" href="#storage-paths-and-multipathing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all LUN paths with state
-esxcli storage core path list
-
-# NMP (Native Multipath Plugin) device list
-esxcli storage nmp device list
-
-# PSP (Path Selection Policy) per device
-esxcli storage nmp device list | grep -E &quot;Device:|PSP:&quot;
-
-# Set PSP for a device (e.g., Round Robin for PowerMax)
-esxcli storage nmp device set -d &lt;naa.xxx&gt; -P VMW_PSP_RR
-
-# Force rescan of all adapters
-esxcli storage core adapter rescan --all
-
-# Rescan a specific adapter
-esxcli storage core adapter rescan -A vmhba0
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all LUN paths with state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># NMP (Native Multipath Plugin) device list</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># PSP (Path Selection Policy) per device</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device:|PSP:&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Set PSP for a device (e.g., Round Robin for PowerMax)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-P<span class="w"> </span>VMW_PSP_RR
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Force rescan of all adapters</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Rescan a specific adapter</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>-A<span class="w"> </span>vmhba0
+</code></pre></div>
 <h2 id="lun-and-device-info">LUN and Device Info<a class="headerlink" href="#lun-and-device-info" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all storage devices
-esxcli storage core device list
-
-# Device details (vendor, model, size, queue depth)
-esxcli storage core device list -d &lt;naa.xxx&gt;
-
-# VAAI (XCOPY/ATS) support on a device
-esxcli storage core device vaai status get -d &lt;naa.xxx&gt;
-
-# Queue depth per device
-esxcli storage core device list | grep &quot;Queue Full Threshold&quot;
-
-# Set queue depth for a device
-esxcli storage core device set --device &lt;naa.xxx&gt; -O MaxQueueDepth=64
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage devices</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Device details (vendor, model, size, queue depth)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># VAAI (XCOPY/ATS) support on a device</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Queue depth per device</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Queue Full Threshold&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Set queue depth for a device</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-O<span class="w"> </span><span class="nv">MaxQueueDepth</span><span class="o">=</span><span class="m">64</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check for APD (All Paths Down) or PDL (Permanent Device Loss)
-grep -i &quot;APD\|PDL\|lost path&quot; /var/log/vmkernel.log | tail -20
-
-# Dead path detail
-esxcli storage core path list | grep -A 5 &quot;State: dead&quot;
-
-# Rescan and verify paths recovered
-esxcli storage core adapter rescan --all
-esxcli storage core path list | grep -c &quot;State: active&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check for APD (All Paths Down) or PDL (Permanent Device Loss)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|lost path&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Dead path detail</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Rescan and verify paths recovered</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;State: active&quot;</span>
+</code></pre></div>
 
 
 

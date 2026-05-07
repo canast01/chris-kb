@@ -823,31 +823,41 @@
 <p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
 <p>Virtual Fabrics partition a physical Brocade chassis into multiple logical switches (Logical Switches), each with its own Fabric ID (FID) and independent FLOGI domain.</p>
+<pre class="mermaid"><code>flowchart LR
+    VF["(VF)"]
+    VF --&gt; S0["Virtual Fabric Status"]
+    VF --&gt; S1["Create a Logical Switch"]
+    VF --&gt; S2["Delete a Logical Switch"]
+    VF --&gt; S3["Assign a Port to a Logical Switch"]
+    VF --&gt; S4["XISL (Inter-Switch Links Between VFs)"]
+    VF --&gt; S5["Context Switching"]
+    VF --&gt; S6["Check Port Assignments per FID"]
+    VF --&gt; S7["Common Issues"]</code></pre>
 <h2 id="virtual-fabric-status">Virtual Fabric Status<a class="headerlink" href="#virtual-fabric-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">lscfg --show           # list all logical switches and their FIDs
-setContext &lt;fid&gt;       # switch CLI context to a specific logical switch
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>lscfg<span class="w"> </span>--show<span class="w">           </span><span class="c1"># list all logical switches and their FIDs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">       </span><span class="c1"># switch CLI context to a specific logical switch</span>
+</code></pre></div>
 <h2 id="create-a-logical-switch">Create a Logical Switch<a class="headerlink" href="#create-a-logical-switch" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">lscfg --create &lt;fid&gt; [-base]    # -base creates a base fabric
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>lscfg<span class="w"> </span>--create<span class="w"> </span>&lt;fid&gt;<span class="w"> </span><span class="o">[</span>-base<span class="o">]</span><span class="w">    </span><span class="c1"># -base creates a base fabric</span>
+</code></pre></div>
 <h2 id="delete-a-logical-switch">Delete a Logical Switch<a class="headerlink" href="#delete-a-logical-switch" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">lscfg --delete &lt;fid&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>lscfg<span class="w"> </span>--delete<span class="w"> </span>&lt;fid&gt;
+</code></pre></div>
 <h2 id="assign-a-port-to-a-logical-switch">Assign a Port to a Logical Switch<a class="headerlink" href="#assign-a-port-to-a-logical-switch" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">lscfg --config &lt;fid&gt; -port &lt;slot/port&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div>
 <h2 id="xisl-inter-switch-links-between-vfs">XISL (Inter-Switch Links Between VFs)<a class="headerlink" href="#xisl-inter-switch-links-between-vfs" title="Permanent link">&para;</a></h2>
 <p>XISLs allow different logical switches on the same chassis to communicate:</p>
-<pre><code class="language-bash">lscfg --port &lt;slot/port&gt; -lport &lt;fid&gt;    # assign port as XISL
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>lscfg<span class="w"> </span>--port<span class="w"> </span>&lt;slot/port&gt;<span class="w"> </span>-lport<span class="w"> </span>&lt;fid&gt;<span class="w">    </span><span class="c1"># assign port as XISL</span>
+</code></pre></div>
 <h2 id="context-switching">Context Switching<a class="headerlink" href="#context-switching" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">setContext &lt;fid&gt;       # enter the context of logical switch &lt;fid&gt;
-# All subsequent commands run in context of that FID
-setContext 128         # 128 = default/base fabric
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>setContext<span class="w"> </span>&lt;fid&gt;<span class="w">       </span><span class="c1"># enter the context of logical switch &lt;fid&gt;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># All subsequent commands run in context of that FID</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>setContext<span class="w"> </span><span class="m">128</span><span class="w">         </span><span class="c1"># 128 = default/base fabric</span>
+</code></pre></div>
 <h2 id="check-port-assignments-per-fid">Check Port Assignments per FID<a class="headerlink" href="#check-port-assignments-per-fid" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">lscfg --show -slot &lt;slot&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lscfg<span class="w"> </span>--show<span class="w"> </span>-slot<span class="w"> </span>&lt;slot&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

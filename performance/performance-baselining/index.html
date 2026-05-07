@@ -865,57 +865,57 @@
 <li>For seasonal systems: <strong>90 days</strong> minimum</li>
 </ul>
 <h2 id="linux-baseline-collection">Linux — Baseline Collection<a class="headerlink" href="#linux-baseline-collection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># CPU — 30 days from sar
-# For each day's summary:
-for d in $(seq 1 30); do
-    sar -u -f /var/log/sa/sa$(date -d &quot;$d days ago&quot; +%d) 2&gt;/dev/null | \
-      awk '/Average/ {print $3}'
-done | awk '{sum+=$1; n++} END {printf &quot;CPU 30d avg: %.1f%%\n&quot;, sum/n}'
-
-# Disk I/O — per device
-iostat -x 5 12 &gt; /tmp/iostat-baseline.txt
-# Key fields: await (ms), r_await, w_await, util%
-
-# Memory
-free -m
-vmstat -S M 5 12
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># CPU — 30 days from sar</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># For each day&#39;s summary:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">30</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>sar<span class="w"> </span>-u<span class="w"> </span>-f<span class="w"> </span>/var/log/sa/sa<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$d</span><span class="s2"> days ago&quot;</span><span class="w"> </span>+%d<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span>awk<span class="w"> </span><span class="s1">&#39;/Average/ {print $3}&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; n++} END {printf &quot;CPU 30d avg: %.1f%%\n&quot;, sum/n}&#39;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Disk I/O — per device</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">12</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/iostat-baseline.txt
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Key fields: await (ms), r_await, w_await, util%</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Memory</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>free<span class="w"> </span>-m
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vmstat<span class="w"> </span>-S<span class="w"> </span>M<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">12</span>
+</code></pre></div>
 <h2 id="windows-baseline-collection">Windows — Baseline Collection<a class="headerlink" href="#windows-baseline-collection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Capture 5-minute samples for 1 hour
-$counters = @(
-    '\Processor(_Total)\% Processor Time',
-    '\Memory\Available MBytes',
-    '\PhysicalDisk(*)\Avg. Disk sec/Read',
-    '\PhysicalDisk(*)\Avg. Disk sec/Write',
-    '\Network Interface(*)\Bytes Total/sec'
-)
-Get-Counter -Counter $counters -SampleInterval 300 -MaxSamples 12 |
-  Export-Counter -Path C:\baseline\$(Get-Date -Format yyyyMMdd).blg
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Capture 5-minute samples for 1 hour</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$counters</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s1">&#39;\Memory\Available MBytes&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Read&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Write&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s1">&#39;\Network Interface(*)\Bytes Total/sec&#39;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-Counter</span> <span class="n">-Counter</span> <span class="nv">$counters</span> <span class="n">-SampleInterval</span> <span class="n">300</span> <span class="n">-MaxSamples</span> <span class="n">12</span> <span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="nb">Export-Counter</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">baseline</span><span class="p">\$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">blg</span>
+</code></pre></div>
 <h2 id="application-performance-baseline">Application Performance Baseline<a class="headerlink" href="#application-performance-baseline" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Apache/nginx access log — requests per minute and response time
-awk '{print $10, $NF}' /var/log/nginx/access.log | \
-  awk '{sum+=$1; count++} END {print &quot;Avg response:&quot;, sum/count &quot;ms; Total:&quot;, count &quot;requests&quot;}'
-
-# Database — PostgreSQL slow query analysis
-psql -c &quot;SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 20;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Apache/nginx access log — requests per minute and response time</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>awk<span class="w"> </span><span class="s1">&#39;{print $10, $NF}&#39;</span><span class="w"> </span>/var/log/nginx/access.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;Avg response:&quot;, sum/count &quot;ms; Total:&quot;, count &quot;requests&quot;}&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Database — PostgreSQL slow query analysis</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 20;&quot;</span>
+</code></pre></div>
 <h2 id="documenting-the-baseline">Documenting the Baseline<a class="headerlink" href="#documenting-the-baseline" title="Permanent link">&para;</a></h2>
-<pre><code>System:         web-prod-01
-Date:           2026-05-06
-Period:         30 days (Mon–Fri 08:00–18:00 business hours)
-
-CPU:            avg 28% | peak 74% | std dev ±12%
-Memory:         avg 61% | peak 82%
-Disk reads:     avg 1.2ms | peak 8ms
-Disk writes:    avg 2.1ms | peak 15ms
-IOPS:           avg 4,200 | peak 18,000
-Network (eth0): avg 180 Mbps | peak 620 Mbps
-
-App requests:   avg 340 req/min | peak 1,200
-Response (P95): avg 85ms | peak 340ms
-Error rate:     avg 0.02%
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>System:         web-prod-01
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Date:           2026-05-06
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Period:         30 days (Mon–Fri 08:00–18:00 business hours)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>CPU:            avg 28% | peak 74% | std dev ±12%
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Memory:         avg 61% | peak 82%
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Disk reads:     avg 1.2ms | peak 8ms
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Disk writes:    avg 2.1ms | peak 15ms
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>IOPS:           avg 4,200 | peak 18,000
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Network (eth0): avg 180 Mbps | peak 620 Mbps
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>App requests:   avg 340 req/min | peak 1,200
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Response (P95): avg 85ms | peak 340ms
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Error rate:     avg 0.02%
+</code></pre></div>
 <h2 id="setting-thresholds-from-baseline">Setting Thresholds from Baseline<a class="headerlink" href="#setting-thresholds-from-baseline" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

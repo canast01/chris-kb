@@ -821,98 +821,98 @@
 <h1 id="database-health-check">Database Health Check<a class="headerlink" href="#database-health-check" title="Permanent link">&para;</a></h1>
 <p>Verify database availability, connectivity, replication status, and resource utilization across common platforms.</p>
 <h2 id="quick-status-all-platforms">Quick Status — All Platforms<a class="headerlink" href="#quick-status-all-platforms" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># PostgreSQL
-systemctl status postgresql
-psql -U postgres -c &quot;SELECT version();&quot;
-psql -U postgres -c &quot;SELECT pg_is_in_recovery();&quot;  # true = standby
-
-# MySQL / MariaDB
-systemctl status mysqld
-mysql -u root -e &quot;SHOW STATUS LIKE 'Uptime';&quot;
-mysql -u root -e &quot;SHOW STATUS LIKE 'Threads_connected';&quot;
-
-# SQL Server
-systemctl status mssql-server   # Linux
-# Windows:
-Get-Service -Name MSSQLSERVER
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_is_in_recovery();&quot;</span><span class="w">  </span><span class="c1"># true = standby</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># MySQL / MariaDB</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>mysqld
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW STATUS LIKE &#39;Uptime&#39;;&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW STATUS LIKE &#39;Threads_connected&#39;;&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>mssql-server<span class="w">   </span><span class="c1"># Linux</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Windows:</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-Service<span class="w"> </span>-Name<span class="w"> </span>MSSQLSERVER
+</code></pre></div>
 <h2 id="postgresql-health-checks">PostgreSQL Health Checks<a class="headerlink" href="#postgresql-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-sql">-- Active connections vs max
-SELECT count(*) AS active, max_conn, max_conn - count(*) AS available
-FROM pg_stat_activity, (SELECT setting::int AS max_conn FROM pg_settings WHERE name='max_connections') s
-GROUP BY max_conn;
-
--- Long-running queries (&gt; 60s)
-SELECT pid, now() - pg_stat_activity.query_start AS duration, query, state
-FROM pg_stat_activity
-WHERE state != 'idle' AND (now() - query_start) &gt; interval '60 seconds'
-ORDER BY duration DESC;
-
--- Bloat / dead tuples
-SELECT relname, n_dead_tup, n_live_tup, last_autovacuum
-FROM pg_stat_user_tables
-ORDER BY n_dead_tup DESC LIMIT 10;
-
--- Replication lag (on primary)
-SELECT client_addr, state, sent_lsn, write_lsn, replay_lsn,
-       (sent_lsn - replay_lsn) AS replication_lag_bytes
-FROM pg_stat_replication;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Active connections vs max</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">active</span><span class="p">,</span><span class="w"> </span><span class="n">max_conn</span><span class="p">,</span><span class="w"> </span><span class="n">max_conn</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">available</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_activity</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">setting</span><span class="p">::</span><span class="nb">int</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">max_conn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_settings</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;max_connections&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">s</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">max_conn</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- Long-running queries (&gt; 60s)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">pg_stat_activity</span><span class="p">.</span><span class="n">query_start</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="k">state</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_activity</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;idle&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">query_start</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;60 seconds&#39;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">-- Bloat / dead tuples</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">relname</span><span class="p">,</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="p">,</span><span class="w"> </span><span class="n">n_live_tup</span><span class="p">,</span><span class="w"> </span><span class="n">last_autovacuum</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_tables</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">-- Replication lag (on primary)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">client_addr</span><span class="p">,</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="n">sent_lsn</span><span class="p">,</span><span class="w"> </span><span class="n">write_lsn</span><span class="p">,</span><span class="w"> </span><span class="n">replay_lsn</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">       </span><span class="p">(</span><span class="n">sent_lsn</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">replay_lsn</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">replication_lag_bytes</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_replication</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="mysql-mariadb-health-checks">MySQL / MariaDB Health Checks<a class="headerlink" href="#mysql-mariadb-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-sql">-- Connection status
-SHOW STATUS LIKE 'Threads_%';
-SHOW STATUS LIKE 'Max_used_connections';
-
--- Replication status (on replica)
-SHOW SLAVE STATUS\G
--- Key fields: Seconds_Behind_Master, Slave_IO_Running, Slave_SQL_Running
-
--- Slow queries
-SHOW STATUS LIKE 'Slow_queries';
-SHOW VARIABLES LIKE 'slow_query_log%';
-
--- InnoDB buffer pool hit ratio (target &gt; 99%)
-SHOW STATUS LIKE 'Innodb_buffer_pool_reads';
-SHOW STATUS LIKE 'Innodb_buffer_pool_read_requests';
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Connection status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Threads_%&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Max_used_connections&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- Replication status (on replica)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">-- Key fields: Seconds_Behind_Master, Slave_IO_Running, Slave_SQL_Running</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- Slow queries</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Slow_queries&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">VARIABLES</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;slow_query_log%&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">-- InnoDB buffer pool hit ratio (target &gt; 99%)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Innodb_buffer_pool_reads&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Innodb_buffer_pool_read_requests&#39;</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="sql-server-health-checks">SQL Server Health Checks<a class="headerlink" href="#sql-server-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-sql">-- Instance uptime
-SELECT sqlserver_start_time FROM sys.dm_os_sys_info;
-
--- Active sessions and blocking
-SELECT session_id, status, blocking_session_id, wait_type, wait_time/1000 AS wait_sec, text
-FROM sys.dm_exec_requests
-CROSS APPLY sys.dm_exec_sql_text(sql_handle)
-WHERE status != 'background'
-ORDER BY wait_time DESC;
-
--- Database file sizes and free space
-SELECT DB_NAME(database_id) AS db_name, name, type_desc,
-       size * 8 / 1024 AS size_mb,
-       fileproperty(name, 'SpaceUsed') * 8 / 1024 AS used_mb
-FROM sys.master_files;
-
--- AG replica health (Always On)
-SELECT ag.name, ar.replica_server_name, rs.synchronization_state_desc, rs.synchronization_health_desc
-FROM sys.dm_hadr_availability_replica_states rs
-JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id
-JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Instance uptime</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">sqlserver_start_time</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_os_sys_info</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">-- Active sessions and blocking</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">wait_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wait_sec</span><span class="p">,</span><span class="w"> </span><span class="nb">text</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">CROSS</span><span class="w"> </span><span class="n">APPLY</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sql_text</span><span class="p">(</span><span class="n">sql_handle</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;background&#39;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">wait_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">-- Database file sizes and free space</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">DB_NAME</span><span class="p">(</span><span class="n">database_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">db_name</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">type_desc</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">       </span><span class="k">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">size_mb</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">       </span><span class="n">fileproperty</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SpaceUsed&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">used_mb</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">master_files</span><span class="p">;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1">-- AG replica health (Always On)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_state_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># PostgreSQL
-psql -h &lt;host&gt; -U &lt;user&gt; -d &lt;dbname&gt; -c &quot;SELECT 1 AS alive;&quot;
-
-# MySQL
-mysql -h &lt;host&gt; -u &lt;user&gt; -p&lt;pass&gt; -e &quot;SELECT 1 AS alive;&quot;
-
-# SQL Server
-sqlcmd -S &lt;host&gt; -U &lt;user&gt; -P &lt;pass&gt; -Q &quot;SELECT 1 AS alive&quot;
-
-# Port reachability
-nc -zv &lt;db-host&gt; 5432    # PostgreSQL
-nc -zv &lt;db-host&gt; 3306    # MySQL
-nc -zv &lt;db-host&gt; 1433    # SQL Server
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;dbname&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># MySQL</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-p&lt;pass&gt;<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive;&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># SQL Server</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sqlcmd<span class="w"> </span>-S<span class="w"> </span>&lt;host&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-P<span class="w"> </span>&lt;pass&gt;<span class="w"> </span>-Q<span class="w"> </span><span class="s2">&quot;SELECT 1 AS alive&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Port reachability</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;db-host&gt;<span class="w"> </span><span class="m">5432</span><span class="w">    </span><span class="c1"># PostgreSQL</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;db-host&gt;<span class="w"> </span><span class="m">3306</span><span class="w">    </span><span class="c1"># MySQL</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;db-host&gt;<span class="w"> </span><span class="m">1433</span><span class="w">    </span><span class="c1"># SQL Server</span>
+</code></pre></div>
 <h2 id="health-check-thresholds">Health Check Thresholds<a class="headerlink" href="#health-check-thresholds" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

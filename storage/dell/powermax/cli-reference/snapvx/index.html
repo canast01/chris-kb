@@ -834,44 +834,55 @@
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
 </blockquote>
 <p>SnapVX provides near-instantaneous, space-efficient snapshots of storage groups on PowerMax.</p>
+<pre class="mermaid"><code>flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --&gt; S0["List Snapshots"]
+    Snapshots --&gt; S1["Create a Snapshot"]
+    Snapshots --&gt; S2["Delete a Snapshot"]
+    Snapshots --&gt; S3["Link Snapshot to a Target SG (Expose for Testing)"]
+    Snapshots --&gt; S4["Unlink a Target SG"]
+    Snapshots --&gt; S5["Restore from Snapshot"]
+    Snapshots --&gt; S6["Rename a Snapshot"]
+    Snapshots --&gt; S7["Snapshot Policies (TimeFinder)"]
+    Snapshots --&gt; S8["Common Issues"]</code></pre>
 <h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All snapshots on the array
-symsnapvx list -sid &lt;sid&gt;
-
-# Snapshots for a specific storage group
-symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt;
-
-# Specific snapshot detail
-symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt; -snapshot_name &lt;snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All snapshots on the array</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symsnapvx<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Snapshots for a specific storage group</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symsnapvx<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specific snapshot detail</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symsnapvx<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-snapshot_name<span class="w"> </span>&lt;snap_name&gt;
+</code></pre></div>
 <h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; establish
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>establish
+</code></pre></div>
 <p>Snapshots are instant and do not require I/O quiesce, though application-consistent snapshots require application coordination.</p>
 <h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Terminate (delete) a snapshot
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate
-
-# Force terminate (if linked)
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate --force
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Terminate (delete) a snapshot</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>terminate
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Force terminate (if linked)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>terminate<span class="w"> </span>--force
+</code></pre></div>
 <h2 id="link-snapshot-to-a-target-sg-expose-for-testing">Link Snapshot to a Target SG (Expose for Testing)<a class="headerlink" href="#link-snapshot-to-a-target-sg-expose-for-testing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Link (read-only view for testing)
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt;
-
-# Link with copy (full copy — writable)
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt; -copy
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Link (read-only view for testing)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>link<span class="w"> </span>-lnsg<span class="w"> </span>&lt;target_sg&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Link with copy (full copy — writable)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>link<span class="w"> </span>-lnsg<span class="w"> </span>&lt;target_sg&gt;<span class="w"> </span>-copy
+</code></pre></div>
 <h2 id="unlink-a-target-sg">Unlink a Target SG<a class="headerlink" href="#unlink-a-target-sg" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; unlink -lnsg &lt;target_sg&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>unlink<span class="w"> </span>-lnsg<span class="w"> </span>&lt;target_sg&gt;
+</code></pre></div>
 <h2 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; restore
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>restore
+</code></pre></div>
 <p>Restore overwrites the source SG with snapshot data. Quiesce or offline the source devices from the host before restoring.</p>
 <h2 id="rename-a-snapshot">Rename a Snapshot<a class="headerlink" href="#rename-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; rename -new_name &lt;new_snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>symsnapvx<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>snap<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span>rename<span class="w"> </span>-new_name<span class="w"> </span>&lt;new_snap_name&gt;
+</code></pre></div>
 <h2 id="snapshot-policies-timefinder">Snapshot Policies (TimeFinder)<a class="headerlink" href="#snapshot-policies-timefinder" title="Permanent link">&para;</a></h2>
 <p>For automated snapshot scheduling, use Unisphere for PowerMax or Solutions Enabler snapshot policies.</p>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>

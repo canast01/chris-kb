@@ -799,79 +799,79 @@
 <h1 id="azure-lifecycle">Azure Lifecycle<a class="headerlink" href="#azure-lifecycle" title="Permanent link">&para;</a></h1>
 <h2 id="vm-patching">VM Patching<a class="headerlink" href="#vm-patching" title="Permanent link">&para;</a></h2>
 <p>VM OS images are patched via Azure Update Manager on a monthly schedule:</p>
-<pre><code class="language-bash"># Check patch assessment for a VM
-az maintenance assignment list --resource-group &lt;rg&gt; --provider-name Microsoft.Compute \
-    --resource-type virtualMachines --resource-name &lt;vm-name&gt;
-
-# Trigger on-demand assessment
-az maintenance apply-updates create --resource-group &lt;rg&gt; \
-    --provider-name Microsoft.Compute --resource-type virtualMachines --resource-name &lt;vm-name&gt;
-
-# Check patch compliance status
-az update-management-v2 assess --resource-group &lt;rg&gt; --vm-name &lt;vm-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check patch assessment for a VM</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>maintenance<span class="w"> </span>assignment<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--provider-name<span class="w"> </span>Microsoft.Compute<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--resource-type<span class="w"> </span>virtualMachines<span class="w"> </span>--resource-name<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Trigger on-demand assessment</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>maintenance<span class="w"> </span>apply-updates<span class="w"> </span>create<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>--provider-name<span class="w"> </span>Microsoft.Compute<span class="w"> </span>--resource-type<span class="w"> </span>virtualMachines<span class="w"> </span>--resource-name<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check patch compliance status</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>update-management-v2<span class="w"> </span>assess<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;
+</code></pre></div>
 <p>Patching waves:
 - Development: Patch Tuesday + 1 day (auto-reboot allowed)
 - Staging: Patch Tuesday + 3 days
 - Production: maintenance window (manual reboot approval required)</p>
 <h2 id="aks-upgrade">AKS Upgrade<a class="headerlink" href="#aks-upgrade" title="Permanent link">&para;</a></h2>
 <p>AKS supports N-2 minor Kubernetes versions. Clusters on unsupported versions receive no patches:</p>
-<pre><code class="language-bash"># Check available upgrades
-az aks get-upgrades --name &lt;cluster-name&gt; -g &lt;rg&gt; --output table
-
-# Upgrade control plane first
-az aks upgrade --name &lt;cluster-name&gt; -g &lt;rg&gt; --kubernetes-version 1.30 --no-wait
-
-# Monitor upgrade progress
-az aks show --name &lt;cluster-name&gt; -g &lt;rg&gt; --query 'provisioningState'
-
-# Upgrade node pools after control plane completes
-az aks nodepool upgrade --cluster-name &lt;cluster-name&gt; -g &lt;rg&gt; \
-    --name &lt;nodepool-name&gt; --kubernetes-version 1.30
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check available upgrades</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>aks<span class="w"> </span>get-upgrades<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Upgrade control plane first</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>aks<span class="w"> </span>upgrade<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30<span class="w"> </span>--no-wait
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Monitor upgrade progress</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;provisioningState&#39;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Upgrade node pools after control plane completes</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>--name<span class="w"> </span>&lt;nodepool-name&gt;<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.30
+</code></pre></div>
 <h2 id="service-retirement-tracking">Service Retirement Tracking<a class="headerlink" href="#service-retirement-tracking" title="Permanent link">&para;</a></h2>
 <p>Monitor Azure service retirements:
 - Azure Portal → Home → Recommendations → Retirements
 - Subscribe to Azure Updates: <a href="https://azure.microsoft.com/updates">azure.microsoft.com/updates</a>
 - Azure Advisor: Operational Excellence recommendations</p>
-<pre><code class="language-bash"># Check Advisor recommendations
-az advisor recommendation list --category OperationalExcellence \
-    --query &quot;[?contains(shortDescription.solution, 'Upgrade')]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check Advisor recommendations</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>advisor<span class="w"> </span>recommendation<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>OperationalExcellence<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(shortDescription.solution, &#39;Upgrade&#39;)]&quot;</span>
+</code></pre></div>
 <h2 id="subscription-lifecycle">Subscription Lifecycle<a class="headerlink" href="#subscription-lifecycle" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all subscriptions in tenant
-az account list --all --output table
-
-# Move subscription to different management group
-az management-group subscriptions add --name &lt;sub-id&gt; --management-group &lt;mg-id&gt;
-
-# Decommission subscription
-# 1. Cancel all resources
-# 2. Remove from management groups
-# 3. Cancel subscription (requires Billing Admin role)
-az account set --subscription &lt;sub-id&gt;
-# Cancel in Azure Portal → Subscriptions → Cancel
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all subscriptions in tenant</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Move subscription to different management group</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>az<span class="w"> </span>management-group<span class="w"> </span>subscriptions<span class="w"> </span>add<span class="w"> </span>--name<span class="w"> </span>&lt;sub-id&gt;<span class="w"> </span>--management-group<span class="w"> </span>&lt;mg-id&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Decommission subscription</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 1. Cancel all resources</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 2. Remove from management groups</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 3. Cancel subscription (requires Billing Admin role)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;sub-id&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Cancel in Azure Portal → Subscriptions → Cancel</span>
+</code></pre></div>
 <p>90-day hold period after cancellation before permanent deletion.</p>
 <h2 id="resource-group-expiry-non-production">Resource Group Expiry (Non-Production)<a class="headerlink" href="#resource-group-expiry-non-production" title="Permanent link">&para;</a></h2>
 <p>Tag non-production resource groups with expiry:</p>
-<pre><code class="language-bash"># Tag with expiry date
-az group update --name &lt;rg-name&gt; --tags ExpiryDate=2026-12-31 Environment=dev
-
-# Script to find expired RGs (run monthly)
-az group list --query &quot;[?tags.ExpiryDate &lt; '$(date +%Y-%m-%d)'].{Name:name,ExpiryDate:tags.ExpiryDate}&quot; --output table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Tag with expiry date</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">ExpiryDate</span><span class="o">=</span><span class="m">2026</span>-12-31<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>dev
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Script to find expired RGs (run monthly)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>az<span class="w"> </span>group<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[?tags.ExpiryDate &lt; &#39;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&#39;].{Name:name,ExpiryDate:tags.ExpiryDate}&quot;</span><span class="w"> </span>--output<span class="w"> </span>table
+</code></pre></div>
 <p>Expired RGs are notified to owner 14 days before deletion.</p>
 <h2 id="entra-id-app-registration-lifecycle">Entra ID App Registration Lifecycle<a class="headerlink" href="#entra-id-app-registration-lifecycle" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List app registrations with credential expiry
-az ad app list --all --query &quot;[*].{AppId:appId,DisplayName:displayName}&quot; -o table
-
-# Check credential expiry dates
-az ad app credential list --id &lt;app-id&gt;
-
-# Rotate client secret
-az ad app credential reset --id &lt;app-id&gt; --credential-description &quot;rotation-$(date +%Y%m)&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List app registrations with credential expiry</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;[*].{AppId:appId,DisplayName:displayName}&quot;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check credential expiry dates</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>list<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Rotate client secret</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>credential<span class="w"> </span>reset<span class="w"> </span>--id<span class="w"> </span>&lt;app-id&gt;<span class="w"> </span>--credential-description<span class="w"> </span><span class="s2">&quot;rotation-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <p>Alert 60 days before credential expiry — expired credentials break CI/CD pipelines silently.</p>
 
 

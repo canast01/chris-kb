@@ -810,67 +810,67 @@
 <h1 id="mtree-operations">MTree Operations<a class="headerlink" href="#mtree-operations" title="Permanent link">&para;</a></h1>
 <p>MTrees are the primary logical partitions on a Data Domain system. Each MTree maps to a directory under <code>/data/col1/</code> and can have independent quotas, replication, and retention lock settings.</p>
 <h2 id="capacity-and-usage">Capacity and Usage<a class="headerlink" href="#capacity-and-usage" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all MTrees with usage
-mtree list --verbose
-
-# Check MTree quota utilisation
-mtree quota show
-
-# Compare pre-compression vs post-compression per MTree
-filesys show compression | grep -B2 -A5 &quot;mtree&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all MTrees with usage</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check MTree quota utilisation</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Compare pre-compression vs post-compression per MTree</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B2<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;mtree&quot;</span>
+</code></pre></div>
 <h2 id="mtree-space-actions">MTree Space Actions<a class="headerlink" href="#mtree-space-actions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Reduce quota if an MTree is over-allocated
-mtree quota set hard-limit &lt;new_size&gt; TiB /data/col1/&lt;mtree_name&gt;
-
-# Remove quota entirely (no limit)
-mtree quota reset /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Reduce quota if an MTree is over-allocated</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span>&lt;new_size&gt;<span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Remove quota entirely (no limit)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span>reset<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="replication-state">Replication State<a class="headerlink" href="#replication-state" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check which MTrees are replicating and their state
-replication show all | grep &lt;mtree_name&gt;
-
-# Show replication lag for a specific MTree
-replication show stats | grep &lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check which MTrees are replicating and their state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show replication lag for a specific MTree</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="retention-lock-review">Retention Lock Review<a class="headerlink" href="#retention-lock-review" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check if retention lock is enabled on an MTree
-mtree retention-lock status /data/col1/&lt;mtree_name&gt;
-
-# List MTrees with retention lock enabled
-mtree list --verbose | grep -E &quot;mtree|retention&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if retention lock is enabled on an MTree</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span>status<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List MTrees with retention lock enabled</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;mtree|retention&quot;</span>
+</code></pre></div>
 <h2 id="creating-mtrees-for-new-backup-applications">Creating MTrees for New Backup Applications<a class="headerlink" href="#creating-mtrees-for-new-backup-applications" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — create the MTree
-mtree create /data/col1/&lt;application&gt;_backup
-
-# Step 2 — set a quota (prevent runaway growth)
-mtree quota set hard-limit 5 TiB /data/col1/&lt;application&gt;_backup
-mtree quota set soft-limit 4 TiB /data/col1/&lt;application&gt;_backup
-
-# Step 3 — create an NFS export or DDBoost storage unit
-nfs add export /data/col1/&lt;application&gt;_backup clients &lt;backup_server_ip&gt;
-# OR
-ddboost storage-unit create &lt;application&gt;_backup
-
-# Step 4 — verify
-mtree show /data/col1/&lt;application&gt;_backup
-mtree quota show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — create the MTree</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mtree<span class="w"> </span>create<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Step 2 — set a quota (prevent runaway growth)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span><span class="m">5</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>soft-limit<span class="w"> </span><span class="m">4</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Step 3 — create an NFS export or DDBoost storage unit</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;application&gt;_backup<span class="w"> </span>clients<span class="w"> </span>&lt;backup_server_ip&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># OR</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>create<span class="w"> </span>&lt;application&gt;_backup
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 4 — verify</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>mtree<span class="w"> </span>show<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
+</code></pre></div>
 <h2 id="decommissioning-an-mtree">Decommissioning an MTree<a class="headerlink" href="#decommissioning-an-mtree" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — confirm backup data has been expired in the backup application
-# Step 2 — remove the NFS export or DDBoost storage unit
-nfs del export /data/col1/&lt;mtree_name&gt;
-# OR
-ddboost storage-unit delete &lt;storage_unit_name&gt;
-
-# Step 3 — delete the MTree
-mtree delete /data/col1/&lt;mtree_name&gt;
-
-# Step 4 — run cleaning to reclaim space
-filesys clean start
-filesys clean status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1 — confirm backup data has been expired in the backup application</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Step 2 — remove the NFS export or DDBoost storage unit</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>nfs<span class="w"> </span>del<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># OR</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>delete<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Step 3 — delete the MTree</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>mtree<span class="w"> </span>delete<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 4 — run cleaning to reclaim space</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+</code></pre></div>
 <h2 id="health-summary">Health Summary<a class="headerlink" href="#health-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

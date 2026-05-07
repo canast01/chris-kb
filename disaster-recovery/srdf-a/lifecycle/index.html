@@ -808,59 +808,59 @@
 <h2 id="firmware-upgrade-procedure">Firmware Upgrade Procedure<a class="headerlink" href="#firmware-upgrade-procedure" title="Permanent link">&para;</a></h2>
 <p>Active SRDF/A pairs must be handled carefully during array firmware upgrades (Non-Disruptive Upgrades — NDU).</p>
 <p><strong>Standard procedure:</strong></p>
-<pre><code class="language-bash"># Step 1 — Suspend SRDF/A replication on the device group
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
-
-# Step 2 — Verify pair state is Suspended
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-
-# Step 3 — Perform NDU on source array (via Unisphere or Dell support)
-# NDU on PowerMax is non-disruptive to host I/O — suspension is only for SRDF/A cycle management
-
-# Step 4 — Perform NDU on target array
-
-# Step 5 — Resume SRDF/A replication
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
-
-# Step 6 — Verify pair state returns to Consistent
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-# Wait for SyncInProg → Consistent transition before closing the change window
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Suspend SRDF/A replication on the device group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Step 2 — Verify pair state is Suspended</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Step 3 — Perform NDU on source array (via Unisphere or Dell support)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># NDU on PowerMax is non-disruptive to host I/O — suspension is only for SRDF/A cycle management</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Step 4 — Perform NDU on target array</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Step 5 — Resume SRDF/A replication</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Step 6 — Verify pair state returns to Consistent</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Wait for SyncInProg → Consistent transition before closing the change window</span>
+</code></pre></div>
 <p><strong>Important:</strong> After resume, monitor the delta set queue — a large backlog accumulated during suspension will flush over the WAN link and may saturate bandwidth temporarily.</p>
 <hr />
 <h2 id="adding-new-devices-to-an-srdf-group">Adding New Devices to an SRDF Group<a class="headerlink" href="#adding-new-devices-to-an-srdf-group" title="Permanent link">&para;</a></h2>
 <p>When new volumes need SRDF/A protection:</p>
-<pre><code class="language-bash"># Create a new device pair and add to an existing device group
-# Step 1 — Ensure the R2 device is created and unformatted on the target array
-# Step 2 — Create the SRDF pair (establishes initial sync)
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; establish -noprompt -type RDF/A
-
-# Step 3 — Monitor sync progress
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-# State will show SyncInProg until initial full sync completes, then Consistent
-
-# Step 4 — Verify the new device pair before handing to the application team
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; verify -consistent
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new device pair and add to an existing device group</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Step 1 — Ensure the R2 device is created and unformatted on the target array</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Step 2 — Create the SRDF pair (establishes initial sync)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>establish<span class="w"> </span>-noprompt<span class="w"> </span>-type<span class="w"> </span>RDF/A
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Step 3 — Monitor sync progress</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># State will show SyncInProg until initial full sync completes, then Consistent</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Step 4 — Verify the new device pair before handing to the application team</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>verify<span class="w"> </span>-consistent
+</code></pre></div>
 <p>Initial synchronisation copies the full volume from R1 to R2. Schedule this during low-write periods to avoid saturating the WAN link and delaying existing SRDF/A cycles.</p>
 <hr />
 <h2 id="removing-devices-from-an-srdf-group">Removing Devices from an SRDF Group<a class="headerlink" href="#removing-devices-from-an-srdf-group" title="Permanent link">&para;</a></h2>
 <p>Decommission procedure for SRDF/A-protected volumes:</p>
-<pre><code class="language-bash"># Step 1 — Quiesce host I/O on the R1 devices (application-level)
-# Step 2 — Split the pair (R1 and R2 become independent)
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; split -noprompt
-
-# Step 3 — Verify both sides are Split and independent
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-
-# Step 4 — Remove the pair from the device group
-symdg -g &lt;dgname&gt; -type RDF1 remove dev &lt;dev_id&gt; -noprompt
-
-# Step 5 — Remove the device from the SRDF group (RDF group)
-symrdf -rdfg &lt;group_num&gt; -sid &lt;r1_sid&gt; -dev &lt;dev_id&gt; remove
-
-# Step 6 — Decommission the R2 device on the target array (or repurpose)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Quiesce host I/O on the R1 devices (application-level)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Step 2 — Split the pair (R1 and R2 become independent)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>split<span class="w"> </span>-noprompt
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Step 3 — Verify both sides are Split and independent</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 4 — Remove the pair from the device group</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>symdg<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-type<span class="w"> </span>RDF1<span class="w"> </span>remove<span class="w"> </span>dev<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span>-noprompt
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Step 5 — Remove the device from the SRDF group (RDF group)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>symrdf<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span>remove
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Step 6 — Decommission the R2 device on the target array (or repurpose)</span>
+</code></pre></div>
 <hr />
 <h2 id="eol-and-platform-tracking">EOL and Platform Tracking<a class="headerlink" href="#eol-and-platform-tracking" title="Permanent link">&para;</a></h2>
 <table>

@@ -789,70 +789,77 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    VMDK["VMDK"]
+    VMDK --&gt; S0["Browse Datastores"]
+    VMDK --&gt; S1["vmkfstools — VMDK Operations"]
+    VMDK --&gt; S2["Datastore Info via vim-cmd"]
+    VMDK --&gt; S3["Snapshot Files"]
+    VMDK --&gt; S4["VMFS Troubleshooting"]</code></pre>
 <h2 id="browse-datastores">Browse Datastores<a class="headerlink" href="#browse-datastores" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all datastores visible to the host
-ls /vmfs/volumes/
-esxcli storage filesystem list
-
-# List contents of a datastore
-ls /vmfs/volumes/&lt;datastore&gt;/
-ls -lah /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
-
-# Disk usage per directory
-du -sh /vmfs/volumes/&lt;datastore&gt;/*
-du -sh /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all datastores visible to the host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ls<span class="w"> </span>/vmfs/volumes/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List contents of a datastore</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ls<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ls<span class="w"> </span>-lah<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Disk usage per directory</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>du<span class="w"> </span>-sh<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/*
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>du<span class="w"> </span>-sh<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+</code></pre></div>
 <h2 id="vmkfstools-vmdk-operations">vmkfstools — VMDK Operations<a class="headerlink" href="#vmkfstools-vmdk-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List VMDK info (size, type, chain)
-vmkfstools -l /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-
-# Create a new thin VMDK
-vmkfstools -c 100G -d thin /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-
-# Clone a VMDK
-vmkfstools -i source.vmdk dest.vmdk
-
-# Expand a VMDK (grows the file — guest must still expand the partition)
-vmkfstools -X 200G /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-
-# Inflate a thin VMDK to eagerzeroedthick
-vmkfstools -k /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-
-# Defragment / punch holes in a thin VMDK
-vmkfstools -p /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-
-# Check VMDK for consistency
-vmkfstools -e /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List VMDK info (size, type, chain)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkfstools<span class="w"> </span>-l<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a new thin VMDK</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkfstools<span class="w"> </span>-c<span class="w"> </span>100G<span class="w"> </span>-d<span class="w"> </span>thin<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Clone a VMDK</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vmkfstools<span class="w"> </span>-i<span class="w"> </span>source.vmdk<span class="w"> </span>dest.vmdk
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Expand a VMDK (grows the file — guest must still expand the partition)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>vmkfstools<span class="w"> </span>-X<span class="w"> </span>200G<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Inflate a thin VMDK to eagerzeroedthick</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>vmkfstools<span class="w"> </span>-k<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Defragment / punch holes in a thin VMDK</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vmkfstools<span class="w"> </span>-p<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Check VMDK for consistency</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>vmkfstools<span class="w"> </span>-e<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk
+</code></pre></div>
 <h2 id="datastore-info-via-vim-cmd">Datastore Info via vim-cmd<a class="headerlink" href="#datastore-info-via-vim-cmd" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all datastores and their status
-vim-cmd hostsvc/datastore/listsummary
-
-# Detailed info on a specific datastore
-vim-cmd hostsvc/datastore/info &lt;datastore_name&gt;
-
-# Rescan all storage adapters (after new LUN presented)
-esxcli storage core adapter rescan --all
-vim-cmd hostsvc/storage/refresh
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all datastores and their status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vim-cmd<span class="w"> </span>hostsvc/datastore/listsummary
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Detailed info on a specific datastore</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vim-cmd<span class="w"> </span>hostsvc/datastore/info<span class="w"> </span>&lt;datastore_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Rescan all storage adapters (after new LUN presented)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>vim-cmd<span class="w"> </span>hostsvc/storage/refresh
+</code></pre></div>
 <h2 id="snapshot-files">Snapshot Files<a class="headerlink" href="#snapshot-files" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Identify snapshot delta files (-.delta.vmdk)
-find /vmfs/volumes/&lt;ds&gt;/ -name &quot;*-delta.vmdk&quot; -o -name &quot;*-0000*.vmdk&quot; 2&gt;/dev/null
-
-# Check snapshot size vs. base disk
-ls -lah /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Identify snapshot delta files (-.delta.vmdk)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-0000*.vmdk&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check snapshot size vs. base disk</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>-lah<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/
+</code></pre></div>
 <h2 id="vmfs-troubleshooting">VMFS Troubleshooting<a class="headerlink" href="#vmfs-troubleshooting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check VMFS filesystem metadata
-esxcli storage vmfs extent list
-
-# Resignature a VMFS copy (after snapshot/LUN clone)
-esxcli storage vmfs snapshot list
-esxcli storage vmfs snapshot resignature -l &lt;label&gt;
-
-# Unmount a datastore from this host (does not remove from vCenter)
-esxcli storage filesystem unmount -l &lt;datastore_label&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check VMFS filesystem metadata</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Resignature a VMFS copy (after snapshot/LUN clone)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>snapshot<span class="w"> </span>list
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>snapshot<span class="w"> </span>resignature<span class="w"> </span>-l<span class="w"> </span>&lt;label&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Unmount a datastore from this host (does not remove from vCenter)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>unmount<span class="w"> </span>-l<span class="w"> </span>&lt;datastore_label&gt;
+</code></pre></div>
 
 
 

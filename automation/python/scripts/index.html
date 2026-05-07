@@ -892,99 +892,99 @@
 <hr />
 <h2 id="windows-run-python-scripts-from-command-prompt-cmd-batch">Windows: Run Python Scripts from Command Prompt (CMD Batch)<a class="headerlink" href="#windows-run-python-scripts-from-command-prompt-cmd-batch" title="Permanent link">&para;</a></h2>
 <p>Checks for Python, creates a virtual environment, installs common infrastructure packages, and runs a specified Python script with environment variables pre-set. Suitable for running any of the scripts in this KB from a Windows machine without needing to install packages globally.</p>
-<pre><code class="language-bat">@echo off
-REM run-py-script.bat
-REM Usage: Edit the variables below, then double-click or run from Command Prompt.
-REM        The script you want to run must be in the same folder as this .bat file,
-REM        or provide a full path in PY_SCRIPT below.
-
-setlocal enabledelayedexpansion
-
-REM -----------------------------------------------------------------------
-REM EDIT THESE VALUES
-REM -----------------------------------------------------------------------
-set PY_SCRIPT=your_script.py
-set VENV_DIR=C:\venvs\kb-scripts
-
-REM Infrastructure environment variables — change to match your environment
-set FA_HOST=192.168.1.100
-set FA_API_TOKEN=your-token-here
-set AWS_ACCESS_KEY_ID=your-access-key
-set AWS_SECRET_ACCESS_KEY=your-secret-key
-set AWS_DEFAULT_REGION=us-east-1
-REM -----------------------------------------------------------------------
-
-echo.
-echo === Python Script Runner ===
-echo Script   : %PY_SCRIPT%
-echo Venv     : %VENV_DIR%
-echo.
-
-REM --- Step 1: Check Python is installed ---
-echo [1/5] Checking for Python...
-python --version &gt;nul 2&gt;&amp;1
-if errorlevel 1 (
-    echo ERROR: Python is not installed or not in PATH.
-    echo        Download and install Python 3 from https://python.org/downloads/
-    echo        During install, check &quot;Add Python to PATH&quot;.
-    pause
-    exit /b 1
-)
-python --version
-echo Python found.
-echo.
-
-REM --- Step 2: Create virtual environment if it doesn't exist ---
-echo [2/5] Setting up virtual environment at %VENV_DIR%...
-if not exist &quot;%VENV_DIR%\Scripts\activate.bat&quot; (
-    echo Creating new virtual environment...
-    python -m venv &quot;%VENV_DIR%&quot;
-    if errorlevel 1 (
-        echo ERROR: Failed to create virtual environment.
-        pause
-        exit /b 1
-    )
-    echo Virtual environment created.
-) else (
-    echo Virtual environment already exists, skipping creation.
-)
-echo.
-
-REM --- Step 3: Activate the virtual environment ---
-echo [3/5] Activating virtual environment...
-call &quot;%VENV_DIR%\Scripts\activate.bat&quot;
-echo Activated.
-echo.
-
-REM --- Step 4: Install required packages ---
-echo [4/5] Installing/updating packages...
-pip install --quiet --upgrade pip
-pip install py-pure-client pyVmomi requests netapp-ontap paramiko boto3
-if errorlevel 1 (
-    echo ERROR: Package installation failed.
-    pause
-    exit /b 1
-)
-echo Packages installed.
-echo.
-
-REM --- Step 5: Run the script ---
-echo [5/5] Running %PY_SCRIPT%...
-echo.
-python &quot;%PY_SCRIPT%&quot;
-set SCRIPT_RC=%errorlevel%
-
-echo.
-if %SCRIPT_RC% equ 0 (
-    echo Script completed successfully.
-) else (
-    echo Script exited with code %SCRIPT_RC%.
-)
-
-deactivate
-pause
-endlocal
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">@</span><span class="k">echo</span> off
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">REM run-py-script.bat</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">REM Usage: Edit the variables below, then double-click or run from Command Prompt.</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">REM        The script you want to run must be in the same folder as this .bat file,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">REM        or provide a full path in PY_SCRIPT below.</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">setlocal</span> enabledelayedexpansion
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">REM -----------------------------------------------------------------------</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1">REM EDIT THESE VALUES</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1">REM -----------------------------------------------------------------------</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">set</span> <span class="nv">PY_SCRIPT</span><span class="p">=</span>your_script.py
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">set</span> <span class="nv">VENV_DIR</span><span class="p">=</span>C:\venvs\kb-scripts
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1">REM Infrastructure environment variables — change to match your environment</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">set</span> <span class="nv">FA_HOST</span><span class="p">=</span>192.168.1.100
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">set</span> <span class="nv">FA_API_TOKEN</span><span class="p">=</span>your-token-here
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">set</span> <span class="nv">AWS_ACCESS_KEY_ID</span><span class="p">=</span>your-access-key
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">set</span> <span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="p">=</span>your-secret-key
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">set</span> <span class="nv">AWS_DEFAULT_REGION</span><span class="p">=</span>us-east-1
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1">REM -----------------------------------------------------------------------</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="k">echo</span>.
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="k">echo</span> === Python Script Runner ===
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">echo</span> Script   : <span class="nv">%PY_SCRIPT%</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">echo</span> Venv     : <span class="nv">%VENV_DIR%</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="k">echo</span>.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1">REM --- Step 1: Check Python is installed ---</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">echo</span> [1/5] Checking for Python...
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>python --version <span class="p">&gt;</span>nul <span class="mi">2</span><span class="p">&gt;&amp;</span><span class="mi">1</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="k">if</span> <span class="k">errorlevel</span> <span class="mi">1</span> <span class="p">(</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="k">echo</span> ERROR: Python is not installed or not in PATH.
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="k">echo</span>        Download and install Python 3 from https://python.org/downloads/
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="k">echo</span>        During install, check <span class="s2">&quot;Add Python to PATH&quot;</span>.
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="k">pause</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="k">exit</span> /b 1
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">)</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>python --version
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="k">echo</span> Python found.
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="k">echo</span>.
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="c1">REM --- Step 2: Create virtual environment if it doesn&#39;t exist ---</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="k">echo</span> [2/5] Setting up virtual environment at <span class="nv">%VENV_DIR%</span>...
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="k">if</span> <span class="k">not</span> <span class="k">exist</span> <span class="s2">&quot;</span><span class="nv">%VENV_DIR%</span><span class="s2">\Scripts\activate.bat&quot;</span> <span class="p">(</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="k">echo</span> Creating new virtual environment...
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    python -m venv <span class="s2">&quot;</span><span class="nv">%VENV_DIR%</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="k">if</span> <span class="k">errorlevel</span> <span class="mi">1</span> <span class="p">(</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="k">echo</span> ERROR: Failed to create virtual environment.
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="k">pause</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="k">exit</span> /b 1
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="p">)</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    <span class="k">echo</span> Virtual environment created.
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="p">)</span> <span class="k">else</span> <span class="p">(</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="k">echo</span> Virtual environment already exists, skipping creation.
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a><span class="k">echo</span>.
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="c1">REM --- Step 3: Activate the virtual environment ---</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="k">echo</span> [3/5] Activating virtual environment...
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a><span class="k">call</span> <span class="s2">&quot;</span><span class="nv">%VENV_DIR%</span><span class="s2">\Scripts\activate.bat&quot;</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="k">echo</span> Activated.
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="k">echo</span>.
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a><span class="c1">REM --- Step 4: Install required packages ---</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="k">echo</span> [4/5] Installing/updating packages...
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>pip install --quiet --upgrade pip
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>pip install py-pure-client pyVmomi requests netapp-ontap paramiko boto3
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a><span class="k">if</span> <span class="k">errorlevel</span> <span class="mi">1</span> <span class="p">(</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    <span class="k">echo</span> ERROR: Package installation failed.
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    <span class="k">pause</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>    <span class="k">exit</span> /b 1
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a><span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a><span class="k">echo</span> Packages installed.
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a><span class="k">echo</span>.
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a><span class="c1">REM --- Step 5: Run the script ---</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a><span class="k">echo</span> [5/5] Running <span class="nv">%PY_SCRIPT%</span>...
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a><span class="k">echo</span>.
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>python <span class="s2">&quot;</span><span class="nv">%PY_SCRIPT%</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a><span class="k">set</span> <span class="nv">SCRIPT_RC</span><span class="p">=</span><span class="nv">%errorlevel%</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a><span class="k">echo</span>.
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a><span class="k">if</span> <span class="nv">%SCRIPT_RC%</span> <span class="ow">equ</span> 0 <span class="p">(</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>    <span class="k">echo</span> Script completed successfully.
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a><span class="p">)</span> <span class="k">else</span> <span class="p">(</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>    <span class="k">echo</span> Script exited with code <span class="nv">%SCRIPT_RC%</span>.
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a><span class="p">)</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>deactivate
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a><span class="k">pause</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a><span class="k">endlocal</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - A Windows PC with Python 3.8 or later installed (download from python.org)
@@ -1050,148 +1050,148 @@ endlocal
 <p><strong>Step 3 — Open a terminal</strong></p>
 <p>Open Command Prompt: press <code>Windows key</code>, type <code>cmd</code>, press Enter.</p>
 <p><strong>Step 4 — Run the script</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-run-py-script.bat
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>run-py-script.bat
+</code></pre></div>
 <p>Or simply double-click the <code>run-py-script.bat</code> file in File Explorer.</p>
 <p><strong>What you should see</strong></p>
 <p>The script prints numbered progress steps (1/5 through 5/5), installs packages on first run (subsequent runs skip this if already installed), then prints the output of your Python script. A "Script completed successfully." message appears at the end if the script exits cleanly. The window pauses so you can read the output before it closes.</p>
 <hr />
 <h2 id="windows-python-environment-setup-powershell">Windows: Python Environment Setup (PowerShell)<a class="headerlink" href="#windows-python-environment-setup-powershell" title="Permanent link">&para;</a></h2>
 <p>One-time setup script that verifies Python 3 is installed, creates a virtual environment in your Documents folder, installs common infrastructure packages, and validates that each key package imports correctly. Run this once before using any Python scripts in this KB.</p>
-<pre><code class="language-powershell"># setup-python-env.ps1
-# Run once to set up your Python environment on Windows.
-# Usage: Right-click → Run with PowerShell  (or see step-by-step guide below)
-
-#Requires -Version 5.1
-
-$ErrorActionPreference = &quot;Stop&quot;
-
-$VenvPath = Join-Path $env:USERPROFILE &quot;Documents\kb-venv&quot;
-$Packages = @(
-    &quot;py-pure-client&quot;,
-    &quot;pyVmomi&quot;,
-    &quot;requests&quot;,
-    &quot;netapp-ontap&quot;,
-    &quot;paramiko&quot;,
-    &quot;boto3&quot;
-)
-
-Write-Host &quot;&quot;
-Write-Host &quot;=== Python Environment Setup ===&quot; -ForegroundColor Cyan
-Write-Host &quot;Virtual environment: $VenvPath&quot;
-Write-Host &quot;&quot;
-
-# --- Step 1: Check for Python 3 ---
-Write-Host &quot;[1/5] Checking for Python 3...&quot; -ForegroundColor Yellow
-$pythonCmd = $null
-
-foreach ($cmd in @(&quot;python&quot;, &quot;python3&quot;)) {
-    try {
-        $ver = &amp; $cmd --version 2&gt;&amp;1
-        if ($ver -match &quot;Python 3\.&quot;) {
-            $pythonCmd = $cmd
-            Write-Host &quot;Found: $ver (command: $cmd)&quot; -ForegroundColor Green
-            break
-        }
-    } catch { }
-}
-
-if (-not $pythonCmd) {
-    Write-Host &quot;&quot;
-    Write-Host &quot;ERROR: Python 3 is not installed or not in PATH.&quot; -ForegroundColor Red
-    Write-Host &quot;&quot;
-    Write-Host &quot;To install Python 3, run the following command in a terminal:&quot; -ForegroundColor Yellow
-    Write-Host &quot;  winget install Python.Python.3&quot; -ForegroundColor White
-    Write-Host &quot;&quot;
-    Write-Host &quot;Or download manually from https://python.org/downloads/&quot; -ForegroundColor White
-    Write-Host &quot;During install, check 'Add Python to PATH'.&quot; -ForegroundColor White
-    Write-Host &quot;&quot;
-    Read-Host &quot;Press Enter to exit&quot;
-    exit 1
-}
-
-# --- Step 2: Create virtual environment ---
-Write-Host &quot;&quot;
-Write-Host &quot;[2/5] Setting up virtual environment...&quot; -ForegroundColor Yellow
-
-if (Test-Path (Join-Path $VenvPath &quot;Scripts\Activate.ps1&quot;)) {
-    Write-Host &quot;Virtual environment already exists at $VenvPath, skipping creation.&quot; -ForegroundColor Green
-} else {
-    Write-Host &quot;Creating virtual environment at $VenvPath...&quot;
-    &amp; $pythonCmd -m venv $VenvPath
-    Write-Host &quot;Virtual environment created.&quot; -ForegroundColor Green
-}
-
-# --- Step 3: Activate virtual environment ---
-Write-Host &quot;&quot;
-Write-Host &quot;[3/5] Activating virtual environment...&quot; -ForegroundColor Yellow
-$activateScript = Join-Path $VenvPath &quot;Scripts\Activate.ps1&quot;
-. $activateScript
-Write-Host &quot;Activated.&quot; -ForegroundColor Green
-
-# --- Step 4: Install packages ---
-Write-Host &quot;&quot;
-Write-Host &quot;[4/5] Installing packages...&quot; -ForegroundColor Yellow
-python -m pip install --quiet --upgrade pip
-foreach ($pkg in $Packages) {
-    Write-Host &quot;  Installing $pkg...&quot;
-    python -m pip install --quiet $pkg
-}
-Write-Host &quot;All packages installed.&quot; -ForegroundColor Green
-
-# --- Step 5: Test imports ---
-Write-Host &quot;&quot;
-Write-Host &quot;[5/5] Testing package imports...&quot; -ForegroundColor Yellow
-
-$importTests = @{
-    &quot;py-pure-client&quot; = &quot;import purestorage&quot;
-    &quot;pyVmomi&quot;        = &quot;import pyVmomi&quot;
-    &quot;boto3&quot;          = &quot;import boto3&quot;
-    &quot;requests&quot;       = &quot;import requests&quot;
-    &quot;paramiko&quot;       = &quot;import paramiko&quot;
-    &quot;netapp-ontap&quot;   = &quot;import netapp_ontap&quot;
-}
-
-$results = @()
-foreach ($entry in $importTests.GetEnumerator()) {
-    $pkg  = $entry.Key
-    $stmt = $entry.Value
-    try {
-        $output = python -c $stmt 2&gt;&amp;1
-        if ($LASTEXITCODE -eq 0) {
-            $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;OK&quot;; Version = (python -c &quot;import importlib.metadata; print(importlib.metadata.version('$pkg'))&quot; 2&gt;$null) }
-        } else {
-            $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;FAIL&quot;; Version = &quot;-&quot; }
-        }
-    } catch {
-        $results += [PSCustomObject]@{ Package = $pkg; Status = &quot;FAIL&quot;; Version = &quot;-&quot; }
-    }
-}
-
-# --- Summary ---
-Write-Host &quot;&quot;
-Write-Host &quot;=== Installed Package Summary ===&quot; -ForegroundColor Cyan
-Write-Host (&quot;{0,-20} {1,-10} {2}&quot; -f &quot;Package&quot;, &quot;Status&quot;, &quot;Version&quot;)
-Write-Host (&quot;-&quot; * 50)
-foreach ($r in $results) {
-    $color = if ($r.Status -eq &quot;OK&quot;) { &quot;Green&quot; } else { &quot;Red&quot; }
-    Write-Host (&quot;{0,-20} {1,-10} {2}&quot; -f $r.Package, $r.Status, $r.Version) -ForegroundColor $color
-}
-
-$failed = $results | Where-Object { $_.Status -ne &quot;OK&quot; }
-Write-Host &quot;&quot;
-if ($failed) {
-    Write-Host &quot;WARNING: $($failed.Count) package(s) failed to import. Review errors above.&quot; -ForegroundColor Red
-} else {
-    Write-Host &quot;SUCCESS: All packages imported successfully.&quot; -ForegroundColor Green
-    Write-Host &quot;Your Python environment is ready. Activate it with:&quot; -ForegroundColor White
-    Write-Host &quot;  . `&quot;$activateScript`&quot;&quot; -ForegroundColor White
-}
-
-Write-Host &quot;&quot;
-Read-Host &quot;Press Enter to exit&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># setup-python-env.ps1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Run once to set up your Python environment on Windows.</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Usage: Right-click → Run with PowerShell  (or see step-by-step guide below)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c">#Requires -Version 5.1</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&quot;Stop&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">$VenvPath</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$env:USERPROFILE</span> <span class="s2">&quot;Documents\kb-venv&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">$Packages</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="s2">&quot;py-pure-client&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="s2">&quot;pyVmomi&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="s2">&quot;requests&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="s2">&quot;netapp-ontap&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="s2">&quot;paramiko&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="s2">&quot;boto3&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nb">Write-Host</span> <span class="s2">&quot;=== Python Environment Setup ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Virtual environment: $VenvPath&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c"># --- Step 1: Check for Python 3 ---</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nb">Write-Host</span> <span class="s2">&quot;[1/5] Checking for Python 3...&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="nv">$pythonCmd</span> <span class="p">=</span> <span class="nv">$null</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$cmd</span> <span class="k">in</span> <span class="p">@(</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;python3&quot;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        <span class="nv">$ver</span> <span class="p">=</span> <span class="p">&amp;</span> <span class="nv">$cmd</span> <span class="p">-</span><span class="n">-version</span> <span class="n">2</span><span class="p">&gt;&amp;</span><span class="n">1</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$ver</span> <span class="o">-match</span> <span class="s2">&quot;Python 3\.&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>            <span class="nv">$pythonCmd</span> <span class="p">=</span> <span class="nv">$cmd</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Found: $ver (command: $cmd)&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>            <span class="k">break</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>        <span class="p">}</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span> <span class="p">}</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="p">}</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$pythonCmd</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;ERROR: Python 3 is not installed or not in PATH.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Red</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;To install Python 3, run the following command in a terminal:&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;  winget install Python.Python.3&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Or download manually from https://python.org/downloads/&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;During install, check &#39;Add Python to PATH&#39;.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>    <span class="nb">Read-Host</span> <span class="s2">&quot;Press Enter to exit&quot;</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>    <span class="n">exit</span> <span class="n">1</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="p">}</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="c"># --- Step 2: Create virtual environment ---</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="nb">Write-Host</span> <span class="s2">&quot;[2/5] Setting up virtual environment...&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="k">if</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="p">(</span><span class="nb">Join-Path</span> <span class="nv">$VenvPath</span> <span class="s2">&quot;Scripts\Activate.ps1&quot;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Virtual environment already exists at $VenvPath, skipping creation.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Creating virtual environment at $VenvPath...&quot;</span>
+<a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a>    <span class="p">&amp;</span> <span class="nv">$pythonCmd</span> <span class="n">-m</span> <span class="n">venv</span> <span class="nv">$VenvPath</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Virtual environment created.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a><span class="p">}</span>
+<a id="__codelineno-2-64" name="__codelineno-2-64" href="#__codelineno-2-64"></a>
+<a id="__codelineno-2-65" name="__codelineno-2-65" href="#__codelineno-2-65"></a><span class="c"># --- Step 3: Activate virtual environment ---</span>
+<a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a><span class="nb">Write-Host</span> <span class="s2">&quot;[3/5] Activating virtual environment...&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a><span class="nv">$activateScript</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$VenvPath</span> <span class="s2">&quot;Scripts\Activate.ps1&quot;</span>
+<a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a><span class="p">.</span> <span class="nv">$activateScript</span>
+<a id="__codelineno-2-70" name="__codelineno-2-70" href="#__codelineno-2-70"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Activated.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-71" name="__codelineno-2-71" href="#__codelineno-2-71"></a>
+<a id="__codelineno-2-72" name="__codelineno-2-72" href="#__codelineno-2-72"></a><span class="c"># --- Step 4: Install packages ---</span>
+<a id="__codelineno-2-73" name="__codelineno-2-73" href="#__codelineno-2-73"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-74" name="__codelineno-2-74" href="#__codelineno-2-74"></a><span class="nb">Write-Host</span> <span class="s2">&quot;[4/5] Installing packages...&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-75" name="__codelineno-2-75" href="#__codelineno-2-75"></a><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-quiet</span> <span class="p">-</span><span class="n">-upgrade</span> <span class="n">pip</span>
+<a id="__codelineno-2-76" name="__codelineno-2-76" href="#__codelineno-2-76"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pkg</span> <span class="k">in</span> <span class="nv">$Packages</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-77" name="__codelineno-2-77" href="#__codelineno-2-77"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;  Installing $pkg...&quot;</span>
+<a id="__codelineno-2-78" name="__codelineno-2-78" href="#__codelineno-2-78"></a>    <span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-quiet</span> <span class="nv">$pkg</span>
+<a id="__codelineno-2-79" name="__codelineno-2-79" href="#__codelineno-2-79"></a><span class="p">}</span>
+<a id="__codelineno-2-80" name="__codelineno-2-80" href="#__codelineno-2-80"></a><span class="nb">Write-Host</span> <span class="s2">&quot;All packages installed.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-81" name="__codelineno-2-81" href="#__codelineno-2-81"></a>
+<a id="__codelineno-2-82" name="__codelineno-2-82" href="#__codelineno-2-82"></a><span class="c"># --- Step 5: Test imports ---</span>
+<a id="__codelineno-2-83" name="__codelineno-2-83" href="#__codelineno-2-83"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-84" name="__codelineno-2-84" href="#__codelineno-2-84"></a><span class="nb">Write-Host</span> <span class="s2">&quot;[5/5] Testing package imports...&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-2-85" name="__codelineno-2-85" href="#__codelineno-2-85"></a>
+<a id="__codelineno-2-86" name="__codelineno-2-86" href="#__codelineno-2-86"></a><span class="nv">$importTests</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-2-87" name="__codelineno-2-87" href="#__codelineno-2-87"></a>    <span class="s2">&quot;py-pure-client&quot;</span> <span class="p">=</span> <span class="s2">&quot;import purestorage&quot;</span>
+<a id="__codelineno-2-88" name="__codelineno-2-88" href="#__codelineno-2-88"></a>    <span class="s2">&quot;pyVmomi&quot;</span>        <span class="p">=</span> <span class="s2">&quot;import pyVmomi&quot;</span>
+<a id="__codelineno-2-89" name="__codelineno-2-89" href="#__codelineno-2-89"></a>    <span class="s2">&quot;boto3&quot;</span>          <span class="p">=</span> <span class="s2">&quot;import boto3&quot;</span>
+<a id="__codelineno-2-90" name="__codelineno-2-90" href="#__codelineno-2-90"></a>    <span class="s2">&quot;requests&quot;</span>       <span class="p">=</span> <span class="s2">&quot;import requests&quot;</span>
+<a id="__codelineno-2-91" name="__codelineno-2-91" href="#__codelineno-2-91"></a>    <span class="s2">&quot;paramiko&quot;</span>       <span class="p">=</span> <span class="s2">&quot;import paramiko&quot;</span>
+<a id="__codelineno-2-92" name="__codelineno-2-92" href="#__codelineno-2-92"></a>    <span class="s2">&quot;netapp-ontap&quot;</span>   <span class="p">=</span> <span class="s2">&quot;import netapp_ontap&quot;</span>
+<a id="__codelineno-2-93" name="__codelineno-2-93" href="#__codelineno-2-93"></a><span class="p">}</span>
+<a id="__codelineno-2-94" name="__codelineno-2-94" href="#__codelineno-2-94"></a>
+<a id="__codelineno-2-95" name="__codelineno-2-95" href="#__codelineno-2-95"></a><span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-2-96" name="__codelineno-2-96" href="#__codelineno-2-96"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$entry</span> <span class="k">in</span> <span class="nv">$importTests</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">())</span> <span class="p">{</span>
+<a id="__codelineno-2-97" name="__codelineno-2-97" href="#__codelineno-2-97"></a>    <span class="nv">$pkg</span>  <span class="p">=</span> <span class="nv">$entry</span><span class="p">.</span><span class="n">Key</span>
+<a id="__codelineno-2-98" name="__codelineno-2-98" href="#__codelineno-2-98"></a>    <span class="nv">$stmt</span> <span class="p">=</span> <span class="nv">$entry</span><span class="p">.</span><span class="n">Value</span>
+<a id="__codelineno-2-99" name="__codelineno-2-99" href="#__codelineno-2-99"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-2-100" name="__codelineno-2-100" href="#__codelineno-2-100"></a>        <span class="nv">$output</span> <span class="p">=</span> <span class="n">python</span> <span class="n">-c</span> <span class="nv">$stmt</span> <span class="n">2</span><span class="p">&gt;&amp;</span><span class="n">1</span>
+<a id="__codelineno-2-101" name="__codelineno-2-101" href="#__codelineno-2-101"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-102" name="__codelineno-2-102" href="#__codelineno-2-102"></a>            <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Package</span> <span class="p">=</span> <span class="nv">$pkg</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;OK&quot;</span><span class="p">;</span> <span class="n">Version</span> <span class="p">=</span> <span class="p">(</span><span class="n">python</span> <span class="n">-c</span> <span class="s2">&quot;import importlib.metadata; print(importlib.metadata.version(&#39;$pkg&#39;))&quot;</span> <span class="n">2</span><span class="p">&gt;</span><span class="nv">$null</span><span class="p">)</span> <span class="p">}</span>
+<a id="__codelineno-2-103" name="__codelineno-2-103" href="#__codelineno-2-103"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-2-104" name="__codelineno-2-104" href="#__codelineno-2-104"></a>            <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Package</span> <span class="p">=</span> <span class="nv">$pkg</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">;</span> <span class="n">Version</span> <span class="p">=</span> <span class="s2">&quot;-&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-105" name="__codelineno-2-105" href="#__codelineno-2-105"></a>        <span class="p">}</span>
+<a id="__codelineno-2-106" name="__codelineno-2-106" href="#__codelineno-2-106"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-2-107" name="__codelineno-2-107" href="#__codelineno-2-107"></a>        <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Package</span> <span class="p">=</span> <span class="nv">$pkg</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">;</span> <span class="n">Version</span> <span class="p">=</span> <span class="s2">&quot;-&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-108" name="__codelineno-2-108" href="#__codelineno-2-108"></a>    <span class="p">}</span>
+<a id="__codelineno-2-109" name="__codelineno-2-109" href="#__codelineno-2-109"></a><span class="p">}</span>
+<a id="__codelineno-2-110" name="__codelineno-2-110" href="#__codelineno-2-110"></a>
+<a id="__codelineno-2-111" name="__codelineno-2-111" href="#__codelineno-2-111"></a><span class="c"># --- Summary ---</span>
+<a id="__codelineno-2-112" name="__codelineno-2-112" href="#__codelineno-2-112"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-113" name="__codelineno-2-113" href="#__codelineno-2-113"></a><span class="nb">Write-Host</span> <span class="s2">&quot;=== Installed Package Summary ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-2-114" name="__codelineno-2-114" href="#__codelineno-2-114"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;{0,-20} {1,-10} {2}&quot;</span> <span class="o">-f</span> <span class="s2">&quot;Package&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">,</span> <span class="s2">&quot;Version&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-115" name="__codelineno-2-115" href="#__codelineno-2-115"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="p">*</span> <span class="n">50</span><span class="p">)</span>
+<a id="__codelineno-2-116" name="__codelineno-2-116" href="#__codelineno-2-116"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$r</span> <span class="k">in</span> <span class="nv">$results</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-117" name="__codelineno-2-117" href="#__codelineno-2-117"></a>    <span class="nv">$color</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$r</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Green&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Red&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-118" name="__codelineno-2-118" href="#__codelineno-2-118"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;{0,-20} {1,-10} {2}&quot;</span> <span class="o">-f</span> <span class="nv">$r</span><span class="p">.</span><span class="n">Package</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">Status</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">Version</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$color</span>
+<a id="__codelineno-2-119" name="__codelineno-2-119" href="#__codelineno-2-119"></a><span class="p">}</span>
+<a id="__codelineno-2-120" name="__codelineno-2-120" href="#__codelineno-2-120"></a>
+<a id="__codelineno-2-121" name="__codelineno-2-121" href="#__codelineno-2-121"></a><span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-122" name="__codelineno-2-122" href="#__codelineno-2-122"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-123" name="__codelineno-2-123" href="#__codelineno-2-123"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-124" name="__codelineno-2-124" href="#__codelineno-2-124"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;WARNING: </span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> package(s) failed to import. Review errors above.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Red</span>
+<a id="__codelineno-2-125" name="__codelineno-2-125" href="#__codelineno-2-125"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-2-126" name="__codelineno-2-126" href="#__codelineno-2-126"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;SUCCESS: All packages imported successfully.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-2-127" name="__codelineno-2-127" href="#__codelineno-2-127"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Your Python environment is ready. Activate it with:&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-2-128" name="__codelineno-2-128" href="#__codelineno-2-128"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;  . </span><span class="se">`&quot;</span><span class="s2">$activateScript</span><span class="se">`&quot;</span><span class="s2">&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-2-129" name="__codelineno-2-129" href="#__codelineno-2-129"></a><span class="p">}</span>
+<a id="__codelineno-2-130" name="__codelineno-2-130" href="#__codelineno-2-130"></a>
+<a id="__codelineno-2-131" name="__codelineno-2-131" href="#__codelineno-2-131"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-132" name="__codelineno-2-132" href="#__codelineno-2-132"></a><span class="nb">Read-Host</span> <span class="s2">&quot;Press Enter to exit&quot;</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - A Windows PC (Windows 10 or later)
@@ -1227,12 +1227,12 @@ Read-Host &quot;Press Enter to exit&quot;
 <p>Press <code>Windows key</code>, type <code>PowerShell</code>, right-click <strong>Windows PowerShell</strong>, and select <strong>Run as Administrator</strong>.</p>
 <p><strong>Step 4 — Allow scripts to run</strong></p>
 <p>In the PowerShell window, paste and press Enter:</p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run the script</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\setup-python-env.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>.\setup-python-env.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>The script steps through 5 numbered stages printed in yellow. If Python is missing it prints installation instructions and stops. Otherwise it creates the virtual environment, installs all six packages, then tests each import and prints a colour-coded summary table showing the package name, OK/FAIL status, and installed version. A green "SUCCESS" message confirms everything is ready.</p>
 

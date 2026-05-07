@@ -802,16 +802,57 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>Get-VMHost | Select Name,ConnectionState,PowerState</code> — confirm all hosts are Connected and PoweredOn</li>
-<li>[ ] Check hardware health alerts in vCenter — flag any red or yellow alarms on ESXi host objects</li>
-<li>[ ] Run <code>esxcli storage core path list | grep -c dead</code> — result should be 0; any dead paths require immediate investigation</li>
-<li>[ ] Run <code>esxcli network vswitch dvs vmware list</code> — verify dvSwitch uplinks are all connected with expected active NICs</li>
-<li>[ ] Review vCenter alarms dashboard for any triggered host-level alarms</li>
-<li>[ ] Verify NTP sync on all hosts: <code>esxcli system ntp get</code> — confirm <code>Running: true</code> and servers configured</li>
-<li>[ ] Review ESXi vmkernel log for NMP, SCSI, or network errors: check <code>/var/log/vmkernel.log</code></li>
-<li>[ ] Confirm no hosts are in maintenance mode unexpectedly</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Run <code>Get-VMHost | Select Name,ConnectionState,PowerState</code></td>
+<td><code>Get-VMHost | Select Name,ConnectionState,PowerState</code></td>
+<td>confirm all hosts are Connected and PoweredOn</td>
+</tr>
+<tr>
+<td>[ ] Check hardware health alerts in vCenter</td>
+<td></td>
+<td>flag any red or yellow alarms on ESXi host objects</td>
+</tr>
+<tr>
+<td>[ ] Run <code>esxcli storage core path list | grep -c dead</code></td>
+<td><code>esxcli storage core path list | grep -c dead</code></td>
+<td>result should be 0; any dead paths require immediate investigation</td>
+</tr>
+<tr>
+<td>[ ] Run <code>esxcli network vswitch dvs vmware list</code></td>
+<td><code>esxcli network vswitch dvs vmware list</code></td>
+<td>verify dvSwitch uplinks are all connected with expected active NICs</td>
+</tr>
+<tr>
+<td>[ ] Review vCenter alarms dashboard for any triggered host-level alarm</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Verify NTP sync on all hosts</td>
+<td><code>esxcli system ntp get</code></td>
+<td>confirm <code>Running: true</code> and servers configured</td>
+</tr>
+<tr>
+<td>[ ] Review ESXi vmkernel log for NMP, SCSI, or network errors</td>
+<td><code>/var/log/vmkernel.log</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm no hosts are in maintenance mode unexpectedly</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All hosts Connected and PoweredOn: <code>Get-VMHost | Select Name,ConnectionState,PowerState</code></li>
@@ -823,17 +864,17 @@
 <li>[ ] PowerCLI hardware summary clean: <code>Get-VMHostHardware</code></li>
 <li>[ ] No unexpected maintenance mode hosts</li>
 </ul>
-<pre><code class="language-bash"># ESXi host health sweep (run per host via SSH or esxcli -s)
-esxcli hardware health get
-esxcli storage nmp device list
-esxcli storage core path list | grep dead
-esxcli network nic list
-esxcli system ntp get
-
-# PowerCLI (run from management workstation)
-Get-VMHost | Select Name,ConnectionState,PowerState
-Get-VMHostHardware | Select VMHost,Manufacturer,Model,CpuCount,MemorySize
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># ESXi host health sweep (run per host via SSH or esxcli -s)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>health<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dead
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># PowerCLI (run from management workstation)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,ConnectionState,PowerState
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-VMHostHardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>VMHost,Manufacturer,Model,CpuCount,MemorySize
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] vMotion tested and working between affected hosts before any maintenance</li>

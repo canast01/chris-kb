@@ -801,64 +801,72 @@
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
 <p>DDBoost (Dell Data Domain Boost) offloads deduplication processing to the backup client, reducing network traffic and improving backup performance. It is used by NetBackup, Networker, Avamar, Veeam, and other backup applications.</p>
+<pre class="mermaid"><code>flowchart LR
+    DDBoost["DDBoost"]
+    DDBoost --&gt; S0["Service Status"]
+    DDBoost --&gt; S1["Storage Units"]
+    DDBoost --&gt; S2["Users"]
+    DDBoost --&gt; S3["Performance and Throughput"]
+    DDBoost --&gt; S4["Distributed Segment Processing (DSP)"]
+    DDBoost --&gt; S5["Troubleshooting"]</code></pre>
 <h2 id="service-status">Service Status<a class="headerlink" href="#service-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># DDBoost service status and connection count
-ddboost status
-
-# Active client connections
-ddboost show clients
-ddboost show clients --verbose
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># DDBoost service status and connection count</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Active client connections</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span>--verbose
+</code></pre></div>
 <h2 id="storage-units">Storage Units<a class="headerlink" href="#storage-units" title="Permanent link">&para;</a></h2>
 <p>Storage units are the logical mount points backup applications connect to:</p>
-<pre><code class="language-bash"># List all storage units
-ddboost storage-unit list
-ddboost storage-unit show &lt;storage_unit_name&gt;
-
-# Create a storage unit
-ddboost storage-unit create &lt;storage_unit_name&gt;
-
-# Create with MTree path
-ddboost storage-unit create &lt;name&gt; --user &lt;ddboost_user&gt;
-
-# Delete a storage unit
-ddboost storage-unit delete &lt;storage_unit_name&gt;
-
-# Storage unit usage and quota
-ddboost storage-unit show &lt;name&gt; --verbose
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all storage units</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>show<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create a storage unit</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>create<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Create with MTree path</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>create<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--user<span class="w"> </span>&lt;ddboost_user&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Delete a storage unit</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>delete<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Storage unit usage and quota</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>show<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--verbose
+</code></pre></div>
 <h2 id="users">Users<a class="headerlink" href="#users" title="Permanent link">&para;</a></h2>
 <p>Each backup application needs a dedicated DDBoost user:</p>
-<pre><code class="language-bash"># List DDBoost users
-ddboost user list
-
-# Add a user
-ddboost user add &lt;username&gt;
-
-# Change password
-ddboost user change password &lt;username&gt;
-
-# Assign user to a storage unit
-ddboost user assign &lt;username&gt; storage-unit &lt;storage_unit_name&gt;
-
-# Remove user
-ddboost user del &lt;username&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List DDBoost users</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ddboost<span class="w"> </span>user<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add a user</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ddboost<span class="w"> </span>user<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Change password</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ddboost<span class="w"> </span>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Assign user to a storage unit</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ddboost<span class="w"> </span>user<span class="w"> </span>assign<span class="w"> </span>&lt;username&gt;<span class="w"> </span>storage-unit<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Remove user</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ddboost<span class="w"> </span>user<span class="w"> </span>del<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
 <h2 id="performance-and-throughput">Performance and Throughput<a class="headerlink" href="#performance-and-throughput" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># DDBoost throughput statistics
-ddboost show stats
-
-# Connection statistics per client
-ddboost show clients --verbose | grep -E &quot;host|throughput|bytes&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># DDBoost throughput statistics</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Connection statistics per client</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;host|throughput|bytes&quot;</span>
+</code></pre></div>
 <h2 id="distributed-segment-processing-dsp">Distributed Segment Processing (DSP)<a class="headerlink" href="#distributed-segment-processing-dsp" title="Permanent link">&para;</a></h2>
 <p>DSP moves deduplication to the client side, reducing network load:</p>
-<pre><code class="language-bash"># DSP status
-ddboost option show | grep -i &quot;dist-seg&quot;
-
-# Enable DSP
-ddboost option set distributed-segment-processing enabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># DSP status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;dist-seg&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable DSP</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ddboost<span class="w"> </span>option<span class="w"> </span><span class="nb">set</span><span class="w"> </span>distributed-segment-processing<span class="w"> </span>enabled
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

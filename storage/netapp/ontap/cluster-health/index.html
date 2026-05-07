@@ -842,22 +842,22 @@
 
 <h1 id="ontap-cluster-health">ONTAP Cluster Health<a class="headerlink" href="#ontap-cluster-health" title="Permanent link">&para;</a></h1>
 <h2 id="overall-cluster-status">Overall Cluster Status<a class="headerlink" href="#overall-cluster-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">cluster show
-# All nodes should show health: true and eligibility: true
-
-system health status show
-# Overall status should be: ok
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># All nodes should show health: true and eligibility: true</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Overall status should be: ok</span>
+</code></pre></div>
 <h2 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">system node show
-# All nodes should be: up
-
-system node show -fields uptime,health
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>system<span class="w"> </span>node<span class="w"> </span>show
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># All nodes should be: up</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>uptime,health
+</code></pre></div>
 <h2 id="ha-pair-status">HA Pair Status<a class="headerlink" href="#ha-pair-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage failover show
-# Both nodes should show: Connected, Not in takeover
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Both nodes should show: Connected, Not in takeover</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -881,32 +881,32 @@ system node show -fields uptime,health
 </tbody>
 </table>
 <h2 id="disk-health">Disk Health<a class="headerlink" href="#disk-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage disk show -broken
-# Any output here requires investigation
-
-storage disk show -container-type spare
-# Confirm spare disks are available for RAID rebuild
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Any output here requires investigation</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm spare disks are available for RAID rebuild</span>
+</code></pre></div>
 <h2 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage aggregate show -state !online
-# Should return no output if all aggregates are healthy
-
-storage aggregate show-status | grep -v normal
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Should return no output if all aggregates are healthy</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
+</code></pre></div>
 <h2 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume show -state !online
-# Should return no output under normal conditions
-
-volume show -fields state,health | grep -v true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Should return no output under normal conditions</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>state,health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="interface-health">Interface Health<a class="headerlink" href="#interface-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">network interface show -status-oper down
-# Any interfaces down should be investigated
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Any interfaces down should be investigated</span>
+</code></pre></div>
 <h2 id="ems-events-recent-errors">EMS Events (Recent Errors)<a class="headerlink" href="#ems-events-recent-errors" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">event log show -severity ERROR -time-range &quot;1h&quot;
-event log show -severity CRITICAL
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span><span class="s2">&quot;1h&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
+</code></pre></div>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All nodes <code>health: true</code></li>

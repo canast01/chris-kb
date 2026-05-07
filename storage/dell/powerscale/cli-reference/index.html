@@ -1588,6 +1588,17 @@
 <blockquote>
 <p>Use <code>isi --help</code> or <code>isi &lt;subcommand&gt; --help</code> for full option lists.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Isilon["(Isilon)"]
+    Isilon --&gt; S0["Cluster Status and Identity"]
+    Isilon --&gt; S1["Nodes"]
+    Isilon --&gt; S2["Storage Pools and Tiers"]
+    Isilon --&gt; S3["File System and Quotas"]
+    Isilon --&gt; S4["NFS Exports"]
+    Isilon --&gt; S5["SMB Shares"]
+    Isilon --&gt; S6["Network"]
+    Isilon --&gt; S7["Access Zones and Authentication"]
+    Isilon --&gt; S8["Snapshots"]</code></pre>
 <hr />
 <div class="kb-grid kb-grid-1">
 
@@ -1609,66 +1620,66 @@
 </div>
 <h2 id="cluster-status-identity">Cluster Status &amp; Identity<a class="headerlink" href="#cluster-status-identity" title="Permanent link">&para;</a></h2>
 <p>The cluster status commands give you a high-level view of the entire system — what version it's running, whether nodes are healthy, and basic performance metrics. These are your first stop when checking in on the cluster.</p>
-<pre><code class="language-bash"># OneFS version
-isi version
-
-# Cluster status overview (nodes, capacity, health)
-isi status
-
-# Cluster name, contact info, timezone
-isi cluster identity view
-
-# Cluster configuration — join mode, ifs mount point
-isi cluster config view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># OneFS version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cluster status overview (nodes, capacity, health)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Cluster name, contact info, timezone</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>cluster<span class="w"> </span>identity<span class="w"> </span>view
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Cluster configuration — join mode, ifs mount point</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>cluster<span class="w"> </span>config<span class="w"> </span>view
+</code></pre></div>
 <h3 id="cluster-statistics">Cluster Statistics<a class="headerlink" href="#cluster-statistics" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Cluster-wide throughput and latency
-isi statistics cluster list
-
-# Drive statistics summary
-isi statistics drive list
-
-# Current IOPS and throughput
-isi statistics system list
-
-# Protocol breakdown (NFS, SMB, iSCSI)
-isi statistics protocol list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Cluster-wide throughput and latency</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Drive statistics summary</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>statistics<span class="w"> </span>drive<span class="w"> </span>list
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Current IOPS and throughput</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>system<span class="w"> </span>list
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Protocol breakdown (NFS, SMB, iSCSI)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list
+</code></pre></div>
 <h3 id="cluster-events-and-jobs">Cluster Events and Jobs<a class="headerlink" href="#cluster-events-and-jobs" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Active events (alerts)
-isi events list
-
-# Running jobs (FlexProtect, SmartPools, etc.)
-isi job jobs list
-
-# Job detail
-isi job jobs view &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Active events (alerts)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>events<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Running jobs (FlexProtect, SmartPools, etc.)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Job detail</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <hr />
 <h2 id="nodes">Nodes<a class="headerlink" href="#nodes" title="Permanent link">&para;</a></h2>
 <p>Nodes are the physical servers that make up the cluster. Each node contributes storage, compute, and network resources. These commands let you inspect individual nodes, check their drives and sensors, and manage node additions or removals.</p>
-<pre><code class="language-bash"># List all nodes
-isi node list
-
-# Specific node detail (state, IP, version)
-isi node view &lt;node_id&gt;
-
-# Node status overlay on the cluster status
-isi status -n &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all nodes</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Specific node detail (state, IP, version)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>node<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Node status overlay on the cluster status</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="node-hardware">Node Hardware<a class="headerlink" href="#node-hardware" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Hardware details (model, CPU, RAM, NIC, HBA)
-isi node hardware view &lt;node_id&gt;
-
-# Drive bays and disk states
-isi node drives list &lt;node_id&gt;
-
-# Specific bay
-isi node drives view &lt;node_id&gt; &lt;bay&gt;
-
-# Environmental sensors (temperature, fans, power supplies)
-isi node sensors view &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Hardware details (model, CPU, RAM, NIC, HBA)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Drive bays and disk states</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>node<span class="w"> </span>drives<span class="w"> </span>list<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Specific bay</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>node<span class="w"> </span>drives<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span>&lt;bay&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Environmental sensors (temperature, fans, power supplies)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>node<span class="w"> </span>sensors<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1707,111 +1718,111 @@ isi node sensors view &lt;node_id&gt;
 </tbody>
 </table>
 <h3 id="smartfailing-a-drive">Smartfailing a Drive<a class="headerlink" href="#smartfailing-a-drive" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Mark a drive for evacuation (data moves to remaining drives)
-isi devices drive smartfail -d &lt;node_id&gt; -b &lt;bay_id&gt;
-
-# Monitor FlexProtect rebuild after drive removal
-isi job jobs list | grep FlexProtect
-isi status -n &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Mark a drive for evacuation (data moves to remaining drives)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>smartfail<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span>-b<span class="w"> </span>&lt;bay_id&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Monitor FlexProtect rebuild after drive removal</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FlexProtect
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="smartfailing-a-node">Smartfailing a Node<a class="headerlink" href="#smartfailing-a-node" title="Permanent link">&para;</a></h3>
 <p>Smartfailing a node redistributes all data from that node before removal:</p>
-<pre><code class="language-bash"># Initiate node smartfail
-isi devices smartfail -d &lt;node_id&gt;
-
-# Monitor progress
-isi status | grep smartfail
-isi job jobs list | grep -i FlexProtect
-
-# Re-add node after replacement/repair
-isi devices add -d &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Initiate node smartfail</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>devices<span class="w"> </span>smartfail<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>smartfail
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>FlexProtect
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Re-add node after replacement/repair</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>isi<span class="w"> </span>devices<span class="w"> </span>add<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="node-network">Node Network<a class="headerlink" href="#node-network" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Network interfaces on a node
-isi network interfaces list --node &lt;node_id&gt;
-
-# IP pool assignments
-isi network pools list
-
-# Check node's external IPs
-isi network interfaces list --node &lt;node_id&gt; | grep ext
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Network interfaces on a node</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list<span class="w"> </span>--node<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># IP pool assignments</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check node&#39;s external IPs</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list<span class="w"> </span>--node<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ext
+</code></pre></div>
 <h3 id="node-performance">Node Performance<a class="headerlink" href="#node-performance" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Per-node I/O statistics
-isi statistics node list
-
-# Node CPU and memory usage
-isi statistics system list --nodes &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Per-node I/O statistics</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Node CPU and memory usage</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>statistics<span class="w"> </span>system<span class="w"> </span>list<span class="w"> </span>--nodes<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <hr />
 <h2 id="storage-pools-tiers">Storage Pools &amp; Tiers<a class="headerlink" href="#storage-pools-tiers" title="Permanent link">&para;</a></h2>
 <p>Storage pools group nodes of similar hardware together. Tiers let you organize pools into performance layers (e.g., fast SSD vs. large-capacity spinning disk). SmartPools (licensed feature) automatically moves files between tiers based on access patterns.</p>
 <h3 id="node-pools">Node Pools<a class="headerlink" href="#node-pools" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List all node pools
-isi storagepool nodepools list
-
-# Detailed view of a node pool
-isi storagepool nodepools view &lt;pool_name&gt;
-
-# Check node pool capacity usage
-isi storagepool nodepools list | awk '{print $1, $4, $5, $6}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all node pools</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Detailed view of a node pool</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>view<span class="w"> </span>&lt;pool_name&gt;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check node pool capacity usage</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>nodepools<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4, $5, $6}&#39;</span>
+</code></pre></div>
 <h3 id="tiers">Tiers<a class="headerlink" href="#tiers" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List configured tiers
-isi storagepool tiers list
-
-# View a tier (shows which node pools are members)
-isi storagepool tiers view &lt;tier_name&gt;
-
-# Create a tier
-isi storagepool tiers create &lt;tier_name&gt; --children &lt;nodepool1&gt;,&lt;nodepool2&gt;
-
-# Delete a tier
-isi storagepool tiers delete &lt;tier_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List configured tiers</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>tiers<span class="w"> </span>list
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># View a tier (shows which node pools are members)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>tiers<span class="w"> </span>view<span class="w"> </span>&lt;tier_name&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Create a tier</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>tiers<span class="w"> </span>create<span class="w"> </span>&lt;tier_name&gt;<span class="w"> </span>--children<span class="w"> </span>&lt;nodepool1&gt;,&lt;nodepool2&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Delete a tier</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>tiers<span class="w"> </span>delete<span class="w"> </span>&lt;tier_name&gt;
+</code></pre></div>
 <h3 id="file-pool-policies">File Pool Policies<a class="headerlink" href="#file-pool-policies" title="Permanent link">&para;</a></h3>
 <p>File pool policies control which files land in which tier based on age, size, path, or access pattern:</p>
-<pre><code class="language-bash"># List all file pool policies
-isi filepool policies list
-
-# View the default policy (applied to all files not matched by a specific policy)
-isi filepool default-policy view
-
-# View a specific policy
-isi filepool policies view &lt;policy_name&gt;
-
-# Create a policy — move files older than 30 days to archive tier
-isi filepool policies create archive-old-files \
-    --file-matching-pattern 'accessed:&gt;30:days' \
-    --set-data-storage-target &lt;archive_tier&gt; \
-    --set-data-ssd-strategy avoid
-
-# Modify the default policy
-isi filepool default-policy modify \
-    --set-data-storage-target &lt;performance_tier&gt;
-
-# Delete a policy
-isi filepool policies delete &lt;policy_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all file pool policies</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># View the default policy (applied to all files not matched by a specific policy)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>isi<span class="w"> </span>filepool<span class="w"> </span>default-policy<span class="w"> </span>view
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># View a specific policy</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Create a policy — move files older than 30 days to archive tier</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>archive-old-files<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span>--file-matching-pattern<span class="w"> </span><span class="s1">&#39;accessed:&gt;30:days&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span>--set-data-storage-target<span class="w"> </span>&lt;archive_tier&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span>--set-data-ssd-strategy<span class="w"> </span>avoid
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Modify the default policy</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>isi<span class="w"> </span>filepool<span class="w"> </span>default-policy<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span>--set-data-storage-target<span class="w"> </span>&lt;performance_tier&gt;
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Delete a policy</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>isi<span class="w"> </span>filepool<span class="w"> </span>policies<span class="w"> </span>delete<span class="w"> </span>&lt;policy_name&gt;
+</code></pre></div>
 <h3 id="smartpools-job">SmartPools Job<a class="headerlink" href="#smartpools-job" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check SmartPools job status
-isi job jobs list | grep SmartPool
-
-# Start SmartPools manually (e.g., after policy change)
-isi job jobs start SmartPools
-
-# View SmartPools job results
-isi job history list | grep SmartPool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check SmartPools job status</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>SmartPool
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Start SmartPools manually (e.g., after policy change)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>SmartPools
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># View SmartPools job results</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>SmartPool
+</code></pre></div>
 <h3 id="spillover-configuration">Spillover Configuration<a class="headerlink" href="#spillover-configuration" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># View spillover settings
-isi storagepool settings view
-
-# Enable spillover to a specific tier
-isi storagepool settings modify \
-    --spillover-enabled yes \
-    --spillover-target &lt;tier_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># View spillover settings</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Enable spillover to a specific tier</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>--spillover-enabled<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>--spillover-target<span class="w"> </span>&lt;tier_name&gt;
+</code></pre></div>
 <h3 id="ssd-strategy-options">SSD Strategy Options<a class="headerlink" href="#ssd-strategy-options" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1842,100 +1853,100 @@ isi storagepool settings modify \
 <hr />
 <h2 id="file-system-quotas">File System &amp; Quotas<a class="headerlink" href="#file-system-quotas" title="Permanent link">&para;</a></h2>
 <p>PowerScale's filesystem lives at <code>/ifs</code>. Everything — NFS exports, SMB shares, snapshots — is a subdirectory under <code>/ifs</code>. Quotas let you set hard limits on how much space a directory can use.</p>
-<pre><code class="language-bash"># Browse
-ls /ifs/
-ls -la /ifs/&lt;path&gt;
-
-# Directory info
-isi get /ifs/&lt;path&gt;
-isi get -D /ifs/&lt;path&gt;
-
-# Create directory
-mkdir -p /ifs/&lt;path&gt;
-
-# Permissions
-chmod 755 /ifs/&lt;path&gt;
-chown &lt;user&gt;:&lt;group&gt; /ifs/&lt;path&gt;
-isi get -a /ifs/&lt;path&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Browse</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ls<span class="w"> </span>/ifs/
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ls<span class="w"> </span>-la<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Directory info</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>isi<span class="w"> </span>get<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>isi<span class="w"> </span>get<span class="w"> </span>-D<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Create directory</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Permissions</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>chown<span class="w"> </span>&lt;user&gt;:&lt;group&gt;<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>isi<span class="w"> </span>get<span class="w"> </span>-a<span class="w"> </span>/ifs/&lt;path&gt;
+</code></pre></div>
 <h3 id="quotas">Quotas<a class="headerlink" href="#quotas" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List quotas
-isi quota quotas list
-isi quota quotas list --type directory
-isi quota quotas list --path /ifs/&lt;path&gt;
-
-# View quota details
-isi quota quotas view --path /ifs/&lt;path&gt; --type directory
-
-# Create quota
-isi quota quotas create /ifs/&lt;path&gt; directory --hard-threshold &lt;size&gt;G --soft-threshold &lt;size&gt;G --advisory-threshold &lt;size&gt;G
-
-# Modify quota
-isi quota quotas modify --path /ifs/&lt;path&gt; --type directory --hard-threshold &lt;size&gt;G
-
-# Delete quota
-isi quota quotas delete --path /ifs/&lt;path&gt; --type directory
-
-# Quota reports
-isi quota reports list
-isi quota reports create
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List quotas</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>directory
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># View quota details</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>view<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--type<span class="w"> </span>directory
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Create quota</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>create<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>directory<span class="w"> </span>--hard-threshold<span class="w"> </span>&lt;size&gt;G<span class="w"> </span>--soft-threshold<span class="w"> </span>&lt;size&gt;G<span class="w"> </span>--advisory-threshold<span class="w"> </span>&lt;size&gt;G
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># Modify quota</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>modify<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--type<span class="w"> </span>directory<span class="w"> </span>--hard-threshold<span class="w"> </span>&lt;size&gt;G
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Delete quota</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>delete<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--type<span class="w"> </span>directory
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># Quota reports</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>create
+</code></pre></div>
 <hr />
 <h2 id="nfs-exports">NFS Exports<a class="headerlink" href="#nfs-exports" title="Permanent link">&para;</a></h2>
 <p>NFS (Network File System) is the standard protocol for sharing files to Linux/Unix clients. An NFS export makes a directory under <code>/ifs</code> available to mount over the network.</p>
-<pre><code class="language-bash"># List all NFS exports (export ID, path, clients)
-isi nfs exports list
-
-# Specific export detail
-isi nfs exports view &lt;export_id&gt;
-
-# Exports in a specific access zone
-isi nfs exports list --zone &lt;zone_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List all NFS exports (export ID, path, clients)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Specific export detail</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Exports in a specific access zone</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+</code></pre></div>
 <h3 id="create-an-export">Create an Export<a class="headerlink" href="#create-an-export" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Basic export — read-write for a CIDR, root access for specific host
-isi nfs exports create /ifs/&lt;path&gt; \
-    --clients &lt;ip_or_cidr&gt; \
-    --read-write-clients &lt;ip_or_cidr&gt; \
-    --root-clients &lt;root_client_ip&gt;
-
-# Export with access zone
-isi nfs exports create /ifs/data/dept1 \
-    --clients 10.0.1.0/24 \
-    --read-write-clients 10.0.1.0/24 \
-    --zone DeptZone1
-
-# Read-only export
-isi nfs exports create /ifs/archive \
-    --clients 10.0.0.0/8 \
-    --read-only-clients 10.0.0.0/8
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Basic export — read-write for a CIDR, root access for specific host</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span>--clients<span class="w"> </span>&lt;ip_or_cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span>--read-write-clients<span class="w"> </span>&lt;ip_or_cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span>--root-clients<span class="w"> </span>&lt;root_client_ip&gt;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Export with access zone</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/data/dept1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span>--zone<span class="w"> </span>DeptZone1
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Read-only export</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/archive<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">    </span>--read-only-clients<span class="w"> </span><span class="m">10</span>.0.0.0/8
+</code></pre></div>
 <h3 id="modify-an-export">Modify an Export<a class="headerlink" href="#modify-an-export" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Add a root client to an existing export
-isi nfs exports modify &lt;export_id&gt; --add-root-clients &lt;new_ip&gt;
-
-# Add a read-write client
-isi nfs exports modify &lt;export_id&gt; --add-read-write-clients &lt;new_ip&gt;
-
-# Remove a client
-isi nfs exports modify &lt;export_id&gt; --remove-clients &lt;old_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Add a root client to an existing export</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--add-root-clients<span class="w"> </span>&lt;new_ip&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Add a read-write client</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--add-read-write-clients<span class="w"> </span>&lt;new_ip&gt;
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Remove a client</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--remove-clients<span class="w"> </span>&lt;old_ip&gt;
+</code></pre></div>
 <h3 id="delete-an-export">Delete an Export<a class="headerlink" href="#delete-an-export" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi nfs exports delete &lt;export_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>delete<span class="w"> </span>&lt;export_id&gt;
+</code></pre></div>
 <h3 id="reload-verify">Reload / Verify<a class="headerlink" href="#reload-verify" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check exports for configuration errors
-isi nfs exports check
-
-# Reload NFS service (applies config changes)
-isi services nfs reload
-
-# View global NFS settings
-isi nfs settings global view
-
-# View default export settings
-isi nfs settings export view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check exports for configuration errors</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>check
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Reload NFS service (applies config changes)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>isi<span class="w"> </span>services<span class="w"> </span>nfs<span class="w"> </span>reload
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># View global NFS settings</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># View default export settings</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>view
+</code></pre></div>
 <h3 id="client-access-levels">Client Access Levels<a class="headerlink" href="#client-access-levels" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1964,12 +1975,12 @@ isi nfs settings export view
 </tbody>
 </table>
 <h3 id="nfs-settings">NFS Settings<a class="headerlink" href="#nfs-settings" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># NFS v3/v4 protocol settings
-isi nfs settings global view | grep -E &quot;nfs3|nfs4|nfsv4&quot;
-
-# Modify global NFS settings
-isi nfs settings global modify --nfsv4-enabled true --nfsv3-enabled true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># NFS v3/v4 protocol settings</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;nfs3|nfs4|nfsv4&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Modify global NFS settings</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--nfsv4-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--nfsv3-enabled<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h3 id="nfs-troubleshooting">NFS Troubleshooting<a class="headerlink" href="#nfs-troubleshooting" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2005,56 +2016,56 @@ isi nfs settings global modify --nfsv4-enabled true --nfsv3-enabled true
 <hr />
 <h2 id="smb-shares">SMB Shares<a class="headerlink" href="#smb-shares" title="Permanent link">&para;</a></h2>
 <p>SMB (Server Message Block) is the protocol Windows uses to access file shares — it's what you use when you map a network drive. PowerScale supports SMB for Windows clients.</p>
-<pre><code class="language-bash"># List all SMB shares
-isi smb shares list
-isi smb shares view &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># List all SMB shares</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h3 id="create-modify-delete">Create / Modify / Delete<a class="headerlink" href="#create-modify-delete" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Create
-isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt;
-
-# Modify — description
-isi smb shares modify &lt;share_name&gt; --description &quot;&lt;text&gt;&quot;
-
-# Enable Access Based Enumeration (users only see files they have permission to)
-isi smb shares modify &lt;share_name&gt; --access-based-enumeration true
-
-# Set continuous availability (for CA shares)
-isi smb shares modify &lt;share_name&gt; --continuously-available true
-
-# Delete
-isi smb shares delete &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Create</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Modify — description</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;&lt;text&gt;&quot;</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># Enable Access Based Enumeration (users only see files they have permission to)</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--access-based-enumeration<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Set continuous availability (for CA shares)</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--continuously-available<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="c1"># Delete</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h3 id="share-permissions-acl">Share Permissions (ACL)<a class="headerlink" href="#share-permissions-acl" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List permissions
-isi smb shares permission list &lt;share_name&gt;
-
-# Grant full control to a group
-isi smb shares permission create &lt;share_name&gt; \
-    --authority &lt;DOMAIN\\Group&gt; \
-    --permission-type allow \
-    --permission full
-
-# Remove a permission
-isi smb shares permission delete &lt;share_name&gt; --authority &lt;DOMAIN\\Group&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># List permissions</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>list<span class="w"> </span>&lt;share_name&gt;
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Grant full control to a group</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span>--authority<span class="w"> </span>&lt;DOMAIN<span class="se">\\</span>Group&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span>--permission-type<span class="w"> </span>allow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">    </span>--permission<span class="w"> </span>full
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># Remove a permission</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--authority<span class="w"> </span>&lt;DOMAIN<span class="se">\\</span>Group&gt;
+</code></pre></div>
 <h3 id="smb-service-global-settings">SMB Service &amp; Global Settings<a class="headerlink" href="#smb-service-global-settings" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># View global SMB settings (SMB versions, security)
-isi smb settings global view
-
-# Enable SMB2 and SMB3 (disable SMB1 for security)
-isi smb settings global modify --support-smb2 true
-
-# View SMB service status
-isi smb settings service view
-
-# Active SMB sessions
-isi smb sessions list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># View global SMB settings (SMB versions, security)</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Enable SMB2 and SMB3 (disable SMB1 for security)</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--support-smb2<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># View SMB service status</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>service<span class="w"> </span>view
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># Active SMB sessions</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>list
+</code></pre></div>
 <h3 id="access-zones">Access Zones<a class="headerlink" href="#access-zones" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi smb shares list --zone &lt;zone_name&gt;
-isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt; --zone &lt;zone_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+</code></pre></div>
 <h3 id="smb-common-issues">SMB Common Issues<a class="headerlink" href="#smb-common-issues" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2091,34 +2102,34 @@ isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt; --zone &lt;zone_name&
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <p>PowerScale uses SmartConnect to load-balance client connections across nodes. IP pools group node interfaces together, and DNS-based SmartConnect zone names distribute clients automatically.</p>
 <h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List all network interfaces
-isi network interfaces list
-isi network interfaces view &lt;iface&gt;
-
-# Filter by node
-isi network interfaces list --node-id &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># List all network interfaces</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>view<span class="w"> </span>&lt;iface&gt;
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="c1"># Filter by node</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list<span class="w"> </span>--node-id<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="subnets">Subnets<a class="headerlink" href="#subnets" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi network subnets list
-isi network subnets view &lt;subnet_name&gt;
-
-# Create a subnet
-isi network subnets create &lt;subnet_name&gt; --subnet-mask &lt;mask&gt; --gateway &lt;gateway&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>isi<span class="w"> </span>network<span class="w"> </span>subnets<span class="w"> </span>list
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>isi<span class="w"> </span>network<span class="w"> </span>subnets<span class="w"> </span>view<span class="w"> </span>&lt;subnet_name&gt;
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># Create a subnet</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>isi<span class="w"> </span>network<span class="w"> </span>subnets<span class="w"> </span>create<span class="w"> </span>&lt;subnet_name&gt;<span class="w"> </span>--subnet-mask<span class="w"> </span>&lt;mask&gt;<span class="w"> </span>--gateway<span class="w"> </span>&lt;gateway&gt;
+</code></pre></div>
 <h3 id="ip-pools-smartconnect">IP Pools (SmartConnect)<a class="headerlink" href="#ip-pools-smartconnect" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List IP pools
-isi network pools list
-isi network pools view &lt;pool_name&gt;
-
-# Create an IP pool
-isi network pools create \
-    --name &lt;pool_name&gt; \
-    --subnet &lt;subnet_name&gt; \
-    --access-zone &lt;zone_name&gt;
-
-# Add an IP range to a pool
-isi network pools modify &lt;pool_name&gt; --add-ranges &lt;ip_start&gt;-&lt;ip_end&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># List IP pools</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>&lt;pool_name&gt;
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1"># Create an IP pool</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span>--name<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">    </span>--subnet<span class="w"> </span>&lt;subnet_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">    </span>--access-zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="c1"># Add an IP range to a pool</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>modify<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span>--add-ranges<span class="w"> </span>&lt;ip_start&gt;-&lt;ip_end&gt;
+</code></pre></div>
 <h3 id="smartconnect-policies">SmartConnect Policies<a class="headerlink" href="#smartconnect-policies" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2146,14 +2157,14 @@ isi network pools modify &lt;pool_name&gt; --add-ranges &lt;ip_start&gt;-&lt;ip_
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># View SmartConnect rules
-isi network rules list
-isi network rules view &lt;rule_name&gt;
-
-# DNS settings
-isi network dns view
-isi network external settings view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># View SmartConnect rules</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>isi<span class="w"> </span>network<span class="w"> </span>rules<span class="w"> </span>list
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>isi<span class="w"> </span>network<span class="w"> </span>rules<span class="w"> </span>view<span class="w"> </span>&lt;rule_name&gt;
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># DNS settings</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>isi<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span>view
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>isi<span class="w"> </span>network<span class="w"> </span>external<span class="w"> </span>settings<span class="w"> </span>view
+</code></pre></div>
 <h3 id="network-common-issues">Network Common Issues<a class="headerlink" href="#network-common-issues" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2190,75 +2201,75 @@ isi network external settings view
 <h2 id="access-zones-authentication">Access Zones &amp; Authentication<a class="headerlink" href="#access-zones-authentication" title="Permanent link">&para;</a></h2>
 <p>Access zones partition the cluster into separate namespaces — each with its own NFS exports, SMB shares, and authentication providers. This is how you serve different tenants or departments from one cluster.</p>
 <h3 id="access-zones_1">Access Zones<a class="headerlink" href="#access-zones_1" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List zones
-isi zone zones list
-isi zone zones view &lt;zone_name&gt;
-
-# Create / delete zone
-isi zone zones create &lt;zone_name&gt; --path /ifs/&lt;path&gt;
-isi zone zones delete &lt;zone_name&gt;
-
-# Modify zone
-isi zone zones modify &lt;zone_name&gt; --add-auth-providers &lt;provider&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># List zones</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>list
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># Create / delete zone</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>create<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>delete<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="c1"># Modify zone</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>modify<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--add-auth-providers<span class="w"> </span>&lt;provider&gt;
+</code></pre></div>
 <h3 id="authentication-users">Authentication &amp; Users<a class="headerlink" href="#authentication-users" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Auth providers
-isi auth providers list
-isi auth providers ad list
-isi auth providers ad view &lt;provider_name&gt;
-
-# Join AD domain
-isi auth ads create --name &lt;domain&gt; --user &lt;admin_user&gt; --password &lt;password&gt;
-
-# Local users and groups
-isi auth users list
-isi auth users view &lt;username&gt;
-isi auth users create --name &lt;username&gt; --password &lt;password&gt;
-isi auth users delete &lt;username&gt;
-isi auth groups list
-isi auth groups view &lt;group_name&gt;
-
-# Map rules
-isi auth mappings rules list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Auth providers</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>list
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>ad<span class="w"> </span>list
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>isi<span class="w"> </span>auth<span class="w"> </span>providers<span class="w"> </span>ad<span class="w"> </span>view<span class="w"> </span>&lt;provider_name&gt;
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="c1"># Join AD domain</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;domain&gt;<span class="w"> </span>--user<span class="w"> </span>&lt;admin_user&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="c1"># Local users and groups</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>delete<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>list
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>isi<span class="w"> </span>auth<span class="w"> </span>groups<span class="w"> </span>view<span class="w"> </span>&lt;group_name&gt;
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a><span class="c1"># Map rules</span>
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>isi<span class="w"> </span>auth<span class="w"> </span>mappings<span class="w"> </span>rules<span class="w"> </span>list
+</code></pre></div>
 <hr />
 <h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
 <p>Snapshots are instant point-in-time copies of a directory. They don't consume extra space until data changes, and they're accessible via the <code>.snapshot</code> folder inside any directory. Great for quick recovery of deleted files.</p>
-<pre><code class="language-bash"># List snapshots
-isi snapshot snapshots list
-isi snapshot snapshots view &lt;snap_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snap_id&gt;
+</code></pre></div>
 <h3 id="create-delete">Create / Delete<a class="headerlink" href="#create-delete" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Create a snapshot
-isi snapshot snapshots create /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-
-# Delete by ID
-isi snapshot snapshots delete &lt;snap_id&gt;
-# Delete by path and name
-isi snapshot snapshots delete --path /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="c1"># Delete by ID</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snap_id&gt;
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="c1"># Delete by path and name</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;snap_name&gt;
+</code></pre></div>
 <h3 id="restore-files-from-a-snapshot">Restore Files from a Snapshot<a class="headerlink" href="#restore-files-from-a-snapshot" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">ls /ifs/&lt;path&gt;/.snapshot/
-cp -a /ifs/.snapshot/&lt;snap_name&gt;/&lt;path&gt;/* /ifs/&lt;path&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>ls<span class="w"> </span>/ifs/&lt;path&gt;/.snapshot/
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>cp<span class="w"> </span>-a<span class="w"> </span>/ifs/.snapshot/&lt;snap_name&gt;/&lt;path&gt;/*<span class="w"> </span>/ifs/&lt;path&gt;/
+</code></pre></div>
 <h3 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List schedules
-isi snapshot schedules list
-isi snapshot schedules view &lt;schedule_name&gt;
-
-# Create a schedule (daily at midnight)
-isi snapshot schedules create &lt;schedule_name&gt; /ifs/&lt;path&gt; &quot;every day&quot;
-
-# Modify retention
-isi snapshot schedules modify &lt;schedule_name&gt; --duration 7D
-
-# Delete a schedule
-isi snapshot schedules delete &lt;schedule_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># List schedules</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>view<span class="w"> </span>&lt;schedule_name&gt;
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="c1"># Create a schedule (daily at midnight)</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span><span class="s2">&quot;every day&quot;</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="c1"># Modify retention</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>--duration<span class="w"> </span>7D
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="c1"># Delete a schedule</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>&lt;schedule_name&gt;
+</code></pre></div>
 <h3 id="snapshot-aliases">Snapshot Aliases<a class="headerlink" href="#snapshot-aliases" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi snapshot aliases list
-isi snapshot aliases create &lt;alias_name&gt; --target &lt;snap_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>aliases<span class="w"> </span>list
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>aliases<span class="w"> </span>create<span class="w"> </span>&lt;alias_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;snap_id&gt;
+</code></pre></div>
 <h3 id="snapshot-common-issues">Snapshot Common Issues<a class="headerlink" href="#snapshot-common-issues" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2294,59 +2305,59 @@ isi snapshot aliases create &lt;alias_name&gt; --target &lt;snap_id&gt;
 <hr />
 <h2 id="synciq-replication">SyncIQ — Replication<a class="headerlink" href="#synciq-replication" title="Permanent link">&para;</a></h2>
 <p>SyncIQ replicates directories from one PowerScale cluster to another. It creates a policy that defines what to sync, where to sync it, and on what schedule. Used for disaster recovery and data distribution.</p>
-<pre><code class="language-bash"># List policies
-isi sync policies list
-isi sync policies view &lt;policy_name&gt;
-
-# Create policy
-isi sync policies create \
-    --name &lt;policy_name&gt; \
-    --action sync \
-    --source-root-path /ifs/&lt;src&gt; \
-    --target-host &lt;ip&gt; \
-    --target-path /ifs/&lt;dst&gt;
-
-# List running jobs
-isi sync jobs list
-
-# Run / pause / cancel
-isi sync jobs start &lt;policy_name&gt;
-isi sync jobs pause &lt;policy_name&gt;
-isi sync jobs cancel &lt;policy_name&gt;
-
-# View job progress
-isi sync jobs view &lt;job_id&gt;
-
-# Reports
-isi sync reports list
-isi sync reports view &lt;report_id&gt;
-
-# Bandwidth rules (throttle replication to protect production I/O)
-isi sync rules list
-isi sync rules create bandwidth --limit &lt;kbps&gt; --schedule always
-
-# Failover / failback
-isi sync policies disable &lt;policy_name&gt;
-isi sync recover policies list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># List policies</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="c1"># Create policy</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">    </span>--name<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/&lt;src&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/&lt;dst&gt;
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a>
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="c1"># List running jobs</span>
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>
+<a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a><span class="c1"># Run / pause / cancel</span>
+<a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>pause<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>cancel<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a>
+<a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a><span class="c1"># View job progress</span>
+<a id="__codelineno-38-22" name="__codelineno-38-22" href="#__codelineno-38-22"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-38-23" name="__codelineno-38-23" href="#__codelineno-38-23"></a>
+<a id="__codelineno-38-24" name="__codelineno-38-24" href="#__codelineno-38-24"></a><span class="c1"># Reports</span>
+<a id="__codelineno-38-25" name="__codelineno-38-25" href="#__codelineno-38-25"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-38-26" name="__codelineno-38-26" href="#__codelineno-38-26"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>&lt;report_id&gt;
+<a id="__codelineno-38-27" name="__codelineno-38-27" href="#__codelineno-38-27"></a>
+<a id="__codelineno-38-28" name="__codelineno-38-28" href="#__codelineno-38-28"></a><span class="c1"># Bandwidth rules (throttle replication to protect production I/O)</span>
+<a id="__codelineno-38-29" name="__codelineno-38-29" href="#__codelineno-38-29"></a>isi<span class="w"> </span>sync<span class="w"> </span>rules<span class="w"> </span>list
+<a id="__codelineno-38-30" name="__codelineno-38-30" href="#__codelineno-38-30"></a>isi<span class="w"> </span>sync<span class="w"> </span>rules<span class="w"> </span>create<span class="w"> </span>bandwidth<span class="w"> </span>--limit<span class="w"> </span>&lt;kbps&gt;<span class="w"> </span>--schedule<span class="w"> </span>always
+<a id="__codelineno-38-31" name="__codelineno-38-31" href="#__codelineno-38-31"></a>
+<a id="__codelineno-38-32" name="__codelineno-38-32" href="#__codelineno-38-32"></a><span class="c1"># Failover / failback</span>
+<a id="__codelineno-38-33" name="__codelineno-38-33" href="#__codelineno-38-33"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>disable<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-38-34" name="__codelineno-38-34" href="#__codelineno-38-34"></a>isi<span class="w"> </span>sync<span class="w"> </span>recover<span class="w"> </span>policies<span class="w"> </span>list
+</code></pre></div>
 <hr />
 <h2 id="jobs-background-tasks">Jobs (Background Tasks)<a class="headerlink" href="#jobs-background-tasks" title="Permanent link">&para;</a></h2>
 <p>OneFS uses a job engine to run background tasks automatically. FlexProtect is the most important — it re-protects your data after a node or drive fails. Understanding these jobs helps you monitor cluster health during and after hardware events.</p>
 <h3 id="check-running-jobs">Check Running Jobs<a class="headerlink" href="#check-running-jobs" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Summary of currently running jobs
-isi job status
-
-# List all active jobs
-isi job jobs list
-
-# List jobs in a specific state
-isi job jobs list --state running
-isi job jobs list --state paused
-isi job jobs list --state failed
-
-# View details of a specific job
-isi job jobs view &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Summary of currently running jobs</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>isi<span class="w"> </span>job<span class="w"> </span>status
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># List all active jobs</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># List jobs in a specific state</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>paused
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>failed
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a><span class="c1"># View details of a specific job</span>
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h3 id="key-job-types">Key Job Types<a class="headerlink" href="#key-job-types" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2382,79 +2393,79 @@ isi job jobs view &lt;job_id&gt;
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># List all available job types
-isi job types list
-
-# View details and description of a job type
-isi job types view &lt;type_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># List all available job types</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>list
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># View details and description of a job type</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>view<span class="w"> </span>&lt;type_name&gt;
+</code></pre></div>
 <h3 id="start-cancel-pause-resume">Start, Cancel, Pause, Resume<a class="headerlink" href="#start-cancel-pause-resume" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi job jobs start FlexProtect
-isi job jobs start QuotaScan
-isi job jobs start SmartPools
-isi job jobs cancel &lt;job_id&gt;
-isi job jobs pause &lt;job_id&gt;
-isi job jobs resume &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>FlexProtect
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>QuotaScan
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>SmartPools
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>cancel<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>pause<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>resume<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h3 id="job-history">Job History<a class="headerlink" href="#job-history" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># View completed job history
-isi job history list
-
-# Job events (detailed log entries)
-isi job events list
-isi job events list --job-id &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># View completed job history</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># Job events (detailed log entries)</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>isi<span class="w"> </span>job<span class="w"> </span>events<span class="w"> </span>list
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>isi<span class="w"> </span>job<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--job-id<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h3 id="job-impact-policies">Job Impact Policies<a class="headerlink" href="#job-impact-policies" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi job policies list
-isi job policies view &lt;policy_name&gt;
-
-# Run Dedupe at low impact during business hours
-isi job types modify Dedupe --policy LOW
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>isi<span class="w"> </span>job<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>isi<span class="w"> </span>job<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Run Dedupe at low impact during business hours</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>modify<span class="w"> </span>Dedupe<span class="w"> </span>--policy<span class="w"> </span>LOW
+</code></pre></div>
 <h3 id="monitoring-flexprotect">Monitoring FlexProtect<a class="headerlink" href="#monitoring-flexprotect" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check if FlexProtect is running
-isi job jobs list | grep FlexProtect
-
-# Check overall data protection status
-isi status | grep -E &quot;SmartFail|Unhealthy|At risk&quot;
-
-# Check for unprotected files
-isi status -n all | grep -i &quot;unprotected\|degraded&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Check if FlexProtect is running</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FlexProtect
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="c1"># Check overall data protection status</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>isi<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SmartFail|Unhealthy|At risk&quot;</span>
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="c1"># Check for unprotected files</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;unprotected\|degraded&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="performance-statistics">Performance &amp; Statistics<a class="headerlink" href="#performance-statistics" title="Permanent link">&para;</a></h2>
 <p>These commands give you live visibility into how hard the cluster is working — throughput, latency, and IOPS across the whole cluster, per node, per protocol, or per client.</p>
 <h3 id="cluster-level-stats">Cluster-Level Stats<a class="headerlink" href="#cluster-level-stats" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Live cluster-wide stats
-isi statistics system list
-
-# Per-client breakdown
-isi statistics client list
-
-# Protocol-level stats
-isi statistics protocol list
-
-# Filter by specific protocol
-isi statistics protocol list --protocol nfs3
-isi statistics protocol list --protocol smb2
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># Live cluster-wide stats</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>system<span class="w"> </span>list
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="c1"># Per-client breakdown</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>isi<span class="w"> </span>statistics<span class="w"> </span>client<span class="w"> </span>list
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="c1"># Protocol-level stats</span>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="c1"># Filter by specific protocol</span>
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>nfs3
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>isi<span class="w"> </span>statistics<span class="w"> </span>protocol<span class="w"> </span>list<span class="w"> </span>--protocol<span class="w"> </span>smb2
+</code></pre></div>
 <h3 id="node-level-stats">Node-Level Stats<a class="headerlink" href="#node-level-stats" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi statistics node list
-isi statistics node list --node-id &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>isi<span class="w"> </span>statistics<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>node<span class="w"> </span>list<span class="w"> </span>--node-id<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h3 id="drive-disk-stats">Drive &amp; Disk Stats<a class="headerlink" href="#drive-disk-stats" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi statistics drive list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>isi<span class="w"> </span>statistics<span class="w"> </span>drive<span class="w"> </span>list
+</code></pre></div>
 <h3 id="active-client-stats">Active Client Stats<a class="headerlink" href="#active-client-stats" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Active NFS client stats
-isi statistics query current --stats node.clientstats.active.nfs
-
-# Active SMB client stats
-isi statistics query current --stats node.clientstats.active.smb2
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="c1"># Active NFS client stats</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>current<span class="w"> </span>--stats<span class="w"> </span>node.clientstats.active.nfs
+<a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>
+<a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="c1"># Active SMB client stats</span>
+<a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>current<span class="w"> </span>--stats<span class="w"> </span>node.clientstats.active.smb2
+</code></pre></div>
 <h3 id="historical-performance">Historical Performance<a class="headerlink" href="#historical-performance" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi statistics history list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>isi<span class="w"> </span>statistics<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list
+</code></pre></div>
 <h3 id="performance-thresholds">Performance Thresholds<a class="headerlink" href="#performance-thresholds" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2513,90 +2524,90 @@ isi statistics query current --stats node.clientstats.active.smb2
 <h2 id="events-alerts">Events &amp; Alerts<a class="headerlink" href="#events-alerts" title="Permanent link">&para;</a></h2>
 <p>Events are the cluster's way of telling you something needs attention. They have severity levels — critical events need immediate action, warnings can wait. Alert channels let you receive notifications by email or SNMP.</p>
 <h3 id="view-events">View Events<a class="headerlink" href="#view-events" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># All active events
-isi event events list
-
-# Critical events only
-isi event events list --severity critical
-
-# Warning and above
-isi event events list --severity warning
-
-# Events since a specific date
-isi event events list --start-time 2026-05-01
-
-# Verbose output with full description
-isi event events list -v
-
-# Filter by event type
-isi event events list | grep -i &quot;disk\|node\|network\|quota&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="c1"># All active events</span>
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list
+<a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>
+<a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a><span class="c1"># Critical events only</span>
+<a id="__codelineno-50-5" name="__codelineno-50-5" href="#__codelineno-50-5"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>critical
+<a id="__codelineno-50-6" name="__codelineno-50-6" href="#__codelineno-50-6"></a>
+<a id="__codelineno-50-7" name="__codelineno-50-7" href="#__codelineno-50-7"></a><span class="c1"># Warning and above</span>
+<a id="__codelineno-50-8" name="__codelineno-50-8" href="#__codelineno-50-8"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>warning
+<a id="__codelineno-50-9" name="__codelineno-50-9" href="#__codelineno-50-9"></a>
+<a id="__codelineno-50-10" name="__codelineno-50-10" href="#__codelineno-50-10"></a><span class="c1"># Events since a specific date</span>
+<a id="__codelineno-50-11" name="__codelineno-50-11" href="#__codelineno-50-11"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--start-time<span class="w"> </span><span class="m">2026</span>-05-01
+<a id="__codelineno-50-12" name="__codelineno-50-12" href="#__codelineno-50-12"></a>
+<a id="__codelineno-50-13" name="__codelineno-50-13" href="#__codelineno-50-13"></a><span class="c1"># Verbose output with full description</span>
+<a id="__codelineno-50-14" name="__codelineno-50-14" href="#__codelineno-50-14"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-50-15" name="__codelineno-50-15" href="#__codelineno-50-15"></a>
+<a id="__codelineno-50-16" name="__codelineno-50-16" href="#__codelineno-50-16"></a><span class="c1"># Filter by event type</span>
+<a id="__codelineno-50-17" name="__codelineno-50-17" href="#__codelineno-50-17"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;disk\|node\|network\|quota&quot;</span>
+</code></pre></div>
 <h3 id="resolve-and-acknowledge-events">Resolve and Acknowledge Events<a class="headerlink" href="#resolve-and-acknowledge-events" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Resolve an event (marks it as handled)
-isi event events resolve &lt;event_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="c1"># Resolve an event (marks it as handled)</span>
+<a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>resolve<span class="w"> </span>&lt;event_id&gt;
+</code></pre></div>
 <h3 id="alert-channels">Alert Channels<a class="headerlink" href="#alert-channels" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List configured alert channels (email, SNMP, etc.)
-isi event channels list
-isi event channels view &lt;channel_name&gt;
-
-# Create an email alert channel
-isi event channels create email-ops \
-    --type smtp \
-    --address ops-team@corp.local \
-    --send-test yes
-
-# Modify a channel
-isi event channels modify &lt;channel_name&gt; --address new@corp.local
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="c1"># List configured alert channels (email, SNMP, etc.)</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>list
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>view<span class="w"> </span>&lt;channel_name&gt;
+<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a>
+<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="c1"># Create an email alert channel</span>
+<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>create<span class="w"> </span>email-ops<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="w">    </span>--type<span class="w"> </span>smtp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-52-8" name="__codelineno-52-8" href="#__codelineno-52-8"></a><span class="w">    </span>--address<span class="w"> </span>ops-team@corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-52-9" name="__codelineno-52-9" href="#__codelineno-52-9"></a><span class="w">    </span>--send-test<span class="w"> </span>yes
+<a id="__codelineno-52-10" name="__codelineno-52-10" href="#__codelineno-52-10"></a>
+<a id="__codelineno-52-11" name="__codelineno-52-11" href="#__codelineno-52-11"></a><span class="c1"># Modify a channel</span>
+<a id="__codelineno-52-12" name="__codelineno-52-12" href="#__codelineno-52-12"></a>isi<span class="w"> </span>event<span class="w"> </span>channels<span class="w"> </span>modify<span class="w"> </span>&lt;channel_name&gt;<span class="w"> </span>--address<span class="w"> </span>new@corp.local
+</code></pre></div>
 <h3 id="alert-rules">Alert Rules<a class="headerlink" href="#alert-rules" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List alert rules (which events trigger which channels)
-isi event alerts list
-isi event alerts view &lt;alert_name&gt;
-
-# Create an alert rule — send critical events to email channel
-isi event alerts create critical-to-email \
-    --event-category all \
-    --severity critical \
-    --channels email-ops
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="c1"># List alert rules (which events trigger which channels)</span>
+<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>list
+<a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>view<span class="w"> </span>&lt;alert_name&gt;
+<a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a>
+<a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="c1"># Create an alert rule — send critical events to email channel</span>
+<a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a>isi<span class="w"> </span>event<span class="w"> </span>alerts<span class="w"> </span>create<span class="w"> </span>critical-to-email<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-53-7" name="__codelineno-53-7" href="#__codelineno-53-7"></a><span class="w">    </span>--event-category<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-53-8" name="__codelineno-53-8" href="#__codelineno-53-8"></a><span class="w">    </span>--severity<span class="w"> </span>critical<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-53-9" name="__codelineno-53-9" href="#__codelineno-53-9"></a><span class="w">    </span>--channels<span class="w"> </span>email-ops
+</code></pre></div>
 <h3 id="snmp-configuration">SNMP Configuration<a class="headerlink" href="#snmp-configuration" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">isi snmp settings view
-
-isi snmp settings modify \
-    --snmp-v3-access-enable yes \
-    --system-contact &quot;infra-team@corp.local&quot; \
-    --system-location &quot;DC1-Row3-Rack5&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>
+<a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-54-4" name="__codelineno-54-4" href="#__codelineno-54-4"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-54-5" name="__codelineno-54-5" href="#__codelineno-54-5"></a><span class="w">    </span>--system-contact<span class="w"> </span><span class="s2">&quot;infra-team@corp.local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-54-6" name="__codelineno-54-6" href="#__codelineno-54-6"></a><span class="w">    </span>--system-location<span class="w"> </span><span class="s2">&quot;DC1-Row3-Rack5&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="firmware-upgrades-support">Firmware, Upgrades &amp; Support<a class="headerlink" href="#firmware-upgrades-support" title="Permanent link">&para;</a></h2>
 <p>Keep the cluster's OneFS OS and drive firmware up to date for security and performance. OneFS upgrades are rolling — each node upgrades one at a time so the cluster stays online.</p>
-<pre><code class="language-bash"># Current OneFS version
-isi version
-
-# Drive firmware inventory
-isi devices drives firmware list
-
-# Start drive firmware upgrade
-isi devices drives firmware upgrade start
-
-# Cluster upgrade (rolling — one node at a time)
-isi upgrade cluster --upgrade-image &lt;image&gt;
-isi upgrade cluster check
-isi upgrade nodes list
-isi upgrade nodes view &lt;node_id&gt;
-
-# License status (SmartPools, SyncIQ, SmartDedupe, etc.)
-isi license licenses list
-isi license licenses view &lt;license_name&gt;
-
-# ESRS (remote support connectivity)
-isi esrs settings view
-isi esrs connectivity test
-
-# Export cluster config (for support or documentation)
-isi config dump
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="c1"># Current OneFS version</span>
+<a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>isi<span class="w"> </span>version
+<a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a>
+<a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a><span class="c1"># Drive firmware inventory</span>
+<a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a>isi<span class="w"> </span>devices<span class="w"> </span>drives<span class="w"> </span>firmware<span class="w"> </span>list
+<a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a>
+<a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a><span class="c1"># Start drive firmware upgrade</span>
+<a id="__codelineno-55-8" name="__codelineno-55-8" href="#__codelineno-55-8"></a>isi<span class="w"> </span>devices<span class="w"> </span>drives<span class="w"> </span>firmware<span class="w"> </span>upgrade<span class="w"> </span>start
+<a id="__codelineno-55-9" name="__codelineno-55-9" href="#__codelineno-55-9"></a>
+<a id="__codelineno-55-10" name="__codelineno-55-10" href="#__codelineno-55-10"></a><span class="c1"># Cluster upgrade (rolling — one node at a time)</span>
+<a id="__codelineno-55-11" name="__codelineno-55-11" href="#__codelineno-55-11"></a>isi<span class="w"> </span>upgrade<span class="w"> </span>cluster<span class="w"> </span>--upgrade-image<span class="w"> </span>&lt;image&gt;
+<a id="__codelineno-55-12" name="__codelineno-55-12" href="#__codelineno-55-12"></a>isi<span class="w"> </span>upgrade<span class="w"> </span>cluster<span class="w"> </span>check
+<a id="__codelineno-55-13" name="__codelineno-55-13" href="#__codelineno-55-13"></a>isi<span class="w"> </span>upgrade<span class="w"> </span>nodes<span class="w"> </span>list
+<a id="__codelineno-55-14" name="__codelineno-55-14" href="#__codelineno-55-14"></a>isi<span class="w"> </span>upgrade<span class="w"> </span>nodes<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-55-15" name="__codelineno-55-15" href="#__codelineno-55-15"></a>
+<a id="__codelineno-55-16" name="__codelineno-55-16" href="#__codelineno-55-16"></a><span class="c1"># License status (SmartPools, SyncIQ, SmartDedupe, etc.)</span>
+<a id="__codelineno-55-17" name="__codelineno-55-17" href="#__codelineno-55-17"></a>isi<span class="w"> </span>license<span class="w"> </span>licenses<span class="w"> </span>list
+<a id="__codelineno-55-18" name="__codelineno-55-18" href="#__codelineno-55-18"></a>isi<span class="w"> </span>license<span class="w"> </span>licenses<span class="w"> </span>view<span class="w"> </span>&lt;license_name&gt;
+<a id="__codelineno-55-19" name="__codelineno-55-19" href="#__codelineno-55-19"></a>
+<a id="__codelineno-55-20" name="__codelineno-55-20" href="#__codelineno-55-20"></a><span class="c1"># ESRS (remote support connectivity)</span>
+<a id="__codelineno-55-21" name="__codelineno-55-21" href="#__codelineno-55-21"></a>isi<span class="w"> </span>esrs<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-55-22" name="__codelineno-55-22" href="#__codelineno-55-22"></a>isi<span class="w"> </span>esrs<span class="w"> </span>connectivity<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-55-23" name="__codelineno-55-23" href="#__codelineno-55-23"></a>
+<a id="__codelineno-55-24" name="__codelineno-55-24" href="#__codelineno-55-24"></a><span class="c1"># Export cluster config (for support or documentation)</span>
+<a id="__codelineno-55-25" name="__codelineno-55-25" href="#__codelineno-55-25"></a>isi<span class="w"> </span>config<span class="w"> </span>dump
+</code></pre></div>
 
 
 

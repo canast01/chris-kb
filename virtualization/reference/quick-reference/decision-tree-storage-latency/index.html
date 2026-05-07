@@ -810,59 +810,59 @@
 <h1 id="decision-tree-storage-latency">Decision Tree: Storage Latency<a class="headerlink" href="#decision-tree-storage-latency" title="Permanent link">&para;</a></h1>
 <p>Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.</p>
 <h2 id="step-1-confirm-latency-baseline-breach">Step 1 — Confirm Latency Baseline Breach<a class="headerlink" href="#step-1-confirm-latency-baseline-breach" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># On ESXi host — check current device latency
-esxtop -b -n 1 | grep -E &quot;DAVG|KAVG|GAVG&quot; | sort -k7 -n -r | head -20
-# GAVG (guest average) &gt; 20ms = elevated
-# DAVG (device average) &gt; 5ms = elevated
-# KAVG (kernel average) &gt; 2ms = kernel queue issues
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On ESXi host — check current device latency</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DAVG|KAVG|GAVG&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-n<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># GAVG (guest average) &gt; 20ms = elevated</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># DAVG (device average) &gt; 5ms = elevated</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># KAVG (kernel average) &gt; 2ms = kernel queue issues</span>
+</code></pre></div>
 <p>Via Aria Operations: vSphere → Datastores → select datastore → Performance → I/O Latency.</p>
 <h2 id="step-2-is-vsan-resync-active">Step 2 — Is vSAN Resync Active?<a class="headerlink" href="#step-2-is-vsan-resync-active" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">esxcli vsan debug resync summary
-# If bytes_remaining &gt; 0, resync is ongoing and contributing to latency
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># If bytes_remaining &gt; 0, resync is ongoing and contributing to latency</span>
+</code></pre></div>
 <p><strong>Active resync causing latency:</strong>
 → Throttle resync: <code>esxcli vsan debug resync throttle -p 25</code>
 → Wait for resync to complete before performing additional storage changes
 → If resync is unexpectedly large: check if a disk or host just returned from failure</p>
 <h2 id="step-3-check-storage-array-health">Step 3 — Check Storage Array Health<a class="headerlink" href="#step-3-check-storage-array-health" title="Permanent link">&para;</a></h2>
-<p><strong>For vSAN:</strong></p>
-<pre><code class="language-bash">esxcli vsan health cluster list | grep -v Green   # Disk health warnings?
-esxcli vsan debug controller list                  # Controller health?
-</code></pre>
+<p><strong>For vSAN:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Green<span class="w">   </span><span class="c1"># Disk health warnings?</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>controller<span class="w"> </span>list<span class="w">                  </span><span class="c1"># Controller health?</span>
+</code></pre></div></p>
 <p><strong>For external storage (NFS/iSCSI/FC):</strong>
 - Log in to array management (Unisphere, ONTAP, Pure FlashArray)
 - Check array-level latency, queue depth, and controller CPU utilisation
 - Check backend disk response time (array-internal metric)</p>
-<p><strong>For Pure FlashArray specifically:</strong></p>
-<pre><code class="language-bash"># Via REST API or purearray CLI
-purearray get   # Throughput and latency summary
-</code></pre>
+<p><strong>For Pure FlashArray specifically:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via REST API or purearray CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>get<span class="w">   </span><span class="c1"># Throughput and latency summary</span>
+</code></pre></div></p>
 <h2 id="step-4-check-network-fabric">Step 4 — Check Network / Fabric<a class="headerlink" href="#step-4-check-network-fabric" title="Permanent link">&para;</a></h2>
-<p>For vSAN: high network latency on the vSAN VMkernel can cause I/O latency:</p>
-<pre><code class="language-bash"># Test vSAN network latency between hosts
-vmkping -I vmk1 &lt;other-host-vsan-vmk-ip&gt;   # &lt;1ms expected on 10GbE
-</code></pre>
-<p>For FC (iSCSI/FC block storage): check HBA port statistics:</p>
-<pre><code class="language-bash">esxcli storage san fc stats get
-# Look for: Link failures, Tx/Rx errors, queue_depth exhaustion
-</code></pre>
+<p>For vSAN: high network latency on the vSAN VMkernel can cause I/O latency:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test vSAN network latency between hosts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;other-host-vsan-vmk-ip&gt;<span class="w">   </span><span class="c1"># &lt;1ms expected on 10GbE</span>
+</code></pre></div></p>
+<p>For FC (iSCSI/FC block storage): check HBA port statistics:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Look for: Link failures, Tx/Rx errors, queue_depth exhaustion</span>
+</code></pre></div></p>
 <h2 id="step-5-check-for-hot-spot-vms">Step 5 — Check for Hot-Spot VMs<a class="headerlink" href="#step-5-check-for-hot-spot-vms" title="Permanent link">&para;</a></h2>
 <p>High I/O from a single VM can saturate a datastore or disk group:</p>
-<pre><code class="language-bash"># Identify top I/O consumers
-esxtop -b -n 1 | grep -E &quot;Virtual Machine|MBRS|MBWS&quot; | head -20
-
-# Sort by GAVG in esxtop interactive mode: press 'u' → sort by GAVG
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Identify top I/O consumers</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Virtual Machine|MBRS|MBWS&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Sort by GAVG in esxtop interactive mode: press &#39;u&#39; → sort by GAVG</span>
+</code></pre></div>
 <p>If a single VM is driving all the I/O:
 - Check if the VM has a stuck snapshot (common cause of write amplification)
 - Check if a backup job is running hot-backup against this VM right now</p>
 <h2 id="step-6-snapshot-chain">Step 6 — Snapshot Chain<a class="headerlink" href="#step-6-snapshot-chain" title="Permanent link">&para;</a></h2>
 <p>Long snapshot chains dramatically increase latency on writes:</p>
-<pre><code class="language-powershell">Get-VM | Where-Object {$_.ExtensionData.Snapshot} | Get-Snapshot |
-    Where-Object {$_.SizeMB -gt 10240} |
-    Select-Object VM, Name, Created, SizeMB
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Snapshot</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span>
+</code></pre></div>
 <p>VMs with snapshot chains &gt; 3 deep or snapshots older than 24 hours during normal operation should be investigated immediately.</p>
 <h2 id="escalation">Escalation<a class="headerlink" href="#escalation" title="Permanent link">&para;</a></h2>
 <p>If storage latency persists &gt; 30 minutes with no obvious cause:

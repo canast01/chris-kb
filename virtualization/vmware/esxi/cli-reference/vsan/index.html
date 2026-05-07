@@ -811,73 +811,82 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    vSAN_Commands["vSAN Commands"]
+    vSAN_Commands --&gt; S0["Cluster Status"]
+    vSAN_Commands --&gt; S1["Storage and Disk Groups"]
+    vSAN_Commands --&gt; S2["Objects and Resyncing"]
+    vSAN_Commands --&gt; S3["Networking"]
+    vSAN_Commands --&gt; S4["Datastore"]
+    vSAN_Commands --&gt; S5["Quick Triage Checklist"]
+    vSAN_Commands --&gt; S6["Status Indicators"]</code></pre>
 <h2 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Cluster membership and UUID
-esxcli vsan cluster get
-
-# Cluster health summary (all checks)
-esxcli vsan health cluster get
-esxcli vsan health summary get
-
-# Health check details — filter for failures only
-esxcli vsan health cluster get | grep -v &quot;GREEN\|green&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster membership and UUID</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cluster health summary (all checks)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Health check details — filter for failures only</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;GREEN\|green&quot;</span>
+</code></pre></div>
 <h2 id="storage-and-disk-groups">Storage and Disk Groups<a class="headerlink" href="#storage-and-disk-groups" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all vSAN storage devices (SSD cache + capacity)
-esxcli vsan storage list
-
-# Per-disk statistics (reads, writes, errors)
-esxcli vsan storage stats get
-
-# Disk group layout — which SSD maps to which capacities
-esxcli vsan storage list | grep -E &quot;Is SSD|Disk Group&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all vSAN storage devices (SSD cache + capacity)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Per-disk statistics (reads, writes, errors)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Disk group layout — which SSD maps to which capacities</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Is SSD|Disk Group&quot;</span>
+</code></pre></div>
 <h2 id="objects-and-resyncing">Objects and Resyncing<a class="headerlink" href="#objects-and-resyncing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List vSAN objects — state, policy compliance
-esxcli vsan debug object list
-
-# Filter for non-healthy objects
-esxcli vsan debug object list | grep -v &quot;healthy&quot;
-
-# Resync status — active rebuild/repair operations
-esxcli vsan debug resync list
-
-# Resync byte count (estimate time remaining)
-esxcli vsan debug resync list | grep -E &quot;Total Bytes|Remaining&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List vSAN objects — state, policy compliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Filter for non-healthy objects</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;healthy&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Resync status — active rebuild/repair operations</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Resync byte count (estimate time remaining)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total Bytes|Remaining&quot;</span>
+</code></pre></div>
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># vSAN VMkernel adapters
-esxcli vsan network list
-
-# Unicast agent configuration per NIC
-esxcli vsan network ipconfig list
-
-# Connectivity test between cluster hosts
-esxcli vsan debug network test
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># vSAN VMkernel adapters</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Unicast agent configuration per NIC</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Connectivity test between cluster hosts</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
 <h2 id="datastore">Datastore<a class="headerlink" href="#datastore" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># vSAN datastore UUID and mount info
-esxcli vsan datastore list
-
-# Trace vSAN I/O (debugging, brief capture)
-esxcli vsan trace get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># vSAN datastore UUID and mount info</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>datastore<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Trace vSAN I/O (debugging, brief capture)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>trace<span class="w"> </span>get
+</code></pre></div>
 <h2 id="quick-triage-checklist">Quick Triage Checklist<a class="headerlink" href="#quick-triage-checklist" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. Cluster health
-esxcli vsan health summary get
-
-# 2. Any resync in progress
-esxcli vsan debug resync list
-
-# 3. Objects needing attention
-esxcli vsan debug object list | grep -v healthy
-
-# 4. Network VMkernel tagged
-esxcli vsan network list
-
-# 5. Storage devices visible
-esxcli vsan storage list | grep -c &quot;naa\.&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Cluster health</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Any resync in progress</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Objects needing attention</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. Network VMkernel tagged</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 5. Storage devices visible</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;naa\.&quot;</span>
+</code></pre></div>
 <h2 id="status-indicators">Status Indicators<a class="headerlink" href="#status-indicators" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

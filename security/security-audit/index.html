@@ -868,58 +868,58 @@
 - <strong>Reference standard:</strong> ISO 27001 Annex A / CIS Controls / PCI-DSS Requirement X
 - <strong>Reviewer:</strong> internal or third-party auditor</p>
 <h2 id="configuration-audit-checks">Configuration Audit Checks<a class="headerlink" href="#configuration-audit-checks" title="Permanent link">&para;</a></h2>
-<p><strong>Linux server hardening:</strong></p>
-<pre><code class="language-bash"># SSH hardening
-grep -E &quot;^PermitRootLogin|^PasswordAuthentication|^Protocol|^MaxAuthTries&quot; /etc/ssh/sshd_config
-
-# Password policy
-cat /etc/security/pwquality.conf
-grep -E &quot;^PASS_MAX_DAYS|^PASS_MIN_DAYS|^PASS_MIN_LEN&quot; /etc/login.defs
-
-# Firewall active
-systemctl is-active firewalld || systemctl is-active ufw
-
-# Auditd running
-systemctl is-active auditd
-
-# SUID/SGID files (unexpected ones are a finding)
-find / -perm /6000 -type f -not -path &quot;/proc/*&quot; 2&gt;/dev/null | sort
-</code></pre>
-<p><strong>Windows server hardening:</strong></p>
-<pre><code class="language-powershell"># Audit policy settings
-auditpol /get /category:*
-
-# Password policy
-Get-ADDefaultDomainPasswordPolicy | Select-Object MinPasswordLength, PasswordHistoryCount, MaxPasswordAge, LockoutThreshold
-
-# SMBv1 disabled
-Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol
-
-# RDP settings
-Get-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections
-
-# Local administrators group membership
-Get-LocalGroupMember -Group &quot;Administrators&quot;
-</code></pre>
+<p><strong>Linux server hardening:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH hardening</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^PermitRootLogin|^PasswordAuthentication|^Protocol|^MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Password policy</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cat<span class="w"> </span>/etc/security/pwquality.conf
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^PASS_MAX_DAYS|^PASS_MIN_DAYS|^PASS_MIN_LEN&quot;</span><span class="w"> </span>/etc/login.defs
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Firewall active</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>firewalld<span class="w"> </span><span class="o">||</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>ufw
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Auditd running</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>auditd
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># SUID/SGID files (unexpected ones are a finding)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>find<span class="w"> </span>/<span class="w"> </span>-perm<span class="w"> </span>/6000<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+</code></pre></div></p>
+<p><strong>Windows server hardening:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Audit policy settings</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Password policy</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ADDefaultDomainPasswordPolicy</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MinPasswordLength</span><span class="p">,</span> <span class="n">PasswordHistoryCount</span><span class="p">,</span> <span class="n">MaxPasswordAge</span><span class="p">,</span> <span class="n">LockoutThreshold</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># SMBv1 disabled</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EnableSMB1Protocol</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># RDP settings</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s1">&#39;HKLM:\System\CurrentControlSet\Control\Terminal Server&#39;</span> <span class="n">-Name</span> <span class="n">fDenyTSConnections</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Local administrators group membership</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+</code></pre></div></p>
 <h2 id="patch-compliance-check">Patch Compliance Check<a class="headerlink" href="#patch-compliance-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># RHEL/CentOS — list available security updates
-yum check-update --security 2&gt;/dev/null | grep -v &quot;^$&quot;
-
-# Ubuntu/Debian
-apt list --upgradable 2&gt;/dev/null | grep -i security
-</code></pre>
-<pre><code class="language-powershell"># Windows — missing updates
-Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
-
-# Or query WSUS/Windows Update
-(New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher().Search(&quot;IsInstalled=0 and Type='Software' and IsHidden=0&quot;).Updates |
-  Select-Object Title, MsrcSeverity
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RHEL/CentOS — list available security updates</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>yum<span class="w"> </span>check-update<span class="w"> </span>--security<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Ubuntu/Debian</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Windows — missing updates</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Or query WSUS/Windows Update</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">(</span><span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span><span class="p">).</span><span class="n">CreateUpdateSearcher</span><span class="p">().</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0 and Type=&#39;Software&#39; and IsHidden=0&quot;</span><span class="p">).</span><span class="n">Updates</span> <span class="p">|</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span>
+</code></pre></div>
 <h2 id="vulnerability-scan-review">Vulnerability Scan Review<a class="headerlink" href="#vulnerability-scan-review" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Example: pull Nessus / Tenable findings via API (requires API key)
-curl -k -X GET &quot;https://&lt;scanner&gt;/scans/&lt;scan_id&gt;/hosts&quot; \
-  -H &quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot; | jq '.hosts[] | {hostname,score,critical,high}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example: pull Nessus / Tenable findings via API (requires API key)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;scanner&gt;/scans/&lt;scan_id&gt;/hosts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.hosts[] | {hostname,score,critical,high}&#39;</span>
+</code></pre></div>
 <p>Review cadence:
 - <strong>Critical findings</strong> — remediate within 15 days
 - <strong>High findings</strong> — remediate within 30 days
@@ -962,17 +962,17 @@ curl -k -X GET &quot;https://&lt;scanner&gt;/scans/&lt;scan_id&gt;/hosts&quot; \
 </tbody>
 </table>
 <h2 id="findings-documentation">Findings Documentation<a class="headerlink" href="#findings-documentation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-markdown">Finding ID:      AUDIT-2026-001
-Severity:        High
-Control:         CIS Control 4 — Controlled Use of Admin Privileges
-Description:     Three user accounts have Domain Admin rights with no documented business justification.
-Evidence:        Get-ADGroupMember output — see attachment
-Risk:            Excessive privilege increases blast radius of credential compromise
-Remediation:     Remove unjustified Domain Admin memberships; document approval for remaining
-Owner:           IT Operations
-Due Date:        2026-06-01
-Status:          Open
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Finding ID:      AUDIT-2026-001
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Severity:        High
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Control:         CIS Control 4 — Controlled Use of Admin Privileges
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Description:     Three user accounts have Domain Admin rights with no documented business justification.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Evidence:        Get-ADGroupMember output — see attachment
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Risk:            Excessive privilege increases blast radius of credential compromise
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Remediation:     Remove unjustified Domain Admin memberships; document approval for remaining
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Owner:           IT Operations
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Due Date:        2026-06-01
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Status:          Open
+</code></pre></div>
 <h2 id="audit-close-out-checklist">Audit Close-Out Checklist<a class="headerlink" href="#audit-close-out-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All in-scope systems reviewed</li>

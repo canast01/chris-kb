@@ -834,77 +834,77 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List Log Analytics workspaces
-az monitor log-analytics workspace list \
-  --query '[*].{Name:name,RG:resourceGroup,Location:location,RetentionDays:retentionInDays}' -o table
-
-# Run a KQL query from CLI
-az monitor log-analytics query \
-  -w &lt;workspace-id&gt; \
-  --analytics-query &quot;Heartbeat | summarize count() by Computer | sort by count_ desc | take 10&quot;
-
-# Show workspace details
-az monitor log-analytics workspace show -g &lt;rg&gt; -n &lt;workspace-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List Log Analytics workspaces</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,Location:location,RetentionDays:retentionInDays}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Run a KQL query from CLI</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-w<span class="w"> </span>&lt;workspace-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--analytics-query<span class="w"> </span><span class="s2">&quot;Heartbeat | summarize count() by Computer | sort by count_ desc | take 10&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show workspace details</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;workspace-name&gt;
+</code></pre></div>
 <h2 id="key-kql-queries">Key KQL Queries<a class="headerlink" href="#key-kql-queries" title="Permanent link">&para;</a></h2>
-<p><strong>Heartbeat — check which agents reported recently:</strong></p>
-<pre><code class="language-kql">Heartbeat
-| where TimeGenerated &gt; ago(1h)
-| summarize LastHeartbeat=max(TimeGenerated) by Computer
-| where LastHeartbeat &lt; ago(15m)
-| order by LastHeartbeat asc
-</code></pre>
-<p><strong>Find errors across all logs:</strong></p>
-<pre><code class="language-kql">search &quot;error&quot; or &quot;ERROR&quot;
-| where TimeGenerated &gt; ago(1h)
-| project TimeGenerated, Type, _ResourceId, Computer, Message=tostring(split($table, &quot; &quot;))
-| sort by TimeGenerated desc
-| take 100
-</code></pre>
-<p><strong>VM performance — CPU over 80%:</strong></p>
-<pre><code class="language-kql">Perf
-| where ObjectName == &quot;Processor&quot; and CounterName == &quot;% Processor Time&quot;
-| where CounterValue &gt; 80
-| summarize avg(CounterValue) by Computer, bin(TimeGenerated, 5m)
-| sort by TimeGenerated desc
-</code></pre>
-<p><strong>Disk free space alerts:</strong></p>
-<pre><code class="language-kql">Perf
-| where ObjectName == &quot;LogicalDisk&quot; and CounterName == &quot;% Free Space&quot;
-| where CounterValue &lt; 20
-| summarize min(CounterValue) by Computer, InstanceName
-</code></pre>
-<p><strong>Security events — failed logons:</strong></p>
-<pre><code class="language-kql">SecurityEvent
-| where EventID == 4625
-| summarize FailedLogons=count() by Account, Computer, bin(TimeGenerated, 1h)
-| sort by FailedLogons desc
-</code></pre>
-<p><strong>Azure activity — who deleted what:</strong></p>
-<pre><code class="language-kql">AzureActivity
-| where OperationNameValue has &quot;delete&quot; and ActivityStatusValue == &quot;Success&quot;
-| project TimeGenerated, Caller, OperationNameValue, ResourceGroup, Resource
-| sort by TimeGenerated desc
-</code></pre>
+<p><strong>Heartbeat — check which agents reported recently:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Heartbeat</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">LastHeartbeat</span><span class="p">=</span><span class="n">max</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Computer</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">LastHeartbeat</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">15</span><span class="n">m</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">LastHeartbeat</span><span class="w"> </span><span class="n">asc</span>
+</code></pre></div></p>
+<p><strong>Find errors across all logs:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">search</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="s">&quot;ERROR&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">Type</span><span class="p">,</span><span class="w"> </span><span class="n">_ResourceId</span><span class="p">,</span><span class="w"> </span><span class="n">Computer</span><span class="p">,</span><span class="w"> </span><span class="n">Message</span><span class="p">=</span><span class="n">tostring</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="err">$</span><span class="n">table</span><span class="p">,</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">))</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">|</span><span class="w"> </span><span class="k">take</span><span class="w"> </span><span class="mi">100</span>
+</code></pre></div></p>
+<p><strong>VM performance — CPU over 80%:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">Perf</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">ObjectName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;Processor&quot;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">CounterName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;% Processor Time&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">CounterValue</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">80</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">avg</span><span class="p">(</span><span class="n">CounterValue</span><span class="p">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Computer</span><span class="p">,</span><span class="w"> </span><span class="n">bin</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">m</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div></p>
+<p><strong>Disk free space alerts:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">Perf</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">ObjectName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;LogicalDisk&quot;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">CounterName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;% Free Space&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">CounterValue</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">20</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">CounterValue</span><span class="p">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Computer</span><span class="p">,</span><span class="w"> </span><span class="n">InstanceName</span>
+</code></pre></div></p>
+<p><strong>Security events — failed logons:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">SecurityEvent</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">EventID</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="mi">4625</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">FailedLogons</span><span class="p">=</span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Account</span><span class="p">,</span><span class="w"> </span><span class="n">Computer</span><span class="p">,</span><span class="w"> </span><span class="n">bin</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">FailedLogons</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div></p>
+<p><strong>Azure activity — who deleted what:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">AzureActivity</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">OperationNameValue</span><span class="w"> </span><span class="k">has</span><span class="w"> </span><span class="s">&quot;delete&quot;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">ActivityStatusValue</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;Success&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">Caller</span><span class="p">,</span><span class="w"> </span><span class="n">OperationNameValue</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceGroup</span><span class="p">,</span><span class="w"> </span><span class="n">Resource</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div></p>
 <h2 id="create-alert-rule-from-query">Create Alert Rule from Query<a class="headerlink" href="#create-alert-rule-from-query" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create a scheduled alert rule (30-min check, alert if &gt;10 results)
-az monitor scheduled-query create \
-  -g &lt;rg&gt; \
-  -n &quot;High-CPU-Alert&quot; \
-  --scopes /subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.OperationalInsights/workspaces/&lt;workspace&gt; \
-  --condition &quot;count &gt; 10&quot; \
-  --condition-query &quot;Perf | where CounterName == '% Processor Time' and CounterValue &gt; 80&quot; \
-  --evaluation-frequency 5m \
-  --window-size 30m \
-  --severity 2 \
-  --action-groups &lt;action-group-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a scheduled alert rule (30-min check, alert if &gt;10 results)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>scheduled-query<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-n<span class="w"> </span><span class="s2">&quot;High-CPU-Alert&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--scopes<span class="w"> </span>/subscriptions/&lt;sub&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.OperationalInsights/workspaces/&lt;workspace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--condition<span class="w"> </span><span class="s2">&quot;count &gt; 10&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--condition-query<span class="w"> </span><span class="s2">&quot;Perf | where CounterName == &#39;% Processor Time&#39; and CounterValue &gt; 80&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--evaluation-frequency<span class="w"> </span>5m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--window-size<span class="w"> </span>30m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--severity<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--action-groups<span class="w"> </span>&lt;action-group-id&gt;
+</code></pre></div>
 <h2 id="data-retention">Data Retention<a class="headerlink" href="#data-retention" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Set workspace retention (max 730 days for hot storage; archive beyond)
-az monitor log-analytics workspace update \
-  -g &lt;rg&gt; -n &lt;workspace-name&gt; \
-  --retention-time 90
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Set workspace retention (max 730 days for hot storage; archive beyond)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;workspace-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--retention-time<span class="w"> </span><span class="m">90</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -811,76 +811,85 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Roles["Roles"]
+    Roles --&gt; S0["Roles"]
+    Roles --&gt; S1["Permissions"]
+    Roles --&gt; S2["Assign a Role"]
+    Roles --&gt; S3["Modify and Remove Permissions"]
+    Roles --&gt; S4["Create a Custom Role"]
+    Roles --&gt; S5["Audit: Permission Report"]
+    Roles --&gt; S6["Common Built-in Roles"]</code></pre>
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all roles
-Get-VIRole
-
-# Role details — privileges assigned
-Get-VIRole -Name &quot;ReadOnly&quot; | Select-Object Name, PrivilegeList
-
-# Find roles with a specific privilege
-Get-VIRole | Where-Object { $_.PrivilegeList -contains &quot;VirtualMachine.Config.Memory&quot; }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all roles</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VIRole</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Role details — privileges assigned</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;ReadOnly&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PrivilegeList</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Find roles with a specific privilege</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-VIRole</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PrivilegeList</span> <span class="o">-contains</span> <span class="s2">&quot;VirtualMachine.Config.Memory&quot;</span> <span class="p">}</span>
+</code></pre></div>
 <h2 id="permissions">Permissions<a class="headerlink" href="#permissions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># All permissions in the inventory
-Get-VIPermission
-
-# Permissions for a specific user or group
-Get-VIPermission | Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; }
-
-# Permissions on a specific entity
-Get-VIPermission -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;)
-Get-VIPermission -Entity (Get-Datacenter &quot;&lt;dc_name&gt;&quot;)
-Get-VIPermission -Entity (Get-Cluster &quot;&lt;cluster_name&gt;&quot;)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># All permissions in the inventory</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VIPermission</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Permissions for a specific user or group</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;&lt;domain&gt;\&lt;user&gt;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Permissions on a specific entity</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;&lt;dc_name&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster_name&gt;&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="assign-a-role">Assign a Role<a class="headerlink" href="#assign-a-role" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Grant a role on a datacenter (propagates to all children)
-New-VIPermission `
-    -Entity (Get-Datacenter &quot;&lt;dc_name&gt;&quot;) `
-    -Principal &quot;&lt;domain&gt;\&lt;user&gt;&quot; `
-    -Role (Get-VIRole &quot;ReadOnly&quot;) `
-    -Propagate:$true
-
-# Grant on a specific VM (no propagation needed)
-New-VIPermission `
-    -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;) `
-    -Principal &quot;&lt;domain&gt;\&lt;group&gt;&quot; `
-    -Role (Get-VIRole &quot;Virtual Machine User&quot;) `
-    -Propagate:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Grant a role on a datacenter (propagates to all children)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;&lt;dc_name&gt;&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-Principal</span> <span class="s2">&quot;&lt;domain&gt;\&lt;user&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;ReadOnly&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Grant on a specific VM (no propagation needed)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">-Principal</span> <span class="s2">&quot;&lt;domain&gt;\&lt;group&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;Virtual Machine User&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="modify-and-remove-permissions">Modify and Remove Permissions<a class="headerlink" href="#modify-and-remove-permissions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Change role for an existing permission
-Set-VIPermission `
-    -Permission (Get-VIPermission -Entity (Get-Datacenter &quot;&lt;dc&gt;&quot;) | Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; }) `
-    -Role (Get-VIRole &quot;Administrator&quot;)
-
-# Remove a permission
-Get-VIPermission -Entity (Get-VM &quot;&lt;vm_name&gt;&quot;) |
-    Where-Object { $_.Principal -eq &quot;&lt;domain&gt;\&lt;user&gt;&quot; } |
-    Remove-VIPermission -Confirm:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Change role for an existing permission</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Set-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-Permission</span> <span class="p">(</span><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;&lt;dc&gt;&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;&lt;domain&gt;\&lt;user&gt;&quot;</span> <span class="p">})</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;Administrator&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Remove a permission</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;&lt;domain&gt;\&lt;user&gt;&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="create-a-custom-role">Create a Custom Role<a class="headerlink" href="#create-a-custom-role" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Create a role with specific privileges
-New-VIRole -Name &quot;VM-PowerOps&quot; -Privilege (
-    Get-VIPrivilege -Name &quot;Power On&quot;, &quot;Power Off&quot;, &quot;Reset&quot;, &quot;Suspend&quot;
-)
-
-# Assign custom role
-New-VIPermission `
-    -Entity (Get-Folder &quot;&lt;folder_name&gt;&quot;) `
-    -Principal &quot;&lt;domain&gt;\vm-operators&quot; `
-    -Role (Get-VIRole &quot;VM-PowerOps&quot;) `
-    -Propagate:$true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create a role with specific privileges</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-PowerOps&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Get-VIPrivilege</span> <span class="n">-Name</span> <span class="s2">&quot;Power On&quot;</span><span class="p">,</span> <span class="s2">&quot;Power Off&quot;</span><span class="p">,</span> <span class="s2">&quot;Reset&quot;</span><span class="p">,</span> <span class="s2">&quot;Suspend&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Assign custom role</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;&lt;folder_name&gt;&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">-Principal</span> <span class="s2">&quot;&lt;domain&gt;\vm-operators&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;VM-PowerOps&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+</code></pre></div>
 <h2 id="audit-permission-report">Audit: Permission Report<a class="headerlink" href="#audit-permission-report" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Export all permissions to CSV
-Get-VIPermission | Select-Object Entity, Principal, Role, IsGroup, Propagate |
-    Export-Csv -Path vcenter_permissions.csv -NoTypeInformation
-
-# Identify users with Administrator role
-Get-VIPermission | Where-Object { $_.Role -eq &quot;Admin&quot; } |
-    Select-Object Entity, Principal, Propagate
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Export all permissions to CSV</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vcenter_permissions</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Identify users with Administrator role</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Role</span> <span class="o">-eq</span> <span class="s2">&quot;Admin&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Propagate</span>
+</code></pre></div>
 <h2 id="common-built-in-roles">Common Built-in Roles<a class="headerlink" href="#common-built-in-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

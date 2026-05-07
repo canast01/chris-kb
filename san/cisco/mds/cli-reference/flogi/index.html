@@ -789,29 +789,36 @@
 <blockquote>
 <p>Part of the Cisco MDS NX-OS CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Server["Server"]
+    Server --&gt; S0["FLOGI Database"]
+    Server --&gt; S1["FC Name Server"]
+    Server --&gt; S2["Interpreting FLOGI Output"]
+    Server --&gt; S3["Verifying Host-to-Storage Visibility"]
+    Server --&gt; S4["Common Issues"]</code></pre>
 <h2 id="flogi-database">FLOGI Database<a class="headerlink" href="#flogi-database" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All logged-in initiators and targets
-show flogi database
-
-# Filter to a specific VSAN
-show flogi database vsan &lt;id&gt;
-
-# Confirm a specific WWN is logged in
-show flogi database | grep &lt;wwn&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All logged-in initiators and targets</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Filter to a specific VSAN</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm a specific WWN is logged in</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwn&gt;
+</code></pre></div>
 <p>FLOGI (Fabric Login) shows every device that has registered with the fabric. If a host HBA or storage target port is missing here, it has not successfully logged into the fabric.</p>
 <h2 id="fc-name-server">FC Name Server<a class="headerlink" href="#fc-name-server" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All registered devices in the fabric
-show fcns database
-show fcns database vsan &lt;id&gt;
-show fcns database detail         # includes port type, symbolic name
-
-# Name server statistics
-show fcns statistics
-
-# Look up a specific WWN
-show fcns database | grep &lt;wwn&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># All registered devices in the fabric</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>detail<span class="w">         </span><span class="c1"># includes port type, symbolic name</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Name server statistics</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>show<span class="w"> </span>fcns<span class="w"> </span>statistics
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Look up a specific WWN</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwn&gt;
+</code></pre></div>
 <h2 id="interpreting-flogi-output">Interpreting FLOGI Output<a class="headerlink" href="#interpreting-flogi-output" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -844,15 +851,15 @@ show fcns database | grep &lt;wwn&gt;
 </tbody>
 </table>
 <h2 id="verifying-host-to-storage-visibility">Verifying Host-to-Storage Visibility<a class="headerlink" href="#verifying-host-to-storage-visibility" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Find the host HBA WWN in FLOGI
-show flogi database | grep &lt;host_wwn&gt;
-
-# Confirm storage port is in the name server
-show fcns database | grep &lt;storage_wwn&gt;
-
-# Confirm both are in the same VSAN
-show vsan membership
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find the host HBA WWN in FLOGI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host_wwn&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm storage port is in the name server</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;storage_wwn&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Confirm both are in the same VSAN</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

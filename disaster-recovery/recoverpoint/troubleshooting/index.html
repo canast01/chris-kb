@@ -840,11 +840,11 @@
 <h3 id="cg-in-error-state">CG in Error State<a class="headerlink" href="#cg-in-error-state" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms:</strong> CG status shows <code>Error</code> or <code>Communication Problem</code> in the RecoverPoint Management Application (RPMA).</p>
 <p><strong>Diagnostic Steps:</strong></p>
-<pre><code class="language-bash"># Via boxmgmt SSH to RPA
-boxmgmt cg check_cg &lt;CG-name&gt;
-boxmgmt list cg
-boxmgmt system status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt SSH to RPA</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
+</code></pre></div>
 <p><strong>Common causes:</strong></p>
 <table>
 <thead>
@@ -879,9 +879,9 @@ boxmgmt system status
 <hr />
 <h3 id="journal-overflow">Journal Overflow<a class="headerlink" href="#journal-overflow" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms:</strong> CG RPO alarm triggered; journal shows &gt; 90% utilization.</p>
-<pre><code class="language-bash">boxmgmt journal list
-boxmgmt journal status &lt;journal-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>status<span class="w"> </span>&lt;journal-name&gt;
+</code></pre></div>
 <p><strong>Resolution:</strong>
 1. Identify which CG is generating excess writes
 2. Expand journal volume (can be done non-disruptively on most arrays)
@@ -890,14 +890,14 @@ boxmgmt journal status &lt;journal-name&gt;
 <hr />
 <h3 id="splitter-communication-failure">Splitter Communication Failure<a class="headerlink" href="#splitter-communication-failure" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms:</strong> CG shows <code>Splitter connection problem</code>; writes may be blocked or split-brain situation.</p>
-<p><strong>PowerMax hardware splitter:</strong></p>
-<pre><code class="language-bash"># On PowerMax (via Solutions Enabler / SYMCLI)
-symrdf -sid &lt;SID&gt; list
-
-# Check splitter registration in RP
-boxmgmt splitter list
-boxmgmt splitter status &lt;splitter-name&gt;
-</code></pre>
+<p><strong>PowerMax hardware splitter:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On PowerMax (via Solutions Enabler / SYMCLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check splitter registration in RP</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>status<span class="w"> </span>&lt;splitter-name&gt;
+</code></pre></div></p>
 <p><strong>RP4VM software splitter (ESXi):</strong>
 - Check ESXi host kernel module: <code>esxcli software vib list | grep rp</code>
 - Restart splitter on ESXi if needed (requires brief I/O pause — schedule maintenance)</p>
@@ -909,9 +909,9 @@ boxmgmt splitter status &lt;splitter-name&gt;
 2. Check write rate increase (application change or batch job)
 3. Verify RPA cluster load — distribute CGs if one RPA is overloaded
 4. Review journal state for overflow</p>
-<pre><code class="language-bash">boxmgmt cg check_cg &lt;CG-name&gt;
-boxmgmt system performance
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>performance
+</code></pre></div>
 <hr />
 <h3 id="failover-did-not-complete-cleanly">Failover Did Not Complete Cleanly<a class="headerlink" href="#failover-did-not-complete-cleanly" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms:</strong> After a failover, CG is stuck in <code>Failover in progress</code> or production site does not become accessible on DR.</p>
@@ -920,9 +920,9 @@ boxmgmt system performance
 2. Check image access logs in RPMA
 3. If failover is incomplete, use <code>Enable Image Access</code> manually for the desired recovery point
 4. After application validation, use <code>Recover Production</code> to complete the failover</p>
-<pre><code class="language-bash">boxmgmt cg enable_image_access &lt;CG-name&gt; &lt;copy-name&gt;
-boxmgmt cg recover_production &lt;CG-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>&lt;copy-name&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>recover_production<span class="w"> </span>&lt;CG-name&gt;
+</code></pre></div>
 <p><strong>If re-sync is required after failover:</strong>
 - Use <code>Direct Access</code> mode to start recovery, then initiate resync back to production</p>
 <hr />
@@ -959,9 +959,9 @@ boxmgmt cg recover_production &lt;CG-name&gt;
 </tbody>
 </table>
 <h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Via boxmgmt
-boxmgmt support collect_bundle
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via boxmgmt</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>boxmgmt<span class="w"> </span>support<span class="w"> </span>collect_bundle
+</code></pre></div>
 <p>Upload bundle to Dell Support case via https://www.dell.com/support.</p>
 
 

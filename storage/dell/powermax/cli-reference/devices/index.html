@@ -800,66 +800,74 @@
 <blockquote>
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI). Devices are the thin or thick volumes presented to hosts. All production devices on PowerMax should be thin (TDEV).</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Devices["Devices"]
+    Devices --&gt; S0["List Devices"]
+    Devices --&gt; S1["Device Details"]
+    Devices --&gt; S2["Create and Delete Devices"]
+    Devices --&gt; S3["Device Flags and Properties"]
+    Devices --&gt; S4["Performance"]
+    Devices --&gt; S5["Quick Reference"]</code></pre>
 <h2 id="list-devices">List Devices<a class="headerlink" href="#list-devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All devices
-symdev list -sid &lt;sid&gt;
-symdev list -sid &lt;sid&gt; -v
-
-# Assigned (in a masking view) vs unassigned
-symdev list -sid &lt;sid&gt; -assigned
-symdev list -sid &lt;sid&gt; -unassigned
-
-# Mapped to hosts
-symdev list -sid &lt;sid&gt; -mapped
-
-# Thin devices (TDEV) — should be all production volumes
-symdev list -sid &lt;sid&gt; -tdev
-
-# Failed or degraded devices
-symdev list -sid &lt;sid&gt; -failed
-
-# Spare devices
-symdev list -sid &lt;sid&gt; -spare
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All devices</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Assigned (in a masking view) vs unassigned</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-assigned
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-unassigned
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Mapped to hosts</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-mapped
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Thin devices (TDEV) — should be all production volumes</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-tdev
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Failed or degraded devices</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-failed
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Spare devices</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-spare
+</code></pre></div>
 <h2 id="device-details">Device Details<a class="headerlink" href="#device-details" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Full device info (capacity, SG membership, SRDF state, host mapping)
-symdev show &lt;devname&gt; -sid &lt;sid&gt;
-symdev show &lt;devname&gt; -sid &lt;sid&gt; -v
-
-# Show SRDF pair info for a device
-symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep -E &quot;RDF|Pair State|R1|R2&quot;
-
-# Show storage group membership
-symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Storage Group&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Full device info (capacity, SG membership, SRDF state, host mapping)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Show SRDF pair info for a device</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Pair State|R1|R2&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Show storage group membership</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Storage Group&quot;</span>
+</code></pre></div>
 <h2 id="create-and-delete-devices">Create and Delete Devices<a class="headerlink" href="#create-and-delete-devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create thin devices (preferred method — add directly to SG)
-symconfigure -sid &lt;sid&gt; -cmd &quot;create dev count=10, size=100GB, emulation=FBA, config=TDEV, sg=&lt;sg_name&gt;;&quot; commit -noprompt
-
-# Delete a device (must be unmasked and removed from all SGs)
-symdev -sid &lt;sid&gt; not_ready &lt;devname&gt; -noprompt
-symconfigure -sid &lt;sid&gt; -cmd &quot;delete dev &lt;devname&gt;;&quot; commit -noprompt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create thin devices (preferred method — add directly to SG)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;create dev count=10, size=100GB, emulation=FBA, config=TDEV, sg=&lt;sg_name&gt;;&quot;</span><span class="w"> </span>commit<span class="w"> </span>-noprompt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Delete a device (must be unmasked and removed from all SGs)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>not_ready<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-noprompt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;delete dev &lt;devname&gt;;&quot;</span><span class="w"> </span>commit<span class="w"> </span>-noprompt
+</code></pre></div>
 <h2 id="device-flags-and-properties">Device Flags and Properties<a class="headerlink" href="#device-flags-and-properties" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check if device is write-disabled (RDF R2 side in sync)
-symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Write Disable&quot;
-
-# Check thin pool subscription
-symcfg -sid &lt;sid&gt; show -pool -thin -demand | grep -E &quot;Total|Subscribed|Free&quot;
-
-# Check device binding to SRDF group
-symdev list -sid &lt;sid&gt; -rdfg &lt;rdfg_number&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if device is write-disabled (RDF R2 side in sync)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Write Disable&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check thin pool subscription</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-demand<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total|Subscribed|Free&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check device binding to SRDF group</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_number&gt;
+</code></pre></div>
 <h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Device I/O stats (requires Solutions Enabler perf daemon)
-symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt;
-
-# All device stats (output can be large)
-symstat -sid &lt;sid&gt; list -type dev
-
-# Top devices by IOPS
-symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Device I/O stats (requires Solutions Enabler perf daemon)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>dev<span class="w"> </span>-devn<span class="w"> </span>&lt;devname&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># All device stats (output can be large)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>dev
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Top devices by IOPS</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-type<span class="w"> </span>dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

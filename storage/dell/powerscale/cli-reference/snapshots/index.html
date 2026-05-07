@@ -822,48 +822,58 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --&gt; S0["List Snapshots"]
+    Snapshots --&gt; S1["Create a Snapshot"]
+    Snapshots --&gt; S2["Delete a Snapshot"]
+    Snapshots --&gt; S3["Restore Files from a Snapshot"]
+    Snapshots --&gt; S4["Snapshot Schedules"]
+    Snapshots --&gt; S5["Snapshot Aliases"]
+    Snapshots --&gt; S6["Snapshot Space Usage"]
+    Snapshots --&gt; S7["Common Issues"]</code></pre>
 <h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi snapshot snapshots list
-isi snapshot snapshots view &lt;snap_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snap_id&gt;
+</code></pre></div>
 <h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi snapshot snapshots create /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;snap_name&gt;
+</code></pre></div>
 <h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi snapshot snapshots delete &lt;snap_id&gt;
-isi snapshot snapshots delete --path /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snap_id&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;snap_name&gt;
+</code></pre></div>
 <h2 id="restore-files-from-a-snapshot">Restore Files from a Snapshot<a class="headerlink" href="#restore-files-from-a-snapshot" title="Permanent link">&para;</a></h2>
 <p>Snapshots are accessible via the <code>.snapshot</code> directory in the file system:</p>
-<pre><code class="language-bash">ls /ifs/&lt;path&gt;/.snapshot/
-cp -a /ifs/.snapshot/&lt;snap_name&gt;/&lt;path&gt;/* /ifs/&lt;path&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ls<span class="w"> </span>/ifs/&lt;path&gt;/.snapshot/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>-a<span class="w"> </span>/ifs/.snapshot/&lt;snap_name&gt;/&lt;path&gt;/*<span class="w"> </span>/ifs/&lt;path&gt;/
+</code></pre></div>
 <h2 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List schedules
-isi snapshot schedules list
-isi snapshot schedules view &lt;schedule_name&gt;
-
-# Create a schedule (daily at midnight)
-isi snapshot schedules create &lt;schedule_name&gt; /ifs/&lt;path&gt; &quot;every day&quot;
-
-# Modify retention
-isi snapshot schedules modify &lt;schedule_name&gt; --duration 7D
-
-# Delete a schedule
-isi snapshot schedules delete &lt;schedule_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List schedules</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>view<span class="w"> </span>&lt;schedule_name&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Create a schedule (daily at midnight)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span><span class="s2">&quot;every day&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Modify retention</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>&lt;schedule_name&gt;<span class="w"> </span>--duration<span class="w"> </span>7D
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Delete a schedule</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>&lt;schedule_name&gt;
+</code></pre></div>
 <h2 id="snapshot-aliases">Snapshot Aliases<a class="headerlink" href="#snapshot-aliases" title="Permanent link">&para;</a></h2>
 <p>Aliases are pointers to specific snapshots, useful for mounting a "latest" snapshot without changing the mount path:</p>
-<pre><code class="language-bash">isi snapshot aliases list
-isi snapshot aliases create &lt;alias_name&gt; --target &lt;snap_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>aliases<span class="w"> </span>list
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>aliases<span class="w"> </span>create<span class="w"> </span>&lt;alias_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;snap_id&gt;
+</code></pre></div>
 <h2 id="snapshot-space-usage">Snapshot Space Usage<a class="headerlink" href="#snapshot-space-usage" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View space used by snapshots
-isi quota list --type directory --path /ifs/&lt;path&gt;
-
-# Or from snapshot list
-isi snapshot snapshots list --verbose
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View space used by snapshots</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>quota<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>directory<span class="w"> </span>--path<span class="w"> </span>/ifs/&lt;path&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or from snapshot list</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--verbose
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

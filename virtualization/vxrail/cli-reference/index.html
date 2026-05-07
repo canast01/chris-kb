@@ -817,6 +817,14 @@
 <blockquote>
 <p>Part of the <a href="../">VxRail</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    VxRail["VxRail"]
+    VxRail --&gt; S0["Overview"]
+    VxRail --&gt; S1["VxRail Manager REST API"]
+    VxRail --&gt; S2["VxRail Manager SSH CLI"]
+    VxRail --&gt; S3["PowerCLI + VxRail Module"]
+    VxRail --&gt; S4["ESXCLI on VxRail Nodes"]
+    VxRail --&gt; S5["iDRAC / RACADM (Hardware Health)"]</code></pre>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>VxRail management interfaces:</p>
@@ -860,187 +868,187 @@
 <h2 id="vxrail-manager-rest-api">VxRail Manager REST API<a class="headerlink" href="#vxrail-manager-rest-api" title="Permanent link">&para;</a></h2>
 <p>Base URL: <code>https://&lt;vxrail-manager-ip&gt;/rest/vxm</code><br />
 Authentication: HTTP Basic (local <code>mystic</code> or vCenter-joined domain user).</p>
-<pre><code class="language-bash">VXM=&quot;https://vxrail-mgr.example.com/rest/vxm&quot;
-AUTH=&quot;-u mystic:password --insecure&quot;
-
-# Cluster summary
-curl -s $AUTH &quot;$VXM/v1/cluster&quot; | python3 -m json.tool
-
-# Host list (all nodes)
-curl -s $AUTH &quot;$VXM/v1/hosts&quot; | python3 -c &quot;
-import sys, json
-hosts = json.load(sys.stdin)
-for h in hosts:
-    print(f\&quot;{h['id']:40s}  state={h['operational_status']:12s}  health={h['health']}\&quot;)
-&quot;
-
-# Specific host detail
-HOST_SN=&quot;XXXXXXX&quot;
-curl -s $AUTH &quot;$VXM/v1/hosts/${HOST_SN}&quot; | python3 -m json.tool
-
-# System alerts
-curl -s $AUTH &quot;$VXM/v1/system/alerts&quot; | python3 -c &quot;
-import sys, json
-alerts = json.load(sys.stdin)
-for a in alerts:
-    print(f\&quot;{a.get('severity','?'):8s}  {a.get('message_id','?'):20s}  {a.get('message','')}\&quot;)
-&quot;
-
-# Active only
-curl -s $AUTH &quot;$VXM/v1/system/alerts?status=active&quot; | python3 -m json.tool
-
-# System version and build info
-curl -s $AUTH &quot;$VXM/v1/system/cluster-hosts-info&quot; | python3 -m json.tool
-
-# VxRail software version
-curl -s $AUTH &quot;$VXM/v1/system/version&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">VXM</span><span class="o">=</span><span class="s2">&quot;https://vxrail-mgr.example.com/rest/vxm&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-u mystic:password --insecure&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cluster summary</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Host list (all nodes)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/hosts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">hosts = json.load(sys.stdin)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">for h in hosts:</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s2">    print(f\&quot;{h[&#39;id&#39;]:40s}  state={h[&#39;operational_status&#39;]:12s}  health={h[&#39;health&#39;]}\&quot;)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s2">&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Specific host detail</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nv">HOST_SN</span><span class="o">=</span><span class="s2">&quot;XXXXXXX&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/hosts/</span><span class="si">${</span><span class="nv">HOST_SN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># System alerts</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/system/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s2">alerts = json.load(sys.stdin)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s2">for a in alerts:</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s2">    print(f\&quot;{a.get(&#39;severity&#39;,&#39;?&#39;):8s}  {a.get(&#39;message_id&#39;,&#39;?&#39;):20s}  {a.get(&#39;message&#39;,&#39;&#39;)}\&quot;)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="s2">&quot;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Active only</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/system/alerts?status=active&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># System version and build info</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/system/cluster-hosts-info&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># VxRail software version</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/system/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <h3 id="lcm-lifecycle-manager-upgrades">LCM (Lifecycle Manager) Upgrades<a class="headerlink" href="#lcm-lifecycle-manager-upgrades" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check available upgrades
-curl -s $AUTH &quot;$VXM/v1/lcm/upgrade/selection&quot; | python3 -m json.tool
-
-# Get the current LCM status
-curl -s $AUTH &quot;$VXM/v1/lcm/upgrade/status&quot; | python3 -m json.tool
-
-# Initiate an LCM upgrade (replace target_version and vcenter details)
-curl -s -X POST $AUTH &quot;$VXM/v1/lcm/upgrade&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{
-    &quot;bundle_file_locator&quot;: &quot;/tmp/VxRail-7.0.xxx-bundle.zip&quot;,
-    &quot;target_hosts_to_remediate_in_parallel&quot;: 1,
-    &quot;vcenter&quot;: {
-      &quot;ip&quot;: &quot;vcenter.example.com&quot;,
-      &quot;username&quot;: &quot;administrator@vsphere.local&quot;,
-      &quot;password&quot;: &quot;vcPassword&quot;
-    }
-  }' | python3 -m json.tool
-
-# Poll LCM upgrade progress
-curl -s $AUTH &quot;$VXM/v1/lcm/upgrade/status&quot; | python3 -c &quot;
-import sys, json
-d = json.load(sys.stdin)
-print(f\&quot;State: {d.get('state','?')}  Progress: {d.get('progress','?')}%\&quot;)
-print(f\&quot;Step:  {d.get('step','?')}\&quot;)
-&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check available upgrades</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/lcm/upgrade/selection&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Get the current LCM status</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/lcm/upgrade/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Initiate an LCM upgrade (replace target_version and vcenter details)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/lcm/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;bundle_file_locator&quot;: &quot;/tmp/VxRail-7.0.xxx-bundle.zip&quot;,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;target_hosts_to_remediate_in_parallel&quot;: 1,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">    &quot;vcenter&quot;: {</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">      &quot;ip&quot;: &quot;vcenter.example.com&quot;,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">      &quot;username&quot;: &quot;administrator@vsphere.local&quot;,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">      &quot;password&quot;: &quot;vcPassword&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    }</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Poll LCM upgrade progress</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AUTH</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VXM</span><span class="s2">/v1/lcm/upgrade/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s2">print(f\&quot;State: {d.get(&#39;state&#39;,&#39;?&#39;)}  Progress: {d.get(&#39;progress&#39;,&#39;?&#39;)}%\&quot;)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s2">print(f\&quot;Step:  {d.get(&#39;step&#39;,&#39;?&#39;)}\&quot;)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="vxrail-manager-ssh-cli">VxRail Manager SSH CLI<a class="headerlink" href="#vxrail-manager-ssh-cli" title="Permanent link">&para;</a></h2>
 <p>SSH to the VxRail Manager appliance IP as <code>mystic</code>.</p>
-<pre><code class="language-bash">ssh mystic@vxrail-mgr.example.com
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>mystic@vxrail-mgr.example.com
+</code></pre></div>
 <p>Once logged in, run <code>vxm-cli</code> commands:</p>
-<pre><code class="language-bash"># VxRail Manager version and system status
-mystic@vxrail-mgr:~$ /opt/vmware/marvin/bin/vxm-cli system version
-mystic@vxrail-mgr:~$ /opt/vmware/marvin/bin/vxm-cli cluster health
-mystic@vxrail-mgr:~$ /opt/vmware/marvin/bin/vxm-cli node list
-
-# Check all services within VxRail Manager
-mystic@vxrail-mgr:~$ systemctl list-units --type=service --state=running | grep -i vx
-
-# View VxRail Manager logs
-mystic@vxrail-mgr:~$ journalctl -u marvin -f
-mystic@vxrail-mgr:~$ tail -f /var/log/marvin/marvin.log
-
-# Restart VxRail Manager service (if unresponsive)
-mystic@vxrail-mgr:~$ sudo systemctl restart marvin
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VxRail Manager version and system status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mystic@vxrail-mgr:~$<span class="w"> </span>/opt/vmware/marvin/bin/vxm-cli<span class="w"> </span>system<span class="w"> </span>version
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mystic@vxrail-mgr:~$<span class="w"> </span>/opt/vmware/marvin/bin/vxm-cli<span class="w"> </span>cluster<span class="w"> </span>health
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>mystic@vxrail-mgr:~$<span class="w"> </span>/opt/vmware/marvin/bin/vxm-cli<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check all services within VxRail Manager</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mystic@vxrail-mgr:~$<span class="w"> </span>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vx
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># View VxRail Manager logs</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>mystic@vxrail-mgr:~$<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>marvin<span class="w"> </span>-f
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mystic@vxrail-mgr:~$<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/marvin/marvin.log
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Restart VxRail Manager service (if unresponsive)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>mystic@vxrail-mgr:~$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>marvin
+</code></pre></div>
 <hr />
 <h2 id="powercli-vxrail-module">PowerCLI + VxRail Module<a class="headerlink" href="#powercli-vxrail-module" title="Permanent link">&para;</a></h2>
 <p>Install the VxRail PowerCLI module from VMware on the management host.</p>
-<pre><code class="language-powershell"># Install modules
-Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force
-Install-Module -Name VMware.VxRail.PowerCLI -Scope CurrentUser -Force
-
-# Connect to vCenter (VxRail is managed via vCenter)
-Connect-VIServer -Server vcenter.example.com -User administrator@vsphere.local -Password &quot;vcPassword&quot;
-
-# Connect to VxRail Manager
-Connect-VxRailManager -Server vxrail-mgr.example.com -Username mystic -Password &quot;password&quot;
-
-# Cluster info
-Get-VxRailCluster
-
-# All nodes
-Get-VxRailNode
-
-# Specific node
-Get-VxRailNode -Id &quot;XXXXXXX&quot;
-
-# System health
-Get-VxRailSystemHealth
-
-# Available LCM upgrade packages
-Get-VxRailAvailableUpgrade
-
-# Start upgrade
-Update-VxRail -TargetVersion &quot;7.0.xxx&quot; -vCenterCredential $vcCred
-
-# Check upgrade progress
-Get-VxRailUpgradeStatus
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Install modules</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">VMware</span><span class="p">.</span><span class="n">VxRail</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Connect to vCenter (VxRail is managed via vCenter)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-User</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="s2">&quot;vcPassword&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Connect to VxRail Manager</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Connect-VxRailManager</span> <span class="n">-Server</span> <span class="n">vxrail-mgr</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Username</span> <span class="n">mystic</span> <span class="n">-Password</span> <span class="s2">&quot;password&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Cluster info</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-VxRailCluster</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># All nodes</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-VxRailNode</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c"># Specific node</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">Get-VxRailNode</span> <span class="n">-Id</span> <span class="s2">&quot;XXXXXXX&quot;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c"># System health</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="nb">Get-VxRailSystemHealth</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c"># Available LCM upgrade packages</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="nb">Get-VxRailAvailableUpgrade</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="c"># Start upgrade</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="nb">Update-VxRail</span> <span class="n">-TargetVersion</span> <span class="s2">&quot;7.0.xxx&quot;</span> <span class="n">-vCenterCredential</span> <span class="nv">$vcCred</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="c"># Check upgrade progress</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="nb">Get-VxRailUpgradeStatus</span>
+</code></pre></div>
 <hr />
 <h2 id="esxcli-on-vxrail-nodes">ESXCLI on VxRail Nodes<a class="headerlink" href="#esxcli-on-vxrail-nodes" title="Permanent link">&para;</a></h2>
 <p>SSH to the individual ESXi node IP using the root or service account. Standard ESXCLI commands apply.</p>
-<pre><code class="language-bash">ssh root@vxrail-node01.example.com
-
-# ESXi version
-esxcli system version get
-
-# NIC list and link state
-esxcli network nic list
-
-# Storage adapter and device list
-esxcli storage core adapter list
-esxcli storage core device list
-
-# Check vSAN disk health (on vSAN cluster)
-esxcli vsan storage list
-
-# Active VMs on this host
-esxcli vm process list
-
-# Host memory and CPU summary
-esxcli hardware memory get
-esxcli hardware cpu global get
-
-# Running services
-esxcli system process list | head -30
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>root@vxrail-node01.example.com
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># ESXi version</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># NIC list and link state</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Storage adapter and device list</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Check vSAN disk health (on vSAN cluster)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Active VMs on this host</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Host memory and CPU summary</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>global<span class="w"> </span>get
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Running services</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+</code></pre></div>
 <hr />
 <h2 id="idrac-racadm-hardware-health">iDRAC / RACADM (Hardware Health)<a class="headerlink" href="#idrac-racadm-hardware-health" title="Permanent link">&para;</a></h2>
 <p>Accessible via SSH to the iDRAC IP or in-band via <code>racadm</code> on the ESXi host.</p>
-<pre><code class="language-bash"># SSH to iDRAC
-ssh root@idrac-node01.example.com
-
-# System info (model, service tag, BIOS, OS)
-racadm getsysinfo
-
-# Hardware inventory
-racadm hwinventory
-
-# Current sensor readings (fans, PSU, temps)
-racadm getsensorinfo
-
-# All chassis components
-racadm chassisname
-racadm getled
-
-# Storage controller and disk status
-racadm storage get controllers
-racadm storage get pdisks -o
-
-# RAID virtual disk status
-racadm storage get vdisks -o
-
-# SEL (System Event Log) — last 20 entries
-racadm getsel --count 20
-
-# Firmware versions for all components
-racadm getversion -all
-
-# In-band from ESXi host (requires Dell OpenManage)
-esxcli system namespace list | grep dell
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to iDRAC</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>root@idrac-node01.example.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># System info (model, service tag, BIOS, OS)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>racadm<span class="w"> </span>getsysinfo
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Hardware inventory</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>racadm<span class="w"> </span>hwinventory
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Current sensor readings (fans, PSU, temps)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>racadm<span class="w"> </span>getsensorinfo
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># All chassis components</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>racadm<span class="w"> </span>chassisname
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>racadm<span class="w"> </span>getled
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Storage controller and disk status</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>controllers
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>pdisks<span class="w"> </span>-o
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># RAID virtual disk status</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>racadm<span class="w"> </span>storage<span class="w"> </span>get<span class="w"> </span>vdisks<span class="w"> </span>-o
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># SEL (System Event Log) — last 20 entries</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>racadm<span class="w"> </span>getsel<span class="w"> </span>--count<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="c1"># Firmware versions for all components</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>racadm<span class="w"> </span>getversion<span class="w"> </span>-all
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="c1"># In-band from ESXi host (requires Dell OpenManage)</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>esxcli<span class="w"> </span>system<span class="w"> </span>namespace<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dell
+</code></pre></div>
 
 
 

@@ -802,45 +802,70 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Confirm all scheduled Python automation jobs ran successfully in the last 24 hours — check cron logs, output files, or email alert summaries</li>
-<li>[ ] Review any error output or non-zero exit codes from yesterday's runs (check <code>/var/log/cron</code>, job-specific log files, or email delivery)</li>
-<li>[ ] Confirm API tokens used by production scripts have not expired (check token expiry dates in the secrets store or config files)</li>
-<li>[ ] Review any scripts that interact with external APIs — confirm the API endpoints are reachable and returning expected responses</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Confirm all scheduled Python automation jobs ran successfully in t</td>
+<td></td>
+<td>check cron logs, output files, or email alert summaries</td>
+</tr>
+<tr>
+<td>[ ] Review any error output or non-zero exit codes from yesterday's ru</td>
+<td><code>/var/log/cron</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm API tokens used by production scripts have not expired (ch</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review any scripts that interact with external APIs</td>
+<td></td>
+<td>confirm the API endpoints are reachable and returning expected responses</td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check Python version installed on the automation host
-python3 --version
-
-# Confirm the virtual environment is intact (activate and check)
-source /opt/automation/venv/bin/activate
-python3 -m pip check
-
-# Verify critical packages are importable
-python3 -c &quot;import boto3; import requests; import paramiko; print('Core imports OK')&quot;
-
-# Check for packages with known security vulnerabilities
-pip audit
-
-# Check connectivity from the automation host to target APIs (example: Dell API Gateway)
-curl -s -o /dev/null -w &quot;%{http_code}&quot; https://apigw.dell.com/cloudiq/v1/health
-
-# Review last 50 lines of the cron log to check for job failures
-grep CRON /var/log/syslog | tail -50
-
-# Check exit codes of recent job runs (if using a log wrapper)
-grep -E &quot;(ERROR|exit code [^0]|Traceback)&quot; /var/log/automation/*.log | tail -30
-
-# Check for outdated packages (run monthly)
-pip list --outdated
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Python version installed on the automation host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm the virtual environment is intact (activate and check)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>check
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Verify critical packages are importable</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; import requests; import paramiko; print(&#39;Core imports OK&#39;)&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check for packages with known security vulnerabilities</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pip<span class="w"> </span>audit
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Check connectivity from the automation host to target APIs (example: Dell API Gateway)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://apigw.dell.com/cloudiq/v1/health
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Review last 50 lines of the cron log to check for job failures</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Check exit codes of recent job runs (if using a log wrapper)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(ERROR|exit code [^0]|Traceback)&quot;</span><span class="w"> </span>/var/log/automation/*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Check for outdated packages (run monthly)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>pip<span class="w"> </span>list<span class="w"> </span>--outdated
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] The change has been tested end-to-end in a non-production environment before touching the production script</li>
 <li>[ ] The current cron schedule for the affected script has been noted (run <code>crontab -l</code> on the automation user)</li>
 <li>[ ] A backup of the existing production script has been taken:
-  <code>bash
-  cp /opt/automation/scripts/my_script.py /opt/automation/scripts/my_script.py.bak.$(date +%Y%m%d)</code></li>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cp<span class="w"> </span>/opt/automation/scripts/my_script.py<span class="w"> </span>/opt/automation/scripts/my_script.py.bak.<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+</code></pre></div></li>
 <li>[ ] API tokens used by the script have been confirmed current and not near expiry</li>
 <li>[ ] Connectivity from the automation host to all target APIs/systems has been confirmed</li>
 <li>[ ] If the script writes output files or sends alerts, the output destinations have been confirmed accessible</li>
@@ -890,9 +915,9 @@ pip list --outdated
 <p><strong>On alert or issue:</strong>
 1. Identify the failing script and the last successful run time — check cron logs (<code>grep CRON /var/log/syslog</code>) and script log files
 2. Reproduce the failure manually in a test shell to get the full traceback:
-   <code>bash
-   source /opt/automation/venv/bin/activate
-   python3 /opt/automation/scripts/failing_script.py 2&gt;&amp;1 | tee /tmp/debug_run.log</code>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
+</code></pre></div>
 3. Check the error type in the traceback to determine the root cause category
 4. Apply the appropriate fix from the triage table below
 5. After fixing, run the script manually once and confirm successful output before re-enabling the cron job</p>
@@ -946,27 +971,27 @@ pip list --outdated
 <p><strong>Before a maintenance window that affects automation targets (e.g., storage array, API endpoint):</strong></p>
 <ol>
 <li>Identify all scripts that interact with the target system:
-   <code>bash
-   grep -r "&lt;target_hostname_or_api&gt;" /opt/automation/scripts/ --include="*.py" -l</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;&lt;target_hostname_or_api&gt;&quot;</span><span class="w"> </span>/opt/automation/scripts/<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-l
+</code></pre></div></li>
 <li>Comment out or temporarily disable the affected cron jobs:
-   <code>bash
-   crontab -e
-   # Add a # before the relevant cron entries</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>crontab<span class="w"> </span>-e
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Add a # before the relevant cron entries</span>
+</code></pre></div></li>
 <li>Confirm the jobs are disabled by verifying no scheduled runs will occur during the window</li>
 <li>Perform the maintenance window on the target system</li>
 <li>Re-enable the cron jobs after the window:
-   <code>bash
-   crontab -e
-   # Remove the # from the relevant cron entries</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>crontab<span class="w"> </span>-e
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Remove the # from the relevant cron entries</span>
+</code></pre></div></li>
 <li>Run the script manually once to confirm it completes successfully against the restored target</li>
 <li>Monitor the output of the first two scheduled runs after re-enabling</li>
 </ol>
 <h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Script runs manually without errors:
-  <code>bash
-  source /opt/automation/venv/bin/activate
-  python3 /opt/automation/scripts/modified_script.py</code></li>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>python3<span class="w"> </span>/opt/automation/scripts/modified_script.py
+</code></pre></div></li>
 <li>[ ] Output matches expected format and content</li>
 <li>[ ] No new errors in the script log file after the manual run</li>
 <li>[ ] Cron job re-enabled and confirmed active (<code>crontab -l</code>)</li>

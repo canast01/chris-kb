@@ -794,17 +794,17 @@
 - Secret key: associated secret from key creation
 - Region: ECS does not enforce AWS regions; set to any value (e.g., <code>us-east-1</code>) in the client config</p>
 <p><strong>AWS CLI configuration:</strong></p>
-<pre><code class="language-bash">aws configure set aws_access_key_id &lt;ecs_access_key&gt;
-aws configure set aws_secret_access_key &lt;ecs_secret_key&gt;
-aws configure set default.region us-east-1
-
-# Use --endpoint-url and --no-verify-ssl (if using self-signed cert)
-aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt; --no-verify-ssl
-
-# Upload a file
-aws s3 cp localfile.tar.gz s3://&lt;bucket&gt;/ \
-  --endpoint-url https://&lt;ecs-endpoint&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>aws_access_key_id<span class="w"> </span>&lt;ecs_access_key&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>aws_secret_access_key<span class="w"> </span>&lt;ecs_secret_key&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>default.region<span class="w"> </span>us-east-1
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Use --endpoint-url and --no-verify-ssl (if using self-signed cert)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;<span class="w"> </span>--no-verify-ssl
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Upload a file</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>localfile.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;
+</code></pre></div>
 <p>ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (<code>&lt;bucket&gt;.&lt;ecs-endpoint&gt;</code>) requires DNS configuration; path-style (<code>&lt;ecs-endpoint&gt;/&lt;bucket&gt;</code>) works without DNS changes.</p>
 <h2 id="veeam-object-repository">Veeam Object Repository<a class="headerlink" href="#veeam-object-repository" title="Permanent link">&para;</a></h2>
 <p>ECS is a certified S3-compatible target for Veeam Backup &amp; Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).</p>
@@ -827,11 +827,11 @@ aws s3 cp localfile.tar.gz s3://&lt;bucket&gt;/ \
 </ul>
 <h2 id="metadata-search-integration">Metadata Search Integration<a class="headerlink" href="#metadata-search-integration" title="Permanent link">&para;</a></h2>
 <p>ECS supports custom object metadata tagging and a Metadata Search API (based on Elasticsearch) that allows querying objects by custom key-value tags across a namespace.</p>
-<pre><code class="language-bash"># Search for objects with a custom metadata tag (requires metadata search enabled on namespace)
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: $TOKEN&quot; \
-  &quot;https://&lt;ecs-node&gt;:4443/object/namespaces/&lt;namespace&gt;/buckets/&lt;bucket&gt;/query?query=&lt;key&gt;%3D&lt;value&gt;&quot; \
-  | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Search for objects with a custom metadata tag (requires metadata search enabled on namespace)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/object/namespaces/&lt;namespace&gt;/buckets/&lt;bucket&gt;/query?query=&lt;key&gt;%3D&lt;value&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <p>Enable metadata search per namespace in ECS Portal → Namespace → Edit. Metadata search requires additional indexer capacity; plan ECS node sizing accordingly.</p>
 <h2 id="external-authentication-ldapad">External Authentication (LDAP/AD)<a class="headerlink" href="#external-authentication-ldapad" title="Permanent link">&para;</a></h2>
 <p>ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level access. Configure under ECS Portal → Namespace → Edit → Authentication Domain. Object users with S3 keys always authenticate locally; LDAP integration applies to management console users.</p>

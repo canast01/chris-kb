@@ -822,60 +822,70 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    NFS_Exports["NFS Exports"]
+    NFS_Exports --&gt; S0["List and View Exports"]
+    NFS_Exports --&gt; S1["Create an Export"]
+    NFS_Exports --&gt; S2["Modify an Export"]
+    NFS_Exports --&gt; S3["Delete an Export"]
+    NFS_Exports --&gt; S4["Reload / Verify"]
+    NFS_Exports --&gt; S5["Client Access Levels"]
+    NFS_Exports --&gt; S6["NFS Settings"]
+    NFS_Exports --&gt; S7["Troubleshooting"]</code></pre>
 <h2 id="list-and-view-exports">List and View Exports<a class="headerlink" href="#list-and-view-exports" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all NFS exports (export ID, path, clients)
-isi nfs exports list
-
-# Specific export detail
-isi nfs exports view &lt;export_id&gt;
-
-# Exports in a specific access zone
-isi nfs exports list --zone &lt;zone_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all NFS exports (export ID, path, clients)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Specific export detail</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Exports in a specific access zone</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+</code></pre></div>
 <h2 id="create-an-export">Create an Export<a class="headerlink" href="#create-an-export" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Basic export — read-write for a CIDR, root access for specific host
-isi nfs exports create /ifs/&lt;path&gt; \
-    --clients &lt;ip_or_cidr&gt; \
-    --read-write-clients &lt;ip_or_cidr&gt; \
-    --root-clients &lt;root_client_ip&gt;
-
-# Export with access zone
-isi nfs exports create /ifs/data/dept1 \
-    --clients 10.0.1.0/24 \
-    --read-write-clients 10.0.1.0/24 \
-    --zone DeptZone1
-
-# Read-only export
-isi nfs exports create /ifs/archive \
-    --clients 10.0.0.0/8 \
-    --read-only-clients 10.0.0.0/8
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Basic export — read-write for a CIDR, root access for specific host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--clients<span class="w"> </span>&lt;ip_or_cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--read-write-clients<span class="w"> </span>&lt;ip_or_cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--root-clients<span class="w"> </span>&lt;root_client_ip&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Export with access zone</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/data/dept1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--read-write-clients<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--zone<span class="w"> </span>DeptZone1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Read-only export</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>create<span class="w"> </span>/ifs/archive<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--clients<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>--read-only-clients<span class="w"> </span><span class="m">10</span>.0.0.0/8
+</code></pre></div>
 <h2 id="modify-an-export">Modify an Export<a class="headerlink" href="#modify-an-export" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a root client to an existing export
-isi nfs exports modify &lt;export_id&gt; --add-root-clients &lt;new_ip&gt;
-
-# Add a read-write client
-isi nfs exports modify &lt;export_id&gt; --add-read-write-clients &lt;new_ip&gt;
-
-# Remove a client
-isi nfs exports modify &lt;export_id&gt; --remove-clients &lt;old_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add a root client to an existing export</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--add-root-clients<span class="w"> </span>&lt;new_ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add a read-write client</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--add-read-write-clients<span class="w"> </span>&lt;new_ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove a client</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--remove-clients<span class="w"> </span>&lt;old_ip&gt;
+</code></pre></div>
 <h2 id="delete-an-export">Delete an Export<a class="headerlink" href="#delete-an-export" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi nfs exports delete &lt;export_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>delete<span class="w"> </span>&lt;export_id&gt;
+</code></pre></div>
 <h2 id="reload-verify">Reload / Verify<a class="headerlink" href="#reload-verify" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check exports for configuration errors
-isi nfs exports check
-
-# Reload NFS service (applies config changes)
-isi services nfs reload
-
-# View global NFS settings
-isi nfs settings global view
-
-# View default export settings
-isi nfs settings export view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check exports for configuration errors</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>check
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Reload NFS service (applies config changes)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>services<span class="w"> </span>nfs<span class="w"> </span>reload
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># View global NFS settings</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># View default export settings</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>view
+</code></pre></div>
 <h2 id="client-access-levels">Client Access Levels<a class="headerlink" href="#client-access-levels" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -904,12 +914,12 @@ isi nfs settings export view
 </tbody>
 </table>
 <h2 id="nfs-settings">NFS Settings<a class="headerlink" href="#nfs-settings" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NFS v3/v4 protocol settings
-isi nfs settings global view | grep -E &quot;nfs3|nfs4|nfsv4&quot;
-
-# Modify global NFS settings
-isi nfs settings global modify --nfsv4-enabled true --nfsv3-enabled true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># NFS v3/v4 protocol settings</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;nfs3|nfs4|nfsv4&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Modify global NFS settings</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--nfsv4-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--nfsv3-enabled<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

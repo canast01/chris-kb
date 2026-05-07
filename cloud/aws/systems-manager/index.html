@@ -850,79 +850,79 @@
 </table>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>SSM Agent must be installed and running on managed instances (pre-installed on Amazon Linux 2/2023, Windows Server AMIs).</p>
-<pre><code class="language-bash"># Check SSM agent status
-systemctl status amazon-ssm-agent           # Linux
-Get-Service AmazonSSMAgent                  # Windows
-
-# Verify instance is registered in SSM
-aws ssm describe-instance-information \
-  --query 'InstanceInformationList[*].{ID:InstanceId,OS:PlatformType,Version:PlatformVersion,Ping:PingStatus}' \
-  --output table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check SSM agent status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>amazon-ssm-agent<span class="w">           </span><span class="c1"># Linux</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Get-Service<span class="w"> </span>AmazonSSMAgent<span class="w">                  </span><span class="c1"># Windows</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify instance is registered in SSM</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-information<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceInformationList[*].{ID:InstanceId,OS:PlatformType,Version:PlatformVersion,Ping:PingStatus}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
 <h2 id="session-manager-ssh-less-access">Session Manager (SSH-less access)<a class="headerlink" href="#session-manager-ssh-less-access" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Start interactive session (requires AWS CLI + session-manager-plugin)
-aws ssm start-session --target &lt;instance-id&gt;
-
-# Port forwarding (e.g., RDS through bastion without opening SGs)
-aws ssm start-session \
-  --target &lt;instance-id&gt; \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{&quot;host&quot;:[&quot;&lt;rds-endpoint&gt;&quot;],&quot;portNumber&quot;:[&quot;5432&quot;],&quot;localPortNumber&quot;:[&quot;5432&quot;]}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Start interactive session (requires AWS CLI + session-manager-plugin)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Port forwarding (e.g., RDS through bastion without opening SGs)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--target<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--document-name<span class="w"> </span>AWS-StartPortForwardingSessionToRemoteHost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="s1">&#39;{&quot;host&quot;:[&quot;&lt;rds-endpoint&gt;&quot;],&quot;portNumber&quot;:[&quot;5432&quot;],&quot;localPortNumber&quot;:[&quot;5432&quot;]}&#39;</span>
+</code></pre></div>
 <h2 id="run-command">Run Command<a class="headerlink" href="#run-command" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Run a shell command on multiple instances
-aws ssm send-command \
-  --instance-ids &lt;i-id1&gt; &lt;i-id2&gt; \
-  --document-name &quot;AWS-RunShellScript&quot; \
-  --parameters commands=&quot;df -h&quot; \
-  --query &quot;Command.CommandId&quot;
-
-# Check command output
-aws ssm get-command-invocation \
-  --command-id &lt;cmd-id&gt; \
-  --instance-id &lt;i-id&gt; \
-  --query '{Status:Status,Output:StandardOutputContent}'
-
-# Run on all instances with a tag
-aws ssm send-command \
-  --targets Key=tag:Env,Values=prod \
-  --document-name &quot;AWS-RunShellScript&quot; \
-  --parameters commands=&quot;systemctl status nginx&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run a shell command on multiple instances</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;i-id1&gt;<span class="w"> </span>&lt;i-id2&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;df -h&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;Command.CommandId&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check command output</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-command-invocation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--command-id<span class="w"> </span>&lt;cmd-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;i-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{Status:Status,Output:StandardOutputContent}&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Run on all instances with a tag</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--targets<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>tag:Env,Values<span class="o">=</span>prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;systemctl status nginx&quot;</span>
+</code></pre></div>
 <h2 id="parameter-store">Parameter Store<a class="headerlink" href="#parameter-store" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Put a parameter
-aws ssm put-parameter \
-  --name &quot;/prod/db/password&quot; \
-  --value &quot;secret-value&quot; \
-  --type SecureString \
-  --key-id alias/aws/ssm
-
-# Get a parameter value
-aws ssm get-parameter \
-  --name &quot;/prod/db/password&quot; \
-  --with-decryption \
-  --query 'Parameter.Value' \
-  --output text
-
-# List parameters by path
-aws ssm get-parameters-by-path \
-  --path &quot;/prod/&quot; \
-  --recursive \
-  --query 'Parameters[*].{Name:Name,Type:Type}' \
-  --output table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Put a parameter</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>put-parameter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;/prod/db/password&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--value<span class="w"> </span><span class="s2">&quot;secret-value&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--type<span class="w"> </span>SecureString<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--key-id<span class="w"> </span>alias/aws/ssm
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Get a parameter value</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;/prod/db/password&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--with-decryption<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Parameter.Value&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--output<span class="w"> </span>text
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># List parameters by path</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameters-by-path<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--path<span class="w"> </span><span class="s2">&quot;/prod/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--recursive<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Parameters[*].{Name:Name,Type:Type}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
 <h2 id="patch-manager">Patch Manager<a class="headerlink" href="#patch-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List patch compliance for managed instances
-aws ssm describe-instance-patch-states \
-  --instance-ids &lt;i-id&gt; \
-  --query 'InstancePatchStates[*].{ID:InstanceId,Missing:MissingCount,Critical:CriticalNonCompliantCount,Failed:FailedCount}'
-
-# Trigger immediate patching
-aws ssm send-command \
-  --instance-ids &lt;i-id&gt; \
-  --document-name &quot;AWS-RunPatchBaseline&quot; \
-  --parameters Operation=Install
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List patch compliance for managed instances</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>describe-instance-patch-states<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;i-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstancePatchStates[*].{ID:InstanceId,Missing:MissingCount,Critical:CriticalNonCompliantCount,Failed:FailedCount}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Trigger immediate patching</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;i-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunPatchBaseline&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">Operation</span><span class="o">=</span>Install
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

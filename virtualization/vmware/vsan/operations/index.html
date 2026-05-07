@@ -802,16 +802,57 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>Get-VsanClusterHealthSummary</code> — all health tests should return green; any yellow or red requires investigation</li>
-<li>[ ] Check vSAN object health in vCenter → vSAN → Monitor → Virtual Objects — flag any inaccessible or degraded objects</li>
-<li>[ ] Run <code>Get-VsanDiskGroup</code> — all disk groups healthy, no drives in evacuating or absent state</li>
-<li>[ ] vCenter → vSAN → Monitor → Resyncing Objects — confirm no resync is in progress from previous failure or change</li>
-<li>[ ] Check capacity per host: flag any disk group exceeding 70% used capacity in vCenter → vSAN → Monitor → Capacity</li>
-<li>[ ] Verify vSAN witness appliance is reachable (2-node or stretched cluster): check witness host connection state</li>
-<li>[ ] Review vSAN performance dashboard for latency or throughput anomalies over the last 24 hours</li>
-<li>[ ] Confirm vSAN Health Service is running and the health check data is current</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Run <code>Get-VsanClusterHealthSummary</code></td>
+<td><code>Get-VsanClusterHealthSummary</code></td>
+<td>all health tests should return green; any yellow or red requires investigation</td>
+</tr>
+<tr>
+<td>[ ] Check vSAN object health in vCenter → vSAN → Monitor → Virtual Obj</td>
+<td></td>
+<td>flag any inaccessible or degraded objects</td>
+</tr>
+<tr>
+<td>[ ] Run <code>Get-VsanDiskGroup</code></td>
+<td><code>Get-VsanDiskGroup</code></td>
+<td>all disk groups healthy, no drives in evacuating or absent state</td>
+</tr>
+<tr>
+<td>[ ] vCenter → vSAN → Monitor → Resyncing Objects</td>
+<td></td>
+<td>confirm no resync is in progress from previous failure or change</td>
+</tr>
+<tr>
+<td>[ ] Check capacity per host</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Verify vSAN witness appliance is reachable (2-node or stretched cluster)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review vSAN performance dashboard for latency or throughput anomal</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm vSAN Health Service is running and the health check data i</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All vSAN health tests green: <code>Get-VsanClusterHealthSummary</code></li>
@@ -823,15 +864,15 @@
 <li>[ ] No performance anomalies in vSAN performance dashboard</li>
 <li>[ ] vSAN Health Service up to date</li>
 </ul>
-<pre><code class="language-powershell"># PowerCLI vSAN health sweep
-Get-VsanClusterHealthSummary -Cluster (Get-Cluster) | Select -ExpandProperty Groups | Select GroupName,GroupHealth
-
-Get-VsanDiskGroup | Select VMHost,State,@{N='DiskCount';E={$_.Disks.Count}}
-
-# Check for degraded/inaccessible objects
-Get-VsanView -Id &quot;VsanObjectSystem-vsan-object-system&quot; |
-  ForEach-Object { $_.QueryVsanObjectUuidsByFilter($null, 100, 0) }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># PowerCLI vSAN health sweep</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">Groups</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">GroupName</span><span class="p">,</span><span class="n">GroupHealth</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Get-VsanDiskGroup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">VMHost</span><span class="p">,</span><span class="n">State</span><span class="p">,@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;DiskCount&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Disks</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Check for degraded/inaccessible objects</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanObjectSystem-vsan-object-system&quot;</span> <span class="p">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">QueryVsanObjectUuidsByFilter</span><span class="p">(</span><span class="nv">$null</span><span class="p">,</span> <span class="n">100</span><span class="p">,</span> <span class="n">0</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All vSAN health tests green before any host maintenance: <code>Get-VsanClusterHealthSummary</code></li>

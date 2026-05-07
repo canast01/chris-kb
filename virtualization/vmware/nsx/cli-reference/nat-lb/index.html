@@ -812,20 +812,26 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Balancing["Balancing"]
+    Balancing --&gt; S0["NAT"]
+    Balancing --&gt; S1["Load Balancer"]
+    Balancing --&gt; S2["Troubleshooting NAT"]
+    Balancing --&gt; S3["Troubleshooting Load Balancer"]</code></pre>
 <h2 id="nat">NAT<a class="headerlink" href="#nat" title="Permanent link">&para;</a></h2>
 <p>NAT rules are configured on Tier-0 or Tier-1 gateways. CLI inspection runs on the Edge node.</p>
-<pre><code class="language-bash"># SSH to Edge node, enter the gateway VRF
-vrf &lt;lr_id&gt;
-
-# List all NAT rules
-get nat rules
-
-# NAT rule hit statistics
-get nat rule stats
-
-# SNAT translations active
-get nat translations
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to Edge node, enter the gateway VRF</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all NAT rules</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>get<span class="w"> </span>nat<span class="w"> </span>rules
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># NAT rule hit statistics</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>nat<span class="w"> </span>rule<span class="w"> </span>stats
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># SNAT translations active</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>get<span class="w"> </span>nat<span class="w"> </span>translations
+</code></pre></div>
 <h3 id="nat-rule-output-fields">NAT Rule Output Fields<a class="headerlink" href="#nat-rule-output-fields" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -863,21 +869,21 @@ get nat translations
 </table>
 <h2 id="load-balancer">Load Balancer<a class="headerlink" href="#load-balancer" title="Permanent link">&para;</a></h2>
 <p>NSX-T load balancer runs on the Edge node. All commands below run in the Edge CLI (not VRF context).</p>
-<pre><code class="language-bash"># Overall load balancer status
-get load-balancer status
-
-# List virtual servers (VIPs)
-get load-balancer virtual-servers
-
-# Server pools and member state
-get load-balancer pools
-
-# Specific pool detail (member health)
-get load-balancer pool &lt;pool_id&gt;
-
-# Active connections per virtual server
-get load-balancer virtual-server &lt;vs_id&gt; stats
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Overall load balancer status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List virtual servers (VIPs)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>virtual-servers
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Server pools and member state</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>pools
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Specific pool detail (member health)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>pool<span class="w"> </span>&lt;pool_id&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Active connections per virtual server</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>virtual-server<span class="w"> </span>&lt;vs_id&gt;<span class="w"> </span>stats
+</code></pre></div>
 <h3 id="load-balancer-status-values">Load Balancer Status Values<a class="headerlink" href="#load-balancer-status-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -910,27 +916,27 @@ get load-balancer virtual-server &lt;vs_id&gt; stats
 </tbody>
 </table>
 <h2 id="troubleshooting-nat">Troubleshooting NAT<a class="headerlink" href="#troubleshooting-nat" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm rule exists for expected source
-get nat rules | grep &lt;source_ip&gt;
-
-# Check translation table for active SNAT flows
-get nat translations | grep &lt;internal_ip&gt;
-
-# Verify interface has correct uplink for NAT
-get interfaces
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm rule exists for expected source</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>nat<span class="w"> </span>rules<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;source_ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check translation table for active SNAT flows</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>nat<span class="w"> </span>translations<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;internal_ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify interface has correct uplink for NAT</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>interfaces
+</code></pre></div>
 <h2 id="troubleshooting-load-balancer">Troubleshooting Load Balancer<a class="headerlink" href="#troubleshooting-load-balancer" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Are pool members passing health checks?
-get load-balancer pools
-
-# Member is DOWN — check:
-# 1. Security group / DFW allows health check port
-# 2. Application listening on expected port
-# 3. Pool monitor type matches application (HTTP vs TCP)
-
-# Check Edge CPU — LB is Edge-hosted, CPU bound under high load
-get service dataplane stats
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Are pool members passing health checks?</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>pools
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Member is DOWN — check:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 1. Security group / DFW allows health check port</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># 2. Application listening on expected port</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. Pool monitor type matches application (HTTP vs TCP)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check Edge CPU — LB is Edge-hosted, CPU bound under high load</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w"> </span>stats
+</code></pre></div>
 
 
 

@@ -867,6 +867,17 @@
 <blockquote>
 <p>SSH to the ESXi host management IP. Enable SSH via vSphere Client → Host → Actions → Services → Enable Secure Shell (SSH), or via the ESXi DCUI console.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    VMware_ESXi["VMware ESXi"]
+    VMware_ESXi --&gt; S0["System, Services and Maintenance"]
+    VMware_ESXi --&gt; S1["Network"]
+    VMware_ESXi --&gt; S2["Firewall and NTP"]
+    VMware_ESXi --&gt; S3["Storage — Devices and Paths"]
+    VMware_ESXi --&gt; S4["SAN Connectivity (iSCSI / FC)"]
+    VMware_ESXi --&gt; S5["Datastores and VMDK"]
+    VMware_ESXi --&gt; S6["VM Management (vim-cmd)"]
+    VMware_ESXi --&gt; S7["Hardware and Health"]
+    VMware_ESXi --&gt; S8["Performance and Troubleshooting"]</code></pre>
 <hr />
 <div class="kb-grid kb-grid-1">
 
@@ -888,360 +899,360 @@
 </div>
 <h2 id="system-services-maintenance">System, Services &amp; Maintenance<a class="headerlink" href="#system-services-maintenance" title="Permanent link">&para;</a></h2>
 <p>Get host identity, manage local accounts, control services, and put the host into maintenance mode. These are the first commands to run when connecting to a host you're unfamiliar with.</p>
-<pre><code class="language-bash"># Version and identity
-esxcli system version get
-esxcli system hostname get
-esxcli system hostname set --host &lt;hostname&gt; --domain &lt;domain&gt;
-esxcli system uuid get
-esxcli system uptime get
-esxcli system time get
-
-# Accounts and permissions
-esxcli system account list
-esxcli system account add -i &lt;username&gt; -p &lt;password&gt; -d &quot;Description&quot;
-esxcli system account remove -i &lt;username&gt;
-esxcli system permission list
-esxcli system permission set -i &lt;username&gt; -r Admin
-
-# Kernel modules
-esxcli system module list
-esxcli system module get -m &lt;module&gt;
-
-# Syslog
-esxcli system syslog config get
-esxcli system syslog config set --loghost udp://&lt;ip&gt;:514
-esxcli system syslog reload
-
-# Restart management agents (fixes vCenter connectivity issues)
-/etc/init.d/hostd restart
-/etc/init.d/vpxa restart
-/etc/init.d/ntpd restart
-/etc/init.d/ssh start
-/etc/init.d/ssh stop
-
-# All services
-services.sh restart
-services.sh status
-
-# Check host version
-vmware -v
-vmware -l
-
-# Uptime
-uptime
-
-# Maintenance mode
-esxcli system maintenanceMode get
-esxcli system maintenanceMode set --enabled true
-esxcli system maintenanceMode set --enabled false
-
-# Via vim-cmd
-vim-cmd hostsvc/maintenance_mode_enter
-vim-cmd hostsvc/maintenance_mode_exit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Version and identity</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--domain<span class="w"> </span>&lt;domain&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>uuid<span class="w"> </span>get
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>uptime<span class="w"> </span>get
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Accounts and permissions</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;Description&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span>list
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>Admin
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Kernel modules</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>list
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>get<span class="w"> </span>-m<span class="w"> </span>&lt;module&gt;
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Syslog</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="w"> </span>udp://&lt;ip&gt;:514
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Restart management agents (fixes vCenter connectivity issues)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>/etc/init.d/ntpd<span class="w"> </span>restart
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>/etc/init.d/ssh<span class="w"> </span>start
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>/etc/init.d/ssh<span class="w"> </span>stop
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># All services</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>services.sh<span class="w"> </span>restart
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>services.sh<span class="w"> </span>status
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Check host version</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>vmware<span class="w"> </span>-v
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>vmware<span class="w"> </span>-l
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="c1"># Uptime</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>uptime
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="c1"># Maintenance mode</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span>get
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="c1"># Via vim-cmd</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>vim-cmd<span class="w"> </span>hostsvc/maintenance_mode_enter
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>vim-cmd<span class="w"> </span>hostsvc/maintenance_mode_exit
+</code></pre></div>
 <hr />
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <p>Manage physical NICs, standard vSwitches, port groups, VMkernel interfaces, routing, and DNS. Most networking changes require caution — misconfiguring the management interface can disconnect you from the host.</p>
-<pre><code class="language-bash"># Physical NICs
-esxcli network nic list
-esxcli network nic get -n vmnic0
-esxcli network nic stats get -n vmnic0
-esxcli network nic up -n vmnic0
-esxcli network nic down -n vmnic0
-
-# vSwitches
-esxcli network vswitch standard list
-esxcli network vswitch standard add -v vSwitch1
-esxcli network vswitch standard remove -v vSwitch1
-esxcli network vswitch standard uplink add -v vSwitch0 -u vmnic1
-esxcli network vswitch standard uplink remove -v vSwitch0 -u vmnic1
-
-# Port groups
-esxcli network vswitch standard portgroup list
-esxcli network vswitch standard portgroup add -v vSwitch0 -p &quot;VM Network&quot;
-esxcli network vswitch standard portgroup remove -v vSwitch0 -p &quot;VM Network&quot;
-
-# VMkernel interfaces (management, vMotion, vSAN, iSCSI)
-esxcli network ip interface list
-esxcli network ip interface ipv4 get
-esxcli network ip interface ipv4 set -i vmk0 -I &lt;ip&gt; -N &lt;netmask&gt; -t static
-esxcli network ip interface add -i vmk1 -p &quot;vMotion&quot;
-esxcli network ip interface remove -i vmk1
-
-# Routing
-esxcli network ip route ipv4 list
-esxcli network ip route ipv4 add -n 0.0.0.0/0 -g &lt;gateway&gt;
-esxcli network ip route ipv4 remove -n 0.0.0.0/0 -g &lt;gateway&gt;
-
-# DNS
-esxcli network ip dns server list
-esxcli network ip dns server add --server &lt;ip&gt;
-esxcli network ip dns server remove --server &lt;ip&gt;
-esxcli network ip dns search list
-
-# Active connections and ARP table
-esxcli network ip connection list
-esxcli network ip neighbor list
-
-# Legacy esxcfg commands (still widely used)
-esxcfg-vmknic -l
-esxcfg-vswitch -l
-esxcfg-nics -l
-esxcfg-route
-esxcfg-route -a &lt;subnet&gt; &lt;gateway&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Physical NICs</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>up<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>down<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># vSwitches</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>add<span class="w"> </span>-v<span class="w"> </span>vSwitch1
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>remove<span class="w"> </span>-v<span class="w"> </span>vSwitch1
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>uplink<span class="w"> </span>add<span class="w"> </span>-v<span class="w"> </span>vSwitch0<span class="w"> </span>-u<span class="w"> </span>vmnic1
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>uplink<span class="w"> </span>remove<span class="w"> </span>-v<span class="w"> </span>vSwitch0<span class="w"> </span>-u<span class="w"> </span>vmnic1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Port groups</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>portgroup<span class="w"> </span>list
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>portgroup<span class="w"> </span>add<span class="w"> </span>-v<span class="w"> </span>vSwitch0<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;VM Network&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>portgroup<span class="w"> </span>remove<span class="w"> </span>-v<span class="w"> </span>vSwitch0<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;VM Network&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># VMkernel interfaces (management, vMotion, vSAN, iSCSI)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span>vmk0<span class="w"> </span>-I<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-N<span class="w"> </span>&lt;netmask&gt;<span class="w"> </span>-t<span class="w"> </span>static
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>-i<span class="w"> </span>vmk1<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>vmk1
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># Routing</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>add<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-g<span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-g<span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># DNS</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>list
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>remove<span class="w"> </span>--server<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>search<span class="w"> </span>list
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1"># Active connections and ARP table</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>connection<span class="w"> </span>list
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>neighbor<span class="w"> </span>list
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="c1"># Legacy esxcfg commands (still widely used)</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>esxcfg-vmknic<span class="w"> </span>-l
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>esxcfg-vswitch<span class="w"> </span>-l
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>esxcfg-nics<span class="w"> </span>-l
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>esxcfg-route
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>esxcfg-route<span class="w"> </span>-a<span class="w"> </span>&lt;subnet&gt;<span class="w"> </span>&lt;gateway&gt;
+</code></pre></div>
 <hr />
 <h2 id="firewall-ntp">Firewall &amp; NTP<a class="headerlink" href="#firewall-ntp" title="Permanent link">&para;</a></h2>
 <p>The ESXi firewall controls which services are reachable on the host. NTP keeps the host clock in sync — critical for vCenter connectivity, certificates, and log correlation.</p>
-<pre><code class="language-bash"># Firewall status and toggle
-esxcli network firewall get
-esxcli network firewall set --enabled true
-esxcli network firewall set --enabled false
-
-# Rulesets (named rules for specific services like SSH, vMotion)
-esxcli network firewall ruleset list
-esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
-esxcli network firewall ruleset set --enabled false --ruleset-id sshServer
-
-# Allowed IPs per ruleset
-esxcli network firewall ruleset allowedip list --ruleset-id sshServer
-esxcli network firewall ruleset allowedip add --ruleset-id sshServer --ip-address &lt;ip&gt;
-esxcli network firewall ruleset allowedip remove --ruleset-id sshServer --ip-address &lt;ip&gt;
-
-# NTP configuration
-esxcli system ntp get
-esxcli system ntp set --enabled true --server &lt;ntp_server&gt;
-esxcli system ntp set --enabled false
-
-# Check sync status
-ntpq -p
-cat /etc/ntp.conf
-
-# Restart NTP
-/etc/init.d/ntpd restart
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Firewall status and toggle</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Rulesets (named rules for specific services like SSH, vMotion)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Allowed IPs per ruleset</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>remove<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># NTP configuration</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--server<span class="w"> </span>&lt;ntp_server&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Check sync status</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>cat<span class="w"> </span>/etc/ntp.conf
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Restart NTP</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>/etc/init.d/ntpd<span class="w"> </span>restart
+</code></pre></div>
 <hr />
 <h2 id="storage-devices-paths">Storage — Devices &amp; Paths<a class="headerlink" href="#storage-devices-paths" title="Permanent link">&para;</a></h2>
 <p>List storage devices, check multipath state, manage VMFS filesystems, and configure path selection policies. A storage device is a LUN — each device can have multiple paths for redundancy.</p>
-<pre><code class="language-bash"># Devices (LUNs visible to the host)
-esxcli storage core device list
-esxcli storage core device list -d &lt;device_id&gt;
-esxcli storage core device stats get -d &lt;device_id&gt;
-
-# Paths (one device can have multiple paths via different HBAs)
-esxcli storage core path list
-esxcli storage core path list -d &lt;device_id&gt;
-esxcli storage core path stats get -A vmhba0
-
-# Adapters (HBAs)
-esxcli storage core adapter list
-esxcli storage core adapter rescan --adapter vmhba0
-esxcli storage core adapter rescan --all
-
-# NMP — Native Multipathing Plugin
-esxcli storage nmp device list
-esxcli storage nmp path list
-esxcli storage nmp satp list
-esxcli storage nmp psp list
-esxcli storage nmp psp roundrobin deviceconfig set --device &lt;device_id&gt; --type iops --iops 1
-
-# VMFS filesystems
-esxcli storage vmfs extent list
-esxcli storage filesystem list
-esxcli storage filesystem mount -v &lt;uuid&gt;
-esxcli storage filesystem unmount -v &lt;uuid&gt;
-esxcli storage filesystem rescan
-
-# Legacy
-esxcfg-scsidevs -l
-esxcfg-scsidevs -m
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Devices (LUNs visible to the host)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Paths (one device can have multiple paths via different HBAs)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;device_id&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Adapters (HBAs)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba0
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># NMP — Native Multipathing Plugin</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>satp<span class="w"> </span>list
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>list
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>&lt;device_id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># VMFS filesystems</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>mount<span class="w"> </span>-v<span class="w"> </span>&lt;uuid&gt;
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>unmount<span class="w"> </span>-v<span class="w"> </span>&lt;uuid&gt;
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>rescan
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># Legacy</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>esxcfg-scsidevs<span class="w"> </span>-l
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>esxcfg-scsidevs<span class="w"> </span>-m
+</code></pre></div>
 <hr />
 <h2 id="san-connectivity-iscsi-fc">SAN Connectivity (iSCSI / FC)<a class="headerlink" href="#san-connectivity-iscsi-fc" title="Permanent link">&para;</a></h2>
 <p>Check Fibre Channel HBA WWPNs, iSCSI initiator IQNs, and configure target discovery. Run these when adding a host to a SAN fabric or troubleshooting LUN visibility.</p>
-<pre><code class="language-bash"># Fibre Channel
-esxcli storage san fc list                          # list HBAs with WWPNs
-esxcli storage san fc stats get -A vmhba0           # FC HBA stats (errors, logins)
-esxcli storage san fc stats get -A vmhba1
-esxcli storage nmp path list                        # path status to all LUNs
-esxcli storage nmp path list -d &lt;naa.xxx&gt;           # paths to a specific device
-esxcli storage core path list | grep &quot;dead\|Dead&quot;   # dead paths
-
-# iSCSI
-esxcli iscsi adapter list
-esxcli iscsi adapter get -A vmhba64                 # IQN and status
-esxcli iscsi adapter discovery sendtarget list -A vmhba64
-esxcli iscsi adapter discovery sendtarget add \
-    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64     # add static discovery target
-esxcli iscsi adapter discovery sendtarget remove \
-    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
-esxcli iscsi session list
-esxcli iscsi logicalnetworkportal list -A vmhba64   # bound VMkernel adapters
-
-# Multipathing and PSP
-esxcli storage nmp device list | grep -E &quot;Device:|PSP:&quot;
-esxcli storage nmp device set -d &lt;naa.xxx&gt; -P VMW_PSP_RR   # set Round Robin PSP
-esxcli storage core adapter rescan --all
-
-# LUN and device info
-esxcli storage core device list -d &lt;naa.xxx&gt;              # vendor, model, size, queue depth
-esxcli storage core device vaai status get -d &lt;naa.xxx&gt;   # VAAI (offload) support
-esxcli storage core device set --device &lt;naa.xxx&gt; -O MaxQueueDepth=64
-
-# Troubleshooting — check for APD / PDL
-grep -i &quot;APD\|PDL\|lost path&quot; /var/log/vmkernel.log | tail -20
-esxcli storage core path list | grep -A 5 &quot;State: dead&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Fibre Channel</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list<span class="w">                          </span><span class="c1"># list HBAs with WWPNs</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba0<span class="w">           </span><span class="c1"># FC HBA stats (errors, logins)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba1
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w">                        </span><span class="c1"># path status to all LUNs</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;<span class="w">           </span><span class="c1"># paths to a specific device</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dead\|Dead&quot;</span><span class="w">   </span><span class="c1"># dead paths</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># iSCSI</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64<span class="w">                 </span><span class="c1"># IQN and status</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span>--address<span class="w"> </span>&lt;iscsi_target_ip&gt;:3260<span class="w"> </span>-A<span class="w"> </span>vmhba64<span class="w">     </span><span class="c1"># add static discovery target</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>remove<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span>--address<span class="w"> </span>&lt;iscsi_target_ip&gt;:3260<span class="w"> </span>-A<span class="w"> </span>vmhba64
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>logicalnetworkportal<span class="w"> </span>list<span class="w"> </span>-A<span class="w"> </span>vmhba64<span class="w">   </span><span class="c1"># bound VMkernel adapters</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Multipathing and PSP</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device:|PSP:&quot;</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-P<span class="w"> </span>VMW_PSP_RR<span class="w">   </span><span class="c1"># set Round Robin PSP</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># LUN and device info</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;<span class="w">              </span><span class="c1"># vendor, model, size, queue depth</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>vaai<span class="w"> </span>status<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;naa.xxx&gt;<span class="w">   </span><span class="c1"># VAAI (offload) support</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--device<span class="w"> </span>&lt;naa.xxx&gt;<span class="w"> </span>-O<span class="w"> </span><span class="nv">MaxQueueDepth</span><span class="o">=</span><span class="m">64</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Troubleshooting — check for APD / PDL</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;APD\|PDL\|lost path&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;State: dead&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="datastores-vmdk">Datastores &amp; VMDK<a class="headerlink" href="#datastores-vmdk" title="Permanent link">&para;</a></h2>
 <p>Browse datastore contents, create and clone VMDKs with <code>vmkfstools</code>, and manage VMFS filesystem metadata.</p>
-<pre><code class="language-bash"># Browse datastores
-ls /vmfs/volumes/
-esxcli storage filesystem list
-ls /vmfs/volumes/&lt;datastore&gt;/
-ls -lah /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
-du -sh /vmfs/volumes/&lt;datastore&gt;/*
-
-# vmkfstools — VMDK operations
-vmkfstools -l /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # list VMDK info
-vmkfstools -c 100G -d thin /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk   # create thin VMDK
-vmkfstools -i source.vmdk dest.vmdk                   # clone
-vmkfstools -X 200G /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk  # expand
-vmkfstools -k /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # inflate thin to thick
-vmkfstools -p /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # defragment
-vmkfstools -e /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # check consistency
-
-# Datastore info via vim-cmd
-vim-cmd hostsvc/datastore/listsummary
-vim-cmd hostsvc/datastore/info &lt;datastore_name&gt;
-esxcli storage core adapter rescan --all
-vim-cmd hostsvc/storage/refresh
-
-# Find snapshot delta files (large delta files indicate unconsolidated snapshots)
-find /vmfs/volumes/&lt;ds&gt;/ -name &quot;*-delta.vmdk&quot; -o -name &quot;*-0000*.vmdk&quot; 2&gt;/dev/null
-
-# VMFS troubleshooting
-esxcli storage vmfs extent list
-esxcli storage vmfs snapshot list
-esxcli storage vmfs snapshot resignature -l &lt;label&gt;   # resignature VMFS copy after LUN clone
-esxcli storage filesystem unmount -l &lt;datastore_label&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Browse datastores</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ls<span class="w"> </span>/vmfs/volumes/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ls<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ls<span class="w"> </span>-lah<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/*
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># vmkfstools — VMDK operations</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vmkfstools<span class="w"> </span>-l<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">       </span><span class="c1"># list VMDK info</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>vmkfstools<span class="w"> </span>-c<span class="w"> </span>100G<span class="w"> </span>-d<span class="w"> </span>thin<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">   </span><span class="c1"># create thin VMDK</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vmkfstools<span class="w"> </span>-i<span class="w"> </span>source.vmdk<span class="w"> </span>dest.vmdk<span class="w">                   </span><span class="c1"># clone</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>vmkfstools<span class="w"> </span>-X<span class="w"> </span>200G<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">  </span><span class="c1"># expand</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>vmkfstools<span class="w"> </span>-k<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">       </span><span class="c1"># inflate thin to thick</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vmkfstools<span class="w"> </span>-p<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">       </span><span class="c1"># defragment</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>vmkfstools<span class="w"> </span>-e<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk<span class="w">       </span><span class="c1"># check consistency</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Datastore info via vim-cmd</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>vim-cmd<span class="w"> </span>hostsvc/datastore/listsummary
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>vim-cmd<span class="w"> </span>hostsvc/datastore/info<span class="w"> </span>&lt;datastore_name&gt;
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>vim-cmd<span class="w"> </span>hostsvc/storage/refresh
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Find snapshot delta files (large delta files indicate unconsolidated snapshots)</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>find<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-0000*.vmdk&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c1"># VMFS troubleshooting</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>snapshot<span class="w"> </span>list
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>snapshot<span class="w"> </span>resignature<span class="w"> </span>-l<span class="w"> </span>&lt;label&gt;<span class="w">   </span><span class="c1"># resignature VMFS copy after LUN clone</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>unmount<span class="w"> </span>-l<span class="w"> </span>&lt;datastore_label&gt;
+</code></pre></div>
 <hr />
 <h2 id="vm-management-vim-cmd">VM Management (vim-cmd)<a class="headerlink" href="#vm-management-vim-cmd" title="Permanent link">&para;</a></h2>
 <p><code>vim-cmd</code> is the host-level VM management tool — use it when vCenter is unavailable or when you need to register/unregister VMs directly on a host.</p>
-<pre><code class="language-bash"># List all VMs registered on this host
-vim-cmd vmsvc/getallvms
-
-# Power state
-vim-cmd vmsvc/power.getstate &lt;vmid&gt;
-vim-cmd vmsvc/power.on &lt;vmid&gt;
-vim-cmd vmsvc/power.off &lt;vmid&gt;
-vim-cmd vmsvc/power.shutdown &lt;vmid&gt;
-vim-cmd vmsvc/power.reboot &lt;vmid&gt;
-vim-cmd vmsvc/power.suspend &lt;vmid&gt;
-vim-cmd vmsvc/power.reset &lt;vmid&gt;
-
-# VM details
-vim-cmd vmsvc/get.summary &lt;vmid&gt;
-vim-cmd vmsvc/get.config &lt;vmid&gt;
-vim-cmd vmsvc/get.guest &lt;vmid&gt;
-vim-cmd vmsvc/get.tasklist &lt;vmid&gt;
-
-# Snapshots
-vim-cmd vmsvc/snapshot.get &lt;vmid&gt;
-vim-cmd vmsvc/snapshot.create &lt;vmid&gt; &lt;name&gt; &lt;description&gt; &lt;memory&gt; &lt;quiesce&gt;
-vim-cmd vmsvc/snapshot.removeall &lt;vmid&gt;
-
-# Register / unregister (when a VM is orphaned or needs to be added back)
-vim-cmd vmsvc/unregister &lt;vmid&gt;
-vim-cmd solo/registervm /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
-
-# Host summary
-vim-cmd hostsvc/hostsummary
-vim-cmd hostsvc/net/info
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all VMs registered on this host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vim-cmd<span class="w"> </span>vmsvc/getallvms
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Power state</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vim-cmd<span class="w"> </span>vmsvc/power.getstate<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vim-cmd<span class="w"> </span>vmsvc/power.on<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>vim-cmd<span class="w"> </span>vmsvc/power.off<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vim-cmd<span class="w"> </span>vmsvc/power.shutdown<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>vim-cmd<span class="w"> </span>vmsvc/power.reboot<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vim-cmd<span class="w"> </span>vmsvc/power.suspend<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>vim-cmd<span class="w"> </span>vmsvc/power.reset<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># VM details</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>vim-cmd<span class="w"> </span>vmsvc/get.summary<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>vim-cmd<span class="w"> </span>vmsvc/get.config<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>vim-cmd<span class="w"> </span>vmsvc/get.guest<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>vim-cmd<span class="w"> </span>vmsvc/get.tasklist<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Snapshots</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.get<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.create<span class="w"> </span>&lt;vmid&gt;<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;description&gt;<span class="w"> </span>&lt;memory&gt;<span class="w"> </span>&lt;quiesce&gt;
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>vim-cmd<span class="w"> </span>vmsvc/snapshot.removeall<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1"># Register / unregister (when a VM is orphaned or needs to be added back)</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>vim-cmd<span class="w"> </span>vmsvc/unregister<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>vim-cmd<span class="w"> </span>solo/registervm<span class="w"> </span>/vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="c1"># Host summary</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>vim-cmd<span class="w"> </span>hostsvc/hostsummary
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>vim-cmd<span class="w"> </span>hostsvc/net/info
+</code></pre></div>
 <hr />
 <h2 id="hardware-health">Hardware &amp; Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h2>
 <p>Query physical hardware inventory, CPU and memory info, PCI devices, and IPMI/BMC (out-of-band management). Use these for hardware inventory or when investigating sensor alerts.</p>
-<pre><code class="language-bash"># Platform info
-esxcli hardware platform get
-esxcli hardware clock get
-
-# CPU details
-esxcli hardware cpu global get
-esxcli hardware cpu list
-
-# Memory
-esxcli hardware memory get
-
-# PCI devices
-esxcli hardware pci list
-
-# IPMI / BMC (out-of-band management interface)
-esxcli hardware ipmi bmc get
-esxcli hardware ipmi fru list
-esxcli hardware ipmi sel list
-
-# Environmental sensors (temp, power, fan)
-esxcli hardware sensor list
-esxcli hardware sensor list --type Temperature
-esxcli hardware sensor list --type Fan
-esxcli hardware sensor list --type Power
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Platform info</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>clock<span class="w"> </span>get
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># CPU details</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>global<span class="w"> </span>get
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Memory</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># PCI devices</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>pci<span class="w"> </span>list
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># IPMI / BMC (out-of-band management interface)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>bmc<span class="w"> </span>get
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>fru<span class="w"> </span>list
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>sel<span class="w"> </span>list
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># Environmental sensors (temp, power, fan)</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Temperature
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Fan
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>sensor<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>Power
+</code></pre></div>
 <hr />
 <h2 id="performance-troubleshooting">Performance &amp; Troubleshooting<a class="headerlink" href="#performance-troubleshooting" title="Permanent link">&para;</a></h2>
 <p><code>esxtop</code> is the top-level performance monitor for ESXi — shows CPU, memory, network, storage, and power in real time. Use it for latency investigation and resource contention analysis.</p>
-<pre><code class="language-bash"># Interactive performance monitor (like top but for ESXi)
-esxtop
-
-# VM process list and kill (use when a VM is stuck)
-esxcli vm process list
-esxcli vm process kill --type soft --world-id &lt;id&gt;    # graceful
-esxcli vm process kill --type hard --world-id &lt;id&gt;    # immediate
-esxcli vm process kill --type force --world-id &lt;id&gt;   # last resort
-
-# Kernel-level stats (advanced troubleshooting)
-vsish -e get /world/&lt;worldid&gt;/sched/statsSummary
-vsish -e ls /vm/
-vsish -e ls /net/pNics/
-
-# Network packet drops
-esxcli network nic stats get -n vmnic0 | grep -i drop
-
-# CPU scheduling
-esxcli sched group list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Interactive performance monitor (like top but for ESXi)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxtop
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># VM process list and kill (use when a VM is stuck)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>--type<span class="w"> </span>soft<span class="w"> </span>--world-id<span class="w"> </span>&lt;id&gt;<span class="w">    </span><span class="c1"># graceful</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>--type<span class="w"> </span>hard<span class="w"> </span>--world-id<span class="w"> </span>&lt;id&gt;<span class="w">    </span><span class="c1"># immediate</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span><span class="nb">kill</span><span class="w"> </span>--type<span class="w"> </span>force<span class="w"> </span>--world-id<span class="w"> </span>&lt;id&gt;<span class="w">   </span><span class="c1"># last resort</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Kernel-level stats (advanced troubleshooting)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vsish<span class="w"> </span>-e<span class="w"> </span>get<span class="w"> </span>/world/&lt;worldid&gt;/sched/statsSummary
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>vsish<span class="w"> </span>-e<span class="w"> </span>ls<span class="w"> </span>/vm/
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>vsish<span class="w"> </span>-e<span class="w"> </span>ls<span class="w"> </span>/net/pNics/
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Network packet drops</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>drop
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># CPU scheduling</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>esxcli<span class="w"> </span>sched<span class="w"> </span>group<span class="w"> </span>list
+</code></pre></div>
 <hr />
 <h2 id="vsan-commands">vSAN Commands<a class="headerlink" href="#vsan-commands" title="Permanent link">&para;</a></h2>
 <p>vSAN-specific commands run directly on the ESXi host shell. These complement the dedicated vSAN CLI Reference and are useful when you're already SSH'd into a host.</p>
-<pre><code class="language-bash"># Cluster membership and UUID
-esxcli vsan cluster get
-
-# Health checks
-esxcli vsan health cluster get
-esxcli vsan health summary get
-esxcli vsan health cluster get | grep -v &quot;GREEN\|green&quot;   # failures only
-
-# Storage and disk groups
-esxcli vsan storage list
-esxcli vsan storage stats get
-esxcli vsan storage list | grep -E &quot;Is SSD|Disk Group&quot;
-
-# Objects and resyncing
-esxcli vsan debug object list
-esxcli vsan debug object list | grep -v &quot;healthy&quot;         # non-healthy only
-esxcli vsan debug resync list
-esxcli vsan debug resync list | grep -E &quot;Total Bytes|Remaining&quot;
-
-# Networking
-esxcli vsan network list
-esxcli vsan network ipconfig list
-esxcli vsan debug network test
-
-# vSAN datastore
-esxcli vsan datastore list
-esxcli vsan trace get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Cluster membership and UUID</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Health checks</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;GREEN\|green&quot;</span><span class="w">   </span><span class="c1"># failures only</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Storage and disk groups</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Is SSD|Disk Group&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Objects and resyncing</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="w">         </span><span class="c1"># non-healthy only</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Total Bytes|Remaining&quot;</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Networking</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># vSAN datastore</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>datastore<span class="w"> </span>list
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>trace<span class="w"> </span>get
+</code></pre></div>
 <hr />
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
 <p>ESXi logs are the first place to look when a VM fails to power on, a host disconnects from vCenter, or storage issues appear. Key logs are in <code>/var/log/</code>.</p>
@@ -1286,64 +1297,64 @@ esxcli vsan trace get
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Live tail
-tail -f /var/log/vmkernel.log
-tail -f /var/log/hostd.log
-tail -f /var/log/vpxa.log
-tail -f /var/log/fdm.log
-
-# Search for problems
-grep -i &quot;error\|warning\|fail\|fault&quot; /var/log/vmkernel.log | tail -30
-grep -i &quot;error&quot; /var/log/hostd.log | tail -20
-grep -i &quot;disconnected\|lost connectivity&quot; /var/log/vpxa.log | tail -10
-
-# Storage path errors
-grep -i &quot;lost path\|path down\|APD\|PDL&quot; /var/log/vmkernel.log | tail -20
-
-# Network errors
-grep -i &quot;link down\|carrier\|vmnic&quot; /var/log/vmkernel.log | tail -20
-
-# HA events
-grep -i &quot;isolation\|restart\|fdm&quot; /var/log/fdm.log | tail -20
-
-# VM-specific events
-grep &quot;&lt;vm_name&gt;&quot; /var/log/vmkernel.log | tail -20
-grep &quot;&lt;vm_name&gt;&quot; /var/log/hostd.log | tail -20
-
-# Generate support bundle
-vm-support -n -w /tmp/
-# Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
-
-# Remote syslog
-esxcli system syslog config get
-esxcli system syslog config set --loghost=udp://syslog.corp.local:514
-esxcli system syslog reload
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Live tail</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmkernel.log
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/hostd.log
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vpxa.log
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/fdm.log
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Search for problems</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warning\|fail\|fault&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;disconnected\|lost connectivity&quot;</span><span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Storage path errors</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;lost path\|path down\|APD\|PDL&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Network errors</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;link down\|carrier\|vmnic&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># HA events</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;isolation\|restart\|fdm&quot;</span><span class="w"> </span>/var/log/fdm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># VM-specific events</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c1"># Generate support bundle</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="c1"># Remote syslog</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>udp://syslog.corp.local:514
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+</code></pre></div>
 <hr />
 <h2 id="certificates-ssh">Certificates &amp; SSH<a class="headerlink" href="#certificates-ssh" title="Permanent link">&para;</a></h2>
 <p>Manage the ESXi host's SSL certificate (used for the web UI and API) and enable/disable SSH access.</p>
-<pre><code class="language-bash"># View current certificate details
-openssl x509 -in /etc/vmware/ssl/rui.crt -noout -dates
-openssl x509 -in /etc/vmware/ssl/rui.crt -noout -subject
-openssl x509 -in /etc/vmware/ssl/rui.crt -noout -fingerprint
-
-# Regenerate self-signed cert
-/sbin/generate-certificates
-
-# List cert files
-ls -la /etc/vmware/ssl/
-
-# Enable / disable SSH
-vim-cmd hostsvc/enable_ssh
-vim-cmd hostsvc/disable_ssh
-
-# Via service
-/etc/init.d/SSH start
-/etc/init.d/SSH stop
-
-# Via firewall ruleset
-esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># View current certificate details</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/vmware/ssl/rui.crt<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/vmware/ssl/rui.crt<span class="w"> </span>-noout<span class="w"> </span>-subject
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/vmware/ssl/rui.crt<span class="w"> </span>-noout<span class="w"> </span>-fingerprint
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Regenerate self-signed cert</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>/sbin/generate-certificates
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># List cert files</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/vmware/ssl/
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Enable / disable SSH</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>vim-cmd<span class="w"> </span>hostsvc/enable_ssh
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Via service</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>/etc/init.d/SSH<span class="w"> </span>start
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>/etc/init.d/SSH<span class="w"> </span>stop
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Via firewall ruleset</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+</code></pre></div>
 
 
 

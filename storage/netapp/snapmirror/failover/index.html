@@ -811,48 +811,48 @@
 <p>SnapMirror failover activates the destination volume as the primary, allowing client access during a primary site outage.</p>
 <h2 id="planned-failover-switchover">Planned Failover (Switchover)<a class="headerlink" href="#planned-failover-switchover" title="Permanent link">&para;</a></h2>
 <p>For maintenance or planned migration:</p>
-<pre><code class="language-bash"># On the destination cluster — break the SnapMirror relationship
-# This makes the destination volume writable
-snapmirror break -destination-path &lt;dest_svm:dest_vol&gt;
-
-# Verify destination is now read-write
-volume show -vserver &lt;dest_svm&gt; -volume &lt;dest_vol&gt; -fields state
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the destination cluster — break the SnapMirror relationship</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># This makes the destination volume writable</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify destination is now read-write</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>state
+</code></pre></div>
 <p>Update client access (DNS, share paths, mount points) to point to the destination.</p>
 <h2 id="unplanned-failover-primary-site-down">Unplanned Failover (Primary Site Down)<a class="headerlink" href="#unplanned-failover-primary-site-down" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># On the destination cluster — break the relationship to enable write access
-snapmirror break -destination-path &lt;dest_svm:dest_vol&gt;
-
-# Check how current the destination is (RPO)
-snapmirror show -destination-path &lt;dest_svm:dest_vol&gt; -fields lag-time
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the destination cluster — break the relationship to enable write access</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check how current the destination is (RPO)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
+</code></pre></div>
 <p>Note: if replication was asynchronous, the <code>lag-time</code> value indicates the RPO gap.</p>
 <h2 id="verify-data-accessibility-after-failover">Verify Data Accessibility After Failover<a class="headerlink" href="#verify-data-accessibility-after-failover" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm volume is online and writable
-volume show -vserver &lt;dest_svm&gt; -volume &lt;dest_vol&gt;
-
-# Check exports/shares are active
-vserver nfs export-policy rule show -vserver &lt;dest_svm&gt;
-vserver cifs share show -vserver &lt;dest_svm&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm volume is online and writable</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;dest_vol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check exports/shares are active</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;dest_svm&gt;
+</code></pre></div>
 <h2 id="resync-after-primary-recovery">Resync After Primary Recovery<a class="headerlink" href="#resync-after-primary-recovery" title="Permanent link">&para;</a></h2>
 <p>Once the primary site is restored, resync data back from destination to source:</p>
-<pre><code class="language-bash"># Resync: destination becomes new source, primary reseeds
-snapmirror resync -source-path &lt;dest_svm:dest_vol&gt; \
-    -destination-path &lt;src_svm:src_vol&gt;
-
-# Monitor resync
-snapmirror show -destination-path &lt;src_svm:src_vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Resync: destination becomes new source, primary reseeds</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Monitor resync</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+</code></pre></div>
 <h2 id="reverse-resync-fail-back">Reverse Resync (Fail Back)<a class="headerlink" href="#reverse-resync-fail-back" title="Permanent link">&para;</a></h2>
 <p>After resync completes and data is consistent:</p>
-<pre><code class="language-bash"># Break the reversed relationship
-snapmirror break -destination-path &lt;src_svm:src_vol&gt;
-
-# Restore original replication direction
-snapmirror resync -source-path &lt;src_svm:src_vol&gt; \
-    -destination-path &lt;dest_svm:dest_vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Break the reversed relationship</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;src_svm:src_vol&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restore original replication direction</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;src_svm:src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm:dest_vol&gt;
+</code></pre></div>
 <h2 id="failover-checklist">Failover Checklist<a class="headerlink" href="#failover-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Determine RPO: check <code>lag-time</code> before breaking relationship</li>

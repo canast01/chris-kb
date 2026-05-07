@@ -834,23 +834,29 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Disks["Disks"]
+    Disks --&gt; S0["Aggregates"]
+    Disks --&gt; S1["Disks"]
+    Disks --&gt; S2["RAID Groups"]
+    Disks --&gt; S3["Shelf and Enclosure"]</code></pre>
 <h2 id="aggregates">Aggregates<a class="headerlink" href="#aggregates" title="Permanent link">&para;</a></h2>
 <p>An aggregate is the physical RAID group that holds one or more volumes.</p>
-<pre><code class="language-bash"># List all aggregates
-storage aggregate show
-
-# Only online aggregates
-storage aggregate show -state online
-
-# Aggregate detail — size, used, available, RAID type
-storage aggregate show -fields aggr-name, node, size, availsize, usedsize, state
-
-# Space breakdown including snapshot reserve
-storage aggregate show-space
-
-# Specific aggregate space
-storage aggregate show-space -aggregate &lt;aggr&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all aggregates</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Only online aggregates</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>online
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Aggregate detail — size, used, available, RAID type</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,<span class="w"> </span>node,<span class="w"> </span>size,<span class="w"> </span>availsize,<span class="w"> </span>usedsize,<span class="w"> </span>state
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Space breakdown including snapshot reserve</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Specific aggregate space</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-space<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
+</code></pre></div>
 <h3 id="aggregate-capacity-thresholds">Aggregate Capacity Thresholds<a class="headerlink" href="#aggregate-capacity-thresholds" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -874,33 +880,33 @@ storage aggregate show-space -aggregate &lt;aggr&gt;
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Find aggregates below 20% free
-storage aggregate show -fields aggr-name, node, availsize, usedpercent | \
-    awk '$NF &gt; 80 {print}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Find aggregates below 20% free</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,<span class="w"> </span>node,<span class="w"> </span>availsize,<span class="w"> </span>usedpercent<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;$NF &gt; 80 {print}&#39;</span>
+</code></pre></div>
 <h3 id="aggregate-operations">Aggregate Operations<a class="headerlink" href="#aggregate-operations" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Rename an aggregate
-storage aggregate rename -aggregate &lt;old_name&gt; -newname &lt;new_name&gt;
-
-# Set maximum RAID group size
-storage aggregate modify -aggregate &lt;aggr&gt; -maxraidsize 24
-
-# Add disks to an aggregate
-storage aggregate add-disks -aggregate &lt;aggr&gt; -diskcount &lt;n&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rename an aggregate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>rename<span class="w"> </span>-aggregate<span class="w"> </span>&lt;old_name&gt;<span class="w"> </span>-newname<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set maximum RAID group size</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>modify<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-maxraidsize<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add disks to an aggregate</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;<span class="w"> </span>-diskcount<span class="w"> </span>&lt;n&gt;
+</code></pre></div>
 <h2 id="disks">Disks<a class="headerlink" href="#disks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All disk inventory
-storage disk show
-
-# Broken disks (failed or suspect)
-storage disk show -broken
-
-# Disk details — location, owner, type, size, bay
-storage disk show -fields disk, bay, node, container-type, disk-type, rpm, size, position
-
-# Spare disks available
-storage disk show -container-type spare
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All disk inventory</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Broken disks (failed or suspect)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Disk details — location, owner, type, size, bay</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,<span class="w"> </span>bay,<span class="w"> </span>node,<span class="w"> </span>container-type,<span class="w"> </span>disk-type,<span class="w"> </span>rpm,<span class="w"> </span>size,<span class="w"> </span>position
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Spare disks available</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare
+</code></pre></div>
 <h3 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -939,29 +945,29 @@ storage disk show -container-type spare
 </tbody>
 </table>
 <h3 id="disk-operations">Disk Operations<a class="headerlink" href="#disk-operations" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Unfail a disk (re-add to aggregate after investigation)
-storage disk unfail -disk &lt;disk_name&gt;
-
-# Assign disk ownership
-storage disk assign -disk &lt;disk_name&gt; -owner &lt;node_name&gt;
-
-# Manually mark a disk as spare
-storage disk assign -disk &lt;disk_name&gt; -owner &lt;node_name&gt; -container-type spare
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Unfail a disk (re-add to aggregate after investigation)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>unfail<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Assign disk ownership</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Manually mark a disk as spare</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_name&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-container-type<span class="w"> </span>spare
+</code></pre></div>
 <h2 id="raid-groups">RAID Groups<a class="headerlink" href="#raid-groups" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># RAID group status per aggregate
-storage aggregate show-raidtree -aggregate &lt;aggr&gt;
-
-# RAID type (RAID-DP, RAID-TEC)
-storage aggregate show -fields raidtype
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># RAID group status per aggregate</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># RAID type (RAID-DP, RAID-TEC)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>raidtype
+</code></pre></div>
 <h2 id="shelf-and-enclosure">Shelf and Enclosure<a class="headerlink" href="#shelf-and-enclosure" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Disk shelves
-storage shelf show
-
-# Shelf module detail
-storage shelf show -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disk shelves</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Shelf module detail</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show<span class="w"> </span>-detail
+</code></pre></div>
 
 
 

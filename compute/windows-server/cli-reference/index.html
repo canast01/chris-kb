@@ -842,171 +842,182 @@
 
 <h1 id="windows-server-cli-reference">Windows Server — CLI Reference<a class="headerlink" href="#windows-server-cli-reference" title="Permanent link">&para;</a></h1>
 <p>All commands are PowerShell unless noted as <code>cmd</code>.</p>
+<pre class="mermaid"><code>flowchart LR
+    N["—"]
+    N --&gt; S0["Services"]
+    N --&gt; S1["Event Logs"]
+    N --&gt; S2["Disk and Storage"]
+    N --&gt; S3["Networking"]
+    N --&gt; S4["Active Directory and Domain"]
+    N --&gt; S5["Process Management"]
+    N --&gt; S6["Performance Counters"]
+    N --&gt; S7["User and Security"]
+    N --&gt; S8["Hotfix and Updates"]</code></pre>
 <h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all services
-Get-Service
-
-# Filter by status
-Get-Service | Where-Object Status -eq Running
-Get-Service | Where-Object { $_.StartType -eq 'Automatic' -and $_.Status -ne 'Running' }
-
-# Start / stop / restart a service
-Start-Service -Name &lt;name&gt;
-Stop-Service -Name &lt;name&gt;
-Restart-Service -Name &lt;name&gt;
-
-# Change startup type
-Set-Service -Name &lt;name&gt; -StartupType Automatic
-Set-Service -Name &lt;name&gt; -StartupType Disabled
-
-# Service details
-Get-Service -Name &lt;name&gt; | Select-Object *
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all services</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Filter by status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Status</span> <span class="o">-eq</span> <span class="n">Running</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Start / stop / restart a service</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Change startup type</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c"># Service details</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">*</span>
+</code></pre></div>
 <h2 id="event-logs">Event Logs<a class="headerlink" href="#event-logs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Query event log (classic)
-Get-EventLog -LogName System -EntryType Error -Newest 50
-Get-EventLog -LogName Application -EntryType Error,Warning -After (Get-Date).AddHours(-24)
-Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 100
-
-# Query using Get-WinEvent (more flexible)
-Get-WinEvent -LogName System -MaxEvents 50
-Get-WinEvent -FilterHashtable @{LogName='System'; Level=2; StartTime=(Get-Date).AddHours(-24)}
-
-# Export event log
-Get-EventLog -LogName System | Export-Csv C:\Temp\SystemEvents.csv -NoTypeInformation
-
-# Clear event log (requires admin)
-Clear-EventLog -LogName Application
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Query event log (classic)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">50</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">Warning</span> <span class="n">-After</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="n">-InstanceId</span> <span class="n">4624</span><span class="p">,</span><span class="n">4625</span> <span class="n">-Newest</span> <span class="n">100</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Query using Get-WinEvent (more flexible)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-MaxEvents</span> <span class="n">50</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Export event log</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SystemEvents</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Clear event log (requires admin)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Clear-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span>
+</code></pre></div>
 <h2 id="disk-and-storage">Disk and Storage<a class="headerlink" href="#disk-and-storage" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Physical disks
-Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle, OperationalStatus
-
-# Partitions
-Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
-
-# Volumes
-Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, SizeRemaining, HealthStatus
-
-# Drive space (quick)
-Get-PSDrive -PSProvider FileSystem
-
-# Initialise and format a new disk
-Initialize-Disk -Number &lt;n&gt; -PartitionStyle GPT
-New-Partition -DiskNumber &lt;n&gt; -UseMaximumSize -DriveLetter D
-Format-Volume -DriveLetter D -FileSystem NTFS -NewFileSystemLabel &quot;Data&quot; -Confirm:$false
-
-# Extend a volume
-Resize-Partition -DriveLetter D -Size (Get-PartitionSupportedSize -DriveLetter D).SizeMax
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Physical disks</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">PartitionStyle</span><span class="p">,</span> <span class="n">OperationalStatus</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Partitions</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Partition</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DiskNumber</span><span class="p">,</span> <span class="n">PartitionNumber</span><span class="p">,</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="nb">Type</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Volumes</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystemLabel</span><span class="p">,</span> <span class="n">FileSystem</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">SizeRemaining</span><span class="p">,</span> <span class="n">HealthStatus</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Drive space (quick)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Initialise and format a new disk</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Initialize-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span> <span class="n">-PartitionStyle</span> <span class="n">GPT</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">New-Partition</span> <span class="n">-DiskNumber</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span> <span class="n">-UseMaximumSize</span> <span class="n">-DriveLetter</span> <span class="n">D</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nb">Format-Volume</span> <span class="n">-DriveLetter</span> <span class="n">D</span> <span class="n">-FileSystem</span> <span class="n">NTFS</span> <span class="n">-NewFileSystemLabel</span> <span class="s2">&quot;Data&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c"># Extend a volume</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nb">Resize-Partition</span> <span class="n">-DriveLetter</span> <span class="n">D</span> <span class="n">-Size</span> <span class="p">(</span><span class="nb">Get-PartitionSupportedSize</span> <span class="n">-DriveLetter</span> <span class="n">D</span><span class="p">).</span><span class="n">SizeMax</span>
+</code></pre></div>
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># IP configuration
-Get-NetIPAddress | Select-Object InterfaceAlias, AddressFamily, IPAddress, PrefixLength
-ipconfig /all                # cmd
-
-# Network adapters
-Get-NetAdapter | Select-Object Name, InterfaceDescription, Status, LinkSpeed, MacAddress
-
-# Routes
-Get-NetRoute | Where-Object DestinationPrefix -eq '0.0.0.0/0'
-route print                  # cmd
-
-# DNS configuration
-Get-DnsClientServerAddress
-nslookup &lt;hostname&gt;          # cmd
-Resolve-DnsName &lt;hostname&gt;
-
-# Test connectivity
-Test-NetConnection -ComputerName &lt;target&gt;
-Test-NetConnection -ComputerName &lt;target&gt; -Port 443
-Test-NetConnection -ComputerName &lt;target&gt; -TraceRoute
-
-# Active connections
-netstat -ano                 # cmd
-Get-NetTCPConnection | Where-Object State -eq Established
-
-# Flush DNS cache
-Clear-DnsClientCache
-ipconfig /flushdns           # cmd
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># IP configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-NetIPAddress</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InterfaceAlias</span><span class="p">,</span> <span class="n">AddressFamily</span><span class="p">,</span> <span class="n">IPAddress</span><span class="p">,</span> <span class="n">PrefixLength</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">all</span>                <span class="c"># cmd</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Network adapters</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-NetAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">InterfaceDescription</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">LinkSpeed</span><span class="p">,</span> <span class="n">MacAddress</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Routes</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-NetRoute</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">DestinationPrefix</span> <span class="o">-eq</span> <span class="s1">&#39;0.0.0.0/0&#39;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">route</span> <span class="n">print</span>                  <span class="c"># cmd</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># DNS configuration</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-DnsClientServerAddress</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">nslookup</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>          <span class="c"># cmd</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c"># Test connectivity</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-TraceRoute</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Active connections</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="n">netstat</span> <span class="n">-ano</span>                 <span class="c"># cmd</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nb">Get-NetTCPConnection</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">State</span> <span class="o">-eq</span> <span class="n">Established</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c"># Flush DNS cache</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nb">Clear-DnsClientCache</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">flushdns</span>           <span class="c"># cmd</span>
+</code></pre></div>
 <h2 id="active-directory-and-domain">Active Directory and Domain<a class="headerlink" href="#active-directory-and-domain" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check domain join status
-dsregcmd /status             # cmd (shows AAD/AD join state)
-
-# Computer account info
-Get-ADComputer -Identity &lt;hostname&gt; -Properties *
-
-# Current user info
-whoami /all                  # cmd
-[System.Security.Principal.WindowsIdentity]::GetCurrent()
-
-# Group Policy results
-gpresult /r                  # cmd (text output)
-gpresult /h C:\Temp\gp.html  # cmd (HTML report)
-gpupdate /force              # cmd (force GP refresh)
-
-# Kerberos tickets
-klist                        # cmd
-klist purge                  # cmd (clear ticket cache)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check domain join status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">dsregcmd</span> <span class="p">/</span><span class="n">status</span>             <span class="c"># cmd (shows AAD/AD join state)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Computer account info</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-ADComputer</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="p">*</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Current user info</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">whoami</span> <span class="p">/</span><span class="n">all</span>                  <span class="c"># cmd</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="no">[System.Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Group Policy results</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">r </span>                 <span class="c"># cmd (text output)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">h </span><span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">gp</span><span class="p">.</span><span class="n">html</span>  <span class="c"># cmd (HTML report)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>              <span class="c"># cmd (force GP refresh)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># Kerberos tickets</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">klist</span>                        <span class="c"># cmd</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="n">klist</span> <span class="n">purge</span>                  <span class="c"># cmd (clear ticket cache)</span>
+</code></pre></div>
 <h2 id="process-management">Process Management<a class="headerlink" href="#process-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List processes
-Get-Process | Sort-Object CPU -Descending | Select-Object -First 20
-Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 20 Name, Id, WorkingSet, CPU
-
-# Kill a process
-Stop-Process -Name &lt;name&gt; -Force
-Stop-Process -Id &lt;pid&gt; -Force
-
-# Find process by port
-Get-NetTCPConnection -LocalPort 80 | Select-Object -ExpandProperty OwningProcess | Get-Process
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># List processes</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">WorkingSet</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">WorkingSet</span><span class="p">,</span> <span class="n">CPU</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Kill a process</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Stop-Process</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Stop-Process</span> <span class="n">-Id</span> <span class="p">&lt;</span><span class="n">pid</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Find process by port</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Get-NetTCPConnection</span> <span class="n">-LocalPort</span> <span class="n">80</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">OwningProcess</span> <span class="p">|</span> <span class="nb">Get-Process</span>
+</code></pre></div>
 <h2 id="performance-counters">Performance Counters<a class="headerlink" href="#performance-counters" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Snapshot CPU
-Get-Counter '\Processor(_Total)\% Processor Time'
-
-# Snapshot memory
-Get-Counter '\Memory\Available MBytes'
-
-# Disk I/O
-Get-Counter '\PhysicalDisk(_Total)\Disk Reads/sec'
-Get-Counter '\PhysicalDisk(_Total)\Disk Writes/sec'
-
-# Multi-counter snapshot
-Get-Counter @(
-  '\Processor(_Total)\% Processor Time',
-  '\Memory\Available MBytes',
-  '\PhysicalDisk(_Total)\% Disk Time'
-) -SampleInterval 5 -MaxSamples 6
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Snapshot CPU</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Snapshot memory</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Memory\Available MBytes&#39;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Disk I/O</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(_Total)\Disk Reads/sec&#39;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(_Total)\Disk Writes/sec&#39;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Multi-counter snapshot</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Get-Counter</span> <span class="p">@(</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>  <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  <span class="s1">&#39;\Memory\Available MBytes&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  <span class="s1">&#39;\PhysicalDisk(_Total)\% Disk Time&#39;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">)</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">6</span>
+</code></pre></div>
 <h2 id="user-and-security">User and Security<a class="headerlink" href="#user-and-security" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Local users
-Get-LocalUser
-Get-LocalGroupMember -Group Administrators
-
-# Active sessions
-query session                # cmd
-logoff &lt;sessionid&gt;           # cmd (disconnect RDP session)
-
-# Audit policy
-auditpol /get /category:*   # cmd
-
-# Firewall
-Get-NetFirewallRule | Where-Object Enabled -eq True | Select-Object DisplayName, Direction, Action, Profile
-New-NetFirewallRule -DisplayName &quot;Block SMBv1&quot; -Direction Inbound -Protocol TCP -LocalPort 445 -Action Block
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Local users</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-LocalUser</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="n">Administrators</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Active sessions</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">query</span> <span class="n">session</span>                <span class="c"># cmd</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">logoff</span> <span class="p">&lt;</span><span class="n">sessionid</span><span class="p">&gt;</span>           <span class="c"># cmd (disconnect RDP session)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Audit policy</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>   <span class="c"># cmd</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Firewall</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Enabled</span> <span class="o">-eq</span> <span class="n">True</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Profile</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Block SMBv1&quot;</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">445</span> <span class="n">-Action</span> <span class="n">Block</span>
+</code></pre></div>
 <h2 id="hotfix-and-updates">Hotfix and Updates<a class="headerlink" href="#hotfix-and-updates" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Installed hotfixes
-Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 20 HotFixID, InstalledOn, Description
-
-# Windows Update service
-Get-Service wuauserv
-Start-Service wuauserv
-
-# Force update check (cmd)
-wuauclt /detectnow           # cmd
-UsoClient StartScan          # cmd (Windows 10/Server 2016+)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Installed hotfixes</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">HotFixID</span><span class="p">,</span> <span class="n">InstalledOn</span><span class="p">,</span> <span class="n">Description</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Windows Update service</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-Service</span> <span class="n">wuauserv</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Start-Service</span> <span class="n">wuauserv</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Force update check (cmd)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>           <span class="c"># cmd</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>          <span class="c"># cmd (Windows 10/Server 2016+)</span>
+</code></pre></div>
 <h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../operations/">Operations</a> — operational runbooks</li>

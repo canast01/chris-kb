@@ -933,103 +933,103 @@
 <hr />
 <h2 id="esxi-host-health-check-powershell-powercli">ESXi Host Health Check (PowerShell / PowerCLI)<a class="headerlink" href="#esxi-host-health-check-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Connect to vCenter or directly to an ESXi host and produce a per-host health report covering hardware sensors, datastore usage, network adapter state, and required service status.</p>
-<pre><code class="language-powershell">#Requires -Modules VMware.PowerCLI
-# esxi_host_health.ps1
-# Usage: pwsh -File esxi_host_health.ps1
-# Env vars: VCENTER_HOST, VC_USER, VC_PASS
-
-param(
-    [string]$VCenterHost = $env:VCENTER_HOST,
-    [string]$VCUser      = $env:VC_USER,
-    [string]$VCPass      = $env:VC_PASS
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-
-$RequiredServices = @('hostd', 'vpxa', 'ntpd')
-$DatastoreWarnPct  = 80
-$overallExit = 0
-
-function Write-Status {
-    param($Label, $Status, $Detail)
-    $colour = switch ($Status) {
-        'PASS'     { 'Green'  }
-        'WARNING'  { 'Yellow' }
-        'CRITICAL' { 'Red'    }
-        default    { 'White'  }
-    }
-    Write-Host (&quot;[{0,-8}] {1,-35} {2}&quot; -f $Status, $Label, $Detail) -ForegroundColor $colour
-}
-
-foreach ($vmhost in (Get-VMHost | Sort-Object Name)) {
-    Write-Host &quot;`n=== $($vmhost.Name) ===&quot; -ForegroundColor Cyan
-
-    # Connection / power state
-    if ($vmhost.ConnectionState -ne 'Connected') {
-        Write-Status &quot;ConnectionState&quot; &quot;CRITICAL&quot; $vmhost.ConnectionState
-        $overallExit = 2; continue
-    }
-    if ($vmhost.PowerState -ne 'PoweredOn') {
-        Write-Status &quot;PowerState&quot; &quot;WARNING&quot; $vmhost.PowerState
-        $overallExit = [Math]::Max($overallExit, 1)
-    } else {
-        Write-Status &quot;ConnectionState&quot; &quot;PASS&quot; &quot;Connected / PoweredOn&quot;
-    }
-
-    # Hardware sensors
-    try {
-        $hw = Get-VMHostHardware -VMHost $vmhost -ErrorAction Stop
-        $badSensors = $hw.CpuInfo | Where-Object { $_.HealthState -ne 'Green' }
-        if ($badSensors) {
-            Write-Status &quot;Hardware Sensors&quot; &quot;WARNING&quot; &quot;$($badSensors.Count) sensor(s) not green&quot;
-            $overallExit = [Math]::Max($overallExit, 1)
-        } else {
-            Write-Status &quot;Hardware Sensors&quot; &quot;PASS&quot; &quot;All sensors green&quot;
-        }
-    } catch {
-        Write-Status &quot;Hardware Sensors&quot; &quot;WARNING&quot; &quot;Could not retrieve hardware info&quot;
-    }
-
-    # Datastore capacity
-    $datastores = Get-Datastore -VMHost $vmhost
-    foreach ($ds in $datastores) {
-        if ($ds.CapacityGB -eq 0) { continue }
-        $usedPct = [Math]::Round((1 - $ds.FreeSpaceGB / $ds.CapacityGB) * 100, 1)
-        $s = if ($usedPct -ge $DatastoreWarnPct) { 'WARNING' } else { 'PASS' }
-        if ($s -eq 'WARNING') { $overallExit = [Math]::Max($overallExit, 1) }
-        Write-Status &quot;Datastore: $($ds.Name)&quot; $s (&quot;Used={0}%  Free={1:N0}GB&quot; -f $usedPct, $ds.FreeSpaceGB)
-    }
-
-    # Network adapters
-    $badNics = Get-VMHostNetworkAdapter -VMHost $vmhost | Where-Object { -not $_.BitRatePerSec -and $_.DeviceName -notmatch 'vmk' }
-    if ($badNics) {
-        Write-Status &quot;Network Adapters&quot; &quot;WARNING&quot; &quot;$($badNics.DeviceName -join ', ') — no link&quot;
-        $overallExit = [Math]::Max($overallExit, 1)
-    } else {
-        Write-Status &quot;Network Adapters&quot; &quot;PASS&quot; &quot;All adapters have link&quot;
-    }
-
-    # Required services
-    $services = Get-VMHostService -VMHost $vmhost
-    foreach ($svc in $RequiredServices) {
-        $s = $services | Where-Object { $_.Key -eq $svc }
-        if (-not $s -or $s.Running -eq $false) {
-            Write-Status &quot;Service: $svc&quot; &quot;CRITICAL&quot; &quot;NOT RUNNING&quot;
-            $overallExit = 2
-        } else {
-            Write-Status &quot;Service: $svc&quot; &quot;PASS&quot; &quot;Running&quot;
-        }
-    }
-}
-
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">#Requires -Modules VMware.PowerCLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># esxi_host_health.ps1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Usage: pwsh -File esxi_host_health.ps1</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Env vars: VCENTER_HOST, VC_USER, VC_PASS</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="no">[string]</span><span class="nv">$VCenterHost</span> <span class="p">=</span> <span class="nv">$env:VCENTER_HOST</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="no">[string]</span><span class="nv">$VCUser</span>      <span class="p">=</span> <span class="nv">$env:VC_USER</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="no">[string]</span><span class="nv">$VCPass</span>      <span class="p">=</span> <span class="nv">$env:VC_PASS</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="nv">$VCUser</span><span class="p">,</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$VCPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$VCenterHost</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">$RequiredServices</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;hostd&#39;</span><span class="p">,</span> <span class="s1">&#39;vpxa&#39;</span><span class="p">,</span> <span class="s1">&#39;ntpd&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nv">$DatastoreWarnPct</span>  <span class="p">=</span> <span class="n">80</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="k">function</span> <span class="nb">Write-Status</span> <span class="p">{</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="k">param</span><span class="p">(</span><span class="nv">$Label</span><span class="p">,</span> <span class="nv">$Status</span><span class="p">,</span> <span class="nv">$Detail</span><span class="p">)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="nv">$colour</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$Status</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="s1">&#39;PASS&#39;</span>     <span class="p">{</span> <span class="s1">&#39;Green&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="s1">&#39;WARNING&#39;</span>  <span class="p">{</span> <span class="s1">&#39;Yellow&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">{</span> <span class="s1">&#39;Red&#39;</span>    <span class="p">}</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="k">default</span>    <span class="p">{</span> <span class="s1">&#39;White&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="p">}</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;[{0,-8}] {1,-35} {2}&quot;</span> <span class="o">-f</span> <span class="nv">$Status</span><span class="p">,</span> <span class="nv">$Label</span><span class="p">,</span> <span class="nv">$Detail</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="p">}</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vmhost</span> <span class="k">in</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="c"># Connection / power state</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s1">&#39;Connected&#39;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;ConnectionState&quot;</span> <span class="s2">&quot;CRITICAL&quot;</span> <span class="nv">$vmhost</span><span class="p">.</span><span class="n">ConnectionState</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">2</span><span class="p">;</span> <span class="k">continue</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    <span class="p">}</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s1">&#39;PoweredOn&#39;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;PowerState&quot;</span> <span class="s2">&quot;WARNING&quot;</span> <span class="nv">$vmhost</span><span class="p">.</span><span class="n">PowerState</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="nv">$overallExit</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Max</span><span class="p">(</span><span class="nv">$overallExit</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;ConnectionState&quot;</span> <span class="s2">&quot;PASS&quot;</span> <span class="s2">&quot;Connected / PoweredOn&quot;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="p">}</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="c"># Hardware sensors</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="nv">$hw</span> <span class="p">=</span> <span class="nb">Get-VMHostHardware</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="nv">$badSensors</span> <span class="p">=</span> <span class="nv">$hw</span><span class="p">.</span><span class="n">CpuInfo</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">HealthState</span> <span class="o">-ne</span> <span class="s1">&#39;Green&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$badSensors</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>            <span class="nb">Write-Status</span> <span class="s2">&quot;Hardware Sensors&quot;</span> <span class="s2">&quot;WARNING&quot;</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$badSensors</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> sensor(s) not green&quot;</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>            <span class="nv">$overallExit</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Max</span><span class="p">(</span><span class="nv">$overallExit</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>            <span class="nb">Write-Status</span> <span class="s2">&quot;Hardware Sensors&quot;</span> <span class="s2">&quot;PASS&quot;</span> <span class="s2">&quot;All sensors green&quot;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>        <span class="p">}</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;Hardware Sensors&quot;</span> <span class="s2">&quot;WARNING&quot;</span> <span class="s2">&quot;Could not retrieve hardware info&quot;</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    <span class="p">}</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    <span class="c"># Datastore capacity</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    <span class="nv">$datastores</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$ds</span> <span class="k">in</span> <span class="nv">$datastores</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span> <span class="p">}</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>        <span class="nv">$usedPct</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>        <span class="nv">$s</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$usedPct</span> <span class="o">-ge</span> <span class="nv">$DatastoreWarnPct</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Max</span><span class="p">(</span><span class="nv">$overallExit</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;Datastore: </span><span class="p">$(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="nv">$s</span> <span class="p">(</span><span class="s2">&quot;Used={0}%  Free={1:N0}GB&quot;</span> <span class="o">-f</span> <span class="nv">$usedPct</span><span class="p">,</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">)</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    <span class="p">}</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>    <span class="c"># Network adapters</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>    <span class="nv">$badNics</span> <span class="p">=</span> <span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="o">-not</span> <span class="nv">$_</span><span class="p">.</span><span class="n">BitRatePerSec</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DeviceName</span> <span class="o">-notmatch</span> <span class="s1">&#39;vmk&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$badNics</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;Network Adapters&quot;</span> <span class="s2">&quot;WARNING&quot;</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$badNics</span><span class="p">.</span><span class="n">DeviceName</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2"> — no link&quot;</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>        <span class="nv">$overallExit</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Max</span><span class="p">(</span><span class="nv">$overallExit</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>        <span class="nb">Write-Status</span> <span class="s2">&quot;Network Adapters&quot;</span> <span class="s2">&quot;PASS&quot;</span> <span class="s2">&quot;All adapters have link&quot;</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>    <span class="p">}</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>    <span class="c"># Required services</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>    <span class="nv">$services</span> <span class="p">=</span> <span class="nb">Get-VMHostService</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="nv">$RequiredServices</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>        <span class="nv">$s</span> <span class="p">=</span> <span class="nv">$services</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Key</span> <span class="o">-eq</span> <span class="nv">$svc</span> <span class="p">}</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>        <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$s</span> <span class="o">-or</span> <span class="nv">$s</span><span class="p">.</span><span class="n">Running</span> <span class="o">-eq</span> <span class="nv">$false</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>            <span class="nb">Write-Status</span> <span class="s2">&quot;Service: $svc&quot;</span> <span class="s2">&quot;CRITICAL&quot;</span> <span class="s2">&quot;NOT RUNNING&quot;</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>            <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">2</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>            <span class="nb">Write-Status</span> <span class="s2">&quot;Service: $svc&quot;</span> <span class="s2">&quot;PASS&quot;</span> <span class="s2">&quot;Running&quot;</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="p">}</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>    <span class="p">}</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a><span class="p">}</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a><span class="n">exit</span> <span class="nv">$overallExit</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -1076,95 +1076,95 @@ exit $overallExit
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\esxi_host_health.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>.\esxi_host_health.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>For each ESXi host managed by vCenter, you will see a block like:</p>
-<pre><code>=== esxi-01.company.local ===
-[PASS    ] ConnectionState                    Connected / PoweredOn
-[PASS    ] Hardware Sensors                   All sensors green
-[PASS    ] Datastore: datastore1              Used=42.1%  Free=289GB
-[PASS    ] Network Adapters                   All adapters have link
-[PASS    ] Service: hostd                     Running
-[PASS    ] Service: vpxa                      Running
-[PASS    ] Service: ntpd                      Running
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>=== esxi-01.company.local ===
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[PASS    ] ConnectionState                    Connected / PoweredOn
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[PASS    ] Hardware Sensors                   All sensors green
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>[PASS    ] Datastore: datastore1              Used=42.1%  Free=289GB
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[PASS    ] Network Adapters                   All adapters have link
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[PASS    ] Service: hostd                     Running
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>[PASS    ] Service: vpxa                      Running
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>[PASS    ] Service: ntpd                      Running
+</code></pre></div>
 <p>Any WARNING items appear in yellow, CRITICAL in red. The script exits with code 2 if any critical issues are found.</p>
 <hr />
 <h2 id="storage-path-health-check-bash-esxcli">Storage Path Health Check (Bash / esxcli)<a class="headerlink" href="#storage-path-health-check-bash-esxcli" title="Permanent link">&para;</a></h2>
 <p>Run on an ESXi host via SSH. Report per-device path counts (active / standby / dead) and exit non-zero if any dead paths exist.</p>
-<pre><code class="language-bash">#!/bin/bash
-# esxi_path_health.sh
-# Usage: ssh root@esxi-host 'bash -s' &lt; esxi_path_health.sh
-# Or run locally on the ESXi host.
-
-CRIT=0
-TS=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-
-echo &quot;===================================&quot;
-echo &quot; ESXi Storage Path Health Check&quot;
-echo &quot; $TS&quot;
-echo &quot;===================================&quot;
-printf &quot;%-40s %8s %8s %8s %8s %s\n&quot; &quot;Device&quot; &quot;Active&quot; &quot;Standby&quot; &quot;Dead&quot; &quot;Total&quot; &quot;Status&quot;
-printf &quot;%-40s %8s %8s %8s %8s %s\n&quot; &quot;------&quot; &quot;------&quot; &quot;-------&quot; &quot;----&quot; &quot;-----&quot; &quot;------&quot;
-
-# Build per-device path summary from nmp device list
-current_device=&quot;&quot;
-declare -A active standby dead total
-
-while IFS= read -r line; do
-    if [[ $line =~ ^[[:space:]]Device\ Display\ Name:.*\(([^)]+)\) ]]; then
-        current_device=&quot;${BASH_REMATCH[1]}&quot;
-    elif [[ $line =~ ^[[:space:]]Device\ Display\ Name:\ (.*) &amp;&amp; -z &quot;$current_device&quot; ]]; then
-        current_device=&quot;$(echo &quot;$line&quot; | awk -F': ' '{print $2}')&quot;
-    fi
-done &lt; &lt;(esxcli storage nmp device list 2&gt;/dev/null)
-
-# Use path list for counts
-declare -A path_active path_standby path_dead
-
-while IFS= read -r line; do
-    if [[ $line =~ ^[[:space:]]Device:\ (.*) ]]; then
-        dev=&quot;${BASH_REMATCH[1]// /}&quot;
-    elif [[ $line =~ State:\ (active|standby|dead|disabled) ]]; do
-        state=&quot;${BASH_REMATCH[1]}&quot;
-        case &quot;$state&quot; in
-            active)   (( path_active[&quot;$dev&quot;]++  )) ;;
-            standby)  (( path_standby[&quot;$dev&quot;]++ )) ;;
-            dead)     (( path_dead[&quot;$dev&quot;]++    )) ;;
-        esac
-    fi
-done &lt; &lt;(esxcli storage core path list 2&gt;/dev/null)
-
-for dev in $(echo &quot;${!path_active[@]} ${!path_standby[@]} ${!path_dead[@]}&quot; | tr ' ' '\n' | sort -u); do
-    a=&quot;${path_active[$dev]:-0}&quot;
-    s=&quot;${path_standby[$dev]:-0}&quot;
-    d=&quot;${path_dead[$dev]:-0}&quot;
-    t=$(( a + s + d ))
-    if (( d &gt; 0 )); then
-        status=&quot;DEAD_PATHS&quot;
-        CRIT=1
-    elif (( a == 0 )); then
-        status=&quot;NO_ACTIVE&quot;
-        CRIT=1
-    else
-        status=&quot;OK&quot;
-    fi
-    printf &quot;%-40s %8d %8d %8d %8d %s\n&quot; &quot;$dev&quot; &quot;$a&quot; &quot;$s&quot; &quot;$d&quot; &quot;$t&quot; &quot;$status&quot;
-done
-
-echo
-if [ $CRIT -eq 1 ]; then
-    echo &quot;RESULT: CRITICAL — dead or missing paths detected&quot;
-else
-    echo &quot;RESULT: PASS — all paths healthy&quot;
-fi
-exit $CRIT
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># esxi_path_health.sh</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Usage: ssh root@esxi-host &#39;bash -s&#39; &lt; esxi_path_health.sh</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or run locally on the ESXi host.</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">CRIT</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%dT%H:%M:%SZ&#39;</span><span class="k">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===================================&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; ESXi Storage Path Health Check&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot; </span><span class="nv">$TS</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===================================&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s %8s %8s %8s %8s %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;Device&quot;</span><span class="w"> </span><span class="s2">&quot;Active&quot;</span><span class="w"> </span><span class="s2">&quot;Standby&quot;</span><span class="w"> </span><span class="s2">&quot;Dead&quot;</span><span class="w"> </span><span class="s2">&quot;Total&quot;</span><span class="w"> </span><span class="s2">&quot;Status&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s %8s %8s %8s %8s %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;------&quot;</span><span class="w"> </span><span class="s2">&quot;------&quot;</span><span class="w"> </span><span class="s2">&quot;-------&quot;</span><span class="w"> </span><span class="s2">&quot;----&quot;</span><span class="w"> </span><span class="s2">&quot;-----&quot;</span><span class="w"> </span><span class="s2">&quot;------&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Build per-device path summary from nmp device list</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nv">current_device</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span>active<span class="w"> </span>standby<span class="w"> </span>dead<span class="w"> </span>total
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$line</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[[</span>:space:<span class="o">]]</span>Device<span class="se">\ </span>Display<span class="se">\ </span>Name:.*<span class="se">\(</span><span class="o">([</span>^<span class="o">)]</span>+<span class="o">)</span><span class="se">\)</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">        </span><span class="nv">current_device</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$line</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[[</span>:space:<span class="o">]]</span>Device<span class="se">\ </span>Display<span class="se">\ </span>Name:<span class="se">\ </span><span class="o">(</span>.*<span class="o">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_device</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">        </span><span class="nv">current_device</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;: &#39;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="o">)</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># Use path list for counts</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span>path_active<span class="w"> </span>path_standby<span class="w"> </span>path_dead
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$line</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[[</span>:space:<span class="o">]]</span>Device:<span class="se">\ </span><span class="o">(</span>.*<span class="o">)</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">        </span><span class="nv">dev</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]// /</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$line</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>State:<span class="se">\ </span><span class="o">(</span>active<span class="p">|</span>standby<span class="p">|</span>dead<span class="p">|</span>disabled<span class="o">)</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">        </span><span class="nv">state</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_REMATCH</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$state</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">            </span>active<span class="o">)</span><span class="w">   </span><span class="o">((</span><span class="w"> </span>path_active<span class="o">[</span><span class="s2">&quot;</span><span class="nv">$dev</span><span class="s2">&quot;</span><span class="o">]</span>++<span class="w">  </span><span class="o">))</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">            </span>standby<span class="o">)</span><span class="w">  </span><span class="o">((</span><span class="w"> </span>path_standby<span class="o">[</span><span class="s2">&quot;</span><span class="nv">$dev</span><span class="s2">&quot;</span><span class="o">]</span>++<span class="w"> </span><span class="o">))</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">            </span>dead<span class="o">)</span><span class="w">     </span><span class="o">((</span><span class="w"> </span>path_dead<span class="o">[</span><span class="s2">&quot;</span><span class="nv">$dev</span><span class="s2">&quot;</span><span class="o">]</span>++<span class="w">    </span><span class="o">))</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">        </span><span class="k">esac</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="o">)</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="k">for</span><span class="w"> </span>dev<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="p">!path_active[@]</span><span class="si">}</span><span class="s2"> </span><span class="si">${</span><span class="p">!path_standby[@]</span><span class="si">}</span><span class="s2"> </span><span class="si">${</span><span class="p">!path_dead[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">    </span><span class="nv">a</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">path_active</span><span class="p">[</span><span class="nv">$dev</span><span class="p">]</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">    </span><span class="nv">s</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">path_standby</span><span class="p">[</span><span class="nv">$dev</span><span class="p">]</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">    </span><span class="nv">d</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">path_dead</span><span class="p">[</span><span class="nv">$dev</span><span class="p">]</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">    </span><span class="nv">t</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="k">))</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span>d<span class="w"> </span>&gt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;DEAD_PATHS&quot;</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="w">        </span><span class="nv">CRIT</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;NO_ACTIVE&quot;</span>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">        </span><span class="nv">CRIT</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-40s %8d %8d %8d %8d %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dev</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$a</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$s</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$d</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$t</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="k">done</span>
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>
+<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="nb">echo</span>
+<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$CRIT</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;RESULT: CRITICAL — dead or missing paths detected&quot;</span>
+<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a><span class="k">else</span>
+<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;RESULT: PASS — all paths healthy&quot;</span>
+<a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a><span class="k">fi</span>
+<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a><span class="nb">exit</span><span class="w"> </span><span class="nv">$CRIT</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - SSH must be enabled on the ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
@@ -1190,136 +1190,136 @@ exit $CRIT
 </ul>
 <p><strong>Step 4 — Run it</strong></p>
 <p>Replace <code>192.168.1.100</code> with your ESXi host's IP:</p>
-<pre><code class="language-bash">ssh root@192.168.1.100 'bash -s' &lt; ~/Desktop/esxi_path_health.sh
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>root@192.168.1.100<span class="w"> </span><span class="s1">&#39;bash -s&#39;</span><span class="w"> </span>&lt;<span class="w"> </span>~/Desktop/esxi_path_health.sh
+</code></pre></div>
 <p>Type the root password when prompted.</p>
 <p><strong>What you should see</strong></p>
-<pre><code>===================================
- ESXi Storage Path Health Check
- 2026-05-06T14:30:00Z
-===================================
-Device                                    Active  Standby     Dead    Total Status
-------                                    ------  -------     ----    ----- ------
-naa.60003ff44dc75adcbc1e2f3a4b5c6d7e       2        0          0        2   OK
-naa.60003ff44dc75adcbc1e2f3a4b5c6d7f       2        0          0        2   OK
-
-RESULT: PASS — all paths healthy
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>===================================
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a> ESXi Storage Path Health Check
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a> 2026-05-06T14:30:00Z
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>===================================
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Device                                    Active  Standby     Dead    Total Status
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>------                                    ------  -------     ----    ----- ------
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>naa.60003ff44dc75adcbc1e2f3a4b5c6d7e       2        0          0        2   OK
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>naa.60003ff44dc75adcbc1e2f3a4b5c6d7f       2        0          0        2   OK
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>RESULT: PASS — all paths healthy
+</code></pre></div>
 <p>If any device shows <code>DEAD_PATHS</code> the script exits with code 1.</p>
 <hr />
 <h2 id="esxi-syslog-and-event-collector-python">ESXi Syslog and Event Collector (Python)<a class="headerlink" href="#esxi-syslog-and-event-collector-python" title="Permanent link">&para;</a></h2>
 <p>Connect to vCenter via pyVmomi, retrieve events from the last 24 hours filtered by severity, and report NMP/storage errors.</p>
-<pre><code class="language-python">#!/usr/bin/env python3
-&quot;&quot;&quot;
-esxi_event_collector.py
-Usage: python3 esxi_event_collector.py
-Deps: pip install pyVmomi
-&quot;&quot;&quot;
-
-import os, ssl, sys
-from datetime import datetime, timedelta, timezone
-from pyVim.connect import SmartConnect, Disconnect
-from pyVmomi import vim
-
-VCENTER_HOST = os.environ.get(&quot;VCENTER_HOST&quot;, &quot;vcenter.local&quot;)
-VC_USER      = os.environ.get(&quot;VC_USER&quot;,      &quot;administrator@vsphere.local&quot;)
-VC_PASS      = os.environ.get(&quot;VC_PASS&quot;,      &quot;&quot;)
-HOURS_BACK   = int(os.environ.get(&quot;HOURS_BACK&quot;, &quot;24&quot;))
-
-# Event types to capture
-WARN_TYPES = {
-    vim.event.EventEx,
-    vim.event.GeneralHostWarningEvent,
-    vim.event.GeneralHostErrorEvent,
-    vim.event.VmFailedToSuspendEvent,
-    vim.event.DatastoreCapacityIncreasedEvent,
-}
-
-NMP_PATTERNS = [&quot;NMP&quot;, &quot;Dead path&quot;, &quot;SCSI&quot;, &quot;storage&quot;, &quot;LUN&quot;, &quot;vmhba&quot;]
-
-
-def connect_vcenter():
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    context.check_hostname = False
-    context.verify_mode = ssl.CERT_NONE
-    si = SmartConnect(host=VCENTER_HOST, user=VC_USER, pwd=VC_PASS, sslContext=context)
-    return si
-
-
-def collect_events(si):
-    content = si.RetrieveContent()
-    em = content.eventManager
-
-    start_time = datetime.now(timezone.utc) - timedelta(hours=HOURS_BACK)
-    filter_spec = vim.event.EventFilterSpec(
-        time=vim.event.EventFilterSpec.ByTime(beginTime=start_time),
-    )
-    events = em.QueryEvents(filter=filter_spec)
-    return events
-
-
-def collect_host_vmkernel_events(si):
-    &quot;&quot;&quot;Scan vmkernel.log for NMP/storage messages via host ConfigManager.&quot;&quot;&quot;
-    content = si.RetrieveContent()
-    container = content.viewManager.CreateContainerView(
-        content.rootFolder, [vim.HostSystem], True
-    )
-    findings = []
-    for host in container.view:
-        try:
-            dm = host.configManager.diagnosticSystem
-            if not dm:
-                continue
-            # Read last 500 lines of vmkernel
-            lines = dm.BrowseDiagnosticLog(key=&quot;vmkernel&quot;, start=None, lines=500)
-            for entry in (lines.lineText or &quot;&quot;).splitlines():
-                if any(p.lower() in entry.lower() for p in NMP_PATTERNS):
-                    findings.append(f&quot;  [{host.name}] {entry.strip()}&quot;)
-        except Exception:
-            pass
-    container.Destroy()
-    return findings
-
-
-si = connect_vcenter()
-events = collect_events(si)
-
-print(f&quot;Events from last {HOURS_BACK}h on {VCENTER_HOST}&quot;)
-print(f&quot;Total events retrieved: {len(events)}&quot;)
-print()
-
-issues = []
-for e in sorted(events, key=lambda x: x.createdTime):
-    msg = getattr(e, 'fullFormattedMessage', str(e))
-    lvl = &quot;INFO&quot;
-    if isinstance(e, (vim.event.GeneralHostErrorEvent,)):
-        lvl = &quot;ERROR&quot;
-    elif isinstance(e, (vim.event.GeneralHostWarningEvent,)):
-        lvl = &quot;WARNING&quot;
-    if lvl in (&quot;ERROR&quot;, &quot;WARNING&quot;):
-        ts = e.createdTime.strftime('%Y-%m-%dT%H:%M:%SZ')
-        host = getattr(e.host, 'name', 'N/A') if hasattr(e, 'host') else 'N/A'
-        issues.append(f&quot;  [{lvl}] {ts}  host={host}  {msg[:120]}&quot;)
-
-if issues:
-    print(f&quot;Host events (WARNING/ERROR):&quot;)
-    for i in issues:
-        print(i)
-else:
-    print(&quot;No WARNING/ERROR host events found.&quot;)
-
-print()
-print(&quot;VMkernel NMP/storage log entries:&quot;)
-vmk_entries = collect_host_vmkernel_events(si)
-if vmk_entries:
-    for e in vmk_entries[:50]:
-        print(e)
-else:
-    print(&quot;  None found.&quot;)
-
-Disconnect(si)
-sys.exit(1 if issues or vmk_entries else 0)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="sd">esxi_event_collector.py</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sd">Usage: python3 esxi_event_collector.py</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="sd">Deps: pip install pyVmomi</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">ssl</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyVim.connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartConnect</span><span class="p">,</span> <span class="n">Disconnect</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyVmomi</span><span class="w"> </span><span class="kn">import</span> <span class="n">vim</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">VCENTER_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VCENTER_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;vcenter.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="n">VC_USER</span>      <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VC_USER&quot;</span><span class="p">,</span>      <span class="s2">&quot;administrator@vsphere.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">VC_PASS</span>      <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VC_PASS&quot;</span><span class="p">,</span>      <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="n">HOURS_BACK</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HOURS_BACK&quot;</span><span class="p">,</span> <span class="s2">&quot;24&quot;</span><span class="p">))</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Event types to capture</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="n">WARN_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventEx</span><span class="p">,</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">GeneralHostWarningEvent</span><span class="p">,</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">GeneralHostErrorEvent</span><span class="p">,</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>    <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">VmFailedToSuspendEvent</span><span class="p">,</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">DatastoreCapacityIncreasedEvent</span><span class="p">,</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="p">}</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="n">NMP_PATTERNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NMP&quot;</span><span class="p">,</span> <span class="s2">&quot;Dead path&quot;</span><span class="p">,</span> <span class="s2">&quot;SCSI&quot;</span><span class="p">,</span> <span class="s2">&quot;storage&quot;</span><span class="p">,</span> <span class="s2">&quot;LUN&quot;</span><span class="p">,</span> <span class="s2">&quot;vmhba&quot;</span><span class="p">]</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="k">def</span><span class="w"> </span><span class="nf">connect_vcenter</span><span class="p">():</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLContext</span><span class="p">(</span><span class="n">ssl</span><span class="o">.</span><span class="n">PROTOCOL_TLS_CLIENT</span><span class="p">)</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>    <span class="n">context</span><span class="o">.</span><span class="n">check_hostname</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>    <span class="n">context</span><span class="o">.</span><span class="n">verify_mode</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">CERT_NONE</span>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>    <span class="n">si</span> <span class="o">=</span> <span class="n">SmartConnect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">VCENTER_HOST</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">VC_USER</span><span class="p">,</span> <span class="n">pwd</span><span class="o">=</span><span class="n">VC_PASS</span><span class="p">,</span> <span class="n">sslContext</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    <span class="k">return</span> <span class="n">si</span>
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="k">def</span><span class="w"> </span><span class="nf">collect_events</span><span class="p">(</span><span class="n">si</span><span class="p">):</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>    <span class="n">content</span> <span class="o">=</span> <span class="n">si</span><span class="o">.</span><span class="n">RetrieveContent</span><span class="p">()</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>    <span class="n">em</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">eventManager</span>
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">HOURS_BACK</span><span class="p">)</span>
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>    <span class="n">filter_spec</span> <span class="o">=</span> <span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventFilterSpec</span><span class="p">(</span>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>        <span class="n">time</span><span class="o">=</span><span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventFilterSpec</span><span class="o">.</span><span class="n">ByTime</span><span class="p">(</span><span class="n">beginTime</span><span class="o">=</span><span class="n">start_time</span><span class="p">),</span>
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>    <span class="p">)</span>
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>    <span class="n">events</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">QueryEvents</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="n">filter_spec</span><span class="p">)</span>
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>    <span class="k">return</span> <span class="n">events</span>
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>
+<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>
+<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a><span class="k">def</span><span class="w"> </span><span class="nf">collect_host_vmkernel_events</span><span class="p">(</span><span class="n">si</span><span class="p">):</span>
+<a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan vmkernel.log for NMP/storage messages via host ConfigManager.&quot;&quot;&quot;</span>
+<a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a>    <span class="n">content</span> <span class="o">=</span> <span class="n">si</span><span class="o">.</span><span class="n">RetrieveContent</span><span class="p">()</span>
+<a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a>    <span class="n">container</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">viewManager</span><span class="o">.</span><span class="n">CreateContainerView</span><span class="p">(</span>
+<a id="__codelineno-7-54" name="__codelineno-7-54" href="#__codelineno-7-54"></a>        <span class="n">content</span><span class="o">.</span><span class="n">rootFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">vim</span><span class="o">.</span><span class="n">HostSystem</span><span class="p">],</span> <span class="kc">True</span>
+<a id="__codelineno-7-55" name="__codelineno-7-55" href="#__codelineno-7-55"></a>    <span class="p">)</span>
+<a id="__codelineno-7-56" name="__codelineno-7-56" href="#__codelineno-7-56"></a>    <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-7-57" name="__codelineno-7-57" href="#__codelineno-7-57"></a>    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">view</span><span class="p">:</span>
+<a id="__codelineno-7-58" name="__codelineno-7-58" href="#__codelineno-7-58"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-7-59" name="__codelineno-7-59" href="#__codelineno-7-59"></a>            <span class="n">dm</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">configManager</span><span class="o">.</span><span class="n">diagnosticSystem</span>
+<a id="__codelineno-7-60" name="__codelineno-7-60" href="#__codelineno-7-60"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">dm</span><span class="p">:</span>
+<a id="__codelineno-7-61" name="__codelineno-7-61" href="#__codelineno-7-61"></a>                <span class="k">continue</span>
+<a id="__codelineno-7-62" name="__codelineno-7-62" href="#__codelineno-7-62"></a>            <span class="c1"># Read last 500 lines of vmkernel</span>
+<a id="__codelineno-7-63" name="__codelineno-7-63" href="#__codelineno-7-63"></a>            <span class="n">lines</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">BrowseDiagnosticLog</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;vmkernel&quot;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<a id="__codelineno-7-64" name="__codelineno-7-64" href="#__codelineno-7-64"></a>            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">lineText</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<a id="__codelineno-7-65" name="__codelineno-7-65" href="#__codelineno-7-65"></a>                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">NMP_PATTERNS</span><span class="p">):</span>
+<a id="__codelineno-7-66" name="__codelineno-7-66" href="#__codelineno-7-66"></a>                    <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">host</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-67" name="__codelineno-7-67" href="#__codelineno-7-67"></a>        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-7-68" name="__codelineno-7-68" href="#__codelineno-7-68"></a>            <span class="k">pass</span>
+<a id="__codelineno-7-69" name="__codelineno-7-69" href="#__codelineno-7-69"></a>    <span class="n">container</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+<a id="__codelineno-7-70" name="__codelineno-7-70" href="#__codelineno-7-70"></a>    <span class="k">return</span> <span class="n">findings</span>
+<a id="__codelineno-7-71" name="__codelineno-7-71" href="#__codelineno-7-71"></a>
+<a id="__codelineno-7-72" name="__codelineno-7-72" href="#__codelineno-7-72"></a>
+<a id="__codelineno-7-73" name="__codelineno-7-73" href="#__codelineno-7-73"></a><span class="n">si</span> <span class="o">=</span> <span class="n">connect_vcenter</span><span class="p">()</span>
+<a id="__codelineno-7-74" name="__codelineno-7-74" href="#__codelineno-7-74"></a><span class="n">events</span> <span class="o">=</span> <span class="n">collect_events</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+<a id="__codelineno-7-75" name="__codelineno-7-75" href="#__codelineno-7-75"></a>
+<a id="__codelineno-7-76" name="__codelineno-7-76" href="#__codelineno-7-76"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Events from last </span><span class="si">{</span><span class="n">HOURS_BACK</span><span class="si">}</span><span class="s2">h on </span><span class="si">{</span><span class="n">VCENTER_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-77" name="__codelineno-7-77" href="#__codelineno-7-77"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total events retrieved: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-78" name="__codelineno-7-78" href="#__codelineno-7-78"></a><span class="nb">print</span><span class="p">()</span>
+<a id="__codelineno-7-79" name="__codelineno-7-79" href="#__codelineno-7-79"></a>
+<a id="__codelineno-7-80" name="__codelineno-7-80" href="#__codelineno-7-80"></a><span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-7-81" name="__codelineno-7-81" href="#__codelineno-7-81"></a><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">createdTime</span><span class="p">):</span>
+<a id="__codelineno-7-82" name="__codelineno-7-82" href="#__codelineno-7-82"></a>    <span class="n">msg</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s1">&#39;fullFormattedMessage&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<a id="__codelineno-7-83" name="__codelineno-7-83" href="#__codelineno-7-83"></a>    <span class="n">lvl</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span>
+<a id="__codelineno-7-84" name="__codelineno-7-84" href="#__codelineno-7-84"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">GeneralHostErrorEvent</span><span class="p">,)):</span>
+<a id="__codelineno-7-85" name="__codelineno-7-85" href="#__codelineno-7-85"></a>        <span class="n">lvl</span> <span class="o">=</span> <span class="s2">&quot;ERROR&quot;</span>
+<a id="__codelineno-7-86" name="__codelineno-7-86" href="#__codelineno-7-86"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">vim</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">GeneralHostWarningEvent</span><span class="p">,)):</span>
+<a id="__codelineno-7-87" name="__codelineno-7-87" href="#__codelineno-7-87"></a>        <span class="n">lvl</span> <span class="o">=</span> <span class="s2">&quot;WARNING&quot;</span>
+<a id="__codelineno-7-88" name="__codelineno-7-88" href="#__codelineno-7-88"></a>    <span class="k">if</span> <span class="n">lvl</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">):</span>
+<a id="__codelineno-7-89" name="__codelineno-7-89" href="#__codelineno-7-89"></a>        <span class="n">ts</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">createdTime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%SZ&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-90" name="__codelineno-7-90" href="#__codelineno-7-90"></a>        <span class="n">host</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s1">&#39;host&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;N/A&#39;</span>
+<a id="__codelineno-7-91" name="__codelineno-7-91" href="#__codelineno-7-91"></a>        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">lvl</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">  host=</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">msg</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-92" name="__codelineno-7-92" href="#__codelineno-7-92"></a>
+<a id="__codelineno-7-93" name="__codelineno-7-93" href="#__codelineno-7-93"></a><span class="k">if</span> <span class="n">issues</span><span class="p">:</span>
+<a id="__codelineno-7-94" name="__codelineno-7-94" href="#__codelineno-7-94"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Host events (WARNING/ERROR):&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-95" name="__codelineno-7-95" href="#__codelineno-7-95"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">issues</span><span class="p">:</span>
+<a id="__codelineno-7-96" name="__codelineno-7-96" href="#__codelineno-7-96"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<a id="__codelineno-7-97" name="__codelineno-7-97" href="#__codelineno-7-97"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-7-98" name="__codelineno-7-98" href="#__codelineno-7-98"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No WARNING/ERROR host events found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-99" name="__codelineno-7-99" href="#__codelineno-7-99"></a>
+<a id="__codelineno-7-100" name="__codelineno-7-100" href="#__codelineno-7-100"></a><span class="nb">print</span><span class="p">()</span>
+<a id="__codelineno-7-101" name="__codelineno-7-101" href="#__codelineno-7-101"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VMkernel NMP/storage log entries:&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-102" name="__codelineno-7-102" href="#__codelineno-7-102"></a><span class="n">vmk_entries</span> <span class="o">=</span> <span class="n">collect_host_vmkernel_events</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+<a id="__codelineno-7-103" name="__codelineno-7-103" href="#__codelineno-7-103"></a><span class="k">if</span> <span class="n">vmk_entries</span><span class="p">:</span>
+<a id="__codelineno-7-104" name="__codelineno-7-104" href="#__codelineno-7-104"></a>    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">vmk_entries</span><span class="p">[:</span><span class="mi">50</span><span class="p">]:</span>
+<a id="__codelineno-7-105" name="__codelineno-7-105" href="#__codelineno-7-105"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-7-106" name="__codelineno-7-106" href="#__codelineno-7-106"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-7-107" name="__codelineno-7-107" href="#__codelineno-7-107"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  None found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-108" name="__codelineno-7-108" href="#__codelineno-7-108"></a>
+<a id="__codelineno-7-109" name="__codelineno-7-109" href="#__codelineno-7-109"></a><span class="n">Disconnect</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+<a id="__codelineno-7-110" name="__codelineno-7-110" href="#__codelineno-7-110"></a><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">issues</span> <span class="ow">or</span> <span class="n">vmk_entries</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -1370,81 +1370,81 @@ sys.exit(1 if issues or vmk_entries else 0)
 <p><strong>Step 3 — Open Command Prompt</strong></p>
 <p>Windows key → type <code>cmd</code> → press Enter</p>
 <p><strong>Step 4 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-python esxi_event_collector.py
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python esxi_event_collector.py
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>Events from last 24h on vcenter.company.local
-Total events retrieved: 312
-
-No WARNING/ERROR host events found.
-
-VMkernel NMP/storage log entries:
-  None found.
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Events from last 24h on vcenter.company.local
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Total events retrieved: 312
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>No WARNING/ERROR host events found.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>VMkernel NMP/storage log entries:
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  None found.
+</code></pre></div>
 <p>If storage or NMP issues are present, they will be listed with timestamps and host names. The script exits with code 1 if any issues are found.</p>
 <hr />
 <h2 id="ntp-configuration-audit-bash">NTP Configuration Audit (Bash)<a class="headerlink" href="#ntp-configuration-audit-bash" title="Permanent link">&para;</a></h2>
 <p>SSH to each ESXi host (or run locally), verify NTP service state, configured servers, and time offset.</p>
-<pre><code class="language-bash">#!/bin/bash
-# esxi_ntp_audit.sh
-# Usage: ESXI_HOSTS=&quot;host1 host2 host3&quot; ./esxi_ntp_audit.sh
-# Requires passwordless SSH to each host as root.
-
-ESXI_HOSTS=&quot;${ESXI_HOSTS:-esxi01 esxi02 esxi03}&quot;
-SSH_OPTS=&quot;-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes&quot;
-OFFSET_WARN_MS=500
-OFFSET_CRIT_MS=2000
-overall=0
-
-printf &quot;%-25s %-20s %-10s %-12s %s\n&quot; &quot;Hostname&quot; &quot;NTP Server(s)&quot; &quot;Service&quot; &quot;Offset(ms)&quot; &quot;Status&quot;
-printf &quot;%-25s %-20s %-10s %-12s %s\n&quot; &quot;--------&quot; &quot;-------------&quot; &quot;-------&quot; &quot;----------&quot; &quot;------&quot;
-
-for host in $ESXI_HOSTS; do
-    run() { ssh $SSH_OPTS &quot;root@${host}&quot; &quot;$1&quot; 2&gt;/dev/null; }
-
-    svc_status=$(run &quot;/etc/init.d/ntpd status&quot; | grep -io 'running\|stopped\|not running' | head -1)
-    svc_status=&quot;${svc_status:-unknown}&quot;
-
-    ntp_servers=$(run &quot;esxcli system ntp get&quot; | awk '/NTP Servers:/{for(i=3;i&lt;=NF;i++) printf $i&quot; &quot;; print &quot;&quot;}' | xargs)
-    [ -z &quot;$ntp_servers&quot; ] &amp;&amp; ntp_servers=&quot;NOT_CONFIGURED&quot;
-
-    # Get time offset from ntpq or chronyc
-    offset_raw=$(run &quot;ntpq -p 2&gt;/dev/null | awk 'NR&gt;2{print \$9}' | head -1&quot;)
-    if [[ &quot;$offset_raw&quot; =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
-        offset_ms=$(printf &quot;%.0f&quot; &quot;$offset_raw&quot;)
-        abs_offset=${offset_ms#-}
-    else
-        offset_ms=&quot;N/A&quot;
-        abs_offset=0
-    fi
-
-    status=&quot;OK&quot;
-    if [[ &quot;$svc_status&quot; != &quot;running&quot; ]]; then
-        status=&quot;SVC_DOWN&quot;
-        overall=2
-    elif [[ &quot;$ntp_servers&quot; == &quot;NOT_CONFIGURED&quot; ]]; then
-        status=&quot;NO_NTP_SERVER&quot;
-        overall=2
-    elif (( abs_offset &gt;= OFFSET_CRIT_MS )); then
-        status=&quot;HIGH_DRIFT&quot;
-        overall=2
-    elif (( abs_offset &gt;= OFFSET_WARN_MS )); then
-        status=&quot;WARN_DRIFT&quot;
-        [ $overall -lt 1 ] &amp;&amp; overall=1
-    fi
-
-    printf &quot;%-25s %-20s %-10s %-12s %s\n&quot; &quot;$host&quot; &quot;${ntp_servers:0:20}&quot; &quot;$svc_status&quot; &quot;${offset_ms}ms&quot; &quot;$status&quot;
-done
-
-echo
-case $overall in
-    0) echo &quot;Overall: PASS&quot;    ;;
-    1) echo &quot;Overall: WARNING&quot; ;;
-    2) echo &quot;Overall: CRITICAL&quot;;;
-esac
-exit $overall
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># esxi_ntp_audit.sh</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Usage: ESXI_HOSTS=&quot;host1 host2 host3&quot; ./esxi_ntp_audit.sh</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Requires passwordless SSH to each host as root.</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">ESXI_HOSTS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ESXI_HOSTS</span><span class="k">:-</span><span class="nv">esxi01</span><span class="p"> esxi02 esxi03</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nv">SSH_OPTS</span><span class="o">=</span><span class="s2">&quot;-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">OFFSET_WARN_MS</span><span class="o">=</span><span class="m">500</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">OFFSET_CRIT_MS</span><span class="o">=</span><span class="m">2000</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nv">overall</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-25s %-20s %-10s %-12s %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;Hostname&quot;</span><span class="w"> </span><span class="s2">&quot;NTP Server(s)&quot;</span><span class="w"> </span><span class="s2">&quot;Service&quot;</span><span class="w"> </span><span class="s2">&quot;Offset(ms)&quot;</span><span class="w"> </span><span class="s2">&quot;Status&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-25s %-20s %-10s %-12s %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;--------&quot;</span><span class="w"> </span><span class="s2">&quot;-------------&quot;</span><span class="w"> </span><span class="s2">&quot;-------&quot;</span><span class="w"> </span><span class="s2">&quot;----------&quot;</span><span class="w"> </span><span class="s2">&quot;------&quot;</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$ESXI_HOSTS</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span>run<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$SSH_OPTS</span><span class="w"> </span><span class="s2">&quot;root@</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="nv">svc_status</span><span class="o">=</span><span class="k">$(</span>run<span class="w"> </span><span class="s2">&quot;/etc/init.d/ntpd status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-io<span class="w"> </span><span class="s1">&#39;running\|stopped\|not running&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">    </span><span class="nv">svc_status</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">svc_status</span><span class="k">:-</span><span class="nv">unknown</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="nv">ntp_servers</span><span class="o">=</span><span class="k">$(</span>run<span class="w"> </span><span class="s2">&quot;esxcli system ntp get&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/NTP Servers:/{for(i=3;i&lt;=NF;i++) printf $i&quot; &quot;; print &quot;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">    </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ntp_servers</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">ntp_servers</span><span class="o">=</span><span class="s2">&quot;NOT_CONFIGURED&quot;</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">    </span><span class="c1"># Get time offset from ntpq or chronyc</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">    </span><span class="nv">offset_raw</span><span class="o">=</span><span class="k">$(</span>run<span class="w"> </span><span class="s2">&quot;ntpq -p 2&gt;/dev/null | awk &#39;NR&gt;2{print \$9}&#39; | head -1&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$offset_raw</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^-?<span class="o">[</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">(</span><span class="se">\.</span><span class="o">[</span><span class="m">0</span>-9<span class="o">]</span>+<span class="o">)</span>?$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">        </span><span class="nv">offset_ms</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%.0f&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$offset_raw</span><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">        </span><span class="nv">abs_offset</span><span class="o">=</span><span class="si">${</span><span class="nv">offset_ms</span><span class="p">#-</span><span class="si">}</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">        </span><span class="nv">offset_ms</span><span class="o">=</span><span class="s2">&quot;N/A&quot;</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="w">        </span><span class="nv">abs_offset</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="w">    </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc_status</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;running&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;SVC_DOWN&quot;</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">        </span><span class="nv">overall</span><span class="o">=</span><span class="m">2</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ntp_servers</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;NOT_CONFIGURED&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;NO_NTP_SERVER&quot;</span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="w">        </span><span class="nv">overall</span><span class="o">=</span><span class="m">2</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">((</span><span class="w"> </span>abs_offset<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span>OFFSET_CRIT_MS<span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;HIGH_DRIFT&quot;</span>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="w">        </span><span class="nv">overall</span><span class="o">=</span><span class="m">2</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">((</span><span class="w"> </span>abs_offset<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span>OFFSET_WARN_MS<span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="w">        </span><span class="nv">status</span><span class="o">=</span><span class="s2">&quot;WARN_DRIFT&quot;</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="w">        </span><span class="o">[</span><span class="w"> </span><span class="nv">$overall</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">overall</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-25s %-20s %-10s %-12s %s\n&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ntp_servers</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">20</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc_status</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">offset_ms</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a><span class="k">done</span>
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a>
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a><span class="nb">echo</span>
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a><span class="k">case</span><span class="w"> </span><span class="nv">$overall</span><span class="w"> </span><span class="k">in</span>
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a><span class="w">    </span><span class="m">0</span><span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Overall: PASS&quot;</span><span class="w">    </span><span class="p">;;</span>
+<a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a><span class="w">    </span><span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Overall: WARNING&quot;</span><span class="w"> </span><span class="p">;;</span>
+<a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a><span class="w">    </span><span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Overall: CRITICAL&quot;</span><span class="p">;;</span>
+<a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a><span class="k">esac</span>
+<a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a><span class="nb">exit</span><span class="w"> </span><span class="nv">$overall</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - SSH must be enabled on each ESXi host: vSphere Client → select the host → Manage → Services → SSH → click Start
@@ -1482,109 +1482,109 @@ exit $overall
 <li><strong>Git Bash:</strong> right-click Desktop → "Git Bash Here"</li>
 </ul>
 <p><strong>Step 4 — Make the script executable</strong></p>
-<pre><code class="language-bash">chmod +x ~/esxi_ntp_audit.sh
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>~/esxi_ntp_audit.sh
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code class="language-bash">ESXI_HOSTS=&quot;192.168.1.101 192.168.1.102 192.168.1.103&quot; ~/esxi_ntp_audit.sh
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">ESXI_HOSTS</span><span class="o">=</span><span class="s2">&quot;192.168.1.101 192.168.1.102 192.168.1.103&quot;</span><span class="w"> </span>~/esxi_ntp_audit.sh
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>Hostname                  NTP Server(s)        Service    Offset(ms)   Status
---------                  -------------        -------    ----------   ------
-192.168.1.101             192.168.1.1          running    12ms         OK
-192.168.1.102             192.168.1.1          running    8ms          OK
-192.168.1.103             NOT_CONFIGURED       running    N/A          NO_NTP_SERVER
-
-Overall: CRITICAL
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Hostname                  NTP Server(s)        Service    Offset(ms)   Status
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>--------                  -------------        -------    ----------   ------
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>192.168.1.101             192.168.1.1          running    12ms         OK
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>192.168.1.102             192.168.1.1          running    8ms          OK
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>192.168.1.103             NOT_CONFIGURED       running    N/A          NO_NTP_SERVER
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Overall: CRITICAL
+</code></pre></div>
 <p>Any host with NTP issues exits with code 2 (CRITICAL).</p>
 <hr />
 <h2 id="ansible-esxi-configuration-playbook">Ansible ESXi Configuration Playbook<a class="headerlink" href="#ansible-esxi-configuration-playbook" title="Permanent link">&para;</a></h2>
 <p>Use the <code>community.vmware</code> collection to verify NTP, DNS, syslog, and SSH security profile compliance across all ESXi hosts in a cluster.</p>
-<pre><code class="language-yaml">---
-# esxi_compliance.yml
-# Usage: ansible-playbook -i inventory esxi_compliance.yml
-# Deps: ansible-galaxy collection install community.vmware
-# Vars: vcenter_hostname, datacenter_name, cluster_name, vc_username, vc_password
-
-- name: ESXi Host Configuration Compliance Check
-  hosts: localhost
-  gather_facts: false
-  vars:
-    vcenter_hostname: vcenter.local
-    datacenter_name:  Production
-    cluster_name:     Cluster-01
-    vc_username:      &quot;{{ lookup('env','VC_USER') }}&quot;
-    vc_password:      &quot;{{ lookup('env','VC_PASS') }}&quot;
-    ntp_servers:
-      - 192.168.1.1
-      - 192.168.1.2
-    dns_servers:
-      - 192.168.1.53
-    syslog_host: &quot;udp://syslog.local:514&quot;
-
-  tasks:
-
-    - name: Gather ESXi host facts
-      community.vmware.vmware_host_facts:
-        hostname:   &quot;{{ vcenter_hostname }}&quot;
-        username:   &quot;{{ vc_username }}&quot;
-        password:   &quot;{{ vc_password }}&quot;
-        cluster:    &quot;{{ cluster_name }}&quot;
-        validate_certs: false
-      register: host_facts
-
-    - name: Check NTP configuration per host
-      community.vmware.vmware_host_ntp:
-        hostname:   &quot;{{ vcenter_hostname }}&quot;
-        username:   &quot;{{ vc_username }}&quot;
-        password:   &quot;{{ vc_password }}&quot;
-        esxi_hostname: &quot;{{ item }}&quot;
-        ntp_servers: &quot;{{ ntp_servers }}&quot;
-        validate_certs: false
-        state: present
-      loop: &quot;{{ host_facts.hosts_facts.keys() | list }}&quot;
-
-    - name: Check DNS configuration per host
-      community.vmware.vmware_host_dns:
-        hostname:   &quot;{{ vcenter_hostname }}&quot;
-        username:   &quot;{{ vc_username }}&quot;
-        password:   &quot;{{ vc_password }}&quot;
-        esxi_hostname: &quot;{{ item }}&quot;
-        dns_servers: &quot;{{ dns_servers }}&quot;
-        validate_certs: false
-      loop: &quot;{{ host_facts.hosts_facts.keys() | list }}&quot;
-
-    - name: Check syslog target per host
-      community.vmware.vmware_host_config_manager:
-        hostname:   &quot;{{ vcenter_hostname }}&quot;
-        username:   &quot;{{ vc_username }}&quot;
-        password:   &quot;{{ vc_password }}&quot;
-        esxi_hostname: &quot;{{ item }}&quot;
-        options:
-          'Syslog.global.logHost': &quot;{{ syslog_host }}&quot;
-        validate_certs: false
-      loop: &quot;{{ host_facts.hosts_facts.keys() | list }}&quot;
-
-    - name: Check SSH security profile (SSH should be disabled in production)
-      community.vmware.vmware_host_service:
-        hostname:   &quot;{{ vcenter_hostname }}&quot;
-        username:   &quot;{{ vc_username }}&quot;
-        password:   &quot;{{ vc_password }}&quot;
-        esxi_hostname: &quot;{{ item }}&quot;
-        service_name: TSM-SSH
-        state: stopped
-        validate_certs: false
-      loop: &quot;{{ host_facts.hosts_facts.keys() | list }}&quot;
-      register: ssh_result
-      failed_when: false
-
-    - name: Assert compliance summary
-      ansible.builtin.assert:
-        that:
-          - host_facts.hosts_facts | length &gt; 0
-        fail_msg: &quot;No hosts found in cluster {{ cluster_name }}&quot;
-        success_msg: &quot;Compliance check complete for {{ host_facts.hosts_facts | length }} hosts&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nn">---</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># esxi_compliance.yml</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Usage: ansible-playbook -i inventory esxi_compliance.yml</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Deps: ansible-galaxy collection install community.vmware</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Vars: vcenter_hostname, datacenter_name, cluster_name, vc_username, vc_password</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ESXi Host Configuration Compliance Check</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span><span class="nt">vcenter_hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vcenter.local</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="nt">datacenter_name</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Production</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">    </span><span class="nt">cluster_name</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Cluster-01</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span><span class="nt">vc_username</span><span class="p">:</span><span class="w">      </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;env&#39;,&#39;VC_USER&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="nt">vc_password</span><span class="p">:</span><span class="w">      </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;env&#39;,&#39;VC_PASS&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">    </span><span class="nt">ntp_servers</span><span class="p">:</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.1</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.2</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="nt">dns_servers</span><span class="p">:</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.53</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="nt">syslog_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;udp://syslog.local:514&quot;</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gather ESXi host facts</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">      </span><span class="nt">community.vmware.vmware_host_facts</span><span class="p">:</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">        </span><span class="nt">cluster</span><span class="p">:</span><span class="w">    </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host_facts</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check NTP configuration per host</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">      </span><span class="nt">community.vmware.vmware_host_ntp</span><span class="p">:</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">        </span><span class="nt">esxi_hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">        </span><span class="nt">ntp_servers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ntp_servers</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">host_facts.hosts_facts.keys()</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check DNS configuration per host</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">      </span><span class="nt">community.vmware.vmware_host_dns</span><span class="p">:</span>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="w">        </span><span class="nt">esxi_hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-51" name="__codelineno-14-51" href="#__codelineno-14-51"></a><span class="w">        </span><span class="nt">dns_servers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">dns_servers</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-52" name="__codelineno-14-52" href="#__codelineno-14-52"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-53" name="__codelineno-14-53" href="#__codelineno-14-53"></a><span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">host_facts.hosts_facts.keys()</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-54" name="__codelineno-14-54" href="#__codelineno-14-54"></a>
+<a id="__codelineno-14-55" name="__codelineno-14-55" href="#__codelineno-14-55"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check syslog target per host</span>
+<a id="__codelineno-14-56" name="__codelineno-14-56" href="#__codelineno-14-56"></a><span class="w">      </span><span class="nt">community.vmware.vmware_host_config_manager</span><span class="p">:</span>
+<a id="__codelineno-14-57" name="__codelineno-14-57" href="#__codelineno-14-57"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-58" name="__codelineno-14-58" href="#__codelineno-14-58"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-59" name="__codelineno-14-59" href="#__codelineno-14-59"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-60" name="__codelineno-14-60" href="#__codelineno-14-60"></a><span class="w">        </span><span class="nt">esxi_hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-61" name="__codelineno-14-61" href="#__codelineno-14-61"></a><span class="w">        </span><span class="nt">options</span><span class="p">:</span>
+<a id="__codelineno-14-62" name="__codelineno-14-62" href="#__codelineno-14-62"></a><span class="w">          </span><span class="s">&#39;Syslog.global.logHost&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">syslog_host</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-63" name="__codelineno-14-63" href="#__codelineno-14-63"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-64" name="__codelineno-14-64" href="#__codelineno-14-64"></a><span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">host_facts.hosts_facts.keys()</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-65" name="__codelineno-14-65" href="#__codelineno-14-65"></a>
+<a id="__codelineno-14-66" name="__codelineno-14-66" href="#__codelineno-14-66"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check SSH security profile (SSH should be disabled in production)</span>
+<a id="__codelineno-14-67" name="__codelineno-14-67" href="#__codelineno-14-67"></a><span class="w">      </span><span class="nt">community.vmware.vmware_host_service</span><span class="p">:</span>
+<a id="__codelineno-14-68" name="__codelineno-14-68" href="#__codelineno-14-68"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-69" name="__codelineno-14-69" href="#__codelineno-14-69"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-70" name="__codelineno-14-70" href="#__codelineno-14-70"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-71" name="__codelineno-14-71" href="#__codelineno-14-71"></a><span class="w">        </span><span class="nt">esxi_hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-72" name="__codelineno-14-72" href="#__codelineno-14-72"></a><span class="w">        </span><span class="nt">service_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TSM-SSH</span>
+<a id="__codelineno-14-73" name="__codelineno-14-73" href="#__codelineno-14-73"></a><span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stopped</span>
+<a id="__codelineno-14-74" name="__codelineno-14-74" href="#__codelineno-14-74"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-75" name="__codelineno-14-75" href="#__codelineno-14-75"></a><span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">host_facts.hosts_facts.keys()</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-76" name="__codelineno-14-76" href="#__codelineno-14-76"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh_result</span>
+<a id="__codelineno-14-77" name="__codelineno-14-77" href="#__codelineno-14-77"></a><span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-14-78" name="__codelineno-14-78" href="#__codelineno-14-78"></a>
+<a id="__codelineno-14-79" name="__codelineno-14-79" href="#__codelineno-14-79"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Assert compliance summary</span>
+<a id="__codelineno-14-80" name="__codelineno-14-80" href="#__codelineno-14-80"></a><span class="w">      </span><span class="nt">ansible.builtin.assert</span><span class="p">:</span>
+<a id="__codelineno-14-81" name="__codelineno-14-81" href="#__codelineno-14-81"></a><span class="w">        </span><span class="nt">that</span><span class="p">:</span>
+<a id="__codelineno-14-82" name="__codelineno-14-82" href="#__codelineno-14-82"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host_facts.hosts_facts | length &gt; 0</span>
+<a id="__codelineno-14-83" name="__codelineno-14-83" href="#__codelineno-14-83"></a><span class="w">        </span><span class="nt">fail_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">hosts</span><span class="nv"> </span><span class="s">found</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-14-84" name="__codelineno-14-84" href="#__codelineno-14-84"></a><span class="w">        </span><span class="nt">success_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Compliance</span><span class="nv"> </span><span class="s">check</span><span class="nv"> </span><span class="s">complete</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">host_facts.hosts_facts</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">length</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">hosts&quot;</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
@@ -1595,8 +1595,8 @@ Overall: CRITICAL
 - Network access to your vCenter server</p>
 <p><strong>Step 1 — Save the file</strong></p>
 <p>In your WSL terminal:</p>
-<pre><code class="language-bash">nano ~/esxi_compliance.yml
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>nano<span class="w"> </span>~/esxi_compliance.yml
+</code></pre></div>
 <p>Paste the entire code block, then press <code>Ctrl+X</code>, then <code>Y</code>, then <code>Enter</code> to save.</p>
 <p><strong>Step 2 — Fill in your details</strong></p>
 <p>Open the file and update the <code>vars:</code> section:</p>
@@ -1642,112 +1642,112 @@ Overall: CRITICAL
 </tbody>
 </table>
 <p><strong>Step 3 — Set credentials as environment variables</strong></p>
-<pre><code class="language-bash">export VC_USER=&quot;administrator@vsphere.local&quot;
-export VC_PASS=&quot;YourPassword&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VC_USER</span><span class="o">=</span><span class="s2">&quot;administrator@vsphere.local&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VC_PASS</span><span class="o">=</span><span class="s2">&quot;YourPassword&quot;</span>
+</code></pre></div>
 <p><strong>Step 4 — Create a minimal inventory file</strong></p>
-<pre><code class="language-bash">echo &quot;localhost ansible_connection=local&quot; &gt; ~/inventory
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;localhost ansible_connection=local&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>~/inventory
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code class="language-bash">ansible-playbook -i ~/inventory ~/esxi_compliance.yml
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>~/inventory<span class="w"> </span>~/esxi_compliance.yml
+</code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>Each task prints <code>ok</code> (no change needed) or <code>changed</code> (configuration was corrected). If no hosts are found in the cluster, you get a <code>FAILED</code> assertion. Any task that encounters an error (such as a host that cannot be reached) will show <code>fatal</code> with the error detail.</p>
 <hr />
 <h2 id="windows-esxi-host-health-via-rest-api-powershell">Windows: ESXi Host Health via REST API (PowerShell)<a class="headerlink" href="#windows-esxi-host-health-via-rest-api-powershell" title="Permanent link">&para;</a></h2>
 <p>Use the ESXi Embedded Host Client REST API (available on ESXi 6.x and newer) to check system health and list services — no extra modules needed.</p>
-<pre><code class="language-powershell"># esxi_rest_health.ps1
-# Uses the ESXi local REST API on port 443.
-# Available on ESXi 6.x and newer (Embedded Host Client REST API).
-# Requires PowerShell 5.1+ (already on Windows 10/11). No extra modules needed.
-
-param(
-    [string]$EsxiHost = &quot;192.168.1.100&quot;,
-    [string]$EsxiUser = &quot;root&quot;,
-    [string]$EsxiPass = &quot;YourRootPasswordHere&quot;
-)
-
-# Ignore SSL certificate errors (ESXi uses self-signed certs)
-Add-Type @&quot;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-public class TrustAll : ICertificatePolicy {
-    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int prob) { return true; }
-}
-&quot;@
-[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-
-$BaseUrl = &quot;https://$EsxiHost/rest&quot;
-
-# Step 1: Authenticate — POST /rest/com/vmware/cis/session with Basic auth
-$authBytes = [System.Text.Encoding]::ASCII.GetBytes(&quot;${EsxiUser}:${EsxiPass}&quot;)
-$authB64   = [System.Convert]::ToBase64String($authBytes)
-$authHeaders = @{ Authorization = &quot;Basic $authB64&quot; }
-
-try {
-    $sessionResp = Invoke-RestMethod -Uri &quot;$BaseUrl/com/vmware/cis/session&quot; -Method POST -Headers $authHeaders
-    $sessionToken = $sessionResp.value
-} catch {
-    Write-Host &quot;ERROR: Could not authenticate to ESXi host. Check IP, username, and password.&quot; -ForegroundColor Red
-    Write-Host $_.Exception.Message
-    exit 1
-}
-
-$apiHeaders = @{ &quot;vmware-api-session-id&quot; = $sessionToken }
-
-Write-Host &quot;`n=== ESXi Host Health Check: $EsxiHost ===&quot; -ForegroundColor Cyan
-Write-Host &quot;($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n&quot;
-
-# Step 2: GET /rest/appliance/health/system — overall health
-try {
-    $health = Invoke-RestMethod -Uri &quot;$BaseUrl/appliance/health/system&quot; -Method GET -Headers $apiHeaders
-    $healthVal = $health.value
-    $colour = if ($healthVal -eq &quot;green&quot;) { &quot;Green&quot; } elseif ($healthVal -eq &quot;yellow&quot;) { &quot;Yellow&quot; } else { &quot;Red&quot; }
-    Write-Host &quot;System Health: &quot; -NoNewline
-    Write-Host $healthVal.ToUpper() -ForegroundColor $colour
-} catch {
-    Write-Host &quot;System Health: UNKNOWN (could not retrieve — $($_.Exception.Message))&quot; -ForegroundColor Yellow
-}
-
-Write-Host &quot;&quot;
-
-# Step 3: GET /rest/appliance/vmon/service — list services
-try {
-    $services = Invoke-RestMethod -Uri &quot;$BaseUrl/appliance/vmon/service&quot; -Method GET -Headers $apiHeaders
-    Write-Host &quot;--- Services ---&quot;
-    $header = &quot;{0,-40} {1,-15} {2}&quot;
-    Write-Host ($header -f &quot;Service&quot;, &quot;State&quot;, &quot;Startup Type&quot;)
-    Write-Host (&quot;-&quot; * 70)
-
-    $stoppedServices = @()
-    foreach ($svc in ($services.value | Sort-Object { $_.key })) {
-        $state   = $svc.value.state
-        $startup = $svc.value.startup_type
-        $colour  = if ($state -eq &quot;STARTED&quot;) { &quot;Green&quot; } elseif ($state -eq &quot;STOPPED&quot;) { &quot;Red&quot; } else { &quot;Yellow&quot; }
-        Write-Host ($header -f $svc.key, $state, $startup) -ForegroundColor $colour
-        if ($state -eq &quot;STOPPED&quot; -and $startup -eq &quot;AUTOMATIC&quot;) {
-            $stoppedServices += $svc.key
-        }
-    }
-
-    if ($stoppedServices.Count -gt 0) {
-        Write-Host &quot;`nWARNING: The following automatic services are stopped:&quot; -ForegroundColor Yellow
-        $stoppedServices | ForEach-Object { Write-Host &quot;  - $_&quot; -ForegroundColor Yellow }
-    } else {
-        Write-Host &quot;`nAll automatic services are running.&quot; -ForegroundColor Green
-    }
-} catch {
-    Write-Host &quot;Services: UNKNOWN (could not retrieve — $($_.Exception.Message))&quot; -ForegroundColor Yellow
-}
-
-# Log out
-try {
-    Invoke-RestMethod -Uri &quot;$BaseUrl/com/vmware/cis/session&quot; -Method DELETE -Headers $apiHeaders | Out-Null
-} catch {}
-
-Write-Host &quot;`nCheck complete.&quot; -ForegroundColor Cyan
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># esxi_rest_health.ps1</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c"># Uses the ESXi local REST API on port 443.</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c"># Available on ESXi 6.x and newer (Embedded Host Client REST API).</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c"># Requires PowerShell 5.1+ (already on Windows 10/11). No extra modules needed.</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="no">[string]</span><span class="nv">$EsxiHost</span> <span class="p">=</span> <span class="s2">&quot;192.168.1.100&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="no">[string]</span><span class="nv">$EsxiUser</span> <span class="p">=</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="no">[string]</span><span class="nv">$EsxiPass</span> <span class="p">=</span> <span class="s2">&quot;YourRootPasswordHere&quot;</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="c"># Ignore SSL certificate errors (ESXi uses self-signed certs)</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="nb">Add-Type</span> <span class="sh">@&quot;</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="sh">using System.Net;</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="sh">using System.Security.Cryptography.X509Certificates;</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="sh">public class TrustAll : ICertificatePolicy {</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="sh">    public bool CheckValidationResult(ServicePoint sp, X509Certificate cert, WebRequest req, int prob) { return true; }</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="sh">}</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a><span class="sh">&quot;@</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="no">[System.Net.ServicePointManager]</span><span class="p">::</span><span class="n">CertificatePolicy</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">TrustAll</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="no">[System.Net.ServicePointManager]</span><span class="p">::</span><span class="n">SecurityProtocol</span> <span class="p">=</span> <span class="no">[System.Net.SecurityProtocolType]</span><span class="p">::</span><span class="n">Tls12</span>
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a><span class="nv">$BaseUrl</span> <span class="p">=</span> <span class="s2">&quot;https://$EsxiHost/rest&quot;</span>
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a><span class="c"># Step 1: Authenticate — POST /rest/com/vmware/cis/session with Basic auth</span>
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a><span class="nv">$authBytes</span> <span class="p">=</span> <span class="no">[System.Text.Encoding]</span><span class="p">::</span><span class="n">ASCII</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="s2">&quot;${EsxiUser}:${EsxiPass}&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a><span class="nv">$authB64</span>   <span class="p">=</span> <span class="no">[System.Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$authBytes</span><span class="p">)</span>
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a><span class="nv">$authHeaders</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Basic $authB64&quot;</span> <span class="p">}</span>
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>    <span class="nv">$sessionResp</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$BaseUrl/com/vmware/cis/session&quot;</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="n">-Headers</span> <span class="nv">$authHeaders</span>
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>    <span class="nv">$sessionToken</span> <span class="p">=</span> <span class="nv">$sessionResp</span><span class="p">.</span><span class="n">value</span>
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;ERROR: Could not authenticate to ESXi host. Check IP, username, and password.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Red</span>
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>    <span class="nb">Write-Host</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>    <span class="n">exit</span> <span class="n">1</span>
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a><span class="p">}</span>
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a><span class="nv">$apiHeaders</span> <span class="p">=</span> <span class="p">@{</span> <span class="s2">&quot;vmware-api-session-id&quot;</span> <span class="p">=</span> <span class="nv">$sessionToken</span> <span class="p">}</span>
+<a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>
+<a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== ESXi Host Health Check: $EsxiHost ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a><span class="nb">Write-Host</span> <span class="s2">&quot;(</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">)</span><span class="s2">)</span><span class="se">`n</span><span class="s2">&quot;</span>
+<a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a>
+<a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a><span class="c"># Step 2: GET /rest/appliance/health/system — overall health</span>
+<a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-19-46" name="__codelineno-19-46" href="#__codelineno-19-46"></a>    <span class="nv">$health</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$BaseUrl/appliance/health/system&quot;</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="nv">$apiHeaders</span>
+<a id="__codelineno-19-47" name="__codelineno-19-47" href="#__codelineno-19-47"></a>    <span class="nv">$healthVal</span> <span class="p">=</span> <span class="nv">$health</span><span class="p">.</span><span class="n">value</span>
+<a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>    <span class="nv">$colour</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$healthVal</span> <span class="o">-eq</span> <span class="s2">&quot;green&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Green&quot;</span> <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$healthVal</span> <span class="o">-eq</span> <span class="s2">&quot;yellow&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Yellow&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Red&quot;</span> <span class="p">}</span>
+<a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;System Health: &quot;</span> <span class="n">-NoNewline</span>
+<a id="__codelineno-19-50" name="__codelineno-19-50" href="#__codelineno-19-50"></a>    <span class="nb">Write-Host</span> <span class="nv">$healthVal</span><span class="p">.</span><span class="n">ToUpper</span><span class="p">()</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-19-51" name="__codelineno-19-51" href="#__codelineno-19-51"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-19-52" name="__codelineno-19-52" href="#__codelineno-19-52"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;System Health: UNKNOWN (could not retrieve — </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-19-53" name="__codelineno-19-53" href="#__codelineno-19-53"></a><span class="p">}</span>
+<a id="__codelineno-19-54" name="__codelineno-19-54" href="#__codelineno-19-54"></a>
+<a id="__codelineno-19-55" name="__codelineno-19-55" href="#__codelineno-19-55"></a><span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-19-56" name="__codelineno-19-56" href="#__codelineno-19-56"></a>
+<a id="__codelineno-19-57" name="__codelineno-19-57" href="#__codelineno-19-57"></a><span class="c"># Step 3: GET /rest/appliance/vmon/service — list services</span>
+<a id="__codelineno-19-58" name="__codelineno-19-58" href="#__codelineno-19-58"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-19-59" name="__codelineno-19-59" href="#__codelineno-19-59"></a>    <span class="nv">$services</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$BaseUrl/appliance/vmon/service&quot;</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="n">-Headers</span> <span class="nv">$apiHeaders</span>
+<a id="__codelineno-19-60" name="__codelineno-19-60" href="#__codelineno-19-60"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;--- Services ---&quot;</span>
+<a id="__codelineno-19-61" name="__codelineno-19-61" href="#__codelineno-19-61"></a>    <span class="nv">$header</span> <span class="p">=</span> <span class="s2">&quot;{0,-40} {1,-15} {2}&quot;</span>
+<a id="__codelineno-19-62" name="__codelineno-19-62" href="#__codelineno-19-62"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="s2">&quot;Service&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="s2">&quot;Startup Type&quot;</span><span class="p">)</span>
+<a id="__codelineno-19-63" name="__codelineno-19-63" href="#__codelineno-19-63"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="p">*</span> <span class="n">70</span><span class="p">)</span>
+<a id="__codelineno-19-64" name="__codelineno-19-64" href="#__codelineno-19-64"></a>
+<a id="__codelineno-19-65" name="__codelineno-19-65" href="#__codelineno-19-65"></a>    <span class="nv">$stoppedServices</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-19-66" name="__codelineno-19-66" href="#__codelineno-19-66"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="p">(</span><span class="nv">$services</span><span class="p">.</span><span class="n">value</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">key</span> <span class="p">}))</span> <span class="p">{</span>
+<a id="__codelineno-19-67" name="__codelineno-19-67" href="#__codelineno-19-67"></a>        <span class="nv">$state</span>   <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">state</span>
+<a id="__codelineno-19-68" name="__codelineno-19-68" href="#__codelineno-19-68"></a>        <span class="nv">$startup</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">startup_type</span>
+<a id="__codelineno-19-69" name="__codelineno-19-69" href="#__codelineno-19-69"></a>        <span class="nv">$colour</span>  <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$state</span> <span class="o">-eq</span> <span class="s2">&quot;STARTED&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Green&quot;</span> <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$state</span> <span class="o">-eq</span> <span class="s2">&quot;STOPPED&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Red&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;Yellow&quot;</span> <span class="p">}</span>
+<a id="__codelineno-19-70" name="__codelineno-19-70" href="#__codelineno-19-70"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">key</span><span class="p">,</span> <span class="nv">$state</span><span class="p">,</span> <span class="nv">$startup</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-19-71" name="__codelineno-19-71" href="#__codelineno-19-71"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$state</span> <span class="o">-eq</span> <span class="s2">&quot;STOPPED&quot;</span> <span class="o">-and</span> <span class="nv">$startup</span> <span class="o">-eq</span> <span class="s2">&quot;AUTOMATIC&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-19-72" name="__codelineno-19-72" href="#__codelineno-19-72"></a>            <span class="nv">$stoppedServices</span> <span class="p">+=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">key</span>
+<a id="__codelineno-19-73" name="__codelineno-19-73" href="#__codelineno-19-73"></a>        <span class="p">}</span>
+<a id="__codelineno-19-74" name="__codelineno-19-74" href="#__codelineno-19-74"></a>    <span class="p">}</span>
+<a id="__codelineno-19-75" name="__codelineno-19-75" href="#__codelineno-19-75"></a>
+<a id="__codelineno-19-76" name="__codelineno-19-76" href="#__codelineno-19-76"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$stoppedServices</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-19-77" name="__codelineno-19-77" href="#__codelineno-19-77"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">WARNING: The following automatic services are stopped:&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-19-78" name="__codelineno-19-78" href="#__codelineno-19-78"></a>        <span class="nv">$stoppedServices</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;  - $_&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span> <span class="p">}</span>
+<a id="__codelineno-19-79" name="__codelineno-19-79" href="#__codelineno-19-79"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-19-80" name="__codelineno-19-80" href="#__codelineno-19-80"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">All automatic services are running.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-19-81" name="__codelineno-19-81" href="#__codelineno-19-81"></a>    <span class="p">}</span>
+<a id="__codelineno-19-82" name="__codelineno-19-82" href="#__codelineno-19-82"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-19-83" name="__codelineno-19-83" href="#__codelineno-19-83"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Services: UNKNOWN (could not retrieve — </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-19-84" name="__codelineno-19-84" href="#__codelineno-19-84"></a><span class="p">}</span>
+<a id="__codelineno-19-85" name="__codelineno-19-85" href="#__codelineno-19-85"></a>
+<a id="__codelineno-19-86" name="__codelineno-19-86" href="#__codelineno-19-86"></a><span class="c"># Log out</span>
+<a id="__codelineno-19-87" name="__codelineno-19-87" href="#__codelineno-19-87"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-19-88" name="__codelineno-19-88" href="#__codelineno-19-88"></a>    <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;$BaseUrl/com/vmware/cis/session&quot;</span> <span class="n">-Method</span> <span class="n">DELETE</span> <span class="n">-Headers</span> <span class="nv">$apiHeaders</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-19-89" name="__codelineno-19-89" href="#__codelineno-19-89"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{}</span>
+<a id="__codelineno-19-90" name="__codelineno-19-90" href="#__codelineno-19-90"></a>
+<a id="__codelineno-19-91" name="__codelineno-19-91" href="#__codelineno-19-91"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">Check complete.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_5">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_5" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
@@ -1793,83 +1793,83 @@ Write-Host &quot;`nCheck complete.&quot; -ForegroundColor Cyan
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\esxi_rest_health.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>.\esxi_rest_health.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>=== ESXi Host Health Check: 192.168.1.100 ===
-(2026-05-06 14:30:22)
-
-System Health: GREEN
-
---- Services ---
-Service                                  State           Startup Type
-----------------------------------------------------------------------
-hostd                                    STARTED         AUTOMATIC
-ntpd                                     STARTED         AUTOMATIC
-sfcbd                                    STOPPED         MANUAL
-
-All automatic services are running.
-
-Check complete.
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>=== ESXi Host Health Check: 192.168.1.100 ===
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>(2026-05-06 14:30:22)
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>System Health: GREEN
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>--- Services ---
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>Service                                  State           Startup Type
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>----------------------------------------------------------------------
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>hostd                                    STARTED         AUTOMATIC
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>ntpd                                     STARTED         AUTOMATIC
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>sfcbd                                    STOPPED         MANUAL
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>All automatic services are running.
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>Check complete.
+</code></pre></div>
 <p>Any service that should start automatically but is stopped is listed as a warning.</p>
 <hr />
 <h2 id="windows-esxi-esxcli-commands-via-plink-cmd">Windows: ESXi ESXCLI Commands via Plink (CMD)<a class="headerlink" href="#windows-esxi-esxcli-commands-via-plink-cmd" title="Permanent link">&para;</a></h2>
 <p>Connect to an ESXi host via SSH using plink (from PuTTY) and run a series of diagnostic ESXCLI commands with clear labels.</p>
-<pre><code class="language-batch">@echo off
-REM esxi_esxcli_check.bat — ESXi diagnostic commands via SSH (plink)
-REM Connects to an ESXi host using plink (PuTTY command-line SSH tool).
-REM
-REM DOWNLOAD PLINK: https://www.putty.org
-REM   - Download putty-64bit-X.XX-installer.msi and install it.
-REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
-REM
-REM ENABLE SSH ON ESXI:
-REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start
-REM
-REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
-REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
-REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
-
-set ESXI_HOST=192.168.1.100
-set SSH_USER=root
-set PLINK=&quot;C:\Program Files\PuTTY\plink.exe&quot;
-
-echo.
-echo === ESXi ESXCLI Diagnostic Check: %ESXI_HOST% ===
-echo.
-
-echo --- ESXi Version ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli system version get&quot;
-if %ERRORLEVEL% neq 0 (
-    echo ERROR: Could not connect to %ESXI_HOST%.
-    echo Check: 1) IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
-    exit /b 1
-)
-
-echo.
-echo --- Storage Multipath Devices (first 40 lines) ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli storage nmp device list | head -40&quot;
-
-echo.
-echo --- Network NICs ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli network nic list&quot;
-
-echo.
-echo --- Host Summary (product, build, status) ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;vim-cmd hostsvc/hostsummary | grep -E 'product|build|status'&quot;
-
-echo.
-echo --- System Uptime (seconds) ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli system stats uptime get&quot;
-
-echo.
-echo === Diagnostic check complete ===
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">@</span><span class="k">echo</span> off
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1">REM esxi_esxcli_check.bat — ESXi diagnostic commands via SSH (plink)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="c1">REM Connects to an ESXi host using plink (PuTTY command-line SSH tool).</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1">REM</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1">REM DOWNLOAD PLINK: https://www.putty.org</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="c1">REM   - Download putty-64bit-X.XX-installer.msi and install it.</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1">REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1">REM</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1">REM ENABLE SSH ON ESXI:</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1">REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="c1">REM</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="c1">REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="c1">REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="c1">REM   Type &#39;y&#39; when asked to trust the host fingerprint, then Ctrl+C.</span>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="k">set</span> <span class="nv">ESXI_HOST</span><span class="p">=</span>192.168.1.100
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="k">set</span> <span class="nv">SSH_USER</span><span class="p">=</span>root
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="k">set</span> <span class="nv">PLINK</span><span class="p">=</span><span class="s2">&quot;C:\Program Files\PuTTY\plink.exe&quot;</span>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="k">echo</span>.
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="k">echo</span> === ESXi ESXCLI Diagnostic Check: <span class="nv">%ESXI_HOST%</span> ===
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="k">echo</span>.
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a><span class="k">echo</span> --- ESXi Version ---
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli system version get&quot;</span>
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="k">if</span> <span class="nv">%ERRORLEVEL%</span> <span class="ow">neq</span> 0 <span class="p">(</span>
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>    <span class="k">echo</span> ERROR: Could not connect to <span class="nv">%ESXI_HOST%</span>.
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>    <span class="k">echo</span> Check: 1<span class="p">)</span> IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
+<a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a>    <span class="k">exit</span> /b 1
+<a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a><span class="c1">)</span>
+<a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a>
+<a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a><span class="k">echo</span>.
+<a id="__codelineno-23-33" name="__codelineno-23-33" href="#__codelineno-23-33"></a><span class="k">echo</span> --- Storage Multipath Devices (first 40 lines) ---
+<a id="__codelineno-23-34" name="__codelineno-23-34" href="#__codelineno-23-34"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli storage nmp device list | head -40&quot;</span>
+<a id="__codelineno-23-35" name="__codelineno-23-35" href="#__codelineno-23-35"></a>
+<a id="__codelineno-23-36" name="__codelineno-23-36" href="#__codelineno-23-36"></a><span class="k">echo</span>.
+<a id="__codelineno-23-37" name="__codelineno-23-37" href="#__codelineno-23-37"></a><span class="k">echo</span> --- Network NICs ---
+<a id="__codelineno-23-38" name="__codelineno-23-38" href="#__codelineno-23-38"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli network nic list&quot;</span>
+<a id="__codelineno-23-39" name="__codelineno-23-39" href="#__codelineno-23-39"></a>
+<a id="__codelineno-23-40" name="__codelineno-23-40" href="#__codelineno-23-40"></a><span class="k">echo</span>.
+<a id="__codelineno-23-41" name="__codelineno-23-41" href="#__codelineno-23-41"></a><span class="k">echo</span> --- Host Summary (product, build, status) ---
+<a id="__codelineno-23-42" name="__codelineno-23-42" href="#__codelineno-23-42"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;vim-cmd hostsvc/hostsummary | grep -E &#39;product|build|status&#39;&quot;</span>
+<a id="__codelineno-23-43" name="__codelineno-23-43" href="#__codelineno-23-43"></a>
+<a id="__codelineno-23-44" name="__codelineno-23-44" href="#__codelineno-23-44"></a><span class="k">echo</span>.
+<a id="__codelineno-23-45" name="__codelineno-23-45" href="#__codelineno-23-45"></a><span class="k">echo</span> --- System Uptime (seconds) ---
+<a id="__codelineno-23-46" name="__codelineno-23-46" href="#__codelineno-23-46"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli system stats uptime get&quot;</span>
+<a id="__codelineno-23-47" name="__codelineno-23-47" href="#__codelineno-23-47"></a>
+<a id="__codelineno-23-48" name="__codelineno-23-48" href="#__codelineno-23-48"></a><span class="k">echo</span>.
+<a id="__codelineno-23-49" name="__codelineno-23-49" href="#__codelineno-23-49"></a><span class="k">echo</span> === Diagnostic check complete ===
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_6">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_6" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
@@ -1878,8 +1878,8 @@ echo === Diagnostic check complete ===
 - Network access from your PC to the ESXi host management IP</p>
 <p><strong>Step 1 — Accept the SSH fingerprint (one-time setup)</strong></p>
 <p>Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:</p>
-<pre><code>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+</code></pre></div>
 <p>When asked "Store key in cache?", type <code>y</code> and press Enter. Type the root password when prompted. Once connected, press <code>Ctrl+C</code> to disconnect. You only need to do this once per ESXi host.</p>
 <p><strong>Step 2 — Save the file</strong></p>
 <ol>
@@ -1921,34 +1921,34 @@ echo === Diagnostic check complete ===
 <p>Windows key → type <code>cmd</code> → press Enter</p>
 <p><strong>Step 5 — Run it</strong></p>
 <p>You can double-click the <code>.bat</code> file on your Desktop, or run it from Command Prompt:</p>
-<pre><code>cd C:\Users\YourName\Desktop
-esxi_esxcli_check.bat
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>esxi_esxcli_check.bat
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>=== ESXi ESXCLI Diagnostic Check: 192.168.1.100 ===
-
---- ESXi Version ---
-   Product: VMware ESXi
-   Version: 8.0.0
-   Build: Releasebuild-20513097
-
---- Storage Multipath Devices (first 40 lines) ---
-   Device Display Name: Local VMware Disk (mpx.vmhba0:C0:T0:L0)
-   ...
-
---- Network NICs ---
-   Name    PCI          Driver  Link  Speed  Duplex MAC Address
-   vmnic0  0000:02:00.0 nvmxnet3  Up  10000  Full   00:0c:29:ab:cd:ef
-
---- Host Summary (product, build, status) ---
-   product = &quot;VMware ESXi&quot;
-   build = &quot;20513097&quot;
-
---- System Uptime (seconds) ---
-   1382400
-
-=== Diagnostic check complete ===
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>=== ESXi ESXCLI Diagnostic Check: 192.168.1.100 ===
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>--- ESXi Version ---
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>   Product: VMware ESXi
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>   Version: 8.0.0
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>   Build: Releasebuild-20513097
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>--- Storage Multipath Devices (first 40 lines) ---
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>   Device Display Name: Local VMware Disk (mpx.vmhba0:C0:T0:L0)
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>   ...
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>--- Network NICs ---
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>   Name    PCI          Driver  Link  Speed  Duplex MAC Address
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>   vmnic0  0000:02:00.0 nvmxnet3  Up  10000  Full   00:0c:29:ab:cd:ef
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>--- Host Summary (product, build, status) ---
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>   product = &quot;VMware ESXi&quot;
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>   build = &quot;20513097&quot;
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>--- System Uptime (seconds) ---
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>   1382400
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>=== Diagnostic check complete ===
+</code></pre></div>
 
 
 

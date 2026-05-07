@@ -802,37 +802,66 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All SRDF/A pairs are in Consistent or Synchronized state — no pairs in Transmit Idle, Split, or Mixed state without an open change ticket</li>
-<li>[ ] Delta mark count is stable — a steadily growing delta mark count indicates the link cannot keep pace with writes</li>
-<li>[ ] Cycle time is within the expected range (default 30 seconds) — confirm via <code>symrdf queryall</code></li>
-<li>[ ] No pairs in Transmit Idle state (indicates link saturation or bandwidth exhaustion)</li>
-<li>[ ] SRDF/A link utilization is below saturation threshold — check that bandwidth headroom exists for peak write periods</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] All SRDF/A pairs are in Consistent or Synchronized state</td>
+<td></td>
+<td>no pairs in Transmit Idle, Split, or Mixed state without an open change ticket</td>
+</tr>
+<tr>
+<td>[ ] Delta mark count is stable</td>
+<td></td>
+<td>a steadily growing delta mark count indicates the link cannot keep pace with writes</td>
+</tr>
+<tr>
+<td>[ ] Cycle time is within the expected range (default 30 seconds)</td>
+<td></td>
+<td>confirm via <code>symrdf queryall</code></td>
+</tr>
+<tr>
+<td>[ ] No pairs in Transmit Idle state (indicates link saturation or band</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] SRDF/A link utilization is below saturation threshold</td>
+<td></td>
+<td>check that bandwidth headroom exists for peak write periods</td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all SRDF/A pairs for a specific RDF group and show their state
-symrdf list -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A
-
-# Query full SRDF/A pair state including cycle time, delta marks, and link state
-symrdf queryall -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;
-
-# Show SRDF/A link status and bandwidth utilization for the RDF group
-symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; verify
-
-# Show RDF group configuration (pair count, link ports, cycle time setting)
-symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A -i 60 -c 5
-
-# Check for any SRDF/A pairs in degraded states across all RDF groups
-symrdf list -sid &lt;r1_sid&gt; -state Transmit_Idle
-symrdf list -sid &lt;r1_sid&gt; -state Mixed
-symrdf list -sid &lt;r1_sid&gt; -state Split
-
-# Check R2 side (run on DR host connected to R2 array)
-symrdf list -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A
-
-# Show delta marks for SRDF/A group (growing delta = link keeping up issue)
-symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A -delta
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all SRDF/A pairs for a specific RDF group and show their state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Query full SRDF/A pair state including cycle time, delta marks, and link state</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>queryall<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show SRDF/A link status and bandwidth utilization for the RDF group</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show RDF group configuration (pair count, link ports, cycle time setting)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span><span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check for any SRDF/A pairs in degraded states across all RDF groups</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Transmit_Idle
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Mixed
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Split
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Check R2 side (run on DR host connected to R2 array)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Show delta marks for SRDF/A group (growing delta = link keeping up issue)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-delta
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All SRDF/A pairs are in Consistent state before beginning any storage changes on R1 or R2 devices</li>
@@ -937,23 +966,23 @@ symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A -delta
 <ol>
 <li>Confirm all pairs are in Consistent state</li>
 <li>Suspend SRDF/A replication for the RDF group:
-   <code>bash
-   symrdf suspend -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A -force</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-force
+</code></pre></div></li>
 <li>Confirm pairs are now in the Suspended state:
-   <code>bash
-   symrdf list -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
+</code></pre></div></li>
 <li>Perform the planned maintenance on R1 or R2 devices</li>
 <li>Resume SRDF/A replication after maintenance:
-   <code>bash
-   symrdf resume -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symrdf<span class="w"> </span>resume<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
+</code></pre></div></li>
 <li>Monitor resync — delta marks should decrease; pairs should return to Consistent state</li>
 </ol>
 <p><strong>Planned failover to R2:</strong></p>
 <ol>
 <li>Confirm all R1 applications are quiesced or shut down</li>
 <li>Initiate planned failover:
-   <code>bash
-   symrdf failover -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A -planned</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
+</code></pre></div></li>
 <li>Activate R2 volumes for host access at the DR site</li>
 <li>When failing back, follow the failback procedure: resync R2 to R1, then swap direction</li>
 </ol>

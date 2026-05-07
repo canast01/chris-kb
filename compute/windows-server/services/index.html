@@ -832,69 +832,69 @@
 <h1 id="windows-server-services">Windows Server Services<a class="headerlink" href="#windows-server-services" title="Permanent link">&para;</a></h1>
 <p>Managing Windows services via PowerShell and sc.exe.</p>
 <h2 id="service-status-and-control">Service Status and Control<a class="headerlink" href="#service-status-and-control" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check service status
-Get-Service -Name &lt;ServiceName&gt;
-Get-Service -Name &lt;ServiceName&gt; | Select-Object *
-
-# Start / stop / restart
-Start-Service -Name &lt;ServiceName&gt;
-Stop-Service -Name &lt;ServiceName&gt;
-Restart-Service -Name &lt;ServiceName&gt; -Force
-
-# Set startup type
-Set-Service -Name &lt;ServiceName&gt; -StartupType Automatic
-Set-Service -Name &lt;ServiceName&gt; -StartupType Disabled
-Set-Service -Name &lt;ServiceName&gt; -StartupType Manual
-
-# Start and set to automatic in one step
-Set-Service -Name &lt;ServiceName&gt; -StartupType Automatic -Status Running
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check service status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">*</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Start / stop / restart</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Set startup type</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Manual</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># Start and set to automatic in one step</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span> <span class="n">-Status</span> <span class="n">Running</span>
+</code></pre></div>
 <h2 id="listing-services">Listing Services<a class="headerlink" href="#listing-services" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># All running services
-Get-Service | Where-Object { $_.Status -eq &quot;Running&quot; }
-
-# Automatic-start services that are stopped (should not normally be stopped)
-Get-Service | Where-Object { $_.StartType -eq &quot;Automatic&quot; -and $_.Status -ne &quot;Running&quot; } |
-    Select-Object Name, DisplayName, Status
-
-# All services with start type
-Get-Service | Select-Object Name, DisplayName, Status, StartType | Sort-Object StartType, Name
-
-# Services matching a name pattern
-Get-Service -Name &quot;SQL*&quot;
-Get-Service | Where-Object { $_.DisplayName -match &quot;IIS&quot; }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># All running services</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Automatic-start services that are stopped (should not normally be stopped)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># All services with start type</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">StartType</span><span class="p">,</span> <span class="n">Name</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Services matching a name pattern</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;SQL*&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">DisplayName</span> <span class="o">-match</span> <span class="s2">&quot;IIS&quot;</span> <span class="p">}</span>
+</code></pre></div>
 <h2 id="service-account-and-dependencies">Service Account and Dependencies<a class="headerlink" href="#service-account-and-dependencies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># View service account via WMI
-Get-CimInstance Win32_Service -Filter &quot;Name='wuauserv'&quot; |
-    Select-Object Name, StartName, State, StartMode
-
-# All services not running as LocalSystem or NetworkService
-Get-CimInstance Win32_Service |
-    Where-Object { $_.StartName -notin @(&quot;LocalSystem&quot;,&quot;NT AUTHORITY\NetworkService&quot;,&quot;NT AUTHORITY\LocalService&quot;) } |
-    Select-Object Name, StartName, State
-
-# Service dependencies
-(Get-Service -Name &lt;ServiceName&gt;).DependentServices
-(Get-Service -Name &lt;ServiceName&gt;).ServicesDependedOn
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># View service account via WMI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="n">-Filter</span> <span class="s2">&quot;Name=&#39;wuauserv&#39;&quot;</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">StartMode</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># All services not running as LocalSystem or NetworkService</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="p">|</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartName</span> <span class="n">-notin</span> <span class="p">@(</span><span class="s2">&quot;LocalSystem&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\NetworkService&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\LocalService&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Service dependencies</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">DependentServices</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">ServicesDependedOn</span>
+</code></pre></div>
 <h2 id="scexe-service-control-legacy-scripts">sc.exe — Service Control (Legacy / Scripts)<a class="headerlink" href="#scexe-service-control-legacy-scripts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-cmd">:: Query a service
-sc query &lt;ServiceName&gt;
-sc qc &lt;ServiceName&gt;   :: Config (start type, binary path, account)
-
-:: Start / stop
-sc start &lt;ServiceName&gt;
-sc stop &lt;ServiceName&gt;
-
-:: Change startup type
-sc config &lt;ServiceName&gt; start= auto
-sc config &lt;ServiceName&gt; start= disabled
-sc config &lt;ServiceName&gt; start= demand
-
-:: Delete a service
-sc delete &lt;ServiceName&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>:: Query a service
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sc query &lt;ServiceName&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sc qc &lt;ServiceName&gt;   :: Config (start type, binary path, account)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>:: Start / stop
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sc start &lt;ServiceName&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sc stop &lt;ServiceName&gt;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>:: Change startup type
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>sc config &lt;ServiceName&gt; start= auto
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sc config &lt;ServiceName&gt; start= disabled
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>sc config &lt;ServiceName&gt; start= demand
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>:: Delete a service
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>sc delete &lt;ServiceName&gt;
+</code></pre></div>
 <h2 id="key-infrastructure-services">Key Infrastructure Services<a class="headerlink" href="#key-infrastructure-services" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -963,52 +963,52 @@ sc delete &lt;ServiceName&gt;
 </tbody>
 </table>
 <h2 id="service-recovery-options">Service Recovery Options<a class="headerlink" href="#service-recovery-options" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Set service recovery actions via sc.exe
-# First failure: restart; second failure: restart; subsequent: restart; reset after 86400s
-sc failure &lt;ServiceName&gt; reset= 86400 actions= restart/5000/restart/5000/restart/5000
-
-# View current recovery actions
-sc qfailure &lt;ServiceName&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Set service recovery actions via sc.exe</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># First failure: restart; second failure: restart; subsequent: restart; reset after 86400s</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">sc </span><span class="n">failure</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">reset</span><span class="p">=</span> <span class="n">86400</span> <span class="n">actions</span><span class="p">=</span> <span class="n">restart</span><span class="p">/</span><span class="n">5000</span><span class="p">/</span><span class="n">restart</span><span class="p">/</span><span class="n">5000</span><span class="p">/</span><span class="n">restart</span><span class="p">/</span><span class="n">5000</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># View current recovery actions</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">sc </span><span class="n">qfailure</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+</code></pre></div>
 <h2 id="remote-service-management">Remote Service Management<a class="headerlink" href="#remote-service-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check service on a remote server
-Get-Service -Name &lt;ServiceName&gt; -ComputerName &lt;servername&gt;
-
-# Restart service on remote server
-Invoke-Command -ComputerName &lt;servername&gt; -ScriptBlock { Restart-Service -Name &lt;ServiceName&gt; -Force }
-
-# Check multiple servers at once
-$servers = @(&quot;srv01&quot;,&quot;srv02&quot;,&quot;srv03&quot;)
-$servers | ForEach-Object {
-    $svc = Get-Service -Name &lt;ServiceName&gt; -ComputerName $_ -ErrorAction SilentlyContinue
-    [PSCustomObject]@{ Server = $_; Status = $svc.Status; StartType = $svc.StartType }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check service on a remote server</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Restart service on remote server</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span> <span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Check multiple servers at once</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;srv01&quot;</span><span class="p">,</span><span class="s2">&quot;srv02&quot;</span><span class="p">,</span><span class="s2">&quot;srv03&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nv">$svc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Server</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">Status</span><span class="p">;</span> <span class="n">StartType</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">StartType</span> <span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
 <h2 id="service-logs-via-event-viewer">Service Logs via Event Viewer<a class="headerlink" href="#service-logs-via-event-viewer" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Service start/stop events (Event ID 7036)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7036 } -MaxEvents 20 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Unexpected service termination (Event ID 7034)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034 } -MaxEvents 10 |
-    Select-Object TimeCreated, Message | Format-List
-
-# Service control manager errors
-Get-WinEvent -FilterHashtable @{ LogName='System'; ProviderName='Service Control Manager'; Level=2 } -MaxEvents 20 |
-    Select-Object TimeCreated, Message | Format-List
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Service start/stop events (Event ID 7036)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7036</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Unexpected service termination (Event ID 7034)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7034</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Service control manager errors</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">ProviderName</span><span class="p">=</span><span class="s1">&#39;Service Control Manager&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+</code></pre></div>
 <h2 id="creating-a-new-service">Creating a New Service<a class="headerlink" href="#creating-a-new-service" title="Permanent link">&para;</a></h2>
-<pre><code class="language-cmd">:: Register a new service
-sc create MyService binPath= &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; ^
-    start= auto obj= &quot;NT AUTHORITY\NetworkService&quot; DisplayName= &quot;My Application Service&quot;
-
-:: Or with PowerShell (requires admin)
-New-Service -Name &quot;MyService&quot; `
-    -BinaryPathName &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; `
-    -DisplayName &quot;My Application Service&quot; `
-    -StartupType Automatic `
-    -Description &quot;Application background service&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>:: Register a new service
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sc create MyService binPath= &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; ^
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    start= auto obj= &quot;NT AUTHORITY\NetworkService&quot; DisplayName= &quot;My Application Service&quot;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>:: Or with PowerShell (requires admin)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>New-Service -Name &quot;MyService&quot; `
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    -BinaryPathName &quot;C:\Apps\myservice.exe --config C:\Apps\config.json&quot; `
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    -DisplayName &quot;My Application Service&quot; `
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    -StartupType Automatic `
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    -Description &quot;Application background service&quot;
+</code></pre></div>
 
 
 

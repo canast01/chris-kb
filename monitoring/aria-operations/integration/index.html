@@ -845,19 +845,19 @@
 <p>Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.</p>
 <h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
 <p>The vCenter adapter is the primary collection source and is configured during initial deployment.</p>
-<pre><code class="language-text">Admin &gt; Solutions &gt; VMware vCenter &gt; Configure
-- Hostname / IP: vCenter FQDN
-- Credential: read-only svc-ariaops service account
-- Collection interval: 5 minutes (default)
-- Advanced: enable object tagging collection for custom group membership
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Admin &gt; Solutions &gt; VMware vCenter &gt; Configure
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Hostname / IP: vCenter FQDN
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Credential: read-only svc-ariaops service account
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Collection interval: 5 minutes (default)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Advanced: enable object tagging collection for custom group membership
+</code></pre></div>
 <p>Verify the adapter is in <strong>Collecting</strong> state. If it shows <strong>No Data</strong>, check the credential and network connectivity on port TCP 443.</p>
 <h2 id="nsx-integration">NSX Integration<a class="headerlink" href="#nsx-integration" title="Permanent link">&para;</a></h2>
 <p>The NSX management pack extends visibility to NSX-T overlays, logical routers, transport nodes, and edge clusters.</p>
-<pre><code class="language-text">Admin &gt; Solutions &gt; VMware NSX-T Adapter &gt; Configure
-- NSX Manager FQDN / IP
-- Credential: read-only NSX service account
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Admin &gt; Solutions &gt; VMware NSX-T Adapter &gt; Configure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- NSX Manager FQDN / IP
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Credential: read-only NSX service account
+</code></pre></div>
 <p>Key objects collected: Logical Routers, Transport Nodes, Edge Clusters, Tier-0/Tier-1 Gateways.</p>
 <h2 id="vsan-integration">vSAN Integration<a class="headerlink" href="#vsan-integration" title="Permanent link">&para;</a></h2>
 <p>vSAN monitoring is included in the vCenter adapter — enable vSAN collection in the adapter advanced settings. Metrics include disk group latency, resync throughput, capacity per datastore cluster, and component health.</p>
@@ -891,26 +891,26 @@
 <p>All storage adapters require a service account on the array with read-only API access.</p>
 <h2 id="servicenow-integration-outbound-alerts">ServiceNow Integration (Outbound Alerts)<a class="headerlink" href="#servicenow-integration-outbound-alerts" title="Permanent link">&para;</a></h2>
 <p>Aria Operations can create ServiceNow incidents automatically via the outbound alert notification plugin.</p>
-<pre><code class="language-text">Admin &gt; Alerts &gt; Notification Plugins &gt; Add ServiceNow Plugin
-- ServiceNow instance URL
-- Username / password (or OAuth token)
-- Map alert severity to incident priority
-- Assign to: storage / infra assignment group
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Admin &gt; Alerts &gt; Notification Plugins &gt; Add ServiceNow Plugin
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- ServiceNow instance URL
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Username / password (or OAuth token)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Map alert severity to incident priority
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Assign to: storage / infra assignment group
+</code></pre></div>
 <p>Test the integration using the <strong>Test Notification</strong> button after saving.</p>
 <h2 id="slack-teams-webhooks">Slack / Teams Webhooks<a class="headerlink" href="#slack-teams-webhooks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-text">Admin &gt; Alerts &gt; Notification Plugins &gt; Add Webhook Plugin
-- Webhook URL: &lt;Teams/Slack incoming webhook URL&gt;
-- Alert filter: severity = Critical or Immediate
-- Payload template: include alert name, object, and description
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; Alerts &gt; Notification Plugins &gt; Add Webhook Plugin
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Webhook URL: &lt;Teams/Slack incoming webhook URL&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Alert filter: severity = Critical or Immediate
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Payload template: include alert name, object, and description
+</code></pre></div>
 <p>Separate plugins are recommended per team channel for targeted routing.</p>
 <h2 id="aria-logs-integration">Aria Logs Integration<a class="headerlink" href="#aria-logs-integration" title="Permanent link">&para;</a></h2>
 <p>Aria Logs (log analytics) integrates bidirectionally — Aria Operations can launch log search in context from an alert, and Aria Logs can trigger alerts back into Aria Operations.</p>
-<pre><code class="language-text">Admin &gt; Global Settings &gt; Log Integration
-- Enable Aria Logs integration
-- Provide Aria Logs FQDN
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Admin &gt; Global Settings &gt; Log Integration
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Enable Aria Logs integration
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Provide Aria Logs FQDN
+</code></pre></div>
 <h2 id="third-party-management-pack-summary">Third-Party Management Pack Summary<a class="headerlink" href="#third-party-management-pack-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -970,8 +970,8 @@
 </table>
 <h2 id="credential-management">Credential Management<a class="headerlink" href="#credential-management" title="Permanent link">&para;</a></h2>
 <p>All adapter credentials should use dedicated service accounts with read-only permissions. Store credentials in the team secrets manager, not in the Aria Operations credential store alone. Rotate adapter service account passwords on the standard 12-month schedule and update credentials under:</p>
-<pre><code class="language-text">Admin &gt; Credentials &gt; [Select Credential] &gt; Edit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Admin &gt; Credentials &gt; [Select Credential] &gt; Edit
+</code></pre></div>
 
 
 

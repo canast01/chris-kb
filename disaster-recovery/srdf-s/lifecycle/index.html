@@ -830,25 +830,25 @@
 </tr>
 </tbody>
 </table>
-<p>Verify current version:</p>
-<pre><code class="language-bash">symcfg list -v | grep &quot;Microcode&quot;
-</code></pre>
+<p>Verify current version:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Microcode&quot;</span>
+</code></pre></div></p>
 <h2 id="firmware-upgrade-procedure">Firmware Upgrade Procedure<a class="headerlink" href="#firmware-upgrade-procedure" title="Permanent link">&para;</a></h2>
 <p>During an NDU (Non-Disruptive Upgrade), SRDF/S pairs are temporarily converted to async mode to avoid blocking host writes:</p>
 <ol>
 <li>
 <p><strong>Pre-upgrade</strong>: Verify <code>Synchronized</code> state on all pairs
-   <code>bash
-   symrdf -g &lt;rdfg&gt; query | grep -v Synchronized   # Should return nothing</code></p>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized<span class="w">   </span><span class="c1"># Should return nothing</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Notify application teams</strong> of temporary RPO degradation during upgrade window</p>
 </li>
 <li>
 <p><strong>Convert to SRDF/A</strong> (if upgrade requires extended window):
-   <code>bash
-   symrdf -g &lt;rdfg&gt; set mode async
-   symrdf -g &lt;rdfg&gt; query | grep Mode   # Verify: Asynchronous</code></p>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>async
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Mode<span class="w">   </span><span class="c1"># Verify: Asynchronous</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Perform NDU on source array</strong> — follow Dell NDU runbook; no I/O interruption expected</p>
@@ -858,10 +858,10 @@
 </li>
 <li>
 <p><strong>Re-establish synchronous mode</strong>:
-   <code>bash
-   symrdf -g &lt;rdfg&gt; set mode sync
-   # Wait for re-synchronization
-   symrdf -g &lt;rdfg&gt; query | grep -E "State|Mode"   # Target: Synchronized, Synchronous</code></p>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>sync
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Wait for re-synchronization</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;State|Mode&quot;</span><span class="w">   </span><span class="c1"># Target: Synchronized, Synchronous</span>
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>Post-upgrade validation</strong>: Confirm all pairs return to <code>Synchronized</code> state within 30 minutes</p>
@@ -875,35 +875,35 @@
 <li>Re-establish SRDF/S from PowerMax (now R1) to new target R2</li>
 <li>Decommission VMAX SRDF groups and devices</li>
 </ol>
-<pre><code class="language-bash"># Check VMAX group topology before migration
-symrdf -g &lt;rdfg&gt; query -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check VMAX group topology before migration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span>-detail
+</code></pre></div>
 <h2 id="establishing-a-new-srdfs-pair">Establishing a New SRDF/S Pair<a class="headerlink" href="#establishing-a-new-srdfs-pair" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create device group on source
-symsg create &lt;sg_name&gt; -type regular
-symsg -sg &lt;sg_name&gt; add dev &lt;dev_range&gt;
-
-# Create SRDF group and establish pairs (first time — full sync)
-symrdf -g &lt;rdfg&gt; establish -full -noprompt
-# Monitor sync progress
-symrdf -g &lt;rdfg&gt; query | grep -E &quot;Tracks|SyncProgress&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create device group on source</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symsg<span class="w"> </span>create<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-type<span class="w"> </span>regular
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symsg<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>add<span class="w"> </span>dev<span class="w"> </span>&lt;dev_range&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Create SRDF group and establish pairs (first time — full sync)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>establish<span class="w"> </span>-full<span class="w"> </span>-noprompt
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Monitor sync progress</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Tracks|SyncProgress&quot;</span>
+</code></pre></div>
 <h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1: Quiesce application I/O
-# Step 2: Split pairs gracefully
-symrdf -g &lt;rdfg&gt; split -noprompt
-
-# Step 3: Verify split state
-symrdf -g &lt;rdfg&gt; query | grep State   # Should show: Split
-
-# Step 4: Delete SRDF pairs
-symrdf -g &lt;rdfg&gt; deletepair -force -noprompt
-
-# Step 5: Remove devices from SRDF group
-symrdf -rdfg &lt;rdfg&gt; delete -noprompt
-
-# Step 6: Update CMDB — remove group number from allocation register
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1: Quiesce application I/O</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 2: Split pairs gracefully</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>split<span class="w"> </span>-noprompt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 3: Verify split state</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>State<span class="w">   </span><span class="c1"># Should show: Split</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Step 4: Delete SRDF pairs</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>deletepair<span class="w"> </span>-force<span class="w"> </span>-noprompt
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Step 5: Remove devices from SRDF group</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>symrdf<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>delete<span class="w"> </span>-noprompt
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Step 6: Update CMDB — remove group number from allocation register</span>
+</code></pre></div>
 <h2 id="license-lifecycle">License Lifecycle<a class="headerlink" href="#license-lifecycle" title="Permanent link">&para;</a></h2>
 <p>SRDF licenses are array-bound per PowerMax array. Track:</p>
 <table>

@@ -833,56 +833,67 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    SMB_Shares["SMB Shares"]
+    SMB_Shares --&gt; S0["List Shares"]
+    SMB_Shares --&gt; S1["Create a Share"]
+    SMB_Shares --&gt; S2["Modify a Share"]
+    SMB_Shares --&gt; S3["Delete a Share"]
+    SMB_Shares --&gt; S4["Share Permissions (ACL)"]
+    SMB_Shares --&gt; S5["SMB Service and Global Settings"]
+    SMB_Shares --&gt; S6["Active SMB Sessions"]
+    SMB_Shares --&gt; S7["Access Zones"]
+    SMB_Shares --&gt; S8["Common Issues"]</code></pre>
 <h2 id="list-shares">List Shares<a class="headerlink" href="#list-shares" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi smb shares list
-isi smb shares view &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>view<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h2 id="create-a-share">Create a Share<a class="headerlink" href="#create-a-share" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;
+</code></pre></div>
 <h2 id="modify-a-share">Modify a Share<a class="headerlink" href="#modify-a-share" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi smb shares modify &lt;share_name&gt; --description &quot;&lt;text&gt;&quot;
-
-# Enable Access Based Enumeration
-isi smb shares modify &lt;share_name&gt; --access-based-enumeration true
-
-# Set continuous availability (for CA shares)
-isi smb shares modify &lt;share_name&gt; --continuously-available true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;&lt;text&gt;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Enable Access Based Enumeration</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--access-based-enumeration<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Set continuous availability (for CA shares)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--continuously-available<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="delete-a-share">Delete a Share<a class="headerlink" href="#delete-a-share" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi smb shares delete &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h2 id="share-permissions-acl">Share Permissions (ACL)<a class="headerlink" href="#share-permissions-acl" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List permissions
-isi smb shares permission list &lt;share_name&gt;
-
-# Grant full control to a group
-isi smb shares permission create &lt;share_name&gt; \
-    --authority &lt;DOMAIN\\Group&gt; \
-    --permission-type allow \
-    --permission full
-
-# Remove a permission
-isi smb shares permission delete &lt;share_name&gt; --authority &lt;DOMAIN\\Group&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List permissions</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>list<span class="w"> </span>&lt;share_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Grant full control to a group</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--authority<span class="w"> </span>&lt;DOMAIN<span class="se">\\</span>Group&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--permission-type<span class="w"> </span>allow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>--permission<span class="w"> </span>full
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Remove a permission</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>permission<span class="w"> </span>delete<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--authority<span class="w"> </span>&lt;DOMAIN<span class="se">\\</span>Group&gt;
+</code></pre></div>
 <h2 id="smb-service-global-settings">SMB Service &amp; Global Settings<a class="headerlink" href="#smb-service-global-settings" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View global SMB settings (SMB versions, security)
-isi smb settings global view
-
-# Enable SMB2 and SMB3 (disable SMB1 for security)
-isi smb settings global modify --support-smb2 true
-
-# View SMB service status
-isi smb settings service view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View global SMB settings (SMB versions, security)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Enable SMB2 and SMB3 (disable SMB1 for security)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--support-smb2<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View SMB service status</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>service<span class="w"> </span>view
+</code></pre></div>
 <h2 id="active-smb-sessions">Active SMB Sessions<a class="headerlink" href="#active-smb-sessions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">isi smb sessions list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>list
+</code></pre></div>
 <h2 id="access-zones">Access Zones<a class="headerlink" href="#access-zones" title="Permanent link">&para;</a></h2>
 <p>PowerScale SMB shares are created within an access zone. Verify the correct zone is specified:</p>
-<pre><code class="language-bash">isi smb shares list --zone &lt;zone_name&gt;
-isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt; --zone &lt;zone_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>create<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>/ifs/&lt;path&gt;<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -838,35 +838,35 @@
 </table>
 <h2 id="validating-restore-readiness">Validating Restore Readiness<a class="headerlink" href="#validating-restore-readiness" title="Permanent link">&para;</a></h2>
 <p>Before a restore, confirm:</p>
-<pre><code class="language-bash"># 1. Filesystem is healthy and enabled
-filesys status
-
-# 2. MTree has data and correct quota
-mtree list --verbose | grep &lt;mtree_name&gt;
-
-# 3. NFS/CIFS export or DDBoost storage unit accessible
-nfs show exports | grep &lt;mtree_path&gt;
-ddboost storage-unit list
-
-# 4. No active cleaning cycle (cleaning can slow restore I/O)
-filesys clean status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Filesystem is healthy and enabled</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. MTree has data and correct quota</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. NFS/CIFS export or DDBoost storage unit accessible</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_path&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 4. No active cleaning cycle (cleaning can slow restore I/O)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+</code></pre></div>
 <h2 id="ddboost-restore-backup-application">DDBoost Restore (Backup Application)<a class="headerlink" href="#ddboost-restore-backup-application" title="Permanent link">&para;</a></h2>
 <p>Restores are initiated from the backup application (NetBackup, Networker, Veeam). The Data Domain role is passive — it serves data to the backup server.</p>
-<pre><code class="language-bash"># Monitor DDBoost active connections during restore
-ddboost show clients
-ddboost show stats | grep -i read
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Monitor DDBoost active connections during restore</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="nb">read</span>
+</code></pre></div>
 <h2 id="nfs-restore-direct-file-copy">NFS Restore (Direct File Copy)<a class="headerlink" href="#nfs-restore-direct-file-copy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Mount the MTree on the backup server
-mount &lt;dd_ip&gt;:/data/col1/&lt;mtree_name&gt; /mnt/dd_restore
-
-# Navigate to backup data
-ls /mnt/dd_restore/
-
-# Restore-specific files or directories
-cp -r /mnt/dd_restore/&lt;backup_path&gt;/ /target/restore/path/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Mount the MTree on the backup server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mount<span class="w"> </span>&lt;dd_ip&gt;:/data/col1/&lt;mtree_name&gt;<span class="w"> </span>/mnt/dd_restore
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Navigate to backup data</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>/mnt/dd_restore/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Restore-specific files or directories</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cp<span class="w"> </span>-r<span class="w"> </span>/mnt/dd_restore/&lt;backup_path&gt;/<span class="w"> </span>/target/restore/path/
+</code></pre></div>
 <h2 id="performance-expectations">Performance Expectations<a class="headerlink" href="#performance-expectations" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -891,25 +891,25 @@ cp -r /mnt/dd_restore/&lt;backup_path&gt;/ /target/restore/path/
 </tbody>
 </table>
 <h2 id="troubleshooting-slow-restores">Troubleshooting Slow Restores<a class="headerlink" href="#troubleshooting-slow-restores" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check DD CPU and I/O during restore
-system show stats
-
-# Check if cleaning is running (impacts read performance)
-filesys clean status
-
-# Check active restore clients
-ddboost show clients --verbose
-nfs show clients
-
-# Network bandwidth to restore destination
-# (Check on the backup server with iperf or similar)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check DD CPU and I/O during restore</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>system<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check if cleaning is running (impacts read performance)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check active restore clients</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span>--verbose
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nfs<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Network bandwidth to restore destination</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># (Check on the backup server with iperf or similar)</span>
+</code></pre></div>
 <h2 id="tape-out-cifs-restores">Tape-Out / CIFS Restores<a class="headerlink" href="#tape-out-cifs-restores" title="Permanent link">&para;</a></h2>
 <p>If backup data was originally written via CIFS:</p>
-<pre><code class="language-bash"># Confirm CIFS share is accessible
-cifs share show | grep &lt;mtree_name&gt;
-cifs show clients
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm CIFS share is accessible</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>cifs<span class="w"> </span>show<span class="w"> </span>clients
+</code></pre></div>
 
 
 

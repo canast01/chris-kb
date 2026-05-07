@@ -873,15 +873,15 @@
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Create a user and assign a role
-user add &lt;username&gt; role backup-operator
-
-# Assign LDAP group to a role
-authentication roles assign role backup-operator group &lt;ldap-group-name&gt;
-
-# List current users and roles
-user show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a user and assign a role</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>user<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>role<span class="w"> </span>backup-operator
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Assign LDAP group to a role</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>authentication<span class="w"> </span>roles<span class="w"> </span>assign<span class="w"> </span>role<span class="w"> </span>backup-operator<span class="w"> </span>group<span class="w"> </span>&lt;ldap-group-name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List current users and roles</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>user<span class="w"> </span>show
+</code></pre></div>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Change the default <code>sysadmin</code> password immediately on commissioning</li>
@@ -898,23 +898,23 @@ user show
 </ul>
 <h2 id="encryption-at-rest-dre">Encryption at Rest (D@RE)<a class="headerlink" href="#encryption-at-rest-dre" title="Permanent link">&para;</a></h2>
 <p>Data Domain supports software-based encryption of all on-disk data.</p>
-<pre><code class="language-bash"># Check current encryption status
-encryption status
-
-# Enable encryption (must be done before data is written — cannot encrypt retroactively)
-encryption enable
-
-# Configure key management — DDOS supports:
-#   - Internal key manager (built-in, no external dependency)
-#   - RSA DPM (Dell Key Management)
-#   - KMIP-compatible external key managers (Thales, Vormetric, etc.)
-
-# Set key manager to internal (default for standalone deployments)
-encryption change-key-manager internal
-
-# View current key manager configuration
-encryption show config
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current encryption status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable encryption (must be done before data is written — cannot encrypt retroactively)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>encryption<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Configure key management — DDOS supports:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   - Internal key manager (built-in, no external dependency)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">#   - RSA DPM (Dell Key Management)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">#   - KMIP-compatible external key managers (Thales, Vormetric, etc.)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Set key manager to internal (default for standalone deployments)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>encryption<span class="w"> </span>change-key-manager<span class="w"> </span>internal
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># View current key manager configuration</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+</code></pre></div>
 <p><strong>Important:</strong> Enabling encryption after data is already written requires a full filesystem rebuild. Always enable D@RE at initial commissioning before writing any backup data.</p>
 <p>DDOS D@RE is FIPS 140-2 certified (AES-256 in CBC mode).</p>
 <h2 id="retention-lock">Retention Lock<a class="headerlink" href="#retention-lock" title="Permanent link">&para;</a></h2>
@@ -940,43 +940,43 @@ encryption show config
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Enable governance retention lock
-mtree retention-lock enable mode governance mtree /data/col1/&lt;mtree-name&gt;
-
-# Enable compliance retention lock (irreversible for the MTree's life)
-mtree retention-lock enable mode compliance mtree /data/col1/&lt;mtree-name&gt;
-
-# Set retention period limits
-mtree retention-lock set min-retention-period 30days mtree /data/col1/&lt;mtree-name&gt;
-mtree retention-lock set max-retention-period 7years mtree /data/col1/&lt;mtree-name&gt;
-
-# Show retention lock status on an MTree
-mtree show retention-lock /data/col1/&lt;mtree-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable governance retention lock</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mode<span class="w"> </span>governance<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable compliance retention lock (irreversible for the MTree&#39;s life)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mode<span class="w"> </span>compliance<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set retention period limits</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-retention-period<span class="w"> </span>30days<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-retention-period<span class="w"> </span>7years<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Show retention lock status on an MTree</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>mtree<span class="w"> </span>show<span class="w"> </span>retention-lock<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+</code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All administrative actions are logged to the DD audit log.</p>
-<pre><code class="language-bash"># View audit log
-log view audit
-
-# Forward audit and system logs to a syslog server
-log host add &lt;syslog-server-ip&gt;
-log host show
-
-# Confirm syslog is working
-log test &lt;syslog-server-ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View audit log</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>log<span class="w"> </span>view<span class="w"> </span>audit
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Forward audit and system logs to a syslog server</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Confirm syslog is working</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>log<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;syslog-server-ip&gt;
+</code></pre></div>
 <p>Log entries include: user logins, configuration changes, retention lock events, filesystem operations, and administrative commands. The audit log should be forwarded to a SIEM that retains logs for at least 12 months.</p>
 <h2 id="ldap-and-authentication-security">LDAP and Authentication Security<a class="headerlink" href="#ldap-and-authentication-security" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify LDAP status and connectivity
-authentication ldap status
-
-# Disable local `sysadmin` login if LDAP is fully operational
-# (Keep break-glass credentials documented in a secure vault)
-adminaccess set admin-auth-method ldap
-
-# Force all management access through LDAP groups
-authentication roles assign role admin group &lt;ad-group-storage-admins&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify LDAP status and connectivity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>authentication<span class="w"> </span>ldap<span class="w"> </span>status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable local `sysadmin` login if LDAP is fully operational</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># (Keep break-glass credentials documented in a secure vault)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>admin-auth-method<span class="w"> </span>ldap
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Force all management access through LDAP groups</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>authentication<span class="w"> </span>roles<span class="w"> </span>assign<span class="w"> </span>role<span class="w"> </span>admin<span class="w"> </span>group<span class="w"> </span>&lt;ad-group-storage-admins&gt;
+</code></pre></div>
 <h2 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Isolate DD management traffic on a dedicated management VLAN</li>
@@ -987,9 +987,9 @@ authentication roles assign role admin group &lt;ad-group-storage-admins&gt;
 </ul>
 <h2 id="fips-compliance">FIPS Compliance<a class="headerlink" href="#fips-compliance" title="Permanent link">&para;</a></h2>
 <p>DDOS is FIPS 140-2 validated for the D@RE encryption module. To confirm:</p>
-<pre><code class="language-bash">encryption status  # look for &quot;FIPS Mode: Enabled&quot; in the output
-system show        # confirm DDOS version — cross-reference with NIST CMVP certificate
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>encryption<span class="w"> </span>status<span class="w">  </span><span class="c1"># look for &quot;FIPS Mode: Enabled&quot; in the output</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>system<span class="w"> </span>show<span class="w">        </span><span class="c1"># confirm DDOS version — cross-reference with NIST CMVP certificate</span>
+</code></pre></div>
 <h2 id="security-incident-response">Security Incident Response<a class="headerlink" href="#security-incident-response" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

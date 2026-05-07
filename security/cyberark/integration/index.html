@@ -882,26 +882,26 @@
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>PVWA authenticates users against AD and uses AD group membership to determine safe access.</p>
 <p>Configuration in PVWA (Administration &gt; LDAP Integration):</p>
-<pre><code>LDAP Host:   ldaps://dc01.corp.example.com:636
-Base DN:     DC=corp,DC=example,DC=com
-Bind DN:     CN=svc-cyberark-ldap,OU=Service Accounts,OU=Managed,DC=corp,DC=example,DC=com
-Bind Pwd:    &lt;managed by CyberArk itself in the Vault&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LDAP Host:   ldaps://dc01.corp.example.com:636
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Base DN:     DC=corp,DC=example,DC=com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Bind DN:     CN=svc-cyberark-ldap,OU=Service Accounts,OU=Managed,DC=corp,DC=example,DC=com
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Bind Pwd:    &lt;managed by CyberArk itself in the Vault&gt;
+</code></pre></div>
 <p>AD groups mapped to Vault access:
 - <code>GG_CyberArk_Auditors</code> → Auditors role (read-only access to all safes)
 - <code>GG_CyberArk_SafeOwners</code> → Safe Owner role (manage assigned safes)
 - <code>GG_CyberArk_VaultAdmins</code> → Vault Admins (full administrative rights)</p>
-<pre><code class="language-powershell"># Test LDAPS connectivity from PVWA server
-Test-NetConnection -ComputerName dc01.corp.example.com -Port 636
-
-# Verify LDAP bind and group membership query
-$ldap = New-Object DirectoryServices.DirectoryEntry(
-    &quot;LDAP://dc01.corp.example.com:636&quot;,
-    &quot;svc-cyberark-ldap@corp.example.com&quot;,
-    &quot;password&quot;
-)
-$ldap.Path
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Test LDAPS connectivity from PVWA server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">636</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Verify LDAP bind and group membership query</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$ldap</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">DirectoryServices</span><span class="p">.</span><span class="n">DirectoryEntry</span><span class="p">(</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;LDAP://dc01.corp.example.com:636&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;svc-cyberark-ldap@corp.example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;password&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">$ldap</span><span class="p">.</span><span class="n">Path</span>
+</code></pre></div>
 <hr />
 <h2 id="mfa-integration-duo-rsa">MFA Integration (Duo / RSA)<a class="headerlink" href="#mfa-integration-duo-rsa" title="Permanent link">&para;</a></h2>
 <p>PVWA supports RADIUS-based MFA enforcement at logon. All privileged user logons require MFA.</p>
@@ -920,16 +920,16 @@ $ldap.Path
 <li>Onboard vCenter accounts to the appropriate safe.</li>
 <li>CPM will rotate the password and update vCenter via the vSphere API.</li>
 </ol>
-<pre><code class="language-powershell"># Onboard a vCenter account
-Add-PASAccount `
-    -userName &quot;svc-cyberark-vcenter&quot; `
-    -address  &quot;vcenter01.corp.example.com&quot; `
-    -accountName &quot;vcenter01-svc-cyberark&quot; `
-    -platformID &quot;VMware-vCenter&quot; `
-    -SafeName &quot;VMware-vCenter-Accounts&quot; `
-    -secret (ConvertTo-SecureString &quot;InitialPassword!&quot; -AsPlainText -Force) `
-    -automaticManagementEnabled $true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Onboard a vCenter account</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Add-PASAccount</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-userName</span> <span class="s2">&quot;svc-cyberark-vcenter&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-address</span>  <span class="s2">&quot;vcenter01.corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">-accountName</span> <span class="s2">&quot;vcenter01-svc-cyberark&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">-platformID</span> <span class="s2">&quot;VMware-vCenter&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">-SafeName</span> <span class="s2">&quot;VMware-vCenter-Accounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">-secret</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;InitialPassword!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">-automaticManagementEnabled</span> <span class="nv">$true</span>
+</code></pre></div>
 <p>Session recording for vCenter: PSM for Web is used to proxy browser-based vSphere Client sessions. No credential is exposed to the user.</p>
 <hr />
 <h2 id="linux-ssh-key-rotation">Linux SSH Key Rotation<a class="headerlink" href="#linux-ssh-key-rotation" title="Permanent link">&para;</a></h2>
@@ -940,62 +940,62 @@ Add-PASAccount `
 <li>Onboard the account with <code>sshKey</code> secret type.</li>
 <li>CPM connects via SSH (as the account itself or via sudo) to rotate the <code>authorized_keys</code> entry.</li>
 </ol>
-<pre><code class="language-bash"># Verify CyberArk public key is in place after rotation
-grep &quot;CyberArk&quot; /home/root/.ssh/authorized_keys
-
-# Ensure sshd allows key-based auth and CyberArk's CPM source IP
-cat /etc/ssh/sshd_config | grep -E &quot;AuthorizedKeysFile|PubkeyAuthentication&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify CyberArk public key is in place after rotation</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span><span class="s2">&quot;CyberArk&quot;</span><span class="w"> </span>/home/root/.ssh/authorized_keys
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Ensure sshd allows key-based auth and CyberArk&#39;s CPM source IP</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;AuthorizedKeysFile|PubkeyAuthentication&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="ansible-integration">Ansible Integration<a class="headerlink" href="#ansible-integration" title="Permanent link">&para;</a></h2>
 <p>The <code>cyberark.pas</code> Ansible collection retrieves credentials from the Vault at playbook runtime. No secrets are stored in Ansible inventory, vars files, or Ansible Tower/AWX credentials for managed accounts.</p>
-<pre><code class="language-yaml"># playbook example: retrieve a password at runtime
-- name: Retrieve DB password from CyberArk
-  cyberark.pas.cyberark_credential:
-    api_base_url: &quot;https://pvwa.corp.example.com&quot;
-    app_id: &quot;Ansible-Automation&quot;
-    query: &quot;Safe=APP-DB01-Accounts;Folder=Root;Object=db01-svc-app01&quot;
-    connection_timeout: 30
-  register: cyberark_result
-  no_log: true
-
-- name: Use the retrieved credential
-  community.mysql.mysql_db:
-    login_user: &quot;svc-app01&quot;
-    login_password: &quot;{{ cyberark_result.result.Content }}&quot;
-    name: appdb
-    state: present
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># playbook example: retrieve a password at runtime</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retrieve DB password from CyberArk</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">cyberark.pas.cyberark_credential</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">api_base_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://pvwa.corp.example.com&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">app_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Ansible-Automation&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Safe=APP-DB01-Accounts;Folder=Root;Object=db01-svc-app01&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">connection_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cyberark_result</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">no_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use the retrieved credential</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nt">community.mysql.mysql_db</span><span class="p">:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">login_user</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;svc-app01&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">login_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cyberark_result.result.Content</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appdb</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+</code></pre></div>
 <p>The Ansible <code>app_id</code> must be defined in CyberArk Application Access Manager (AAM) with the Ansible Tower/AWX host IP as an allowed machine.</p>
 <hr />
 <h2 id="terraform-integration">Terraform Integration<a class="headerlink" href="#terraform-integration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-hcl"># Retrieve a CyberArk secret in Terraform
-provider &quot;cyberark&quot; {
-  tenant    = &quot;corp&quot;
-  client_id = var.cyberark_client_id
-  client_secret = var.cyberark_client_secret
-}
-
-data &quot;cyberark_secret&quot; &quot;db_password&quot; {
-  name     = &quot;db01-svc-app01&quot;
-  safe_name = &quot;APP-DB01-Accounts&quot;
-}
-
-resource &quot;aws_db_instance&quot; &quot;app_db&quot; {
-  password = data.cyberark_secret.db_password.value
-  # other config...
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Retrieve a CyberArk secret in Terraform</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;cyberark&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="na">tenant</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;corp&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="na">client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cyberark_client_id</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="na">client_secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cyberark_client_secret</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kr">data</span><span class="w"> </span><span class="nc">&quot;cyberark_secret&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db01-svc-app01&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="na">safe_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;APP-DB01-Accounts&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app_db&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.cyberark_secret.db_password.value</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1">  # other config...</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="siem-splunk-integration">SIEM (Splunk) Integration<a class="headerlink" href="#siem-splunk-integration" title="Permanent link">&para;</a></h2>
 <p>The Vault and PVWA forward audit events to Splunk via syslog.</p>
 <p>Vault syslog configuration (<code>DBPARM.ini</code> on Vault server):</p>
-<pre><code class="language-ini">[SYSLOG]
-SyslogServerIP     = 10.10.10.200
-SyslogServerPort   = 514
-SyslogServerProtocol = UDP
-SyslogTranslatorFile = Syslog.xsl
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">[SYSLOG]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">SyslogServerIP</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">10.10.10.200</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">SyslogServerPort</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">514</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">SyslogServerProtocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">UDP</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">SyslogTranslatorFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Syslog.xsl</span>
+</code></pre></div>
 <p>Key audit event types to monitor in Splunk:
 - <code>CPM Password Change</code> — credential rotation events
 - <code>Get Password</code> — credential retrievals (who accessed what)

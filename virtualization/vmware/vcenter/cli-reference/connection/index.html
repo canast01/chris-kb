@@ -800,70 +800,78 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Session["Session"]
+    Session --&gt; S0["Install and Configure PowerCLI"]
+    Session --&gt; S1["Connecting"]
+    Session --&gt; S2["Session Info"]
+    Session --&gt; S3["Disconnecting"]
+    Session --&gt; S4["Running as a Script / Non-Interactive"]
+    Session --&gt; S5["Proxy and Certificate Settings"]</code></pre>
 <h2 id="install-and-configure-powercli">Install and Configure PowerCLI<a class="headerlink" href="#install-and-configure-powercli" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install from PowerShell Gallery (run once)
-Install-Module VMware.PowerCLI -Scope CurrentUser -Force
-
-# Suppress invalid certificate warnings (lab/self-signed)
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
-
-# Opt out of CEIP telemetry
-Set-PowerCLIConfiguration -ParticipateInCeip $false -Confirm:$false
-
-# Check installed version
-Get-Module VMware.PowerCLI -ListAvailable | Select-Object Name, Version
-
-# Update to latest
-Update-Module VMware.PowerCLI
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install from PowerShell Gallery (run once)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Force</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Suppress invalid certificate warnings (lab/self-signed)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Opt out of CEIP telemetry</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-ParticipateInCeip</span> <span class="nv">$false</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check installed version</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Update to latest</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Update-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span>
+</code></pre></div>
 <h2 id="connecting">Connecting<a class="headerlink" href="#connecting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Interactive (prompts for credentials)
-Connect-VIServer -Server &lt;vcenter_fqdn&gt;
-
-# Credential in command (scripts — use a secret vault for production)
-Connect-VIServer -Server vcenter.corp.local -User administrator@vsphere.local -Password &lt;password&gt;
-
-# Using a credential object (safer for scripts)
-$cred = Get-Credential
-Connect-VIServer -Server vcenter.corp.local -Credential $cred
-
-# Connect to multiple vCenters
-Connect-VIServer -Server vcenter1.corp.local, vcenter2.corp.local
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Interactive (prompts for credentials)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter_fqdn</span><span class="p">&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Credential in command (scripts — use a secret vault for production)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-User</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="n">-Password</span> <span class="p">&lt;</span><span class="n">password</span><span class="p">&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Using a credential object (safer for scripts)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="nv">$cred</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Connect to multiple vCenters</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter1</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span><span class="p">,</span> <span class="n">vcenter2</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+</code></pre></div>
 <h2 id="session-info">Session Info<a class="headerlink" href="#session-info" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Current connection(s)
-$global:DefaultVIServer
-$global:DefaultVIServers   # when connected to multiple
-
-# Session details (user, API version, connection time)
-$global:DefaultVIServer | Select-Object Name, User, Version, IsConnected, SessionId
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Current connection(s)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$global:DefaultVIServer</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$global:DefaultVIServers</span>   <span class="c"># when connected to multiple</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Session details (user, API version, connection time)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$global:DefaultVIServer</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">IsConnected</span><span class="p">,</span> <span class="n">SessionId</span>
+</code></pre></div>
 <h2 id="disconnecting">Disconnecting<a class="headerlink" href="#disconnecting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Disconnect from all vCenters
-Disconnect-VIServer * -Confirm:$false
-
-# Disconnect from a specific vCenter
-Disconnect-VIServer -Server vcenter.corp.local -Confirm:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Disconnect from all vCenters</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Disconnect from a specific vCenter</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="running-as-a-script-non-interactive">Running as a Script / Non-Interactive<a class="headerlink" href="#running-as-a-script-non-interactive" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Store encrypted credential on disk (per-user, per-machine)
-$cred = Get-Credential
-$cred | Export-Clixml -Path &quot;$env:USERPROFILE\.vcenter_cred.xml&quot;
-
-# Load credential in script
-$cred = Import-Clixml -Path &quot;$env:USERPROFILE\.vcenter_cred.xml&quot;
-Connect-VIServer -Server vcenter.corp.local -Credential $cred
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Store encrypted credential on disk (per-user, per-machine)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$cred</span> <span class="p">|</span> <span class="nb">Export-Clixml</span> <span class="n">-Path</span> <span class="s2">&quot;$env:USERPROFILE\.vcenter_cred.xml&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Load credential in script</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Import-Clixml</span> <span class="n">-Path</span> <span class="s2">&quot;$env:USERPROFILE\.vcenter_cred.xml&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="nv">$cred</span>
+</code></pre></div>
 <h2 id="proxy-and-certificate-settings">Proxy and Certificate Settings<a class="headerlink" href="#proxy-and-certificate-settings" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Skip proxy for vCenter (when vCenter is on-prem but proxy is active)
-Set-PowerCLIConfiguration -ProxyPolicy NoProxy -Confirm:$false
-
-# Trust all certificates (only for lab environments)
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
-
-# Require valid certificates (production default)
-Set-PowerCLIConfiguration -InvalidCertificateAction Fail -Confirm:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Skip proxy for vCenter (when vCenter is on-prem but proxy is active)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-ProxyPolicy</span> <span class="n">NoProxy</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Trust all certificates (only for lab environments)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Require valid certificates (production default)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Fail</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 
 
 

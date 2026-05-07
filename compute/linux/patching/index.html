@@ -832,140 +832,140 @@
 <h1 id="linux-patching">Linux Patching<a class="headerlink" href="#linux-patching" title="Permanent link">&para;</a></h1>
 <p>Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.</p>
 <h2 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. Confirm system is healthy before patching
-uptime
-systemctl --failed
-df -h | awk '$5+0 &gt; 85'
-
-# 2. Capture current package versions (rollback reference)
-rpm -qa --qf &quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot; | sort &gt; /tmp/pre-patch-packages.txt   # RHEL
-dpkg -l | awk 'NR&gt;5' &gt; /tmp/pre-patch-packages.txt   # Ubuntu
-
-# 3. Capture running kernel
-uname -r
-
-# 4. Check available updates without applying
-dnf check-update   # RHEL
-apt list --upgradable 2&gt;/dev/null   # Ubuntu
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Confirm system is healthy before patching</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uptime
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 85&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 2. Capture current package versions (rollback reference)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">&quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;5&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w">   </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 3. Capture running kernel</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uname<span class="w"> </span>-r
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 4. Check available updates without applying</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>dnf<span class="w"> </span>check-update<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w">   </span><span class="c1"># Ubuntu</span>
+</code></pre></div>
 <h2 id="rhel-dnf-patching">RHEL — dnf Patching<a class="headerlink" href="#rhel-dnf-patching" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List available updates
-dnf check-update
-
-# Apply all updates (security + bug fix + enhancement)
-dnf update -y
-
-# Apply security updates only
-dnf update --security -y
-
-# Apply a specific advisory
-dnf update --advisory=RHSA-2026:1234 -y
-
-# Apply updates excluding the kernel (maintenance without reboot risk)
-dnf update --exclude=kernel* -y
-
-# List installed security advisories
-dnf updateinfo list security installed | head -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List available updates</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dnf<span class="w"> </span>check-update
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Apply all updates (security + bug fix + enhancement)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dnf<span class="w"> </span>update<span class="w"> </span>-y
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Apply security updates only</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dnf<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Apply a specific advisory</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dnf<span class="w"> </span>update<span class="w"> </span>--advisory<span class="o">=</span>RHSA-2026:1234<span class="w"> </span>-y
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Apply updates excluding the kernel (maintenance without reboot risk)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dnf<span class="w"> </span>update<span class="w"> </span>--exclude<span class="o">=</span>kernel*<span class="w"> </span>-y
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List installed security advisories</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>dnf<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security<span class="w"> </span>installed<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
 <h2 id="rhel-yum-history-rollback">RHEL — yum history (Rollback)<a class="headerlink" href="#rhel-yum-history-rollback" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List recent transactions
-yum history list | head -20
-
-# View what a transaction did
-yum history info &lt;transaction-id&gt;
-
-# Undo a specific transaction (rollback)
-yum history undo &lt;transaction-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List recent transactions</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>yum<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View what a transaction did</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>yum<span class="w"> </span><span class="nb">history</span><span class="w"> </span>info<span class="w"> </span>&lt;transaction-id&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Undo a specific transaction (rollback)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>yum<span class="w"> </span><span class="nb">history</span><span class="w"> </span>undo<span class="w"> </span>&lt;transaction-id&gt;
+</code></pre></div>
 <h2 id="ubuntu-apt-patching">Ubuntu — apt Patching<a class="headerlink" href="#ubuntu-apt-patching" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Refresh package index
-apt update
-
-# List upgradable packages
-apt list --upgradable 2&gt;/dev/null
-
-# Apply all upgrades
-apt upgrade -y
-
-# Apply security updates only (using unattended-upgrades filter)
-apt-get install --only-upgrade $(apt-get --just-print upgrade 2&gt;/dev/null | \
-  grep &quot;^Inst&quot; | grep -i security | awk '{print $2}') -y
-
-# Full upgrade (handles dependency changes)
-apt full-upgrade -y
-
-# Remove unused packages after upgrade
-apt autoremove -y
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Refresh package index</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>apt<span class="w"> </span>update
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List upgradable packages</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Apply all upgrades</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Apply security updates only (using unattended-upgrades filter)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>apt-get<span class="w"> </span>install<span class="w"> </span>--only-upgrade<span class="w"> </span><span class="k">$(</span>apt-get<span class="w"> </span>--just-print<span class="w"> </span>upgrade<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;^Inst&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>security<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span><span class="w"> </span>-y
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Full upgrade (handles dependency changes)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>apt<span class="w"> </span>full-upgrade<span class="w"> </span>-y
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Remove unused packages after upgrade</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>apt<span class="w"> </span>autoremove<span class="w"> </span>-y
+</code></pre></div>
 <h2 id="kernel-updates-and-reboot">Kernel Updates and Reboot<a class="headerlink" href="#kernel-updates-and-reboot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check if a reboot is required (RHEL)
-needs-restarting -r
-# Exit code 1 = reboot required
-
-# Check if a reboot is required (Ubuntu)
-ls /var/run/reboot-required 2&gt;/dev/null &amp;&amp; echo &quot;Reboot required&quot; || echo &quot;No reboot needed&quot;
-
-# Check which processes need restart (Ubuntu)
-needs-restarting 2&gt;/dev/null || checkrestart   # Debian: apt install debian-goodies
-
-# Verify new kernel is default after update
-grub2-editenv list | grep saved_entry   # RHEL
-grep GRUB_DEFAULT /etc/default/grub     # Ubuntu
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if a reboot is required (RHEL)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>needs-restarting<span class="w"> </span>-r
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Exit code 1 = reboot required</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check if a reboot is required (Ubuntu)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ls<span class="w"> </span>/var/run/reboot-required<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check which processes need restart (Ubuntu)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>needs-restarting<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>checkrestart<span class="w">   </span><span class="c1"># Debian: apt install debian-goodies</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify new kernel is default after update</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>grub2-editenv<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>saved_entry<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>grep<span class="w"> </span>GRUB_DEFAULT<span class="w"> </span>/etc/default/grub<span class="w">     </span><span class="c1"># Ubuntu</span>
+</code></pre></div>
 <h2 id="red-hat-subscription-and-repositories">Red Hat Subscription and Repositories<a class="headerlink" href="#red-hat-subscription-and-repositories" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check subscription status
-subscription-manager status
-subscription-manager list --consumed
-
-# List enabled repos
-dnf repolist enabled
-
-# Enable a specific repo
-subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
-
-# Check RHEL version
-cat /etc/redhat-release
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check subscription status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>subscription-manager<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>subscription-manager<span class="w"> </span>list<span class="w"> </span>--consumed
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List enabled repos</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>dnf<span class="w"> </span>repolist<span class="w"> </span>enabled
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Enable a specific repo</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>subscription-manager<span class="w"> </span>repos<span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-appstream-rpms
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check RHEL version</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>cat<span class="w"> </span>/etc/redhat-release
+</code></pre></div>
 <h2 id="ansible-patching-at-scale">Ansible Patching at Scale<a class="headerlink" href="#ansible-patching-at-scale" title="Permanent link">&para;</a></h2>
-<pre><code class="language-yaml"># patch-rhel.yml — apply security patches to a group of RHEL servers
-- hosts: rhel_servers
-  become: true
-  tasks:
-    - name: Apply all security updates
-      ansible.builtin.dnf:
-        name: &quot;*&quot;
-        state: latest
-        security: true
-      register: dnf_result
-
-    - name: Check if reboot is required
-      ansible.builtin.command: needs-restarting -r
-      register: reboot_check
-      failed_when: false
-      changed_when: false
-
-    - name: Reboot if required
-      ansible.builtin.reboot:
-        reboot_timeout: 300
-      when: reboot_check.rc == 1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># patch-rhel.yml — apply security patches to a group of RHEL servers</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rhel_servers</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apply all security updates</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nt">ansible.builtin.dnf</span><span class="p">:</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="nt">security</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dnf_result</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check if reboot is required</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">needs-restarting -r</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reboot_check</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reboot if required</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">      </span><span class="nt">ansible.builtin.reboot</span><span class="p">:</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">        </span><span class="nt">reboot_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reboot_check.rc == 1</span>
+</code></pre></div>
 <h2 id="post-patch-validation">Post-Patch Validation<a class="headerlink" href="#post-patch-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm updated kernel is running (after reboot)
-uname -r
-
-# Confirm critical services are up
-systemctl is-active sshd chronyd auditd
-
-# Check for new failed services
-systemctl --failed
-
-# Compare package list to pre-patch snapshot
-rpm -qa --qf &quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot; | sort &gt; /tmp/post-patch-packages.txt
-diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
-
-# Verify no unexpected changes in /etc
-find /etc -newer /tmp/pre-patch-packages.txt -type f 2&gt;/dev/null | head -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm updated kernel is running (after reboot)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uname<span class="w"> </span>-r
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm critical services are up</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>sshd<span class="w"> </span>chronyd<span class="w"> </span>auditd
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check for new failed services</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Compare package list to pre-patch snapshot</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>rpm<span class="w"> </span>-qa<span class="w"> </span>--qf<span class="w"> </span><span class="s2">&quot;%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/post-patch-packages.txt
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>diff<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w"> </span>/tmp/post-patch-packages.txt
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Verify no unexpected changes in /etc</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/tmp/pre-patch-packages.txt<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
 <h2 id="patch-schedule-standards">Patch Schedule Standards<a class="headerlink" href="#patch-schedule-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

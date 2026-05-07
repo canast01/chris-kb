@@ -812,51 +812,60 @@
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
 <p>The Data Domain filesystem (DDFS) manages all deduplication and compression. All user data lives in the active tier under <code>/data/col1/</code>.</p>
+<pre class="mermaid"><code>flowchart LR
+    Filesystem["Filesystem"]
+    Filesystem --&gt; S0["Filesystem Status"]
+    Filesystem --&gt; S1["Enable and Disable"]
+    Filesystem --&gt; S2["Cleaning (Garbage Collection)"]
+    Filesystem --&gt; S3["Capacity and Compression Analysis"]
+    Filesystem --&gt; S4["Compression Ratio Fields"]
+    Filesystem --&gt; S5["Space Recovery Actions"]
+    Filesystem --&gt; S6["Filesystem Checks"]</code></pre>
 <h2 id="filesystem-status">Filesystem Status<a class="headerlink" href="#filesystem-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Filesystem state (enabled/disabled)
-filesys status
-
-# Full status overview
-filesys show
-
-# Compression and deduplication statistics
-filesys show compression
-
-# Space usage breakdown (pre-comp, post-comp, physical)
-filesys show space
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Filesystem state (enabled/disabled)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Full status overview</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>filesys<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Compression and deduplication statistics</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Space usage breakdown (pre-comp, post-comp, physical)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+</code></pre></div>
 <h2 id="enable-and-disable">Enable and Disable<a class="headerlink" href="#enable-and-disable" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable the filesystem (required before accepting backup data)
-filesys enable
-
-# Disable the filesystem (maintenance only — stops all I/O)
-filesys disable
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable the filesystem (required before accepting backup data)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>filesys<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Disable the filesystem (maintenance only — stops all I/O)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>filesys<span class="w"> </span>disable
+</code></pre></div>
 <h2 id="cleaning-garbage-collection">Cleaning (Garbage Collection)<a class="headerlink" href="#cleaning-garbage-collection" title="Permanent link">&para;</a></h2>
 <p>Cleaning reclaims space from deleted or expired files. It runs automatically but can be triggered manually:</p>
-<pre><code class="language-bash"># Start a cleaning cycle
-filesys clean start
-
-# Show cleaning status
-filesys clean status
-
-# Stop an in-progress clean
-filesys clean stop
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start a cleaning cycle</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show cleaning status</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Stop an in-progress clean</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>stop
+</code></pre></div>
 <p>Cleaning is I/O intensive. Schedule during off-peak hours if running manually.</p>
 <h2 id="capacity-and-compression-analysis">Capacity and Compression Analysis<a class="headerlink" href="#capacity-and-compression-analysis" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Overall capacity summary
-filesys show space
-
-# Compression ratio and savings
-filesys show compression summary
-
-# Per-MTree compression
-filesys show compression | grep -A5 &quot;mtree&quot;
-
-# Logical vs physical usage
-filesys show space | grep -E &quot;Used|Available|Total&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Overall capacity summary</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Compression ratio and savings</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>summary
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Per-MTree compression</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;mtree&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Logical vs physical usage</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>filesys<span class="w"> </span>show<span class="w"> </span>space<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Used|Available|Total&quot;</span>
+</code></pre></div>
 <h2 id="compression-ratio-fields">Compression Ratio Fields<a class="headerlink" href="#compression-ratio-fields" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -889,23 +898,23 @@ filesys show space | grep -E &quot;Used|Available|Total&quot;
 </tbody>
 </table>
 <h2 id="space-recovery-actions">Space Recovery Actions<a class="headerlink" href="#space-recovery-actions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Expire old backup data (via backup application policy — not DD CLI)
-# Data Domain only deletes data when the backup app marks it expired
-
-# After deletions, run cleaning to reclaim space
-filesys clean start
-
-# Monitor reclaim progress
-filesys clean status
-filesys show space   # compare before/after
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Expire old backup data (via backup application policy — not DD CLI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Data Domain only deletes data when the backup app marks it expired</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After deletions, run cleaning to reclaim space</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Monitor reclaim progress</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>filesys<span class="w"> </span>show<span class="w"> </span>space<span class="w">   </span><span class="c1"># compare before/after</span>
+</code></pre></div>
 <h2 id="filesystem-checks">Filesystem Checks<a class="headerlink" href="#filesystem-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check filesystem integrity
-filesys check
-
-# View filesystem event log
-filesys show log
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check filesystem integrity</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>filesys<span class="w"> </span>check
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View filesystem event log</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>log
+</code></pre></div>
 
 
 

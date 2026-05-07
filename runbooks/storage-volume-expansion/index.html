@@ -799,69 +799,69 @@
 <h1 id="storage-volume-expansion-runbook">Storage Volume Expansion Runbook<a class="headerlink" href="#storage-volume-expansion-runbook" title="Permanent link">&para;</a></h1>
 <p>Controlled process for expanding a storage volume and resizing the filesystem on the host.</p>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Current host disk state
-df -h
-lsblk
-multipath -ll          # confirm all paths healthy
-
-# Check array pool capacity (confirm space available)
-# On the array management console or CLI before expanding
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Current host disk state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>lsblk
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>multipath<span class="w"> </span>-ll<span class="w">          </span><span class="c1"># confirm all paths healthy</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check array pool capacity (confirm space available)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># On the array management console or CLI before expanding</span>
+</code></pre></div>
 <h2 id="step-1-expand-the-lun-on-the-array">Step 1 — Expand the LUN on the Array<a class="headerlink" href="#step-1-expand-the-lun-on-the-array" title="Permanent link">&para;</a></h2>
-<p><strong>NetApp ONTAP:</strong></p>
-<pre><code class="language-bash">volume size -vserver &lt;svm&gt; -volume &lt;vol&gt; -new-size &lt;size&gt;
-</code></pre>
-<p><strong>Pure FlashArray:</strong></p>
-<pre><code class="language-bash">purecli volume setattr &lt;volume_name&gt; --size &lt;new_size&gt;
-</code></pre>
-<p><strong>Dell Unity:</strong></p>
-<pre><code class="language-bash">uemcli -d &lt;ip&gt; /stor/config/lun -id &lt;lun_id&gt; set -size &lt;new_size&gt;
-</code></pre>
-<p><strong>Dell PowerMax (Solutions Enabler):</strong></p>
-<pre><code class="language-bash">symconfigure -sid &lt;sid&gt; commit -noprompt \
-    &quot;modify dev &lt;dev_id&gt;, size=&lt;new_size_cyl&gt;;&quot;
-</code></pre>
+<p><strong>NetApp ONTAP:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-new-size<span class="w"> </span>&lt;size&gt;
+</code></pre></div></p>
+<p><strong>Pure FlashArray:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purecli<span class="w"> </span>volume<span class="w"> </span>setattr<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>&lt;new_size&gt;
+</code></pre></div></p>
+<p><strong>Dell Unity:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>&lt;new_size&gt;
+</code></pre></div></p>
+<p><strong>Dell PowerMax (Solutions Enabler):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>commit<span class="w"> </span>-noprompt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="s2">&quot;modify dev &lt;dev_id&gt;, size=&lt;new_size_cyl&gt;;&quot;</span>
+</code></pre></div></p>
 <h2 id="step-2-rescan-on-the-host">Step 2 — Rescan on the Host<a class="headerlink" href="#step-2-rescan-on-the-host" title="Permanent link">&para;</a></h2>
-<p><strong>Linux:</strong></p>
-<pre><code class="language-bash"># Rescan SCSI bus
-echo 1 &gt; /sys/class/scsi_device/&lt;host:bus:target:lun&gt;/device/rescan
-
-# Or rescan all
-for host in /sys/class/scsi_host/host*/; do
-    echo &quot;- - -&quot; &gt; ${host}scan
-done
-
-# Refresh multipath
-multipathd reconfigure
-multipath -ll
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell">Update-HostStorageCache
-Get-Disk | Where-Object Size -GT 0
-</code></pre>
+<p><strong>Linux:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Rescan SCSI bus</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_device/&lt;host:bus:target:lun&gt;/device/rescan
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or rescan all</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>scan
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">done</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Refresh multipath</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>multipath<span class="w"> </span>-ll
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Update-HostStorageCache</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Size</span> <span class="o">-GT</span> <span class="n">0</span>
+</code></pre></div></p>
 <h2 id="step-3-resize-partition-and-filesystem">Step 3 — Resize Partition and Filesystem<a class="headerlink" href="#step-3-resize-partition-and-filesystem" title="Permanent link">&para;</a></h2>
-<p><strong>Linux (LVM):</strong></p>
-<pre><code class="language-bash"># Resize physical volume (if using multipath device)
-pvresize /dev/mapper/&lt;mpathX&gt;
-
-# Extend logical volume
-lvextend -l +100%FREE /dev/&lt;vg&gt;/&lt;lv&gt;
-
-# Resize filesystem
-resize2fs /dev/&lt;vg&gt;/&lt;lv&gt;          # ext4
-xfs_growfs /dev/&lt;vg&gt;/&lt;lv&gt;         # xfs
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell"># Expand partition to max available
-$disk = Get-Disk -Number &lt;n&gt;
-$part = Get-Partition -DiskNumber $disk.Number
-Resize-Partition -DiskNumber $disk.Number -PartitionNumber $part.PartitionNumber -Size ($part | Get-PartitionSupportedSize).SizeMax
-</code></pre>
+<p><strong>Linux (LVM):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Resize physical volume (if using multipath device)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pvresize<span class="w"> </span>/dev/mapper/&lt;mpathX&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Extend logical volume</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Resize filesystem</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>resize2fs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">          </span><span class="c1"># ext4</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>xfs_growfs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">         </span><span class="c1"># xfs</span>
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Expand partition to max available</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$disk</span> <span class="p">=</span> <span class="nb">Get-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$part</span> <span class="p">=</span> <span class="nb">Get-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Resize-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="nv">$part</span><span class="p">.</span><span class="n">PartitionNumber</span> <span class="n">-Size</span> <span class="p">(</span><span class="nv">$part</span> <span class="p">|</span> <span class="nb">Get-PartitionSupportedSize</span><span class="p">).</span><span class="n">SizeMax</span>
+</code></pre></div></p>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">df -h                     # confirm new size visible
-lsblk                     # confirm partition expanded
-multipath -ll             # confirm no path issues post-rescan
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w">                     </span><span class="c1"># confirm new size visible</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>lsblk<span class="w">                     </span><span class="c1"># confirm partition expanded</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>multipath<span class="w"> </span>-ll<span class="w">             </span><span class="c1"># confirm no path issues post-rescan</span>
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

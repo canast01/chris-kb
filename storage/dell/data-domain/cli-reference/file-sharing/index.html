@@ -823,33 +823,39 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    CIFS_SMB["CIFS/SMB"]
+    CIFS_SMB --&gt; S0["NFS"]
+    CIFS_SMB --&gt; S1["CIFS / SMB"]
+    CIFS_SMB --&gt; S2["NFS + CIFS Dual Protocol"]
+    CIFS_SMB --&gt; S3["Troubleshooting"]</code></pre>
 <h2 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h2>
 <p>Data Domain exports MTrees over NFS for backup applications that use the filesystem protocol (e.g., Networker, some Veeam configurations).</p>
-<pre><code class="language-bash"># List all NFS exports
-nfs show exports
-
-# NFS service status
-nfs status
-
-# NFS client connections
-nfs show clients
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all NFS exports</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># NFS service status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nfs<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># NFS client connections</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nfs<span class="w"> </span>show<span class="w"> </span>clients
+</code></pre></div>
 <h3 id="managing-nfs-exports">Managing NFS Exports<a class="headerlink" href="#managing-nfs-exports" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Create an NFS export for an MTree
-nfs add export /data/col1/&lt;mtree_name&gt; clients &lt;ip_or_cidr&gt;
-
-# Allow multiple clients
-nfs add export /data/col1/&lt;mtree_name&gt; clients &lt;ip1&gt;,&lt;ip2&gt;
-
-# Modify export options (root squash, read-write)
-nfs modify export /data/col1/&lt;mtree_name&gt; clients &lt;ip&gt; options rw,root-squash
-
-# Remove a client from an export
-nfs del export /data/col1/&lt;mtree_name&gt; clients &lt;ip_or_cidr&gt;
-
-# Remove the entire export
-nfs del export /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an NFS export for an MTree</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;ip_or_cidr&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Allow multiple clients</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;ip1&gt;,&lt;ip2&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Modify export options (root squash, read-write)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nfs<span class="w"> </span>modify<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>options<span class="w"> </span>rw,root-squash
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Remove a client from an export</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nfs<span class="w"> </span>del<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;ip_or_cidr&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Remove the entire export</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nfs<span class="w"> </span>del<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h3 id="nfs-options-reference">NFS Options Reference<a class="headerlink" href="#nfs-options-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -886,28 +892,28 @@ nfs del export /data/col1/&lt;mtree_name&gt;
 </tbody>
 </table>
 <h2 id="cifs-smb">CIFS / SMB<a class="headerlink" href="#cifs-smb" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># CIFS service status and configuration
-cifs show
-
-# Active client connections
-cifs show clients
-
-# All CIFS shares
-cifs share show
-
-# Create a CIFS share for an MTree
-cifs share add /data/col1/&lt;mtree_name&gt;
-
-# Remove a CIFS share
-cifs share del /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># CIFS service status and configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cifs<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Active client connections</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cifs<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># All CIFS shares</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cifs<span class="w"> </span>share<span class="w"> </span>show
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Create a CIFS share for an MTree</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>cifs<span class="w"> </span>share<span class="w"> </span>add<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Remove a CIFS share</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>cifs<span class="w"> </span>share<span class="w"> </span>del<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h3 id="cifs-share-options">CIFS Share Options<a class="headerlink" href="#cifs-share-options" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Restrict share access to specific AD groups
-cifs share modify &lt;share_name&gt; add-writable-users &lt;DOMAIN&gt;\&lt;group&gt;
-
-# View share permissions
-cifs share show &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict share access to specific AD groups</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cifs<span class="w"> </span>share<span class="w"> </span>modify<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>add-writable-users<span class="w"> </span>&lt;DOMAIN&gt;<span class="se">\&lt;</span>group&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View share permissions</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cifs<span class="w"> </span>share<span class="w"> </span>show<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h2 id="nfs-cifs-dual-protocol">NFS + CIFS Dual Protocol<a class="headerlink" href="#nfs-cifs-dual-protocol" title="Permanent link">&para;</a></h2>
 <p>An MTree can be exported over both NFS and CIFS simultaneously for mixed environments. Ensure access controls are configured on both protocols to avoid permission conflicts.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>

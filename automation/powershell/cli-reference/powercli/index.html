@@ -727,67 +727,67 @@
 <p>Part of the PowerShell CLI Reference.</p>
 </blockquote>
 <hr />
-<pre><code class="language-powershell"># Install / connect
-Install-Module VMware.PowerCLI -Scope CurrentUser
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
-Connect-VIServer -Server &lt;vcenter&gt; -Credential (Get-Credential)
-Disconnect-VIServer -Confirm:$false
-
-# VMs
-Get-VM
-Get-VM -Name &lt;name&gt;
-Get-VM | Where-Object { $_.PowerState -eq &quot;PoweredOff&quot; }
-Start-VM -VM &lt;name&gt;
-Stop-VM -VM &lt;name&gt; -Confirm:$false
-Restart-VM -VM &lt;name&gt; -Confirm:$false
-Suspend-VM -VM &lt;name&gt;
-
-# VM config
-Get-VM &lt;name&gt; | Get-HardDisk
-Get-VM &lt;name&gt; | Get-NetworkAdapter
-Set-VM -VM &lt;name&gt; -NumCpu 4 -MemoryGB 16 -Confirm:$false
-
-# Snapshots
-Get-Snapshot -VM &lt;name&gt;
-New-Snapshot -VM &lt;name&gt; -Name &quot;pre-patch&quot; -Memory:$false -Quiesce:$false
-Remove-Snapshot -Snapshot &lt;snap&gt; -Confirm:$false
-Set-VM -VM &lt;name&gt; -Snapshot &lt;snap&gt; -Confirm:$false  # Revert
-
-# Hosts
-Get-VMHost
-Get-VMHost -Name &lt;hostname&gt;
-Get-VMHost | Select-Object Name, PowerState, ConnectionState, Version
-Set-VMHost -VMHost &lt;host&gt; -State Maintenance
-
-# Clusters
-Get-Cluster
-Get-Cluster &lt;name&gt; | Get-VMHost
-Get-Cluster | Get-VM
-
-# Datastores
-Get-Datastore
-Get-Datastore | Select-Object Name, CapacityGB, FreeSpaceGB
-Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 }
-
-# vSAN
-Get-VsanView
-Get-VsanClusterConfiguration -Cluster &lt;cluster&gt;
-
-# Resource pools
-Get-ResourcePool
-Get-ResourcePool -Name &lt;name&gt; | Get-VM
-
-# vCenter events
-Get-VIEvent -MaxSamples 100
-Get-VIEvent -Start (Get-Date).AddHours(-24)
-
-# Tags
-Get-Tag
-Get-TagCategory
-New-Tag -Name &lt;tag&gt; -Category &lt;category&gt;
-Get-VM &lt;name&gt; | Get-TagAssignment
-New-TagAssignment -Tag &lt;tag&gt; -Entity (Get-VM &lt;name&gt;)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install / connect</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># VMs</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-VM</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Restart-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Suspend-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># VM config</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-NumCpu</span> <span class="n">4</span> <span class="n">-MemoryGB</span> <span class="n">16</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c"># Snapshots</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch&quot;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nb">Remove-Snapshot</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>  <span class="c"># Revert</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c"># Hosts</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">Get-VMHost</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">Version</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-State</span> <span class="n">Maintenance</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c"># Clusters</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="nb">Get-Cluster</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="nb">Get-Cluster</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="c"># Datastores</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="nb">Get-Datastore</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="o">-lt</span> <span class="n">0</span><span class="p">.</span><span class="n">2</span> <span class="p">}</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="c"># vSAN</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="nb">Get-VsanView</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">&lt;</span><span class="n">cluster</span><span class="p">&gt;</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="c"># Resource pools</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="nb">Get-ResourcePool</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="nb">Get-ResourcePool</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="c"># vCenter events</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">100</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="nb">Get-VIEvent</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="c"># Tags</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="nb">Get-Tag</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a><span class="nb">Get-TagCategory</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a><span class="nb">New-Tag</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="p">&lt;</span><span class="n">category</span><span class="p">&gt;</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-TagAssignment</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;)</span>
+</code></pre></div>
 
 
 

@@ -849,35 +849,35 @@
 <p>Apply the principle of least privilege. Operations staff reviewing dashboards and recommendations should be Viewers. Admins should be limited to designated platform administrators.</p>
 <h2 id="sso-integration">SSO Integration<a class="headerlink" href="#sso-integration" title="Permanent link">&para;</a></h2>
 <p>Dell AIOps authentication is handled through CloudIQ SSO, which supports SAML 2.0 integration with enterprise IdPs.</p>
-<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Identity Providers &gt; Add
-- SAML 2.0 metadata from Okta / Azure AD / ADFS
-- Attribute mapping: email → user account, group claim → Admin/Viewer role
-- Enable JIT provisioning for automatic account creation from IdP groups
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>CloudIQ portal &gt; Settings &gt; Identity Providers &gt; Add
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- SAML 2.0 metadata from Okta / Azure AD / ADFS
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Attribute mapping: email → user account, group claim → Admin/Viewer role
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Enable JIT provisioning for automatic account creation from IdP groups
+</code></pre></div>
 <p>After SSO is configured, disable local CloudIQ account login for all non-break-glass users.</p>
 <h2 id="api-access-control">API Access Control<a class="headerlink" href="#api-access-control" title="Permanent link">&para;</a></h2>
 <p>All REST API access uses OAuth2 client credentials. Each consuming system should have its own API client with minimum required scopes.</p>
-<pre><code class="language-text">Create an API client:
-CloudIQ portal &gt; Settings &gt; API Clients &gt; Add Client
-- Name: descriptive (e.g., automation-aiops, splunk-aiops)
-- Scopes: read-only for monitoring and reporting
-- Store client_id and client_secret in secrets manager immediately
-  (secret only shown once)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Create an API client:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>CloudIQ portal &gt; Settings &gt; API Clients &gt; Add Client
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Name: descriptive (e.g., automation-aiops, splunk-aiops)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Scopes: read-only for monitoring and reporting
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Store client_id and client_secret in secrets manager immediately
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  (secret only shown once)
+</code></pre></div>
 <h3 id="api-credential-rotation">API Credential Rotation<a class="headerlink" href="#api-credential-rotation" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">Rotation procedure (90-day schedule):
-1. CloudIQ portal &gt; Settings &gt; API Clients &gt; [Client] &gt; Rotate Secret
-2. Update new client_secret in secrets manager
-3. Redeploy all scripts and integrations referencing the old secret
-4. Verify scripts return HTTP 200 with new credentials
-5. Log rotation date and next due date in the credential register
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Rotation procedure (90-day schedule):
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>1. CloudIQ portal &gt; Settings &gt; API Clients &gt; [Client] &gt; Rotate Secret
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2. Update new client_secret in secrets manager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>3. Redeploy all scripts and integrations referencing the old secret
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>4. Verify scripts return HTTP 200 with new credentials
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>5. Log rotation date and next due date in the credential register
+</code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>CloudIQ audit log captures all administrative actions for AIOps configuration and access.</p>
-<pre><code class="language-text">CloudIQ portal &gt; Settings &gt; Audit Log
-- View: filter by user, date, or action type
-- Export to CSV for SIEM ingestion
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>CloudIQ portal &gt; Settings &gt; Audit Log
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- View: filter by user, date, or action type
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Export to CSV for SIEM ingestion
+</code></pre></div>
 <p>Key events to review in audit log:
 - User login/logout (especially failed logins or logins from unexpected locations)
 - API client creation, modification, and secret rotation

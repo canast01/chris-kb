@@ -825,35 +825,64 @@
 <li>Replaces legacy ESRS in environments still running older EMC/Dell infrastructure</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm SCG appliance is running and reachable from the management network</li>
-<li>Check SCG appliance GUI (HTTPS port 9443) for connectivity status: all devices should show as Connected</li>
-<li>Review the SCG event log for any failed telemetry uploads or device registration errors</li>
-<li>Confirm outbound HTTPS (port 443) to Dell endpoints (<code>esrs.emc.com</code>, <code>cloudiq.dell.com</code>) is reachable</li>
-<li>Check that all registered devices are actively sending telemetry — a device showing as offline in CloudIQ is usually an SCG connectivity issue</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confirm SCG appliance is running and reachable from the management net</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check SCG appliance GUI (HTTPS port 9443) for connectivity status</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review the SCG event log for any failed telemetry uploads or device re</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm outbound HTTPS (port 443) to Dell endpoints (<code>esrs.emc.com</code>, <code>|</code>esrs.emc.com`</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check that all registered devices are actively sending telemetry</td>
+<td></td>
+<td>a device showing as offline in CloudIQ is usually an SCG connectivity issue</td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Test outbound connectivity from the SCG appliance to Dell support endpoints
-curl -sv --max-time 10 https://esrs.emc.com/esrs/v2/device/heartbeat 2&gt;&amp;1 | grep -E &quot;(connected|SSL|error|timeout)&quot;
-
-curl -sv --max-time 10 https://cloudiq.dell.com 2&gt;&amp;1 | grep -E &quot;(connected|SSL|error|timeout)&quot;
-
-# Check SCG service status on Linux-based SCG
-systemctl status dell-scg 2&gt;/dev/null || service dell-scg status 2&gt;/dev/null
-
-# Check SCG version via REST API (local)
-curl -sk https://localhost:9443/scg/api/v1/system/version | python3 -m json.tool
-
-# List registered devices via SCG REST API
-curl -sk -u &quot;admin:&lt;password&gt;&quot; \
-  https://localhost:9443/scg/api/v1/devices | python3 -m json.tool
-
-# Check SCG log for recent errors
-journalctl -u dell-scg --since &quot;24 hours ago&quot; | grep -i &quot;error\|fail\|disconnect&quot; | tail -30
-
-# From a registered array — test SCG reachability (PowerMax example via Solutions Enabler)
-symcfg -sid &lt;SID&gt; -esrs list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test outbound connectivity from the SCG appliance to Dell support endpoints</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sv<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://esrs.emc.com/esrs/v2/device/heartbeat<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(connected|SSL|error|timeout)&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>curl<span class="w"> </span>-sv<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://cloudiq.dell.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(connected|SSL|error|timeout)&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Check SCG service status on Linux-based SCG</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dell-scg<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>service<span class="w"> </span>dell-scg<span class="w"> </span>status<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check SCG version via REST API (local)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://localhost:9443/scg/api/v1/system/version<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># List registered devices via SCG REST API</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>https://localhost:9443/scg/api/v1/devices<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check SCG log for recent errors</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dell-scg<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disconnect&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># From a registered array — test SCG reachability (PowerMax example via Solutions Enabler)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-esrs<span class="w"> </span>list
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -897,14 +926,40 @@ symcfg -sid &lt;SID&gt; -esrs list
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Deploy a new SCG virtual appliance: download OVA from Dell Support, deploy to vSphere, configure IP/DNS/gateway via the initial setup wizard</li>
-<li>Register a new array to SCG: from the array management interface (e.g., Unisphere, SYMCLI), specify the SCG hostname/IP and complete the registration</li>
-<li>Upgrade SCG: download the update bundle from Dell Support and apply via SCG GUI → Software Update</li>
-<li>Add a second SCG for redundancy and configure failover registration on each array (primary/secondary SCG)</li>
-<li>Review and export SCG event logs for audit or troubleshooting via SCG GUI → Logs → Export</li>
-<li>Decommission an SCG: remove all device registrations before shutting down to avoid orphaned records in Dell's support back-end</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deploy a new SCG virtual appliance: download OVA from Dell Support, deploy to vS</td>
+<td></td>
+</tr>
+<tr>
+<td>Register a new array to SCG: from the array management interface (e.g., Unispher</td>
+<td></td>
+</tr>
+<tr>
+<td>Upgrade SCG: download the update bundle from Dell Support and apply via SCG GUI</td>
+<td></td>
+</tr>
+<tr>
+<td>Add a second SCG for redundancy and configure failover registration on each arra</td>
+<td></td>
+</tr>
+<tr>
+<td>Review and export SCG event logs for audit or troubleshooting via SCG GUI → Logs</td>
+<td></td>
+</tr>
+<tr>
+<td>Decommission an SCG: remove all device registrations before shutting down to avo</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Deploy two SCG appliances in active/passive for redundancy — a single SCG failure silently stops all telemetry and support connectivity</li>

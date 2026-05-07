@@ -810,100 +810,100 @@
 <h1 id="dell-unity-luns">Dell Unity LUNs<a class="headerlink" href="#dell-unity-luns" title="Permanent link">&para;</a></h1>
 <p>LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.</p>
 <h2 id="lun-overview">LUN Overview<a class="headerlink" href="#lun-overview" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all LUNs
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun show
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun show -detail
-
-# View a specific LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; show -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all LUNs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># View a specific LUN</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+</code></pre></div>
 <h2 id="create-a-lun">Create a LUN<a class="headerlink" href="#create-a-lun" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create a basic thin LUN in a pool
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun create \
-    -name &lt;lun_name&gt; \
-    -pool &lt;pool_id&gt; \
-    -size 500G
-
-# Create with a description
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun create \
-    -name db-prod-01 \
-    -pool pool_1 \
-    -size 1T \
-    -descr &quot;Production database LUN&quot;
-
-# Create with a host access directly
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun create \
-    -name app-lun-01 \
-    -pool pool_1 \
-    -size 200G \
-    -host &lt;host_id&gt; \
-    -accessMask nohostaccess   # assign access separately
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a basic thin LUN in a pool</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-name<span class="w"> </span>&lt;lun_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-pool<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-size<span class="w"> </span>500G
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create with a description</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-name<span class="w"> </span>db-prod-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-pool<span class="w"> </span>pool_1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-size<span class="w"> </span>1T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>-descr<span class="w"> </span><span class="s2">&quot;Production database LUN&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Create with a host access directly</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>-name<span class="w"> </span>app-lun-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>-pool<span class="w"> </span>pool_1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span>-size<span class="w"> </span>200G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span>-accessMask<span class="w"> </span>nohostaccess<span class="w">   </span><span class="c1"># assign access separately</span>
+</code></pre></div>
 <h2 id="modify-and-expand">Modify and Expand<a class="headerlink" href="#modify-and-expand" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Expand LUN size (can only increase)
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; set -size 2T
-
-# Rename a LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; set -name &lt;new_name&gt;
-
-# Change description
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; set -descr &quot;Updated description&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Expand LUN size (can only increase)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>2T
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Rename a LUN</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-name<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Change description</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-descr<span class="w"> </span><span class="s2">&quot;Updated description&quot;</span>
+</code></pre></div>
 <h2 id="host-access-lun-mapping">Host Access (LUN Mapping)<a class="headerlink" href="#host-access-lun-mapping" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Grant host access to a LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create \
-    -lun &lt;lun_id&gt; \
-    -host &lt;host_id&gt;
-
-# List current host access
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl show
-
-# Remove host access
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl -id &lt;acl_id&gt; delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Grant host access to a LUN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-lun<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List current host access</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>show
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Remove host access</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>-id<span class="w"> </span>&lt;acl_id&gt;<span class="w"> </span>delete
+</code></pre></div>
 <h2 id="lun-snapshots">LUN Snapshots<a class="headerlink" href="#lun-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List snapshots for a LUN
-uemcli -d &lt;ip&gt; -u admin /prot/snap show -res &lt;lun_id&gt;
-
-# Create a snapshot
-uemcli -d &lt;ip&gt; -u admin /prot/snap create \
-    -name &lt;snap_name&gt; \
-    -res &lt;lun_id&gt;
-
-# Restore LUN from snapshot
-uemcli -d &lt;ip&gt; -u admin /prot/snap -id &lt;snap_id&gt; restore
-
-# Delete a snapshot
-uemcli -d &lt;ip&gt; -u admin /prot/snap -id &lt;snap_id&gt; delete
-
-# Attach snapshot as read-only to another host
-uemcli -d &lt;ip&gt; -u admin /prot/snap -id &lt;snap_id&gt; copy \
-    -name &lt;snap_copy_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List snapshots for a LUN</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>show<span class="w"> </span>-res<span class="w"> </span>&lt;lun_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-name<span class="w"> </span>&lt;snap_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>-res<span class="w"> </span>&lt;lun_id&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Restore LUN from snapshot</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>-id<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>restore
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Delete a snapshot</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>-id<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>delete
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Attach snapshot as read-only to another host</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>-id<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>copy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span>-name<span class="w"> </span>&lt;snap_copy_name&gt;
+</code></pre></div>
 <h2 id="delete-a-lun">Delete a LUN<a class="headerlink" href="#delete-a-lun" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Delete requires all host access and snapshots to be removed first
-# 1. Remove host access
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl -id &lt;acl_id&gt; delete
-
-# 2. Delete snapshots
-uemcli -d &lt;ip&gt; -u admin /prot/snap show -res &lt;lun_id&gt;
-uemcli -d &lt;ip&gt; -u admin /prot/snap -id &lt;snap_id&gt; delete
-
-# 3. Delete the LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lun -id &lt;lun_id&gt; delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Delete requires all host access and snapshots to be removed first</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 1. Remove host access</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>-id<span class="w"> </span>&lt;acl_id&gt;<span class="w"> </span>delete
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Delete snapshots</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>show<span class="w"> </span>-res<span class="w"> </span>&lt;lun_id&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/snap<span class="w"> </span>-id<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>delete
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 3. Delete the LUN</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span>delete
+</code></pre></div>
 <h2 id="host-side-validation-after-mapping">Host-Side Validation (After Mapping)<a class="headerlink" href="#host-side-validation-after-mapping" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Linux — rescan and discover new LUN
-rescan-scsi-bus.sh
-multipath -ll
-
-# Windows — rescan disks
-Get-Disk | Where-Object OperationalStatus -eq &quot;Offline&quot;
-Set-Disk -Number &lt;n&gt; -IsOffline $false
-Initialize-Disk -Number &lt;n&gt;
-New-Partition -DiskNumber &lt;n&gt; -UseMaximumSize -AssignDriveLetter
-Format-Volume -DriveLetter &lt;X&gt; -FileSystem NTFS
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux — rescan and discover new LUN</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>rescan-scsi-bus.sh
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Windows — rescan disks</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Get-Disk<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>OperationalStatus<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;Offline&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Set-Disk<span class="w"> </span>-Number<span class="w"> </span>&lt;n&gt;<span class="w"> </span>-IsOffline<span class="w"> </span><span class="nv">$false</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Initialize-Disk<span class="w"> </span>-Number<span class="w"> </span>&lt;n&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>New-Partition<span class="w"> </span>-DiskNumber<span class="w"> </span>&lt;n&gt;<span class="w"> </span>-UseMaximumSize<span class="w"> </span>-AssignDriveLetter
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Format-Volume<span class="w"> </span>-DriveLetter<span class="w"> </span>&lt;X&gt;<span class="w"> </span>-FileSystem<span class="w"> </span>NTFS
+</code></pre></div>
 
 
 

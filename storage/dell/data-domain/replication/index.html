@@ -810,15 +810,15 @@
 <h1 id="replication-operations">Replication Operations<a class="headerlink" href="#replication-operations" title="Permanent link">&para;</a></h1>
 <p>Operational guidance for managing Data Domain replication — monitoring, troubleshooting, and failover.</p>
 <h2 id="routine-checks">Routine Checks<a class="headerlink" href="#routine-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All replication contexts and their state
-replication show all
-
-# Contexts with issues (not replicating or idle)
-replication status | grep -v &quot;replicating\|idle&quot;
-
-# Current lag (bytes behind)
-replication show stats | grep lag
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All replication contexts and their state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Contexts with issues (not replicating or idle)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>replication<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;replicating\|idle&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Current lag (bytes behind)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
+</code></pre></div>
 <h2 id="replication-lag-thresholds">Replication Lag Thresholds<a class="headerlink" href="#replication-lag-thresholds" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -847,23 +847,23 @@ replication show stats | grep lag
 </tbody>
 </table>
 <h2 id="troubleshooting-replication">Troubleshooting Replication<a class="headerlink" href="#troubleshooting-replication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. Check context state
-replication show all | grep &lt;context_id&gt;
-
-# 2. Check for alerts related to replication
-alert show current | grep -i repl
-
-# 3. Network connectivity to destination
-net ping &lt;destination_dd_ip&gt;
-
-# 4. Check filesystem health on both systems
-filesys status
-filesys show space
-
-# 5. Check if destination has space
-# (Log into destination DD and run:)
-filesys show space
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Check context state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Check for alerts related to replication</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alert<span class="w"> </span>show<span class="w"> </span>current<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>repl
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Network connectivity to destination</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>net<span class="w"> </span>ping<span class="w"> </span>&lt;destination_dd_ip&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Check filesystem health on both systems</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># 5. Check if destination has space</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># (Log into destination DD and run:)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -897,38 +897,38 @@ filesys show space
 </tbody>
 </table>
 <h2 id="manual-operations">Manual Operations<a class="headerlink" href="#manual-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Trigger an immediate sync
-replication sync &lt;context_id&gt;
-
-# Pause replication (source continues writing; changes accumulate)
-replication disable &lt;context_id&gt;
-
-# Resume
-replication enable &lt;context_id&gt;
-
-# Resync (re-establishes after break or failover)
-replication resync &lt;context_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger an immediate sync</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>sync<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Pause replication (source continues writing; changes accumulate)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>disable<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Resume</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>replication<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Resync (re-establishes after break or failover)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context_id&gt;
+</code></pre></div>
 <h2 id="failover-procedure">Failover Procedure<a class="headerlink" href="#failover-procedure" title="Permanent link">&para;</a></h2>
 <p>Run on the <strong>destination</strong> Data Domain when the source is unavailable:</p>
-<pre><code class="language-bash"># Step 1 — break the context to make destination writeable
-replication failover &lt;context_id&gt;
-
-# Step 2 — redirect backup application to destination DD
-# (update backup application target configuration)
-
-# Step 3 — validate backup jobs complete successfully
-ddboost show clients   # or nfs show clients
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — break the context to make destination writeable</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>replication<span class="w"> </span>failover<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — redirect backup application to destination DD</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># (update backup application target configuration)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Step 3 — validate backup jobs complete successfully</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">   </span><span class="c1"># or nfs show clients</span>
+</code></pre></div>
 <h2 id="recovery-after-primary-returns">Recovery After Primary Returns<a class="headerlink" href="#recovery-after-primary-returns" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — re-establish and resync
-replication resync &lt;context_id&gt;
-
-# Step 2 — confirm sync complete (lag = 0)
-replication show stats | grep lag
-
-# Step 3 — redirect backup application back to primary
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — re-establish and resync</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Step 2 — confirm sync complete (lag = 0)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Step 3 — redirect backup application back to primary</span>
+</code></pre></div>
 
 
 

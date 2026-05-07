@@ -842,65 +842,65 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List managed disks
-az disk list \
-  --query '[*].{Name:name,RG:resourceGroup,Type:sku.name,Size:diskSizeGb,State:diskState}' -o table
-
-# Show disk details
-az disk show -g &lt;rg&gt; -n &lt;disk-name&gt;
-
-# Create a managed disk from snapshot
-az disk create -g &lt;rg&gt; -n &lt;new-disk-name&gt; \
-  --source &lt;snapshot-resource-id&gt; \
-  --sku Premium_LRS
-
-# Create a snapshot
-az snapshot create -g &lt;rg&gt; -n &lt;snap-name&gt; \
-  --source &lt;disk-resource-id&gt;
-
-# List snapshots
-az snapshot list -g &lt;rg&gt; \
-  --query '[*].{Name:name,Disk:creationData.sourceResourceId,Size:diskSizeGb,State:diskState}' -o table
-
-# Resize a disk (VM must be deallocated or disk must be detached for OS disk)
-az disk update -g &lt;rg&gt; -n &lt;disk-name&gt; --size-gb 512
-
-# Change disk performance tier
-az disk update -g &lt;rg&gt; -n &lt;disk-name&gt; --sku Premium_LRS --disk-iops-read-write 5000 --disk-mbps-read-write 200
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List managed disks</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,Type:sku.name,Size:diskSizeGb,State:diskState}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show disk details</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;disk-name&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create a managed disk from snapshot</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>disk<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;new-disk-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--source<span class="w"> </span>&lt;snapshot-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--sku<span class="w"> </span>Premium_LRS
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;snap-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--source<span class="w"> </span>&lt;disk-resource-id&gt;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># List snapshots</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>az<span class="w"> </span>snapshot<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Disk:creationData.sourceResourceId,Size:diskSizeGb,State:diskState}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Resize a disk (VM must be deallocated or disk must be detached for OS disk)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>az<span class="w"> </span>disk<span class="w"> </span>update<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span>--size-gb<span class="w"> </span><span class="m">512</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Change disk performance tier</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>az<span class="w"> </span>disk<span class="w"> </span>update<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span>--sku<span class="w"> </span>Premium_LRS<span class="w"> </span>--disk-iops-read-write<span class="w"> </span><span class="m">5000</span><span class="w"> </span>--disk-mbps-read-write<span class="w"> </span><span class="m">200</span>
+</code></pre></div>
 <h2 id="attach-detach-disks">Attach / Detach Disks<a class="headerlink" href="#attach-detach-disks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Attach an existing managed disk to a VM
-az vm disk attach -g &lt;rg&gt; --vm-name &lt;vm-name&gt; \
-  --name &lt;disk-name&gt; --caching ReadOnly
-
-# Detach a disk
-az vm disk detach -g &lt;rg&gt; --vm-name &lt;vm-name&gt; --name &lt;disk-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Attach an existing managed disk to a VM</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>vm<span class="w"> </span>disk<span class="w"> </span>attach<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;disk-name&gt;<span class="w"> </span>--caching<span class="w"> </span>ReadOnly
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Detach a disk</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>az<span class="w"> </span>vm<span class="w"> </span>disk<span class="w"> </span>detach<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;disk-name&gt;
+</code></pre></div>
 <h2 id="expand-os-disk-linux-vm">Expand OS Disk (Linux VM)<a class="headerlink" href="#expand-os-disk-linux-vm" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. Deallocate VM
-az vm deallocate -g &lt;rg&gt; -n &lt;vm-name&gt;
-
-# 2. Resize OS disk
-az disk update -g &lt;rg&gt; -n &lt;os-disk-name&gt; --size-gb 256
-
-# 3. Start VM
-az vm start -g &lt;rg&gt; -n &lt;vm-name&gt;
-
-# 4. On the VM: extend the partition and filesystem
-sudo growpart /dev/sda 1
-sudo resize2fs /dev/sda1     # ext4
-sudo xfs_growfs /             # xfs
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Deallocate VM</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>deallocate<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Resize OS disk</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>disk<span class="w"> </span>update<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;os-disk-name&gt;<span class="w"> </span>--size-gb<span class="w"> </span><span class="m">256</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Start VM</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>vm<span class="w"> </span>start<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. On the VM: extend the partition and filesystem</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sudo<span class="w"> </span>growpart<span class="w"> </span>/dev/sda<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>sudo<span class="w"> </span>resize2fs<span class="w"> </span>/dev/sda1<span class="w">     </span><span class="c1"># ext4</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>sudo<span class="w"> </span>xfs_growfs<span class="w"> </span>/<span class="w">             </span><span class="c1"># xfs</span>
+</code></pre></div>
 <h2 id="disk-encryption">Disk Encryption<a class="headerlink" href="#disk-encryption" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable encryption using Azure Disk Encryption (ADE) with Key Vault
-az vm encryption enable -g &lt;rg&gt; -n &lt;vm-name&gt; \
-  --disk-encryption-keyvault &lt;keyvault-resource-id&gt; \
-  --volume-type All
-
-# Check encryption status
-az vm encryption show -g &lt;rg&gt; -n &lt;vm-name&gt; \
-  --query '{OS:osDisk.encryptionSettings,DataDisks:dataDiskEncryptionSettings}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable encryption using Azure Disk Encryption (ADE) with Key Vault</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--disk-encryption-keyvault<span class="w"> </span>&lt;keyvault-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--volume-type<span class="w"> </span>All
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check encryption status</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>vm<span class="w"> </span>encryption<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{OS:osDisk.encryptionSettings,DataDisks:dataDiskEncryptionSettings}&#39;</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

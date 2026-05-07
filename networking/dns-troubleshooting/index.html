@@ -845,41 +845,41 @@
 </ul>
 <h2 id="triage-steps">Triage Steps<a class="headerlink" href="#triage-steps" title="Permanent link">&para;</a></h2>
 <h3 id="1-test-resolution-directly">1. Test Resolution Directly<a class="headerlink" href="#1-test-resolution-directly" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">nslookup &lt;hostname&gt;
-dig &lt;hostname&gt;
-dig &lt;hostname&gt; @&lt;dns_server_ip&gt;    # query a specific server directly
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nslookup<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>@&lt;dns_server_ip&gt;<span class="w">    </span><span class="c1"># query a specific server directly</span>
+</code></pre></div>
 <h3 id="2-check-configured-dns-servers">2. Check Configured DNS Servers<a class="headerlink" href="#2-check-configured-dns-servers" title="Permanent link">&para;</a></h3>
-<p><strong>Linux:</strong></p>
-<pre><code class="language-bash">cat /etc/resolv.conf
-resolvectl status
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell">Get-DnsClientServerAddress
-ipconfig /all | findstr DNS
-</code></pre>
+<p><strong>Linux:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>resolvectl<span class="w"> </span>status
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-DnsClientServerAddress</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">all</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">DNS</span>
+</code></pre></div></p>
 <h3 id="3-test-dns-server-reachability">3. Test DNS Server Reachability<a class="headerlink" href="#3-test-dns-server-reachability" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">ping &lt;dns_server_ip&gt;
-nslookup &lt;hostname&gt; &lt;dns_server_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ping<span class="w"> </span>&lt;dns_server_ip&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nslookup<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>&lt;dns_server_ip&gt;
+</code></pre></div>
 <h3 id="4-forward-and-reverse-resolution">4. Forward and Reverse Resolution<a class="headerlink" href="#4-forward-and-reverse-resolution" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Forward: name → IP
-dig &lt;hostname&gt;
-
-# Reverse: IP → name (PTR)
-dig -x &lt;ip&gt;
-nslookup &lt;ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Forward: name → IP</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Reverse: IP → name (PTR)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>dig<span class="w"> </span>-x<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nslookup<span class="w"> </span>&lt;ip&gt;
+</code></pre></div>
 <p>Missing PTR records cause Kerberos failures and NFS/CIFS auth issues.</p>
 <h3 id="5-flush-dns-cache">5. Flush DNS Cache<a class="headerlink" href="#5-flush-dns-cache" title="Permanent link">&para;</a></h3>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-cmd">ipconfig /flushdns
-</code></pre>
-<p><strong>Linux (systemd-resolved):</strong></p>
-<pre><code class="language-bash">resolvectl flush-caches
-# or
-systemctl restart systemd-resolved
-</code></pre>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ipconfig /flushdns
+</code></pre></div></p>
+<p><strong>Linux (systemd-resolved):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>resolvectl<span class="w"> </span>flush-caches
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># or</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-resolved
+</code></pre></div></p>
 <h3 id="6-test-from-multiple-systems">6. Test from Multiple Systems<a class="headerlink" href="#6-test-from-multiple-systems" title="Permanent link">&para;</a></h3>
 <p>If one server resolves but another doesn't, the issue is host-specific — wrong server configured, stale cache, or host firewall blocking UDP 53.</p>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>

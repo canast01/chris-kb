@@ -799,15 +799,15 @@
 <h1 id="srdfs-security">SRDF/S Security<a class="headerlink" href="#srdfs-security" title="Permanent link">&para;</a></h1>
 <h2 id="solutions-enabler-rbac">Solutions Enabler RBAC<a class="headerlink" href="#solutions-enabler-rbac" title="Permanent link">&para;</a></h2>
 <p>Control who can execute SRDF failover and resync operations:</p>
-<pre><code class="language-bash"># List current user roles
-symauth -sid &lt;SID&gt; list
-
-# Add DR operator role — failover-capable, scoped to specific SRDF groups
-symauth -sid &lt;SID&gt; add -username svc_dr_ops -role StorageAdmin -scope rdfg:&lt;group_number&gt;
-
-# Add monitoring account — read-only
-symauth -sid &lt;SID&gt; add -username svc_monitoring -role StorageMonitor
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List current user roles</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Add DR operator role — failover-capable, scoped to specific SRDF groups</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_dr_ops<span class="w"> </span>-role<span class="w"> </span>StorageAdmin<span class="w"> </span>-scope<span class="w"> </span>rdfg:&lt;group_number&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Add monitoring account — read-only</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_monitoring<span class="w"> </span>-role<span class="w"> </span>StorageMonitor
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -834,21 +834,21 @@ symauth -sid &lt;SID&gt; add -username svc_monitoring -role StorageMonitor
 <p>SRDF/S failovers are zero-data-loss but cause site-wide impact. Guard against accidental execution:</p>
 <ul>
 <li>Require second-factor confirmation for <code>symrdf failover</code> in production:
-  <code>bash
-  export SYMCLI_CONFIRM=prompt    # Requires manual y/n before executing</code></li>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_CONFIRM</span><span class="o">=</span>prompt<span class="w">    </span><span class="c1"># Requires manual y/n before executing</span>
+</code></pre></div></li>
 <li>Implement a two-person rule: all production SRDF failovers require peer approval before execution</li>
 <li>Restrict <code>symrdf establish -full</code> (full resync) to break-glass account — this destroys R2 content</li>
 </ul>
 <h2 id="fcip-encryption">FCIP Encryption<a class="headerlink" href="#fcip-encryption" title="Permanent link">&para;</a></h2>
 <p>SRDF/E encrypts data over FCIP links using AES-256:</p>
-<pre><code class="language-bash"># Check encryption status per SRDF group
-symcfg list -rdfg -v | grep -E &quot;RDF Group|Encryption&quot;
-
-# Enable encryption on an existing group (requires group to be in Split state)
-symrdf -g &lt;rdfg&gt; split -noprompt
-symrdf -g &lt;rdfg&gt; set encrypt enable
-symrdf -g &lt;rdfg&gt; establish -noprompt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check encryption status per SRDF group</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF Group|Encryption&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable encryption on an existing group (requires group to be in Split state)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>split<span class="w"> </span>-noprompt
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>encrypt<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>establish<span class="w"> </span>-noprompt
+</code></pre></div>
 <h2 id="fc-fabric-zoning">FC Fabric Zoning<a class="headerlink" href="#fc-fabric-zoning" title="Permanent link">&para;</a></h2>
 <p>SRDF director ports must be hard-zoned to prevent unauthorised array-to-array communication:</p>
 <ul>
@@ -857,9 +857,9 @@ symrdf -g &lt;rdfg&gt; establish -noprompt
 <li>Use hard zoning (WWPN-based) — soft zone aliases are acceptable for documentation only</li>
 <li>Zone naming: <code>SRDF_&lt;source_array_port&gt;_&lt;target_array_port&gt;</code></li>
 </ul>
-<p>Verify SRDF director port WWPNs:</p>
-<pre><code class="language-bash">symcfg list -rdfg &lt;rdfg&gt; -v | grep &quot;Director&quot;
-</code></pre>
+<p>Verify SRDF director port WWPNs:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Director&quot;</span>
+</code></pre></div></p>
 <h2 id="management-api-security">Management API Security<a class="headerlink" href="#management-api-security" title="Permanent link">&para;</a></h2>
 <p>The Unisphere REST API should be secured:</p>
 <ul>
@@ -868,18 +868,18 @@ symrdf -g &lt;rdfg&gt; establish -noprompt
 <li>Scope API accounts to minimum required capabilities</li>
 <li>Rotate service account certificates annually</li>
 </ul>
-<p>Verify TLS configuration:</p>
-<pre><code class="language-bash">curl -k https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
-# Production systems should use trusted CA cert (remove -k flag)
-</code></pre>
+<p>Verify TLS configuration:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Production systems should use trusted CA cert (remove -k flag)</span>
+</code></pre></div></p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All SRDF state changes are recorded in the PowerMax audit log:</p>
-<pre><code class="language-bash"># View recent RDF events
-symevent list -sid &lt;SID&gt; -type rdf -last 100
-
-# Export for SIEM ingest
-symevent list -sid &lt;SID&gt; -type rdf -output csv &gt; /tmp/rdf_events.csv
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View recent RDF events</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Export for SIEM ingest</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events.csv
+</code></pre></div>
 <p>Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM. Alert on:
 - <code>SRDF Split</code> outside maintenance windows
 - <code>SRDF Failover</code> (any occurrence)

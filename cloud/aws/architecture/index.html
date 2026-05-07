@@ -799,32 +799,32 @@
 <h1 id="aws-architecture">AWS Architecture<a class="headerlink" href="#aws-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="account-structure">Account Structure<a class="headerlink" href="#account-structure" title="Permanent link">&para;</a></h2>
 <p>AWS Organizations with a management account at the root; all production workloads in member accounts:</p>
-<pre><code>Management Account (root — SCPs and billing only)
-├── Platform OU
-│   ├── Log Archive Account      (centralised CloudTrail and Config logs)
-│   └── Security Tooling Account (Security Hub, GuardDuty, IAM Access Analyzer)
-├── Workloads OU
-│   ├── Production Account
-│   ├── Staging Account
-│   └── Development Account
-└── Shared Services Account      (shared VPCs, DNS, AD, CI/CD)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Management Account (root — SCPs and billing only)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Platform OU
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Log Archive Account      (centralised CloudTrail and Config logs)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   └── Security Tooling Account (Security Hub, GuardDuty, IAM Access Analyzer)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── Workloads OU
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── Production Account
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── Staging Account
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── Development Account
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── Shared Services Account      (shared VPCs, DNS, AD, CI/CD)
+</code></pre></div>
 <ul>
 <li>Management account hosts no workloads — only SCPs and consolidated billing</li>
 <li>SCPs enforce guardrails: deny root access, enforce encryption, restrict regions to approved list</li>
 </ul>
 <h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
 <p>Hub-and-spoke via Transit Gateway:</p>
-<pre><code>On-Premises ←→ Direct Connect ←→ Transit Gateway
-                                        │
-              ┌─────────────────────────┼─────────────────────────┐
-              ▼                         ▼                         ▼
-      Shared Services VPC         Production VPC            Dev/Staging VPC
-      (10.0.0.0/16)               (10.1.0.0/16)             (10.2.0.0/16)
-      ├── Public Subnet           ├── Public Subnet (ALB)
-      ├── Private Subnet          ├── Private Subnet (EC2, RDS)
-      └── Isolated Subnet         └── Isolated Subnet (DB, no internet)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>On-Premises ←→ Direct Connect ←→ Transit Gateway
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                                        │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>              ┌─────────────────────────┼─────────────────────────┐
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>              ▼                         ▼                         ▼
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      Shared Services VPC         Production VPC            Dev/Staging VPC
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      (10.0.0.0/16)               (10.1.0.0/16)             (10.2.0.0/16)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      ├── Public Subnet           ├── Public Subnet (ALB)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      ├── Private Subnet          ├── Private Subnet (EC2, RDS)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      └── Isolated Subnet         └── Isolated Subnet (DB, no internet)
+</code></pre></div>
 <p>Subnet tiers per VPC:
 - <strong>Public</strong>: ALB, NAT Gateway — no EC2 instances
 - <strong>Private</strong>: EC2, ECS, Lambda — internet via NAT Gateway
@@ -890,16 +890,16 @@
 </tbody>
 </table>
 <h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
-<pre><code>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
-    │
-    ▼
-IAM Identity Center (SSO) — maps AD groups to permission sets
-    │
-    ▼
-IAM Roles (assumed by EC2, Lambda, ECS, CI/CD pipelines)
-    │
-No long-lived IAM user access keys in production
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ▼
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>IAM Identity Center (SSO) — maps AD groups to permission sets
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    ▼
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>IAM Roles (assumed by EC2, Lambda, ECS, CI/CD pipelines)
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>No long-lived IAM user access keys in production
+</code></pre></div>
 <ul>
 <li>Humans: IAM Identity Center (SSO) — no direct IAM users</li>
 <li>Machines: IAM Roles with instance profiles or OIDC federation</li>

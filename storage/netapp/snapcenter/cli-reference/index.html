@@ -878,6 +878,10 @@
 <blockquote>
 <p>Part of the <a href="../">SnapCenter</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    SnapCenter["SnapCenter"]
+    SnapCenter --&gt; S0["PowerShell Module"]
+    SnapCenter --&gt; S1["REST API (curl)"]</code></pre>
 <hr />
 <h2 id="powershell-module">PowerShell Module<a class="headerlink" href="#powershell-module" title="Permanent link">&para;</a></h2>
 <p>SnapCenter ships a PowerShell module (<code>SnapCenter</code>) installed automatically with the server. Load it in any PS session or use the SnapCenter shell shortcut.</p>
@@ -928,122 +932,122 @@
 </tbody>
 </table>
 <h3 id="connect">Connect<a class="headerlink" href="#connect" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Interactive login (prompts for credentials)
-Open-SmConnection -SMSbaseUrl https://snapcenter.example.com
-
-# With stored credential object
-$cred = Get-Credential
-Open-SmConnection -SMSbaseUrl https://snapcenter.example.com -Credential $cred
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Interactive login (prompts for credentials)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseUrl</span> <span class="n">https</span><span class="p">://</span><span class="n">snapcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># With stored credential object</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseUrl</span> <span class="n">https</span><span class="p">://</span><span class="n">snapcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="nv">$cred</span>
+</code></pre></div>
 <h3 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># List all backups for a resource
-Get-SmBackup -BackupName &quot;*&quot; -PluginCode SCW
-
-# List backups for a specific SQL resource
-Get-SmBackup -PluginCode SCSQL -BackupType &quot;DataBackup&quot; | Select BackupName, BackupTime, BackupStatus
-
-# Trigger an on-demand backup
-Start-SmBackup -PolicyName &quot;DailyFullBackup&quot; -Resource @{&quot;Host&quot;=&quot;sqlhost01&quot;;&quot;Type&quot;=&quot;Database&quot;;&quot;Names&quot;=&quot;AdventureWorks&quot;}
-
-# Remove a specific backup by name
-Remove-SmBackup -BackupName &quot;AdventureWorks_backup_2024-11-20_01-00-00&quot; -Force
-
-# Verify backup integrity
-Invoke-SmBackupVerification -BackupName &quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all backups for a resource</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-SmBackup</span> <span class="n">-BackupName</span> <span class="s2">&quot;*&quot;</span> <span class="n">-PluginCode</span> <span class="n">SCW</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># List backups for a specific SQL resource</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-SmBackup</span> <span class="n">-PluginCode</span> <span class="n">SCSQL</span> <span class="n">-BackupType</span> <span class="s2">&quot;DataBackup&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">BackupName</span><span class="p">,</span> <span class="n">BackupTime</span><span class="p">,</span> <span class="n">BackupStatus</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Trigger an on-demand backup</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Start-SmBackup</span> <span class="n">-PolicyName</span> <span class="s2">&quot;DailyFullBackup&quot;</span> <span class="n">-Resource</span> <span class="p">@{</span><span class="s2">&quot;Host&quot;</span><span class="p">=</span><span class="s2">&quot;sqlhost01&quot;</span><span class="p">;</span><span class="s2">&quot;Type&quot;</span><span class="p">=</span><span class="s2">&quot;Database&quot;</span><span class="p">;</span><span class="s2">&quot;Names&quot;</span><span class="p">=</span><span class="s2">&quot;AdventureWorks&quot;</span><span class="p">}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Remove a specific backup by name</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Remove-SmBackup</span> <span class="n">-BackupName</span> <span class="s2">&quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Verify backup integrity</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Invoke-SmBackupVerification</span> <span class="n">-BackupName</span> <span class="s2">&quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;</span>
+</code></pre></div>
 <h3 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Restore SQL database from backup
-Restore-SmBackup -BackupName &quot;AdventureWorks_backup_2024-11-20_01-00-00&quot; `
-  -Resource @{&quot;Host&quot;=&quot;sqlhost01&quot;;&quot;Type&quot;=&quot;Database&quot;;&quot;Names&quot;=&quot;AdventureWorks&quot;} `
-  -RestoreLastBackup
-
-# Point-in-time restore (SQL)
-Restore-SmBackup -BackupName &quot;AdventureWorks_backup_2024-11-20_01-00-00&quot; `
-  -RestoreToTime &quot;2024-11-20 03:45:00&quot; -LogBackups
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Restore SQL database from backup</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Restore-SmBackup</span> <span class="n">-BackupName</span> <span class="s2">&quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-Resource</span> <span class="p">@{</span><span class="s2">&quot;Host&quot;</span><span class="p">=</span><span class="s2">&quot;sqlhost01&quot;</span><span class="p">;</span><span class="s2">&quot;Type&quot;</span><span class="p">=</span><span class="s2">&quot;Database&quot;</span><span class="p">;</span><span class="s2">&quot;Names&quot;</span><span class="p">=</span><span class="s2">&quot;AdventureWorks&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-RestoreLastBackup</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Point-in-time restore (SQL)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Restore-SmBackup</span> <span class="n">-BackupName</span> <span class="s2">&quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">-RestoreToTime</span> <span class="s2">&quot;2024-11-20 03:45:00&quot;</span> <span class="n">-LogBackups</span>
+</code></pre></div>
 <h3 id="clone-operations">Clone Operations<a class="headerlink" href="#clone-operations" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># List all clones
-Get-SmClone | Select CloneName, SourceBackupName, CloneStatus
-
-# Create a clone from backup
-New-SmClone -BackupName &quot;AdventureWorks_backup_2024-11-20_01-00-00&quot; `
-  -CloneToInstance &quot;sqlhost02\MSSQLSERVER&quot; -CloneName &quot;AdventureWorks_clone&quot;
-
-# Delete a clone
-Remove-SmClone -CloneName &quot;AdventureWorks_clone&quot; -Force
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List all clones</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-SmClone</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">CloneName</span><span class="p">,</span> <span class="n">SourceBackupName</span><span class="p">,</span> <span class="n">CloneStatus</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Create a clone from backup</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">New-SmClone</span> <span class="n">-BackupName</span> <span class="s2">&quot;AdventureWorks_backup_2024-11-20_01-00-00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">-CloneToInstance</span> <span class="s2">&quot;sqlhost02\MSSQLSERVER&quot;</span> <span class="n">-CloneName</span> <span class="s2">&quot;AdventureWorks_clone&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Delete a clone</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Remove-SmClone</span> <span class="n">-CloneName</span> <span class="s2">&quot;AdventureWorks_clone&quot;</span> <span class="n">-Force</span>
+</code></pre></div>
 <h3 id="policy-management">Policy Management<a class="headerlink" href="#policy-management" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># List all policies
-Get-SmPolicy | Select PolicyName, PluginCode, ScheduleType, RetentionCount
-
-# Create a new retention policy (SQL full backup, 7 daily copies)
-New-SmPolicy -PolicyName &quot;SQL_Daily_7d&quot; -PluginCode SCSQL -BackupType Full `
-  -ScheduleType Daily -ScheduleStartTime &quot;01:00&quot; `
-  -RetentionSettings @{&quot;Count&quot;=7;&quot;Type&quot;=&quot;Count&quot;}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all policies</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-SmPolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">PolicyName</span><span class="p">,</span> <span class="n">PluginCode</span><span class="p">,</span> <span class="n">ScheduleType</span><span class="p">,</span> <span class="n">RetentionCount</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Create a new retention policy (SQL full backup, 7 daily copies)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">New-SmPolicy</span> <span class="n">-PolicyName</span> <span class="s2">&quot;SQL_Daily_7d&quot;</span> <span class="n">-PluginCode</span> <span class="n">SCSQL</span> <span class="n">-BackupType</span> <span class="n">Full</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="n">-ScheduleType</span> <span class="n">Daily</span> <span class="n">-ScheduleStartTime</span> <span class="s2">&quot;01:00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="n">-RetentionSettings</span> <span class="p">@{</span><span class="s2">&quot;Count&quot;</span><span class="p">=</span><span class="n">7</span><span class="p">;</span><span class="s2">&quot;Type&quot;</span><span class="p">=</span><span class="s2">&quot;Count&quot;</span><span class="p">}</span>
+</code></pre></div>
 <h3 id="job-monitoring">Job Monitoring<a class="headerlink" href="#job-monitoring" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Get summary of recent jobs (last 24 h)
-Get-SmJobSummaryReport -JobType Backup -StartTime (Get-Date).AddHours(-24)
-
-# Watch a running job
-$job = Start-SmBackup -PolicyName &quot;DailyFullBackup&quot; -Resource @{&quot;Host&quot;=&quot;sqlhost01&quot;;&quot;Type&quot;=&quot;Database&quot;;&quot;Names&quot;=&quot;AdventureWorks&quot;}
-do {
-    $status = Get-SmJob -JobId $job.JobId
-    Write-Host &quot;$(Get-Date -f HH:mm:ss)  Status: $($status.Status)  Progress: $($status.PercentComplete)%&quot;
-    Start-Sleep 10
-} while ($status.Status -in @(&quot;Running&quot;,&quot;Queued&quot;))
-Write-Host &quot;Job finished: $($status.Status)&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Get summary of recent jobs (last 24 h)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmJobSummaryReport</span> <span class="n">-JobType</span> <span class="n">Backup</span> <span class="n">-StartTime</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Watch a running job</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Start-SmBackup</span> <span class="n">-PolicyName</span> <span class="s2">&quot;DailyFullBackup&quot;</span> <span class="n">-Resource</span> <span class="p">@{</span><span class="s2">&quot;Host&quot;</span><span class="p">=</span><span class="s2">&quot;sqlhost01&quot;</span><span class="p">;</span><span class="s2">&quot;Type&quot;</span><span class="p">=</span><span class="s2">&quot;Database&quot;</span><span class="p">;</span><span class="s2">&quot;Names&quot;</span><span class="p">=</span><span class="s2">&quot;AdventureWorks&quot;</span><span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">do</span> <span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nv">$status</span> <span class="p">=</span> <span class="nb">Get-SmJob</span> <span class="n">-JobId</span> <span class="nv">$job</span><span class="p">.</span><span class="n">JobId</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="o">-f</span> <span class="n">HH</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span><span class="p">)</span><span class="s2">  Status: </span><span class="p">$(</span><span class="nv">$status</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span><span class="s2">  Progress: </span><span class="p">$(</span><span class="nv">$status</span><span class="p">.</span><span class="n">PercentComplete</span><span class="p">)</span><span class="s2">%&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="nb">Start-Sleep</span> <span class="n">10</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nv">$status</span><span class="p">.</span><span class="n">Status</span> <span class="n">-in</span> <span class="p">@(</span><span class="s2">&quot;Running&quot;</span><span class="p">,</span><span class="s2">&quot;Queued&quot;</span><span class="p">))</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Job finished: </span><span class="p">$(</span><span class="nv">$status</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="rest-api-curl">REST API (curl)<a class="headerlink" href="#rest-api-curl" title="Permanent link">&para;</a></h2>
 <p>Base URL: <code>https://&lt;snapcenter-host&gt;/api/4.9</code><br />
 All requests require the <code>token</code> header obtained from the login call.</p>
 <h3 id="authenticate">Authenticate<a class="headerlink" href="#authenticate" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Login — returns a token
-curl -sk -X POST https://snapcenter.example.com/api/4.9/auth/login \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;password&quot;,&quot;Rolename&quot;:&quot;SnapCenterAdmin&quot;}}}' \
-  | python3 -m json.tool
-
-# Extract token (jq)
-TOKEN=$(curl -sk -X POST https://snapcenter.example.com/api/4.9/auth/login \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;password&quot;,&quot;Rolename&quot;:&quot;SnapCenterAdmin&quot;}}}' \
-  | jq -r '.Token')
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Login — returns a token</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://snapcenter.example.com/api/4.9/auth/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;password&quot;,&quot;Rolename&quot;:&quot;SnapCenterAdmin&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Extract token (jq)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://snapcenter.example.com/api/4.9/auth/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;password&quot;,&quot;Rolename&quot;:&quot;SnapCenterAdmin&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.Token&#39;</span><span class="k">)</span>
+</code></pre></div>
 <h3 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List all jobs
-curl -sk -X GET &quot;https://snapcenter.example.com/api/4.9/jobs&quot; \
-  -H &quot;token: $TOKEN&quot; | jq '.List[] | {JobId, JobType, Status, StartTime}'
-
-# Get a specific job
-curl -sk -X GET &quot;https://snapcenter.example.com/api/4.9/jobs/12345&quot; \
-  -H &quot;token: $TOKEN&quot; | jq .
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all jobs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/jobs&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.List[] | {JobId, JobType, Status, StartTime}&#39;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Get a specific job</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/jobs/12345&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
 <h3 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List all registered resources
-curl -sk -X GET &quot;https://snapcenter.example.com/api/4.9/resources&quot; \
-  -H &quot;token: $TOKEN&quot; | jq '.Resources[] | {ResourceName, HostName, PluginCode}'
-
-# Filter by plugin (e.g. SQL)
-curl -sk -X GET &quot;https://snapcenter.example.com/api/4.9/resources?PluginCode=SCSQL&quot; \
-  -H &quot;token: $TOKEN&quot; | jq .
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all registered resources</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/resources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.Resources[] | {ResourceName, HostName, PluginCode}&#39;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Filter by plugin (e.g. SQL)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/resources?PluginCode=SCSQL&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
 <h3 id="backups-via-api">Backups via API<a class="headerlink" href="#backups-via-api" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># List backups for a resource
-curl -sk -X GET &quot;https://snapcenter.example.com/api/4.9/backups?ResourceName=AdventureWorks&quot; \
-  -H &quot;token: $TOKEN&quot; | jq '.Backups[] | {BackupName, BackupTime, BackupStatus}'
-
-# Trigger on-demand backup
-curl -sk -X POST &quot;https://snapcenter.example.com/api/4.9/backups&quot; \
-  -H &quot;token: $TOKEN&quot; -H &quot;Content-Type: application/json&quot; \
-  -d '{
-    &quot;jobType&quot;: &quot;Backup&quot;,
-    &quot;pluginCode&quot;: &quot;SCSQL&quot;,
-    &quot;resourceName&quot;: &quot;AdventureWorks&quot;,
-    &quot;policyName&quot;: &quot;DailyFullBackup&quot;
-  }' | jq '{JobId: .JobId}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List backups for a resource</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/backups?ResourceName=AdventureWorks&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.Backups[] | {BackupName, BackupTime, BackupStatus}&#39;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Trigger on-demand backup</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://snapcenter.example.com/api/4.9/backups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s1">    &quot;jobType&quot;: &quot;Backup&quot;,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s1">    &quot;pluginCode&quot;: &quot;SCSQL&quot;,</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s1">    &quot;resourceName&quot;: &quot;AdventureWorks&quot;,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="s1">    &quot;policyName&quot;: &quot;DailyFullBackup&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{JobId: .JobId}&#39;</span>
+</code></pre></div>
 
 
 

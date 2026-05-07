@@ -834,19 +834,30 @@
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
 <p>Data Domain replication runs at the MTree level and uses a source-destination model. Both systems must have network connectivity and matching software versions.</p>
+<pre class="mermaid"><code>flowchart LR
+    Replication["Replication"]
+    Replication --&gt; S0["Status Overview"]
+    Replication --&gt; S1["Replication States"]
+    Replication --&gt; S2["Configure a Replication Context"]
+    Replication --&gt; S3["Ongoing Operations"]
+    Replication --&gt; S4["Monitoring Replication Lag"]
+    Replication --&gt; S5["Failover (Passive Site Activation)"]
+    Replication --&gt; S6["Re-establishing Replication After Failover"]
+    Replication --&gt; S7["Replication Certificates"]
+    Replication --&gt; S8["Troubleshooting"]</code></pre>
 <h2 id="status-overview">Status Overview<a class="headerlink" href="#status-overview" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All replication contexts (summary)
-replication show all
-
-# Replication configuration
-replication show config
-
-# Per-context statistics (lag, bytes sent, compression)
-replication show stats
-
-# Quick status — state of all contexts
-replication status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All replication contexts (summary)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Replication configuration</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>replication<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Per-context statistics (lag, bytes sent, compression)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>replication<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Quick status — state of all contexts</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>replication<span class="w"> </span>status
+</code></pre></div>
 <h2 id="replication-states">Replication States<a class="headerlink" href="#replication-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -879,55 +890,55 @@ replication status
 </tbody>
 </table>
 <h2 id="configure-a-replication-context">Configure a Replication Context<a class="headerlink" href="#configure-a-replication-context" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add MTree-level replication (directional — source to destination)
-replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt; \
-    destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
-
-# Initialize replication (first sync — can take hours for large datasets)
-replication initialize &lt;context_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add MTree-level replication (directional — source to destination)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>destination<span class="w"> </span>mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Initialize replication (first sync — can take hours for large datasets)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>replication<span class="w"> </span>initialize<span class="w"> </span>&lt;context_id&gt;
+</code></pre></div>
 <h2 id="ongoing-operations">Ongoing Operations<a class="headerlink" href="#ongoing-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Trigger an immediate sync (outside scheduled window)
-replication sync &lt;context_id&gt;
-
-# Pause replication (source continues; changes accumulated)
-replication disable &lt;context_id&gt;
-
-# Resume replication
-replication enable &lt;context_id&gt;
-
-# Break a context (irreversible — removes replication relationship)
-replication break &lt;context_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger an immediate sync (outside scheduled window)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>sync<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Pause replication (source continues; changes accumulated)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>disable<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Resume replication</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>replication<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Break a context (irreversible — removes replication relationship)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>replication<span class="w"> </span><span class="k">break</span><span class="w"> </span>&lt;context_id&gt;
+</code></pre></div>
 <h2 id="monitoring-replication-lag">Monitoring Replication Lag<a class="headerlink" href="#monitoring-replication-lag" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Lag in bytes (amount of data not yet replicated)
-replication show stats | grep lag
-
-# Lag in time
-replication status | grep -E &quot;context|lag&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Lag in bytes (amount of data not yet replicated)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Lag in time</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>replication<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;context|lag&quot;</span>
+</code></pre></div>
 <h2 id="failover-passive-site-activation">Failover (Passive Site Activation)<a class="headerlink" href="#failover-passive-site-activation" title="Permanent link">&para;</a></h2>
 <p>Run on the <strong>destination</strong> Data Domain when primary is unavailable:</p>
-<pre><code class="language-bash"># Break the context (makes destination writeable)
-replication failover &lt;context_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Break the context (makes destination writeable)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>replication<span class="w"> </span>failover<span class="w"> </span>&lt;context_id&gt;
+</code></pre></div>
 <p>After failover, configure backup applications to point to the destination system.</p>
 <h2 id="re-establishing-replication-after-failover">Re-establishing Replication After Failover<a class="headerlink" href="#re-establishing-replication-after-failover" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — resync (when primary recovers)
-replication resync &lt;context_id&gt;
-
-# Step 2 — confirm sync complete
-replication status
-replication show stats | grep lag
-
-# Step 3 — failback: swap source/destination roles
-# (requires breaking and recreating context in reverse)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1 — resync (when primary recovers)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context_id&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Step 2 — confirm sync complete</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>replication<span class="w"> </span>status
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Step 3 — failback: swap source/destination roles</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># (requires breaking and recreating context in reverse)</span>
+</code></pre></div>
 <h2 id="replication-certificates">Replication Certificates<a class="headerlink" href="#replication-certificates" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Trust a remote DD (exchange certs — required for encrypted replication)
-replication add source ... --encryption aes128
-admintool certify &lt;remote_dd_hostname&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Trust a remote DD (exchange certs — required for encrypted replication)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>...<span class="w"> </span>--encryption<span class="w"> </span>aes128
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>admintool<span class="w"> </span>certify<span class="w"> </span>&lt;remote_dd_hostname&gt;
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

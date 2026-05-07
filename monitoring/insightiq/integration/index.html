@@ -823,69 +823,69 @@
 <p>InsightIQ integrates primarily with PowerScale (Isilon) clusters for data collection, and with enterprise monitoring, identity, and notification platforms for alerting and access management.</p>
 <h2 id="onefs-data-connector-inbound">OneFS Data Connector (Inbound)<a class="headerlink" href="#onefs-data-connector-inbound" title="Permanent link">&para;</a></h2>
 <p>The core integration is between InsightIQ and each PowerScale cluster. InsightIQ pulls metrics via the OneFS REST API.</p>
-<pre><code class="language-text">Configuration: InsightIQ web UI &gt; Administration &gt; Clusters &gt; Add Cluster
-- OneFS management IP or SmartConnect zone name
-- Username: svc-insightiq (read-only OneFS account)
-- Collection interval: configurable (default: 30 seconds, aggregated to 5-minute buckets)
-- TLS: enforce HTTPS for API calls to OneFS management port (TCP 8080)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Configuration: InsightIQ web UI &gt; Administration &gt; Clusters &gt; Add Cluster
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- OneFS management IP or SmartConnect zone name
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Username: svc-insightiq (read-only OneFS account)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Collection interval: configurable (default: 30 seconds, aggregated to 5-minute buckets)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- TLS: enforce HTTPS for API calls to OneFS management port (TCP 8080)
+</code></pre></div>
 <p>OneFS service account setup (run on OneFS CLI):</p>
-<pre><code class="language-bash"># Create read-only role for InsightIQ
-isi auth roles create --name=IIQ_ReadOnly --description=&quot;InsightIQ read-only role&quot;
-isi auth roles modify IIQ_ReadOnly --add-priv-ro ISI_PRIV_LOGIN_PAPI
-isi auth roles modify IIQ_ReadOnly --add-priv-ro ISI_PRIV_STATISTICS
-
-# Create service account
-isi auth users create svc-insightiq --password &lt;password&gt; --enabled yes
-
-# Assign role
-isi auth roles modify IIQ_ReadOnly --add-user svc-insightiq
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create read-only role for InsightIQ</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span>--name<span class="o">=</span>IIQ_ReadOnly<span class="w"> </span>--description<span class="o">=</span><span class="s2">&quot;InsightIQ read-only role&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>IIQ_ReadOnly<span class="w"> </span>--add-priv-ro<span class="w"> </span>ISI_PRIV_LOGIN_PAPI
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>IIQ_ReadOnly<span class="w"> </span>--add-priv-ro<span class="w"> </span>ISI_PRIV_STATISTICS
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Create service account</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>svc-insightiq<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span>--enabled<span class="w"> </span>yes
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Assign role</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>IIQ_ReadOnly<span class="w"> </span>--add-user<span class="w"> </span>svc-insightiq
+</code></pre></div>
 <h2 id="active-directory-sso-ldap-integration">Active Directory SSO (LDAP Integration)<a class="headerlink" href="#active-directory-sso-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>InsightIQ supports LDAP/AD integration for centralised user authentication.</p>
-<pre><code class="language-text">InsightIQ web UI &gt; Administration &gt; Authentication &gt; LDAP
-- LDAP server: ldap://&lt;DC-FQDN&gt;:389 or ldaps://&lt;DC-FQDN&gt;:636
-- Bind DN: CN=svc-iiq-ldap,OU=ServiceAccounts,DC=company,DC=com
-- Base DN: OU=StorageTeam,DC=company,DC=com
-- Group mapping: LDAP group → InsightIQ admin or viewer role
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>InsightIQ web UI &gt; Administration &gt; Authentication &gt; LDAP
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- LDAP server: ldap://&lt;DC-FQDN&gt;:389 or ldaps://&lt;DC-FQDN&gt;:636
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Bind DN: CN=svc-iiq-ldap,OU=ServiceAccounts,DC=company,DC=com
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Base DN: OU=StorageTeam,DC=company,DC=com
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Group mapping: LDAP group → InsightIQ admin or viewer role
+</code></pre></div>
 <p>Use LDAPS (TCP 636) to encrypt LDAP traffic. Store the bind account password in the secrets manager.</p>
 <h2 id="smtp-email-alerts">SMTP Email Alerts<a class="headerlink" href="#smtp-email-alerts" title="Permanent link">&para;</a></h2>
 <p>InsightIQ sends alert emails directly from the appliance via SMTP. Configure the outbound SMTP relay.</p>
-<pre><code class="language-text">InsightIQ web UI &gt; Administration &gt; Email Settings
-- SMTP server: relay.company.com
-- Port: 587 (STARTTLS)
-- From address: insightiq-alerts@company.com
-- Recipients: configure per alert rule (storage-ops@company.com)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>InsightIQ web UI &gt; Administration &gt; Email Settings
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- SMTP server: relay.company.com
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Port: 587 (STARTTLS)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- From address: insightiq-alerts@company.com
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Recipients: configure per alert rule (storage-ops@company.com)
+</code></pre></div>
 <p>Alert rules are configured per metric threshold under: <strong>Administration &gt; Alert Settings &gt; Add Alert</strong></p>
 <h2 id="snmp-forwarding-to-monitoring-platform">SNMP Forwarding to Monitoring Platform<a class="headerlink" href="#snmp-forwarding-to-monitoring-platform" title="Permanent link">&para;</a></h2>
 <p>InsightIQ can forward threshold breach alerts as SNMP traps to enterprise monitoring platforms (Aria Operations, Nagios, Zabbix).</p>
-<pre><code class="language-text">InsightIQ web UI &gt; Administration &gt; SNMP
-- SNMP version: v2c or v3 (prefer v3 for security)
-- Community string / auth credentials
-- Trap target: &lt;Aria-Operations-IP&gt;:162 or &lt;monitoring-platform&gt;:162
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>InsightIQ web UI &gt; Administration &gt; SNMP
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- SNMP version: v2c or v3 (prefer v3 for security)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Community string / auth credentials
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Trap target: &lt;Aria-Operations-IP&gt;:162 or &lt;monitoring-platform&gt;:162
+</code></pre></div>
 <p>For Aria Operations: configure an SNMP trap receiver adapter to ingest InsightIQ traps and map them to Aria alert definitions.</p>
 <h2 id="syslog-to-siem">Syslog to SIEM<a class="headerlink" href="#syslog-to-siem" title="Permanent link">&para;</a></h2>
 <p>InsightIQ appliance events (user logins, configuration changes, service errors) are forwarded to the SIEM via syslog.</p>
-<pre><code class="language-bash"># Configure syslog forwarding on InsightIQ appliance (RHEL/CentOS):
-# /etc/rsyslog.d/insightiq.conf
-*.* @&lt;SIEM-IP&gt;:514        # UDP
-# or
-*.* @@&lt;SIEM-IP&gt;:514       # TCP
-</code></pre>
-<p>Restart rsyslog after configuration change:</p>
-<pre><code class="language-bash">sudo systemctl restart rsyslog
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure syslog forwarding on InsightIQ appliance (RHEL/CentOS):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /etc/rsyslog.d/insightiq.conf</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>*.*<span class="w"> </span>@&lt;SIEM-IP&gt;:514<span class="w">        </span><span class="c1"># UDP</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># or</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>*.*<span class="w"> </span>@@&lt;SIEM-IP&gt;:514<span class="w">       </span><span class="c1"># TCP</span>
+</code></pre></div>
+<p>Restart rsyslog after configuration change:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</code></pre></div></p>
 <h2 id="csv-pdf-report-export">CSV / PDF Report Export<a class="headerlink" href="#csv-pdf-report-export" title="Permanent link">&para;</a></h2>
 <p>InsightIQ generates scheduled reports distributed via email or available for download.</p>
-<pre><code class="language-text">InsightIQ web UI &gt; Reports &gt; Scheduled Reports &gt; Add
-- Report type: Cluster Performance / Capacity Trend / Protocol Summary
-- Format: PDF or CSV
-- Schedule: weekly or monthly
-- Email recipients: distribution list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>InsightIQ web UI &gt; Reports &gt; Scheduled Reports &gt; Add
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>- Report type: Cluster Performance / Capacity Trend / Protocol Summary
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>- Format: PDF or CSV
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- Schedule: weekly or monthly
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- Email recipients: distribution list
+</code></pre></div>
 <p>Reports are suitable for distribution to capacity planning teams and management.</p>
 <h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>

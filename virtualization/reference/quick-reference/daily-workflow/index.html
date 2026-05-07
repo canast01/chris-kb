@@ -832,41 +832,41 @@
 <h1 id="daily-vmware-operations-workflow">Daily VMware Operations Workflow<a class="headerlink" href="#daily-vmware-operations-workflow" title="Permanent link">&para;</a></h1>
 <p>A repeatable morning workflow to confirm the environment is healthy before the business day begins.</p>
 <h2 id="step-1-vcenter-alarm-triage-5-min">Step 1 — vCenter Alarm Triage (5 min)<a class="headerlink" href="#step-1-vcenter-alarm-triage-5-min" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Connect and get all triggered alarms
-Connect-VIServer -Server vcenter.corp.local
-Get-AlarmDefinition | Where-Object {$_.Enabled} | ForEach-Object {
-    Get-Alarm -Entity (Get-Datacenter) | Where-Object {$_.Status -ne &quot;Green&quot;}
-} | Select-Object Entity, AlarmDefinition, Status | Format-Table -AutoSize
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Connect and get all triggered alarms</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-AlarmDefinition</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="nb">Get-Alarm</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Green&quot;</span><span class="p">}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">AlarmDefinition</span><span class="p">,</span> <span class="n">Status</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 <ul>
 <li><strong>Red/critical</strong>: investigate immediately before proceeding</li>
 <li><strong>Yellow/warning</strong>: log for follow-up; assign owner if persistent</li>
 </ul>
 <h2 id="step-2-host-health-3-min">Step 2 — Host Health (3 min)<a class="headerlink" href="#step-2-host-health-3-min" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Any hosts not fully connected?
-Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
-
-# Any hosts in maintenance mode unexpectedly?
-Get-VMHost -State Maintenance | Select-Object Name, State
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Any hosts not fully connected?</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s2">&quot;Connected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Any hosts in maintenance mode unexpectedly?</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VMHost</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span>
+</code></pre></div>
 <h2 id="step-3-cluster-ha-and-drs-status-2-min">Step 3 — Cluster HA and DRS Status (2 min)<a class="headerlink" href="#step-3-cluster-ha-and-drs-status-2-min" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, @{
-    N=&quot;DrsMode&quot;; E={$_.DrsAutomationLevel}
-} | Format-Table -AutoSize
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="p">@{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">N</span><span class="p">=</span><span class="s2">&quot;DrsMode&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">DrsAutomationLevel</span><span class="p">}</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 <p>Confirm: HA Enabled = True, DRS Enabled = True, DrsMode = FullyAutomated (or as per standard).</p>
 <h2 id="step-4-datastore-capacity-3-min">Step 4 — Datastore Capacity (3 min)<a class="headerlink" href="#step-4-datastore-capacity-3-min" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Datastore | Select-Object Name, FreeSpaceGB, CapacityGB, @{
-    N=&quot;Used%&quot;; E={[math]::Round((1-($_.FreeSpaceGB/$_.CapacityGB))*100,1)}
-} | Where-Object {&quot;Used%&quot; -gt 75} | Sort-Object &quot;Used%&quot; -Descending
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="p">@{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">N</span><span class="p">=</span><span class="s2">&quot;Used%&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span><span class="p">-(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">))*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="s2">&quot;Used%&quot;</span> <span class="o">-gt</span> <span class="n">75</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="s2">&quot;Used%&quot;</span> <span class="n">-Descending</span>
+</code></pre></div>
 <p>Any datastore &gt; 75% full: investigate and action.</p>
 <h2 id="step-5-vsan-health-2-min-if-applicable">Step 5 — vSAN Health (2 min, if applicable)<a class="headerlink" href="#step-5-vsan-health-2-min-if-applicable" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SSH to any cluster host, or use vCenter:
-# Cluster → Monitor → vSAN → Skyline Health
-esxcli vsan health cluster list | grep -v &quot;Green&quot;   # Should return nothing
-esxcli vsan debug resync summary                     # Confirm no unexpected resync in progress
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to any cluster host, or use vCenter:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Cluster → Monitor → vSAN → Skyline Health</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Green&quot;</span><span class="w">   </span><span class="c1"># Should return nothing</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w">                     </span><span class="c1"># Confirm no unexpected resync in progress</span>
+</code></pre></div>
 <h2 id="step-6-review-failed-tasks-2-min">Step 6 — Review Failed Tasks (2 min)<a class="headerlink" href="#step-6-review-failed-tasks-2-min" title="Permanent link">&para;</a></h2>
 <p>vCenter UI → Recent Tasks → filter by Status: Error → review last 24 hours.</p>
 <p>Key tasks to watch:

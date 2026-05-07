@@ -789,54 +789,61 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    DFW["(DFW)"]
+    DFW --&gt; S0["DFW Statistics — NSX Manager"]
+    DFW --&gt; S1["DFW Inspection on ESXi Host"]
+    DFW --&gt; S2["Identifying a VM's Filter Name"]
+    DFW --&gt; S3["Rule Output Interpretation"]
+    DFW --&gt; S4["Common Troubleshooting"]</code></pre>
 <h2 id="dfw-statistics-nsx-manager">DFW Statistics — NSX Manager<a class="headerlink" href="#dfw-statistics-nsx-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to NSX Manager CLI
-nsxcli
-
-# Firewall rule statistics (hit counts, bytes)
-get firewall stats
-
-# DFW summary across all transport nodes
-get dfw stats
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to NSX Manager CLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsxcli
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Firewall rule statistics (hit counts, bytes)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>get<span class="w"> </span>firewall<span class="w"> </span>stats
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># DFW summary across all transport nodes</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>dfw<span class="w"> </span>stats
+</code></pre></div>
 <h2 id="dfw-inspection-on-esxi-host">DFW Inspection on ESXi Host<a class="headerlink" href="#dfw-inspection-on-esxi-host" title="Permanent link">&para;</a></h2>
 <p>The DFW is enforced on each ESXi host via <code>vsipioctl</code>. All commands run as root on the ESXi host.</p>
-<pre><code class="language-bash"># List all DFW filters attached to VMs on this host
-summarize-dvfilter
-
-# Output format shows: vmname -&gt; vnic -&gt; filter_name
-# Example filter name: nic-12345-eth0-vmware-sfw.2
-</code></pre>
-<pre><code class="language-bash"># Get DFW rules applied to a specific filter
-vsipioctl getrules -f &lt;filter_name&gt;
-
-# Show address sets (IP groups, security groups) used in rules
-vsipioctl getaddrsets -f &lt;filter_name&gt;
-
-# Per-rule hit statistics for a filter
-vsipioctl getstats -f &lt;filter_name&gt;
-
-# Show service / port-protocol objects
-vsipioctl getservices -f &lt;filter_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all DFW filters attached to VMs on this host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>summarize-dvfilter
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output format shows: vmname -&gt; vnic -&gt; filter_name</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Example filter name: nic-12345-eth0-vmware-sfw.2</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get DFW rules applied to a specific filter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show address sets (IP groups, security groups) used in rules</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Per-rule hit statistics for a filter</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show service / port-protocol objects</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vsipioctl<span class="w"> </span>getservices<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;
+</code></pre></div>
 <h2 id="identifying-a-vms-filter-name">Identifying a VM's Filter Name<a class="headerlink" href="#identifying-a-vms-filter-name" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — find the VM's world ID
-esxcli vm process list | grep -A5 &lt;vm_name&gt;
-
-# Step 2 — list filters and match to VM
-summarize-dvfilter | grep -A3 &lt;vm_name&gt;
-
-# Step 3 — inspect rules for that filter
-vsipioctl getrules -f &lt;filter_name_from_step2&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — find the VM&#39;s world ID</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;vm_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — list filters and match to VM</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span>&lt;vm_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Step 3 — inspect rules for that filter</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name_from_step2&gt;
+</code></pre></div>
 <h2 id="rule-output-interpretation">Rule Output Interpretation<a class="headerlink" href="#rule-output-interpretation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-text"># Sample getrules output:
-ruleset domain-c12:500  {
-  rule 1234 at 1 inout protocol any from any to any accept;
-  rule 1235 at 2 inout protocol tcp from addrset sg-web to addrset sg-db port {3306} accept;
-  rule 65535 at 99 inout protocol any from any to any drop;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Sample getrules output:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ruleset domain-c12:500  {
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  rule 1234 at 1 inout protocol any from any to any accept;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  rule 1235 at 2 inout protocol tcp from addrset sg-web to addrset sg-db port {3306} accept;
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  rule 65535 at 99 inout protocol any from any to any drop;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>}
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -872,19 +879,19 @@ ruleset domain-c12:500  {
 </tbody>
 </table>
 <h2 id="common-troubleshooting">Common Troubleshooting<a class="headerlink" href="#common-troubleshooting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm DFW is enforced on a VM (filter count &gt; 0)
-summarize-dvfilter | grep -c &lt;vm_name&gt;
-
-# Check if a rule is being hit (non-zero pkt count)
-vsipioctl getstats -f &lt;filter_name&gt; | grep -v &quot; 0 pkts&quot;
-
-# Temporarily check connectivity without DFW:
-# In NSX Manager — Policy → Security → Gateway Firewall → disable rule
-# Note: disabling DFW globally is a major security change — use exclusion list instead
-
-# Add VM to DFW exclusion list (NSX Manager only, not CLI)
-# System → Fabric → Nodes → Host Transport Nodes → DFW Exclusion List
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm DFW is enforced on a VM (filter count &gt; 0)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>&lt;vm_name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check if a rule is being hit (non-zero pkt count)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; 0 pkts&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Temporarily check connectivity without DFW:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># In NSX Manager — Policy → Security → Gateway Firewall → disable rule</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Note: disabling DFW globally is a major security change — use exclusion list instead</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Add VM to DFW exclusion list (NSX Manager only, not CLI)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># System → Fabric → Nodes → Host Transport Nodes → DFW Exclusion List</span>
+</code></pre></div>
 
 
 

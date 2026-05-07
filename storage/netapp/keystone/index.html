@@ -854,34 +854,67 @@
 <li>StorageGRID object storage consumption alongside ONTAP block/file under a unified subscription</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify Keystone Collector service is running and last reported telemetry within the expected interval</li>
-<li>Review current consumed capacity vs. committed tier per service level in the BlueXP Keystone dashboard</li>
-<li>Check whether burst capacity is active and how close burst consumption is to the burst limit</li>
-<li>Confirm no service-level SLA breaches are flagged (availability, latency, IOPS/TB)</li>
-<li>Validate that recently provisioned volumes are assigned to the correct performance service level via AQoS policy in ONTAP</li>
-<li>Review any open support tickets or notifications from NetApp regarding the Keystone subscription</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verify Keystone Collector service is running and last reported telemet</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review current consumed capacity vs. committed tier per service level</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check whether burst capacity is active and how close burst consumption</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm no service-level SLA breaches are flagged (availability, laten</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Validate that recently provisioned volumes are assigned to the correct</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review any open support tickets or notifications from NetApp regarding</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># On the Keystone Collector VM — check collector service status (Linux systemd)
-sudo systemctl status keystone-collector
-
-# View Keystone Collector logs for reporting errors
-sudo journalctl -u keystone-collector -n 100
-
-# On the ONTAP cluster — verify AQoS policies assigned to Keystone volumes
-qos policy-group show
-
-# Check that volumes are associated with the correct Keystone service-level policy group
-volume show -fields qos-policy-group
-
-# Verify ONTAP cluster is reachable from the Keystone Collector
-# (run from the Collector VM)
-curl -sk https://&lt;cluster-mgmt-lif&gt;/api/cluster
-
-# On ONTAP — review capacity per volume to correlate with Keystone billing tiers
-volume show -fields size,used,percent-used
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the Keystone Collector VM — check collector service status (Linux systemd)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>keystone-collector
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># View Keystone Collector logs for reporting errors</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># On the ONTAP cluster — verify AQoS policies assigned to Keystone volumes</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check that volumes are associated with the correct Keystone service-level policy group</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>qos-policy-group
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify ONTAP cluster is reachable from the Keystone Collector</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># (run from the Collector VM)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;cluster-mgmt-lif&gt;/api/cluster
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># On ONTAP — review capacity per volume to correlate with Keystone billing tiers</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -920,25 +953,83 @@ volume show -fields size,used,percent-used
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Monitor current and trended capacity consumption per service level from the BlueXP Keystone dashboard or digital wallet</li>
-<li>Request a subscription amendment (capacity increase or service level change) through NetApp sales or the BlueXP portal — upgrades to higher performance tiers are allowed mid-term; downgrades are not</li>
-<li>Validate new volume provisioning assigns the correct AQoS policy-group (<code>qos-policy-group</code>) matching the intended Keystone service level</li>
-<li>Review and reduce burst usage before the monthly billing close by decommissioning unused volumes or snapshots</li>
-<li>Update Keystone Collector credentials and software version when notified by NetApp to maintain telemetry continuity</li>
-<li>Generate and archive monthly consumption reports from BlueXP digital wallet for internal chargeback or showback</li>
-<li>Coordinate with NetApp to add StorageGRID object capacity tiers to an existing Keystone subscription</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitor current and trended capacity consumption per service level from the Blue</td>
+<td></td>
+</tr>
+<tr>
+<td>Request a subscription amendment (capacity increase or service level change) thr</td>
+<td></td>
+</tr>
+<tr>
+<td>Validate new volume provisioning assigns the correct AQoS policy-group (`qos-pol</td>
+<td></td>
+</tr>
+<tr>
+<td>Review and reduce burst usage before the monthly billing close by decommissionin</td>
+<td></td>
+</tr>
+<tr>
+<td>Update Keystone Collector credentials and software version when notified by NetA</td>
+<td></td>
+</tr>
+<tr>
+<td>Generate and archive monthly consumption reports from BlueXP digital wallet for</td>
+<td></td>
+</tr>
+<tr>
+<td>Coordinate with NetApp to add StorageGRID object capacity tiers to an existing K</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Monitor NetApp release notes for Keystone Collector updates — the Collector is a separate software component from ONTAP and has its own release cadence</li>
-<li>Before upgrading the Collector, back up the Collector configuration file and record the current reporting status and last successful telemetry timestamp</li>
-<li>Download the new Collector package from the NetApp support site and follow the installation guide for the target OS (Linux RPM/DEB)</li>
-<li>After upgrade, confirm the Collector service restarts cleanly with <code>systemctl status keystone-collector</code> and that telemetry resumes within the next reporting interval</li>
-<li>For ONTAP upgrades on Keystone-managed clusters, follow the standard ONTAP ANDU upgrade path and verify AQoS policy-group assignments are intact post-upgrade with <code>volume show -fields qos-policy-group</code></li>
-<li>Notify NetApp Keystone operations team before any major infrastructure change (node additions, aggregate rebuilds) that could affect reported capacity</li>
-<li>After any significant change, validate the BlueXP Keystone dashboard reflects accurate consumption within one reporting cycle before closing the maintenance window</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Monitor NetApp release notes for Keystone Collector updates — the Collector is a separate software component from ONTAP and has its own release cadence</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Before upgrading the Collector, back up the Collector configuration file and record the current reporting status and last successful telemetry timestamp</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Download the new Collector package from the NetApp support site and follow the installation guide for the target OS (Linux RPM/DEB)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>After upgrade, confirm the Collector service restarts cleanly with <code>systemctl status keystone-collector</code> and that telemetry resumes within the next reporting interval</td>
+</tr>
+<tr>
+<td>5</td>
+<td>For ONTAP upgrades on Keystone-managed clusters, follow the standard ONTAP ANDU upgrade path and verify AQoS policy-group assignments are intact post-upgrade with <code>volume show -fields qos-policy-group</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Notify NetApp Keystone operations team before any major infrastructure change (node additions, aggregate rebuilds) that could affect reported capacity</td>
+</tr>
+<tr>
+<td>7</td>
+<td>After any significant change, validate the BlueXP Keystone dashboard reflects accurate consumption within one reporting cycle before closing the maintenance window</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Review capacity consumption weekly — not just at month-end — so burst usage can be corrected before it appears on the invoice</li>

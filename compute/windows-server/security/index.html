@@ -853,23 +853,23 @@
 </tr>
 </tbody>
 </table>
-<p>Apply GPO immediately (without waiting for next policy refresh cycle):</p>
-<pre><code class="language-powershell">gpupdate /force
-rsop.msc   # View resulting set of policy
-</code></pre>
+<p>Apply GPO immediately (without waiting for next policy refresh cycle):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">rsop</span><span class="p">.</span><span class="n">msc</span>   <span class="c"># View resulting set of policy</span>
+</code></pre></div></p>
 <h2 id="windows-defender-configuration">Windows Defender Configuration<a class="headerlink" href="#windows-defender-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Verify Defender status
-Get-MpComputerStatus | Select-Object AMRunningMode, RealTimeProtectionEnabled, AntivirusSignatureLastUpdated
-
-# Trigger signature update
-Update-MpSignature
-
-# Check for active threats
-Get-MpThreatDetection | Select-Object ActionSuccess, CategoryID, Resources, InitialDetectionTime
-
-# Add exclusion (document every exclusion in CMDB)
-Add-MpPreference -ExclusionPath &quot;D:\App\Data\&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify Defender status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-MpComputerStatus</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AMRunningMode</span><span class="p">,</span> <span class="n">RealTimeProtectionEnabled</span><span class="p">,</span> <span class="n">AntivirusSignatureLastUpdated</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Trigger signature update</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Update-MpSignature</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check for active threats</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-MpThreatDetection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ActionSuccess</span><span class="p">,</span> <span class="n">CategoryID</span><span class="p">,</span> <span class="n">Resources</span><span class="p">,</span> <span class="n">InitialDetectionTime</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Add exclusion (document every exclusion in CMDB)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Add-MpPreference</span> <span class="n">-ExclusionPath</span> <span class="s2">&quot;D:\App\Data\&quot;</span>
+</code></pre></div>
 <h2 id="cyberark-pam-privileged-access-management">CyberArk PAM (Privileged Access Management)<a class="headerlink" href="#cyberark-pam-privileged-access-management" title="Permanent link">&para;</a></h2>
 <p>Local administrator accounts are managed via CyberArk:</p>
 <ol>
@@ -878,42 +878,42 @@ Add-MpPreference -ExclusionPath &quot;D:\App\Data\&quot;
 <li>Require dual approval for admin access to Tier 1 systems</li>
 </ol>
 <p>For systems not yet onboarded to CyberArk, use LAPS:</p>
-<pre><code class="language-powershell"># Verify LAPS is installed
-Get-AdmPwdPassword -ComputerName $env:COMPUTERNAME
-
-# Check LAPS policy is applied
-Get-ItemProperty -Path &quot;HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd&quot; |
-    Select-Object AdmPwdEnabled, PasswordLength, PasswordAgeDays
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify LAPS is installed</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-AdmPwdPassword</span> <span class="n">-ComputerName</span> <span class="nv">$env:COMPUTERNAME</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check LAPS policy is applied</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd&quot;</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Select-Object</span> <span class="n">AdmPwdEnabled</span><span class="p">,</span> <span class="n">PasswordLength</span><span class="p">,</span> <span class="n">PasswordAgeDays</span>
+</code></pre></div>
 <h2 id="audit-policy">Audit Policy<a class="headerlink" href="#audit-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Review current audit policy
-auditpol /get /category:*
-
-# Force CIS audit policy (run as Administrator)
-auditpol /set /subcategory:&quot;Logon&quot; /success:enable /failure:enable
-auditpol /set /subcategory:&quot;Account Lockout&quot; /success:enable /failure:enable
-auditpol /set /subcategory:&quot;Privilege Use&quot; /success:enable /failure:enable
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Review current audit policy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Force CIS audit policy (run as Administrator)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Logon&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Account Lockout&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Privilege Use&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
+</code></pre></div>
 <h2 id="windows-firewall">Windows Firewall<a class="headerlink" href="#windows-firewall" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check firewall state per profile
-Get-NetFirewallProfile | Select-Object Name, Enabled, DefaultInboundAction
-
-# View active rules
-Get-NetFirewallRule | Where-Object {$_.Enabled -eq &quot;True&quot; -and $_.Direction -eq &quot;Inbound&quot;} |
-    Select-Object DisplayName, Action, Profile
-
-# Add rule (example: allow monitoring on port 9182)
-New-NetFirewallRule -DisplayName &quot;Allow WMI Exporter&quot; -Direction Inbound -Protocol TCP -LocalPort 9182 -Action Allow
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check firewall state per profile</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-NetFirewallProfile</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">DefaultInboundAction</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># View active rules</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-NetFirewallRule</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="s2">&quot;True&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Direction</span> <span class="o">-eq</span> <span class="s2">&quot;Inbound&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Profile</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Add rule (example: allow monitoring on port 9182)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow WMI Exporter&quot;</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">9182</span> <span class="n">-Action</span> <span class="n">Allow</span>
+</code></pre></div>
 <h2 id="event-log-forwarding">Event Log Forwarding<a class="headerlink" href="#event-log-forwarding" title="Permanent link">&para;</a></h2>
 <p>Forward security events to SIEM:</p>
-<pre><code class="language-powershell"># Check Windows Event Forwarding (WEF) subscriptions
-wecutil es   # List subscriptions
-
-# Or via Splunk/Elastic agent — verify agent service
-Get-Service SplunkForwarder | Select-Object Status
-Get-Service ElasticAgent | Select-Object Status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check Windows Event Forwarding (WEF) subscriptions</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">wecutil</span> <span class="n">es</span>   <span class="c"># List subscriptions</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Or via Splunk/Elastic agent — verify agent service</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-Service</span> <span class="n">SplunkForwarder</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Get-Service</span> <span class="n">ElasticAgent</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
+</code></pre></div>
 <p>Events to forward to SIEM:
 - Security log: Event IDs 4624 (logon), 4625 (failed logon), 4648 (explicit logon), 4719 (policy change), 4728/4732/4756 (group membership changes)</p>
 <h2 id="security-hardening-checklist">Security Hardening Checklist<a class="headerlink" href="#security-hardening-checklist" title="Permanent link">&para;</a></h2>

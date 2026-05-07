@@ -800,64 +800,72 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Snapshots["Snapshots"]
+    Snapshots --&gt; S0["List Snapshots"]
+    Snapshots --&gt; S1["Create Snapshots"]
+    Snapshots --&gt; S2["Remove Snapshots"]
+    Snapshots --&gt; S3["Revert to Snapshot"]
+    Snapshots --&gt; S4["Snapshot Consolidation"]
+    Snapshots --&gt; S5["Snapshot Best Practices"]</code></pre>
 <h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Snapshots for a specific VM
-Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot;
-
-# All snapshots across all VMs — sorted by size
-Get-VM | Get-Snapshot |
-    Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
-    @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB, 2)}} |
-    Sort-Object SizeGB -Descending
-
-# Snapshots older than 7 days (maintenance risk)
-Get-VM | Get-Snapshot |
-    Where-Object { $_.Created -lt (Get-Date).AddDays(-7) } |
-    Select-Object @{N=&quot;VM&quot;;E={$_.VM.Name}}, Name, Created,
-    @{N=&quot;AgeDays&quot;;E={[math]::Round(((Get-Date) - $_.Created).TotalDays, 0)}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Snapshots for a specific VM</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># All snapshots across all VMs — sorted by size</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Snapshots older than 7 days (maintenance risk)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;AgeDays&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span> <span class="n">0</span><span class="p">)}}</span>
+</code></pre></div>
 <h2 id="create-snapshots">Create Snapshots<a class="headerlink" href="#create-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Crash-consistent snapshot (no memory, no quiesce)
-New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;pre-patch-$(Get-Date -Format yyyy-MM-dd)&quot; `
-    -Memory:$false -Quiesce:$false
-
-# Application-consistent snapshot (quiesced — requires VMware Tools)
-New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;app-consistent-$(Get-Date -Format yyyy-MM-dd)&quot; `
-    -Memory:$false -Quiesce:$true
-
-# Memory snapshot (captures RAM state — slower, larger)
-New-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;memory-$(Get-Date -Format yyyy-MM-dd)&quot; `
-    -Memory:$true -Quiesce:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Crash-consistent snapshot (no memory, no quiesce)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyy-MM-dd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Application-consistent snapshot (quiesced — requires VMware Tools)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;app-consistent-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyy-MM-dd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Memory snapshot (captures RAM state — slower, larger)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;memory-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyy-MM-dd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">-Memory</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="remove-snapshots">Remove Snapshots<a class="headerlink" href="#remove-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Remove a named snapshot
-Remove-Snapshot `
-    -Snapshot (Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;&lt;snap_name&gt;&quot;) `
-    -Confirm:$false
-
-# Remove all snapshots for a VM (consolidates chain)
-Remove-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -RemoveChildren -Confirm:$false
-
-# Remove all old snapshots across all VMs (older than 7 days)
-Get-VM | Get-Snapshot |
-    Where-Object { $_.Created -lt (Get-Date).AddDays(-7) } |
-    Remove-Snapshot -Confirm:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Remove a named snapshot</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Remove-Snapshot</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;snap_name&gt;&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Remove all snapshots for a VM (consolidates chain)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Remove all old snapshots across all VMs (older than 7 days)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="revert-to-snapshot">Revert to Snapshot<a class="headerlink" href="#revert-to-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Revert a VM to a named snapshot
-Set-VM -VM &quot;&lt;vm_name&gt;&quot; `
-    -Snapshot (Get-Snapshot -VM &quot;&lt;vm_name&gt;&quot; -Name &quot;&lt;snap_name&gt;&quot;) `
-    -Confirm:$false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Revert a VM to a named snapshot</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;snap_name&gt;&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h2 id="snapshot-consolidation">Snapshot Consolidation<a class="headerlink" href="#snapshot-consolidation" title="Permanent link">&para;</a></h2>
 <p>Unconsolidated snapshots waste space and degrade performance:</p>
-<pre><code class="language-powershell"># Find VMs needing consolidation
-Get-VM | Where-Object { $_.ExtensionData.Runtime.ConsolidationNeeded } |
-    Select-Object Name
-
-# Consolidate a VM's snapshots
-(Get-VM &quot;&lt;vm_name&gt;&quot;).ExtensionData.ConsolidateVMDisks_Task()
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find VMs needing consolidation</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Consolidate a VM&#39;s snapshots</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConsolidateVMDisks_Task</span><span class="p">()</span>
+</code></pre></div>
 <h2 id="snapshot-best-practices">Snapshot Best Practices<a class="headerlink" href="#snapshot-best-practices" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

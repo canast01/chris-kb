@@ -845,56 +845,56 @@
 </table>
 <h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
 <p>Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:</p>
-<pre><code>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
-VG: vg_system
-  lv_root     20 GB       xfs     /
-  lv_var      20 GB       xfs     /var
-  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
-  lv_home      5 GB       xfs     /home
-  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
-
-VG: vg_data (application data — sized per role)
-  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
-</code></pre>
-<p>LVM enables future resizing without OS reinstallation:</p>
-<pre><code class="language-bash"># Extend a volume
-lvextend -L +20G /dev/vg_system/lv_var
-xfs_growfs /var
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VG: vg_system
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  lv_root     20 GB       xfs     /
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  lv_var      20 GB       xfs     /var
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  lv_home      5 GB       xfs     /home
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>VG: vg_data (application data — sized per role)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
+</code></pre></div>
+<p>LVM enables future resizing without OS reinstallation:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Extend a volume</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_system/lv_var
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>xfs_growfs<span class="w"> </span>/var
+</code></pre></div></p>
 <h2 id="network-configuration">Network Configuration<a class="headerlink" href="#network-configuration" title="Permanent link">&para;</a></h2>
 <p>Standard network configuration (nmcli / Netplan):</p>
-<pre><code class="language-bash"># RHEL — configure bonded interface with VLAN
-nmcli con add type bond ifname bond0 bond.options &quot;mode=802.3ad,miimon=100&quot;
-nmcli con add type ethernet ifname eth0 master bond0
-nmcli con add type ethernet ifname eth1 master bond0
-nmcli con add type vlan con-name bond0.100 dev bond0 id 100
-nmcli con modify bond0.100 ipv4.addresses &lt;ip&gt;/&lt;prefix&gt; ipv4.gateway &lt;gw&gt; ipv4.method manual
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RHEL — configure bonded interface with VLAN</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">&quot;mode=802.3ad,miimon=100&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth0<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth1<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
+</code></pre></div>
 <p>All production servers require:
 - Bonded uplinks (LACP) for redundancy
 - Separate management IP (VLAN 10 or equivalent) and data IP (role-specific VLAN)
 - DNS configured to internal resolvers</p>
 <h2 id="init-system-and-services">Init System and Services<a class="headerlink" href="#init-system-and-services" title="Permanent link">&para;</a></h2>
 <p>systemd manages all services:</p>
-<pre><code class="language-bash"># Common service management
-systemctl status &lt;service&gt;
-systemctl start &lt;service&gt;
-systemctl enable &lt;service&gt;   # Persistent across reboots
-journalctl -u &lt;service&gt; -n 100 --no-pager   # Recent logs
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Common service management</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;service&gt;<span class="w">   </span><span class="c1"># Persistent across reboots</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager<span class="w">   </span><span class="c1"># Recent logs</span>
+</code></pre></div>
 <h2 id="package-management">Package Management<a class="headerlink" href="#package-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># RHEL (dnf)
-dnf check-update             # List available updates
-dnf upgrade                  # Apply all updates
-dnf history                  # Review change log
-subscription-manager status  # Verify RH subscription
-
-# Ubuntu (apt)
-apt-get update
-apt-get upgrade -y
-apt list --upgradable
-ua status                    # Verify Ubuntu Advantage subscription
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RHEL (dnf)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>check-update<span class="w">             </span><span class="c1"># List available updates</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dnf<span class="w"> </span>upgrade<span class="w">                  </span><span class="c1"># Apply all updates</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w">                  </span><span class="c1"># Review change log</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>subscription-manager<span class="w"> </span>status<span class="w">  </span><span class="c1"># Verify RH subscription</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Ubuntu (apt)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>apt-get<span class="w"> </span>update
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>apt-get<span class="w"> </span>upgrade<span class="w"> </span>-y
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>apt<span class="w"> </span>list<span class="w"> </span>--upgradable
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ua<span class="w"> </span>status<span class="w">                    </span><span class="c1"># Verify Ubuntu Advantage subscription</span>
+</code></pre></div>
 <p>Repositories locked to approved internal mirrors — no direct internet access from production servers.</p>
 
 

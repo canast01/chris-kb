@@ -811,158 +811,158 @@
 <p>PowerShell automation using the <code>psPAS</code> module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install psPAS module
-Install-Module psPAS -Scope CurrentUser
-
-# Authenticate to PVWA (CyberArk authentication)
-$credential = Get-Credential  # svc-cyberark-api
-New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type CyberArk
-
-# Authenticate using LDAP / AD credentials
-New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type LDAP
-
-# Close session when done
-Close-PASSession
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install psPAS module</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-Module</span> <span class="n">psPAS</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Authenticate to PVWA (CyberArk authentication)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-Credential</span>  <span class="c"># svc-cyberark-api</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">New-PASSession</span> <span class="n">-BaseURI</span> <span class="s2">&quot;https://pvwa.corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Type</span> <span class="n">CyberArk</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Authenticate using LDAP / AD credentials</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">New-PASSession</span> <span class="n">-BaseURI</span> <span class="s2">&quot;https://pvwa.corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Type</span> <span class="n">LDAP</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Close session when done</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Close-PASSession</span>
+</code></pre></div>
 <hr />
 <h2 id="account-onboarding">Account Onboarding<a class="headerlink" href="#account-onboarding" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Onboard a single account
-$params = @{
-    userName     = &quot;svc-app01&quot;
-    address      = &quot;db01.corp.example.com&quot;
-    accountName  = &quot;db01-svc-app01&quot;
-    platformID   = &quot;WinServerLocal&quot;
-    SafeName     = &quot;APP-DB01-Accounts&quot;
-    secret       = (ConvertTo-SecureString &quot;InitialPassword123!&quot; -AsPlainText -Force)
-    automaticManagementEnabled = $true
-}
-Add-PASAccount @params
-
-# Bulk onboard from CSV
-# CSV columns: userName, address, accountName, platformID, SafeName, secret
-Import-Csv &quot;accounts_to_onboard.csv&quot; | ForEach-Object {
-    Add-PASAccount `
-        -userName $_.userName `
-        -address $_.address `
-        -accountName $_.accountName `
-        -platformID $_.platformID `
-        -SafeName $_.SafeName `
-        -secret (ConvertTo-SecureString $_.secret -AsPlainText -Force) `
-        -automaticManagementEnabled $true
-    Write-Host &quot;Onboarded: $($_.accountName)&quot;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Onboard a single account</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$params</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">userName</span>     <span class="p">=</span> <span class="s2">&quot;svc-app01&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">address</span>      <span class="p">=</span> <span class="s2">&quot;db01.corp.example.com&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">accountName</span>  <span class="p">=</span> <span class="s2">&quot;db01-svc-app01&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">platformID</span>   <span class="p">=</span> <span class="s2">&quot;WinServerLocal&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">SafeName</span>     <span class="p">=</span> <span class="s2">&quot;APP-DB01-Accounts&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">secret</span>       <span class="p">=</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;InitialPassword123!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">automaticManagementEnabled</span> <span class="p">=</span> <span class="nv">$true</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Add-PASAccount</span> <span class="nv">@params</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Bulk onboard from CSV</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># CSV columns: userName, address, accountName, platformID, SafeName, secret</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Import-Csv</span> <span class="s2">&quot;accounts_to_onboard.csv&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="nb">Add-PASAccount</span> <span class="p">`</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="n">-userName</span> <span class="nv">$_</span><span class="p">.</span><span class="n">userName</span> <span class="p">`</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="n">-address</span> <span class="nv">$_</span><span class="p">.</span><span class="n">address</span> <span class="p">`</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="n">-accountName</span> <span class="nv">$_</span><span class="p">.</span><span class="n">accountName</span> <span class="p">`</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="n">-platformID</span> <span class="nv">$_</span><span class="p">.</span><span class="n">platformID</span> <span class="p">`</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="n">-SafeName</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SafeName</span> <span class="p">`</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="n">-secret</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$_</span><span class="p">.</span><span class="n">secret</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="n">-automaticManagementEnabled</span> <span class="nv">$true</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Onboarded: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">accountName</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="password-retrieval">Password Retrieval<a class="headerlink" href="#password-retrieval" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Retrieve a password (check-out) — used in automation only, not for interactive retrieval
-$account = Get-PASAccount -SafeName &quot;APP-DB01-Accounts&quot; -Keywords &quot;svc-app01&quot;
-$cred    = Get-PASAccountPassword -AccountID $account.id
-
-# Use the retrieved password in a script
-$securePassword = ConvertTo-SecureString $cred.Password -AsPlainText -Force
-$psCredential   = New-Object System.Management.Automation.PSCredential($account.userName, $securePassword)
-
-# Invoke-Command using retrieved credentials
-Invoke-Command -ComputerName &quot;db01.corp.example.com&quot; -Credential $psCredential -ScriptBlock {
-    # task here
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Retrieve a password (check-out) — used in automation only, not for interactive retrieval</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$account</span> <span class="p">=</span> <span class="nb">Get-PASAccount</span> <span class="n">-SafeName</span> <span class="s2">&quot;APP-DB01-Accounts&quot;</span> <span class="n">-Keywords</span> <span class="s2">&quot;svc-app01&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$cred</span>    <span class="p">=</span> <span class="nb">Get-PASAccountPassword</span> <span class="n">-AccountID</span> <span class="nv">$account</span><span class="p">.</span><span class="n">id</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Use the retrieved password in a script</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$securePassword</span> <span class="p">=</span> <span class="nb">ConvertTo-SecureString</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">Password</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$psCredential</span>   <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span><span class="nv">$account</span><span class="p">.</span><span class="n">userName</span><span class="p">,</span> <span class="nv">$securePassword</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Invoke-Command using retrieved credentials</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="s2">&quot;db01.corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="nv">$psCredential</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="c"># task here</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="safe-management">Safe Management<a class="headerlink" href="#safe-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Create a new safe
-Add-PASSafe -SafeName &quot;APP-NEWAPP-Accounts&quot; `
-  -Description &quot;Managed accounts for NewApp&quot; `
-  -ManagingCPM &quot;PasswordManager&quot; `
-  -NumberOfVersionsRetention 5
-
-# Add a safe member with specific permissions
-Add-PASSafeMember -SafeName &quot;APP-NEWAPP-Accounts&quot; `
-  -MemberName &quot;GG_CyberArk_NewApp_Owners&quot; `
-  -UseAccounts $true `
-  -RetrieveAccounts $true `
-  -ListAccounts $true `
-  -AddAccounts $true `
-  -UpdateAccountContent $true `
-  -UpdateAccountProperties $true `
-  -InitiateCPMAccountManagementOperations $true
-
-# List all safes
-Get-PASSafe | Select-Object SafeName, Description, ManagingCPM | Sort-Object SafeName
-
-# Export safe membership audit (all safes, all members)
-$report = Get-PASSafe | ForEach-Object {
-    $safeName = $_.SafeName
-    Get-PASSafeMember -SafeName $safeName | ForEach-Object {
-        [PSCustomObject]@{
-            Safe   = $safeName
-            Member = $_.MemberName
-            Type   = $_.MemberType
-            UseAccounts = $_.Permissions.useAccounts
-            RetrieveAccounts = $_.Permissions.retrieveAccounts
-        }
-    }
-}
-$report | Export-Csv &quot;SafeMembership_Audit.csv&quot; -NoTypeInformation
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create a new safe</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-PASSafe</span> <span class="n">-SafeName</span> <span class="s2">&quot;APP-NEWAPP-Accounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="n">-Description</span> <span class="s2">&quot;Managed accounts for NewApp&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="n">-ManagingCPM</span> <span class="s2">&quot;PasswordManager&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="n">-NumberOfVersionsRetention</span> <span class="n">5</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Add a safe member with specific permissions</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Add-PASSafeMember</span> <span class="n">-SafeName</span> <span class="s2">&quot;APP-NEWAPP-Accounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="n">-MemberName</span> <span class="s2">&quot;GG_CyberArk_NewApp_Owners&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">-UseAccounts</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">-RetrieveAccounts</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  <span class="n">-ListAccounts</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  <span class="n">-AddAccounts</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  <span class="n">-UpdateAccountContent</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  <span class="n">-UpdateAccountProperties</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  <span class="n">-InitiateCPMAccountManagementOperations</span> <span class="nv">$true</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c"># List all safes</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nb">Get-PASSafe</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SafeName</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">ManagingCPM</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SafeName</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c"># Export safe membership audit (all safes, all members)</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="nv">$report</span> <span class="p">=</span> <span class="nb">Get-PASSafe</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="nv">$safeName</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SafeName</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="nb">Get-PASSafeMember</span> <span class="n">-SafeName</span> <span class="nv">$safeName</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>            <span class="n">Safe</span>   <span class="p">=</span> <span class="nv">$safeName</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>            <span class="n">Member</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemberName</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>            <span class="nb">Type </span>  <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemberType</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>            <span class="n">UseAccounts</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Permissions</span><span class="p">.</span><span class="n">useAccounts</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>            <span class="n">RetrieveAccounts</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Permissions</span><span class="p">.</span><span class="n">retrieveAccounts</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="p">}</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    <span class="p">}</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="p">}</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="s2">&quot;SafeMembership_Audit.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
 <hr />
 <h2 id="cpm-rotation-status-report">CPM Rotation Status Report<a class="headerlink" href="#cpm-rotation-status-report" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Report accounts with failed rotation or rotation overdue
-$accounts = Get-PASAccount -search &quot;*&quot; | Where-Object {
-    $_.secretManagement.status -ne &quot;success&quot; -or
-    $_.secretManagement.lastModifiedTime -lt ((Get-Date).AddDays(-90).ToUnixTime())
-}
-
-$report = $accounts | Select-Object `
-    @{N=&quot;AccountName&quot;;    E={$_.name}},
-    @{N=&quot;Safe&quot;;           E={$_.safeName}},
-    @{N=&quot;Address&quot;;        E={$_.address}},
-    @{N=&quot;CPMStatus&quot;;      E={$_.secretManagement.status}},
-    @{N=&quot;LastRotation&quot;;   E={[DateTimeOffset]::FromUnixTimeSeconds($_.secretManagement.lastModifiedTime).LocalDateTime}}
-
-$report | Export-Csv &quot;CPM_RotationStatus.csv&quot; -NoTypeInformation
-$report | Where-Object { $_.CPMStatus -ne &quot;success&quot; }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Report accounts with failed rotation or rotation overdue</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$accounts</span> <span class="p">=</span> <span class="nb">Get-PASAccount</span> <span class="n">-search</span> <span class="s2">&quot;*&quot;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">status</span> <span class="o">-ne</span> <span class="s2">&quot;success&quot;</span> <span class="o">-or</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">lastModifiedTime</span> <span class="o">-lt</span> <span class="p">((</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">).</span><span class="n">ToUnixTime</span><span class="p">())</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$report</span> <span class="p">=</span> <span class="nv">$accounts</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;AccountName&quot;</span><span class="p">;</span>    <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">name</span><span class="p">}},</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Safe&quot;</span><span class="p">;</span>           <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">safeName</span><span class="p">}},</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Address&quot;</span><span class="p">;</span>        <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">address</span><span class="p">}},</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPMStatus&quot;</span><span class="p">;</span>      <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">status</span><span class="p">}},</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LastRotation&quot;</span><span class="p">;</span>   <span class="n">E</span><span class="p">={</span><span class="no">[DateTimeOffset]</span><span class="p">::</span><span class="n">FromUnixTimeSeconds</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">lastModifiedTime</span><span class="p">).</span><span class="n">LocalDateTime</span><span class="p">}}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="s2">&quot;CPM_RotationStatus.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CPMStatus</span> <span class="o">-ne</span> <span class="s2">&quot;success&quot;</span> <span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="session-recording-inventory">Session Recording Inventory<a class="headerlink" href="#session-recording-inventory" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List PSM recordings for a date range
-$from = (Get-Date).AddDays(-7)
-$to   = Get-Date
-
-Get-PASRecording -FromTime $from.ToUnixTime() -ToTime $to.ToUnixTime() |
-  Select-Object `
-    @{N=&quot;User&quot;;     E={$_.User}},
-    @{N=&quot;Target&quot;;   E={$_.Target}},
-    @{N=&quot;Safe&quot;;     E={$_.Safe}},
-    @{N=&quot;Start&quot;;    E={[DateTimeOffset]::FromUnixTimeSeconds($_.Start).LocalDateTime}},
-    @{N=&quot;Duration&quot;; E={$_.Duration}} |
-  Export-Csv &quot;PSM_Recordings_$(Get-Date -Format 'yyyyMMdd').csv&quot; -NoTypeInformation
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># List PSM recordings for a date range</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$from</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$to</span>   <span class="p">=</span> <span class="nb">Get-Date</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-PASRecording</span> <span class="n">-FromTime</span> <span class="nv">$from</span><span class="p">.</span><span class="n">ToUnixTime</span><span class="p">()</span> <span class="n">-ToTime</span> <span class="nv">$to</span><span class="p">.</span><span class="n">ToUnixTime</span><span class="p">()</span> <span class="p">|</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="nb">Select-Object</span> <span class="p">`</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;User&quot;</span><span class="p">;</span>     <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">User</span><span class="p">}},</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Target&quot;</span><span class="p">;</span>   <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Target</span><span class="p">}},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Safe&quot;</span><span class="p">;</span>     <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Safe</span><span class="p">}},</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Start&quot;</span><span class="p">;</span>    <span class="n">E</span><span class="p">={</span><span class="no">[DateTimeOffset]</span><span class="p">::</span><span class="n">FromUnixTimeSeconds</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Start</span><span class="p">).</span><span class="n">LocalDateTime</span><span class="p">}},</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Duration&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Duration</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  <span class="nb">Export-Csv</span> <span class="s2">&quot;PSM_Recordings_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
 <hr />
 <h2 id="failed-rotation-alert">Failed Rotation Alert<a class="headerlink" href="#failed-rotation-alert" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Send email alert for any accounts with CPM failure (run as scheduled task)
-Import-Module psPAS
-$credential = Import-Clixml &quot;C:\Scripts\CyberArk\svc-cyberark-api.cred&quot;
-New-PASSession -BaseURI &quot;https://pvwa.corp.example.com&quot; -Credential $credential -Type CyberArk
-
-$failed = Get-PASAccount -search &quot;*&quot; |
-  Where-Object { $_.secretManagement.status -eq &quot;failure&quot; }
-
-if ($failed.Count -gt 0) {
-    $body = $failed | Select-Object name, safeName, address,
-      @{N=&quot;Status&quot;; E={$_.secretManagement.status}} |
-      ConvertTo-Html -Fragment
-
-    Send-MailMessage `
-        -To &quot;infra-sec@corp.example.com&quot; `
-        -From &quot;noreply-cyberark@corp.example.com&quot; `
-        -Subject &quot;CyberArk: $($failed.Count) CPM Rotation Failure(s)&quot; `
-        -Body &quot;&lt;html&gt;&lt;body&gt;$body&lt;/body&gt;&lt;/html&gt;&quot; `
-        -BodyAsHtml `
-        -SmtpServer &quot;smtp.corp.example.com&quot;
-}
-
-Close-PASSession
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Send email alert for any accounts with CPM failure (run as scheduled task)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Import-Module</span> <span class="n">psPAS</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Import-Clixml</span> <span class="s2">&quot;C:\Scripts\CyberArk\svc-cyberark-api.cred&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">New-PASSession</span> <span class="n">-BaseURI</span> <span class="s2">&quot;https://pvwa.corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Type</span> <span class="n">CyberArk</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$failed</span> <span class="p">=</span> <span class="nb">Get-PASAccount</span> <span class="n">-search</span> <span class="s2">&quot;*&quot;</span> <span class="p">|</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">status</span> <span class="o">-eq</span> <span class="s2">&quot;failure&quot;</span> <span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="nv">$failed</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">name</span><span class="p">,</span> <span class="n">safeName</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>      <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Status&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">secretManagement</span><span class="p">.</span><span class="n">status</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>      <span class="nb">ConvertTo-Html</span> <span class="n">-Fragment</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="nb">Send-MailMessage</span> <span class="p">`</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="n">-To</span> <span class="s2">&quot;infra-sec@corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="n">-From</span> <span class="s2">&quot;noreply-cyberark@corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="n">-Subject</span> <span class="s2">&quot;CyberArk: </span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> CPM Rotation Failure(s)&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">-Body</span> <span class="s2">&quot;&lt;html&gt;&lt;body&gt;$body&lt;/body&gt;&lt;/html&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="n">-BodyAsHtml</span> <span class="p">`</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.corp.example.com&quot;</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="p">}</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nb">Close-PASSession</span>
+</code></pre></div>
 
 
 

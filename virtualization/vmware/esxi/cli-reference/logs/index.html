@@ -800,6 +800,14 @@
 <blockquote>
 <p>Part of the <a href="../">VMware ESXi CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Logs["Logs"]
+    Logs --&gt; S0["Key Log Files"]
+    Logs --&gt; S1["Live Tailing"]
+    Logs --&gt; S2["Searching for Issues"]
+    Logs --&gt; S3["Collect Support Bundle"]
+    Logs --&gt; S4["Remote Syslog"]
+    Logs --&gt; S5["Log Rotation and Persistence"]</code></pre>
 <h2 id="key-log-files">Key Log Files<a class="headerlink" href="#key-log-files" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -853,63 +861,63 @@
 </tbody>
 </table>
 <h2 id="live-tailing">Live Tailing<a class="headerlink" href="#live-tailing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Follow key logs in real time
-tail -f /var/log/vmkernel.log
-tail -f /var/log/hostd.log
-tail -f /var/log/vpxa.log
-tail -f /var/log/fdm.log
-
-# Multiple logs at once (busybox tail on ESXi)
-tail -f /var/log/vmkernel.log /var/log/hostd.log
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Follow key logs in real time</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmkernel.log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/hostd.log
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vpxa.log
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/fdm.log
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Multiple logs at once (busybox tail on ESXi)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span>/var/log/hostd.log
+</code></pre></div>
 <h2 id="searching-for-issues">Searching for Issues<a class="headerlink" href="#searching-for-issues" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Errors and warnings
-grep -i &quot;error\|warning\|fail\|fault&quot; /var/log/vmkernel.log | tail -30
-grep -i &quot;error&quot; /var/log/hostd.log | tail -20
-grep -i &quot;disconnected\|lost connectivity&quot; /var/log/vpxa.log | tail -10
-
-# Storage path errors
-grep -i &quot;lost path\|path down\|APD\|PDL&quot; /var/log/vmkernel.log | tail -20
-
-# Network errors
-grep -i &quot;link down\|carrier\|vmnic&quot; /var/log/vmkernel.log | tail -20
-
-# HA events
-grep -i &quot;isolation\|restart\|fdm&quot; /var/log/fdm.log | tail -20
-
-# VM-specific events
-grep &quot;&lt;vm_name&gt;&quot; /var/log/vmkernel.log | tail -20
-grep &quot;&lt;vm_name&gt;&quot; /var/log/hostd.log | tail -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Errors and warnings</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warning\|fail\|fault&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;disconnected\|lost connectivity&quot;</span><span class="w"> </span>/var/log/vpxa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Storage path errors</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;lost path\|path down\|APD\|PDL&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Network errors</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;link down\|carrier\|vmnic&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># HA events</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;isolation\|restart\|fdm&quot;</span><span class="w"> </span>/var/log/fdm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># VM-specific events</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;vm_name&gt;&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
 <h2 id="collect-support-bundle">Collect Support Bundle<a class="headerlink" href="#collect-support-bundle" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Generate ESXi support bundle (vm-support)
-vm-support -n -w /tmp/
-# Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
-
-# Or trigger from vSphere Client: Host → Actions → Export System Logs
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate ESXi support bundle (vm-support)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Or trigger from vSphere Client: Host → Actions → Export System Logs</span>
+</code></pre></div>
 <h2 id="remote-syslog">Remote Syslog<a class="headerlink" href="#remote-syslog" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check current syslog configuration
-esxcli system syslog config get
-
-# Set a remote syslog target
-esxcli system syslog config set --loghost=udp://syslog.corp.local:514
-esxcli system syslog reload
-
-# Add a second syslog target (comma-separated)
-esxcli system syslog config set --loghost=&quot;udp://syslog1.corp.local:514,tcp://syslog2.corp.local:514&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current syslog configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set a remote syslog target</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>udp://syslog.corp.local:514
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Add a second syslog target (comma-separated)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;udp://syslog1.corp.local:514,tcp://syslog2.corp.local:514&quot;</span>
+</code></pre></div>
 <h2 id="log-rotation-and-persistence">Log Rotation and Persistence<a class="headerlink" href="#log-rotation-and-persistence" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Log size and rotation config
-esxcli system syslog config get | grep -E &quot;rotate\|size&quot;
-
-# Persistent log location (survives reboots — if scratch disk configured)
-ls /scratch/log/
-
-# Check scratch disk assignment
-esxcli system syslog config get | grep &quot;local0&quot;
-cat /etc/vmware/locker.conf
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Log size and rotation config</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;rotate\|size&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Persistent log location (survives reboots — if scratch disk configured)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ls<span class="w"> </span>/scratch/log/
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check scratch disk assignment</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;local0&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cat<span class="w"> </span>/etc/vmware/locker.conf
+</code></pre></div>
 
 
 

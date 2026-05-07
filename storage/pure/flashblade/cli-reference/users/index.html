@@ -811,19 +811,28 @@
 <blockquote>
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Authentication["Authentication"]
+    Authentication --&gt; S0["Local Admin Users"]
+    Authentication --&gt; S1["Roles"]
+    Authentication --&gt; S2["API Tokens"]
+    Authentication --&gt; S3["Directory Services (LDAP / Active Directory)"]
+    Authentication --&gt; S4["Multi-Factor Authentication"]
+    Authentication --&gt; S5["Session Management"]
+    Authentication --&gt; S6["Audit Log"]</code></pre>
 <h2 id="local-admin-users">Local Admin Users<a class="headerlink" href="#local-admin-users" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all local admin users
-purefb admin show
-
-# Create a local user
-purefb admin create --name &lt;username&gt; --role array_admin
-
-# Set password
-purefb admin update --name &lt;username&gt; --password &lt;new_password&gt;
-
-# Delete a user
-purefb admin delete --name &lt;username&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all local admin users</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a local user</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set password</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;new_password&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Delete a user</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -849,56 +858,56 @@ purefb admin delete --name &lt;username&gt;
 </table>
 <h2 id="api-tokens">API Tokens<a class="headerlink" href="#api-tokens" title="Permanent link">&para;</a></h2>
 <p>API tokens are used for automation and integration (Pure1, scripts, REST API):</p>
-<pre><code class="language-bash"># List API clients / tokens
-purefb api-client show
-
-# Create an API client
-purefb api-client create \
-    --name &lt;client_name&gt; \
-    --role array_admin
-
-# Delete an API client
-purefb api-client delete --name &lt;client_name&gt;
-
-# Generate a new API token for a user
-purefb admin apitoken create --name &lt;username&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List API clients / tokens</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>api-client<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create an API client</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>api-client<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--name<span class="w"> </span>&lt;client_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Delete an API client</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>purefb<span class="w"> </span>api-client<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>&lt;client_name&gt;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Generate a new API token for a user</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
 <h2 id="directory-services-ldap-active-directory">Directory Services (LDAP / Active Directory)<a class="headerlink" href="#directory-services-ldap-active-directory" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View directory service configuration
-purefb directory-service show
-
-# Configure LDAP/AD authentication
-purefb directory-service update \
-    --enabled true \
-    --uri &quot;ldap://ldap.corp.local&quot; \
-    --base-dn &quot;DC=corp,DC=local&quot; \
-    --bind-user &quot;CN=svcldap,OU=ServiceAccounts,DC=corp,DC=local&quot; \
-    --bind-password &lt;password&gt;
-
-# Test directory service connectivity
-purefb directory-service test
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View directory service configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Configure LDAP/AD authentication</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap.corp.local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svcldap,OU=ServiceAccounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--bind-password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Test directory service connectivity</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
 <h2 id="multi-factor-authentication">Multi-Factor Authentication<a class="headerlink" href="#multi-factor-authentication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># MFA configuration
-purefb mfa show
-
-# Require MFA for all admin logins
-purefb mfa update --enabled true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># MFA configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>mfa<span class="w"> </span>show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Require MFA for all admin logins</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purefb<span class="w"> </span>mfa<span class="w"> </span>update<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Active admin sessions
-purefb admin show --sessions
-
-# Logout all sessions for a user (emergency)
-purefb admin invalidate-sessions --name &lt;username&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Active admin sessions</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>show<span class="w"> </span>--sessions
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Logout all sessions for a user (emergency)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>invalidate-sessions<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
 <h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View admin audit log (login, config changes)
-purefb audit show
-
-# Export audit log
-purefb audit export
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View admin audit log (login, config changes)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>audit<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Export audit log</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purefb<span class="w"> </span>audit<span class="w"> </span><span class="nb">export</span>
+</code></pre></div>
 
 
 

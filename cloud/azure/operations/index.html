@@ -802,16 +802,57 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check Azure Service Health for active events in your subscription regions</li>
-<li>[ ] Review VM power states: <code>az vm list --show-details --query '[*].[name,powerState]' -o table</code></li>
-<li>[ ] Check Azure Monitor activity log alerts: <code>az monitor activity-log alert list -o table</code></li>
-<li>[ ] Review failed backup jobs: <code>az backup job list --vault-name $VAULT -g $RG --query '[?properties.status==\</code>Failed`]'`</li>
-<li>[ ] Review Azure Advisor for new high-severity recommendations</li>
-<li>[ ] Check Key Vault certificate expiry — flag any certificates expiring within 30 days</li>
-<li>[ ] Review Cost Management for anomalies vs. the prior week</li>
-<li>[ ] Check Entra ID sign-in logs for failed or suspicious authentication activity</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Check Azure Service Health for active events in your subscription</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review VM power states</td>
+<td><code>az vm list --show-details --query '[*].[name,powerState]' -o table</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check Azure Monitor activity log alerts</td>
+<td><code>az monitor activity-log alert list -o table</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review failed backup jobs</td>
+<td><code>az backup job list --vault-name $VAULT -g $RG --query '[?properties.status==\</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review Azure Advisor for new high-severity recommendations</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check Key Vault certificate expiry</td>
+<td></td>
+<td>flag any certificates expiring within 30 days</td>
+</tr>
+<tr>
+<td>[ ] Review Cost Management for anomalies vs. the prior week</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check Entra ID sign-in logs for failed or suspicious authenticatio</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Confirm Azure CLI is authenticated and targeting the correct subscription</li>
@@ -823,30 +864,30 @@
 <li>[ ] Check NSG flow logs for unexpected denied traffic patterns</li>
 <li>[ ] Verify Entra ID service principal credentials are not expired</li>
 </ul>
-<pre><code class="language-bash"># List VMs with power state
-az vm list --show-details \
-  --query '[*].[name,resourceGroup,powerState,provisioningState]' \
-  -o table
-
-# Load balancer status
-az network lb show \
-  --name &lt;lb-name&gt; \
-  --resource-group &lt;rg&gt; \
-  --query '{name:name,provisioningState:provisioningState}' \
-  -o table
-
-# Activity log — last 50 events
-az monitor activity-log list --max-events 50 \
-  --query '[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]' \
-  -o table
-
-# Failed backup jobs
-az backup job list \
-  --vault-name $VAULT \
-  -g $RG \
-  --query '[?properties.status==`Failed`].[properties.jobType,properties.startTime,properties.errorDetails]' \
-  -o table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List VMs with power state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--show-details<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[name,resourceGroup,powerState,provisioningState]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Load balancer status</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>network<span class="w"> </span>lb<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--name<span class="w"> </span>&lt;lb-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{name:name,provisioningState:provisioningState}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Activity log — last 50 events</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span>--max-events<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Failed backup jobs</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--vault-name<span class="w"> </span><span class="nv">$VAULT</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>-g<span class="w"> </span><span class="nv">$RG</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[?properties.status==`Failed`].[properties.jobType,properties.startTime,properties.errorDetails]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>-o<span class="w"> </span>table
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] VM snapshot or Recovery Services vault backup verified before change</li>

@@ -823,12 +823,12 @@
 <h2 id="snapshot-failure-vmware">Snapshot Failure (VMware)<a class="headerlink" href="#snapshot-failure-vmware" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Job fails at "Creating snapshot" or "Committing snapshot."</p>
 <p><strong>Creating snapshot fails:</strong></p>
-<pre><code class="language-powershell"># Check VMware Tools version on the VM — outdated Tools causes quiesce failures
-Get-VM &quot;VMName&quot; | Select Name, @{N=&quot;ToolsVersion&quot;;E={$_.ExtensionData.Guest.ToolsVersion}}
-
-# Disable application-aware processing temporarily to isolate quiesce vs non-quiesce failure
-# In Veeam: Job settings → Guest Processing → disable Application-Aware Image Processing
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check VMware Tools version on the VM — outdated Tools causes quiesce failures</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;VMName&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ToolsVersion&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Guest</span><span class="p">.</span><span class="n">ToolsVersion</span><span class="p">}}</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Disable application-aware processing temporarily to isolate quiesce vs non-quiesce failure</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># In Veeam: Job settings → Guest Processing → disable Application-Aware Image Processing</span>
+</code></pre></div>
 <p>Common causes: VMware Tools not installed, VSS writer error inside the guest, services not quiescing in time.</p>
 <p><strong>Committing snapshot fails / snapshot stuck:</strong></p>
 <ol>
@@ -841,33 +841,33 @@ Get-VM &quot;VMName&quot; | Select Name, @{N=&quot;ToolsVersion&quot;;E={$_.Exte
 <h2 id="proxy-timeout-network-error">Proxy Timeout / Network Error<a class="headerlink" href="#proxy-timeout-network-error" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Job fails with "connection refused," "timed out," or "network error" during data transfer.</p>
 <p><strong>Triage:</strong></p>
-<pre><code class="language-powershell"># From VBR console — Infrastructure → Backup Proxies → check proxy status
-# Or via PowerShell
-Get-VBRViProxy | Select Name, Host, MaxTasksCount, IsDisabled
-</code></pre>
-<pre><code class="language-cmd"># Test connectivity between VBR server and proxy (run on VBR server)
-Test-NetConnection -ComputerName &lt;proxy-hostname&gt; -Port 2500
-
-# Test proxy to repository connectivity
-Test-NetConnection -ComputerName &lt;repo-hostname&gt; -Port 2500
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># From VBR console — Infrastructure → Backup Proxies → check proxy status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Or via PowerShell</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-VBRViProxy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Host</span><span class="p">,</span> <span class="n">MaxTasksCount</span><span class="p">,</span> <span class="n">IsDisabled</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Test connectivity between VBR server and proxy (run on VBR server)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Test-NetConnection -ComputerName &lt;proxy-hostname&gt; -Port 2500
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Test proxy to repository connectivity
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Test-NetConnection -ComputerName &lt;repo-hostname&gt; -Port 2500
+</code></pre></div>
 <p>Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories. Any firewall blocking this range will cause timeout failures.</p>
 <p><strong>Check proxy resource exhaustion:</strong> if the proxy CPU or RAM is at capacity, tasks queue and eventually time out. Increase max concurrent tasks or add a proxy.</p>
 <hr />
 <h2 id="repository-out-of-space">Repository Out of Space<a class="headerlink" href="#repository-out-of-space" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Job fails with "not enough free disk space on the repository" or "Veeam backup files have been detected outside of the quota."</p>
-<pre><code class="language-powershell"># Check repository free space
-Get-VBRBackupRepository | Select Name, FriendlyPath, Path,
-  @{N=&quot;FreeMB&quot;;E={[math]::Round($_.GetContainer().CachedFreeSpace / 1MB)}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check repository free space</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FriendlyPath</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)}}</span>
+</code></pre></div>
 <p><strong>Immediate remediation:</strong></p>
 <ol>
 <li>Check if SOBR capacity tier offload is configured and working — manually trigger offload if needed.</li>
 <li>Identify large backup chains that can be reduced:</li>
 </ol>
-<pre><code class="language-powershell"># Find largest backup chains
-Get-VBRBackup | Select JobName, @{N=&quot;SizeGB&quot;;E={[math]::Round(($_.GetStorageFiles() | Measure-Object -Property Stats -Sum).Sum.DataSize / 1GB, 1)}} | Sort-Object SizeGB -Descending
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find largest backup chains</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetStorageFiles</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Stats</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+</code></pre></div>
 <ol>
 <li>Reduce retention policy on some jobs to free space sooner.</li>
 <li>Delete orphaned backup files (Backups → Orphaned → Remove from disk).</li>
@@ -881,32 +881,32 @@ Get-VBRBackup | Select JobName, @{N=&quot;SizeGB&quot;;E={[math]::Round(($_.GetS
 <li><strong>Network configuration of the recovered VM</strong> — Instant Recovery places the VM in a publish network by default. Verify it is connected to the correct port group.</li>
 <li><strong>Veeam vPower NFS service</strong> — if the NFS service is not running on the proxy, the virtual disk cannot be mounted:</li>
 </ol>
-<pre><code class="language-cmd"># On the Veeam proxy — check the vPower NFS service
-Get-Service -Name VeeamVssProvider
-Get-Service -Name VeeamNFSSvc
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># On the Veeam proxy — check the vPower NFS service
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Get-Service -Name VeeamVssProvider
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Get-Service -Name VeeamNFSSvc
+</code></pre></div>
 <ol>
 <li><strong>Finalize to production</strong> — if the VM stays in instant recovery state for too long, Veeam will not free the backup chain. Migrate the disk to a production datastore once the VM is confirmed working.</li>
 </ol>
 <hr />
 <h2 id="vbr-service-crash-instability">VBR Service Crash / Instability<a class="headerlink" href="#vbr-service-crash-instability" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Jobs fail to start, Veeam console cannot connect, or the VBR service restarts repeatedly.</p>
-<pre><code class="language-cmd"># Check Windows Event Log on the VBR server
-Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
-
-# Check Veeam service log
-Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># Check Windows Event Log on the VBR server
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># Check Veeam service log
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
+</code></pre></div>
 <p>Common causes:
 - Veeam configuration database (PostgreSQL or SQL Server) connection failure
 - Insufficient disk space on the VBR server's OS drive
 - Memory leak after extended uptime (schedule a service restart during off-peak)
 - Corrupt job metadata (identified by error mentioning a specific job ID)</p>
 <p><strong>Restart the VBR service:</strong></p>
-<pre><code class="language-cmd"># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
-net stop &quot;Veeam Backup Service&quot;
-net start &quot;Veeam Backup Service&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>net stop &quot;Veeam Backup Service&quot;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>net start &quot;Veeam Backup Service&quot;
+</code></pre></div>
 <hr />
 <h2 id="backup-copy-job-never-completes">Backup Copy Job Never Completes<a class="headerlink" href="#backup-copy-job-never-completes" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> The backup copy job runs continuously, never reaching a "Success" state, or transfers a tiny amount of data each cycle.</p>
@@ -920,9 +920,9 @@ net start &quot;Veeam Backup Service&quot;
 <hr />
 <h2 id="surebackup-fails">SureBackup Fails<a class="headerlink" href="#surebackup-fails" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> SureBackup verification job reports "VM failed to start" or "application test script failed."</p>
-<pre><code class="language-powershell"># Check virtual lab network mapping
-Get-VBRVirtualLab | Select Name, Platform, Description
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check virtual lab network mapping</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VBRVirtualLab</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Platform</span><span class="p">,</span> <span class="n">Description</span>
+</code></pre></div>
 <ol>
 <li>Verify the <strong>virtual lab network mapping</strong> — the VLan used inside the isolated lab must be mapped to a real port group.</li>
 <li>Check <strong>test credentials</strong> — SureBackup uses guest credentials to run verification scripts; confirm they are correct and the account is not locked.</li>

@@ -838,33 +838,33 @@
 <li>[ ] Change window scheduled and approved</li>
 </ul>
 <p><strong>Upgrade steps:</strong></p>
-<pre><code class="language-bash"># Step 1 — Upload the firmware image to an FTP/SCP server reachable from the switch
-
-# Step 2 — Start firmwaredownload (non-disruptive on directors; disruptive on fixed switches)
-firmwaredownload -s -b -n &lt;ftp-server&gt; &lt;path-to-image&gt; &lt;username&gt; &lt;password&gt;
-# -s = activate after download
-# -b = non-disruptive (HA chassis only)
-# -n = no auto-reboot (for manual activation control)
-
-# Step 3 — Monitor the upgrade progress
-firmwaredownloadstatus
-
-# Step 4 — On fixed switches (non-disruptive upgrade not available), the switch reboots
-# Monitor from SANnav or reconnect after ~3-5 minutes
-
-# Step 5 — Verify after upgrade
-version
-switchshow    # all ports up
-fabricshow    # fabric intact
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — Upload the firmware image to an FTP/SCP server reachable from the switch</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Step 2 — Start firmwaredownload (non-disruptive on directors; disruptive on fixed switches)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>firmwaredownload<span class="w"> </span>-s<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span>&lt;ftp-server&gt;<span class="w"> </span>&lt;path-to-image&gt;<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># -s = activate after download</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># -b = non-disruptive (HA chassis only)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># -n = no auto-reboot (for manual activation control)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Step 3 — Monitor the upgrade progress</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>firmwaredownloadstatus
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Step 4 — On fixed switches (non-disruptive upgrade not available), the switch reboots</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Monitor from SANnav or reconnect after ~3-5 minutes</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Step 5 — Verify after upgrade</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>version
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>switchshow<span class="w">    </span><span class="c1"># all ports up</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>fabricshow<span class="w">    </span><span class="c1"># fabric intact</span>
+</code></pre></div>
 <hr />
 <h2 id="configupload-configdownload-backup-and-restore">configupload / configdownload (Backup and Restore)<a class="headerlink" href="#configupload-configdownload-backup-and-restore" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Backup the switch configuration to an SCP server
-configupload -all scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
-
-# Restore configuration (use during replacement or recovery)
-configdownload -all scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Backup the switch configuration to an SCP server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>configupload<span class="w"> </span>-all<span class="w"> </span>scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Restore configuration (use during replacement or recovery)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;path&gt;/switch-config.txt
+</code></pre></div>
 <p>Configurations should be backed up:
 - Before any firmware upgrade
 - Before any major zone change
@@ -875,25 +875,27 @@ configdownload -all scp://&lt;username&gt;:&lt;password&gt;@&lt;server&gt;/&lt;p
 <li>Pre-configure the new switch: hostname, domain ID, NTP, AAA, SNMP, syslog.</li>
 <li>Set the domain ID statically before connecting ISLs to avoid domain ID conflict:</li>
 </ol>
-<pre><code class="language-bash">configure
-# Set Fabric Parameters → insistDomainId = 1
-# Set Domain ID to the assigned value from the SAN design register
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>configure
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Set Fabric Parameters → insistDomainId = 1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Set Domain ID to the assigned value from the SAN design register</span>
+</code></pre></div>
 <ol>
 <li>Connect ISL cables to the edge ports of the core switch.</li>
 <li>Verify the new switch joins the fabric:</li>
 </ol>
-<pre><code class="language-bash">fabricshow     # New switch should appear
-topologyshow   # ISL path visible
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>fabricshow<span class="w">     </span><span class="c1"># New switch should appear</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>topologyshow<span class="w">   </span><span class="c1"># ISL path visible</span>
+</code></pre></div>
 <ol>
-<li>Configure trunk groups on the ISL ports:</li>
-</ol>
-<pre><code class="language-bash"># Verify trunking formed automatically (requires same speed on both ends)
-trunkshow
-</code></pre>
-<ol>
-<li>Update CMDB and SAN design register with the new domain ID and port map.</li>
+<li>
+<p>Configure trunk groups on the ISL ports:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify trunking formed automatically (requires same speed on both ends)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>trunkshow
+</code></pre></div></p>
+</li>
+<li>
+<p>Update CMDB and SAN design register with the new domain ID and port map.</p>
+</li>
 </ol>
 <hr />
 <h2 id="switch-replacement">Switch Replacement<a class="headerlink" href="#switch-replacement" title="Permanent link">&para;</a></h2>
@@ -904,14 +906,14 @@ trunkshow
 <li>Restore configuration: <code>configdownload</code></li>
 <li>Connect to the fabric and verify all devices re-login:</li>
 </ol>
-<pre><code class="language-bash">nsshow    # All devices logged in
-cfgshow   # Zone database present and correct
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nsshow<span class="w">    </span><span class="c1"># All devices logged in</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cfgshow<span class="w">   </span><span class="c1"># Zone database present and correct</span>
+</code></pre></div>
 <ol>
-<li>Activate the zone set if it was not restored automatically:</li>
+<li>Activate the zone set if it was not restored automatically:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
+</code></pre></div></li>
 </ol>
-<pre><code class="language-bash">cfgenable &lt;zoneset-name&gt;
-</code></pre>
 
 
 

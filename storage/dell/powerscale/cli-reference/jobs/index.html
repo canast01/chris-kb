@@ -800,88 +800,96 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference. OneFS uses a job engine to run background tasks — FlexProtect rebuilds, SmartPools tiering, quota accounting, deduplication, and more.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Tasks["Tasks)"]
+    Tasks --&gt; S0["Check Running Jobs"]
+    Tasks --&gt; S1["Job Types"]
+    Tasks --&gt; S2["Start and Cancel Jobs"]
+    Tasks --&gt; S3["Job History"]
+    Tasks --&gt; S4["Job Impact Policies"]
+    Tasks --&gt; S5["Monitoring FlexProtect"]</code></pre>
 <h2 id="check-running-jobs">Check Running Jobs<a class="headerlink" href="#check-running-jobs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Summary of currently running jobs
-isi job status
-
-# List all active jobs
-isi job jobs list
-
-# List jobs in a specific state
-isi job jobs list --state running
-isi job jobs list --state paused
-isi job jobs list --state waiting
-isi job jobs list --state failed
-
-# View details of a specific job
-isi job jobs view &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Summary of currently running jobs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>job<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all active jobs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List jobs in a specific state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>paused
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>waiting
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>failed
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># View details of a specific job</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h2 id="job-types">Job Types<a class="headerlink" href="#job-types" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all available job types
-isi job types list
-
-# View details and description of a job type
-isi job types view &lt;type_name&gt;
-
-# Key job types:
-# FlexProtect      — re-protects data after a node or drive failure
-# SmartPools       — moves files between tiers based on file pool policies
-# Dedupe           — block-level deduplication (requires SmartDedupe license)
-# QuotaScan        — recalculates quota accounting
-# ShadowStoreDelete — removes shadow store data (snapshots/dedupe)
-# MultiScan        — combined integrity and protection scan
-# AutoBalance      — rebalances data across nodes
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all available job types</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View details and description of a job type</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>view<span class="w"> </span>&lt;type_name&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Key job types:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># FlexProtect      — re-protects data after a node or drive failure</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># SmartPools       — moves files between tiers based on file pool policies</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Dedupe           — block-level deduplication (requires SmartDedupe license)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># QuotaScan        — recalculates quota accounting</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># ShadowStoreDelete — removes shadow store data (snapshots/dedupe)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># MultiScan        — combined integrity and protection scan</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># AutoBalance      — rebalances data across nodes</span>
+</code></pre></div>
 <h2 id="start-and-cancel-jobs">Start and Cancel Jobs<a class="headerlink" href="#start-and-cancel-jobs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Start a job manually (useful after drive replacement)
-isi job jobs start FlexProtect
-isi job jobs start QuotaScan
-isi job jobs start SmartPools
-
-# Cancel a running job
-isi job jobs cancel &lt;job_id&gt;
-
-# Pause a job (can be resumed)
-isi job jobs pause &lt;job_id&gt;
-
-# Resume a paused job
-isi job jobs resume &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Start a job manually (useful after drive replacement)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>FlexProtect
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>QuotaScan
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>SmartPools
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Cancel a running job</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>cancel<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Pause a job (can be resumed)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>pause<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Resume a paused job</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>resume<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h2 id="job-history">Job History<a class="headerlink" href="#job-history" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View completed job history
-isi job history list
-
-# View history for a specific job type
-isi job history list | grep SmartPools
-
-# Job events (detailed log entries)
-isi job events list
-
-# Events for a specific job
-isi job events list --job-id &lt;job_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View completed job history</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View history for a specific job type</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>SmartPools
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Job events (detailed log entries)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>job<span class="w"> </span>events<span class="w"> </span>list
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Events for a specific job</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>job<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span>--job-id<span class="w"> </span>&lt;job_id&gt;
+</code></pre></div>
 <h2 id="job-impact-policies">Job Impact Policies<a class="headerlink" href="#job-impact-policies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List impact policies (control resource usage during jobs)
-isi job policies list
-
-# View a policy
-isi job policies view &lt;policy_name&gt;
-
-# Modify a job type's impact policy (e.g., run Dedupe at low impact)
-isi job types modify Dedupe --policy LOW
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List impact policies (control resource usage during jobs)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>job<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View a policy</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>job<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Modify a job type&#39;s impact policy (e.g., run Dedupe at low impact)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>job<span class="w"> </span>types<span class="w"> </span>modify<span class="w"> </span>Dedupe<span class="w"> </span>--policy<span class="w"> </span>LOW
+</code></pre></div>
 <h2 id="monitoring-flexprotect">Monitoring FlexProtect<a class="headerlink" href="#monitoring-flexprotect" title="Permanent link">&para;</a></h2>
 <p>FlexProtect is the most critical background job — runs after node/drive failures:</p>
-<pre><code class="language-bash"># Check if FlexProtect is running
-isi job jobs list | grep FlexProtect
-
-# Check overall data protection status
-isi status | grep -E &quot;SmartFail|Unhealthy|At risk&quot;
-
-# Check for unprotected files
-isi job jobs list | grep MultiScan
-isi status -n all | grep -i &quot;unprotected\|degraded&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check if FlexProtect is running</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FlexProtect
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check overall data protection status</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SmartFail|Unhealthy|At risk&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check for unprotected files</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>MultiScan
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;unprotected\|degraded&quot;</span>
+</code></pre></div>
 
 
 

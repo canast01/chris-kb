@@ -800,17 +800,25 @@
 <blockquote>
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    QoS["QoS"]
+    QoS --&gt; S0["Statistics Collection"]
+    QoS --&gt; S1["Common Statistics Objects"]
+    QoS --&gt; S2["QoS Policy Groups"]
+    QoS --&gt; S3["Apply QoS to a Volume"]
+    QoS --&gt; S4["QoS Workload Monitoring"]
+    QoS --&gt; S5["Performance Thresholds Reference"]</code></pre>
 <h2 id="statistics-collection">Statistics Collection<a class="headerlink" href="#statistics-collection" title="Permanent link">&para;</a></h2>
 <p>ONTAP statistics require a sample to be collected before viewing:</p>
-<pre><code class="language-bash"># Start a statistics collection
-statistics start -object volume -sample-id perf_check
-
-# Wait 10–30 seconds, then stop
-statistics stop -sample-id perf_check
-
-# View collected statistics
-statistics show -sample-id perf_check
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Start a statistics collection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Wait 10–30 seconds, then stop</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># View collected statistics</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check
+</code></pre></div>
 <h2 id="common-statistics-objects">Common Statistics Objects<a class="headerlink" href="#common-statistics-objects" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -846,52 +854,52 @@ statistics show -sample-id perf_check
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Volume-level latency
-statistics show -sample-id perf_check | grep -E &quot;total_latency|read_latency|write_latency&quot;
-
-# IOPS per volume
-statistics show -sample-id perf_check | grep -E &quot;total_ops|read_ops|write_ops&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Volume-level latency</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_latency|read_latency|write_latency&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># IOPS per volume</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>perf_check<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_ops|read_ops|write_ops&quot;</span>
+</code></pre></div>
 <h2 id="qos-policy-groups">QoS Policy Groups<a class="headerlink" href="#qos-policy-groups" title="Permanent link">&para;</a></h2>
 <p>QoS limits or guarantees throughput for specific volumes or LUNs:</p>
-<pre><code class="language-bash"># List all QoS policy groups
-qos policy-group show
-
-# Create a QoS max throughput policy (limit)
-qos policy-group create \
-    -policy-group prod-limit \
-    -vserver &lt;svm&gt; \
-    -max-throughput 5000IOPS
-
-# Create a min throughput policy (guarantee)
-qos policy-group create \
-    -policy-group db-floor \
-    -vserver &lt;svm&gt; \
-    -min-throughput 2000IOPS
-
-# Modify a policy group
-qos policy-group modify -policy-group prod-limit -max-throughput 8000IOPS
-
-# Delete a policy group
-qos policy-group delete -policy-group prod-limit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all QoS policy groups</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create a QoS max throughput policy (limit)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-max-throughput<span class="w"> </span>5000IOPS
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Create a min throughput policy (guarantee)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-policy-group<span class="w"> </span>db-floor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>-min-throughput<span class="w"> </span>2000IOPS
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Modify a policy group</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>modify<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit<span class="w"> </span>-max-throughput<span class="w"> </span>8000IOPS
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Delete a policy group</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>delete<span class="w"> </span>-policy-group<span class="w"> </span>prod-limit
+</code></pre></div>
 <h2 id="apply-qos-to-a-volume">Apply QoS to a Volume<a class="headerlink" href="#apply-qos-to-a-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Assign a QoS policy to a volume
-volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group prod-limit
-
-# Remove QoS from a volume
-volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group none
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Assign a QoS policy to a volume</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>prod-limit
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove QoS from a volume</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-qos-policy-group<span class="w"> </span>none
+</code></pre></div>
 <h2 id="qos-workload-monitoring">QoS Workload Monitoring<a class="headerlink" href="#qos-workload-monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All active QoS workloads
-qos workload show
-
-# QoS performance statistics (current IOPS and latency per workload)
-qos statistics performance show
-
-# Sort by highest IOPS
-qos statistics performance show | sort -rn -k3
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All active QoS workloads</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>qos<span class="w"> </span>workload<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># QoS performance statistics (current IOPS and latency per workload)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Sort by highest IOPS</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span>-k3
+</code></pre></div>
 <h2 id="performance-thresholds-reference">Performance Thresholds Reference<a class="headerlink" href="#performance-thresholds-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

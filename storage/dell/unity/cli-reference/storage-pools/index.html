@@ -811,21 +811,30 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Storage_Pools["Storage Pools"]
+    Storage_Pools --&gt; S0["List Pools"]
+    Storage_Pools --&gt; S1["Capacity Monitoring"]
+    Storage_Pools --&gt; S2["Create a Pool"]
+    Storage_Pools --&gt; S3["Expand a Pool"]
+    Storage_Pools --&gt; S4["Modify and Delete"]
+    Storage_Pools --&gt; S5["RAID Types"]
+    Storage_Pools --&gt; S6["Pool Health States"]</code></pre>
 <h2 id="list-pools">List Pools<a class="headerlink" href="#list-pools" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All pools (summary)
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool show
-
-# Detailed — name, size, used, free, health, RAID type
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail
-
-# Specific pool by ID
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All pools (summary)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed — name, size, used, free, health, RAID type</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specific pool by ID</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+</code></pre></div>
 <h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Pool utilisation
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail | \
-    grep -E &quot;Name|Size|Used|Free|Health&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pool utilisation</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Size|Used|Free|Health&quot;</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -853,36 +862,36 @@ uemcli -d &lt;ip&gt; -u admin /stor/config/pool show -detail | \
 </tbody>
 </table>
 <h2 id="create-a-pool">Create a Pool<a class="headerlink" href="#create-a-pool" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create a pool using an existing disk group
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
-    -name &lt;pool_name&gt; \
-    -diskGroup &lt;dg_id&gt; \
-    -raidType RAID5 \
-    -stripeWidth 5
-
-# With description
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool create \
-    -name Production_Pool \
-    -diskGroup dg_1 \
-    -raidType RAID5 \
-    -descr &quot;Primary production pool - SAS SSD&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a pool using an existing disk group</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-name<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-diskGroup<span class="w"> </span>&lt;dg_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-raidType<span class="w"> </span>RAID5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-stripeWidth<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># With description</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-name<span class="w"> </span>Production_Pool<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-diskGroup<span class="w"> </span>dg_1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-raidType<span class="w"> </span>RAID5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>-descr<span class="w"> </span><span class="s2">&quot;Primary production pool - SAS SSD&quot;</span>
+</code></pre></div>
 <h2 id="expand-a-pool">Expand a Pool<a class="headerlink" href="#expand-a-pool" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a disk group to an existing pool
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set \
-    -addDiskGroup &lt;dg_id&gt;
-
-# Verify size after expansion
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; show -detail | \
-    grep -E &quot;Size|Used|Free&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add a disk group to an existing pool</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-addDiskGroup<span class="w"> </span>&lt;dg_id&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify size after expansion</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Size|Used|Free&quot;</span>
+</code></pre></div>
 <h2 id="modify-and-delete">Modify and Delete<a class="headerlink" href="#modify-and-delete" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Rename a pool
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; set -name &lt;new_name&gt;
-
-# Delete a pool (must be empty — no LUNs or file systems)
-uemcli -d &lt;ip&gt; -u admin /stor/config/pool -id &lt;pool_id&gt; delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rename a pool</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-name<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Delete a pool (must be empty — no LUNs or file systems)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>-id<span class="w"> </span>&lt;pool_id&gt;<span class="w"> </span>delete
+</code></pre></div>
 <h2 id="raid-types">RAID Types<a class="headerlink" href="#raid-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

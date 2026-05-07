@@ -812,31 +812,40 @@
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
 <p>Pure FlashBlade supports asynchronous replication (snapshot-based) and ActiveDR (near-synchronous) for NFS/SMB file replication.</p>
+<pre class="mermaid"><code>flowchart LR
+    Replication__ActiveD["Replication (ActiveD"]
+    Replication__ActiveD --&gt; S0["Remote Array (Replication Target)"]
+    Replication__ActiveD --&gt; S1["File System Replica Links"]
+    Replication__ActiveD --&gt; S2["Replication Status"]
+    Replication__ActiveD --&gt; S3["Pause and Resume"]
+    Replication__ActiveD --&gt; S4["Delete a Replica Link"]
+    Replication__ActiveD --&gt; S5["Monitoring Lag"]
+    Replication__ActiveD --&gt; S6["Object Store Replication (Buckets)"]</code></pre>
 <h2 id="remote-array-replication-target">Remote Array (Replication Target)<a class="headerlink" href="#remote-array-replication-target" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List configured remote arrays
-purefb remote-array show
-
-# Add a replication target
-purefb remote-array create \
-    --name &lt;target_name&gt; \
-    --management-address &lt;target_management_ip&gt;
-
-# The target FlashBlade must also trust this array (reciprocal)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List configured remote arrays</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>remote-array<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Add a replication target</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>remote-array<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>--name<span class="w"> </span>&lt;target_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>--management-address<span class="w"> </span>&lt;target_management_ip&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># The target FlashBlade must also trust this array (reciprocal)</span>
+</code></pre></div>
 <h2 id="file-system-replica-links">File System Replica Links<a class="headerlink" href="#file-system-replica-links" title="Permanent link">&para;</a></h2>
 <p>Replica links replicate file systems between source and target arrays:</p>
-<pre><code class="language-bash"># List all replica links
-purefb fs-replica-link show
-
-# Detailed view — state, lag, direction
-purefb fs-replica-link show --detailed
-
-# Create a replica link
-purefb fs-replica-link create \
-    --local-filesystem &lt;local_fs_name&gt; \
-    --remote-filesystem &lt;remote_fs_name&gt; \
-    --remote-array &lt;target_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all replica links</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Detailed view — state, lag, direction</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>show<span class="w"> </span>--detailed
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create a replica link</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--local-filesystem<span class="w"> </span>&lt;local_fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--remote-filesystem<span class="w"> </span>&lt;remote_fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--remote-array<span class="w"> </span>&lt;target_name&gt;
+</code></pre></div>
 <h2 id="replication-status">Replication Status<a class="headerlink" href="#replication-status" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -865,40 +874,40 @@ purefb fs-replica-link create \
 </tbody>
 </table>
 <h2 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Pause replication
-purefb fs-replica-link update \
-    --paused true \
-    --local-filesystem &lt;fs_name&gt; \
-    --remote-filesystem &lt;remote_fs_name&gt; \
-    --remote-array &lt;target_name&gt;
-
-# Resume replication
-purefb fs-replica-link update \
-    --paused false \
-    --local-filesystem &lt;fs_name&gt; \
-    --remote-filesystem &lt;remote_fs_name&gt; \
-    --remote-array &lt;target_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pause replication</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--paused<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--local-filesystem<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--remote-filesystem<span class="w"> </span>&lt;remote_fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--remote-array<span class="w"> </span>&lt;target_name&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Resume replication</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--paused<span class="w"> </span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--local-filesystem<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--remote-filesystem<span class="w"> </span>&lt;remote_fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>--remote-array<span class="w"> </span>&lt;target_name&gt;
+</code></pre></div>
 <h2 id="delete-a-replica-link">Delete a Replica Link<a class="headerlink" href="#delete-a-replica-link" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb fs-replica-link delete \
-    --local-filesystem &lt;fs_name&gt; \
-    --remote-filesystem &lt;remote_fs_name&gt; \
-    --remote-array &lt;target_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>--local-filesystem<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--remote-filesystem<span class="w"> </span>&lt;remote_fs_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--remote-array<span class="w"> </span>&lt;target_name&gt;
+</code></pre></div>
 <h2 id="monitoring-lag">Monitoring Lag<a class="headerlink" href="#monitoring-lag" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replication lag (time behind)
-purefb fs-replica-link show --detailed | grep -i lag
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Replication lag (time behind)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>fs-replica-link<span class="w"> </span>show<span class="w"> </span>--detailed<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>lag
+</code></pre></div>
 <h2 id="object-store-replication-buckets">Object Store Replication (Buckets)<a class="headerlink" href="#object-store-replication-buckets" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List object replica links
-purefb os-replica-link show
-
-# Create bucket replication
-purefb os-replica-link create \
-    --local-bucket &lt;bucket_name&gt; \
-    --remote-bucket &lt;remote_bucket_name&gt; \
-    --remote-array &lt;target_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List object replica links</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>os-replica-link<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Create bucket replication</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purefb<span class="w"> </span>os-replica-link<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--local-bucket<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--remote-bucket<span class="w"> </span>&lt;remote_bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--remote-array<span class="w"> </span>&lt;target_name&gt;
+</code></pre></div>
 
 
 

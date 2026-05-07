@@ -798,129 +798,137 @@
 
 <h1 id="certificates-cli-reference">Certificates CLI Reference<a class="headerlink" href="#certificates-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Windows certificate operations use <code>certutil</code> for verification, revocation, and store management. Linux operations rely on <code>openssl</code> for inspection, verification, and TLS connectivity testing. PowerShell provides <code>Get-ChildItem Cert:\</code> for the Windows certificate store and <code>Test-Certificate</code> for chain validation.</p>
+<pre class="mermaid"><code>flowchart LR
+    Certificates["Certificates"]
+    Certificates --&gt; S0["openssl — Inspection"]
+    Certificates --&gt; S1["openssl — Verification"]
+    Certificates --&gt; S2["openssl — TLS Testing"]
+    Certificates --&gt; S3["certutil — Windows"]
+    Certificates --&gt; S4["PowerShell — Windows Certificate Store"]
+    Certificates --&gt; S5["Key and CSR Generation"]</code></pre>
 <hr />
 <h2 id="openssl-inspection">openssl — Inspection<a class="headerlink" href="#openssl-inspection" title="Permanent link">&para;</a></h2>
 <p>Inspect certificates, keys, and chains before deploying or renewing.</p>
-<pre><code class="language-bash"># View all certificate fields
-openssl x509 -in cert.pem -noout -text
-
-# Show subject, issuer, and expiry only
-openssl x509 -in cert.pem -noout -subject -issuer -dates
-
-# Show SANs (Subject Alternative Names)
-openssl x509 -in cert.pem -noout -text | grep -A1 &quot;Subject Alternative&quot;
-
-# Compute SHA-1 thumbprint
-openssl x509 -in cert.pem -noout -fingerprint -sha1
-
-# Compute SHA-256 fingerprint
-openssl x509 -in cert.pem -noout -fingerprint -sha256
-
-# Inspect a PKCS#12 bundle
-openssl pkcs12 -info -in cert.p12 -noout
-
-# View a CSR
-openssl req -in request.csr -noout -text
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View all certificate fields</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show subject, issuer, and expiry only</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show SANs (Subject Alternative Names)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A1<span class="w"> </span><span class="s2">&quot;Subject Alternative&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Compute SHA-1 thumbprint</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Compute SHA-256 fingerprint</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-fingerprint<span class="w"> </span>-sha256
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Inspect a PKCS#12 bundle</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-info<span class="w"> </span>-in<span class="w"> </span>cert.p12<span class="w"> </span>-noout
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># View a CSR</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>openssl<span class="w"> </span>req<span class="w"> </span>-in<span class="w"> </span>request.csr<span class="w"> </span>-noout<span class="w"> </span>-text
+</code></pre></div>
 <hr />
 <h2 id="openssl-verification">openssl — Verification<a class="headerlink" href="#openssl-verification" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify certificate matches the private key (moduli must match)
-openssl x509 -noout -modulus -in cert.pem | md5sum
-openssl rsa  -noout -modulus -in key.pem  | md5sum
-
-# Verify certificate against a CA bundle
-openssl verify -CAfile ca-bundle.pem cert.pem
-
-# Verify full chain (intermediate + root)
-openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
-
-# Check days until expiry
-openssl x509 -enddate -noout -in cert.pem |   awk -F= '{print $2}' | xargs -I{} date -d &quot;{}&quot; +%s |   awk -v now=$(date +%s) '{print int(($1-now)/86400)&quot; days remaining&quot;}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify certificate matches the private key (moduli must match)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>key.pem<span class="w">  </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Verify certificate against a CA bundle</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>ca-bundle.pem<span class="w"> </span>cert.pem
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify full chain (intermediate + root)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.pem<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.pem<span class="w"> </span>cert.pem
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check days until expiry</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-enddate<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="p">|</span><span class="w">   </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">now</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="s1">&#39;{print int(($1-now)/86400)&quot; days remaining&quot;}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="openssl-tls-testing">openssl — TLS Testing<a class="headerlink" href="#openssl-tls-testing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Test TLS handshake and show server certificate
-openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;
-
-# Check specific TLS version support
-openssl s_client -connect &lt;host&gt;:443 -tls1_2
-openssl s_client -connect &lt;host&gt;:443 -tls1_3
-
-# Show full certificate chain from a live endpoint
-openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt; 2&gt;/dev/null |   openssl x509 -noout -text
-
-# Test LDAPS
-openssl s_client -connect &lt;ldap_host&gt;:636
-
-# Test SMTPS
-openssl s_client -connect &lt;smtp_host&gt;:465 -starttls smtp
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test TLS handshake and show server certificate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check specific TLS version support</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-tls1_2
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-tls1_3
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Show full certificate chain from a live endpoint</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w">   </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Test LDAPS</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ldap_host&gt;:636
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Test SMTPS</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;smtp_host&gt;:465<span class="w"> </span>-starttls<span class="w"> </span>smtp
+</code></pre></div>
 <hr />
 <h2 id="certutil-windows">certutil — Windows<a class="headerlink" href="#certutil-windows" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify a certificate file
-certutil -verify cert.pem
-
-# Display certificate detail
-certutil -dump cert.pem
-
-# Check revocation (CRL/OCSP)
-certutil -verify -urlfetch cert.pem
-
-# Add a certificate to the Trusted Root store
-certutil -addstore Root ca.crt
-
-# Remove a certificate from the store by thumbprint
-certutil -delstore My &lt;thumbprint&gt;
-
-# List all certs in the Personal store
-certutil -store My
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify a certificate file</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>certutil<span class="w"> </span>-verify<span class="w"> </span>cert.pem
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Display certificate detail</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>certutil<span class="w"> </span>-dump<span class="w"> </span>cert.pem
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check revocation (CRL/OCSP)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>certutil<span class="w"> </span>-verify<span class="w"> </span>-urlfetch<span class="w"> </span>cert.pem
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Add a certificate to the Trusted Root store</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>certutil<span class="w"> </span>-addstore<span class="w"> </span>Root<span class="w"> </span>ca.crt
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Remove a certificate from the store by thumbprint</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>certutil<span class="w"> </span>-delstore<span class="w"> </span>My<span class="w"> </span>&lt;thumbprint&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># List all certs in the Personal store</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>certutil<span class="w"> </span>-store<span class="w"> </span>My
+</code></pre></div>
 <hr />
 <h2 id="powershell-windows-certificate-store">PowerShell — Windows Certificate Store<a class="headerlink" href="#powershell-windows-certificate-store" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all certs in the Personal (My) store
-Get-ChildItem Cert:\LocalMachine\My | Select Subject, Thumbprint, NotAfter
-
-# Find certificates expiring within 30 days
-$cutoff = (Get-Date).AddDays(30)
-Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.NotAfter -lt $cutoff }
-
-# Find by thumbprint
-Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq &quot;&lt;thumbprint&gt;&quot; }
-
-# Validate certificate chain
-Get-ChildItem Cert:\LocalMachine\My | Test-Certificate
-
-# Export certificate to PEM
-$cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -like &quot;*&lt;cn&gt;*&quot; }
-[System.IO.File]::WriteAllBytes(&quot;C:\cert.cer&quot;, $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all certs in the Personal (My) store</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Subject</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="n">NotAfter</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Find certificates expiring within 30 days</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">30</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="nv">$cutoff</span> <span class="p">}</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Find by thumbprint</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Thumbprint</span> <span class="o">-eq</span> <span class="s2">&quot;&lt;thumbprint&gt;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Validate certificate chain</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Test-Certificate</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># Export certificate to PEM</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">&quot;*&lt;cn&gt;*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">WriteAllBytes</span><span class="p">(</span><span class="s2">&quot;C:\cert.cer&quot;</span><span class="p">,</span> <span class="nv">$cert</span><span class="p">.</span><span class="n">Export</span><span class="p">(</span><span class="no">[System.Security.Cryptography.X509Certificates.X509ContentType]</span><span class="p">::</span><span class="n">Cert</span><span class="p">))</span>
+</code></pre></div>
 <hr />
 <h2 id="key-csr-generation">Key &amp; CSR Generation<a class="headerlink" href="#key-csr-generation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Generate a 2048-bit RSA private key
-openssl genrsa -out key.pem 2048
-
-# Generate a 4096-bit RSA key
-openssl genrsa -out key.pem 4096
-
-# Generate an EC key (P-256)
-openssl ecparam -name prime256v1 -genkey -noout -out ec-key.pem
-
-# Create a CSR from an existing key
-openssl req -new -key key.pem -out request.csr   -subj &quot;/CN=&lt;common_name&gt;/O=&lt;org&gt;/C=&lt;country&gt;&quot;
-
-# Create a CSR with SANs (using a config file)
-openssl req -new -key key.pem -out request.csr -config &lt;(cat &lt;&lt;EOF
-[req]
-distinguished_name = dn
-req_extensions = v3_req
-prompt = no
-[dn]
-CN = &lt;common_name&gt;
-[v3_req]
-subjectAltName = DNS:&lt;san1&gt;,DNS:&lt;san2&gt;
-EOF
-)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a 2048-bit RSA private key</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>key.pem<span class="w"> </span><span class="m">2048</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Generate a 4096-bit RSA key</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>key.pem<span class="w"> </span><span class="m">4096</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Generate an EC key (P-256)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>openssl<span class="w"> </span>ecparam<span class="w"> </span>-name<span class="w"> </span>prime256v1<span class="w"> </span>-genkey<span class="w"> </span>-noout<span class="w"> </span>-out<span class="w"> </span>ec-key.pem
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Create a CSR from an existing key</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>key.pem<span class="w"> </span>-out<span class="w"> </span>request.csr<span class="w">   </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;common_name&gt;/O=&lt;org&gt;/C=&lt;country&gt;&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Create a CSR with SANs (using a config file)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>key.pem<span class="w"> </span>-out<span class="w"> </span>request.csr<span class="w"> </span>-config<span class="w"> </span>&lt;<span class="o">(</span>cat<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s">[req]</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s">distinguished_name = dn</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s">req_extensions = v3_req</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s">prompt = no</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s">[dn]</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s">CN = &lt;common_name&gt;</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s">[v3_req]</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s">subjectAltName = DNS:&lt;san1&gt;,DNS:&lt;san2&gt;</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s">EOF</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="o">)</span>
+</code></pre></div>
 
 
 

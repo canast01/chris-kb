@@ -802,28 +802,53 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Review current COD utilization vs licensed capacity using SYMCLI or Unisphere — confirm no unexpected consumption increase</li>
-<li>[ ] Confirm no new COD activations have occurred without an associated approved change ticket</li>
-<li>[ ] Check system capacity headroom — flag if utilized capacity exceeds 80% of licensed capacity</li>
-<li>[ ] Verify Unisphere connectivity to Dell (required for COD activation requests)</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Review current COD utilization vs licensed capacity using SYMCLI o</td>
+<td></td>
+<td>confirm no unexpected consumption increase</td>
+</tr>
+<tr>
+<td>[ ] Confirm no new COD activations have occurred without an associated</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check system capacity headroom</td>
+<td></td>
+<td>flag if utilized capacity exceeds 80% of licensed capacity</td>
+</tr>
+<tr>
+<td>[ ] Verify Unisphere connectivity to Dell (required for COD activation</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show current array capacity state including licensed vs consumed
-symcfg -sid &lt;sid&gt; show -capacity -gb
-
-# Show COD license entitlement and activation status
-symlmf -sid &lt;sid&gt; list
-
-# Show storage resource pool (SRP) utilization — confirms physical capacity consumed
-symcfg -sid &lt;sid&gt; list -srp -detail
-
-# Show total raw, subscribed, and usable capacity
-symcfg -sid &lt;sid&gt; show -tb
-
-# Check if COD capacity pools are available and their current state
-symcfg -sid &lt;sid&gt; list -demand -demand_type cod
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show current array capacity state including licensed vs consumed</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-capacity<span class="w"> </span>-gb
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show COD license entitlement and activation status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show storage resource pool (SRP) utilization — confirms physical capacity consumed</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span>-detail
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show total raw, subscribed, and usable capacity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-tb
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check if COD capacity pools are available and their current state</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-demand<span class="w"> </span>-demand_type<span class="w"> </span>cod
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Current utilization has been reviewed and is approaching the threshold requiring COD activation (typically &gt;80% of licensed capacity)</li>
@@ -918,9 +943,9 @@ symcfg -sid &lt;sid&gt; list -demand -demand_type cod
 <li>Submit the activation request specifying the number of additional TB required</li>
 <li>Monitor the activation status in Unisphere — expect propagation within 10-15 minutes</li>
 <li>Validate the new capacity is visible via SYMCLI:
-   <code>bash
-   symcfg -sid &lt;sid&gt; show -capacity -gb
-   symlmf -sid &lt;sid&gt; list</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-capacity<span class="w"> </span>-gb
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list
+</code></pre></div></li>
 <li>Confirm the new capacity is available to the SRP and workloads are not impacted</li>
 <li>Update the change ticket with the post-activation capacity figures</li>
 </ol>

@@ -851,180 +851,180 @@
 <li><strong>Which services/processes are involved?</strong> — systemctl, ps, journalctl</li>
 </ol>
 <h2 id="high-cpu">High CPU<a class="headerlink" href="#high-cpu" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Which processes are consuming CPU?
-ps aux --sort=-%cpu | head -15
-top -b -n1 | head -25
-
-# Is load from CPU-bound work or I/O wait?
-# wa% in top/iostat = I/O wait — not a CPU problem
-iostat -xz 1 3 | grep -E &quot;Device|avg-cpu&quot;
-
-# Per-thread breakdown
-ps -eLf | sort -k4 -rn | head -20
-
-# Zombie processes
-ps aux | grep Z
-
-# CPU throttling (thermal)
-dmesg | grep -i &quot;throttl\|cpu freq&quot; | tail -10
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Which processes are consuming CPU?</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>top<span class="w"> </span>-b<span class="w"> </span>-n1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-25
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Is load from CPU-bound work or I/O wait?</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># wa% in top/iostat = I/O wait — not a CPU problem</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Device|avg-cpu&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Per-thread breakdown</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ps<span class="w"> </span>-eLf<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Zombie processes</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Z
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># CPU throttling (thermal)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;throttl\|cpu freq&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</code></pre></div>
 <h2 id="high-memory-oom">High Memory / OOM<a class="headerlink" href="#high-memory-oom" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Current memory state
-free -h
-cat /proc/meminfo | grep -E &quot;MemTotal|MemFree|MemAvailable|Cached|SwapUsed&quot;
-
-# Processes using most memory
-ps aux --sort=-%mem | head -15
-
-# OOM killer activity
-dmesg | grep -i &quot;oom\|killed process&quot; | tail -20
-journalctl -k --since &quot;1 hour ago&quot; | grep -i oom
-
-# Memory leak — watch a process over time
-watch -n5 &quot;ps -o pid,vsz,rss,comm -p &lt;PID&gt;&quot;
-
-# Huge pages usage
-cat /proc/meminfo | grep -i huge
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Current memory state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>free<span class="w"> </span>-h
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;MemTotal|MemFree|MemAvailable|Cached|SwapUsed&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Processes using most memory</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%mem<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># OOM killer activity</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|killed process&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>oom
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Memory leak — watch a process over time</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ps -o pid,vsz,rss,comm -p &lt;PID&gt;&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Huge pages usage</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>huge
+</code></pre></div>
 <h2 id="high-disk-io-or-latency">High Disk I/O or Latency<a class="headerlink" href="#high-disk-io-or-latency" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Which device is busy?
-iostat -xz 1 5
-# %util &gt; 80% = saturated; await &gt; 20ms = high latency
-
-# Which process is doing the I/O?
-iotop -o -P
-
-# Filesystem fill causing ENOSPC errors
-df -h | awk '$5+0 &gt; 85'
-dmesg | grep -i &quot;ENOSPC\|no space left\|filesystem full&quot;
-
-# Large temp files
-find /tmp /var/tmp -size +100M 2&gt;/dev/null
-
-# Growing log files
-du -sh /var/log/* | sort -h | tail -10
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Which device is busy?</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># %util &gt; 80% = saturated; await &gt; 20ms = high latency</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Which process is doing the I/O?</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>iotop<span class="w"> </span>-o<span class="w"> </span>-P
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Filesystem fill causing ENOSPC errors</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 85&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ENOSPC\|no space left\|filesystem full&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Large temp files</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>find<span class="w"> </span>/tmp<span class="w"> </span>/var/tmp<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Growing log files</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</code></pre></div>
 <h2 id="network-connectivity-issues">Network Connectivity Issues<a class="headerlink" href="#network-connectivity-issues" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — Is the interface up?
-ip link show | grep -E &quot;state UP|state DOWN&quot;
-
-# Step 2 — Does the IP and route exist?
-ip addr show
-ip route show
-
-# Step 3 — Can we reach the gateway?
-ping -c 4 $(ip route show default | awk '{print $3}')
-
-# Step 4 — Can we reach DNS?
-dig +short google.com @8.8.8.8
-
-# Step 5 — Is the local port open?
-ss -tulnp | grep &lt;port&gt;
-
-# Step 6 — Is firewall blocking?
-firewall-cmd --list-all          # RHEL
-ufw status verbose               # Ubuntu
-iptables -L -n -v | grep DROP    # Direct iptables
-
-# Step 7 — Packet capture to confirm traffic flow
-tcpdump -i eth0 host &lt;remote-ip&gt; and port &lt;port&gt; -c 50
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Is the interface up?</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;state UP|state DOWN&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — Does the IP and route exist?</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Step 3 — Can we reach the gateway?</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="k">$(</span>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Step 4 — Can we reach DNS?</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>dig<span class="w"> </span>+short<span class="w"> </span>google.com<span class="w"> </span>@8.8.8.8
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Step 5 — Is the local port open?</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Step 6 — Is firewall blocking?</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DROP<span class="w">    </span><span class="c1"># Direct iptables</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Step 7 — Packet capture to confirm traffic flow</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>host<span class="w"> </span>&lt;remote-ip&gt;<span class="w"> </span>and<span class="w"> </span>port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
 <h2 id="service-not-starting">Service Not Starting<a class="headerlink" href="#service-not-starting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check the exact error
-systemctl status &lt;service&gt; -l
-journalctl -u &lt;service&gt; -n 50 --no-pager
-
-# Check dependencies
-systemctl list-dependencies &lt;service&gt; | grep failed
-
-# Validate unit file
-systemd-analyze verify /etc/systemd/system/&lt;service&gt;.service
-
-# Check if port is already in use
-ss -tulnp | grep &lt;port&gt;
-
-# Test the command manually
-sudo -u &lt;service-user&gt; &lt;ExecStart-command&gt; --dry-run
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check the exact error</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-l
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check dependencies</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>list-dependencies<span class="w"> </span>&lt;service&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>failed
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Validate unit file</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>systemd-analyze<span class="w"> </span>verify<span class="w"> </span>/etc/systemd/system/&lt;service&gt;.service
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check if port is already in use</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Test the command manually</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>sudo<span class="w"> </span>-u<span class="w"> </span>&lt;service-user&gt;<span class="w"> </span>&lt;ExecStart-command&gt;<span class="w"> </span>--dry-run
+</code></pre></div>
 <h2 id="ssh-access-denied">SSH Access Denied<a class="headerlink" href="#ssh-access-denied" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check sshd is running
-systemctl status sshd
-
-# Check sshd config for auth method restrictions
-grep -E &quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot; /etc/ssh/sshd_config
-
-# Check PAM for account restrictions
-journalctl _SYSTEMD_UNIT=sshd.service | grep &quot;Failed\|error\|pam&quot; | tail -20
-
-# Check if account is locked
-passwd -S &lt;username&gt;   # L = locked
-faillock --user &lt;username&gt;    # Check failed login counter
-faillock --user &lt;username&gt; --reset    # Reset counter
-
-# Check /etc/hosts.allow and hosts.deny (tcpwrappers)
-cat /etc/hosts.deny
-cat /etc/hosts.allow
-
-# SELinux blocking SSH (non-standard port)
-ausearch -m avc -c sshd --start recent | tail -10
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check sshd is running</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sshd
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check sshd config for auth method restrictions</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PasswordAuth|PubkeyAuth|AllowUsers|DenyUsers|MaxAuthTries&quot;</span><span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check PAM for account restrictions</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed\|error\|pam&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check if account is locked</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>passwd<span class="w"> </span>-S<span class="w"> </span>&lt;username&gt;<span class="w">   </span><span class="c1"># L = locked</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w">    </span><span class="c1"># Check failed login counter</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset<span class="w">    </span><span class="c1"># Reset counter</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check /etc/hosts.allow and hosts.deny (tcpwrappers)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>cat<span class="w"> </span>/etc/hosts.deny
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>cat<span class="w"> </span>/etc/hosts.allow
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># SELinux blocking SSH (non-standard port)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>-c<span class="w"> </span>sshd<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</code></pre></div>
 <h2 id="disk-full-emergency">Disk Full — Emergency<a class="headerlink" href="#disk-full-emergency" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Find the full filesystem
-df -h | awk '$5+0 &gt; 90'
-
-# Largest directories
-du -sh /* 2&gt;/dev/null | sort -h | tail -10
-du -sh /var/* 2&gt;/dev/null | sort -h | tail -10
-
-# Large log files
-find /var/log -size +100M -type f 2&gt;/dev/null
-# Truncate (don't delete — running process may hold FD open)
-&gt; /var/log/large-logfile.log
-
-# Open but deleted files still consuming space
-lsof | grep deleted | sort -k7 -rn | head -10
-# Restart the holding process to release inodes
-
-# Force journal vacuum
-journalctl --vacuum-size=500M
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find the full filesystem</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 90&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Largest directories</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Large log files</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>find<span class="w"> </span>/var/log<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Truncate (don&#39;t delete — running process may hold FD open)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>&gt;<span class="w"> </span>/var/log/large-logfile.log
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Open but deleted files still consuming space</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>lsof<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deleted<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Restart the holding process to release inodes</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Force journal vacuum</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>500M
+</code></pre></div>
 <h2 id="system-crash-reboot-analysis">System Crash / Reboot Analysis<a class="headerlink" href="#system-crash-reboot-analysis" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Recent reboots
-last reboot | head -10
-
-# Was it a kernel panic?
-journalctl -b -1 | tail -50   # Previous boot
-dmesg | grep -i &quot;panic\|bug:\|BUG:\|Oops:&quot;
-
-# kdump crash dump (if configured)
-ls /var/crash/
-
-# Hardware errors (memory, CPU, PCIe)
-mcelog --client 2&gt;/dev/null
-dmesg | grep -iE &quot;mce|machine check|uncorrect|hardware error&quot;
-
-# Check IPMI SEL (system event log)
-ipmitool sel list | tail -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Recent reboots</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>last<span class="w"> </span>reboot<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Was it a kernel panic?</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50<span class="w">   </span><span class="c1"># Previous boot</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;panic\|bug:\|BUG:\|Oops:&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># kdump crash dump (if configured)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ls<span class="w"> </span>/var/crash/
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Hardware errors (memory, CPU, PCIe)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>mcelog<span class="w"> </span>--client<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;mce|machine check|uncorrect|hardware error&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Check IPMI SEL (system event log)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>ipmitool<span class="w"> </span>sel<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
 <h2 id="useful-one-liners">Useful One-Liners<a class="headerlink" href="#useful-one-liners" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All errors in the last 10 minutes
-journalctl -p err --since &quot;10 minutes ago&quot;
-
-# Files recently modified in /etc
-find /etc -newer /etc/fstab -type f 2&gt;/dev/null | sort
-
-# Which process has a file open
-lsof /path/to/file
-
-# Which process is listening on a port
-ss -tlnp | grep :8080
-
-# Strace a process for syscall-level debugging
-strace -p &lt;PID&gt; -s 200 -f 2&gt;&amp;1 | head -100
-
-# Check for time skew (NTP offset &gt; 1s = problematic)
-chronyc tracking | grep &quot;System time&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All errors in the last 10 minutes</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;10 minutes ago&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Files recently modified in /etc</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>find<span class="w"> </span>/etc<span class="w"> </span>-newer<span class="w"> </span>/etc/fstab<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Which process has a file open</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>lsof<span class="w"> </span>/path/to/file
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Which process is listening on a port</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:8080
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Strace a process for syscall-level debugging</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>strace<span class="w"> </span>-p<span class="w"> </span>&lt;PID&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">200</span><span class="w"> </span>-f<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Check for time skew (NTP offset &gt; 1s = problematic)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+</code></pre></div>
 
 
 

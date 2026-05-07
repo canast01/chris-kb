@@ -800,41 +800,41 @@
 <p>Dell ECS (Elastic Cloud Storage) uses S3-compatible buckets as the fundamental storage object. Buckets contain objects and have associated policies, retention settings, and replication configuration.</p>
 <h2 id="bucket-management-via-ecs-management-console-api">Bucket Management via ECS Management Console / API<a class="headerlink" href="#bucket-management-via-ecs-management-console-api" title="Permanent link">&para;</a></h2>
 <p>ECS is primarily managed via its web UI or REST API. The key CLI tool is <code>ecscli</code> for scripted operations.</p>
-<pre><code class="language-bash"># List all buckets (using AWS CLI against ECS S3 endpoint)
-aws s3 ls s3:// --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-
-# Create a bucket
-aws s3 mb s3://&lt;bucket_name&gt; --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-
-# Delete a bucket (must be empty)
-aws s3 rb s3://&lt;bucket_name&gt; --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all buckets (using AWS CLI against ECS S3 endpoint)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a bucket</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>s3<span class="w"> </span>mb<span class="w"> </span>s3://&lt;bucket_name&gt;<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Delete a bucket (must be empty)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>s3<span class="w"> </span>rb<span class="w"> </span>s3://&lt;bucket_name&gt;<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+</code></pre></div>
 <h2 id="bucket-policies">Bucket Policies<a class="headerlink" href="#bucket-policies" title="Permanent link">&para;</a></h2>
 <p>ECS supports S3-compatible bucket policies for access control:</p>
-<pre><code class="language-bash"># View a bucket policy
-aws s3api get-bucket-policy \
-    --bucket &lt;bucket_name&gt; \
-    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-
-# Apply a bucket policy
-aws s3api put-bucket-policy \
-    --bucket &lt;bucket_name&gt; \
-    --policy file://bucket_policy.json \
-    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View a bucket policy</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Apply a bucket policy</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--policy<span class="w"> </span>file://bucket_policy.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+</code></pre></div>
 <h2 id="object-retention-compliance">Object Retention (Compliance)<a class="headerlink" href="#object-retention-compliance" title="Permanent link">&para;</a></h2>
 <p>ECS supports WORM (Write Once, Read Many) object lock for compliance use cases:</p>
-<pre><code class="language-bash"># Check object lock configuration on a bucket
-aws s3api get-object-lock-configuration \
-    --bucket &lt;bucket_name&gt; \
-    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check object lock configuration on a bucket</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-object-lock-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+</code></pre></div>
 <h2 id="bucket-acls">Bucket ACLs<a class="headerlink" href="#bucket-acls" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View bucket ACL
-aws s3api get-bucket-acl \
-    --bucket &lt;bucket_name&gt; \
-    --endpoint-url https://&lt;ecs_s3_endpoint&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View bucket ACL</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-acl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--bucket<span class="w"> </span>&lt;bucket_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;ecs_s3_endpoint&gt;
+</code></pre></div>
 <h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

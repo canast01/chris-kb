@@ -800,23 +800,31 @@
 <blockquote>
 <p>Part of the Brocade Fabric OS CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Users["Users"]
+    Users --&gt; S0["User Accounts"]
+    Users --&gt; S1["Roles"]
+    Users --&gt; S2["Authentication (RADIUS / TACACS+)"]
+    Users --&gt; S3["Secure Fabric OS (SCC / DCC Policies)"]
+    Users --&gt; S4["SSH Configuration"]
+    Users --&gt; S5["Common Issues"]</code></pre>
 <h2 id="user-accounts">User Accounts<a class="headerlink" href="#user-accounts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all user accounts
-userConfig --show
-
-# Change a user's password
-passwd &lt;username&gt;
-
-# Create a user
-userConfig --add &lt;username&gt; -r &lt;role&gt; -l &lt;chassis|switch&gt;
-
-# Delete a user
-userConfig --delete &lt;username&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all user accounts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>userConfig<span class="w"> </span>--show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Change a user&#39;s password</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>passwd<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Create a user</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>userConfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;<span class="w"> </span>-l<span class="w"> </span>&lt;chassis<span class="p">|</span>switch&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Delete a user</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>userConfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List available roles
-roleConfig --show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List available roles</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>roleConfig<span class="w"> </span>--show
+</code></pre></div>
 <p>Built-in roles:
 | Role | Permissions |
 |---|---|
@@ -827,34 +835,34 @@ roleConfig --show
 | operator | Read-only + basic operations |
 | user | Read-only |</p>
 <h2 id="authentication-radius-tacacs">Authentication (RADIUS / TACACS+)<a class="headerlink" href="#authentication-radius-tacacs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show AAA configuration
-aaaConfig --show
-
-# Show auth settings
-authUtil --show
-
-# Configure RADIUS
-aaaConfig --add &lt;server_ip&gt; -p &lt;port&gt; -s &lt;secret&gt; -t radius
-
-# Configure TACACS+
-aaaConfig --add &lt;server_ip&gt; -p &lt;port&gt; -s &lt;secret&gt; -t tacacs+
-
-# Test authentication
-authUtil --authenlogout
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show AAA configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aaaConfig<span class="w"> </span>--show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show auth settings</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>authUtil<span class="w"> </span>--show
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Configure RADIUS</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aaaConfig<span class="w"> </span>--add<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;secret&gt;<span class="w"> </span>-t<span class="w"> </span>radius
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Configure TACACS+</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>aaaConfig<span class="w"> </span>--add<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;secret&gt;<span class="w"> </span>-t<span class="w"> </span>tacacs+
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Test authentication</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>authUtil<span class="w"> </span>--authenlogout
+</code></pre></div>
 <h2 id="secure-fabric-os-scc-dcc-policies">Secure Fabric OS (SCC / DCC Policies)<a class="headerlink" href="#secure-fabric-os-scc-dcc-policies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show security policies
-secPolicyShow
-secPolicyShow &quot;SCC_POLICY&quot;    # Switch Connection Control — which switches can join fabric
-secPolicyShow &quot;DCC_POLICY&quot;    # Device Connection Control — which WWNs can log in
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show security policies</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>secPolicyShow
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>secPolicyShow<span class="w"> </span><span class="s2">&quot;SCC_POLICY&quot;</span><span class="w">    </span><span class="c1"># Switch Connection Control — which switches can join fabric</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>secPolicyShow<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span><span class="w">    </span><span class="c1"># Device Connection Control — which WWNs can log in</span>
+</code></pre></div>
 <h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show SSH status
-sshUtil --show
-
-# Generate SSH host keys
-sshUtil --genkey -t rsa
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show SSH status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sshUtil<span class="w"> </span>--show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate SSH host keys</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sshUtil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

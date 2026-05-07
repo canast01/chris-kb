@@ -857,32 +857,32 @@
 </tbody>
 </table>
 <h2 id="phase-1-identify-and-triage">Phase 1 — Identify and Triage<a class="headerlink" href="#phase-1-identify-and-triage" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check for active suspicious processes (Linux)
-ps aux | grep -E &quot;nc|ncat|nmap|metasploit|mimikatz|powersploit&quot;
-
-# Recent logins from unusual IPs
-last -n 50
-grep &quot;Failed password\|Accepted password&quot; /var/log/auth.log | tail -50
-
-# Windows — check for active remote sessions
-query session /server:&lt;hostname&gt;
-Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 50
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check for active suspicious processes (Linux)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;nc|ncat|nmap|metasploit|mimikatz|powersploit&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Recent logins from unusual IPs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>last<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span><span class="s2">&quot;Failed password\|Accepted password&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Windows — check for active remote sessions</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>query<span class="w"> </span>session<span class="w"> </span>/server:&lt;hostname&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-EventLog<span class="w"> </span>-LogName<span class="w"> </span>Security<span class="w"> </span>-InstanceId<span class="w"> </span><span class="m">4624</span>,4625<span class="w"> </span>-Newest<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
 <h2 id="phase-2-contain">Phase 2 — Contain<a class="headerlink" href="#phase-2-contain" title="Permanent link">&para;</a></h2>
 <p><strong>Network isolation (do not power off — preserve forensic state):</strong></p>
-<pre><code class="language-powershell"># Windows — disable NIC (keeps system running but disconnected)
-Get-NetAdapter | Disable-NetAdapter -Confirm:$false
-
-# Or block at firewall / network switch level
-# Contact network team to port-isolate the switch port
-</code></pre>
-<pre><code class="language-bash"># Linux — drop all traffic except management (use with caution)
-iptables -I INPUT -s &lt;mgmt-ip&gt; -j ACCEPT
-iptables -I OUTPUT -d &lt;mgmt-ip&gt; -j ACCEPT
-iptables -P INPUT DROP
-iptables -P OUTPUT DROP
-iptables -P FORWARD DROP
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Windows — disable NIC (keeps system running but disconnected)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-NetAdapter</span> <span class="p">|</span> <span class="nb">Disable-NetAdapter</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Or block at firewall / network switch level</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Contact network team to port-isolate the switch port</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — drop all traffic except management (use with caution)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-s<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-d<span class="w"> </span>&lt;mgmt-ip&gt;<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>iptables<span class="w"> </span>-P<span class="w"> </span>INPUT<span class="w"> </span>DROP
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>iptables<span class="w"> </span>-P<span class="w"> </span>OUTPUT<span class="w"> </span>DROP
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>iptables<span class="w"> </span>-P<span class="w"> </span>FORWARD<span class="w"> </span>DROP
+</code></pre></div>
 <p><strong>CyberArk — rotate or suspend compromised accounts immediately:</strong>
 1. CyberArk PVWA → Accounts → locate account → Change password (immediate rotation)
 2. For suspected account compromise: suspend account in AD and rotate all credentials</p>
@@ -926,22 +926,22 @@ iptables -P FORWARD DROP
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Pull security events from last 4 hours
-Get-WinEvent -FilterHashtable @{LogName='Security'; StartTime=(Get-Date).AddHours(-4)} |
-  Where-Object {$_.Id -in @(4624,4625,4648,4720,4728,7045)} |
-  Select-Object TimeCreated, Id, Message | Format-List
-</code></pre>
-<p><strong>Linux — audit log:</strong></p>
-<pre><code class="language-bash"># Recent sudo usage
-grep sudo /var/log/auth.log | tail -50
-
-# File access audit (if auditd running)
-ausearch -k &lt;audit-key&gt; -ts recent
-
-# Network connections at time of incident
-ss -tnp
-netstat -anp | grep ESTABLISHED
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Pull security events from last 4 hours</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">4</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="n">-in</span> <span class="p">@(</span><span class="n">4624</span><span class="p">,</span><span class="n">4625</span><span class="p">,</span><span class="n">4648</span><span class="p">,</span><span class="n">4720</span><span class="p">,</span><span class="n">4728</span><span class="p">,</span><span class="n">7045</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+</code></pre></div>
+<p><strong>Linux — audit log:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Recent sudo usage</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>sudo<span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># File access audit (if auditd running)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>&lt;audit-key&gt;<span class="w"> </span>-ts<span class="w"> </span>recent
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Network connections at time of incident</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ss<span class="w"> </span>-tnp
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>netstat<span class="w"> </span>-anp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ESTABLISHED
+</code></pre></div></p>
 <h2 id="phase-4-eradicate-and-recover">Phase 4 — Eradicate and Recover<a class="headerlink" href="#phase-4-eradicate-and-recover" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Remove malicious files, scheduled tasks, persistence mechanisms</li>
@@ -951,18 +951,18 @@ netstat -anp | grep ESTABLISHED
 <li>Reset all passwords for affected accounts and service accounts</li>
 </ul>
 <h2 id="phase-5-post-incident">Phase 5 — Post-Incident<a class="headerlink" href="#phase-5-post-incident" title="Permanent link">&para;</a></h2>
-<pre><code class="language-markdown">Incident Report (template):
-- Date/time detected:
-- Date/time contained:
-- Systems affected:
-- Data at risk / confirmed exfiltrated:
-- Root cause:
-- Attack vector:
-- Timeline:
-- Actions taken:
-- Lessons learned:
-- Remediation items (with owners and due dates):
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Incident Report (template):
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">-</span><span class="w"> </span>Date/time detected:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">-</span><span class="w"> </span>Date/time contained:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>Systems affected:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">-</span><span class="w"> </span>Data at risk / confirmed exfiltrated:
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">-</span><span class="w"> </span>Root cause:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">-</span><span class="w"> </span>Attack vector:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">-</span><span class="w"> </span>Timeline:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">-</span><span class="w"> </span>Actions taken:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">-</span><span class="w"> </span>Lessons learned:
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">-</span><span class="w"> </span>Remediation items (with owners and due dates):
+</code></pre></div>
 <h2 id="escalation-contacts-fill-in">Escalation Contacts (fill in)<a class="headerlink" href="#escalation-contacts-fill-in" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -802,16 +802,57 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] NSX-T Manager UI → System → Overview — confirm overall system health is green, no component warnings</li>
-<li>[ ] <code>GET /api/v1/cluster/status</code> — management cluster status should show <code>STABLE</code>; flag any <code>DEGRADED</code> or <code>UNSTABLE</code> nodes</li>
-<li>[ ] <code>GET /api/v1/transport-nodes/status</code> — all transport nodes should report <code>UP</code>; flag any <code>DOWN</code> or <code>DEGRADED</code></li>
-<li>[ ] Check Edge cluster health: <code>GET /api/v1/edge-clusters</code> — all Edge nodes reachable and healthy</li>
-<li>[ ] <code>GET /api/v1/alarms?status=OPEN</code> — review all open alarms; action any at HIGH or CRITICAL severity</li>
-<li>[ ] Verify T0/T1 BGP sessions are established (if BGP in use): NSX-T UI → Networking → T0 Gateways → BGP Neighbors, or from Edge CLI: <code>get logical-router &lt;id&gt; bgp neighbor summary</code></li>
-<li>[ ] Check DFW rule count is not approaching platform limits: NSX-T UI → Security → Distributed Firewall → Statistics</li>
-<li>[ ] Review NSX Manager backup status: confirm automated backups are completing successfully</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] NSX-T Manager UI → System → Overview</td>
+<td></td>
+<td>confirm overall system health is green, no component warnings</td>
+</tr>
+<tr>
+<td>[ ] <code>GET /api/v1/cluster/status</code></td>
+<td><code>GET /api/v1/cluster/status</code></td>
+<td>management cluster status should show <code>STABLE</code>; flag any <code>DEGRADED</code> or <code>UNSTABLE</code> nodes</td>
+</tr>
+<tr>
+<td>[ ] <code>GET /api/v1/transport-nodes/status</code></td>
+<td><code>GET /api/v1/transport-nodes/status</code></td>
+<td>all transport nodes should report <code>UP</code>; flag any <code>DOWN</code> or <code>DEGRADED</code></td>
+</tr>
+<tr>
+<td>[ ] Check Edge cluster health</td>
+<td><code>GET /api/v1/edge-clusters</code></td>
+<td>all Edge nodes reachable and healthy</td>
+</tr>
+<tr>
+<td>[ ] <code>GET /api/v1/alarms?status=OPEN</code></td>
+<td><code>GET /api/v1/alarms?status=OPEN</code></td>
+<td>review all open alarms; action any at HIGH or CRITICAL severity</td>
+</tr>
+<tr>
+<td>[ ] Verify T0/T1 BGP sessions are established (if BGP in use): NSX-T UI → Networking → T0 Gateways → BGP Neighbors, or from Edge CLI</td>
+<td><code>get logical-router &lt;id&gt; bgp neighbor summary</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check DFW rule count is not approaching platform limits</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Review NSX Manager backup status</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Management cluster stable: <code>GET /api/v1/cluster/status</code></li>
@@ -823,15 +864,15 @@
 <li>[ ] DFW rule count within safe limits</li>
 <li>[ ] NSX Manager backup current</li>
 </ul>
-<pre><code class="language-bash"># NSX-T REST API health checks (replace &lt;nsx-manager&gt; and use a valid session token)
-curl -sk -u 'admin' https://&lt;nsx-manager&gt;/api/v1/cluster/status
-curl -sk -u 'admin' https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status
-curl -sk -u 'admin' https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN
-
-# From Edge node CLI (SSH to Edge)
-get logical-router &lt;tier0-router-id&gt; bgp neighbor summary
-get tunnel-port status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># NSX-T REST API health checks (replace &lt;nsx-manager&gt; and use a valid session token)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/cluster/status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/alarms?status<span class="o">=</span>OPEN
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># From Edge node CLI (SSH to Edge)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>get<span class="w"> </span>logical-router<span class="w"> </span>&lt;tier0-router-id&gt;<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>status
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] NSX Manager backup is current — confirm backup completed within the last 24 hours</li>

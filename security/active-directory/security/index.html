@@ -880,12 +880,12 @@
 - AppLocker / WDAC policy allows only admin tools
 - BitLocker + TPM + Secure Boot enforced
 - Joined to separate PAW OU with restricted GPO</p>
-<pre><code class="language-powershell"># Verify PAW OU GPO — confirm internet-facing apps are blocked
-Get-GPInheritance -Target &quot;OU=PAW,OU=Tier0,DC=corp,DC=local&quot;
-
-# Check logon restriction policy on DC
-Get-GPOReport -Name &quot;Tier0-Logon-Restrictions&quot; -ReportType Html -Path C:\Reports\tier0-gpo.html
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify PAW OU GPO — confirm internet-facing apps are blocked</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=PAW,OU=Tier0,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check logon restriction policy on DC</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-GPOReport</span> <span class="n">-Name</span> <span class="s2">&quot;Tier0-Logon-Restrictions&quot;</span> <span class="n">-ReportType</span> <span class="n">Html</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">tier0-gpo</span><span class="p">.</span><span class="n">html</span>
+</code></pre></div>
 <h2 id="core-security-controls">Core Security Controls<a class="headerlink" href="#core-security-controls" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -930,65 +930,65 @@ Get-GPOReport -Name &quot;Tier0-Logon-Restrictions&quot; -ReportType Html -Path 
 </tbody>
 </table>
 <h2 id="enforcing-ldap-signing-and-channel-binding">Enforcing LDAP Signing and Channel Binding<a class="headerlink" href="#enforcing-ldap-signing-and-channel-binding" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Verify current LDAP signing requirement via registry on DC
-Get-ItemProperty -Path &quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot; |
-    Select-Object &quot;LDAPServerIntegrity&quot;
-# 2 = Require (desired); 1 = Negotiate; 0 = None
-
-# Verify channel binding token requirements
-Get-ItemProperty -Path &quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot; |
-    Select-Object &quot;LdapEnforceChannelBinding&quot;
-# 2 = Always (desired); 1 = When Supported; 0 = Never
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify current LDAP signing requirement via registry on DC</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="s2">&quot;LDAPServerIntegrity&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># 2 = Require (desired); 1 = Negotiate; 0 = None</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Verify channel binding token requirements</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="nb">Select-Object</span> <span class="s2">&quot;LdapEnforceChannelBinding&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># 2 = Always (desired); 1 = When Supported; 0 = Never</span>
+</code></pre></div>
 <h2 id="kerberos-encryption-policy">Kerberos Encryption Policy<a class="headerlink" href="#kerberos-encryption-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Verify Kerberos encryption GPO is applied to DCs
-# GPO setting: Computer → Windows Settings → Security Settings →
-# Local Policies → Security Options → &quot;Network security: Configure encryption types allowed for Kerberos&quot;
-# Desired: AES128_HMAC_SHA1, AES256_HMAC_SHA1 only (DES and RC4 unchecked)
-
-# Check if RC4 is still in use (legacy clients will fail after disabling)
-# Event ID 4769 with &quot;Ticket Encryption Type: 0x17&quot; = RC4 in use
-Get-WinEvent -ComputerName dc1 -FilterHashtable @{
-    LogName='Security'; Id=4769
-} -MaxEvents 500 | Where-Object { $_.Message -match &quot;0x17&quot; } | Select-Object -First 10 TimeCreated, Message
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify Kerberos encryption GPO is applied to DCs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># GPO setting: Computer → Windows Settings → Security Settings →</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Local Policies → Security Options → &quot;Network security: Configure encryption types allowed for Kerberos&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Desired: AES128_HMAC_SHA1, AES256_HMAC_SHA1 only (DES and RC4 unchecked)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Check if RC4 is still in use (legacy clients will fail after disabling)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Event ID 4769 with &quot;Ticket Encryption Type: 0x17&quot; = RC4 in use</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4769</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;0x17&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+</code></pre></div>
 <h2 id="protected-users-group">Protected Users Group<a class="headerlink" href="#protected-users-group" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Add privileged accounts to Protected Users
-Add-ADGroupMember -Identity &quot;Protected Users&quot; -Members &quot;admin-tier0-01&quot;,&quot;admin-tier0-02&quot;
-
-# Verify current membership
-Get-ADGroupMember -Identity &quot;Protected Users&quot; | Select-Object SamAccountName, DistinguishedName
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Add privileged accounts to Protected Users</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;admin-tier0-01&quot;</span><span class="p">,</span><span class="s2">&quot;admin-tier0-02&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Verify current membership</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span>
+</code></pre></div>
 <p>Protected Users group members cannot:
 - Authenticate with NTLM, DES, or RC4
 - Use unconstrained delegation
 - Have their credentials cached on non-DCs</p>
 <h2 id="adminsdholder-monitoring">AdminSDHolder Monitoring<a class="headerlink" href="#adminsdholder-monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all accounts protected by AdminSDHolder (adminCount=1)
-Get-ADUser -Filter { AdminCount -eq 1 } -Properties AdminCount |
-    Select-Object SamAccountName, DistinguishedName, AdminCount
-
-# Check if non-privileged accounts have adminCount=1 (sign of ACL tampering or orphaned admin membership)
-Get-ADUser -Filter { AdminCount -eq 1 } |
-    Where-Object { (Get-ADUser $_ -Properties MemberOf).MemberOf -eq $null }
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all accounts protected by AdminSDHolder (adminCount=1)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span> <span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="n">-Properties</span> <span class="n">AdminCount</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span><span class="p">,</span> <span class="n">AdminCount</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Check if non-privileged accounts have adminCount=1 (sign of ACL tampering or orphaned admin membership)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span> <span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-ADUser</span> <span class="nv">$_</span> <span class="n">-Properties</span> <span class="n">MemberOf</span><span class="p">).</span><span class="n">MemberOf</span> <span class="o">-eq</span> <span class="nv">$null</span> <span class="p">}</span>
+</code></pre></div>
 <h2 id="dcsync-attack-detection">DCSync Attack Detection<a class="headerlink" href="#dcsync-attack-detection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Defender for Identity alert: &quot;Directory Services Replication Request&quot;
-# Also: Event ID 4662 with access mask 0x100 (Replicating Directory Changes)
-Get-WinEvent -ComputerName dc1 -FilterHashtable @{
-    LogName='Security'; Id=4662
-} -MaxEvents 200 | Where-Object { $_.Message -match &quot;1131f6aa&quot; -or $_.Message -match &quot;1131f6ad&quot; }
-# These GUIDs = Replicating Directory Changes (All)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Defender for Identity alert: &quot;Directory Services Replication Request&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Also: Event ID 4662 with access mask 0x100 (Replicating Directory Changes)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4662</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">200</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;1131f6aa&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;1131f6ad&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># These GUIDs = Replicating Directory Changes (All)</span>
+</code></pre></div>
 <h2 id="defender-for-identity-deployment">Defender for Identity Deployment<a class="headerlink" href="#defender-for-identity-deployment" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install MDI sensor on each DC
-# Download sensor installer from MDI portal → Sensors → + Sensor
-# On DC:
-.\Azure ATP Sensor Setup.exe /quiet NetFrameworkCommandLineArguments=&quot;/q&quot; AccessKey=&quot;&lt;sensor-key&gt;&quot;
-
-# Verify sensor status
-# MDI portal → Sensors → confirm all DCs show &quot;Running&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Install MDI sensor on each DC</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Download sensor installer from MDI portal → Sensors → + Sensor</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># On DC:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">.\</span><span class="n">Azure</span> <span class="n">ATP</span> <span class="n">Sensor</span> <span class="n">Setup</span><span class="p">.</span><span class="n">exe</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">NetFrameworkCommandLineArguments</span><span class="p">=</span><span class="s2">&quot;/q&quot;</span> <span class="n">AccessKey</span><span class="p">=</span><span class="s2">&quot;&lt;sensor-key&gt;&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Verify sensor status</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># MDI portal → Sensors → confirm all DCs show &quot;Running&quot;</span>
+</code></pre></div>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Protected Users group populated with all Tier 0 accounts</li>

@@ -895,41 +895,78 @@
 <li>Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Log in to the ECS Portal and review the Dashboard → Alerts panel for any active hardware or software alarms</li>
-<li>Check the ECS Portal Dashboard → Capacity view to confirm cluster utilisation is below 70% of usable capacity</li>
-<li>Check ECS Portal → Geo Monitoring to verify geo-replication lag between VDCs is within acceptable thresholds</li>
-<li>Query <code>GET /vdc/capacity</code> via the Management REST API to retrieve current cluster capacity metrics programmatically</li>
-<li>Query <code>GET /vdc/nodes</code> to confirm all nodes report as <code>GOOD</code> status</li>
-<li>Review ECS Portal → Hardware to confirm all node disks are healthy with no <code>FAILED</code> or <code>SUSPECT</code> disks</li>
-<li>Check namespace and bucket usage growth trends to identify unexpected capacity spikes (versioning, multipart uploads)</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Log in to the ECS Portal and review the Dashboard → Alerts panel for a</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check the ECS Portal Dashboard → Capacity view to confirm cluster util</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check ECS Portal → Geo Monitoring to verify geo-replication lag betwee</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Query <code>GET /vdc/capacity</code> via the Management REST API to retrieve curr</td>
+<td><code>GET /vdc/capacity</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Query <code>GET /vdc/nodes</code> to confirm all nodes report as <code>GOOD</code> status</td>
+<td><code>GET /vdc/nodes</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Review ECS Portal → Hardware to confirm all node disks are healthy wit</td>
+<td><code>FAILED</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Check namespace and bucket usage growth trends to identify unexpected</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN header)
-curl -s -k -u &quot;sysadmin:&lt;password&gt;&quot; \
-  &quot;https://&lt;ecs-node&gt;:4443/login&quot; -D -
-
-# Retrieve VDC capacity (total, used, available, percent full)
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot; \
-  &quot;https://&lt;ecs-node&gt;:4443/vdc/capacity&quot;
-
-# List all nodes and their health status
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot; \
-  &quot;https://&lt;ecs-node&gt;:4443/vdc/nodes&quot;
-
-# Retrieve active alerts for the VDC
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot; \
-  &quot;https://&lt;ecs-node&gt;:4443/vdc/alerts&quot;
-
-# List namespaces (ecscli)
-ecscli namespace list
-
-# List buckets in a namespace (ecscli)
-ecscli bucket list --namespace &lt;namespace&gt;
-
-# Get bucket metadata including versioning, quota, replication group
-ecscli bucket get --namespace &lt;namespace&gt; --name &lt;bucket&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN header)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span>-D<span class="w"> </span>-
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Retrieve VDC capacity (total, used, available, percent full)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/capacity&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List all nodes and their health status</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/nodes&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Retrieve active alerts for the VDC</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/alerts&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># List namespaces (ecscli)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># List buckets in a namespace (ecscli)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Get bucket metadata including versioning, quota, replication group</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>get<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;bucket&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -973,26 +1010,87 @@ ecscli bucket get --namespace &lt;namespace&gt; --name &lt;bucket&gt;
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create a namespace per team or application via ECS Portal → Namespace → New, and assign a replication group</li>
-<li>Create a bucket within a namespace, configure replication group, versioning, and quota at creation time</li>
-<li>Create IAM users and assign S3 access keys within the namespace for application authentication</li>
-<li>Configure a lifecycle policy on a bucket to transition or expire objects after a defined retention period</li>
-<li>Add a new node to an existing VDC via ECS Portal → Hardware → Add Node; ECS will automatically rebalance data</li>
-<li>Configure geo-replication by adding a remote VDC to the replication group and setting the replication mode (sync or async)</li>
-<li>Rotate object user secret keys with <code>ecscli user secret-key create</code> and update consuming applications</li>
-<li>Run capacity and performance reports from ECS Portal → Dashboard for capacity planning input</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a namespace per team or application via ECS Portal → Namespace → New, and</td>
+<td></td>
+</tr>
+<tr>
+<td>Create a bucket within a namespace, configure replication group, versioning, and</td>
+<td></td>
+</tr>
+<tr>
+<td>Create IAM users and assign S3 access keys within the namespace for application</td>
+<td></td>
+</tr>
+<tr>
+<td>Configure a lifecycle policy on a bucket to transition or expire objects after a</td>
+<td></td>
+</tr>
+<tr>
+<td>Add a new node to an existing VDC via ECS Portal → Hardware → Add Node; ECS will</td>
+<td></td>
+</tr>
+<tr>
+<td>Configure geo-replication by adding a remote VDC to the replication group and se</td>
+<td></td>
+</tr>
+<tr>
+<td>Rotate object user secret keys with <code>ecscli user secret-key create</code> and update c</td>
+<td></td>
+</tr>
+<tr>
+<td>Run capacity and performance reports from ECS Portal → Dashboard for capacity pl</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding</li>
-<li>Review the Dell ECS release notes for the target version; note any configuration changes or mandatory interim upgrades required</li>
-<li>Verify all nodes are healthy (<code>GOOD</code>) and geo-replication lag is at zero before starting the upgrade</li>
-<li>Download the upgrade package from Dell Support and upload it to the ECS upgrade staging area via the Portal</li>
-<li>ECS upgrades are rolling (one node at a time); the portal will indicate per-node progress — do not force simultaneous node upgrades</li>
-<li>After all nodes upgrade, confirm all nodes return to <code>GOOD</code> status and geo-replication resumes with no lag</li>
-<li>Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Confirm the current ECS software version via ECS Portal → Settings → Software Update and record it before proceeding</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Review the Dell ECS release notes for the target version; note any configuration changes or mandatory interim upgrades required</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Verify all nodes are healthy (<code>GOOD</code>) and geo-replication lag is at zero before starting the upgrade</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Download the upgrade package from Dell Support and upload it to the ECS upgrade staging area via the Portal</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ECS upgrades are rolling (one node at a time); the portal will indicate per-node progress — do not force simultaneous node upgrades</td>
+</tr>
+<tr>
+<td>6</td>
+<td>After all nodes upgrade, confirm all nodes return to <code>GOOD</code> status and geo-replication resumes with no lag</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Validate S3, Swift, and other API endpoints with a quick functional test from each consuming application or namespace</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Separate namespaces per team or application — do not share a single namespace across unrelated workloads</li>

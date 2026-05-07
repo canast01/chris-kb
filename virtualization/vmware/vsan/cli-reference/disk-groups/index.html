@@ -811,55 +811,64 @@
 <blockquote>
 <p>Part of the <a href="../">vSAN CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Disk_Groups["Disk Groups"]
+    Disk_Groups --&gt; S0["List Disk Groups and Devices"]
+    Disk_Groups --&gt; S1["Disk and Group Statistics"]
+    Disk_Groups --&gt; S2["Add Disks / Create Disk Group"]
+    Disk_Groups --&gt; S3["Evacuate Before Removal"]
+    Disk_Groups --&gt; S4["Remove a Disk Group"]
+    Disk_Groups --&gt; S5["Disk Group Health"]
+    Disk_Groups --&gt; S6["Disk Group Best Practices"]</code></pre>
 <h2 id="list-disk-groups-and-devices">List Disk Groups and Devices<a class="headerlink" href="#list-disk-groups-and-devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># All vSAN storage devices — shows SSD (cache tier) and capacity disks
-esxcli vsan storage list
-
-# Summarised disk group view — which SSD is group leader
-esxcli vsan storage list | grep -E &quot;Is SSD|Disk Group UUID|VSAN UUID&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># All vSAN storage devices — shows SSD (cache tier) and capacity disks</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Summarised disk group view — which SSD is group leader</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Is SSD|Disk Group UUID|VSAN UUID&quot;</span>
+</code></pre></div>
 <h2 id="disk-and-group-statistics">Disk and Group Statistics<a class="headerlink" href="#disk-and-group-statistics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># I/O stats per disk (reads, writes, errors, latency)
-esxcli vsan storage stats get
-
-# Per-disk detail (include health state)
-esxcli vsan storage list | grep -E &quot;naa\.|Health|State&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># I/O stats per disk (reads, writes, errors, latency)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Per-disk detail (include health state)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Health|State&quot;</span>
+</code></pre></div>
 <h2 id="add-disks-create-disk-group">Add Disks / Create Disk Group<a class="headerlink" href="#add-disks-create-disk-group" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a cache SSD and one or more capacity disks (creates new disk group)
-esxcli vsan storage add -s &lt;ssd_naa&gt; -d &lt;capacity_naa1&gt; -d &lt;capacity_naa2&gt;
-
-# Add capacity disk to existing disk group
-esxcli vsan storage add -s &lt;existing_ssd_naa&gt; -d &lt;new_capacity_naa&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add a cache SSD and one or more capacity disks (creates new disk group)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add capacity disk to existing disk group</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;existing_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;new_capacity_naa&gt;
+</code></pre></div>
 <h2 id="evacuate-before-removal">Evacuate Before Removal<a class="headerlink" href="#evacuate-before-removal" title="Permanent link">&para;</a></h2>
 <p>Always evacuate data before removing a disk to avoid data loss:</p>
-<pre><code class="language-bash"># Evacuate a disk (moves data to other hosts, waits for completion)
-esxcli vsan storage evacuate -d &lt;device_naa&gt;
-
-# Check resync progress during evacuation
-esxcli vsan debug resync list
-
-# Confirm no remaining data on disk
-esxcli vsan storage list | grep &lt;device_naa&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Evacuate a disk (moves data to other hosts, waits for completion)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>evacuate<span class="w"> </span>-d<span class="w"> </span>&lt;device_naa&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check resync progress during evacuation</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm no remaining data on disk</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;device_naa&gt;
+</code></pre></div>
 <h2 id="remove-a-disk-group">Remove a Disk Group<a class="headerlink" href="#remove-a-disk-group" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Remove a cache SSD (removes entire disk group — evacuate first)
-esxcli vsan storage remove -s &lt;ssd_naa&gt;
-
-# Remove a single capacity disk from a group
-esxcli vsan storage remove -d &lt;capacity_naa&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Remove a cache SSD (removes entire disk group — evacuate first)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;ssd_naa&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Remove a single capacity disk from a group</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa&gt;
+</code></pre></div>
 <h2 id="disk-group-health">Disk Group Health<a class="headerlink" href="#disk-group-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check for degraded or absent components
-esxcli vsan debug object list | grep -v healthy
-
-# vSAN health check — disk layer
-esxcli vsan health cluster get | grep -i disk
-
-# Overall health summary
-esxcli vsan health summary get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check for degraded or absent components</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># vSAN health check — disk layer</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>disk
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Overall health summary</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>summary<span class="w"> </span>get
+</code></pre></div>
 <h2 id="disk-group-best-practices">Disk Group Best Practices<a class="headerlink" href="#disk-group-best-practices" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

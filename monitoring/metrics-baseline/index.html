@@ -835,50 +835,50 @@
 </tbody>
 </table>
 <h2 id="baseline-collection-commands">Baseline Collection Commands<a class="headerlink" href="#baseline-collection-commands" title="Permanent link">&para;</a></h2>
-<p><strong>Linux — CPU and memory snapshot:</strong></p>
-<pre><code class="language-bash"># 60-second sample, 5 intervals
-vmstat -S M 10 6
-
-# Or sar if sysstat installed
-sar -u 5 12      # CPU every 5 sec, 12 samples
-sar -r 5 12      # Memory
-sar -d 5 12      # Disk I/O
-</code></pre>
-<p><strong>Linux — disk latency:</strong></p>
-<pre><code class="language-bash">iostat -xz 5 6   # extended stats, 5 sec interval, 6 samples
-# key fields: await (avg I/O wait ms), r_await, w_await, util%
-</code></pre>
-<p><strong>Windows — performance counters:</strong></p>
-<pre><code class="language-powershell"># CPU
-Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 5 -MaxSamples 12
-
-# Memory available
-Get-Counter '\Memory\Available MBytes' -SampleInterval 5 -MaxSamples 12
-
-# Disk latency
-Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Read','\PhysicalDisk(*)\Avg. Disk sec/Write' -SampleInterval 5 -MaxSamples 12
-</code></pre>
-<p><strong>NetApp ONTAP — workload stats:</strong></p>
-<pre><code class="language-bash">qos statistics workload latency show -iterations 5 -interval 5
-statistics show -object system -counter total_ops,read_ops,write_ops,latency
-</code></pre>
-<p><strong>Pure FlashArray:</strong></p>
-<pre><code class="language-bash">purecli array get --mirrored
-purecli volume list --performance    # per-volume latency, IOPS, BW
-</code></pre>
+<p><strong>Linux — CPU and memory snapshot:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 60-second sample, 5 intervals</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmstat<span class="w"> </span>-S<span class="w"> </span>M<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">6</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or sar if sysstat installed</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sar<span class="w"> </span>-u<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">12</span><span class="w">      </span><span class="c1"># CPU every 5 sec, 12 samples</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>sar<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">12</span><span class="w">      </span><span class="c1"># Memory</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sar<span class="w"> </span>-d<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">12</span><span class="w">      </span><span class="c1"># Disk I/O</span>
+</code></pre></div></p>
+<p><strong>Linux — disk latency:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w">   </span><span class="c1"># extended stats, 5 sec interval, 6 samples</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># key fields: await (avg I/O wait ms), r_await, w_await, util%</span>
+</code></pre></div></p>
+<p><strong>Windows — performance counters:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># CPU</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Memory available</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Memory\Available MBytes&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Disk latency</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Read&#39;</span><span class="p">,</span><span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Write&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span>
+</code></pre></div></p>
+<p><strong>NetApp ONTAP — workload stats:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show<span class="w"> </span>-iterations<span class="w"> </span><span class="m">5</span><span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>system<span class="w"> </span>-counter<span class="w"> </span>total_ops,read_ops,write_ops,latency
+</code></pre></div></p>
+<p><strong>Pure FlashArray:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purecli<span class="w"> </span>array<span class="w"> </span>get<span class="w"> </span>--mirrored
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purecli<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--performance<span class="w">    </span><span class="c1"># per-volume latency, IOPS, BW</span>
+</code></pre></div></p>
 <h2 id="documenting-the-baseline">Documenting the Baseline<a class="headerlink" href="#documenting-the-baseline" title="Permanent link">&para;</a></h2>
 <p>Record for each system / service:</p>
-<pre><code>System:          app-db01
-Date captured:   YYYY-MM-DD
-Period:          Mon–Fri business hours, 4 weeks
-
-CPU avg:         22%   | peak: 68% (month-end batch)
-Memory avg:      71%   | peak: 84%
-Disk read lat:   0.8ms | peak: 3ms
-Disk write lat:  1.2ms | peak: 5ms
-IOPS avg:        3,200 | peak: 12,000
-Network (eth0):  120 Mbps avg | 450 Mbps peak
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>System:          app-db01
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Date captured:   YYYY-MM-DD
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Period:          Mon–Fri business hours, 4 weeks
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>CPU avg:         22%   | peak: 68% (month-end batch)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Memory avg:      71%   | peak: 84%
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Disk read lat:   0.8ms | peak: 3ms
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Disk write lat:  1.2ms | peak: 5ms
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>IOPS avg:        3,200 | peak: 12,000
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Network (eth0):  120 Mbps avg | 450 Mbps peak
+</code></pre></div>
 <h2 id="setting-thresholds-from-baseline">Setting Thresholds from Baseline<a class="headerlink" href="#setting-thresholds-from-baseline" title="Permanent link">&para;</a></h2>
 <p>Recommended starting point:
 - <strong>Warning</strong>: avg + (2 × std deviation), or &gt;75% of peak

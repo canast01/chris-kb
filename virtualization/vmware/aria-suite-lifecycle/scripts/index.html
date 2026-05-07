@@ -724,27 +724,27 @@
 
 <h1 id="aria-suite-lifecycle-scripts">Aria Suite Lifecycle Scripts<a class="headerlink" href="#aria-suite-lifecycle-scripts" title="Permanent link">&para;</a></h1>
 <p>Automation scripts for LCM target three primary use cases: pre-upgrade validation (confirming disk space, certificate validity, and product health before initiating an upgrade), certificate expiry monitoring (scanning all Locker entries and alerting when within a configurable threshold), and scheduled health checks via the LCM REST API. Scripts use the LCM API base URL <code>https://&lt;lcm-fqdn&gt;/lcm/lcmservice/api/v2</code> with Basic or token authentication.</p>
-<p><strong>Certificate expiry monitor (Bash):</strong></p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-# Usage: ./cert-expiry-check.sh &lt;lcm-fqdn&gt; &lt;username&gt; &lt;password&gt; &lt;warn-days&gt;
-LCM=$1; USER=$2; PASS=$3; WARN=${4:-30}
-TOKEN=$(curl -sk -X POST &quot;https://$LCM/lcm/authz/api/v2/login&quot; \
-  -H 'Content-Type: application/json' \
-  -d &quot;{\&quot;username\&quot;:\&quot;$USER\&quot;,\&quot;password\&quot;:\&quot;$PASS\&quot;}&quot; | jq -r '.token')
-curl -sk -H &quot;x-xenon-auth-token: $TOKEN&quot; \
-  &quot;https://$LCM/lcm/locker/api/v2/certificates&quot; | \
-  jq --argjson w &quot;$WARN&quot; \
-  '.certificates[] | select((.daysToExpiry|tonumber) &lt;= $w) | &quot;\(.alias): \(.daysToExpiry) days&quot;'
-</code></pre>
-<p><strong>Pre-upgrade disk check (Bash):</strong></p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-# Run on LCM appliance as root before any upgrade
-for mount in / /data /tmp; do
-  used=$(df -h &quot;$mount&quot; | awk 'NR==2{print $5}' | tr -d '%')
-  echo &quot;$mount: ${used}% used&quot;
-  [[ $used -ge 80 ]] &amp;&amp; echo &quot;  WARNING: $mount exceeds 80% — free space before upgrading&quot;
-done
-</code></pre>
+<p><strong>Certificate expiry monitor (Bash):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Usage: ./cert-expiry-check.sh &lt;lcm-fqdn&gt; &lt;username&gt; &lt;password&gt; &lt;warn-days&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">LCM</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span><span class="p">;</span><span class="w"> </span><span class="nv">WARN</span><span class="o">=</span><span class="si">${</span><span class="nv">4</span><span class="k">:-</span><span class="nv">30</span><span class="si">}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>jq<span class="w"> </span>--argjson<span class="w"> </span>w<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WARN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="s1">&#39;.certificates[] | select((.daysToExpiry|tonumber) &lt;= $w) | &quot;\(.alias): \(.daysToExpiry) days&quot;&#39;</span>
+</code></pre></div></p>
+<p><strong>Pre-upgrade disk check (Bash):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run on LCM appliance as root before any upgrade</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">for</span><span class="w"> </span>mount<span class="w"> </span><span class="k">in</span><span class="w"> </span>/<span class="w"> </span>/data<span class="w"> </span>/tmp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nv">used</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">: </span><span class="si">${</span><span class="nv">used</span><span class="si">}</span><span class="s2">% used&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="nv">$used</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  WARNING: </span><span class="nv">$mount</span><span class="s2"> exceeds 80% — free space before upgrading&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">done</span>
+</code></pre></div></p>
 
 
 

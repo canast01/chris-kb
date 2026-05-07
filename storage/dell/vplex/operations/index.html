@@ -802,16 +802,52 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<p>Run these vplexcli checks each morning to confirm cluster health, director status, distributed device sync, and Witness connectivity.</p>
-<ul>
-<li>[ ] Check cluster health indications: <code>ll /clusters/*/health-indications/</code> — all health-indications should show <code>health-state: ok</code>; investigate any cluster showing a non-ok state</li>
-<li>[ ] Check distributed device health: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — all distributed devices should show <code>health-state: ok</code> and <code>rebuild-allowed: true</code>; an <code>out-of-sync</code> device requires immediate attention</li>
-<li>[ ] Check director hardware health: <code>ll /engines/*/directors/*/hardware/</code> — all directors should show healthy component states; a faulted director reduces redundancy and must be escalated</li>
-<li>[ ] Verify Witness connectivity for Metro deployments: <code>ll /metro-node/*/witness/</code> — Witness should show <code>connected: true</code> and <code>reachable: true</code>; loss of Witness connectivity risks I/O suspension on a subsequent site failure</li>
-<li>[ ] Check consistency group state: <code>ll /distributed-storage/consistency-groups/</code> — all groups should show <code>operational-status: ok</code></li>
-<li>[ ] Verify storage views are intact for all hosts: <code>ll /clusters/*/exports/storage-views/</code> — confirm the expected number of storage views and initiator-to-port mappings</li>
-<li>[ ] Review any active alerts in Unisphere for VPLEX or from email/SNMP notifications for alerts generated overnight</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Check cluster health indications</td>
+<td><code>ll /clusters/*/health-indications/</code></td>
+<td>all health-indications should show <code>health-state: ok</code>; investigate any cluster showing a non-ok state</td>
+</tr>
+<tr>
+<td>[ ] Check distributed device health</td>
+<td><code>ll /distributed-storage/distributed-devices/*/health-indications/</code></td>
+<td>all distributed devices should show <code>health-state: ok</code> and <code>rebuild-allowed: true</code>; an <code>out-of-sync</code> device requires immediate attention</td>
+</tr>
+<tr>
+<td>[ ] Check director hardware health</td>
+<td><code>ll /engines/*/directors/*/hardware/</code></td>
+<td>all directors should show healthy component states; a faulted director reduces redundancy and must be escalated</td>
+</tr>
+<tr>
+<td>[ ] Verify Witness connectivity for Metro deployments</td>
+<td><code>ll /metro-node/*/witness/</code></td>
+<td>Witness should show <code>connected: true</code> and <code>reachable: true</code>; loss of Witness connectivity risks I/O suspension on a subsequent site failure</td>
+</tr>
+<tr>
+<td>[ ] Check consistency group state</td>
+<td><code>ll /distributed-storage/consistency-groups/</code></td>
+<td>all groups should show <code>operational-status: ok</code></td>
+</tr>
+<tr>
+<td>[ ] Verify storage views are intact for all hosts</td>
+<td><code>ll /clusters/*/exports/storage-views/</code></td>
+<td>confirm the expected number of storage views and initiator-to-port mappings</td>
+</tr>
+<tr>
+<td>[ ] Review any active alerts in Unisphere for VPLEX or from email/SNMP</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <p>Run these checks before any VPLEX maintenance or as first-response steps when a host reports I/O issues.</p>
 <ul>
@@ -824,30 +860,30 @@
 <li>[ ] <code>health-check --full</code> — system-level health check returns no warnings or errors</li>
 <li>[ ] ICL (inter-cluster link) latency between Metro sites is within the expected sub-10ms threshold</li>
 </ul>
-<pre><code class="language-bash"># Check cluster-level health indications
-ll /clusters/*/health-indications/
-
-# Check all distributed device health states
-ll /distributed-storage/distributed-devices/*/health-indications/
-
-# Check director hardware health across all engines
-ll /engines/*/directors/*/hardware/
-
-# Check Witness connectivity (Metro deployments)
-ll /metro-node/*/witness/
-
-# Check consistency group operational status
-ll /distributed-storage/consistency-groups/
-
-# List all storage views and their initiator-to-port bindings
-ll /clusters/*/exports/storage-views/
-
-# Run a full system health check
-health-check --full
-
-# Show cluster hardware inventory
-ll /clusters/*/hardware/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check cluster-level health indications</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ll<span class="w"> </span>/clusters/*/health-indications/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check all distributed device health states</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ll<span class="w"> </span>/distributed-storage/distributed-devices/*/health-indications/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check director hardware health across all engines</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ll<span class="w"> </span>/engines/*/directors/*/hardware/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check Witness connectivity (Metro deployments)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ll<span class="w"> </span>/metro-node/*/witness/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check consistency group operational status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ll<span class="w"> </span>/distributed-storage/consistency-groups/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all storage views and their initiator-to-port bindings</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ll<span class="w"> </span>/clusters/*/exports/storage-views/
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Run a full system health check</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>health-check<span class="w"> </span>--full
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show cluster hardware inventory</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>ll<span class="w"> </span>/clusters/*/hardware/
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <p>Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.</p>
 <ul>

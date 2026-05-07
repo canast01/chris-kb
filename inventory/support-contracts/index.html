@@ -894,16 +894,16 @@
 </table>
 <h2 id="expiry-monitoring">Expiry Monitoring<a class="headerlink" href="#expiry-monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="contracts-expiring-within-90-days">Contracts Expiring Within 90 Days<a class="headerlink" href="#contracts-expiring-within-90-days" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Query contract CSV for near-expiry items
-# Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier
-awk -F',' 'NR&gt;1 {
-  cmd = &quot;date -d \&quot;&quot; $4 &quot;\&quot; +%s&quot;
-  cmd | getline expiry; close(cmd)
-  days = int((expiry - systime()) / 86400)
-  if (days &lt; 90 &amp;&amp; days &gt;= 0) printf &quot;EXPIRING: %s | %s | %d days | Owner: %s\n&quot;, $1, $2, days, $5
-  if (days &lt; 0) printf &quot;EXPIRED: %s | %s | %d days ago | Owner: %s\n&quot;, $1, $2, -days, $5
-}' support-contracts.csv
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Query contract CSV for near-expiry items</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 {</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s1">  cmd = &quot;date -d \&quot;&quot; $4 &quot;\&quot; +%s&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s1">  cmd | getline expiry; close(cmd)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">  days = int((expiry - systime()) / 86400)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">  if (days &lt; 90 &amp;&amp; days &gt;= 0) printf &quot;EXPIRING: %s | %s | %d days | Owner: %s\n&quot;, $1, $2, days, $5</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">  if (days &lt; 0) printf &quot;EXPIRED: %s | %s | %d days ago | Owner: %s\n&quot;, $1, $2, -days, $5</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">}&#39;</span><span class="w"> </span>support-contracts.csv
+</code></pre></div>
 <h2 id="support-tier-reference">Support Tier Reference<a class="headerlink" href="#support-tier-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -942,41 +942,41 @@ awk -F',' 'NR&gt;1 {
 </tbody>
 </table>
 <h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Generic: note the following before calling/opening a ticket:
-# - Contract number / serial number
-# - Product version and build
-# - Affected hostname(s) and IPs
-# - Symptoms: what is failing and since when
-# - Logs: collect before calling (see platform-specific runbooks)
-
-# NetApp — collect AutoSupport bundle
-system node autosupport invoke -type all -message &quot;Opening case XXXXX&quot;
-
-# VMware — collect vm-support bundle
-vm-support -w /tmp -b
-
-# Cisco TAC — collect 'show tech-support' output
-# (varies by device — run before opening case)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generic: note the following before calling/opening a ticket:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># - Contract number / serial number</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># - Product version and build</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># - Affected hostname(s) and IPs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># - Symptoms: what is failing and since when</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># - Logs: collect before calling (see platform-specific runbooks)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># NetApp — collect AutoSupport bundle</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Opening case XXXXX&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># VMware — collect vm-support bundle</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp<span class="w"> </span>-b
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Cisco TAC — collect &#39;show tech-support&#39; output</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># (varies by device — run before opening case)</span>
+</code></pre></div>
 <h2 id="warranty-support-status-checks">Warranty / Support Status Checks<a class="headerlink" href="#warranty-support-status-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Dell hardware — using Dell TechDirect API or iDRAC
-racadm getsvctag   # get service tag from iDRAC
-
-# Check warranty on Dell support site (requires service tag)
-curl -s &quot;https://apidirect.dell.com/Contracts/v2/contracts?servicetag=&lt;tag&gt;&quot; \
-  -H &quot;X-BAPI-Key: &lt;api-key&gt;&quot; | jq '.contracts[] | {entitlement:.entitlementType,end:.endDate}'
-
-# HPE iLO — show contract info
-# HPSUM or OneView shows warranty; or use:
-# curl https://warranty.hpe.com/CountryLanguageStore/wc/country/&lt;country&gt;/language/EN/contract/serial/&lt;serial&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Dell hardware — using Dell TechDirect API or iDRAC</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span>getsvctag<span class="w">   </span><span class="c1"># get service tag from iDRAC</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check warranty on Dell support site (requires service tag)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://apidirect.dell.com/Contracts/v2/contracts?servicetag=&lt;tag&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-BAPI-Key: &lt;api-key&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.contracts[] | {entitlement:.entitlementType,end:.endDate}&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># HPE iLO — show contract info</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># HPSUM or OneView shows warranty; or use:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># curl https://warranty.hpe.com/CountryLanguageStore/wc/country/&lt;country&gt;/language/EN/contract/serial/&lt;serial&gt;</span>
+</code></pre></div>
 <h2 id="renewal-process">Renewal Process<a class="headerlink" href="#renewal-process" title="Permanent link">&para;</a></h2>
-<pre><code>120 days out → Identify contracts expiring &lt; 90 days; review scope (add/remove CIs)
-90 days out  → Request renewal quote from vendor; route to procurement
-60 days out  → Quote approved by management; PO raised
-30 days out  → PO submitted to vendor; confirmation received
-Day 0        → New contract active; update contract register; confirm portal access
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>120 days out → Identify contracts expiring &lt; 90 days; review scope (add/remove CIs)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>90 days out  → Request renewal quote from vendor; route to procurement
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>60 days out  → Quote approved by management; PO raised
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>30 days out  → PO submitted to vendor; confirmation received
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Day 0        → New contract active; update contract register; confirm portal access
+</code></pre></div>
 <h2 id="support-contract-checklist">Support Contract Checklist<a class="headerlink" href="#support-contract-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All production systems have active support coverage</li>

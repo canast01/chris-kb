@@ -812,62 +812,71 @@
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
 <p>MTrees are logical partitions of the Data Domain filesystem. Each MTree has its own quota, replication, and retention settings. All backup data lives under <code>/data/col1/</code>.</p>
+<pre class="mermaid"><code>flowchart LR
+    Units["Units)"]
+    Units --&gt; S0["List and View MTrees"]
+    Units --&gt; S1["Create and Delete"]
+    Units --&gt; S2["Quotas"]
+    Units --&gt; S3["MTree Retention Lock (Compliance / Enterprise)"]
+    Units --&gt; S4["MTree Replication"]
+    Units --&gt; S5["Capacity Summary"]
+    Units --&gt; S6["Common Operations Table"]</code></pre>
 <h2 id="list-and-view-mtrees">List and View MTrees<a class="headerlink" href="#list-and-view-mtrees" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all MTrees
-mtree list
-
-# Detail for a specific MTree
-mtree show /data/col1/&lt;mtree_name&gt;
-
-# All MTrees with usage stats
-mtree list --verbose
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all MTrees</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mtree<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detail for a specific MTree</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mtree<span class="w"> </span>show<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All MTrees with usage stats</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose
+</code></pre></div>
 <h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create an MTree
-mtree create /data/col1/&lt;mtree_name&gt;
-
-# Delete an MTree (must be empty or use force)
-mtree delete /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an MTree</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mtree<span class="w"> </span>create<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Delete an MTree (must be empty or use force)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mtree<span class="w"> </span>delete<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="quotas">Quotas<a class="headerlink" href="#quotas" title="Permanent link">&para;</a></h2>
 <p>Quotas limit MTree disk usage and prevent one tenant from consuming all space:</p>
-<pre><code class="language-bash"># View current quotas
-mtree quota show
-
-# Set hard limit (backup fails when limit is reached)
-mtree quota set hard-limit 10 TiB /data/col1/&lt;mtree_name&gt;
-
-# Set soft limit (alert raised when exceeded)
-mtree quota set soft-limit 8 TiB /data/col1/&lt;mtree_name&gt;
-
-# Remove a quota
-mtree quota reset /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current quotas</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set hard limit (backup fails when limit is reached)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span><span class="m">10</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set soft limit (alert raised when exceeded)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>soft-limit<span class="w"> </span><span class="m">8</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Remove a quota</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>mtree<span class="w"> </span>quota<span class="w"> </span>reset<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="mtree-retention-lock-compliance-enterprise">MTree Retention Lock (Compliance / Enterprise)<a class="headerlink" href="#mtree-retention-lock-compliance-enterprise" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable retention lock on an MTree
-mtree retention-lock enable mode enterprise /data/col1/&lt;mtree_name&gt;
-
-# Set minimum/maximum retention period
-mtree retention-lock set min-retention-period 30days /data/col1/&lt;mtree_name&gt;
-mtree retention-lock set max-retention-period 7years /data/col1/&lt;mtree_name&gt;
-
-# View retention lock settings
-mtree retention-lock status /data/col1/&lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable retention lock on an MTree</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mode<span class="w"> </span>enterprise<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set minimum/maximum retention period</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-retention-period<span class="w"> </span>30days<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-retention-period<span class="w"> </span>7years<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># View retention lock settings</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span>status<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="mtree-replication">MTree Replication<a class="headerlink" href="#mtree-replication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add an MTree as a replication source (see replication CLI ref for full setup)
-replication add source mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt; destination mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
-
-# View replication contexts for this MTree
-replication show all | grep &lt;mtree_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add an MTree as a replication source (see replication CLI ref for full setup)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>mtree://&lt;src_host&gt;/data/col1/&lt;mtree_name&gt;<span class="w"> </span>destination<span class="w"> </span>mtree://&lt;dst_host&gt;/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View replication contexts for this MTree</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+</code></pre></div>
 <h2 id="capacity-summary">Capacity Summary<a class="headerlink" href="#capacity-summary" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Space used by each MTree
-mtree list --verbose | grep -E &quot;name|pre-comp|post-comp|quota&quot;
-
-# Compare pre-compression vs post-compression (dedup savings)
-filesys show compression | grep -A5 &quot;mtree&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Space used by each MTree</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;name|pre-comp|post-comp|quota&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Compare pre-compression vs post-compression (dedup savings)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;mtree&quot;</span>
+</code></pre></div>
 <h2 id="common-operations-table">Common Operations Table<a class="headerlink" href="#common-operations-table" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

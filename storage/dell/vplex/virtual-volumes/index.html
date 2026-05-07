@@ -799,62 +799,62 @@
 <h1 id="vplex-virtual-volumes">VPLEX Virtual Volumes<a class="headerlink" href="#vplex-virtual-volumes" title="Permanent link">&para;</a></h1>
 <p>Virtual volumes are the logical storage objects presented to hosts via VPLEX. They are built on top of storage volumes from back-end arrays.</p>
 <h2 id="list-virtual-volumes">List Virtual Volumes<a class="headerlink" href="#list-virtual-volumes" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/virtual-volumes/
-
-# Detailed view of a specific volume
-VPlexcli:/&gt; ll /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/virtual-volumes/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Detailed view of a specific volume</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;/
+</code></pre></div>
 <p>Key attributes:
 - <code>operational-status</code> — should be <code>ok</code>
 - <code>capacity</code> — size of the volume
 - <code>supporting-device</code> — the underlying storage device
 - <code>visibility</code> — which initiators/hosts can see this volume</p>
 <h2 id="create-a-virtual-volume">Create a Virtual Volume<a class="headerlink" href="#create-a-virtual-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># First, claim the back-end storage volume as an extent
-VPlexcli:/&gt; storage-volume claim \
-    --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/&lt;sv_name&gt;
-
-# Create a device from the extent
-VPlexcli:/&gt; device create \
-    --device-name &lt;device_name&gt; \
-    --extent /clusters/cluster-1/storage-elements/extents/&lt;extent_name&gt;
-
-# Create the virtual volume
-VPlexcli:/&gt; virtual-volume create \
-    --volume-name &lt;vol_name&gt; \
-    --device /clusters/cluster-1/devices/&lt;device_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># First, claim the back-end storage volume as an extent</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VPlexcli:/&gt;<span class="w"> </span>storage-volume<span class="w"> </span>claim<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--storage-volume<span class="w"> </span>/clusters/cluster-1/storage-elements/storage-volumes/&lt;sv_name&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create a device from the extent</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--device-name<span class="w"> </span>&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--extent<span class="w"> </span>/clusters/cluster-1/storage-elements/extents/&lt;extent_name&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Create the virtual volume</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>VPlexcli:/&gt;<span class="w"> </span>virtual-volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>--volume-name<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--device<span class="w"> </span>/clusters/cluster-1/devices/&lt;device_name&gt;
+</code></pre></div>
 <h2 id="register-virtual-volume-to-initiator-masking">Register Virtual Volume to Initiator (Masking)<a class="headerlink" href="#register-virtual-volume-to-initiator-masking" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; initiator-port register \
-    --port-wwn &lt;host_wwn&gt; \
-    --cluster cluster-1
-
-VPlexcli:/&gt; storage-view create \
-    --name &lt;view_name&gt; \
-    --cluster cluster-1
-
-VPlexcli:/&gt; storage-view add-initiator-port \
-    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
-    --port-wwn &lt;host_wwn&gt;
-
-VPlexcli:/&gt; storage-view add-virtual-volume \
-    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
-    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VPlexcli:/&gt;<span class="w"> </span>initiator-port<span class="w"> </span>register<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--port-wwn<span class="w"> </span>&lt;host_wwn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--cluster<span class="w"> </span>cluster-1
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>VPlexcli:/&gt;<span class="w"> </span>storage-view<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--name<span class="w"> </span>&lt;view_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--cluster<span class="w"> </span>cluster-1
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>VPlexcli:/&gt;<span class="w"> </span>storage-view<span class="w"> </span>add-initiator-port<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--storage-view<span class="w"> </span>/clusters/cluster-1/exports/storage-views/&lt;view_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--port-wwn<span class="w"> </span>&lt;host_wwn&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>VPlexcli:/&gt;<span class="w"> </span>storage-view<span class="w"> </span>add-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--storage-view<span class="w"> </span>/clusters/cluster-1/exports/storage-views/&lt;view_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="unregister-delete-virtual-volume">Unregister / Delete Virtual Volume<a class="headerlink" href="#unregister-delete-virtual-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Remove from storage view first
-VPlexcli:/&gt; storage-view remove-virtual-volume \
-    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
-    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
-
-# Destroy the virtual volume
-VPlexcli:/&gt; virtual-volume destroy \
-    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove from storage view first</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>VPlexcli:/&gt;<span class="w"> </span>storage-view<span class="w"> </span>remove-virtual-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--storage-view<span class="w"> </span>/clusters/cluster-1/exports/storage-views/&lt;view_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Destroy the virtual volume</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>VPlexcli:/&gt;<span class="w"> </span>virtual-volume<span class="w"> </span>destroy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--virtual-volume<span class="w"> </span>/clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="check-volume-visibility">Check Volume Visibility<a class="headerlink" href="#check-volume-visibility" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/exports/storage-views/
-VPlexcli:/&gt; ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/exports/storage-views/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

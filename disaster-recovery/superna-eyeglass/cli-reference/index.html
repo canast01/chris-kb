@@ -798,95 +798,103 @@
 
 <h1 id="superna-eyeglass-cli-reference">Superna Eyeglass CLI Reference<a class="headerlink" href="#superna-eyeglass-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Eyeglass provides the <code>igls</code> CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the <code>admin</code> user.</p>
+<pre class="mermaid"><code>flowchart LR
+    Superna_Eyeglass["Superna Eyeglass"]
+    Superna_Eyeglass --&gt; S0["Appliance Status"]
+    Superna_Eyeglass --&gt; S1["Replication and Sync Status"]
+    Superna_Eyeglass --&gt; S2["Failover"]
+    Superna_Eyeglass --&gt; S3["Failback"]
+    Superna_Eyeglass --&gt; S4["OneFS SyncIQ (Supporting Commands)"]
+    Superna_Eyeglass --&gt; S5["REST API"]</code></pre>
 <hr />
 <h2 id="appliance-status">Appliance Status<a class="headerlink" href="#appliance-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show Eyeglass service status
-igls status
-
-# Show appliance version and build
-igls version
-
-# Show license status
-igls license show
-
-# Show cluster nodes (for multi-node deployments)
-igls cluster show
-
-# Show network configuration
-igls network show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show Eyeglass service status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>igls<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show appliance version and build</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>igls<span class="w"> </span>version
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show license status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>igls<span class="w"> </span>license<span class="w"> </span>show
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show cluster nodes (for multi-node deployments)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>igls<span class="w"> </span>cluster<span class="w"> </span>show
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show network configuration</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>igls<span class="w"> </span>network<span class="w"> </span>show
+</code></pre></div>
 <hr />
 <h2 id="replication-sync-status">Replication &amp; Sync Status<a class="headerlink" href="#replication-sync-status" title="Permanent link">&para;</a></h2>
 <p>Monitor SyncIQ policy replication state from Eyeglass.</p>
-<pre><code class="language-bash"># List all monitored SyncIQ policies and their status
-igls sync show
-
-# Show sync status for a specific policy
-igls sync show --policy &lt;policy_name&gt;
-
-# Force a manual sync check
-igls sync refresh
-
-# Show last replication run times
-igls sync history
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all monitored SyncIQ policies and their status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>igls<span class="w"> </span>sync<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show sync status for a specific policy</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>igls<span class="w"> </span>sync<span class="w"> </span>show<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Force a manual sync check</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>igls<span class="w"> </span>sync<span class="w"> </span>refresh
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show last replication run times</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>igls<span class="w"> </span>sync<span class="w"> </span><span class="nb">history</span>
+</code></pre></div>
 <hr />
 <h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
 <p>Eyeglass-managed failover delegates SyncIQ policy operations and DNS updates to the appliance. Run failover from the UI when possible; CLI is for automation.</p>
-<pre><code class="language-bash"># List available failover jobs
-igls failover list
-
-# Run a failover job
-igls failover run --job &lt;job_name&gt;
-
-# Check failover job status
-igls failover status --job &lt;job_name&gt;
-
-# Cancel an in-progress failover
-igls failover cancel --job &lt;job_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List available failover jobs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>igls<span class="w"> </span>failover<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run a failover job</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>igls<span class="w"> </span>failover<span class="w"> </span>run<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check failover job status</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>igls<span class="w"> </span>failover<span class="w"> </span>status<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Cancel an in-progress failover</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>igls<span class="w"> </span>failover<span class="w"> </span>cancel<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
+</code></pre></div>
 <hr />
 <h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
 <p>Failback restores the original source cluster as the active side after a failover.</p>
-<pre><code class="language-bash"># List available failback jobs
-igls failback list
-
-# Run a failback
-igls failback run --job &lt;job_name&gt;
-
-# Monitor failback progress
-igls failback status --job &lt;job_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List available failback jobs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>igls<span class="w"> </span>failback<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Run a failback</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>igls<span class="w"> </span>failback<span class="w"> </span>run<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Monitor failback progress</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>igls<span class="w"> </span>failback<span class="w"> </span>status<span class="w"> </span>--job<span class="w"> </span>&lt;job_name&gt;
+</code></pre></div>
 <hr />
 <h2 id="onefs-synciq-supporting-commands">OneFS SyncIQ (Supporting Commands)<a class="headerlink" href="#onefs-synciq-supporting-commands" title="Permanent link">&para;</a></h2>
 <p>Run these on the PowerScale/Isilon cluster to verify the underlying replication state that Eyeglass monitors.</p>
-<pre><code class="language-bash"># List all SyncIQ policies and their status
-isi sync policies list
-
-# Show detail for a policy
-isi sync policies view &lt;policy_name&gt;
-
-# List recent sync reports
-isi sync reports list
-
-# Start a manual SyncIQ sync
-isi sync policies start &lt;policy_name&gt;
-
-# Check SyncIQ service status
-isi sync settings view
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all SyncIQ policies and their status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show detail for a policy</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List recent sync reports</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Start a manual SyncIQ sync</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check SyncIQ service status</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>settings<span class="w"> </span>view
+</code></pre></div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>The Eyeglass REST API is available at <code>https://&lt;eyeglass_ip&gt;/eca/api/v1</code>.</p>
-<pre><code class="language-bash"># Authenticate
-curl -k -X POST https://&lt;eyeglass_ip&gt;/eca/api/v1/auth/login   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
-
-# List sync jobs
-curl -k -X GET https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/sync   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List failover jobs
-curl -k -X GET https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/failover   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/auth/login<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List sync jobs</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/sync<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List failover jobs</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;eyeglass_ip&gt;/eca/api/v1/jobs/failover<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 
 
 

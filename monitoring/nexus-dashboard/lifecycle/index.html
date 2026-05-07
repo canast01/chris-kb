@@ -910,67 +910,67 @@
 - NX-OS fabric switch firmware version</p>
 <p>A version mismatch between ND and its managed fabrics can result in loss of management connectivity.</p>
 <h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
-<pre><code class="language-text">1. Check the Cisco Nexus Dashboard Compatibility Matrix for target version compatibility
-2. Verify ACI APIC and NX-OS firmware are compatible with the target ND version
-3. Take a cluster backup: Admin &gt; Backup and Restore &gt; Backup Now (to SFTP/NFS)
-4. Take VM snapshots of all ND nodes (for VMware deployments)
-5. Note current cluster health: Admin &gt; Cluster Configuration — all nodes Online
-6. Download the ND upgrade image from software.cisco.com
-7. Notify network operations team — brief service interruptions may occur per node during rolling upgrade
-8. Schedule the upgrade in the change management system
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Check the Cisco Nexus Dashboard Compatibility Matrix for target version compatibility
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Verify ACI APIC and NX-OS firmware are compatible with the target ND version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Take a cluster backup: Admin &gt; Backup and Restore &gt; Backup Now (to SFTP/NFS)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Take VM snapshots of all ND nodes (for VMware deployments)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. Note current cluster health: Admin &gt; Cluster Configuration — all nodes Online
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>6. Download the ND upgrade image from software.cisco.com
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. Notify network operations team — brief service interruptions may occur per node during rolling upgrade
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>8. Schedule the upgrade in the change management system
+</code></pre></div>
 <h2 id="nd-base-platform-upgrade">ND Base Platform Upgrade<a class="headerlink" href="#nd-base-platform-upgrade" title="Permanent link">&para;</a></h2>
-<pre><code class="language-text">1. Log into Nexus Dashboard web UI
-2. Navigate to Admin &gt; System Settings &gt; Software Management
-3. Upload the upgrade image (or specify URL for direct download)
-4. ND validates the image and runs pre-upgrade checks
-5. Initiate the upgrade — ND performs a rolling node-by-node upgrade
-6. Monitor progress in Admin &gt; Cluster Configuration
-   - Each node cycles: Downloading → Upgrading → Rebooting → Online
-7. Verify all nodes return to Online status post-upgrade
-8. Verify all services (NDFC, NDI) are running: Admin &gt; App Store &gt; Installed Apps
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Log into Nexus Dashboard web UI
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Navigate to Admin &gt; System Settings &gt; Software Management
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Upload the upgrade image (or specify URL for direct download)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. ND validates the image and runs pre-upgrade checks
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. Initiate the upgrade — ND performs a rolling node-by-node upgrade
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. Monitor progress in Admin &gt; Cluster Configuration
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   - Each node cycles: Downloading → Upgrading → Rebooting → Online
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>7. Verify all nodes return to Online status post-upgrade
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>8. Verify all services (NDFC, NDI) are running: Admin &gt; App Store &gt; Installed Apps
+</code></pre></div>
 <p>Rolling upgrade typically takes 30–60 minutes per node for a 3-node cluster.</p>
 <h2 id="service-upgrade-ndfc-ndi">Service Upgrade (NDFC / NDI)<a class="headerlink" href="#service-upgrade-ndfc-ndi" title="Permanent link">&para;</a></h2>
 <p>Services are upgraded independently of the base ND platform.</p>
-<pre><code class="language-text">Admin &gt; App Store &gt; Installed Apps &gt; [NDFC or NDI] &gt; Upgrade
-- Select target version
-- Confirm pre-checks pass
-- Upgrade proceeds with brief service interruption (UI and API unavailable for 5–10 minutes)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Admin &gt; App Store &gt; Installed Apps &gt; [NDFC or NDI] &gt; Upgrade
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Select target version
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Confirm pre-checks pass
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Upgrade proceeds with brief service interruption (UI and API unavailable for 5–10 minutes)
+</code></pre></div>
 <p>Upgrade services after the base ND platform upgrade is complete and all nodes are healthy.</p>
 <h2 id="node-management">Node Management<a class="headerlink" href="#node-management" title="Permanent link">&para;</a></h2>
 <h3 id="adding-a-node">Adding a Node<a class="headerlink" href="#adding-a-node" title="Permanent link">&para;</a></h3>
 <p>Expanding from 3 to 5 nodes requires the same ND version across all nodes.</p>
-<pre><code class="language-text">Admin &gt; Cluster Configuration &gt; Add Node
-- Enter the new node's management IP and credentials
-- ND orchestrates node join and cluster rebalancing
-- Wait for the new node to reach Online status (10–20 minutes)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; Cluster Configuration &gt; Add Node
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Enter the new node&#39;s management IP and credentials
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- ND orchestrates node join and cluster rebalancing
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Wait for the new node to reach Online status (10–20 minutes)
+</code></pre></div>
 <h3 id="replacing-a-failed-node">Replacing a Failed Node<a class="headerlink" href="#replacing-a-failed-node" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">1. Remove the failed node: Admin &gt; Cluster Configuration &gt; [Node] &gt; Delete
-2. Deploy a new ND node (OVA or physical) with identical network configuration
-3. Join the new node: Admin &gt; Cluster Configuration &gt; Add Node
-4. Verify cluster returns to full quorum
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Remove the failed node: Admin &gt; Cluster Configuration &gt; [Node] &gt; Delete
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Deploy a new ND node (OVA or physical) with identical network configuration
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Join the new node: Admin &gt; Cluster Configuration &gt; Add Node
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Verify cluster returns to full quorum
+</code></pre></div>
 <h2 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">&para;</a></h2>
 <h3 id="automated-backup-schedule">Automated Backup Schedule<a class="headerlink" href="#automated-backup-schedule" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">Admin &gt; Backup and Restore &gt; Scheduled Backup
-- Destination: SFTP (sftp://&lt;backup-host&gt;/nexus-dashboard/)
-- Schedule: weekly, Sunday 02:00
-- Retention: keep 4 most recent
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Admin &gt; Backup and Restore &gt; Scheduled Backup
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- Destination: SFTP (sftp://&lt;backup-host&gt;/nexus-dashboard/)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- Schedule: weekly, Sunday 02:00
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- Retention: keep 4 most recent
+</code></pre></div>
 <h3 id="manual-backup">Manual Backup<a class="headerlink" href="#manual-backup" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">Admin &gt; Backup and Restore &gt; Backup Now
-- Backs up: cluster configuration, NDFC policies, NDI baselines, user accounts
-- Note: does not back up NDI telemetry history (that data is ephemeral)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Admin &gt; Backup and Restore &gt; Backup Now
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>- Backs up: cluster configuration, NDFC policies, NDI baselines, user accounts
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>- Note: does not back up NDI telemetry history (that data is ephemeral)
+</code></pre></div>
 <h3 id="restore">Restore<a class="headerlink" href="#restore" title="Permanent link">&para;</a></h3>
-<pre><code class="language-text">Admin &gt; Backup and Restore &gt; Restore
-- Upload backup file
-- Select what to restore (full cluster or specific services)
-- Confirm — cluster will be restored to the backup state
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Admin &gt; Backup and Restore &gt; Restore
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>- Upload backup file
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>- Select what to restore (full cluster or specific services)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>- Confirm — cluster will be restored to the backup state
+</code></pre></div>
 <h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Cisco EOL/EOS notices: <a href="https://cisco.com/go/eos">cisco.com/go/eos</a></li>

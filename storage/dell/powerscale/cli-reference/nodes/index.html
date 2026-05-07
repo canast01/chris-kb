@@ -811,29 +811,38 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Nodes["Nodes"]
+    Nodes --&gt; S0["Node List and Status"]
+    Nodes --&gt; S1["Node Hardware"]
+    Nodes --&gt; S2["Disk States"]
+    Nodes --&gt; S3["Smartfailing a Drive"]
+    Nodes --&gt; S4["Smartfailing a Node"]
+    Nodes --&gt; S5["Node Network"]
+    Nodes --&gt; S6["Node Performance"]</code></pre>
 <h2 id="node-list-and-status">Node List and Status<a class="headerlink" href="#node-list-and-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all nodes
-isi node list
-
-# Specific node detail (state, IP, version)
-isi node view &lt;node_id&gt;
-
-# Node status overlay on the cluster status
-isi status -n &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all nodes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Specific node detail (state, IP, version)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>node<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Node status overlay on the cluster status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h2 id="node-hardware">Node Hardware<a class="headerlink" href="#node-hardware" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Hardware details (model, CPU, RAM, NIC, HBA)
-isi node hardware view &lt;node_id&gt;
-
-# Drive bays and disk states
-isi node drives list &lt;node_id&gt;
-
-# Specific bay
-isi node drives view &lt;node_id&gt; &lt;bay&gt;
-
-# Environmental sensors (temperature, fans, power supplies)
-isi node sensors view &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Hardware details (model, CPU, RAM, NIC, HBA)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>node<span class="w"> </span>hardware<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Drive bays and disk states</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>node<span class="w"> </span>drives<span class="w"> </span>list<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Specific bay</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>node<span class="w"> </span>drives<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span>&lt;bay&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Environmental sensors (temperature, fans, power supplies)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>node<span class="w"> </span>sensors<span class="w"> </span>view<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h2 id="disk-states">Disk States<a class="headerlink" href="#disk-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -872,42 +881,42 @@ isi node sensors view &lt;node_id&gt;
 </tbody>
 </table>
 <h2 id="smartfailing-a-drive">Smartfailing a Drive<a class="headerlink" href="#smartfailing-a-drive" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Mark a drive for evacuation (data moves to remaining drives)
-isi devices drive smartfail -d &lt;node_id&gt; -b &lt;bay_id&gt;
-
-# Monitor FlexProtect rebuild after drive removal
-isi job jobs list | grep FlexProtect
-isi status -n &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Mark a drive for evacuation (data moves to remaining drives)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>smartfail<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span>-b<span class="w"> </span>&lt;bay_id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor FlexProtect rebuild after drive removal</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FlexProtect
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h2 id="smartfailing-a-node">Smartfailing a Node<a class="headerlink" href="#smartfailing-a-node" title="Permanent link">&para;</a></h2>
 <p>Smartfailing a node redistributes all data from that node before removal:</p>
-<pre><code class="language-bash"># Initiate node smartfail
-isi devices smartfail -d &lt;node_id&gt;
-
-# Monitor progress
-isi status | grep smartfail
-isi job jobs list | grep -i FlexProtect
-
-# Re-add node after replacement/repair
-isi devices add -d &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Initiate node smartfail</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>devices<span class="w"> </span>smartfail<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>smartfail
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>isi<span class="w"> </span>job<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>FlexProtect
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Re-add node after replacement/repair</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>devices<span class="w"> </span>add<span class="w"> </span>-d<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 <h2 id="node-network">Node Network<a class="headerlink" href="#node-network" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Network interfaces on a node
-isi network interfaces list --node &lt;node_id&gt;
-
-# IP pool assignments
-isi network pools list
-
-# Check node's external IPs
-isi network interfaces list --node &lt;node_id&gt; | grep ext
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Network interfaces on a node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list<span class="w"> </span>--node<span class="w"> </span>&lt;node_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># IP pool assignments</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check node&#39;s external IPs</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list<span class="w"> </span>--node<span class="w"> </span>&lt;node_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ext
+</code></pre></div>
 <h2 id="node-performance">Node Performance<a class="headerlink" href="#node-performance" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Per-node I/O statistics
-isi statistics node list
-
-# Node CPU and memory usage
-isi statistics system list --nodes &lt;node_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Per-node I/O statistics</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Node CPU and memory usage</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>statistics<span class="w"> </span>system<span class="w"> </span>list<span class="w"> </span>--nodes<span class="w"> </span>&lt;node_id&gt;
+</code></pre></div>
 
 
 

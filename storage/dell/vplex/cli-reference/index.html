@@ -811,6 +811,15 @@
 <blockquote>
 <p>Part of the <a href="../">VPLEX</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    vplexcli["(vplexcli)"]
+    vplexcli --&gt; S0["Quick-Reference Command Table"]
+    vplexcli --&gt; S1["Cluster and Director Status"]
+    vplexcli --&gt; S2["Virtual Volume Management"]
+    vplexcli --&gt; S3["Distributed Device Operations (VPLEX Metro)"]
+    vplexcli --&gt; S4["Storage Views (Host Masking)"]
+    vplexcli --&gt; S5["Data Migration"]
+    vplexcli --&gt; S6["Logs and Diagnostics"]</code></pre>
 <hr />
 <p><code>vplexcli</code> is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with <code>vplexcli</code>. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g. <code>/clusters/cluster-1/</code>) and <code>ll</code> (list-long) is the standard inspection command.</p>
 <blockquote>
@@ -866,36 +875,36 @@
 </table>
 <hr />
 <h2 id="cluster-and-director-status">Cluster and Director Status<a class="headerlink" href="#cluster-and-director-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Launch vplexcli interactively
-ssh service@&lt;VMS_IP&gt;
-vplexcli
-
-# --- One-shot equivalents (use in scripts) ---
-
-# List all clusters
-vplexcli -q -e &quot;ls /clusters&quot;
-
-# Show cluster-1 health indications
-vplexcli -q -e &quot;ll /clusters/cluster-1/health-indications/&quot;
-
-# Full system health check
-vplexcli -q -e &quot;health-check&quot;
-
-# List all engines (physical chassis)
-vplexcli -q -e &quot;ls /engines&quot;
-
-# Show all directors across all engines
-vplexcli -q -e &quot;ll /engines/*/directors/&quot;
-
-# Show a specific director's hardware status
-vplexcli -q -e &quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/&quot;
-
-# List director front-end (FE) ports
-vplexcli -q -e &quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;
-
-# Check inter-cluster link (ICL) status (Metro)
-vplexcli -q -e &quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Launch vplexcli interactively</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>service@&lt;VMS_IP&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vplexcli
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># --- One-shot equivalents (use in scripts) ---</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all clusters</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show cluster-1 health indications</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/health-indications/&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Full system health check</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;health-check&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all engines (physical chassis)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /engines&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show all directors across all engines</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show a specific director&#39;s hardware status</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># List director front-end (FE) ports</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Check inter-cluster link (ICL) status (Metro)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+</code></pre></div>
 <p><strong>Key health-indication values:</strong></p>
 <table>
 <thead>
@@ -926,93 +935,93 @@ vplexcli -q -e &quot;ll /clusters/cluster-1/communication/inter-cluster-links/&q
 <hr />
 <h2 id="virtual-volume-management">Virtual Volume Management<a class="headerlink" href="#virtual-volume-management" title="Permanent link">&para;</a></h2>
 <p>Virtual volumes are the objects presented to hosts. They are built on top of extents → local devices → virtual volumes.</p>
-<pre><code class="language-bash"># --- Navigate the virtual volumes context interactively ---
-cd /virtual-volumes
-ls
-
-# --- List all virtual volumes (one-shot) ---
-vplexcli -q -e &quot;ls /virtual-volumes&quot;
-
-# Show detailed attributes of a specific virtual volume
-vplexcli -q -e &quot;ll /virtual-volumes/my_app_vol_1/&quot;
-
-# List virtual volumes with health state
-vplexcli -q -e &quot;ll /virtual-volumes/*/health-indications/&quot;
-
-# --- Create a new virtual volume ---
-# Step 1: Claim a back-end storage volume as a VPLEX storage volume
-vplexcli -q -e &quot;storage-volume claim --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;
-
-# Step 2: Create an extent from the storage volume
-vplexcli -q -e &quot;extent create --name ext_app_001 --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;
-
-# Step 3: Create a local device from the extent
-vplexcli -q -e &quot;local-device create --name dev_app_001 --geometry raid-0 --extents /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;
-
-# Step 4: Create a virtual volume from the local device
-vplexcli -q -e &quot;virtual-volume create --name my_app_vol_1 --local-device /clusters/cluster-1/devices/dev_app_001&quot;
-
-# --- Expand a virtual volume ---
-# First expand the back-end LUN on the array, then:
-vplexcli -q -e &quot;storage-volume rediscover --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;
-vplexcli -q -e &quot;extent expand --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;
-vplexcli -q -e &quot;virtual-volume expand --virtual-volume /virtual-volumes/my_app_vol_1&quot;
-
-# --- Delete a virtual volume ---
-# Remove from storage view first (see Storage Views section), then:
-vplexcli -q -e &quot;virtual-volume destroy --virtual-volume /virtual-volumes/my_app_vol_1 --force&quot;
-vplexcli -q -e &quot;local-device destroy --local-device /clusters/cluster-1/devices/dev_app_001&quot;
-vplexcli -q -e &quot;extent destroy --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;
-vplexcli -q -e &quot;storage-volume unclaim --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># --- Navigate the virtual volumes context interactively ---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>/virtual-volumes
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ls
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># --- List all virtual volumes (one-shot) ---</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /virtual-volumes&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Show detailed attributes of a specific virtual volume</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /virtual-volumes/my_app_vol_1/&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># List virtual volumes with health state</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /virtual-volumes/*/health-indications/&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># --- Create a new virtual volume ---</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Step 1: Claim a back-end storage volume as a VPLEX storage volume</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume claim --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Step 2: Create an extent from the storage volume</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;extent create --name ext_app_001 --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Step 3: Create a local device from the extent</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;local-device create --name dev_app_001 --geometry raid-0 --extents /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Step 4: Create a virtual volume from the local device</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume create --name my_app_vol_1 --local-device /clusters/cluster-1/devices/dev_app_001&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># --- Expand a virtual volume ---</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># First expand the back-end LUN on the array, then:</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume rediscover --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;extent expand --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume expand --virtual-volume /virtual-volumes/my_app_vol_1&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># --- Delete a virtual volume ---</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># Remove from storage view first (see Storage Views section), then:</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume destroy --virtual-volume /virtual-volumes/my_app_vol_1 --force&quot;</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;local-device destroy --local-device /clusters/cluster-1/devices/dev_app_001&quot;</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;extent destroy --extent /clusters/cluster-1/storage-elements/extents/ext_app_001&quot;</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume unclaim --storage-volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="distributed-device-operations-vplex-metro">Distributed Device Operations (VPLEX Metro)<a class="headerlink" href="#distributed-device-operations-vplex-metro" title="Permanent link">&para;</a></h2>
 <p>Distributed devices span two clusters and provide Metro active-active access. Consistency groups ensure write-order fidelity.</p>
-<pre><code class="language-bash"># List all distributed devices
-vplexcli -q -e &quot;ls /distributed-storage/distributed-devices&quot;
-
-# Show health of all distributed devices
-vplexcli -q -e &quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;
-
-# Show sync state of a specific distributed device
-vplexcli -q -e &quot;ll /distributed-storage/distributed-devices/dist_app_vol_1/&quot;
-
-# --- Create a distributed device (Metro) ---
-# Prerequisite: local devices exist on both cluster-1 and cluster-2
-vplexcli -q -e &quot;distributed-device create \
-  --name dist_app_vol_1 \
-  --geometry raid-1 \
-  --components /clusters/cluster-1/devices/dev_app_001,/clusters/cluster-2/devices/dev_app_002&quot;
-
-# Create a virtual volume on top of the distributed device
-vplexcli -q -e &quot;virtual-volume create --name app_vol_metro_1 \
-  --distributed-device /distributed-storage/distributed-devices/dist_app_vol_1&quot;
-
-# --- Consistency groups ---
-# List all consistency groups
-vplexcli -q -e &quot;ls /distributed-storage/consistency-groups&quot;
-
-# Show consistency group details
-vplexcli -q -e &quot;ll /distributed-storage/consistency-groups/cg_app_tier/&quot;
-
-# Create a consistency group
-vplexcli -q -e &quot;consistency-group create --name cg_app_tier&quot;
-
-# Add a virtual volume to a consistency group
-vplexcli -q -e &quot;consistency-group add-virtual-volumes \
-  --consistency-group /distributed-storage/consistency-groups/cg_app_tier \
-  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;
-
-# Remove a volume from a consistency group
-vplexcli -q -e &quot;consistency-group remove-virtual-volumes \
-  --consistency-group /distributed-storage/consistency-groups/cg_app_tier \
-  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;
-
-# --- Metro node / Witness status ---
-# Check Witness connectivity
-vplexcli -q -e &quot;ll /clusters/cluster-1/cluster-witness/&quot;
-vplexcli -q -e &quot;ll /clusters/cluster-2/cluster-witness/&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all distributed devices</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /distributed-storage/distributed-devices&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show health of all distributed devices</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show sync state of a specific distributed device</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/dist_app_vol_1/&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># --- Create a distributed device (Metro) ---</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Prerequisite: local devices exist on both cluster-1 and cluster-2</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;distributed-device create \</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">  --name dist_app_vol_1 \</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">  --geometry raid-1 \</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">  --components /clusters/cluster-1/devices/dev_app_001,/clusters/cluster-2/devices/dev_app_002&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Create a virtual volume on top of the distributed device</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;virtual-volume create --name app_vol_metro_1 \</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">  --distributed-device /distributed-storage/distributed-devices/dist_app_vol_1&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># --- Consistency groups ---</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># List all consistency groups</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /distributed-storage/consistency-groups&quot;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Show consistency group details</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/cg_app_tier/&quot;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Create a consistency group</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;consistency-group create --name cg_app_tier&quot;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># Add a virtual volume to a consistency group</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;consistency-group add-virtual-volumes \</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="s2">  --consistency-group /distributed-storage/consistency-groups/cg_app_tier \</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="s2">  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="c1"># Remove a volume from a consistency group</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;consistency-group remove-virtual-volumes \</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="s2">  --consistency-group /distributed-storage/consistency-groups/cg_app_tier \</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="s2">  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="c1"># --- Metro node / Witness status ---</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="c1"># Check Witness connectivity</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+</code></pre></div>
 <p><strong>Distributed device health states:</strong></p>
 <table>
 <thead>
@@ -1043,95 +1052,95 @@ vplexcli -q -e &quot;ll /clusters/cluster-2/cluster-witness/&quot;
 <hr />
 <h2 id="storage-views-host-masking">Storage Views (Host Masking)<a class="headerlink" href="#storage-views-host-masking" title="Permanent link">&para;</a></h2>
 <p>Storage views map virtual volumes to host initiator ports via VPLEX front-end ports.</p>
-<pre><code class="language-bash"># List all storage views on cluster-1
-vplexcli -q -e &quot;ls /clusters/cluster-1/exports/storage-views&quot;
-
-# Show full details of a storage view
-vplexcli -q -e &quot;ll /clusters/cluster-1/exports/storage-views/sv_esxi_host_01/&quot;
-
-# List registered initiator ports on cluster-1
-vplexcli -q -e &quot;ls /clusters/cluster-1/exports/ports&quot;
-
-# List all initiator ports (host HBAs)
-vplexcli -q -e &quot;ls /clusters/cluster-1/exports/initiator-ports&quot;
-
-# --- Create a new storage view ---
-# Step 1: Register host initiator port (WWN)
-vplexcli -q -e &quot;initiator-port register \
-  --cluster /clusters/cluster-1 \
-  --port-wwn 10:00:00:00:c9:ab:cd:ef \
-  --name esxi_host_01_hba0&quot;
-
-# Step 2: Create the storage view
-vplexcli -q -e &quot;storage-view create \
-  --name sv_esxi_host_01 \
-  --cluster /clusters/cluster-1&quot;
-
-# Step 3: Add VPLEX front-end ports to the storage view
-vplexcli -q -e &quot;storage-view add-ports \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \
-  --ports /clusters/cluster-1/exports/ports/A0-FC00,/clusters/cluster-1/exports/ports/B0-FC00&quot;
-
-# Step 4: Add initiator ports (host HBAs) to the storage view
-vplexcli -q -e &quot;storage-view add-initiator-ports \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \
-  --initiator-ports /clusters/cluster-1/exports/initiator-ports/esxi_host_01_hba0&quot;
-
-# Step 5: Add virtual volumes to the storage view
-vplexcli -q -e &quot;storage-view add-virtual-volumes \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \
-  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;
-
-# --- Modify an existing storage view ---
-# Add a second initiator (e.g. after HBA replacement)
-vplexcli -q -e &quot;storage-view add-initiator-ports \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \
-  --initiator-ports /clusters/cluster-1/exports/initiator-ports/esxi_host_01_hba1&quot;
-
-# Remove a virtual volume from a storage view (before deleting the volume)
-vplexcli -q -e &quot;storage-view remove-virtual-volumes \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \
-  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;
-
-# Delete a storage view
-vplexcli -q -e &quot;storage-view destroy \
-  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 --force&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage views on cluster-1</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/storage-views&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show full details of a storage view</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/sv_esxi_host_01/&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List registered initiator ports on cluster-1</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/ports&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List all initiator ports (host HBAs)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/initiator-ports&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># --- Create a new storage view ---</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Step 1: Register host initiator port (WWN)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port register \</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s2">  --port-wwn 10:00:00:00:c9:ab:cd:ef \</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s2">  --name esxi_host_01_hba0&quot;</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Step 2: Create the storage view</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view create \</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s2">  --name sv_esxi_host_01 \</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s2">  --cluster /clusters/cluster-1&quot;</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Step 3: Add VPLEX front-end ports to the storage view</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-ports \</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="s2">  --ports /clusters/cluster-1/exports/ports/A0-FC00,/clusters/cluster-1/exports/ports/B0-FC00&quot;</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># Step 4: Add initiator ports (host HBAs) to the storage view</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-initiator-ports \</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="s2">  --initiator-ports /clusters/cluster-1/exports/initiator-ports/esxi_host_01_hba0&quot;</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="c1"># Step 5: Add virtual volumes to the storage view</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-virtual-volumes \</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="s2">  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="c1"># --- Modify an existing storage view ---</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="c1"># Add a second initiator (e.g. after HBA replacement)</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-initiator-ports \</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="s2">  --initiator-ports /clusters/cluster-1/exports/initiator-ports/esxi_host_01_hba1&quot;</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="c1"># Remove a virtual volume from a storage view (before deleting the volume)</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view remove-virtual-volumes \</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 \</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="s2">  --virtual-volumes /virtual-volumes/app_vol_metro_1&quot;</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="c1"># Delete a storage view</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view destroy \</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 --force&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="data-migration">Data Migration<a class="headerlink" href="#data-migration" title="Permanent link">&para;</a></h2>
 <p>VPLEX can migrate data non-disruptively between back-end arrays using the data-migration feature.</p>
-<pre><code class="language-bash"># List active migrations
-vplexcli -q -e &quot;ls /data-migrations&quot;
-
-# Show status of all migrations
-vplexcli -q -e &quot;ll /data-migrations/*/status/&quot;
-
-# --- Start a non-disruptive migration ---
-# Step 1: Claim the target (destination) storage volume
-vplexcli -q -e &quot;storage-volume claim \
-  --storage-volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001&quot;
-
-# Step 2: Create the migration job (source → target)
-vplexcli -q -e &quot;data-migration create \
-  --name mig_app_vol_1 \
-  --virtual-volume /virtual-volumes/my_app_vol_1 \
-  --target-storage-volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001&quot;
-
-# Step 3: Start the migration
-vplexcli -q -e &quot;data-migration start \
-  --migration /data-migrations/mig_app_vol_1&quot;
-
-# --- Monitor migration progress ---
-vplexcli -q -e &quot;ll /data-migrations/mig_app_vol_1/&quot;
-
-# Step 4: Commit migration (cut over to target; source released)
-vplexcli -q -e &quot;data-migration commit \
-  --migration /data-migrations/mig_app_vol_1&quot;
-
-# Step 5: Clean up the migration object
-vplexcli -q -e &quot;data-migration destroy \
-  --migration /data-migrations/mig_app_vol_1&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List active migrations</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /data-migrations&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show status of all migrations</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /data-migrations/*/status/&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># --- Start a non-disruptive migration ---</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Step 1: Claim the target (destination) storage volume</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-volume claim \</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">  --storage-volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Step 2: Create the migration job (source → target)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;data-migration create \</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">  --name mig_app_vol_1 \</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">  --virtual-volume /virtual-volumes/my_app_vol_1 \</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">  --target-storage-volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Step 3: Start the migration</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;data-migration start \</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s2">  --migration /data-migrations/mig_app_vol_1&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># --- Monitor migration progress ---</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /data-migrations/mig_app_vol_1/&quot;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Step 4: Commit migration (cut over to target; source released)</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;data-migration commit \</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="s2">  --migration /data-migrations/mig_app_vol_1&quot;</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="c1"># Step 5: Clean up the migration object</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;data-migration destroy \</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s2">  --migration /data-migrations/mig_app_vol_1&quot;</span>
+</code></pre></div>
 <p><strong>Migration status values:</strong></p>
 <table>
 <thead>
@@ -1161,37 +1170,37 @@ vplexcli -q -e &quot;data-migration destroy \
 </table>
 <hr />
 <h2 id="logs-and-diagnostics">Logs and Diagnostics<a class="headerlink" href="#logs-and-diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all engines
-vplexcli -q -e &quot;ls /engines&quot;
-
-# Show hardware inventory for all directors
-vplexcli -q -e &quot;ll /engines/*/directors/*/hardware/&quot;
-
-# Show all system alerts
-vplexcli -q -e &quot;ll /clusters/*/system-volumes/alerts/&quot;
-
-# View VPLEX management server logs (from VMS OS shell)
-ssh service@&lt;VMS_IP&gt;
-tail -f /var/log/VPlex/cli/vplexcli.log
-tail -f /var/log/VPlex/vplexmanagement.log
-
-# --- Collect support log bundle ---
-# From within vplexcli:
-collect-support-log -f /var/log/support_bundle.tar.gz
-
-# From VMS OS shell (copy to a remote host):
-scp service@&lt;VMS_IP&gt;:/var/log/support_bundle.tar.gz admin@&lt;jump_host&gt;:/tmp/
-
-# --- Show GeoSynchrony (firmware) version ---
-vplexcli -q -e &quot;ll /clusters/cluster-1/system-volumes/version/&quot;
-
-# Show back-end storage array inventory
-vplexcli -q -e &quot;ls /storage-elements/storage-arrays&quot;
-vplexcli -q -e &quot;ll /storage-elements/storage-arrays/array-A/&quot;
-
-# Check unclaimed storage volumes on a back-end array
-vplexcli -q -e &quot;ls /storage-elements/storage-arrays/array-A/storage-volumes&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all engines</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /engines&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show hardware inventory for all directors</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show all system alerts</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/system-volumes/alerts/&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># View VPLEX management server logs (from VMS OS shell)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ssh<span class="w"> </span>service@&lt;VMS_IP&gt;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/VPlex/cli/vplexcli.log
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/VPlex/vplexmanagement.log
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># --- Collect support log bundle ---</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># From within vplexcli:</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>collect-support-log<span class="w"> </span>-f<span class="w"> </span>/var/log/support_bundle.tar.gz
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># From VMS OS shell (copy to a remote host):</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>scp<span class="w"> </span>service@&lt;VMS_IP&gt;:/var/log/support_bundle.tar.gz<span class="w"> </span>admin@&lt;jump_host&gt;:/tmp/
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># --- Show GeoSynchrony (firmware) version ---</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/system-volumes/version/&quot;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Show back-end storage array inventory</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays&quot;</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /storage-elements/storage-arrays/array-A/&quot;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="c1"># Check unclaimed storage volumes on a back-end array</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays/array-A/storage-volumes&quot;</span>
+</code></pre></div>
 
 
 

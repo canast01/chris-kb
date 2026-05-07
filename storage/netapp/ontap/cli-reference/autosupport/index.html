@@ -801,52 +801,60 @@
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
 <p>AutoSupport is NetApp's telemetry and support system. It sends system health, configuration, and event data to NetApp support and can trigger proactive support cases.</p>
+<pre class="mermaid"><code>flowchart LR
+    AutoSupport["AutoSupport"]
+    AutoSupport --&gt; S0["View AutoSupport Status"]
+    AutoSupport --&gt; S1["Send AutoSupport Messages"]
+    AutoSupport --&gt; S2["History"]
+    AutoSupport --&gt; S3["Configuration"]
+    AutoSupport --&gt; S4["AutoSupport Delivery Methods"]
+    AutoSupport --&gt; S5["Active IQ and AutoSupport"]</code></pre>
 <h2 id="view-autosupport-status">View AutoSupport Status<a class="headerlink" href="#view-autosupport-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># AutoSupport configuration and status
-autosupport show
-
-# Per-node view
-autosupport show -node &lt;node&gt;
-
-# Delivery status (whether messages are reaching NetApp)
-autosupport show -fields last-subject-sent, last-successful-destination
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># AutoSupport configuration and status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>autosupport<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Per-node view</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Delivery status (whether messages are reaching NetApp)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>last-subject-sent,<span class="w"> </span>last-successful-destination
+</code></pre></div>
 <h2 id="send-autosupport-messages">Send AutoSupport Messages<a class="headerlink" href="#send-autosupport-messages" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Test AutoSupport delivery (sends a test message)
-autosupport invoke -node &lt;node&gt; -type test
-
-# Send full AutoSupport bundle (for TAC cases)
-autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual upload for case SR-XXXXX&quot;
-
-# Send specific subsystem data
-autosupport invoke -node &lt;node&gt; -type test -subsystem storage
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test AutoSupport delivery (sends a test message)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Send full AutoSupport bundle (for TAC cases)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;Manual upload for case SR-XXXXX&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Send specific subsystem data</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-type<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-subsystem<span class="w"> </span>storage
+</code></pre></div>
 <h2 id="history">History<a class="headerlink" href="#history" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># AutoSupport message history
-autosupport history show
-
-# Per-node history
-autosupport history show -node &lt;node&gt;
-
-# History with delivery status
-autosupport history show -fields seq-num, status, triggered-time, destination
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># AutoSupport message history</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Per-node history</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># History with delivery status</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>seq-num,<span class="w"> </span>status,<span class="w"> </span>triggered-time,<span class="w"> </span>destination
+</code></pre></div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable AutoSupport
-autosupport modify -node &lt;node&gt; -state enable
-
-# Disable AutoSupport (not recommended except for offline systems)
-autosupport modify -node &lt;node&gt; -state disable
-
-# Set SMTP relay
-autosupport modify -node &lt;node&gt; -mail-hosts &lt;smtp_server&gt;
-
-# Set proxy (if AutoSupport uses HTTPS via proxy)
-autosupport modify -node &lt;node&gt; -proxy-url http://proxy.corp.local:8080
-
-# Set notification address (where AutoSupport emails are sent)
-autosupport modify -node &lt;node&gt; -noteto ops@corp.local
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable AutoSupport</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable AutoSupport (not recommended except for offline systems)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-state<span class="w"> </span>disable
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Set SMTP relay</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-mail-hosts<span class="w"> </span>&lt;smtp_server&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Set proxy (if AutoSupport uses HTTPS via proxy)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-proxy-url<span class="w"> </span>http://proxy.corp.local:8080
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Set notification address (where AutoSupport emails are sent)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-noteto<span class="w"> </span>ops@corp.local
+</code></pre></div>
 <h2 id="autosupport-delivery-methods">AutoSupport Delivery Methods<a class="headerlink" href="#autosupport-delivery-methods" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -870,12 +878,12 @@ autosupport modify -node &lt;node&gt; -noteto ops@corp.local
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Set protocol
-autosupport modify -node &lt;node&gt; -transport https
-
-# Verify HTTPS connectivity to NetApp
-autosupport check show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set protocol</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>-transport<span class="w"> </span>https
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify HTTPS connectivity to NetApp</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>autosupport<span class="w"> </span>check<span class="w"> </span>show
+</code></pre></div>
 <h2 id="active-iq-and-autosupport">Active IQ and AutoSupport<a class="headerlink" href="#active-iq-and-autosupport" title="Permanent link">&para;</a></h2>
 <p>AutoSupport data feeds into NetApp Active IQ (cloud-based analytics):</p>
 <ul>

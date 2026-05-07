@@ -826,10 +826,10 @@
 <li>Username/password: dedicated svc_srm account with <code>StorageAdmin</code> role</li>
 </ol>
 <h3 id="protection-group-configuration">Protection Group Configuration<a class="headerlink" href="#protection-group-configuration" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Verify SRM can discover SRDF groups
-# In SRM: Array Managers → Rescan Devices
-# All SRDF/S groups should appear as replication candidates
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify SRM can discover SRDF groups</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># In SRM: Array Managers → Rescan Devices</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># All SRDF/S groups should appear as replication candidates</span>
+</code></pre></div>
 <p>Map each protection group to an SRDF group:
 - One protection group per SRDF group (one per application tier)
 - Include all datastores in the consistency group within a single protection group</p>
@@ -841,9 +841,9 @@
 <li>vSAN witness appliance in a third site (or substitute with PDL handling policies)</li>
 <li>Host affinity rules keep VMs at their preferred site under normal operation</li>
 </ul>
-<p>Verify vMSC readiness:</p>
-<pre><code class="language-bash">esxcli storage nmp path list | grep -i powermax   # Confirm paths at both sites
-</code></pre>
+<p>Verify vMSC readiness:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>powermax<span class="w">   </span><span class="c1"># Confirm paths at both sites</span>
+</code></pre></div></p>
 <h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
 <p>The PowerMax management pack surfaces SRDF/S health in Aria Ops dashboards:</p>
 <ul>
@@ -855,25 +855,25 @@
 <p>Install the management pack from Aria Marketplace → search "PowerMax" → Deploy.</p>
 <h2 id="solutions-enabler-rest-api">Solutions Enabler REST API<a class="headerlink" href="#solutions-enabler-rest-api" title="Permanent link">&para;</a></h2>
 <p>The Unisphere REST API enables programmatic SRDF/S pair management from Ansible or Terraform:</p>
-<pre><code class="language-bash"># Authenticate
-curl -k -u svc_api:password https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
-
-# List SRDF groups
-GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group
-
-# Get pair state
-GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume/{devId}
-
-# Split pair (planned failover)
-PUT /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume
-Body: {&quot;action&quot;: &quot;Split&quot;, &quot;executionOption&quot;: &quot;SYNCHRONOUS&quot;}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>svc_api:password<span class="w"> </span>https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List SRDF groups</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>GET<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Get pair state</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>GET<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group/<span class="o">{</span>rdfgNumber<span class="o">}</span>/volume/<span class="o">{</span>devId<span class="o">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Split pair (planned failover)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>PUT<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group/<span class="o">{</span>rdfgNumber<span class="o">}</span>/volume
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Body:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;action&quot;</span>:<span class="w"> </span><span class="s2">&quot;Split&quot;</span>,<span class="w"> </span><span class="s2">&quot;executionOption&quot;</span>:<span class="w"> </span><span class="s2">&quot;SYNCHRONOUS&quot;</span><span class="o">}</span>
+</code></pre></div>
 <h2 id="backup-from-r2">Backup from R2<a class="headerlink" href="#backup-from-r2" title="Permanent link">&para;</a></h2>
 <p>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:</p>
-<pre><code class="language-bash">symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; create -name BACKUP_$(date +%Y%m%d) -ttl 3
-# Mount the linked copy to a backup proxy server
-symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; link -name BACKUP_$(date +%Y%m%d) -lnsg &lt;proxy_sg&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-ttl<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Mount the linked copy to a backup proxy server</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>link<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-lnsg<span class="w"> </span>&lt;proxy_sg&gt;
+</code></pre></div>
 <p>Note: always snapshot the R2 while it is in <code>Synchronized</code> state to ensure consistency.</p>
 
 

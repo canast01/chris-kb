@@ -878,80 +878,80 @@
 <p>Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.</p>
 <h2 id="daily-backup-status-checks">Daily Backup Status Checks<a class="headerlink" href="#daily-backup-status-checks" title="Permanent link">&para;</a></h2>
 <h3 id="postgresql-pg_basebackup-pgbackrest">PostgreSQL (pg_basebackup / pgBackRest)<a class="headerlink" href="#postgresql-pg_basebackup-pgbackrest" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># pgBackRest — check latest backup info
-pgbackrest --stanza=&lt;stanza-name&gt; info
-
-# List backup files
-pgbackrest --stanza=&lt;stanza-name&gt; info --output=json | jq '.[] | .backup[-1]'
-
-# Check WAL archiving is current
-psql -U postgres -c &quot;SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># pgBackRest — check latest backup info</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>info
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List backup files</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>info<span class="w"> </span>--output<span class="o">=</span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | .backup[-1]&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check WAL archiving is current</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;&quot;</span>
+</code></pre></div>
 <h3 id="mysql-mariadb">MySQL / MariaDB<a class="headerlink" href="#mysql-mariadb" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check recent backup files
-ls -lht /backup/mysql/ | head -10
-
-# Verify binary log position captured in backup
-cat /backup/mysql/xtrabackup_binlog_info
-
-# MySQLdump backup log
-tail -50 /var/log/mysql-backup.log | grep -E &quot;(Error|Completed|Failed)&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check recent backup files</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ls<span class="w"> </span>-lht<span class="w"> </span>/backup/mysql/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify binary log position captured in backup</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>/backup/mysql/xtrabackup_binlog_info
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># MySQLdump backup log</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/mysql-backup.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Error|Completed|Failed)&quot;</span>
+</code></pre></div>
 <h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permanent link">&para;</a></h3>
-<pre><code class="language-sql">-- Last backup per database
-SELECT d.name AS database_name,
-       MAX(b.backup_finish_date) AS last_backup,
-       b.type AS backup_type
-FROM sys.databases d
-LEFT JOIN msdb.dbo.backupset b ON d.name = b.database_name
-WHERE d.database_id &gt; 4  -- exclude system DBs
-GROUP BY d.name, b.type
-ORDER BY d.name, b.type;
-
--- Failed backup jobs last 24h
-SELECT j.name AS job_name, h.run_date, h.run_time, h.message
-FROM msdb.dbo.sysjobs j
-JOIN msdb.dbo.sysjobhistory h ON j.job_id = h.job_id
-WHERE j.name LIKE '%backup%'
-  AND h.run_status = 0  -- 0 = failed
-  AND h.run_date &gt;= CONVERT(int, CONVERT(varchar, GETDATE()-1, 112));
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Last backup per database</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">database_name</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">       </span><span class="k">MAX</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">backup_finish_date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">last_backup</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">backup_type</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">databases</span><span class="w"> </span><span class="n">d</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">backupset</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">database_name</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">database_id</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">4</span><span class="w">  </span><span class="c1">-- exclude system DBs</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="k">type</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="k">type</span><span class="p">;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">-- Failed backup jobs last 24h</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">job_name</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_date</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">message</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">FROM</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">sysjobs</span><span class="w"> </span><span class="n">j</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">sysjobhistory</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">job_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">job_id</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%backup%&#39;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="c1">-- 0 = failed</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_date</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">,</span><span class="w"> </span><span class="n">GETDATE</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">));</span>
+</code></pre></div>
 <h2 id="backup-file-integrity-check">Backup File Integrity Check<a class="headerlink" href="#backup-file-integrity-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># PostgreSQL — verify backup with pgBackRest
-pgbackrest --stanza=&lt;stanza-name&gt; check
-
-# MySQL — verify xtrabackup integrity
-xtrabackup --prepare --target-dir=/backup/mysql/latest/
-
-# SQL Server — verify backup file checksum
-RESTORE VERIFYONLY FROM DISK = '/backup/mssql/mydb_full.bak' WITH CHECKSUM;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># PostgreSQL — verify backup with pgBackRest</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>check
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># MySQL — verify xtrabackup integrity</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/backup/mysql/latest/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># SQL Server — verify backup file checksum</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>RESTORE<span class="w"> </span>VERIFYONLY<span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/backup/mssql/mydb_full.bak&#39;</span><span class="w"> </span>WITH<span class="w"> </span>CHECKSUM<span class="p">;</span>
+</code></pre></div>
 <h2 id="test-restore-procedure">Test Restore Procedure<a class="headerlink" href="#test-restore-procedure" title="Permanent link">&para;</a></h2>
 <p>Perform test restores to a non-production target on a defined schedule (weekly for critical DBs).</p>
 <h3 id="postgresql-test-restore">PostgreSQL Test Restore<a class="headerlink" href="#postgresql-test-restore" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Restore to test instance
-pgbackrest --stanza=&lt;stanza-name&gt; --pg1-path=/var/lib/pgsql/test-restore restore
-# Start test instance and verify
-pg_ctl -D /var/lib/pgsql/test-restore start
-psql -p 5433 -U postgres -c &quot;SELECT count(*) FROM pg_stat_user_tables;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore to test instance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>--pg1-path<span class="o">=</span>/var/lib/pgsql/test-restore<span class="w"> </span>restore
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Start test instance and verify</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pg_ctl<span class="w"> </span>-D<span class="w"> </span>/var/lib/pgsql/test-restore<span class="w"> </span>start
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>psql<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_user_tables;&quot;</span>
+</code></pre></div>
 <h3 id="mysql-test-restore">MySQL Test Restore<a class="headerlink" href="#mysql-test-restore" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Copy backup to test directory
-xtrabackup --prepare --target-dir=/restore/mysql-test/
-rsync -a /restore/mysql-test/ /var/lib/mysql-test/
-chown -R mysql: /var/lib/mysql-test/
-mysqld_safe --datadir=/var/lib/mysql-test --socket=/tmp/mysql-test.sock &amp;
-mysql -S /tmp/mysql-test.sock -e &quot;SHOW DATABASES;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Copy backup to test directory</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/restore/mysql-test/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>rsync<span class="w"> </span>-a<span class="w"> </span>/restore/mysql-test/<span class="w"> </span>/var/lib/mysql-test/
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>chown<span class="w"> </span>-R<span class="w"> </span>mysql:<span class="w"> </span>/var/lib/mysql-test/
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>mysqld_safe<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/mysql-test<span class="w"> </span>--socket<span class="o">=</span>/tmp/mysql-test.sock<span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>mysql<span class="w"> </span>-S<span class="w"> </span>/tmp/mysql-test.sock<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW DATABASES;&quot;</span>
+</code></pre></div>
 <h3 id="sql-server-test-restore">SQL Server Test Restore<a class="headerlink" href="#sql-server-test-restore" title="Permanent link">&para;</a></h3>
-<pre><code class="language-sql">RESTORE DATABASE [TestRestore] FROM DISK = '/backup/mssql/prod_full.bak'
-WITH MOVE 'proddb' TO '/var/opt/mssql/data/TestRestore.mdf',
-     MOVE 'proddb_log' TO '/var/opt/mssql/data/TestRestore_log.ldf',
-     REPLACE, STATS = 10;
--- Verify table counts match expected
-USE TestRestore;
-SELECT COUNT(*) FROM important_table;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">TestRestore</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/backup/mssql/prod_full.bak&#39;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">WITH</span><span class="w"> </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore.mdf&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">     </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb_log&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore_log.ldf&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">     </span><span class="k">REPLACE</span><span class="p">,</span><span class="w"> </span><span class="n">STATS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">-- Verify table counts match expected</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">USE</span><span class="w"> </span><span class="n">TestRestore</span><span class="p">;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">important_table</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Full backup completed successfully within last 24h</li>

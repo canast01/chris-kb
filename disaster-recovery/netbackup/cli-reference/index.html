@@ -798,114 +798,122 @@
 
 <h1 id="netbackup-cli-reference">NetBackup CLI Reference<a class="headerlink" href="#netbackup-cli-reference" title="Permanent link">&para;</a></h1>
 <p>NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The <code>bp*</code> family covers backup and restore operations; <code>nb*</code> and <code>tp*</code> commands cover EMM, media, and device management. Commands are in <code>/usr/openv/netbackup/bin/admincmd/</code> on Linux or <code>C:\Program Files\Veritas\NetBackup\bin\admincmd\</code> on Windows.</p>
+<pre class="mermaid"><code>flowchart LR
+    NetBackup["NetBackup"]
+    NetBackup --&gt; S0["Job Monitoring"]
+    NetBackup --&gt; S1["Backup Operations"]
+    NetBackup --&gt; S2["Restore Operations"]
+    NetBackup --&gt; S3["Catalog and Media"]
+    NetBackup --&gt; S4["Client and Policy Management"]
+    NetBackup --&gt; S5["Error and Log Analysis"]</code></pre>
 <hr />
 <h2 id="job-monitoring">Job Monitoring<a class="headerlink" href="#job-monitoring" title="Permanent link">&para;</a></h2>
 <p>Monitor backup and restore jobs in real time or review recent history.</p>
-<pre><code class="language-bash"># High-level job summary
-bpjobs -summary
-
-# List all active jobs
-bpjobs
-
-# Query job database — failed jobs in last 24 hours
-bpdbjobs -report -failed -hoursago 24
-
-# Query job database — all jobs with verbose output
-bpdbjobs -report -all_columns -hoursago 48
-
-# Kill a running job
-bpdbjobs -cancel -jobid &lt;id&gt;
-
-# Check NetBackup processes
-bpps -a
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># High-level job summary</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bpjobs<span class="w"> </span>-summary
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all active jobs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bpjobs
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query job database — failed jobs in last 24 hours</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-failed<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Query job database — all jobs with verbose output</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">48</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Kill a running job</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>bpdbjobs<span class="w"> </span>-cancel<span class="w"> </span>-jobid<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check NetBackup processes</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>bpps<span class="w"> </span>-a
+</code></pre></div>
 <hr />
 <h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
 <p>Initiate manual backups and inspect policy configuration.</p>
-<pre><code class="language-bash"># Initiate manual backup for a policy/schedule/client
-bpbackup -p &lt;policy&gt; -s &lt;schedule&gt; -c &lt;client&gt;
-
-# List all policies
-bppllist -allpolicies -L
-
-# List file list for a policy
-bpplinclude -L -p &lt;policy&gt;
-
-# List schedules for a policy
-bpplschedrep &lt;policy&gt;
-
-# List clients assigned to a policy
-bpplclients &lt;policy&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Initiate manual backup for a policy/schedule/client</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;schedule&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;client&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List all policies</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bppllist<span class="w"> </span>-allpolicies<span class="w"> </span>-L
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List file list for a policy</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>bpplinclude<span class="w"> </span>-L<span class="w"> </span>-p<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List schedules for a policy</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>bpplschedrep<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># List clients assigned to a policy</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>bpplclients<span class="w"> </span>&lt;policy&gt;
+</code></pre></div>
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
 <p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
-<pre><code class="language-bash"># Restore files for a client
-bprestore -C &lt;client&gt; -t &lt;policy_type&gt; -L /tmp/restore.log &lt;file_path&gt;
-
-# List available restore points (backup images)
-bpimmedia -U -client &lt;client&gt;
-
-# Browse backups for a client
-bplist -C &lt;client&gt; -t &lt;type&gt; -R /
-
-# Initiate instant access restore
-bprestore -L /tmp/restore.log -R -C &lt;client&gt; &lt;path&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restore files for a client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;policy_type&gt;<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>&lt;file_path&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List available restore points (backup images)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpimmedia<span class="w"> </span>-U<span class="w"> </span>-client<span class="w"> </span>&lt;client&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Browse backups for a client</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bplist<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;type&gt;<span class="w"> </span>-R<span class="w"> </span>/
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Initiate instant access restore</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>bprestore<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>-R<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>&lt;path&gt;
+</code></pre></div>
 <hr />
 <h2 id="catalog-media">Catalog &amp; Media<a class="headerlink" href="#catalog-media" title="Permanent link">&para;</a></h2>
 <p>Manage media, catalog verification, and storage unit health.</p>
-<pre><code class="language-bash"># List all storage units
-bpstulist
-
-# List storage unit detail
-bpstulist -label &lt;stu_name&gt;
-
-# List media volumes
-vmquery -b -m &lt;media_id&gt;
-
-# List all tape drives
-tpconfig -d
-
-# Run catalog backup
-bpcatarc
-
-# Verify catalog integrity
-bpdbm -consistency_check
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage units</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bpstulist
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List storage unit detail</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>bpstulist<span class="w"> </span>-label<span class="w"> </span>&lt;stu_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List media volumes</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vmquery<span class="w"> </span>-b<span class="w"> </span>-m<span class="w"> </span>&lt;media_id&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List all tape drives</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tpconfig<span class="w"> </span>-d
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Run catalog backup</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>bpcatarc
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Verify catalog integrity</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>bpdbm<span class="w"> </span>-consistency_check
+</code></pre></div>
 <hr />
 <h2 id="client-policy-management">Client &amp; Policy Management<a class="headerlink" href="#client-policy-management" title="Permanent link">&para;</a></h2>
 <p>Inspect and manage client records and policy assignments.</p>
-<pre><code class="language-bash"># List all clients
-bpclient -L
-
-# Show detail for a specific client
-bpclient -L -client &lt;name&gt;
-
-# Test BPCD connectivity to a client
-bptestbpcd -client &lt;host&gt;
-
-# Test client backup connectivity
-bptestnetconn -sv -client &lt;host&gt;
-
-# List media servers
-nbemmcmd -listhosts -machinetype mediaserver
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all clients</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpclient<span class="w"> </span>-L
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show detail for a specific client</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>bpclient<span class="w"> </span>-L<span class="w"> </span>-client<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test BPCD connectivity to a client</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Test client backup connectivity</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>bptestnetconn<span class="w"> </span>-sv<span class="w"> </span>-client<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># List media servers</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>nbemmcmd<span class="w"> </span>-listhosts<span class="w"> </span>-machinetype<span class="w"> </span>mediaserver
+</code></pre></div>
 <hr />
 <h2 id="error-log-analysis">Error &amp; Log Analysis<a class="headerlink" href="#error-log-analysis" title="Permanent link">&para;</a></h2>
 <p>Decode errors and review logs.</p>
-<pre><code class="language-bash"># Show backup errors from last 24 hours
-bperror -backstat -hoursago 24
-
-# Look up an error code
-bperror -S &lt;exit_status&gt;
-
-# View unified logs (unilog format)
-vxlogview -i 51216 -d 24:00:00
-
-# Tail legacy job logs
-tail -f /usr/openv/netbackup/logs/bprd/log.&lt;today&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show backup errors from last 24 hours</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-hoursago<span class="w"> </span><span class="m">24</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Look up an error code</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>bperror<span class="w"> </span>-S<span class="w"> </span>&lt;exit_status&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View unified logs (unilog format)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vxlogview<span class="w"> </span>-i<span class="w"> </span><span class="m">51216</span><span class="w"> </span>-d<span class="w"> </span><span class="m">24</span>:00:00
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Tail legacy job logs</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>tail<span class="w"> </span>-f<span class="w"> </span>/usr/openv/netbackup/logs/bprd/log.&lt;today&gt;
+</code></pre></div>
 
 
 

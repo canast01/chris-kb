@@ -802,39 +802,64 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Log in to the Dell APEX console (<a href="https://console.dell.com/apex">console.dell.com/apex</a>) and review the dashboard for any health alerts on APEX storage systems</li>
-<li>[ ] Check consumed capacity vs contracted capacity — flag if consumed capacity exceeds 80% of the contracted amount</li>
-<li>[ ] Confirm all APEX systems are showing healthy in CloudIQ (health score &gt;= 80, no CRITICAL alerts)</li>
-<li>[ ] Confirm no Dell-scheduled maintenance windows are active or pending without prior notification to your team</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Log in to the Dell APEX console ([console.dell.com/apex](https</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check consumed capacity vs contracted capacity</td>
+<td></td>
+<td>flag if consumed capacity exceeds 80% of the contracted amount</td>
+</tr>
+<tr>
+<td>[ ] Confirm all APEX systems are showing healthy in CloudIQ (health sc</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm no Dell-scheduled maintenance windows are active or pendin</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Authenticate to Dell APEX API (console.dell.com)
-# Obtain token via Dell API Gateway
-APEX_TOKEN=&quot;&lt;your_apex_api_token&gt;&quot;
-APEX_BASE=&quot;https://apigw.dell.com/apex/v1&quot;
-
-# List all APEX storage systems and their health scores
-curl -s -H &quot;Authorization: Bearer ${APEX_TOKEN}&quot; \
-  &quot;${APEX_BASE}/storage-systems&quot; | \
-  jq '.results[] | {name: .name, health_score: .health_score, status: .status, type: .type}'
-
-# Check capacity consumed vs contracted for each system
-curl -s -H &quot;Authorization: Bearer ${APEX_TOKEN}&quot; \
-  &quot;${APEX_BASE}/storage-systems&quot; | \
-  jq '.results[] | {name: .name, contracted_tb: .contracted_capacity_tb, consumed_tb: .consumed_capacity_tb, percent_consumed: (.consumed_capacity_tb / .contracted_capacity_tb * 100)}'
-
-# Check for any active alerts on APEX systems via CloudIQ API
-CLOUDIQ_TOKEN=&quot;&lt;your_cloudiq_api_token&gt;&quot;
-curl -s -H &quot;Authorization: Bearer ${CLOUDIQ_TOKEN}&quot; \
-  &quot;https://apigw.dell.com/cloudiq/v1/alerts?filter=state%20eq%20%22ACTIVE%22&quot; | \
-  jq '.results[] | select(.severity == &quot;CRITICAL&quot;) | {resource: .resource_name, description: .description}'
-
-# Check SLA tier assigned to each system
-curl -s -H &quot;Authorization: Bearer ${APEX_TOKEN}&quot; \
-  &quot;${APEX_BASE}/storage-systems&quot; | \
-  jq '.results[] | {name: .name, sla_tier: .sla_tier, committed_iops: .committed_iops}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to Dell APEX API (console.dell.com)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Obtain token via Dell API Gateway</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">APEX_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your_apex_api_token&gt;&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">APEX_BASE</span><span class="o">=</span><span class="s2">&quot;https://apigw.dell.com/apex/v1&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># List all APEX storage systems and their health scores</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">APEX_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">APEX_BASE</span><span class="si">}</span><span class="s2">/storage-systems&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name: .name, health_score: .health_score, status: .status, type: .type}&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check capacity consumed vs contracted for each system</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">APEX_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">APEX_BASE</span><span class="si">}</span><span class="s2">/storage-systems&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name: .name, contracted_tb: .contracted_capacity_tb, consumed_tb: .consumed_capacity_tb, percent_consumed: (.consumed_capacity_tb / .contracted_capacity_tb * 100)}&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check for any active alerts on APEX systems via CloudIQ API</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nv">CLOUDIQ_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your_cloudiq_api_token&gt;&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CLOUDIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="s2">&quot;https://apigw.dell.com/cloudiq/v1/alerts?filter=state%20eq%20%22ACTIVE%22&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | select(.severity == &quot;CRITICAL&quot;) | {resource: .resource_name, description: .description}&#39;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Check SLA tier assigned to each system</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">APEX_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">APEX_BASE</span><span class="si">}</span><span class="s2">/storage-systems&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name: .name, sla_tier: .sla_tier, committed_iops: .committed_iops}&#39;</span>
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Contracted capacity headroom is sufficient for the planned workload increase (consumed &lt; 80% of contracted)</li>

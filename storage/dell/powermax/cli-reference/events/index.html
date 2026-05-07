@@ -800,53 +800,61 @@
 <blockquote>
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI). Review events after any array alert, before opening a support case, and as part of regular health checks.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Audit["Audit"]
+    Audit --&gt; S0["System Events"]
+    Audit --&gt; S1["Audit Log"]
+    Audit --&gt; S2["Health Checks via Events"]
+    Audit --&gt; S3["Export for Support Case"]
+    Audit --&gt; S4["Alerting Integration"]
+    Audit --&gt; S5["Quick Reference"]</code></pre>
 <h2 id="system-events">System Events<a class="headerlink" href="#system-events" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all recent events
-symevent list -sid &lt;sid&gt;
-symevent list -sid &lt;sid&gt; -v
-
-# Filter by time range
-symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
-symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot; -end_time &quot;01/02/2026 00:00:00&quot;
-
-# Filter by severity
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;WARNING\|ERROR\|FATAL&quot;
-
-# Event count summary
-symevent list -sid &lt;sid&gt; | wc -l
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all recent events</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Filter by time range</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;01/01/2026 00:00:00&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;01/01/2026 00:00:00&quot;</span><span class="w"> </span>-end_time<span class="w"> </span><span class="s2">&quot;01/02/2026 00:00:00&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Filter by severity</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;WARNING\|ERROR\|FATAL&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Event count summary</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</code></pre></div>
 <h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all audit entries
-symaudit list -sid &lt;sid&gt;
-symaudit list -sid &lt;sid&gt; -v
-
-# Filter by time
-symaudit list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
-
-# Filter by user
-symaudit list -sid &lt;sid&gt; -user &lt;username&gt;
-
-# Filter by action type
-symaudit list -sid &lt;sid&gt; -v | grep -i &quot;Create\|Delete\|Modify\|SRDF&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all audit entries</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Filter by time</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-start_time<span class="w"> </span><span class="s2">&quot;01/01/2026 00:00:00&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Filter by user</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Filter by action type</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;Create\|Delete\|Modify\|SRDF&quot;</span>
+</code></pre></div>
 <h2 id="health-checks-via-events">Health Checks via Events<a class="headerlink" href="#health-checks-via-events" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check for any uncleared events (active alerts)
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;uncleared\|active&quot;
-
-# Check for drive-related events
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;disk\|drive\|BE\|DAE&quot;
-
-# Check for replication events
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;RDF\|SRDF\|replication&quot;
-
-# Check for port/director events
-symevent list -sid &lt;sid&gt; -v | grep -i &quot;port\|director\|link&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check for any uncleared events (active alerts)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;uncleared\|active&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check for drive-related events</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;disk\|drive\|BE\|DAE&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check for replication events</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;RDF\|SRDF\|replication&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check for port/director events</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;port\|director\|link&quot;</span>
+</code></pre></div>
 <h2 id="export-for-support-case">Export for Support Case<a class="headerlink" href="#export-for-support-case" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Export events to file for Dell TAC
-symevent list -sid &lt;sid&gt; -v -output csv &gt; /tmp/events-$(date +%Y%m%d).csv
-symaudit list -sid &lt;sid&gt; -v &gt; /tmp/audit-$(date +%Y%m%d).txt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export events to file for Dell TAC</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/events-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symaudit<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>/tmp/audit-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+</code></pre></div>
 <h2 id="alerting-integration">Alerting Integration<a class="headerlink" href="#alerting-integration" title="Permanent link">&para;</a></h2>
 <p>Events on PowerMax can be forwarded via:
 - Unisphere for PowerMax → Settings → Alert Policies (email, SNMP trap)

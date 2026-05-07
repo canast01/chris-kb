@@ -800,110 +800,110 @@
 <p>Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to <code>/var/log/ops/</code> and forwarded to the central logging platform.</p>
 <h2 id="system-health-checksh">system-health-check.sh<a class="headerlink" href="#system-health-checksh" title="Permanent link">&para;</a></h2>
 <p>Checks disk, memory, load, failed services, and recent auth failures:</p>
-<pre><code class="language-bash">#!/bin/bash
-THRESHOLD=80
-echo &quot;=== System Health Check: $(hostname) at $(date) ===&quot;
-
-# Disk usage
-echo &quot;--- Disk Usage ---&quot;
-df -h | awk -v t=$THRESHOLD 'NR&gt;1 &amp;&amp; int($5) &gt; t {print &quot;WARNING: &quot;$6&quot; is &quot;$5&quot; full&quot;}'
-
-# Memory
-echo &quot;--- Memory ---&quot;
-free -m | awk '/Mem/ {printf &quot;Used: %dMB / Total: %dMB (%.0f%%)\n&quot;, $3, $2, $3/$2*100}'
-
-# Load average
-echo &quot;--- Load Average ---&quot;
-uptime | awk -F'load average:' '{print &quot;Load:&quot; $2}'
-
-# Failed services
-echo &quot;--- Failed Services ---&quot;
-systemctl --failed --no-legend | awk '{print &quot;FAILED: &quot;$1}'
-
-# Recent auth failures
-echo &quot;--- Auth Failures (last hour) ---&quot;
-journalctl -u sshd --since &quot;1 hour ago&quot; | grep &quot;Failed password&quot; | wc -l | xargs echo &quot;SSH failed logins:&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="m">80</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== System Health Check: </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Disk usage</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Disk Usage ---&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">t</span><span class="o">=</span><span class="nv">$THRESHOLD</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; int($5) &gt; t {print &quot;WARNING: &quot;$6&quot; is &quot;$5&quot; full&quot;}&#39;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Memory</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Memory ---&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>free<span class="w"> </span>-m<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/Mem/ {printf &quot;Used: %dMB / Total: %dMB (%.0f%%)\n&quot;, $3, $2, $3/$2*100}&#39;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Load average</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Load Average ---&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>uptime<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;load average:&#39;</span><span class="w"> </span><span class="s1">&#39;{print &quot;Load:&quot; $2}&#39;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Failed services</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Failed Services ---&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>systemctl<span class="w"> </span>--failed<span class="w"> </span>--no-legend<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print &quot;FAILED: &quot;$1}&#39;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Recent auth failures</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Auth Failures (last hour) ---&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sshd<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SSH failed logins:&quot;</span>
+</code></pre></div>
 <h2 id="log-archivalsh">log-archival.sh<a class="headerlink" href="#log-archivalsh" title="Permanent link">&para;</a></h2>
 <p>Compresses rotated logs older than 30 days to NFS archive:</p>
-<pre><code class="language-bash">#!/bin/bash
-ARCHIVE_PATH=&quot;/mnt/nfs-archive/logs/$(hostname)&quot;
-LOG_PATH=&quot;/var/log&quot;
-mkdir -p &quot;$ARCHIVE_PATH&quot;
-
-find &quot;$LOG_PATH&quot; -name &quot;*.log-*&quot; -mtime +30 -type f | while read f; do
-    gzip -9 &quot;$f&quot; &amp;&amp; mv &quot;${f}.gz&quot; &quot;$ARCHIVE_PATH/&quot; &amp;&amp; \
-    logger &quot;Archived $f to $ARCHIVE_PATH&quot;
-done
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">ARCHIVE_PATH</span><span class="o">=</span><span class="s2">&quot;/mnt/nfs-archive/logs/</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">LOG_PATH</span><span class="o">=</span><span class="s2">&quot;/var/log&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ARCHIVE_PATH</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_PATH</span><span class="s2">&quot;</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log-*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>f<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>gzip<span class="w"> </span>-9<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="si">}</span><span class="s2">.gz&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ARCHIVE_PATH</span><span class="s2">/&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>logger<span class="w"> </span><span class="s2">&quot;Archived </span><span class="nv">$f</span><span class="s2"> to </span><span class="nv">$ARCHIVE_PATH</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">done</span>
+</code></pre></div>
 <h2 id="patch-status-reportsh">patch-status-report.sh<a class="headerlink" href="#patch-status-reportsh" title="Permanent link">&para;</a></h2>
 <p>Reports pending updates and last patch date:</p>
-<pre><code class="language-bash">#!/bin/bash
-echo &quot;=== Patch Status: $(hostname) at $(date) ===&quot;
-
-# RHEL/CentOS
-if command -v dnf &amp;&gt;/dev/null; then
-    echo &quot;Available updates:&quot;
-    dnf check-update --quiet 2&gt;/dev/null | grep -v &quot;^$&quot; | wc -l | xargs echo &quot;  Packages:&quot;
-    rpm -qa --last | head -5 | xargs echo &quot;  Last installed:&quot;
-fi
-
-# Ubuntu/Debian
-if command -v apt-get &amp;&gt;/dev/null; then
-    apt-get -q --just-print upgrade 2&gt;/dev/null | grep &quot;^Inst&quot; | wc -l | xargs echo &quot;  Packages pending:&quot;
-fi
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Patch Status: </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># RHEL/CentOS</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>dnf<span class="w"> </span><span class="p">&amp;</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Available updates:&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>dnf<span class="w"> </span>check-update<span class="w"> </span>--quiet<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  Packages:&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>rpm<span class="w"> </span>-qa<span class="w"> </span>--last<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  Last installed:&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">fi</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Ubuntu/Debian</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>apt-get<span class="w"> </span><span class="p">&amp;</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>apt-get<span class="w"> </span>-q<span class="w"> </span>--just-print<span class="w"> </span>upgrade<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^Inst&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  Packages pending:&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">fi</span>
+</code></pre></div>
 <h2 id="user-auditsh">user-audit.sh<a class="headerlink" href="#user-auditsh" title="Permanent link">&para;</a></h2>
 <p>Lists local users, sudo group members, and last login dates:</p>
-<pre><code class="language-bash">#!/bin/bash
-echo &quot;=== User Audit: $(hostname) at $(date) ===&quot;
-echo &quot;--- Local users with shell access ---&quot;
-awk -F: '$7 !~ /nologin|false/ {print $1, $7}' /etc/passwd
-
-echo &quot;--- Sudo group members ---&quot;
-getent group sudo wheel 2&gt;/dev/null
-
-echo &quot;--- Last 10 logins ---&quot;
-last -n 10 | head -10
-
-echo &quot;--- Currently logged in ---&quot;
-who
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== User Audit: </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Local users with shell access ---&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$7 !~ /nologin|false/ {print $1, $7}&#39;</span><span class="w"> </span>/etc/passwd
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Sudo group members ---&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>getent<span class="w"> </span>group<span class="w"> </span>sudo<span class="w"> </span>wheel<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Last 10 logins ---&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>last<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Currently logged in ---&quot;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>who
+</code></pre></div>
 <h2 id="disk-alertsh">disk-alert.sh<a class="headerlink" href="#disk-alertsh" title="Permanent link">&para;</a></h2>
 <p>Sends alert if any filesystem exceeds threshold — designed for cron:</p>
-<pre><code class="language-bash">#!/bin/bash
-THRESHOLD=80
-ALERT_EMAIL=&quot;ops@corp.local&quot;
-
-df -H | awk -v t=$THRESHOLD 'NR&gt;1 &amp;&amp; int($5) &gt; t {
-    print &quot;DISK ALERT on &quot; ENVIRON[&quot;HOSTNAME&quot;] &quot;: &quot; $6 &quot; is &quot; $5
-}' | while read -r line; do
-    echo &quot;$line&quot; | mail -s &quot;[DISK ALERT] $(hostname)&quot; &quot;$ALERT_EMAIL&quot;
-    logger &quot;$line&quot;
-done
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="m">80</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops@corp.local&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>df<span class="w"> </span>-H<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-v<span class="w"> </span><span class="nv">t</span><span class="o">=</span><span class="nv">$THRESHOLD</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; int($5) &gt; t {</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    print &quot;DISK ALERT on &quot; ENVIRON[&quot;HOSTNAME&quot;] &quot;: &quot; $6 &quot; is &quot; $5</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[DISK ALERT] </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ALERT_EMAIL</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>logger<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">done</span>
+</code></pre></div>
 <h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
 <p>Scripts are deployed and scheduled via Ansible:</p>
-<pre><code class="language-yaml"># tasks/deploy-scripts.yml
-- name: Copy operational scripts
-  copy:
-    src: &quot;{{ item }}&quot;
-    dest: /usr/local/bin/
-    mode: &quot;0750&quot;
-    owner: root
-    group: root
-  loop:
-    - system-health-check.sh
-    - disk-alert.sh
-
-- name: Schedule disk alert via cron
-  cron:
-    name: disk-alert
-    minute: &quot;0&quot;
-    hour: &quot;*/4&quot;
-    job: /usr/local/bin/disk-alert.sh
-    user: root
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># tasks/deploy-scripts.yml</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Copy operational scripts</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">copy</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0750&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">loop</span><span class="p">:</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system-health-check.sh</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk-alert.sh</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schedule disk alert via cron</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="nt">cron</span><span class="p">:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk-alert</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="nt">minute</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0&quot;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nt">hour</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*/4&quot;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/disk-alert.sh</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+</code></pre></div>
 
 
 

@@ -821,10 +821,10 @@
 <h1 id="esxi-standards">ESXi Standards<a class="headerlink" href="#esxi-standards" title="Permanent link">&para;</a></h1>
 <h2 id="host-naming">Host Naming<a class="headerlink" href="#host-naming" title="Permanent link">&para;</a></h2>
 <p>All ESXi hosts use fully qualified domain names (FQDN) and must have matching forward and reverse DNS records:</p>
-<pre><code>Format: esxi-&lt;nn&gt;.&lt;domain&gt;
-Example: esxi-01.corp.example.com
-         esxi-02.corp.example.com
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Format: esxi-&lt;nn&gt;.&lt;domain&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Example: esxi-01.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>         esxi-02.corp.example.com
+</code></pre></div>
 <p>The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.</p>
 <h2 id="bios-uefi-baseline">BIOS / UEFI Baseline<a class="headerlink" href="#bios-uefi-baseline" title="Permanent link">&para;</a></h2>
 <p>Configure the following on all physical hosts before installing ESXi:</p>
@@ -923,19 +923,19 @@ Example: esxi-01.corp.example.com
 </tbody>
 </table>
 <p>Jumbo frames (MTU 9000) require matching configuration on the physical switch ports and upstream switches for storage and vMotion traffic.</p>
-<p>Verify MTU end-to-end:</p>
-<pre><code class="language-bash">vmkping -I vmk2 -d -s 8972 &lt;target-IP&gt;
-# -d = don't fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)
-</code></pre>
+<p>Verify MTU end-to-end:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;target-IP&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># -d = don&#39;t fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)</span>
+</code></pre></div></p>
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
 <p>All ESXi hosts must synchronise to the same NTP sources as vCenter. Clock skew &gt; 5 minutes causes authentication failures.</p>
-<pre><code class="language-bash"># Check NTP status
-esxcli system time get
-esxcli network ntp get
-
-# Set NTP servers
-esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enabled=true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NTP status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp1.example.com<span class="w"> </span>--server<span class="o">=</span>ntp2.example.com<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="vib-policy-and-accepted-levels">VIB Policy and Accepted Levels<a class="headerlink" href="#vib-policy-and-accepted-levels" title="Permanent link">&para;</a></h2>
 <p>ESXi enforces VIB acceptance levels. Production hosts should accept only:</p>
 <table>
@@ -969,12 +969,12 @@ esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enab
 </tr>
 </tbody>
 </table>
-<p>Check the cluster's acceptance level:</p>
-<pre><code class="language-bash">esxcli software acceptance get
-</code></pre>
-<p>Set to VMwareAccepted minimum:</p>
-<pre><code class="language-bash">esxcli software acceptance set --level=VMwareAccepted
-</code></pre>
+<p>Check the cluster's acceptance level:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+</code></pre></div></p>
+<p>Set to VMwareAccepted minimum:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--level<span class="o">=</span>VMwareAccepted
+</code></pre></div></p>
 <h2 id="storage-path-configuration">Storage Path Configuration<a class="headerlink" href="#storage-path-configuration" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1012,9 +1012,9 @@ esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enab
 </tr>
 </tbody>
 </table>
-<p>Configure Round Robin for a device:</p>
-<pre><code class="language-bash">esxcli storage nmp psp roundrobin deviceconfig set -d &lt;device-naa&gt; --type=iops --iops=1
-</code></pre>
+<p>Configure Round Robin for a device:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;device-naa&gt;<span class="w"> </span>--type<span class="o">=</span>iops<span class="w"> </span>--iops<span class="o">=</span><span class="m">1</span>
+</code></pre></div></p>
 <h2 id="host-profile-configuration-baseline">Host Profile Configuration Baseline<a class="headerlink" href="#host-profile-configuration-baseline" title="Permanent link">&para;</a></h2>
 <p>Every cluster host must conform to the Host Profile applied from vCenter. A Host Profile captures:</p>
 <ul>
@@ -1055,10 +1055,10 @@ esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enab
 </tr>
 </tbody>
 </table>
-<p>Set shell timeout to limit exposure if left enabled:</p>
-<pre><code class="language-bash">esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 600
-esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 300
-</code></pre>
+<p>Set shell timeout to limit exposure if left enabled:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
+</code></pre></div></p>
 
 
 

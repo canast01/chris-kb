@@ -835,9 +835,9 @@
 </tr>
 </tbody>
 </table>
-<p>Validate RTT from each PowerMax director port:</p>
-<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; query -v | grep -E &quot;RTT|Latency&quot;
-</code></pre>
+<p>Validate RTT from each PowerMax director port:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RTT|Latency&quot;</span>
+</code></pre></div></p>
 <h2 id="srdf-group-design-rules">SRDF Group Design Rules<a class="headerlink" href="#srdf-group-design-rules" title="Permanent link">&para;</a></h2>
 <ul>
 <li>One SRDF/S group per application tier — isolate DB, APP, and WEB tiers</li>
@@ -845,20 +845,20 @@
 <li>Maximum 2,048 devices per SRDF group</li>
 <li>Three-site design: SRDF/S to secondary (RPO=0), SRDF/A to tertiary (RPO=30s)</li>
 </ul>
-<pre><code>RDFG-S-&lt;site-pair&gt;-&lt;tier&gt;-&lt;seq&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>RDFG-S-&lt;site-pair&gt;-&lt;tier&gt;-&lt;seq&gt;
+</code></pre></div>
 <p>Examples:
 - <code>RDFG-S-DC1DC2-DB-01</code>
 - <code>RDFG-S-DC1DC2-APP-01</code>
 - <code>RDFG-S-DC1DC2-WEB-01</code></p>
 <h2 id="bandwidth-sizing">Bandwidth Sizing<a class="headerlink" href="#bandwidth-sizing" title="Permanent link">&para;</a></h2>
 <p>Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.</p>
-<pre><code>Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
+</code></pre></div>
 <p>Where 1.25 = 25% headroom for burst absorption.</p>
-<p>Measure peak write throughput:</p>
-<pre><code class="language-bash">symstat -sid &lt;SID&gt; -type rdf -i 5 -c 12   # 5-second samples, 12 cycles = 1 minute
-</code></pre>
+<p>Measure peak write throughput:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">12</span><span class="w">   </span><span class="c1"># 5-second samples, 12 cycles = 1 minute</span>
+</code></pre></div></p>
 <p>Sizing must be validated at peak (end-of-month batch, backup window) — not average load.</p>
 <h2 id="target-volume-standards">Target Volume Standards<a class="headerlink" href="#target-volume-standards" title="Permanent link">&para;</a></h2>
 <ul>
@@ -866,9 +866,9 @@
 <li>R2 emulation and track format must match R1 exactly</li>
 <li>R2 volumes should not be presented to hosts except during planned failover or DR test</li>
 </ul>
-<p>Verify before establishing:</p>
-<pre><code class="language-bash">symdev show -sid &lt;target_SID&gt; &lt;dev_id&gt; | grep -E &quot;Size|Emulation|Track&quot;
-</code></pre>
+<p>Verify before establishing:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symdev<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Size|Emulation|Track&quot;</span>
+</code></pre></div></p>
 <h2 id="test-frequency">Test Frequency<a class="headerlink" href="#test-frequency" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

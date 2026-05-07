@@ -931,33 +931,33 @@
 </ul>
 <h2 id="checking-resync-progress">Checking Resync Progress<a class="headerlink" href="#checking-resync-progress" title="Permanent link">&para;</a></h2>
 <h3 id="esxi-cli-run-on-any-host-in-the-cluster">ESXi CLI (run on any host in the cluster)<a class="headerlink" href="#esxi-cli-run-on-any-host-in-the-cluster" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">esxcli vsan debug resync summary get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+</code></pre></div>
 <p>This returns a summary of active resync operations including bytes remaining and estimated completion time.</p>
 <h3 id="powercli">PowerCLI<a class="headerlink" href="#powercli" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Connect to vCenter first
-Connect-VIServer -Server vcsa-prod-01.example.com
-
-# Get resync throttle status
-Get-VsanResyncThrottle -Cluster (Get-Cluster &quot;cl-prod-compute-01&quot;)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Connect to vCenter first</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcsa-prod</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Get resync throttle status</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VsanResyncThrottle</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cl-prod-compute-01&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="vcenter-ui">vCenter UI<a class="headerlink" href="#vcenter-ui" title="Permanent link">&para;</a></h3>
 <p>Navigate to: <strong>Cluster</strong> → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Resyncing Objects</strong></p>
 <p>This view shows all objects currently resyncing, broken down by type (repair, rebalance, evacuation, policy change) along with bytes remaining.</p>
 <h2 id="resync-throttle">Resync Throttle<a class="headerlink" href="#resync-throttle" title="Permanent link">&para;</a></h2>
 <p>During peak production hours, resync can consume significant I/O bandwidth. vSAN allows you to throttle resync to protect workload performance.</p>
 <h3 id="check-current-throttle">Check current throttle<a class="headerlink" href="#check-current-throttle" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash">esxcli vsan debug resync throttle get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
+</code></pre></div>
 <h3 id="set-throttle-iops-cap">Set throttle (IOPS cap)<a class="headerlink" href="#set-throttle-iops-cap" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Set resync throughput limit to 1000 IOPS (per host)
-esxcli vsan debug resync throttle set --throttle 1000
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Set resync throughput limit to 1000 IOPS (per host)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">1000</span>
+</code></pre></div>
 <p>A value of <code>0</code> means no throttle (unlimited). During business hours, setting a limit of <code>500</code>–<code>2000</code> IOPS is typical depending on workload sensitivity. Remove the throttle during off-hours maintenance windows to allow faster completion.</p>
 <h3 id="powercli-throttle">PowerCLI throttle<a class="headerlink" href="#powercli-throttle" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Set resync throttle (IopsForResync) for the cluster
-Set-VsanResyncThrottle -Cluster (Get-Cluster &quot;cl-prod-compute-01&quot;) -IopsForResync 1000
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Set resync throttle (IopsForResync) for the cluster</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Set-VsanResyncThrottle</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cl-prod-compute-01&quot;</span><span class="p">)</span> <span class="n">-IopsForResync</span> <span class="n">1000</span>
+</code></pre></div>
 <h2 id="performance-impact-during-rebuild">Performance Impact During Rebuild<a class="headerlink" href="#performance-impact-during-rebuild" title="Permanent link">&para;</a></h2>
 <p>Rebuild generates significant back-end I/O between hosts. Expect:</p>
 <ul>

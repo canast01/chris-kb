@@ -852,35 +852,35 @@
 </tbody>
 </table>
 <h2 id="aws-kms-key-lifecycle">AWS KMS Key Lifecycle<a class="headerlink" href="#aws-kms-key-lifecycle" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create a key
-aws kms create-key --description &quot;prod-data-key&quot; --key-usage ENCRYPT_DECRYPT
-
-# Enable automatic rotation (annual, symmetric only)
-aws kms enable-key-rotation --key-id &lt;key-id&gt;
-
-# Check rotation status
-aws kms get-key-rotation-status --key-id &lt;key-id&gt;
-
-# Schedule deletion (7–30 day waiting period)
-aws kms schedule-key-deletion --key-id &lt;key-id&gt; --pending-window-in-days 30
-
-# Cancel deletion
-aws kms cancel-key-deletion --key-id &lt;key-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a key</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>kms<span class="w"> </span>create-key<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;prod-data-key&quot;</span><span class="w"> </span>--key-usage<span class="w"> </span>ENCRYPT_DECRYPT
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Enable automatic rotation (annual, symmetric only)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>kms<span class="w"> </span>enable-key-rotation<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check rotation status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>kms<span class="w"> </span>get-key-rotation-status<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Schedule deletion (7–30 day waiting period)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aws<span class="w"> </span>kms<span class="w"> </span>schedule-key-deletion<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;<span class="w"> </span>--pending-window-in-days<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Cancel deletion</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>aws<span class="w"> </span>kms<span class="w"> </span>cancel-key-deletion<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;
+</code></pre></div>
 <h2 id="azure-key-vault-key-operations">Azure Key Vault Key Operations<a class="headerlink" href="#azure-key-vault-key-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List keys
-az keyvault key list --vault-name &lt;vault-name&gt; \
-  --query '[*].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}' -o table
-
-# Rotate a key (create new version)
-az keyvault key rotate --vault-name &lt;vault-name&gt; --name &lt;key-name&gt;
-
-# Backup a key
-az keyvault key backup --vault-name &lt;vault-name&gt; --name &lt;key-name&gt; --file key-backup.blob
-
-# Restore a key
-az keyvault key restore --vault-name &lt;vault-name&gt; --file key-backup.blob
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List keys</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Enabled:attributes.enabled,Expires:attributes.expires}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Rotate a key (create new version)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>rotate<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;key-name&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Backup a key</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>backup<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;key-name&gt;<span class="w"> </span>--file<span class="w"> </span>key-backup.blob
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Restore a key</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>keyvault<span class="w"> </span>key<span class="w"> </span>restore<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span>--file<span class="w"> </span>key-backup.blob
+</code></pre></div>
 <h2 id="key-revocation">Key Revocation<a class="headerlink" href="#key-revocation" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Identify scope — which systems used the compromised key?</li>
@@ -890,21 +890,21 @@ az keyvault key restore --vault-name &lt;vault-name&gt; --file key-backup.blob
 <li>Document incident and remediation</li>
 </ol>
 <h2 id="ssh-host-key-rotation">SSH Host Key Rotation<a class="headerlink" href="#ssh-host-key-rotation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N &quot;&quot;
-ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N &quot;&quot;
-systemctl restart sshd
-# Update known_hosts on all clients
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-f<span class="w"> </span>/etc/ssh/ssh_host_ed25519_key<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-f<span class="w"> </span>/etc/ssh/ssh_host_rsa_key<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Update known_hosts on all clients</span>
+</code></pre></div>
 <h2 id="ontap-key-manager">ONTAP Key Manager<a class="headerlink" href="#ontap-key-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check key manager status
-security key-manager show
-
-# Query encryption keys
-security key-manager key query
-
-# Check volume encryption state
-volume show -fields encryption-state
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check key manager status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Query encryption keys</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check volume encryption state</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>encryption-state
+</code></pre></div>
 <h2 id="key-management-checklist">Key Management Checklist<a class="headerlink" href="#key-management-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All production keys stored in approved KMS/HSM — no plaintext keys in config files</li>

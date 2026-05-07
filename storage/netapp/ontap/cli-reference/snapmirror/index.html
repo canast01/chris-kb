@@ -789,62 +789,69 @@
 <blockquote>
 <p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    SnapMirror["SnapMirror"]
+    SnapMirror --&gt; S0["View Relationships"]
+    SnapMirror --&gt; S1["Create and Delete"]
+    SnapMirror --&gt; S2["Operations"]
+    SnapMirror --&gt; S3["Monitoring"]
+    SnapMirror --&gt; S4["Common Issues"]</code></pre>
 <h2 id="view-relationships">View Relationships<a class="headerlink" href="#view-relationships" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all relationships
-snapmirror show
-
-# Filter by destination
-snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Show key health fields
-snapmirror show -fields source-path,destination-path,state,lag-time,health
-
-# Show unhealthy relationships only
-snapmirror show -health false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all relationships</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Filter by destination</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show key health fields</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,state,lag-time,health
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show unhealthy relationships only</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
+</code></pre></div>
 <h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create async DP relationship
-snapmirror create \
-    -source-path &lt;src_svm&gt;:&lt;src_vol&gt; \
-    -destination-path &lt;dest_svm&gt;:&lt;dest_vol&gt; \
-    -type DP \
-    -policy MirrorAllSnapshots
-
-# Delete relationship (destination side)
-snapmirror delete -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Release source side (after delete)
-snapmirror release -source-path &lt;svm&gt;:&lt;vol&gt; -destination-path &lt;svm&gt;:&lt;vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create async DP relationship</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-source-path<span class="w"> </span>&lt;src_svm&gt;:&lt;src_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-type<span class="w"> </span>DP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Delete relationship (destination side)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>snapmirror<span class="w"> </span>delete<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Release source side (after delete)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>snapmirror<span class="w"> </span>release<span class="w"> </span>-source-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+</code></pre></div>
 <h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Initialize (baseline transfer)
-snapmirror initialize -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Manual update (force sync)
-snapmirror update -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Quiesce (pause transfers)
-snapmirror quiesce -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Break (make destination writable — for failover)
-snapmirror break -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Resync (re-establish after break)
-snapmirror resync -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Abort in-progress transfer
-snapmirror abort -destination-path &lt;svm&gt;:&lt;vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Initialize (baseline transfer)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Manual update (force sync)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Quiesce (pause transfers)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Break (make destination writable — for failover)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Resync (re-establish after break)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Abort in-progress transfer</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+</code></pre></div>
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Transfer history
-snapmirror history show -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# Lag across all relationships
-snapmirror lag show
-
-# Show active transfers
-snapmirror show -transfer-progress
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Transfer history</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Lag across all relationships</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snapmirror<span class="w"> </span>lag<span class="w"> </span>show
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show active transfers</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-transfer-progress
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

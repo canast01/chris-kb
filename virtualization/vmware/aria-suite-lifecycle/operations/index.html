@@ -809,19 +809,19 @@
 
 <h1 id="aria-suite-lifecycle-operations">Aria Suite Lifecycle Operations<a class="headerlink" href="#aria-suite-lifecycle-operations" title="Permanent link">&para;</a></h1>
 <h2 id="daily-health-checks">Daily Health Checks<a class="headerlink" href="#daily-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. LCM appliance disk usage — keep /data (NFS) and / below 80%
-df -h
-
-# 2. LCM service status
-systemctl status lcm
-
-# 3. Check recent log errors
-grep -E &quot;ERROR|WARN&quot; /var/log/lcm/lcm-app.log | tail -50
-
-# 4. Verify NFS mount is healthy
-mount | grep /data
-ls /data/ | head
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. LCM appliance disk usage — keep /data (NFS) and / below 80%</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. LCM service status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>lcm
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Check recent log errors</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARN&quot;</span><span class="w"> </span>/var/log/lcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Verify NFS mount is healthy</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ls<span class="w"> </span>/data/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
+</code></pre></div>
 <p>In the LCM UI:
 - <strong>Lifecycle Operations → Environments</strong>: all environment cards should show green health indicators
 - <strong>Locker → Certificates</strong>: check for certificates expiring within 30 days
@@ -849,12 +849,12 @@ ls /data/ | head
 </ol>
 <p>If upgrade fails mid-way, LCM provides a "Rollback" option that reverts from snapshots.</p>
 <h2 id="check-upgrade-status">Check Upgrade Status<a class="headerlink" href="#check-upgrade-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Via LCM API
-curl -k -u admin:password https://lcm.corp.local/lcm/lcops/api/v2/requests | python3 -m json.tool
-
-# Via LCM appliance logs
-tail -f /var/log/lcm/lcm-app.log | grep -E &quot;upgrade|UPGRADE|task&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Via LCM API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>https://lcm.corp.local/lcm/lcops/api/v2/requests<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Via LCM appliance logs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;upgrade|UPGRADE|task&quot;</span>
+</code></pre></div>
 <p>Via UI: Lifecycle Operations → Requests → filter by type "Upgrade" — shows step-by-step progress.</p>
 <h2 id="certificate-management-via-locker">Certificate Management via Locker<a class="headerlink" href="#certificate-management-via-locker" title="Permanent link">&para;</a></h2>
 <p>To replace a certificate on a managed product:</p>
@@ -867,24 +867,24 @@ tail -f /var/log/lcm/lcm-app.log | grep -E &quot;upgrade|UPGRADE|task&quot;
 <p><strong>Never replace certificates directly on appliances</strong> — LCM loses track of the certificate and future upgrades may fail.</p>
 <h2 id="storage-management">Storage Management<a class="headerlink" href="#storage-management" title="Permanent link">&para;</a></h2>
 <p>Monitor NFS binary repository usage:</p>
-<pre><code class="language-bash"># Available space per product
-du -sh /data/wp-content/downloads/*
-
-# Clean up old binaries no longer needed (after upgrade is validated)
-# LCM UI → Settings → Binary Mapping → select old version → Delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Available space per product</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/wp-content/downloads/*
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Clean up old binaries no longer needed (after upgrade is validated)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># LCM UI → Settings → Binary Mapping → select old version → Delete</span>
+</code></pre></div>
 <p>Keep at minimum: current version + one previous version of each managed product.</p>
 <h2 id="troubleshooting-lcm-issues">Troubleshooting LCM Issues<a class="headerlink" href="#troubleshooting-lcm-issues" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Restart LCM service (if UI unresponsive)
-systemctl restart lcm
-systemctl status lcm
-
-# Check LCM API health
-curl -k https://localhost/lcm/lcops/api/v2/ping
-
-# Full log capture for support SR
-tar -czf /tmp/lcm-logs-$(date +%Y%m%d).tar.gz /var/log/lcm/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restart LCM service (if UI unresponsive)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>lcm
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>lcm
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check LCM API health</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://localhost/lcm/lcops/api/v2/ping
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Full log capture for support SR</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tar<span class="w"> </span>-czf<span class="w"> </span>/tmp/lcm-logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/lcm/
+</code></pre></div>
 <p>Common issues:
 | Symptom | Likely Cause | Fix |
 |---|---|---|

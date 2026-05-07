@@ -799,23 +799,23 @@
 <h1 id="cod-lifecycle">COD — Lifecycle<a class="headerlink" href="#cod-lifecycle" title="Permanent link">&para;</a></h1>
 <h2 id="entitlement-lifecycle">Entitlement Lifecycle<a class="headerlink" href="#entitlement-lifecycle" title="Permanent link">&para;</a></h2>
 <p>COD entitlements are tracked in the Dell License Management Portal and are tied to a specific PowerMax frame serial number (SID). The lifecycle of a COD entitlement follows this path:</p>
-<pre><code>Purchase order confirmed
-        │
-        ▼
-Dell issues license key → available in Dell License Management Portal
-        │
-        ▼
-License key applied to array via SYMCLI or Unisphere
-        │
-        ▼
-Capacity active — in use by thin pools and storage groups
-        │
-        ▼
-Frame upgrade or replacement?
-        │
-        ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
-        └── NO  → Entitlement remains active until frame decommission
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Purchase order confirmed
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Dell issues license key → available in Dell License Management Portal
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        ▼
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>License key applied to array via SYMCLI or Unisphere
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Capacity active — in use by thin pools and storage groups
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Frame upgrade or replacement?
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        └── NO  → Entitlement remains active until frame decommission
+</code></pre></div>
 <h2 id="cod-and-powermax-frame-upgrades">COD and PowerMax Frame Upgrades<a class="headerlink" href="#cod-and-powermax-frame-upgrades" title="Permanent link">&para;</a></h2>
 <p>When a PowerMax frame is upgraded (e.g., PowerMax 2000 → PowerMax 8000), COD entitlements are transferred to the new frame's SID. This is not automatic — it requires a formal request to Dell:</p>
 <ol>
@@ -827,16 +827,16 @@ Frame upgrade or replacement?
 </ol>
 <p><strong>Never apply a license file to a different SID than it was issued for</strong> — it will fail and may trigger a support case.</p>
 <h2 id="reviewing-cod-entitlement">Reviewing COD Entitlement<a class="headerlink" href="#reviewing-cod-entitlement" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all license entitlements for an array
-symlicense -sid &lt;SID&gt; list
-
-# Show detail for COD-specific licenses
-symlicense -sid &lt;SID&gt; show -feature COD
-
-# Compare installed vs licensed capacity
-symcfg -sid &lt;SID&gt; list -capacity
-symcfg -sid &lt;SID&gt; show -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all license entitlements for an array</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show detail for COD-specific licenses</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span>-feature<span class="w"> </span>COD
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Compare installed vs licensed capacity</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-capacity
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+</code></pre></div>
 <p>Cross-reference this output against the Dell License Management Portal to confirm the portal record matches what the array reports. Discrepancies must be resolved with Dell before the next capacity review.</p>
 <h2 id="cod-entitlement-review-cadence">COD Entitlement Review Cadence<a class="headerlink" href="#cod-entitlement-review-cadence" title="Permanent link">&para;</a></h2>
 <table>

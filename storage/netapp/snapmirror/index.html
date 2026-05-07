@@ -849,44 +849,85 @@
 <li>Cloud tiering and replication to ONTAP Select or Cloud Volumes ONTAP using the same SnapMirror interface</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Check all relationship health and lag times: <code>snapmirror show -fields lag-time,healthy</code></li>
-<li>Confirm no relationships are in <code>broken-off</code> state after a DR test that was not resynced</li>
-<li>Verify scheduled transfers completed successfully; look for <code>Last Transfer Type: scheduled</code> and recent timestamps</li>
-<li>Review the lag time on critical volumes against your defined RPO thresholds</li>
-<li>Check for any <code>unhealthy</code> relationships and review the reason field for root cause</li>
-<li>Confirm SnapMirror synchronous relationships show <code>In-Sync</code> status</li>
-<li>Review transfer queue depth on the destination cluster for any backlogged updates</li>
-<li>Verify SMBC mediator connectivity if AutomatedFailOver policies are in use</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check all relationship health and lag times</td>
+<td><code>snapmirror show -fields lag-time,healthy</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm no relationships are in <code>broken-off</code> state after a DR test tha</td>
+<td><code>broken-off</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Verify scheduled transfers completed successfully; look for <code>Last Transfer Type |</code>Last Transfer Type: scheduled`</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review the lag time on critical volumes against your defined RPO thres</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check for any <code>unhealthy</code> relationships and review the reason field fo</td>
+<td><code>unhealthy</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm SnapMirror synchronous relationships show <code>In-Sync</code> status</td>
+<td><code>In-Sync</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Review transfer queue depth on the destination cluster for any backlog</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Verify SMBC mediator connectivity if AutomatedFailOver policies are in</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show all SnapMirror relationships with lag time and health status
-snapmirror show -fields lag-time,healthy,last-transfer-end-timestamp
-
-# Show full detail for a specific relationship
-snapmirror show -destination-path svm_dst:vol_dst
-
-# Show relationships currently in broken-off state
-snapmirror show -relationship-status broken-off
-
-# Trigger an immediate incremental update to a destination volume
-snapmirror update -destination-path svm_dst:vol_dst
-
-# Resync a broken-off relationship (direction: dst -&gt; src re-established)
-snapmirror resync -destination-path svm_dst:vol_dst
-
-# Break a relationship for DR failover (makes destination read-write)
-snapmirror break -destination-path svm_dst:vol_dst
-
-# Initialize a new relationship (baseline transfer)
-snapmirror initialize -destination-path svm_dst:vol_dst
-
-# Quiesce a relationship (pause future transfers, finishes current)
-snapmirror quiesce -destination-path svm_dst:vol_dst
-
-# Show transfer history and last transfer size
-snapmirror show-history -destination-path svm_dst:vol_dst
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all SnapMirror relationships with lag time and health status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,last-transfer-end-timestamp
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full detail for a specific relationship</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show relationships currently in broken-off state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Trigger an immediate incremental update to a destination volume</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Resync a broken-off relationship (direction: dst -&gt; src re-established)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Break a relationship for DR failover (makes destination read-write)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Initialize a new relationship (baseline transfer)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Quiesce a relationship (pause future transfers, finishes current)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show transfer history and last transfer size</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -930,26 +971,87 @@ snapmirror show-history -destination-path svm_dst:vol_dst
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create new async XDP relationship: create destination DP volume, create relationship with <code>snapmirror create -type XDP -policy MirrorAllSnapshots</code>, then initialize</li>
-<li>Break a relationship for DR failover: <code>snapmirror quiesce</code> then <code>snapmirror break</code>; mount destination volumes on hosts</li>
-<li>Resync after DR test: ensure source volumes are accessible, run <code>snapmirror resync -destination-path</code> — this reverses direction and re-establishes the relationship</li>
-<li>Update lag-critical volumes outside schedule: use <code>snapmirror update</code> to trigger an immediate incremental transfer</li>
-<li>Reverse resync for failback: after a real DR event with source repaired, use <code>snapmirror resync</code> with reversed source/destination to replicate changes back</li>
-<li>Modify transfer schedule or throttle bandwidth by updating the SnapMirror policy or job schedule on the destination cluster</li>
-<li>Monitor all relationships centrally from ONTAP System Manager or use the ONTAP REST API for programmatic health checks</li>
-<li>Delete a relationship cleanly: <code>snapmirror quiesce</code>, <code>snapmirror break</code>, <code>snapmirror delete -destination-path</code>; then delete destination volume separately</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create new async XDP relationship</td>
+<td><code>snapmirror create -type XDP -policy MirrorAllSnapshots</code></td>
+</tr>
+<tr>
+<td>Break a relationship for DR failover</td>
+<td><code>snapmirror quiesce</code>, <code>snapmirror break</code></td>
+</tr>
+<tr>
+<td>Resync after DR test</td>
+<td><code>snapmirror resync -destination-path</code></td>
+</tr>
+<tr>
+<td>Update lag-critical volumes outside schedule</td>
+<td><code>snapmirror update</code></td>
+</tr>
+<tr>
+<td>Reverse resync for failback</td>
+<td><code>snapmirror resync</code></td>
+</tr>
+<tr>
+<td>Modify transfer schedule or throttle bandwidth by updating the SnapMirror policy</td>
+<td></td>
+</tr>
+<tr>
+<td>Monitor all relationships centrally from ONTAP System Manager or use the ONTAP R</td>
+<td></td>
+</tr>
+<tr>
+<td>Delete a relationship cleanly</td>
+<td><code>snapmirror quiesce</code>, <code>snapmirror break</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Review the ONTAP Interoperability Matrix — SnapMirror requires the destination cluster ONTAP version to be equal to or newer than the source; never replicate to a lower version</li>
-<li>Quiesce non-critical SnapMirror relationships before upgrading the source cluster to avoid transfer failures during the rolling upgrade</li>
-<li>Upgrade the destination cluster first if upgrading both clusters, then upgrade the source — this maintains replication compatibility</li>
-<li>After ONTAP upgrade, verify all relationships return to healthy state: <code>snapmirror show -fields healthy</code> should show <code>true</code> for all</li>
-<li>For SMBC/AutomatedFailOver relationships, confirm the ONTAP Mediator service is updated to the version compatible with the new ONTAP release before upgrading clusters</li>
-<li>Test a manual <code>snapmirror update</code> on a representative volume post-upgrade to confirm transfers are functioning correctly</li>
-<li>Review the ONTAP release notes for any SnapMirror policy or command deprecations that affect your automation scripts</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Review the ONTAP Interoperability Matrix — SnapMirror requires the destination cluster ONTAP version to be equal to or newer than the source; never replicate to a lower version</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Quiesce non-critical SnapMirror relationships before upgrading the source cluster to avoid transfer failures during the rolling upgrade</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Upgrade the destination cluster first if upgrading both clusters, then upgrade the source — this maintains replication compatibility</td>
+</tr>
+<tr>
+<td>4</td>
+<td>After ONTAP upgrade, verify all relationships return to healthy state: <code>snapmirror show -fields healthy</code> should show <code>true</code> for all</td>
+</tr>
+<tr>
+<td>5</td>
+<td>For SMBC/AutomatedFailOver relationships, confirm the ONTAP Mediator service is updated to the version compatible with the new ONTAP release before upgrading clusters</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Test a manual <code>snapmirror update</code> on a representative volume post-upgrade to confirm transfers are functioning correctly</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Review the ONTAP release notes for any SnapMirror policy or command deprecations that affect your automation scripts</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Always monitor lag time against your defined RPO; set ONTAP EMS alerts on <code>snapmirror.lag.warn</code> thresholds so you know before an RPO breach</li>

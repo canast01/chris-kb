@@ -821,47 +821,47 @@
 <h1 id="flashblade-snapshots">FlashBlade Snapshots<a class="headerlink" href="#flashblade-snapshots" title="Permanent link">&para;</a></h1>
 <p>FlashBlade supports snapshots at the file system level. Snapshots are space-efficient and near-instantaneous.</p>
 <h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb fs-snapshot list
-purefb fs-snapshot list --filter &quot;source='&lt;fs_name&gt;'&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;source=&#39;&lt;fs_name&gt;&#39;&quot;</span>
+</code></pre></div>
 <h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb fs-snapshot create --source &lt;fs_name&gt; --suffix &lt;snap_name&gt;
-</code></pre>
-<p>Example:</p>
-<pre><code class="language-bash">purefb fs-snapshot create --source prod-nfs --suffix daily-2026-05-06
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
+</code></pre></div>
+<p>Example:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>prod-nfs<span class="w"> </span>--suffix<span class="w"> </span>daily-2026-05-06
+</code></pre></div></p>
 <h2 id="accessing-snapshot-data">Accessing Snapshot Data<a class="headerlink" href="#accessing-snapshot-data" title="Permanent link">&para;</a></h2>
 <p>Snapshots are accessible via the NFS <code>.snapshot</code> directory (if enabled):</p>
-<pre><code class="language-bash">ls /mnt/&lt;fs_mount&gt;/.snapshot/
-# Lists available snapshots by suffix
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ls<span class="w"> </span>/mnt/&lt;fs_mount&gt;/.snapshot/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Lists available snapshots by suffix</span>
+</code></pre></div>
 <p>Users can browse and copy files directly from the <code>.snapshot</code> path without administrator involvement.</p>
 <h2 id="restore-a-file-system-from-snapshot">Restore a File System from Snapshot<a class="headerlink" href="#restore-a-file-system-from-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Overwrite the live file system with snapshot content
-purefb fs-snapshot restore &lt;fs_name&gt;.&lt;snap_name&gt; --overwrite-fs
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Overwrite the live file system with snapshot content</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>restore<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--overwrite-fs
+</code></pre></div>
 <blockquote>
 <p>This replaces all current data on the file system — ensure this is intentional.</p>
 </blockquote>
 <h2 id="copy-a-snapshot-to-a-new-file-system">Copy a Snapshot to a New File System<a class="headerlink" href="#copy-a-snapshot-to-a-new-file-system" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb fs-snapshot copy &lt;fs_name&gt;.&lt;snap_name&gt; --name &lt;new_fs_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>copy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;new_fs_name&gt;
+</code></pre></div>
 <p>Creates a new independent file system from the snapshot without affecting the original.</p>
 <h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Destroy (recoverable for 24 hours)
-purefb fs-snapshot destroy &lt;fs_name&gt;.&lt;snap_name&gt;
-
-# Eradicate permanently
-purefb fs-snapshot eradicate &lt;fs_name&gt;.&lt;snap_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Destroy (recoverable for 24 hours)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>destroy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Eradicate permanently</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>eradicate<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
+</code></pre></div>
 <h2 id="snapshot-policy-automated-scheduling">Snapshot Policy (Automated Scheduling)<a class="headerlink" href="#snapshot-policy-automated-scheduling" title="Permanent link">&para;</a></h2>
 <p>FlashBlade supports policy-based snapshots via the GUI:
 1. Navigate to <strong>Protection → Snapshot Policies</strong>
 2. Create a policy with frequency and retention settings
 3. Assign the policy to file systems</p>
-<pre><code class="language-bash"># View policies via CLI
-purefb policies list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View policies via CLI</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purefb<span class="w"> </span>policies<span class="w"> </span>list
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

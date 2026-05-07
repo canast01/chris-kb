@@ -811,52 +811,61 @@
 <blockquote>
 <p>Part of the <a href="../">vSAN CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    VMkernel["VMkernel)"]
+    VMkernel --&gt; S0["vSAN VMkernel Adapters"]
+    VMkernel --&gt; S1["Unicast Agent Configuration"]
+    VMkernel --&gt; S2["Connectivity Test"]
+    VMkernel --&gt; S3["Verifying VMkernel Tagging"]
+    VMkernel --&gt; S4["MTU Verification"]
+    VMkernel --&gt; S5["Network Configuration Commands"]
+    VMkernel --&gt; S6["Troubleshooting Reference"]</code></pre>
 <h2 id="vsan-vmkernel-adapters">vSAN VMkernel Adapters<a class="headerlink" href="#vsan-vmkernel-adapters" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List VMkernel adapters tagged for vSAN traffic
-esxcli vsan network list
-
-# Output fields: adapter name, IP, gateway, traffic type tag
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List VMkernel adapters tagged for vSAN traffic</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Output fields: adapter name, IP, gateway, traffic type tag</span>
+</code></pre></div>
 <h2 id="unicast-agent-configuration">Unicast Agent Configuration<a class="headerlink" href="#unicast-agent-configuration" title="Permanent link">&para;</a></h2>
 <p>vSAN uses unicast by default (multicast no longer required from vSAN 6.6+).</p>
-<pre><code class="language-bash"># View unicast agent config — shows peer IPs for each vSAN VMkernel
-esxcli vsan network ipconfig list
-
-# Per-adapter unicast peers (who this host talks to in the cluster)
-esxcli vsan network ipconfig list | grep -E &quot;Adapter|Unicast&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View unicast agent config — shows peer IPs for each vSAN VMkernel</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Per-adapter unicast peers (who this host talks to in the cluster)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Adapter|Unicast&quot;</span>
+</code></pre></div>
 <h2 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Test vSAN network connectivity to all cluster peers
-esxcli vsan debug network test
-
-# This sends UDP probes to all known unicast agents and reports latency / loss
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test vSAN network connectivity to all cluster peers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># This sends UDP probes to all known unicast agents and reports latency / loss</span>
+</code></pre></div>
 <h2 id="verifying-vmkernel-tagging">Verifying VMkernel Tagging<a class="headerlink" href="#verifying-vmkernel-tagging" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm vmk is tagged for vSAN
-esxcli network ip interface tag get -i vmk2   # replace vmk2 with actual adapter
-
-# Expected output includes: VSAN
-
-# Add vSAN tag to a VMkernel (if missing)
-esxcli network ip interface tag add -i vmk2 -t VSAN
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm vmk is tagged for vSAN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>get<span class="w"> </span>-i<span class="w"> </span>vmk2<span class="w">   </span><span class="c1"># replace vmk2 with actual adapter</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Expected output includes: VSAN</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Add vSAN tag to a VMkernel (if missing)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>-i<span class="w"> </span>vmk2<span class="w"> </span>-t<span class="w"> </span>VSAN
+</code></pre></div>
 <h2 id="mtu-verification">MTU Verification<a class="headerlink" href="#mtu-verification" title="Permanent link">&para;</a></h2>
 <p>vSAN performs best with jumbo frames (MTU 9000) end-to-end.</p>
-<pre><code class="language-bash"># Check VMkernel MTU
-esxcli network ip interface list | grep -A5 vmk2
-
-# Test large packet through physical switches (ping with don't-fragment)
-vmkping -I vmk2 -d -s 8972 &lt;peer_vmk_ip&gt;
-
-# Expected: no packet loss. If loss occurs — switch or NIC MTU mismatch
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check VMkernel MTU</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk2
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test large packet through physical switches (ping with don&#39;t-fragment)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer_vmk_ip&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: no packet loss. If loss occurs — switch or NIC MTU mismatch</span>
+</code></pre></div>
 <h2 id="network-configuration-commands">Network Configuration Commands<a class="headerlink" href="#network-configuration-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a vSAN VMkernel (if not using vSphere UI)
-esxcli vsan network ip add -i vmk2
-
-# Remove a VMkernel from vSAN network config
-esxcli vsan network ip remove -i vmk2
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add a vSAN VMkernel (if not using vSphere UI)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>add<span class="w"> </span>-i<span class="w"> </span>vmk2
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Remove a VMkernel from vSAN network config</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>vmk2
+</code></pre></div>
 <h2 id="troubleshooting-reference">Troubleshooting Reference<a class="headerlink" href="#troubleshooting-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

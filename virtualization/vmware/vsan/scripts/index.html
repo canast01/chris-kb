@@ -933,82 +933,82 @@
 <hr />
 <h2 id="vsan-cluster-health-check-powershell-powercli">vSAN Cluster Health Check (PowerShell / PowerCLI)<a class="headerlink" href="#vsan-cluster-health-check-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Run the full vSAN health test suite via PowerCLI and exit non-zero if any test is YELLOW or RED.</p>
-<pre><code class="language-powershell">#Requires -Modules VMware.PowerCLI
-# vsan_cluster_health.ps1
-# Usage: pwsh -File vsan_cluster_health.ps1
-# Env vars: VCENTER_HOST, VC_USER, VC_PASS, CLUSTER_NAME
-
-param(
-    [string]$VCenterHost  = $env:VCENTER_HOST,
-    [string]$VCUser       = $env:VC_USER,
-    [string]$VCPass       = $env:VC_PASS,
-    [string]$ClusterName  = $env:CLUSTER_NAME
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-
-$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
-
-Write-Host &quot;`n=== vSAN Health Check: $($cluster.Name) ===&quot; -ForegroundColor Cyan
-Write-Host &quot;($(Get-Date -Format 'o'))`n&quot;
-
-$overallExit = 0
-
-# --- Cluster health summary ---
-$healthSummary = Get-VsanClusterHealthSummary -Cluster $cluster -FetchFromCache:$false
-foreach ($group in $healthSummary.Groups) {
-    foreach ($test in $group.GroupTests) {
-        $s = switch ($test.TestHealth) {
-            'green'   { 'PASS'     }
-            'yellow'  { 'WARNING'  }
-            'red'     { 'CRITICAL' }
-            default   { 'UNKNOWN'  }
-        }
-        $colour = switch ($s) {
-            'PASS'     { 'Green'  }
-            'WARNING'  { 'Yellow' }
-            'CRITICAL' { 'Red'    }
-            default    { 'White'  }
-        }
-        if ($s -eq 'CRITICAL') { $overallExit = 2 }
-        if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-        Write-Host (&quot;[{0,-8}] {1}&quot; -f $s, $test.TestName) -ForegroundColor $colour
-    }
-}
-
-# --- Disk group capacity ---
-Write-Host &quot;`n--- Disk Group Capacity ---&quot;
-$diskGroups = Get-VsanDiskGroup -Cluster $cluster
-foreach ($dg in $diskGroups) {
-    $capacityDisks = $dg.ExtensionData.DiskMapping.NonSsd
-    $totalGB  = ($capacityDisks | Measure-Object -Property CapacityGB -Sum).Sum
-    $usedGB   = ($capacityDisks | Measure-Object -Property UsedGB     -Sum).Sum
-    $usedPct  = if ($totalGB -gt 0) { [Math]::Round($usedGB / $totalGB * 100, 1) } else { 0 }
-    $s = if ($usedPct -ge 70) { 'WARNING' } else { 'PASS' }
-    if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-    Write-Host (&quot;[{0,-8}] Host={1}  Total={2:N0}GB  Used={3:N0}GB  {4}%&quot; -f
-        $s, $dg.VMHost.Name, $totalGB, $usedGB, $usedPct)
-}
-
-# --- Object resync status ---
-Write-Host &quot;`n--- Resync Status ---&quot;
-$vsanView = Get-VsanView -Id &quot;VsanObjectSystem-vsan-cluster-object-system&quot;
-if ($vsanView) {
-    $resync = $vsanView.VsanQueryObjectIdentities($cluster.ExtensionData.MoRef, $null, $null, $false, $true, $false)
-    $resyncing = if ($resync) { ($resync.Health | Where-Object { $_.Status -ne 'healthy' }).Count } else { 0 }
-    $s = if ($resyncing -gt 0) { 'WARNING' } else { 'PASS' }
-    if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-    Write-Host (&quot;[{0,-8}] Objects resyncing: {1}&quot; -f $s, $resyncing)
-}
-
-Write-Host &quot;`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})&quot;
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">#Requires -Modules VMware.PowerCLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># vsan_cluster_health.ps1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Usage: pwsh -File vsan_cluster_health.ps1</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Env vars: VCENTER_HOST, VC_USER, VC_PASS, CLUSTER_NAME</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="no">[string]</span><span class="nv">$VCenterHost</span>  <span class="p">=</span> <span class="nv">$env:VCENTER_HOST</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="no">[string]</span><span class="nv">$VCUser</span>       <span class="p">=</span> <span class="nv">$env:VC_USER</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="no">[string]</span><span class="nv">$VCPass</span>       <span class="p">=</span> <span class="nv">$env:VC_PASS</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="no">[string]</span><span class="nv">$ClusterName</span>  <span class="p">=</span> <span class="nv">$env:CLUSTER_NAME</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="nv">$VCUser</span><span class="p">,</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$VCPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$VCenterHost</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="nv">$ClusterName</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== vSAN Health Check: </span><span class="p">$(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">Write-Host</span> <span class="s2">&quot;(</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span><span class="s2">)</span><span class="se">`n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c"># --- Cluster health summary ---</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nv">$healthSummary</span> <span class="p">=</span> <span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="n">-FetchFromCache</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$group</span> <span class="k">in</span> <span class="nv">$healthSummary</span><span class="p">.</span><span class="n">Groups</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$test</span> <span class="k">in</span> <span class="nv">$group</span><span class="p">.</span><span class="n">GroupTests</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="nv">$s</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$test</span><span class="p">.</span><span class="n">TestHealth</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="s1">&#39;green&#39;</span>   <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span>     <span class="p">}</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            <span class="s1">&#39;yellow&#39;</span>  <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            <span class="s1">&#39;red&#39;</span>     <span class="p">{</span> <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="k">default</span>   <span class="p">{</span> <span class="s1">&#39;UNKNOWN&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="p">}</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="nv">$colour</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$s</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>            <span class="s1">&#39;PASS&#39;</span>     <span class="p">{</span> <span class="s1">&#39;Green&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>            <span class="s1">&#39;WARNING&#39;</span>  <span class="p">{</span> <span class="s1">&#39;Yellow&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>            <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">{</span> <span class="s1">&#39;Red&#39;</span>    <span class="p">}</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>            <span class="k">default</span>    <span class="p">{</span> <span class="s1">&#39;White&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="p">}</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;CRITICAL&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">2</span> <span class="p">}</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="o">-and</span> <span class="nv">$overallExit</span> <span class="o">-lt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">1</span> <span class="p">}</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;[{0,-8}] {1}&quot;</span> <span class="o">-f</span> <span class="nv">$s</span><span class="p">,</span> <span class="nv">$test</span><span class="p">.</span><span class="n">TestName</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="p">}</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="p">}</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="c"># --- Disk group capacity ---</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">--- Disk Group Capacity ---&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="nv">$diskGroups</span> <span class="p">=</span> <span class="nb">Get-VsanDiskGroup</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$dg</span> <span class="k">in</span> <span class="nv">$diskGroups</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="nv">$capacityDisks</span> <span class="p">=</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">DiskMapping</span><span class="p">.</span><span class="n">NonSsd</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    <span class="nv">$totalGB</span>  <span class="p">=</span> <span class="p">(</span><span class="nv">$capacityDisks</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    <span class="nv">$usedGB</span>   <span class="p">=</span> <span class="p">(</span><span class="nv">$capacityDisks</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">UsedGB</span>     <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="nv">$usedPct</span>  <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$totalGB</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$usedGB</span> <span class="p">/</span> <span class="nv">$totalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="n">0</span> <span class="p">}</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    <span class="nv">$s</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$usedPct</span> <span class="o">-ge</span> <span class="n">70</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="o">-and</span> <span class="nv">$overallExit</span> <span class="o">-lt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">1</span> <span class="p">}</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;[{0,-8}] Host={1}  Total={2:N0}GB  Used={3:N0}GB  {4}%&quot;</span> <span class="o">-f</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>        <span class="nv">$s</span><span class="p">,</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="nv">$totalGB</span><span class="p">,</span> <span class="nv">$usedGB</span><span class="p">,</span> <span class="nv">$usedPct</span><span class="p">)</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="p">}</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="c"># --- Object resync status ---</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">--- Resync Status ---&quot;</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a><span class="nv">$vsanView</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanObjectSystem-vsan-cluster-object-system&quot;</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$vsanView</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nv">$vsanView</span><span class="p">.</span><span class="n">VsanQueryObjectIdentities</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$false</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>    <span class="nv">$resyncing</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$resync</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$resync</span><span class="p">.</span><span class="n">Health</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;healthy&#39;</span> <span class="p">}).</span><span class="n">Count</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="n">0</span> <span class="p">}</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    <span class="nv">$s</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$resyncing</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span> <span class="p">}</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="o">-and</span> <span class="nv">$overallExit</span> <span class="o">-lt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">1</span> <span class="p">}</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;[{0,-8}] Objects resyncing: {1}&quot;</span> <span class="o">-f</span> <span class="nv">$s</span><span class="p">,</span> <span class="nv">$resyncing</span><span class="p">)</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a><span class="p">}</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">Overall: </span><span class="p">$(</span><span class="k">if</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">){</span><span class="s1">&#39;PASS&#39;</span><span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">1</span><span class="p">){</span><span class="s1">&#39;WARNING&#39;</span><span class="p">}</span> <span class="k">else</span><span class="p">{</span><span class="s1">&#39;CRITICAL&#39;</span><span class="p">})</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a><span class="n">exit</span> <span class="nv">$overallExit</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -1061,93 +1061,93 @@ exit $overallExit
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\vsan_cluster_health.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>.\vsan_cluster_health.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>=== vSAN Health Check: vSAN-Cluster ===
-
-[PASS    ] vSAN Health Service up-to-date
-[PASS    ] All hosts contributing stats
-[PASS    ] Network latency check
-[WARNING ] Disk format version
-
---- Disk Group Capacity ---
-[PASS    ] Host=esxi-01.local  Total=3072GB  Used=1100GB  35.8%
-
---- Resync Status ---
-[PASS    ] Objects resyncing: 0
-
-Overall: WARNING
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>=== vSAN Health Check: vSAN-Cluster ===
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[PASS    ] vSAN Health Service up-to-date
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>[PASS    ] All hosts contributing stats
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>[PASS    ] Network latency check
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>[WARNING ] Disk format version
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>--- Disk Group Capacity ---
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>[PASS    ] Host=esxi-01.local  Total=3072GB  Used=1100GB  35.8%
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>--- Resync Status ---
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>[PASS    ] Objects resyncing: 0
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>Overall: WARNING
+</code></pre></div>
 <p>Any test in yellow appears in yellow text, red tests in red. The script exits with code 1 for warnings, 2 for critical failures.</p>
 <hr />
 <h2 id="disk-group-capacity-report-powershell-powercli">Disk Group Capacity Report (PowerShell / PowerCLI)<a class="headerlink" href="#disk-group-capacity-report-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Print a per-host, per-disk-group capacity table showing cache and capacity tier details, sorted by utilization.</p>
-<pre><code class="language-powershell">#Requires -Modules VMware.PowerCLI
-# vsan_diskgroup_report.ps1
-# Usage: pwsh -File vsan_diskgroup_report.ps1
-
-param(
-    [string]$VCenterHost = $env:VCENTER_HOST,
-    [string]$VCUser      = $env:VC_USER,
-    [string]$VCPass      = $env:VC_PASS,
-    [string]$ClusterName = $env:CLUSTER_NAME,
-    [int]$WarnPercent    = 70
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
-
-$results = [System.Collections.Generic.List[PSObject]]::new()
-
-foreach ($dg in (Get-VsanDiskGroup -Cluster $cluster)) {
-    $cacheDisk = $dg.ExtensionData.DiskMapping.Ssd
-    $capDisks  = $dg.ExtensionData.DiskMapping.NonSsd
-
-    $cacheSizeGB  = [Math]::Round(($cacheDisk | Measure-Object -Property CapacityGB -Sum).Sum, 0)
-    $cacheHealth  = ($cacheDisk | ForEach-Object { $_.OperationalState }) -join ','
-
-    $totalGB = [Math]::Round(($capDisks | Measure-Object -Property CapacityGB -Sum).Sum, 0)
-    $usedGB  = [Math]::Round(($capDisks | Measure-Object -Property UsedGB -Sum).Sum, 0)
-    $freeGB  = $totalGB - $usedGB
-    $pct     = if ($totalGB -gt 0) { [Math]::Round($usedGB / $totalGB * 100, 1) } else { 0 }
-
-    $results.Add([PSCustomObject]@{
-        Host        = $dg.VMHost.Name
-        DiskGroup   = $dg.Name
-        CacheGB     = $cacheSizeGB
-        CacheHealth = $cacheHealth
-        TotalGB     = $totalGB
-        UsedGB      = $usedGB
-        FreeGB      = $freeGB
-        UsedPct     = $pct
-        Status      = if ($pct -ge $WarnPercent) { 'WARNING' } else { 'PASS' }
-    })
-}
-
-$sorted = $results | Sort-Object UsedPct -Descending
-$header = &quot;{0,-25} {1,-20} {2,9} {3,-12} {4,9} {5,9} {6,9} {7,7} {8}&quot;
-Write-Host ($header -f &quot;Host&quot;, &quot;DiskGroup&quot;, &quot;Cache GB&quot;, &quot;CacheHealth&quot;, &quot;Total GB&quot;, &quot;Used GB&quot;, &quot;Free GB&quot;, &quot;Used%&quot;, &quot;Status&quot;)
-Write-Host (&quot;-&quot; * 105)
-foreach ($r in $sorted) {
-    $colour = if ($r.Status -eq 'WARNING') { 'Yellow' } else { 'White' }
-    Write-Host ($header -f $r.Host, $r.DiskGroup, $r.CacheGB, $r.CacheHealth,
-        $r.TotalGB, $r.UsedGB, $r.FreeGB, &quot;$($r.UsedPct)%&quot;, $r.Status) -ForegroundColor $colour
-}
-
-$warnCount = ($sorted | Where-Object { $_.Status -eq 'WARNING' }).Count
-Write-Host &quot;`nDisk groups above ${WarnPercent}%: $warnCount&quot;
-Disconnect-VIServer -Confirm:$false
-exit ($warnCount -gt 0 ? 1 : 0)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">#Requires -Modules VMware.PowerCLI</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># vsan_diskgroup_report.ps1</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Usage: pwsh -File vsan_diskgroup_report.ps1</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="no">[string]</span><span class="nv">$VCenterHost</span> <span class="p">=</span> <span class="nv">$env:VCENTER_HOST</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="no">[string]</span><span class="nv">$VCUser</span>      <span class="p">=</span> <span class="nv">$env:VC_USER</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="no">[string]</span><span class="nv">$VCPass</span>      <span class="p">=</span> <span class="nv">$env:VC_PASS</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="no">[string]</span><span class="nv">$ClusterName</span> <span class="p">=</span> <span class="nv">$env:CLUSTER_NAME</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="no">[int]</span><span class="nv">$WarnPercent</span>    <span class="p">=</span> <span class="n">70</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="nv">$VCUser</span><span class="p">,</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$VCPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$VCenterHost</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="nv">$ClusterName</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nv">$results</span> <span class="p">=</span> <span class="no">[System.Collections.Generic.List[PSObject]]</span><span class="p">::</span><span class="n">new</span><span class="p">()</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$dg</span> <span class="k">in</span> <span class="p">(</span><span class="nb">Get-VsanDiskGroup</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="nv">$cacheDisk</span> <span class="p">=</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">DiskMapping</span><span class="p">.</span><span class="n">Ssd</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    <span class="nv">$capDisks</span>  <span class="p">=</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">DiskMapping</span><span class="p">.</span><span class="n">NonSsd</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    <span class="nv">$cacheSizeGB</span>  <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$cacheDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">0</span><span class="p">)</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    <span class="nv">$cacheHealth</span>  <span class="p">=</span> <span class="p">(</span><span class="nv">$cacheDisk</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OperationalState</span> <span class="p">})</span> <span class="n">-join</span> <span class="s1">&#39;,&#39;</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    <span class="nv">$totalGB</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$capDisks</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">0</span><span class="p">)</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>    <span class="nv">$usedGB</span>  <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$capDisks</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">UsedGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">0</span><span class="p">)</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    <span class="nv">$freeGB</span>  <span class="p">=</span> <span class="nv">$totalGB</span> <span class="p">-</span> <span class="nv">$usedGB</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>    <span class="nv">$pct</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$totalGB</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$usedGB</span> <span class="p">/</span> <span class="nv">$totalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="n">0</span> <span class="p">}</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="nv">$results</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>        <span class="n">Host</span>        <span class="p">=</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>        <span class="n">DiskGroup</span>   <span class="p">=</span> <span class="nv">$dg</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>        <span class="n">CacheGB</span>     <span class="p">=</span> <span class="nv">$cacheSizeGB</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>        <span class="n">CacheHealth</span> <span class="p">=</span> <span class="nv">$cacheHealth</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>        <span class="n">TotalGB</span>     <span class="p">=</span> <span class="nv">$totalGB</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>        <span class="n">UsedGB</span>      <span class="p">=</span> <span class="nv">$usedGB</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>        <span class="n">FreeGB</span>      <span class="p">=</span> <span class="nv">$freeGB</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>        <span class="n">UsedPct</span>     <span class="p">=</span> <span class="nv">$pct</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>        <span class="n">Status</span>      <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$pct</span> <span class="o">-ge</span> <span class="nv">$WarnPercent</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span> <span class="p">}</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>    <span class="p">})</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="p">}</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="nv">$sorted</span> <span class="p">=</span> <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">UsedPct</span> <span class="n">-Descending</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="nv">$header</span> <span class="p">=</span> <span class="s2">&quot;{0,-25} {1,-20} {2,9} {3,-12} {4,9} {5,9} {6,9} {7,7} {8}&quot;</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="s2">&quot;Host&quot;</span><span class="p">,</span> <span class="s2">&quot;DiskGroup&quot;</span><span class="p">,</span> <span class="s2">&quot;Cache GB&quot;</span><span class="p">,</span> <span class="s2">&quot;CacheHealth&quot;</span><span class="p">,</span> <span class="s2">&quot;Total GB&quot;</span><span class="p">,</span> <span class="s2">&quot;Used GB&quot;</span><span class="p">,</span> <span class="s2">&quot;Free GB&quot;</span><span class="p">,</span> <span class="s2">&quot;Used%&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="p">*</span> <span class="n">105</span><span class="p">)</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$r</span> <span class="k">in</span> <span class="nv">$sorted</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>    <span class="nv">$colour</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$r</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;Yellow&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;White&#39;</span> <span class="p">}</span>
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>    <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="nv">$r</span><span class="p">.</span><span class="n">Host</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">DiskGroup</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">CacheGB</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">CacheHealth</span><span class="p">,</span>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>        <span class="nv">$r</span><span class="p">.</span><span class="n">TotalGB</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">UsedGB</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">FreeGB</span><span class="p">,</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$r</span><span class="p">.</span><span class="n">UsedPct</span><span class="p">)</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="nv">$r</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="p">}</span>
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="nv">$warnCount</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$sorted</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}).</span><span class="n">Count</span>
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">Disk groups above ${WarnPercent}%: $warnCount&quot;</span>
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="n">exit</span> <span class="p">(</span><span class="nv">$warnCount</span> <span class="o">-gt</span> <span class="n">0</span> <span class="p">?</span> <span class="n">1</span> <span class="p">:</span> <span class="n">0</span><span class="p">)</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_1">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_1" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -1205,132 +1205,132 @@ exit ($warnCount -gt 0 ? 1 : 0)
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\vsan_diskgroup_report.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>.\vsan_diskgroup_report.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>Host                      DiskGroup            Cache GB CacheHealth   Total GB  Used GB  Free GB  Used% Status
----------------------------------------------------------------------------------------------------------
-esxi-01.company.local     DiskGroup-1               400 ok               3072     2200      872  71.6% WARNING
-esxi-02.company.local     DiskGroup-1               400 ok               3072     1100     1972  35.8% PASS
-
-Disk groups above 70%: 1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Host                      DiskGroup            Cache GB CacheHealth   Total GB  Used GB  Free GB  Used% Status
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>---------------------------------------------------------------------------------------------------------
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxi-01.company.local     DiskGroup-1               400 ok               3072     2200      872  71.6% WARNING
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxi-02.company.local     DiskGroup-1               400 ok               3072     1100     1972  35.8% PASS
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Disk groups above 70%: 1
+</code></pre></div>
 <p>Disk groups above 70% appear in yellow. The script exits with code 1 if any disk group is above the threshold.</p>
 <hr />
 <h2 id="vsan-object-health-check-python-pyvmomi">vSAN Object Health Check (Python / pyVmomi)<a class="headerlink" href="#vsan-object-health-check-python-pyvmomi" title="Permanent link">&para;</a></h2>
 <p>Connect to vCenter via pyVmomi, query all vSAN objects, and report any that are not in a healthy state.</p>
-<pre><code class="language-python">#!/usr/bin/env python3
-&quot;&quot;&quot;
-vsan_object_health.py
-Usage: python3 vsan_object_health.py
-Deps: pip install pyVmomi
-&quot;&quot;&quot;
-
-import os, ssl, sys
-from pyVim.connect import SmartConnect, Disconnect
-from pyVmomi      import vim, vmodl
-
-VCENTER_HOST = os.environ.get(&quot;VCENTER_HOST&quot;, &quot;vcenter.local&quot;)
-VC_USER      = os.environ.get(&quot;VC_USER&quot;,      &quot;administrator@vsphere.local&quot;)
-VC_PASS      = os.environ.get(&quot;VC_PASS&quot;,      &quot;&quot;)
-CLUSTER_NAME = os.environ.get(&quot;CLUSTER_NAME&quot;, &quot;vSAN-Cluster&quot;)
-
-context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-context.check_hostname = False
-context.verify_mode    = ssl.CERT_NONE
-
-si      = SmartConnect(host=VCENTER_HOST, user=VC_USER, pwd=VC_PASS, sslContext=context)
-content = si.RetrieveContent()
-
-# Find cluster
-cluster = None
-for dc in content.rootFolder.childEntity:
-    if not hasattr(dc, 'hostFolder'): continue
-    for item in dc.hostFolder.childEntity:
-        if hasattr(item, 'name') and item.name == CLUSTER_NAME:
-            cluster = item
-            break
-
-if not cluster:
-    print(f&quot;Cluster '{CLUSTER_NAME}' not found.&quot;)
-    sys.exit(2)
-
-print(f&quot;=== vSAN Object Health: {CLUSTER_NAME} ===\n&quot;)
-
-# Use VsanObjectSystem to query object health
-vsan_obj_sys = None
-for mo in content.viewManager.CreateContainerView(
-    content.rootFolder, [vim.ClusterComputeResource], True
-).view:
-    if mo.name == CLUSTER_NAME:
-        try:
-            vsan_obj_sys = si._stub.GetServiceInstance().content.serviceContent
-        except Exception:
-            pass
-        break
-
-# Fallback: inspect vm config datastores for vSAN object identities
-issues = []
-vm_container = content.viewManager.CreateContainerView(
-    content.rootFolder, [vim.VirtualMachine], True
-)
-
-for vm in vm_container.view:
-    try:
-        runtime = vm.runtime
-        if not hasattr(runtime, 'dasVmProtection'):
-            continue
-        # Check each virtual disk
-        for device in vm.config.hardware.device:
-            if not isinstance(device, vim.vm.device.VirtualDisk):
-                continue
-            backing = device.backing
-            if not hasattr(backing, 'backingObjectId'):
-                continue
-            # vSAN-backed disk — check accessibility
-            if hasattr(runtime, 'connectionState') and runtime.connectionState == 'inaccessible':
-                issues.append({
-                    &quot;vm&quot;:     vm.name,
-                    &quot;type&quot;:   &quot;vmdk&quot;,
-                    &quot;label&quot;:  device.deviceInfo.label,
-                    &quot;state&quot;:  &quot;inaccessible&quot;,
-                })
-    except Exception:
-        pass
-
-vm_container.Destroy()
-
-# Check VM home directories
-vm2 = content.viewManager.CreateContainerView(
-    content.rootFolder, [vim.VirtualMachine], True
-)
-for vm in vm2.view:
-    try:
-        if vm.runtime.connectionState == 'inaccessible':
-            issues.append({&quot;vm&quot;: vm.name, &quot;type&quot;: &quot;vm_home&quot;, &quot;label&quot;: &quot;config&quot;, &quot;state&quot;: &quot;inaccessible&quot;})
-        elif vm.runtime.connectionState == 'orphaned':
-            issues.append({&quot;vm&quot;: vm.name, &quot;type&quot;: &quot;vm_home&quot;, &quot;label&quot;: &quot;config&quot;, &quot;state&quot;: &quot;orphaned&quot;})
-    except Exception:
-        pass
-vm2.Destroy()
-
-if issues:
-    print(f&quot;{'VM':&lt;30} {'Type':&lt;10} {'Label':&lt;25} {'State'}&quot;)
-    print(&quot;-&quot; * 75)
-    for i in issues:
-        print(f&quot;{i['vm']:&lt;30} {i['type']:&lt;10} {i['label']:&lt;25} {i['state']}&quot;)
-    print(f&quot;\nInaccessible/degraded objects: {len(issues)}&quot;)
-    Disconnect(si)
-    sys.exit(1)
-else:
-    print(&quot;All vSAN-backed VM objects appear accessible.&quot;)
-    Disconnect(si)
-    sys.exit(0)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="sd">vsan_object_health.py</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="sd">Usage: python3 vsan_object_health.py</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="sd">Deps: pip install pyVmomi</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">ssl</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyVim.connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartConnect</span><span class="p">,</span> <span class="n">Disconnect</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyVmomi</span><span class="w">      </span><span class="kn">import</span> <span class="n">vim</span><span class="p">,</span> <span class="n">vmodl</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">VCENTER_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VCENTER_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;vcenter.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">VC_USER</span>      <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VC_USER&quot;</span><span class="p">,</span>      <span class="s2">&quot;administrator@vsphere.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">VC_PASS</span>      <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VC_PASS&quot;</span><span class="p">,</span>      <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="n">CLUSTER_NAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CLUSTER_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;vSAN-Cluster&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLContext</span><span class="p">(</span><span class="n">ssl</span><span class="o">.</span><span class="n">PROTOCOL_TLS_CLIENT</span><span class="p">)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="n">context</span><span class="o">.</span><span class="n">check_hostname</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="n">context</span><span class="o">.</span><span class="n">verify_mode</span>    <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">CERT_NONE</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="n">si</span>      <span class="o">=</span> <span class="n">SmartConnect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">VCENTER_HOST</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">VC_USER</span><span class="p">,</span> <span class="n">pwd</span><span class="o">=</span><span class="n">VC_PASS</span><span class="p">,</span> <span class="n">sslContext</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="n">content</span> <span class="o">=</span> <span class="n">si</span><span class="o">.</span><span class="n">RetrieveContent</span><span class="p">()</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Find cluster</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="n">cluster</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="k">for</span> <span class="n">dc</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">rootFolder</span><span class="o">.</span><span class="n">childEntity</span><span class="p">:</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dc</span><span class="p">,</span> <span class="s1">&#39;hostFolder&#39;</span><span class="p">):</span> <span class="k">continue</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dc</span><span class="o">.</span><span class="n">hostFolder</span><span class="o">.</span><span class="n">childEntity</span><span class="p">:</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">CLUSTER_NAME</span><span class="p">:</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>            <span class="n">cluster</span> <span class="o">=</span> <span class="n">item</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>            <span class="k">break</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="k">if</span> <span class="ow">not</span> <span class="n">cluster</span><span class="p">:</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster &#39;</span><span class="si">{</span><span class="n">CLUSTER_NAME</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== vSAN Object Health: </span><span class="si">{</span><span class="n">CLUSTER_NAME</span><span class="si">}</span><span class="s2"> ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="c1"># Use VsanObjectSystem to query object health</span>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="n">vsan_obj_sys</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a><span class="k">for</span> <span class="n">mo</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">viewManager</span><span class="o">.</span><span class="n">CreateContainerView</span><span class="p">(</span>
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>    <span class="n">content</span><span class="o">.</span><span class="n">rootFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">vim</span><span class="o">.</span><span class="n">ClusterComputeResource</span><span class="p">],</span> <span class="kc">True</span>
+<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">:</span>
+<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a>    <span class="k">if</span> <span class="n">mo</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">CLUSTER_NAME</span><span class="p">:</span>
+<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a>            <span class="n">vsan_obj_sys</span> <span class="o">=</span> <span class="n">si</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetServiceInstance</span><span class="p">()</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">serviceContent</span>
+<a id="__codelineno-8-47" name="__codelineno-8-47" href="#__codelineno-8-47"></a>        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-8-48" name="__codelineno-8-48" href="#__codelineno-8-48"></a>            <span class="k">pass</span>
+<a id="__codelineno-8-49" name="__codelineno-8-49" href="#__codelineno-8-49"></a>        <span class="k">break</span>
+<a id="__codelineno-8-50" name="__codelineno-8-50" href="#__codelineno-8-50"></a>
+<a id="__codelineno-8-51" name="__codelineno-8-51" href="#__codelineno-8-51"></a><span class="c1"># Fallback: inspect vm config datastores for vSAN object identities</span>
+<a id="__codelineno-8-52" name="__codelineno-8-52" href="#__codelineno-8-52"></a><span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-8-53" name="__codelineno-8-53" href="#__codelineno-8-53"></a><span class="n">vm_container</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">viewManager</span><span class="o">.</span><span class="n">CreateContainerView</span><span class="p">(</span>
+<a id="__codelineno-8-54" name="__codelineno-8-54" href="#__codelineno-8-54"></a>    <span class="n">content</span><span class="o">.</span><span class="n">rootFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">vim</span><span class="o">.</span><span class="n">VirtualMachine</span><span class="p">],</span> <span class="kc">True</span>
+<a id="__codelineno-8-55" name="__codelineno-8-55" href="#__codelineno-8-55"></a><span class="p">)</span>
+<a id="__codelineno-8-56" name="__codelineno-8-56" href="#__codelineno-8-56"></a>
+<a id="__codelineno-8-57" name="__codelineno-8-57" href="#__codelineno-8-57"></a><span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vm_container</span><span class="o">.</span><span class="n">view</span><span class="p">:</span>
+<a id="__codelineno-8-58" name="__codelineno-8-58" href="#__codelineno-8-58"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-8-59" name="__codelineno-8-59" href="#__codelineno-8-59"></a>        <span class="n">runtime</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">runtime</span>
+<a id="__codelineno-8-60" name="__codelineno-8-60" href="#__codelineno-8-60"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">runtime</span><span class="p">,</span> <span class="s1">&#39;dasVmProtection&#39;</span><span class="p">):</span>
+<a id="__codelineno-8-61" name="__codelineno-8-61" href="#__codelineno-8-61"></a>            <span class="k">continue</span>
+<a id="__codelineno-8-62" name="__codelineno-8-62" href="#__codelineno-8-62"></a>        <span class="c1"># Check each virtual disk</span>
+<a id="__codelineno-8-63" name="__codelineno-8-63" href="#__codelineno-8-63"></a>        <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">vm</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+<a id="__codelineno-8-64" name="__codelineno-8-64" href="#__codelineno-8-64"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">vim</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">VirtualDisk</span><span class="p">):</span>
+<a id="__codelineno-8-65" name="__codelineno-8-65" href="#__codelineno-8-65"></a>                <span class="k">continue</span>
+<a id="__codelineno-8-66" name="__codelineno-8-66" href="#__codelineno-8-66"></a>            <span class="n">backing</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">backing</span>
+<a id="__codelineno-8-67" name="__codelineno-8-67" href="#__codelineno-8-67"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">backing</span><span class="p">,</span> <span class="s1">&#39;backingObjectId&#39;</span><span class="p">):</span>
+<a id="__codelineno-8-68" name="__codelineno-8-68" href="#__codelineno-8-68"></a>                <span class="k">continue</span>
+<a id="__codelineno-8-69" name="__codelineno-8-69" href="#__codelineno-8-69"></a>            <span class="c1"># vSAN-backed disk — check accessibility</span>
+<a id="__codelineno-8-70" name="__codelineno-8-70" href="#__codelineno-8-70"></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">runtime</span><span class="p">,</span> <span class="s1">&#39;connectionState&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">runtime</span><span class="o">.</span><span class="n">connectionState</span> <span class="o">==</span> <span class="s1">&#39;inaccessible&#39;</span><span class="p">:</span>
+<a id="__codelineno-8-71" name="__codelineno-8-71" href="#__codelineno-8-71"></a>                <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-8-72" name="__codelineno-8-72" href="#__codelineno-8-72"></a>                    <span class="s2">&quot;vm&quot;</span><span class="p">:</span>     <span class="n">vm</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-8-73" name="__codelineno-8-73" href="#__codelineno-8-73"></a>                    <span class="s2">&quot;type&quot;</span><span class="p">:</span>   <span class="s2">&quot;vmdk&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-74" name="__codelineno-8-74" href="#__codelineno-8-74"></a>                    <span class="s2">&quot;label&quot;</span><span class="p">:</span>  <span class="n">device</span><span class="o">.</span><span class="n">deviceInfo</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+<a id="__codelineno-8-75" name="__codelineno-8-75" href="#__codelineno-8-75"></a>                    <span class="s2">&quot;state&quot;</span><span class="p">:</span>  <span class="s2">&quot;inaccessible&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-76" name="__codelineno-8-76" href="#__codelineno-8-76"></a>                <span class="p">})</span>
+<a id="__codelineno-8-77" name="__codelineno-8-77" href="#__codelineno-8-77"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-8-78" name="__codelineno-8-78" href="#__codelineno-8-78"></a>        <span class="k">pass</span>
+<a id="__codelineno-8-79" name="__codelineno-8-79" href="#__codelineno-8-79"></a>
+<a id="__codelineno-8-80" name="__codelineno-8-80" href="#__codelineno-8-80"></a><span class="n">vm_container</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+<a id="__codelineno-8-81" name="__codelineno-8-81" href="#__codelineno-8-81"></a>
+<a id="__codelineno-8-82" name="__codelineno-8-82" href="#__codelineno-8-82"></a><span class="c1"># Check VM home directories</span>
+<a id="__codelineno-8-83" name="__codelineno-8-83" href="#__codelineno-8-83"></a><span class="n">vm2</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">viewManager</span><span class="o">.</span><span class="n">CreateContainerView</span><span class="p">(</span>
+<a id="__codelineno-8-84" name="__codelineno-8-84" href="#__codelineno-8-84"></a>    <span class="n">content</span><span class="o">.</span><span class="n">rootFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">vim</span><span class="o">.</span><span class="n">VirtualMachine</span><span class="p">],</span> <span class="kc">True</span>
+<a id="__codelineno-8-85" name="__codelineno-8-85" href="#__codelineno-8-85"></a><span class="p">)</span>
+<a id="__codelineno-8-86" name="__codelineno-8-86" href="#__codelineno-8-86"></a><span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vm2</span><span class="o">.</span><span class="n">view</span><span class="p">:</span>
+<a id="__codelineno-8-87" name="__codelineno-8-87" href="#__codelineno-8-87"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-8-88" name="__codelineno-8-88" href="#__codelineno-8-88"></a>        <span class="k">if</span> <span class="n">vm</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">connectionState</span> <span class="o">==</span> <span class="s1">&#39;inaccessible&#39;</span><span class="p">:</span>
+<a id="__codelineno-8-89" name="__codelineno-8-89" href="#__codelineno-8-89"></a>            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;vm&quot;</span><span class="p">:</span> <span class="n">vm</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vm_home&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;inaccessible&quot;</span><span class="p">})</span>
+<a id="__codelineno-8-90" name="__codelineno-8-90" href="#__codelineno-8-90"></a>        <span class="k">elif</span> <span class="n">vm</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">connectionState</span> <span class="o">==</span> <span class="s1">&#39;orphaned&#39;</span><span class="p">:</span>
+<a id="__codelineno-8-91" name="__codelineno-8-91" href="#__codelineno-8-91"></a>            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;vm&quot;</span><span class="p">:</span> <span class="n">vm</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vm_home&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;orphaned&quot;</span><span class="p">})</span>
+<a id="__codelineno-8-92" name="__codelineno-8-92" href="#__codelineno-8-92"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-8-93" name="__codelineno-8-93" href="#__codelineno-8-93"></a>        <span class="k">pass</span>
+<a id="__codelineno-8-94" name="__codelineno-8-94" href="#__codelineno-8-94"></a><span class="n">vm2</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+<a id="__codelineno-8-95" name="__codelineno-8-95" href="#__codelineno-8-95"></a>
+<a id="__codelineno-8-96" name="__codelineno-8-96" href="#__codelineno-8-96"></a><span class="k">if</span> <span class="n">issues</span><span class="p">:</span>
+<a id="__codelineno-8-97" name="__codelineno-8-97" href="#__codelineno-8-97"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;VM&#39;</span><span class="si">:</span><span class="s2">&lt;30</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Type&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Label&#39;</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;State&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-98" name="__codelineno-8-98" href="#__codelineno-8-98"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">75</span><span class="p">)</span>
+<a id="__codelineno-8-99" name="__codelineno-8-99" href="#__codelineno-8-99"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">issues</span><span class="p">:</span>
+<a id="__codelineno-8-100" name="__codelineno-8-100" href="#__codelineno-8-100"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;vm&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;30</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;25</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-101" name="__codelineno-8-101" href="#__codelineno-8-101"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Inaccessible/degraded objects: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">issues</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-102" name="__codelineno-8-102" href="#__codelineno-8-102"></a>    <span class="n">Disconnect</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+<a id="__codelineno-8-103" name="__codelineno-8-103" href="#__codelineno-8-103"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-8-104" name="__codelineno-8-104" href="#__codelineno-8-104"></a><span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-8-105" name="__codelineno-8-105" href="#__codelineno-8-105"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All vSAN-backed VM objects appear accessible.&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-106" name="__codelineno-8-106" href="#__codelineno-8-106"></a>    <span class="n">Disconnect</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+<a id="__codelineno-8-107" name="__codelineno-8-107" href="#__codelineno-8-107"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
@@ -1381,90 +1381,90 @@ else:
 <p><strong>Step 3 — Open Command Prompt</strong></p>
 <p>Windows key → type <code>cmd</code> → press Enter</p>
 <p><strong>Step 4 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-python vsan_object_health.py
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>python vsan_object_health.py
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<p>If everything is healthy:</p>
-<pre><code>=== vSAN Object Health: vSAN-Cluster ===
-
-All vSAN-backed VM objects appear accessible.
-</code></pre>
-<p>If issues are found:</p>
-<pre><code>VM                             Type       Label                     State
----------------------------------------------------------------------------
-web-server-broken              vmdk       Hard disk 1               inaccessible
-
-Inaccessible/degraded objects: 1
-</code></pre>
+<p>If everything is healthy:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>=== vSAN Object Health: vSAN-Cluster ===
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>All vSAN-backed VM objects appear accessible.
+</code></pre></div></p>
+<p>If issues are found:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>VM                             Type       Label                     State
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>---------------------------------------------------------------------------
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>web-server-broken              vmdk       Hard disk 1               inaccessible
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Inaccessible/degraded objects: 1
+</code></pre></div></p>
 <p>The script exits with code 1 if any inaccessible objects are found.</p>
 <hr />
 <h2 id="performance-baseline-check-powershell-powercli">Performance Baseline Check (PowerShell / PowerCLI)<a class="headerlink" href="#performance-baseline-check-powershell-powercli" title="Permanent link">&para;</a></h2>
 <p>Collect 24-hour vSAN performance statistics via <code>Get-VsanStat</code> and compare key metrics against configurable baselines.</p>
-<pre><code class="language-powershell">#Requires -Modules VMware.PowerCLI
-# vsan_perf_baseline.ps1
-# Usage: pwsh -File vsan_perf_baseline.ps1
-
-param(
-    [string]$VCenterHost = $env:VCENTER_HOST,
-    [string]$VCUser      = $env:VC_USER,
-    [string]$VCPass      = $env:VC_PASS,
-    [string]$ClusterName = $env:CLUSTER_NAME
-)
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
-
-# Configurable baselines
-$baselines = @{
-    'Backend.Throughput.Read.Average'   = 500    # MB/s
-    'Backend.Throughput.Write.Average'  = 300
-    'Performance.ReadIops.Average'      = 50000  # IOPS
-    'Performance.WriteIops.Average'     = 30000
-    'Performance.ReadLatency.Average'   = 5      # ms
-    'Performance.WriteLatency.Average'  = 10
-    'Congestion.Average'                = 10
-    'Overbooking.Average'               = 20
-}
-
-$startTime = (Get-Date).AddHours(-24)
-$endTime   = Get-Date
-
-Write-Host &quot;`n=== vSAN Performance Baseline: $($cluster.Name) ===&quot; -ForegroundColor Cyan
-Write-Host &quot;Period: $($startTime.ToString('o')) → $($endTime.ToString('o'))`n&quot;
-
-$header = &quot;{0,-45} {1,14} {2,14} {3,14} {4}&quot;
-Write-Host ($header -f &quot;Metric&quot;, &quot;Avg Value&quot;, &quot;Baseline&quot;, &quot;Delta%&quot;, &quot;Status&quot;)
-Write-Host (&quot;-&quot; * 100)
-
-$overallExit = 0
-
-foreach ($metric in $baselines.Keys | Sort-Object) {
-    try {
-        $stats = Get-VsanStat -Cluster $cluster -Name $metric `
-            -StartTime $startTime -EndTime $endTime -ErrorAction SilentlyContinue
-        if (-not $stats) { continue }
-        $avg = [Math]::Round(($stats | Measure-Object -Property Value -Average).Average, 2)
-        $baseline = $baselines[$metric]
-        $deltaPct = if ($baseline -gt 0) { [Math]::Round(($avg - $baseline) / $baseline * 100, 1) } else { 0 }
-        $status = if ($deltaPct -gt 20) { 'WARNING' } elseif ($deltaPct -gt 50) { 'CRITICAL' } else { 'PASS' }
-        if ($status -eq 'CRITICAL') { $overallExit = 2 }
-        if ($status -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-        $colour = switch ($status) { 'PASS'{'Green'} 'WARNING'{'Yellow'} 'CRITICAL'{'Red'} default{'White'} }
-        Write-Host ($header -f $metric, $avg, $baseline, &quot;${deltaPct}%&quot;, $status) -ForegroundColor $colour
-    } catch {
-        Write-Host ($header -f $metric, &quot;N/A&quot;, $baselines[$metric], &quot;-&quot;, &quot;SKIPPED&quot;)
-    }
-}
-
-Write-Host &quot;`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})&quot;
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c">#Requires -Modules VMware.PowerCLI</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># vsan_perf_baseline.ps1</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c"># Usage: pwsh -File vsan_perf_baseline.ps1</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="no">[string]</span><span class="nv">$VCenterHost</span> <span class="p">=</span> <span class="nv">$env:VCENTER_HOST</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="no">[string]</span><span class="nv">$VCUser</span>      <span class="p">=</span> <span class="nv">$env:VC_USER</span><span class="p">,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="no">[string]</span><span class="nv">$VCPass</span>      <span class="p">=</span> <span class="nv">$env:VC_PASS</span><span class="p">,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="no">[string]</span><span class="nv">$ClusterName</span> <span class="p">=</span> <span class="nv">$env:CLUSTER_NAME</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="nv">$VCUser</span><span class="p">,</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$VCPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">)</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$VCenterHost</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="nv">$ClusterName</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c"># Configurable baselines</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="nv">$baselines</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="s1">&#39;Backend.Throughput.Read.Average&#39;</span>   <span class="p">=</span> <span class="n">500</span>    <span class="c"># MB/s</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    <span class="s1">&#39;Backend.Throughput.Write.Average&#39;</span>  <span class="p">=</span> <span class="n">300</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    <span class="s1">&#39;Performance.ReadIops.Average&#39;</span>      <span class="p">=</span> <span class="n">50000</span>  <span class="c"># IOPS</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    <span class="s1">&#39;Performance.WriteIops.Average&#39;</span>     <span class="p">=</span> <span class="n">30000</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>    <span class="s1">&#39;Performance.ReadLatency.Average&#39;</span>   <span class="p">=</span> <span class="n">5</span>      <span class="c"># ms</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    <span class="s1">&#39;Performance.WriteLatency.Average&#39;</span>  <span class="p">=</span> <span class="n">10</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>    <span class="s1">&#39;Congestion.Average&#39;</span>                <span class="p">=</span> <span class="n">10</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>    <span class="s1">&#39;Overbooking.Average&#39;</span>               <span class="p">=</span> <span class="n">20</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="p">}</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="nv">$startTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="nv">$endTime</span>   <span class="p">=</span> <span class="nb">Get-Date</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== vSAN Performance Baseline: </span><span class="p">$(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Period: </span><span class="p">$(</span><span class="nv">$startTime</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">))</span><span class="s2"> → </span><span class="p">$(</span><span class="nv">$endTime</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">))</span><span class="se">`n</span><span class="s2">&quot;</span>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="nv">$header</span> <span class="p">=</span> <span class="s2">&quot;{0,-45} {1,14} {2,14} {3,14} {4}&quot;</span>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="s2">&quot;Metric&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg Value&quot;</span><span class="p">,</span> <span class="s2">&quot;Baseline&quot;</span><span class="p">,</span> <span class="s2">&quot;Delta%&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="p">*</span> <span class="n">100</span><span class="p">)</span>
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$metric</span> <span class="k">in</span> <span class="nv">$baselines</span><span class="p">.</span><span class="n">Keys</span> <span class="p">|</span> <span class="nb">Sort-Object</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>        <span class="nv">$stats</span> <span class="p">=</span> <span class="nb">Get-VsanStat</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="n">-Name</span> <span class="nv">$metric</span> <span class="p">`</span>
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>            <span class="n">-StartTime</span> <span class="nv">$startTime</span> <span class="n">-EndTime</span> <span class="nv">$endTime</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a>        <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$stats</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span> <span class="p">}</span>
+<a id="__codelineno-12-48" name="__codelineno-12-48" href="#__codelineno-12-48"></a>        <span class="nv">$avg</span> <span class="p">=</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$stats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-12-49" name="__codelineno-12-49" href="#__codelineno-12-49"></a>        <span class="nv">$baseline</span> <span class="p">=</span> <span class="nv">$baselines</span><span class="p">[</span><span class="nv">$metric</span><span class="p">]</span>
+<a id="__codelineno-12-50" name="__codelineno-12-50" href="#__codelineno-12-50"></a>        <span class="nv">$deltaPct</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$baseline</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="no">[Math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$avg</span> <span class="p">-</span> <span class="nv">$baseline</span><span class="p">)</span> <span class="p">/</span> <span class="nv">$baseline</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="n">0</span> <span class="p">}</span>
+<a id="__codelineno-12-51" name="__codelineno-12-51" href="#__codelineno-12-51"></a>        <span class="nv">$status</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$deltaPct</span> <span class="o">-gt</span> <span class="n">20</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span> <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$deltaPct</span> <span class="o">-gt</span> <span class="n">50</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span> <span class="p">}</span>
+<a id="__codelineno-12-52" name="__codelineno-12-52" href="#__codelineno-12-52"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$status</span> <span class="o">-eq</span> <span class="s1">&#39;CRITICAL&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">2</span> <span class="p">}</span>
+<a id="__codelineno-12-53" name="__codelineno-12-53" href="#__codelineno-12-53"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$status</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="o">-and</span> <span class="nv">$overallExit</span> <span class="o">-lt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">1</span> <span class="p">}</span>
+<a id="__codelineno-12-54" name="__codelineno-12-54" href="#__codelineno-12-54"></a>        <span class="nv">$colour</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$status</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span><span class="p">{</span><span class="s1">&#39;Green&#39;</span><span class="p">}</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">{</span><span class="s1">&#39;Yellow&#39;</span><span class="p">}</span> <span class="s1">&#39;CRITICAL&#39;</span><span class="p">{</span><span class="s1">&#39;Red&#39;</span><span class="p">}</span> <span class="k">default</span><span class="p">{</span><span class="s1">&#39;White&#39;</span><span class="p">}</span> <span class="p">}</span>
+<a id="__codelineno-12-55" name="__codelineno-12-55" href="#__codelineno-12-55"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="nv">$metric</span><span class="p">,</span> <span class="nv">$avg</span><span class="p">,</span> <span class="nv">$baseline</span><span class="p">,</span> <span class="s2">&quot;${deltaPct}%&quot;</span><span class="p">,</span> <span class="nv">$status</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-12-56" name="__codelineno-12-56" href="#__codelineno-12-56"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-12-57" name="__codelineno-12-57" href="#__codelineno-12-57"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="nv">$metric</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="nv">$baselines</span><span class="p">[</span><span class="nv">$metric</span><span class="p">],</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;SKIPPED&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-58" name="__codelineno-12-58" href="#__codelineno-12-58"></a>    <span class="p">}</span>
+<a id="__codelineno-12-59" name="__codelineno-12-59" href="#__codelineno-12-59"></a><span class="p">}</span>
+<a id="__codelineno-12-60" name="__codelineno-12-60" href="#__codelineno-12-60"></a>
+<a id="__codelineno-12-61" name="__codelineno-12-61" href="#__codelineno-12-61"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">Overall: </span><span class="p">$(</span><span class="k">if</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">){</span><span class="s1">&#39;PASS&#39;</span><span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">1</span><span class="p">){</span><span class="s1">&#39;WARNING&#39;</span><span class="p">}</span> <span class="k">else</span><span class="p">{</span><span class="s1">&#39;CRITICAL&#39;</span><span class="p">})</span><span class="s2">&quot;</span>
+<a id="__codelineno-12-62" name="__codelineno-12-62" href="#__codelineno-12-62"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-12-63" name="__codelineno-12-63" href="#__codelineno-12-63"></a><span class="n">exit</span> <span class="nv">$overallExit</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_3">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_3" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -1518,98 +1518,98 @@ exit $overallExit
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\vsan_perf_baseline.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>.\vsan_perf_baseline.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>=== vSAN Performance Baseline: vSAN-Cluster ===
-Period: 2026-05-05T14:30:00 → 2026-05-06T14:30:00
-
-Metric                                            Avg Value       Baseline         Delta% Status
-----------------------------------------------------------------------------------------------------
-Backend.Throughput.Read.Average                      412.50          500           -17.5% PASS
-Performance.ReadLatency.Average                        3.20            5           -36.0% PASS
-Performance.WriteLatency.Average                      18.50           10            85.0% WARNING
-
-Overall: WARNING
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>=== vSAN Performance Baseline: vSAN-Cluster ===
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Period: 2026-05-05T14:30:00 → 2026-05-06T14:30:00
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>Metric                                            Avg Value       Baseline         Delta% Status
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>----------------------------------------------------------------------------------------------------
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>Backend.Throughput.Read.Average                      412.50          500           -17.5% PASS
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>Performance.ReadLatency.Average                        3.20            5           -36.0% PASS
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>Performance.WriteLatency.Average                      18.50           10            85.0% WARNING
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>Overall: WARNING
+</code></pre></div>
 <p>Metrics more than 20% above baseline appear in yellow (WARNING), more than 50% above in red (CRITICAL).</p>
 <hr />
 <h2 id="ansible-vsan-health-playbook">Ansible vSAN Health Playbook<a class="headerlink" href="#ansible-vsan-health-playbook" title="Permanent link">&para;</a></h2>
 <p>Use <code>community.vmware</code> to gather vSAN cluster info, run health checks, inspect disk groups, and assert all health tests pass.</p>
-<pre><code class="language-yaml">---
-# vsan_health.yml
-# Usage: ansible-playbook -i inventory vsan_health.yml
-# Deps: ansible-galaxy collection install community.vmware
-# Vars: vcenter_hostname, datacenter_name, cluster_name, vc_username, vc_password
-
-- name: vSAN Cluster Health Check
-  hosts: localhost
-  gather_facts: false
-  vars:
-    vcenter_hostname: vcenter.local
-    datacenter_name:  Production
-    cluster_name:     vSAN-Cluster
-    vc_username:      &quot;{{ lookup('env','VC_USER') }}&quot;
-    vc_password:      &quot;{{ lookup('env','VC_PASS') }}&quot;
-
-  tasks:
-
-    - name: Gather vSAN cluster health info
-      community.vmware.vmware_vsan_health_info:
-        hostname:       &quot;{{ vcenter_hostname }}&quot;
-        username:       &quot;{{ vc_username }}&quot;
-        password:       &quot;{{ vc_password }}&quot;
-        cluster_name:   &quot;{{ cluster_name }}&quot;
-        validate_certs: false
-      register: vsan_health
-
-    - name: Show vSAN health groups
-      ansible.builtin.debug:
-        var: vsan_health.vsan_health_info
-
-    - name: Assert no RED health tests
-      ansible.builtin.assert:
-        that: &gt;
-          vsan_health.vsan_health_info.groups | default([]) | map(attribute='tests') | flatten
-          | selectattr('testHealth', 'equalto', 'red') | list | length == 0
-        fail_msg: &quot;One or more vSAN health tests are RED — immediate attention required&quot;
-        success_msg: &quot;No RED vSAN health tests found&quot;
-
-    - name: Assert no YELLOW health tests
-      ansible.builtin.assert:
-        that: &gt;
-          vsan_health.vsan_health_info.groups | default([]) | map(attribute='tests') | flatten
-          | selectattr('testHealth', 'equalto', 'yellow') | list | length == 0
-        fail_msg: &quot;One or more vSAN health tests are YELLOW — review required&quot;
-        success_msg: &quot;No YELLOW vSAN health tests found&quot;
-      register: yellow_assert
-      failed_when: false  # report but don't halt on yellow
-
-    - name: Gather cluster facts (for disk group info)
-      community.vmware.vmware_cluster_info:
-        hostname:       &quot;{{ vcenter_hostname }}&quot;
-        username:       &quot;{{ vc_username }}&quot;
-        password:       &quot;{{ vc_password }}&quot;
-        datacenter:     &quot;{{ datacenter_name }}&quot;
-        validate_certs: false
-      register: cluster_facts
-
-    - name: Output health summary
-      ansible.builtin.debug:
-        msg:
-          - &quot;vSAN health check complete for cluster: {{ cluster_name }}&quot;
-          - &quot;Yellow tests assertion: {{ yellow_assert.msg | default('N/A') }}&quot;
-          - &quot;Cluster info retrieved: {{ cluster_facts.clusters[cluster_name] is defined }}&quot;
-
-    - name: Notify on failures (placeholder — replace with your notification method)
-      ansible.builtin.debug:
-        msg: &quot;ALERT: vSAN health issue detected on {{ cluster_name }}&quot;
-      when: yellow_assert is failed
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nn">---</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># vsan_health.yml</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Usage: ansible-playbook -i inventory vsan_health.yml</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Deps: ansible-galaxy collection install community.vmware</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Vars: vcenter_hostname, datacenter_name, cluster_name, vc_username, vc_password</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vSAN Cluster Health Check</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span><span class="nt">vcenter_hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vcenter.local</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="nt">datacenter_name</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Production</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span><span class="nt">cluster_name</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">vSAN-Cluster</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">    </span><span class="nt">vc_username</span><span class="p">:</span><span class="w">      </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;env&#39;,&#39;VC_USER&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span><span class="nt">vc_password</span><span class="p">:</span><span class="w">      </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">lookup(&#39;env&#39;,&#39;VC_PASS&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gather vSAN cluster health info</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="w">      </span><span class="nt">community.vmware.vmware_vsan_health_info</span><span class="p">:</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">        </span><span class="nt">cluster_name</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan_health</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show vSAN health groups</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">        </span><span class="nt">var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan_health.vsan_health_info</span>
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Assert no RED health tests</span>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="w">      </span><span class="nt">ansible.builtin.assert</span><span class="p">:</span>
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="w">        </span><span class="nt">that</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="w">          </span><span class="no">vsan_health.vsan_health_info.groups | default([]) | map(attribute=&#39;tests&#39;) | flatten</span>
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="w">          </span><span class="no">| selectattr(&#39;testHealth&#39;, &#39;equalto&#39;, &#39;red&#39;) | list | length == 0</span>
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="w">        </span><span class="nt">fail_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;One</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">more</span><span class="nv"> </span><span class="s">vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">tests</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">RED</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">immediate</span><span class="nv"> </span><span class="s">attention</span><span class="nv"> </span><span class="s">required&quot;</span>
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">        </span><span class="nt">success_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">RED</span><span class="nv"> </span><span class="s">vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">tests</span><span class="nv"> </span><span class="s">found&quot;</span>
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a>
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Assert no YELLOW health tests</span>
+<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a><span class="w">      </span><span class="nt">ansible.builtin.assert</span><span class="p">:</span>
+<a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a><span class="w">        </span><span class="nt">that</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a><span class="w">          </span><span class="no">vsan_health.vsan_health_info.groups | default([]) | map(attribute=&#39;tests&#39;) | flatten</span>
+<a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a><span class="w">          </span><span class="no">| selectattr(&#39;testHealth&#39;, &#39;equalto&#39;, &#39;yellow&#39;) | list | length == 0</span>
+<a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a><span class="w">        </span><span class="nt">fail_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;One</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">more</span><span class="nv"> </span><span class="s">vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">tests</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">YELLOW</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">review</span><span class="nv"> </span><span class="s">required&quot;</span>
+<a id="__codelineno-16-46" name="__codelineno-16-46" href="#__codelineno-16-46"></a><span class="w">        </span><span class="nt">success_msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">YELLOW</span><span class="nv"> </span><span class="s">vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">tests</span><span class="nv"> </span><span class="s">found&quot;</span>
+<a id="__codelineno-16-47" name="__codelineno-16-47" href="#__codelineno-16-47"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yellow_assert</span>
+<a id="__codelineno-16-48" name="__codelineno-16-48" href="#__codelineno-16-48"></a><span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># report but don&#39;t halt on yellow</span>
+<a id="__codelineno-16-49" name="__codelineno-16-49" href="#__codelineno-16-49"></a>
+<a id="__codelineno-16-50" name="__codelineno-16-50" href="#__codelineno-16-50"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gather cluster facts (for disk group info)</span>
+<a id="__codelineno-16-51" name="__codelineno-16-51" href="#__codelineno-16-51"></a><span class="w">      </span><span class="nt">community.vmware.vmware_cluster_info</span><span class="p">:</span>
+<a id="__codelineno-16-52" name="__codelineno-16-52" href="#__codelineno-16-52"></a><span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vcenter_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-53" name="__codelineno-16-53" href="#__codelineno-16-53"></a><span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_username</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-54" name="__codelineno-16-54" href="#__codelineno-16-54"></a><span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w">       </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vc_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-55" name="__codelineno-16-55" href="#__codelineno-16-55"></a><span class="w">        </span><span class="nt">datacenter</span><span class="p">:</span><span class="w">     </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">datacenter_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-56" name="__codelineno-16-56" href="#__codelineno-16-56"></a><span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-16-57" name="__codelineno-16-57" href="#__codelineno-16-57"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster_facts</span>
+<a id="__codelineno-16-58" name="__codelineno-16-58" href="#__codelineno-16-58"></a>
+<a id="__codelineno-16-59" name="__codelineno-16-59" href="#__codelineno-16-59"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Output health summary</span>
+<a id="__codelineno-16-60" name="__codelineno-16-60" href="#__codelineno-16-60"></a><span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<a id="__codelineno-16-61" name="__codelineno-16-61" href="#__codelineno-16-61"></a><span class="w">        </span><span class="nt">msg</span><span class="p">:</span>
+<a id="__codelineno-16-62" name="__codelineno-16-62" href="#__codelineno-16-62"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">check</span><span class="nv"> </span><span class="s">complete</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">cluster:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-63" name="__codelineno-16-63" href="#__codelineno-16-63"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Yellow</span><span class="nv"> </span><span class="s">tests</span><span class="nv"> </span><span class="s">assertion:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">yellow_assert.msg</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">default(&#39;N/A&#39;)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-64" name="__codelineno-16-64" href="#__codelineno-16-64"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Cluster</span><span class="nv"> </span><span class="s">info</span><span class="nv"> </span><span class="s">retrieved:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster_facts.clusters[cluster_name]</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">defined</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-65" name="__codelineno-16-65" href="#__codelineno-16-65"></a>
+<a id="__codelineno-16-66" name="__codelineno-16-66" href="#__codelineno-16-66"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify on failures (placeholder — replace with your notification method)</span>
+<a id="__codelineno-16-67" name="__codelineno-16-67" href="#__codelineno-16-67"></a><span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<a id="__codelineno-16-68" name="__codelineno-16-68" href="#__codelineno-16-68"></a><span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ALERT:</span><span class="nv"> </span><span class="s">vSAN</span><span class="nv"> </span><span class="s">health</span><span class="nv"> </span><span class="s">issue</span><span class="nv"> </span><span class="s">detected</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-16-69" name="__codelineno-16-69" href="#__codelineno-16-69"></a><span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yellow_assert is failed</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_4">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_4" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
@@ -1620,8 +1620,8 @@ Overall: WARNING
 - Network access to your vCenter server</p>
 <p><strong>Step 1 — Save the file</strong></p>
 <p>In your WSL terminal:</p>
-<pre><code class="language-bash">nano ~/vsan_health.yml
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>nano<span class="w"> </span>~/vsan_health.yml
+</code></pre></div>
 <p>Paste the entire code block, then press <code>Ctrl+X</code>, then <code>Y</code>, then <code>Enter</code> to save.</p>
 <p><strong>Step 2 — Fill in your details</strong></p>
 <p>Open the file and update the <code>vars:</code> section:</p>
@@ -1652,114 +1652,114 @@ Overall: WARNING
 </tbody>
 </table>
 <p><strong>Step 3 — Set credentials as environment variables</strong></p>
-<pre><code class="language-bash">export VC_USER=&quot;administrator@vsphere.local&quot;
-export VC_PASS=&quot;YourPassword&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VC_USER</span><span class="o">=</span><span class="s2">&quot;administrator@vsphere.local&quot;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VC_PASS</span><span class="o">=</span><span class="s2">&quot;YourPassword&quot;</span>
+</code></pre></div>
 <p><strong>Step 4 — Create a minimal inventory file</strong></p>
-<pre><code class="language-bash">echo &quot;localhost ansible_connection=local&quot; &gt; ~/inventory
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;localhost ansible_connection=local&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>~/inventory
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code class="language-bash">ansible-playbook -i ~/inventory ~/vsan_health.yml
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>~/inventory<span class="w"> </span>~/vsan_health.yml
+</code></pre></div>
 <p><strong>What you should see</strong></p>
 <p>Each task prints <code>ok</code> or <code>failed</code>. A RED health test causes a hard failure. YELLOW tests are reported but do not stop the playbook (they are logged with <code>failed_when: false</code>). The final debug task prints a summary.</p>
 <hr />
 <h2 id="windows-vsan-health-check-via-powercli-powershell">Windows: vSAN Health Check via PowerCLI (PowerShell)<a class="headerlink" href="#windows-vsan-health-check-via-powercli-powershell" title="Permanent link">&para;</a></h2>
 <p>Use PowerCLI to connect to vCenter, retrieve vSAN cluster configuration and health summary, and highlight any tests in warning or critical state.</p>
-<pre><code class="language-powershell"># vsan_health_windows.ps1
-# Requires PowerCLI: Install-Module VMware.PowerCLI -Scope CurrentUser -Force
-# Requires PowerShell 5.1+ (already on Windows 10/11).
-
-param(
-    [string]$VCenterHost = &quot;vcenter.company.local&quot;,
-    [string]$VCUser      = &quot;administrator@vsphere.local&quot;,
-    [string]$VCPass      = &quot;YourPasswordHere&quot;
-)
-
-# Install PowerCLI if not already installed (run PowerShell as Administrator first):
-# Install-Module VMware.PowerCLI -Scope CurrentUser -Force
-
-Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
-
-$cred = New-Object System.Management.Automation.PSCredential(
-    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
-)
-
-try {
-    Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
-    Write-Host &quot;Connected to vCenter: $VCenterHost&quot; -ForegroundColor Green
-} catch {
-    Write-Host &quot;ERROR: Could not connect to vCenter. Check IP, username, and password.&quot; -ForegroundColor Red
-    Write-Host $_.Exception.Message
-    exit 1
-}
-
-Write-Host &quot;`n=== vSAN Cluster Health Summary ===&quot; -ForegroundColor Cyan
-Write-Host &quot;($(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))`n&quot;
-
-$overallExit = 0
-$clusters = Get-Cluster | Where-Object { $_.VsanEnabled }
-
-if (-not $clusters) {
-    Write-Host &quot;No vSAN-enabled clusters found.&quot; -ForegroundColor Yellow
-    Disconnect-VIServer -Confirm:$false
-    exit 0
-}
-
-foreach ($cluster in $clusters) {
-    Write-Host &quot;--- Cluster: $($cluster.Name) ---&quot; -ForegroundColor Cyan
-
-    # Get vSAN cluster configuration
-    try {
-        $vsanConfig = Get-VsanClusterConfiguration -Cluster $cluster
-        Write-Host &quot;  Deduplication enabled : $($vsanConfig.SpaceEfficiencyEnabled)&quot;
-        Write-Host &quot;  Encryption enabled    : $($vsanConfig.EncryptionEnabled)&quot;
-        Write-Host &quot;  Default FTT policy    : $($vsanConfig.DefaultStoragePolicy)&quot;
-    } catch {
-        Write-Host &quot;  Configuration: could not retrieve ($($_.Exception.Message))&quot; -ForegroundColor Yellow
-    }
-
-    Write-Host &quot;&quot;
-
-    # Run health summary
-    try {
-        $healthSummary = Get-VsanClusterHealthSummary -Cluster $cluster -FetchFromCache:$false
-        Write-Host &quot;  Health Test Results:&quot;
-        $header = &quot;    {0,-55} {1}&quot;
-        Write-Host ($header -f &quot;Test Name&quot;, &quot;Status&quot;)
-        Write-Host (&quot;    &quot; + &quot;-&quot; * 65)
-
-        foreach ($group in $healthSummary.Groups) {
-            Write-Host &quot;    [Group: $($group.GroupName)]&quot; -ForegroundColor White
-            foreach ($test in $group.GroupTests) {
-                $s = switch ($test.TestHealth) {
-                    'green'  { 'PASS'     }
-                    'yellow' { 'WARNING'  }
-                    'red'    { 'CRITICAL' }
-                    default  { 'UNKNOWN'  }
-                }
-                $colour = switch ($s) {
-                    'PASS'     { 'Green'  }
-                    'WARNING'  { 'Yellow' }
-                    'CRITICAL' { 'Red'    }
-                    default    { 'White'  }
-                }
-                if ($s -eq 'CRITICAL') { $overallExit = 2 }
-                if ($s -eq 'WARNING' -and $overallExit -lt 2) { $overallExit = 1 }
-                Write-Host ($header -f &quot;      $($test.TestName)&quot;, $s) -ForegroundColor $colour
-            }
-        }
-    } catch {
-        Write-Host &quot;  Health check: could not retrieve ($($_.Exception.Message))&quot; -ForegroundColor Yellow
-    }
-
-    Write-Host &quot;&quot;
-}
-
-Write-Host &quot;Overall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})&quot;
-Disconnect-VIServer -Confirm:$false
-exit $overallExit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># vsan_health_windows.ps1</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c"># Requires PowerCLI: Install-Module VMware.PowerCLI -Scope CurrentUser -Force</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c"># Requires PowerShell 5.1+ (already on Windows 10/11).</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="no">[string]</span><span class="nv">$VCenterHost</span> <span class="p">=</span> <span class="s2">&quot;vcenter.company.local&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="no">[string]</span><span class="nv">$VCUser</span>      <span class="p">=</span> <span class="s2">&quot;administrator@vsphere.local&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="no">[string]</span><span class="nv">$VCPass</span>      <span class="p">=</span> <span class="s2">&quot;YourPasswordHere&quot;</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="p">)</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="c"># Install PowerCLI if not already installed (run PowerShell as Administrator first):</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="c"># Install-Module VMware.PowerCLI -Scope CurrentUser -Force</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>    <span class="nv">$VCUser</span><span class="p">,</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="nv">$VCPass</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="p">)</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>    <span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$VCenterHost</span> <span class="n">-Credential</span> <span class="nv">$cred</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Connected to vCenter: $VCenterHost&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;ERROR: Could not connect to vCenter. Check IP, username, and password.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Red</span>
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>    <span class="nb">Write-Host</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>    <span class="n">exit</span> <span class="n">1</span>
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a><span class="p">}</span>
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== vSAN Cluster Health Summary ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a><span class="nb">Write-Host</span> <span class="s2">&quot;(</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">)</span><span class="s2">)</span><span class="se">`n</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a><span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">0</span>
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a><span class="nv">$clusters</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">VsanEnabled</span> <span class="p">}</span>
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$clusters</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;No vSAN-enabled clusters found.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>    <span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>    <span class="n">exit</span> <span class="n">0</span>
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a><span class="p">}</span>
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$cluster</span> <span class="k">in</span> <span class="nv">$clusters</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;--- Cluster: </span><span class="p">$(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ---&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>    <span class="c"># Get vSAN cluster configuration</span>
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>        <span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Deduplication enabled : </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">SpaceEfficiencyEnabled</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Encryption enabled    : </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">EncryptionEnabled</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Default FTT policy    : </span><span class="p">$(</span><span class="nv">$vsanConfig</span><span class="p">.</span><span class="n">DefaultStoragePolicy</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Configuration: could not retrieve (</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>    <span class="p">}</span>
+<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>
+<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-55" name="__codelineno-21-55" href="#__codelineno-21-55"></a>
+<a id="__codelineno-21-56" name="__codelineno-21-56" href="#__codelineno-21-56"></a>    <span class="c"># Run health summary</span>
+<a id="__codelineno-21-57" name="__codelineno-21-57" href="#__codelineno-21-57"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-21-58" name="__codelineno-21-58" href="#__codelineno-21-58"></a>        <span class="nv">$healthSummary</span> <span class="p">=</span> <span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="n">-FetchFromCache</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-21-59" name="__codelineno-21-59" href="#__codelineno-21-59"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Health Test Results:&quot;</span>
+<a id="__codelineno-21-60" name="__codelineno-21-60" href="#__codelineno-21-60"></a>        <span class="nv">$header</span> <span class="p">=</span> <span class="s2">&quot;    {0,-55} {1}&quot;</span>
+<a id="__codelineno-21-61" name="__codelineno-21-61" href="#__codelineno-21-61"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="s2">&quot;Test Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-62" name="__codelineno-21-62" href="#__codelineno-21-62"></a>        <span class="nb">Write-Host</span> <span class="p">(</span><span class="s2">&quot;    &quot;</span> <span class="p">+</span> <span class="s2">&quot;-&quot;</span> <span class="p">*</span> <span class="n">65</span><span class="p">)</span>
+<a id="__codelineno-21-63" name="__codelineno-21-63" href="#__codelineno-21-63"></a>
+<a id="__codelineno-21-64" name="__codelineno-21-64" href="#__codelineno-21-64"></a>        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$group</span> <span class="k">in</span> <span class="nv">$healthSummary</span><span class="p">.</span><span class="n">Groups</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-65" name="__codelineno-21-65" href="#__codelineno-21-65"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;    [Group: </span><span class="p">$(</span><span class="nv">$group</span><span class="p">.</span><span class="n">GroupName</span><span class="p">)</span><span class="s2">]&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">White</span>
+<a id="__codelineno-21-66" name="__codelineno-21-66" href="#__codelineno-21-66"></a>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$test</span> <span class="k">in</span> <span class="nv">$group</span><span class="p">.</span><span class="n">GroupTests</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-67" name="__codelineno-21-67" href="#__codelineno-21-67"></a>                <span class="nv">$s</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$test</span><span class="p">.</span><span class="n">TestHealth</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-68" name="__codelineno-21-68" href="#__codelineno-21-68"></a>                    <span class="s1">&#39;green&#39;</span>  <span class="p">{</span> <span class="s1">&#39;PASS&#39;</span>     <span class="p">}</span>
+<a id="__codelineno-21-69" name="__codelineno-21-69" href="#__codelineno-21-69"></a>                    <span class="s1">&#39;yellow&#39;</span> <span class="p">{</span> <span class="s1">&#39;WARNING&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-21-70" name="__codelineno-21-70" href="#__codelineno-21-70"></a>                    <span class="s1">&#39;red&#39;</span>    <span class="p">{</span> <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">}</span>
+<a id="__codelineno-21-71" name="__codelineno-21-71" href="#__codelineno-21-71"></a>                    <span class="k">default</span>  <span class="p">{</span> <span class="s1">&#39;UNKNOWN&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-21-72" name="__codelineno-21-72" href="#__codelineno-21-72"></a>                <span class="p">}</span>
+<a id="__codelineno-21-73" name="__codelineno-21-73" href="#__codelineno-21-73"></a>                <span class="nv">$colour</span> <span class="p">=</span> <span class="k">switch</span> <span class="p">(</span><span class="nv">$s</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-21-74" name="__codelineno-21-74" href="#__codelineno-21-74"></a>                    <span class="s1">&#39;PASS&#39;</span>     <span class="p">{</span> <span class="s1">&#39;Green&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-21-75" name="__codelineno-21-75" href="#__codelineno-21-75"></a>                    <span class="s1">&#39;WARNING&#39;</span>  <span class="p">{</span> <span class="s1">&#39;Yellow&#39;</span> <span class="p">}</span>
+<a id="__codelineno-21-76" name="__codelineno-21-76" href="#__codelineno-21-76"></a>                    <span class="s1">&#39;CRITICAL&#39;</span> <span class="p">{</span> <span class="s1">&#39;Red&#39;</span>    <span class="p">}</span>
+<a id="__codelineno-21-77" name="__codelineno-21-77" href="#__codelineno-21-77"></a>                    <span class="k">default</span>    <span class="p">{</span> <span class="s1">&#39;White&#39;</span>  <span class="p">}</span>
+<a id="__codelineno-21-78" name="__codelineno-21-78" href="#__codelineno-21-78"></a>                <span class="p">}</span>
+<a id="__codelineno-21-79" name="__codelineno-21-79" href="#__codelineno-21-79"></a>                <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;CRITICAL&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">2</span> <span class="p">}</span>
+<a id="__codelineno-21-80" name="__codelineno-21-80" href="#__codelineno-21-80"></a>                <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-eq</span> <span class="s1">&#39;WARNING&#39;</span> <span class="o">-and</span> <span class="nv">$overallExit</span> <span class="o">-lt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$overallExit</span> <span class="p">=</span> <span class="n">1</span> <span class="p">}</span>
+<a id="__codelineno-21-81" name="__codelineno-21-81" href="#__codelineno-21-81"></a>                <span class="nb">Write-Host</span> <span class="p">(</span><span class="nv">$header</span> <span class="o">-f</span> <span class="s2">&quot;      </span><span class="p">$(</span><span class="nv">$test</span><span class="p">.</span><span class="n">TestName</span><span class="p">)</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$s</span><span class="p">)</span> <span class="n">-ForegroundColor</span> <span class="nv">$colour</span>
+<a id="__codelineno-21-82" name="__codelineno-21-82" href="#__codelineno-21-82"></a>            <span class="p">}</span>
+<a id="__codelineno-21-83" name="__codelineno-21-83" href="#__codelineno-21-83"></a>        <span class="p">}</span>
+<a id="__codelineno-21-84" name="__codelineno-21-84" href="#__codelineno-21-84"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-21-85" name="__codelineno-21-85" href="#__codelineno-21-85"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Health check: could not retrieve (</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-21-86" name="__codelineno-21-86" href="#__codelineno-21-86"></a>    <span class="p">}</span>
+<a id="__codelineno-21-87" name="__codelineno-21-87" href="#__codelineno-21-87"></a>
+<a id="__codelineno-21-88" name="__codelineno-21-88" href="#__codelineno-21-88"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-21-89" name="__codelineno-21-89" href="#__codelineno-21-89"></a><span class="p">}</span>
+<a id="__codelineno-21-90" name="__codelineno-21-90" href="#__codelineno-21-90"></a>
+<a id="__codelineno-21-91" name="__codelineno-21-91" href="#__codelineno-21-91"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Overall: </span><span class="p">$(</span><span class="k">if</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">){</span><span class="s1">&#39;PASS&#39;</span><span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$overallExit</span> <span class="o">-eq</span> <span class="n">1</span><span class="p">){</span><span class="s1">&#39;WARNING&#39;</span><span class="p">}</span> <span class="k">else</span><span class="p">{</span><span class="s1">&#39;CRITICAL&#39;</span><span class="p">})</span><span class="s2">&quot;</span>
+<a id="__codelineno-21-92" name="__codelineno-21-92" href="#__codelineno-21-92"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-21-93" name="__codelineno-21-93" href="#__codelineno-21-93"></a><span class="n">exit</span> <span class="nv">$overallExit</span>
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_5">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_5" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - Windows 10 or Windows 11 (PowerShell 5.1 is already installed)
@@ -1807,82 +1807,82 @@ exit $overallExit
 <p><strong>Step 3 — Open PowerShell as Administrator</strong></p>
 <p>Windows key → type <code>PowerShell</code> → right-click → <strong>Run as Administrator</strong></p>
 <p><strong>Step 4 — Allow scripts to run (one-time per session)</strong></p>
-<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+</code></pre></div>
 <p><strong>Step 5 — Run it</strong></p>
-<pre><code>cd C:\Users\YourName\Desktop
-.\vsan_health_windows.ps1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>.\vsan_health_windows.ps1
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>Connected to vCenter: vcenter.company.local
-
-=== vSAN Cluster Health Summary ===
-(2026-05-06 14:30:22)
-
---- Cluster: vSAN-Cluster ---
-  Deduplication enabled : False
-  Encryption enabled    : False
-  Default FTT policy    : vSAN Default Storage Policy
-
-  Health Test Results:
-    Test Name                                               Status
-    -----------------------------------------------------------------
-    [Group: Hardware compatibility]
-      SCSI controller is VMware certified                   PASS
-    [Group: Network]
-      vSAN cluster partition                                PASS
-      All hosts have a vSAN vmknic configured               PASS
-    [Group: Data]
-      vSAN object health                                    WARNING
-
-Overall: WARNING
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Connected to vCenter: vcenter.company.local
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>=== vSAN Cluster Health Summary ===
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>(2026-05-06 14:30:22)
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>--- Cluster: vSAN-Cluster ---
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>  Deduplication enabled : False
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>  Encryption enabled    : False
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>  Default FTT policy    : vSAN Default Storage Policy
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>  Health Test Results:
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>    Test Name                                               Status
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>    -----------------------------------------------------------------
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>    [Group: Hardware compatibility]
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>      SCSI controller is VMware certified                   PASS
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>    [Group: Network]
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>      vSAN cluster partition                                PASS
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>      All hosts have a vSAN vmknic configured               PASS
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>    [Group: Data]
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>      vSAN object health                                    WARNING
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>Overall: WARNING
+</code></pre></div>
 <p>Any test in yellow status appears in yellow text, red tests in red.</p>
 <hr />
 <h2 id="windows-vsan-disk-group-status-via-plink-cmd">Windows: vSAN Disk Group Status via Plink (CMD)<a class="headerlink" href="#windows-vsan-disk-group-status-via-plink-cmd" title="Permanent link">&para;</a></h2>
 <p>Connect to an ESXi host that is part of your vSAN cluster via SSH using plink (from PuTTY) and run vSAN ESXCLI commands.</p>
-<pre><code class="language-batch">@echo off
-REM vsan_diskgroup_check.bat — vSAN disk group status via SSH (plink)
-REM Connects to an ESXi host in the vSAN cluster using plink (PuTTY SSH tool).
-REM
-REM DOWNLOAD PLINK: https://www.putty.org
-REM   - Download putty-64bit-X.XX-installer.msi and install it.
-REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe
-REM
-REM NOTE: SSH must be enabled on the ESXi host:
-REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start
-REM
-REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):
-REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
-REM   Type 'y' when asked to trust the host fingerprint, then Ctrl+C.
-
-set ESXI_HOST=192.168.1.100
-set SSH_USER=root
-set PLINK=&quot;C:\Program Files\PuTTY\plink.exe&quot;
-
-echo.
-echo === vSAN Disk Group Status Check: %ESXI_HOST% ===
-echo.
-
-echo --- vSAN Storage Disk List ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan storage list&quot;
-if %ERRORLEVEL% neq 0 (
-    echo ERROR: Could not connect to %ESXI_HOST%.
-    echo Check: 1) IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
-    exit /b 1
-)
-
-echo.
-echo --- vSAN Cluster Status ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan cluster get&quot;
-
-echo.
-echo --- vSAN Health Check Summary ---
-%PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% &quot;esxcli vsan health cluster list&quot;
-
-echo.
-echo === vSAN check complete ===
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">@</span><span class="k">echo</span> off
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1">REM vsan_diskgroup_check.bat — vSAN disk group status via SSH (plink)</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1">REM Connects to an ESXi host in the vSAN cluster using plink (PuTTY SSH tool).</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1">REM</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="c1">REM DOWNLOAD PLINK: https://www.putty.org</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1">REM   - Download putty-64bit-X.XX-installer.msi and install it.</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1">REM   - plink.exe will be at: C:\Program Files\PuTTY\plink.exe</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1">REM</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1">REM NOTE: SSH must be enabled on the ESXi host:</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1">REM   vSphere Client -&gt; select the host -&gt; Manage -&gt; Services -&gt; SSH -&gt; Start</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="c1">REM</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="c1">REM FIRST-TIME SETUP (run once to accept the SSH fingerprint):</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="c1">REM   &quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="c1">REM   Type &#39;y&#39; when asked to trust the host fingerprint, then Ctrl+C.</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="k">set</span> <span class="nv">ESXI_HOST</span><span class="p">=</span>192.168.1.100
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="k">set</span> <span class="nv">SSH_USER</span><span class="p">=</span>root
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a><span class="k">set</span> <span class="nv">PLINK</span><span class="p">=</span><span class="s2">&quot;C:\Program Files\PuTTY\plink.exe&quot;</span>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a><span class="k">echo</span>.
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a><span class="k">echo</span> === vSAN Disk Group Status Check: <span class="nv">%ESXI_HOST%</span> ===
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a><span class="k">echo</span>.
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a><span class="k">echo</span> --- vSAN Storage Disk List ---
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli vsan storage list&quot;</span>
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a><span class="k">if</span> <span class="nv">%ERRORLEVEL%</span> <span class="ow">neq</span> 0 <span class="p">(</span>
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>    <span class="k">echo</span> ERROR: Could not connect to <span class="nv">%ESXI_HOST%</span>.
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>    <span class="k">echo</span> Check: 1<span class="p">)</span> IP is correct  2) SSH is enabled  3) Run first-time fingerprint setup above
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>    <span class="k">exit</span> /b 1
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a><span class="c1">)</span>
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a><span class="k">echo</span>.
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a><span class="k">echo</span> --- vSAN Cluster Status ---
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli vsan cluster get&quot;</span>
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a><span class="k">echo</span>.
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a><span class="k">echo</span> --- vSAN Health Check Summary ---
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a><span class="nv">%PLINK%</span> -ssh -l <span class="nv">%SSH_USER%</span> -batch <span class="nv">%ESXI_HOST%</span> <span class="s2">&quot;esxcli vsan health cluster list&quot;</span>
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a><span class="k">echo</span>.
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a><span class="k">echo</span> === vSAN check complete ===
+</code></pre></div>
 <h4 id="how-to-run-this-script-step-by-step_6">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_6" title="Permanent link">&para;</a></h4>
 <p><strong>Before you start — what you need</strong>
 - PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
@@ -1892,8 +1892,8 @@ echo === vSAN check complete ===
 - Network access from your PC to the ESXi host management IP</p>
 <p><strong>Step 1 — Accept the SSH fingerprint (one-time setup)</strong></p>
 <p>Before the batch script will work, you must accept the host's SSH fingerprint once. Open Command Prompt and run:</p>
-<pre><code>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>&quot;C:\Program Files\PuTTY\plink.exe&quot; -ssh root@192.168.1.100
+</code></pre></div>
 <p>When asked "Store key in cache?", type <code>y</code> and press Enter. Type the root password when prompted. Once connected, press <code>Ctrl+C</code> to disconnect. You only need to do this once per ESXi host.</p>
 <p><strong>Step 2 — Save the file</strong></p>
 <ol>
@@ -1935,30 +1935,30 @@ echo === vSAN check complete ===
 <p>Windows key → type <code>cmd</code> → press Enter</p>
 <p><strong>Step 5 — Run it</strong></p>
 <p>You can double-click the <code>.bat</code> file on your Desktop, or run it from Command Prompt:</p>
-<pre><code>cd C:\Users\YourName\Desktop
-vsan_diskgroup_check.bat
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>cd C:\Users\YourName\Desktop
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>vsan_diskgroup_check.bat
+</code></pre></div>
 <p><strong>What you should see</strong></p>
-<pre><code>=== vSAN Disk Group Status Check: 192.168.1.100 ===
-
---- vSAN Storage Disk List ---
-   Device: naa.55cd2e404b9b4c12
-   Display Name: Local Micron Disk (naa.55cd2e404b9b4c12)
-   Is Cache Disk: true
-   Tier: CACHE
-   ...
-
---- vSAN Cluster Status ---
-   Sub-Cluster Master UUID: 52c8d2a5-1234-5678-abcd-ef0123456789
-   Sub-Cluster Backup UUID: ...
-   ...
-
---- vSAN Health Check Summary ---
-   Group ID  Test ID  Test Result
-   ...
-
-=== vSAN check complete ===
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>=== vSAN Disk Group Status Check: 192.168.1.100 ===
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>--- vSAN Storage Disk List ---
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>   Device: naa.55cd2e404b9b4c12
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>   Display Name: Local Micron Disk (naa.55cd2e404b9b4c12)
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>   Is Cache Disk: true
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>   Tier: CACHE
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>   ...
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>--- vSAN Cluster Status ---
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>   Sub-Cluster Master UUID: 52c8d2a5-1234-5678-abcd-ef0123456789
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>   Sub-Cluster Backup UUID: ...
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>   ...
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>--- vSAN Health Check Summary ---
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>   Group ID  Test ID  Test Result
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>   ...
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>=== vSAN check complete ===
+</code></pre></div>
 
 
 

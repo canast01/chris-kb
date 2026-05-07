@@ -935,110 +935,110 @@
 <hr />
 <h2 id="csr-generation">CSR Generation<a class="headerlink" href="#csr-generation" title="Permanent link">&para;</a></h2>
 <p>Always generate the key pair on the target host or in an HSM — never send private keys over the network.</p>
-<pre><code class="language-bash"># Generate a 4096-bit RSA key and CSR (Linux)
-openssl req -new -newkey rsa:4096 -nodes \
-  -keyout server.key \
-  -out server.csr \
-  -subj &quot;/CN=app.corp.example.com/O=Example Corp/C=GB&quot;
-
-# Generate with SANs using a config file
-cat &gt; san.cnf &lt;&lt;EOF
-[req]
-distinguished_name = req_distinguished_name
-req_extensions     = v3_req
-prompt             = no
-
-[req_distinguished_name]
-CN = app.corp.example.com
-
-[v3_req]
-subjectAltName = @alt_names
-
-[alt_names]
-DNS.1 = app.corp.example.com
-DNS.2 = app-internal.corp.example.com
-IP.1  = 10.10.10.50
-EOF
-
-openssl req -new -newkey rsa:4096 -nodes \
-  -keyout server.key -out server.csr -config san.cnf
-</code></pre>
-<pre><code class="language-powershell"># Generate CSR on Windows using certreq
-# 1. Create request INF
-$inf = @&quot;
-[NewRequest]
-Subject       = &quot;CN=app.corp.example.com, O=Example Corp, C=GB&quot;
-KeyAlgorithm  = RSA
-KeyLength     = 4096
-HashAlgorithm = SHA256
-Exportable    = FALSE
-MachineKeySet = TRUE
-
-[Extensions]
-2.5.29.17 = &quot;{text}dns=app.corp.example.com&amp;dns=app-internal.corp.example.com&quot;
-&quot;@
-$inf | Out-File &quot;C:\Temp\request.inf&quot; -Encoding ASCII
-
-# 2. Generate CSR
-certreq -new &quot;C:\Temp\request.inf&quot; &quot;C:\Temp\request.csr&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Generate a 4096-bit RSA key and CSR (Linux)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-keyout<span class="w"> </span>server.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-out<span class="w"> </span>server.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=app.corp.example.com/O=Example Corp/C=GB&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Generate with SANs using a config file</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>san.cnf<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s">[req]</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s">distinguished_name = req_distinguished_name</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s">req_extensions     = v3_req</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s">prompt             = no</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s">[req_distinguished_name]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s">CN = app.corp.example.com</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">[v3_req]</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s">subjectAltName = @alt_names</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s">[alt_names]</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s">DNS.1 = app.corp.example.com</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s">DNS.2 = app-internal.corp.example.com</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s">IP.1  = 10.10.10.50</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="s">EOF</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>-keyout<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server.csr<span class="w"> </span>-config<span class="w"> </span>san.cnf
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Generate CSR on Windows using certreq</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># 1. Create request INF</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$inf</span> <span class="p">=</span> <span class="sh">@&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sh">[NewRequest]</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sh">Subject       = &quot;CN=app.corp.example.com, O=Example Corp, C=GB&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sh">KeyAlgorithm  = RSA</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sh">KeyLength     = 4096</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="sh">HashAlgorithm = SHA256</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="sh">Exportable    = FALSE</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="sh">MachineKeySet = TRUE</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="sh">[Extensions]</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="sh">2.5.29.17 = &quot;{text}dns=app.corp.example.com&amp;dns=app-internal.corp.example.com&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="sh">&quot;@</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nv">$inf</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;C:\Temp\request.inf&quot;</span> <span class="n">-Encoding</span> <span class="n">ASCII</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c"># 2. Generate CSR</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">certreq</span> <span class="n">-new</span> <span class="s2">&quot;C:\Temp\request.inf&quot;</span> <span class="s2">&quot;C:\Temp\request.csr&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="certificate-issuance-internal-adcs">Certificate Issuance (Internal ADCS)<a class="headerlink" href="#certificate-issuance-internal-adcs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Submit CSR to internal ADCS CA and retrieve certificate
-certreq -submit -attrib &quot;CertificateTemplate:WebServer-Internal&quot; `
-  &quot;C:\Temp\request.csr&quot; &quot;C:\Temp\issued.cer&quot;
-
-# If pending (requires manager approval), retrieve after approval
-certreq -retrieve &lt;RequestID&gt; &quot;C:\Temp\issued.cer&quot;
-
-# Install the issued certificate
-certreq -accept &quot;C:\Temp\issued.cer&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Submit CSR to internal ADCS CA and retrieve certificate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:WebServer-Internal&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="s2">&quot;C:\Temp\request.csr&quot;</span> <span class="s2">&quot;C:\Temp\issued.cer&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># If pending (requires manager approval), retrieve after approval</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">certreq</span> <span class="n">-retrieve</span> <span class="p">&lt;</span><span class="n">RequestID</span><span class="p">&gt;</span> <span class="s2">&quot;C:\Temp\issued.cer&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Install the issued certificate</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">certreq</span> <span class="n">-accept</span> <span class="s2">&quot;C:\Temp\issued.cer&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="certificate-installation">Certificate Installation<a class="headerlink" href="#certificate-installation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify certificate and key match before installation
-openssl x509 -noout -modulus -in server.crt | md5sum
-openssl rsa  -noout -modulus -in server.key | md5sum
-# Output must match
-
-# Combine into PEM bundle (cert + intermediates)
-cat server.crt intermediate-ca.crt &gt; bundle.pem
-
-# Verify the full chain
-openssl verify -CAfile root-ca.crt -untrusted intermediate-ca.crt server.crt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify certificate and key match before installation</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>server.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Output must match</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Combine into PEM bundle (cert + intermediates)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cat<span class="w"> </span>server.crt<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>&gt;<span class="w"> </span>bundle.pem
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify the full chain</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root-ca.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>server.crt
+</code></pre></div>
 <hr />
 <h2 id="expiry-monitoring">Expiry Monitoring<a class="headerlink" href="#expiry-monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="venafi">Venafi<a class="headerlink" href="#venafi" title="Permanent link">&para;</a></h3>
 <p>Venafi TPP monitors all managed certificates automatically. Set email alerts at 30-day and 7-day thresholds in the policy folder settings. See the <a href="../../venafi/lifecycle/">Venafi Lifecycle page</a> for details.</p>
 <h3 id="manual-monitoring-scripts">Manual Monitoring Scripts<a class="headerlink" href="#manual-monitoring-scripts" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Scan local machine certificate store for certificates expiring within 30 days
-$warnDays = 30
-Get-ChildItem Cert:\LocalMachine\My |
-  Where-Object { $_.NotAfter -lt (Get-Date).AddDays($warnDays) } |
-  Select-Object Subject, NotAfter, Thumbprint, @{N=&quot;DaysLeft&quot;; E={($_.NotAfter - (Get-Date)).Days}} |
-  Sort-Object NotAfter
-</code></pre>
-<pre><code class="language-bash"># Check expiry of a remote TLS certificate
-echo | openssl s_client -connect app.corp.example.com:443 -servername app.corp.example.com 2&gt;/dev/null |
-  openssl x509 -noout -enddate
-
-# Bulk check a list of hostnames
-while IFS= read -r host; do
-  expiry=$(echo | openssl s_client -connect &quot;$host:443&quot; -servername &quot;$host&quot; 2&gt;/dev/null |
-    openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
-  echo &quot;$host: $expiry&quot;
-done &lt; hosts.txt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Scan local machine certificate store for certificates expiring within 30 days</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$warnDays</span> <span class="p">=</span> <span class="n">30</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="nv">$warnDays</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;DaysLeft&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={(</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="p">-</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)).</span><span class="n">Days</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">Sort-Object</span> <span class="n">NotAfter</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check expiry of a remote TLS certificate</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>app.corp.example.com:443<span class="w"> </span>-servername<span class="w"> </span>app.corp.example.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Bulk check a list of hostnames</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>host<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">:443&quot;</span><span class="w"> </span>-servername<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">: </span><span class="nv">$expiry</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>hosts.txt
+</code></pre></div>
 <hr />
 <h2 id="certificate-renewal">Certificate Renewal<a class="headerlink" href="#certificate-renewal" title="Permanent link">&para;</a></h2>
 <p>Renewal should be initiated at 80% of the certificate's validity period (e.g., for a 2-year certificate, renew after ~20 months).</p>
-<pre><code class="language-powershell"># Trigger auto-enrollment renewal on a Windows host
-certutil -pulse
-
-# Force renewal of a specific certificate (using Venafi API — see Venafi lifecycle page)
-# Or: request a new certificate using the same template and replace the binding
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Trigger auto-enrollment renewal on a Windows host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">certutil</span> <span class="n">-pulse</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Force renewal of a specific certificate (using Venafi API — see Venafi lifecycle page)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Or: request a new certificate using the same template and replace the binding</span>
+</code></pre></div>
 <h3 id="renewing-a-ca-certificate">Renewing a CA Certificate<a class="headerlink" href="#renewing-a-ca-certificate" title="Permanent link">&para;</a></h3>
 <p>CA certificate renewal is a planned event requiring co-ordination with all relying parties:</p>
 <ol>
@@ -1046,9 +1046,9 @@ certutil -pulse
 <li>Have the parent CA (or Root CA key ceremony) sign the new CA certificate.</li>
 <li>Publish the new CA certificate to AD (auto-distributes to domain members via GPO):</li>
 </ol>
-<pre><code class="language-powershell"># Publish new Issuing CA certificate to AD
-certutil -dspublish -f IssuingCA.cer SubCA
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Publish new Issuing CA certificate to AD</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">certutil</span> <span class="n">-dspublish</span> <span class="o">-f</span> <span class="n">IssuingCA</span><span class="p">.</span><span class="n">cer</span> <span class="n">SubCA</span>
+</code></pre></div>
 <ol>
 <li>Update CDP and AIA extensions to reference the new certificate.</li>
 <li>Update any trust stores that reference the CA certificate explicitly (non-domain systems, network devices, Java keystores).</li>
@@ -1056,16 +1056,16 @@ certutil -dspublish -f IssuingCA.cer SubCA
 <hr />
 <h2 id="certificate-revocation">Certificate Revocation<a class="headerlink" href="#certificate-revocation" title="Permanent link">&para;</a></h2>
 <h3 id="revoke-via-adcs">Revoke via ADCS<a class="headerlink" href="#revoke-via-adcs" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Revoke a certificate by serial number
-$serial = &quot;1f2e3d4c5b6a7988&quot;
-certutil -revoke $serial 3   # Reason code 3 = Key Compromise
-
-# Publish a new CRL immediately after revocation
-certutil -CRL
-
-# Verify the revoked certificate appears in the CRL
-certutil -verify -urlfetch &lt;revoked-cert.cer&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Revoke a certificate by serial number</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$serial</span> <span class="p">=</span> <span class="s2">&quot;1f2e3d4c5b6a7988&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">certutil</span> <span class="n">-revoke</span> <span class="nv">$serial</span> <span class="n">3</span>   <span class="c"># Reason code 3 = Key Compromise</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Publish a new CRL immediately after revocation</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">certutil</span> <span class="n">-CRL</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Verify the revoked certificate appears in the CRL</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">certutil</span> <span class="n">-verify</span> <span class="n">-urlfetch</span> <span class="p">&lt;</span><span class="n">revoked-cert</span><span class="p">.</span><span class="n">cer</span><span class="p">&gt;</span>
+</code></pre></div>
 <p>Reason codes: 0 = Unspecified, 1 = Key Compromise, 2 = CA Compromise, 3 = Affiliation Changed, 4 = Superseded, 5 = Cessation of Operation.</p>
 <h3 id="emergency-revocation-checklist">Emergency Revocation Checklist<a class="headerlink" href="#emergency-revocation-checklist" title="Permanent link">&para;</a></h3>
 <ul>

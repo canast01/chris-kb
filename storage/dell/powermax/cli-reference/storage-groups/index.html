@@ -800,67 +800,75 @@
 <blockquote>
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI). Storage Groups are the primary logical grouping mechanism in Unisphere for PowerMax and SYMCLI. Every device that is presented to a host must be in a Storage Group that is part of a Masking View.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Storage_Groups["Storage Groups"]
+    Storage_Groups --&gt; S0["List and Inspect"]
+    Storage_Groups --&gt; S1["Create and Delete"]
+    Storage_Groups --&gt; S2["Add and Remove Devices"]
+    Storage_Groups --&gt; S3["Parent / Child Hierarchy"]
+    Storage_Groups --&gt; S4["Rename and Modify"]
+    Storage_Groups --&gt; S5["Quick Reference"]</code></pre>
 <h2 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all storage groups
-symsg list -sid &lt;sid&gt;
-symsg list -sid &lt;sid&gt; -v
-
-# Show contents and properties of a specific SG
-symsg show &lt;sg_name&gt; -sid &lt;sid&gt;
-symsg show &lt;sg_name&gt; -sid &lt;sid&gt; -v
-
-# Show SRP (Storage Resource Pool) and service level
-symsg show &lt;sg_name&gt; -sid &lt;sid&gt; | grep -E &quot;SRP|Service Level|Compression&quot;
-
-# List SGs containing a specific device
-symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Storage Group&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all storage groups</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show contents and properties of a specific SG</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>symsg<span class="w"> </span>show<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>symsg<span class="w"> </span>show<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-v
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Show SRP (Storage Resource Pool) and service level</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symsg<span class="w"> </span>show<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SRP|Service Level|Compression&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># List SGs containing a specific device</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symdev<span class="w"> </span>show<span class="w"> </span>&lt;devname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Storage Group&quot;</span>
+</code></pre></div>
 <h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create a regular (leaf) storage group
-symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -type regular
-
-# Create with SRP and service level
-symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -srp SRP_1 -slo Diamond
-
-# Create a parent storage group (contains child SGs)
-symsg create &lt;parent_sg&gt; -sid &lt;sid&gt; -type parent
-
-# Delete a storage group (must have no devices and no masking views)
-symsg delete &lt;sg_name&gt; -sid &lt;sid&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a regular (leaf) storage group</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symsg<span class="w"> </span>create<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-type<span class="w"> </span>regular
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create with SRP and service level</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symsg<span class="w"> </span>create<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-srp<span class="w"> </span>SRP_1<span class="w"> </span>-slo<span class="w"> </span>Diamond
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create a parent storage group (contains child SGs)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symsg<span class="w"> </span>create<span class="w"> </span>&lt;parent_sg&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-type<span class="w"> </span>parent
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete a storage group (must have no devices and no masking views)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symsg<span class="w"> </span>delete<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+</code></pre></div>
 <h2 id="add-and-remove-devices">Add and Remove Devices<a class="headerlink" href="#add-and-remove-devices" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a device to a storage group
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;devname&gt;
-
-# Add a range of devices
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;start&gt;:&lt;end&gt;
-
-# Remove a device from a storage group
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; remove dev &lt;devname&gt;
-
-# Create new devices and add to SG
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; addnew dev count=5 emulation=FBA size=100GB
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add a device to a storage group</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>add<span class="w"> </span>dev<span class="w"> </span>&lt;devname&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add a range of devices</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>add<span class="w"> </span>dev<span class="w"> </span>&lt;start&gt;:&lt;end&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove a device from a storage group</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>remove<span class="w"> </span>dev<span class="w"> </span>&lt;devname&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Create new devices and add to SG</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>addnew<span class="w"> </span>dev<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">emulation</span><span class="o">=</span>FBA<span class="w"> </span><span class="nv">size</span><span class="o">=</span>100GB
+</code></pre></div>
 <h2 id="parent-child-hierarchy">Parent / Child Hierarchy<a class="headerlink" href="#parent-child-hierarchy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add child SG to parent SG
-symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; add sg &lt;child_sg&gt;
-
-# Remove child SG from parent SG
-symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; remove sg &lt;child_sg&gt;
-
-# Show hierarchy
-symsg show &lt;parent_sg&gt; -sid &lt;sid&gt; | grep -A 20 &quot;Child Storage Group&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add child SG to parent SG</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;parent_sg&gt;<span class="w"> </span>add<span class="w"> </span>sg<span class="w"> </span>&lt;child_sg&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Remove child SG from parent SG</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;parent_sg&gt;<span class="w"> </span>remove<span class="w"> </span>sg<span class="w"> </span>&lt;child_sg&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show hierarchy</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symsg<span class="w"> </span>show<span class="w"> </span>&lt;parent_sg&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Child Storage Group&quot;</span>
+</code></pre></div>
 <h2 id="rename-and-modify">Rename and Modify<a class="headerlink" href="#rename-and-modify" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Rename a storage group
-symsg rename &lt;old_sg&gt; -new_sg_name &lt;new_sg&gt; -sid &lt;sid&gt;
-
-# Change service level
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -slo Platinum
-
-# Enable/disable compression
-symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -compression enabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rename a storage group</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symsg<span class="w"> </span>rename<span class="w"> </span>&lt;old_sg&gt;<span class="w"> </span>-new_sg_name<span class="w"> </span>&lt;new_sg&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Change service level</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-slo<span class="w"> </span>Platinum
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Enable/disable compression</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symsg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-compression<span class="w"> </span>enabled
+</code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

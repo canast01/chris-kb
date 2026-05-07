@@ -793,22 +793,22 @@
 <h2 id="storage-integration">Storage Integration<a class="headerlink" href="#storage-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Fibre Channel (FC):</strong> HBA zoning must be configured on the FC switch before ESXi discovers LUNs. Single-initiator/single-target zoning is best practice. ESXi registers as an initiator; storage array presents LUNs as VMFS datastores or RDMs.</p>
 <p><strong>iSCSI:</strong> Software iSCSI initiator is enabled via:</p>
-<pre><code class="language-bash">esxcli iscsi adapter list
-esxcli iscsi adapter enable --adapter=vmhba65
-esxcli iscsi adapter discovery statictarget add --adapter=vmhba65 --address=&lt;target-ip&gt;:3260,1 --name=&lt;iqn&gt;
-esxcli storage core adapter rescan --adapter=vmhba65
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--adapter<span class="o">=</span>vmhba65
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>statictarget<span class="w"> </span>add<span class="w"> </span>--adapter<span class="o">=</span>vmhba65<span class="w"> </span>--address<span class="o">=</span>&lt;target-ip&gt;:3260,1<span class="w"> </span>--name<span class="o">=</span>&lt;iqn&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="o">=</span>vmhba65
+</code></pre></div>
 <p>Bind the iSCSI adapter to dedicated vmkernel ports for multipathing.</p>
 <p><strong>NFS:</strong> Mount an NFS datastore:</p>
-<pre><code class="language-bash">esxcli storage nfs add --host=&lt;nfs-server-ip&gt; --share=/export/datastore01 --volume-name=NFS-DS01
-esxcli storage nfs list
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>add<span class="w"> </span>--host<span class="o">=</span>&lt;nfs-server-ip&gt;<span class="w"> </span>--share<span class="o">=</span>/export/datastore01<span class="w"> </span>--volume-name<span class="o">=</span>NFS-DS01
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nfs<span class="w"> </span>list
+</code></pre></div>
 <p>Ensure the NFS vmkernel adapter is on the correct VLAN and the NFS server export allows the ESXi management/NFS IP.</p>
 <p><strong>NVMe/FC:</strong> NVMe over Fabrics adapters appear as <code>vmhba</code> devices; configure via <code>esxcli nvme</code> subcommands. Requires NVMe-capable HBA and array.</p>
 <p><strong>VAAI (vStorage APIs for Array Integration):</strong> Offloads clone, zero, and lock primitives to compatible arrays (Pure Storage, Dell PowerStore, NetApp ONTAP). Verify VAAI is active:</p>
-<pre><code class="language-bash">esxcli storage core plugin list | grep NMP
-vmkfstools -P /vmfs/volumes/&lt;datastore&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>plugin<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>NMP
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkfstools<span class="w"> </span>-P<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;
+</code></pre></div>
 <p>VAAI primitives (XCOPY, WRITE_SAME, ATS) significantly reduce ESXi CPU overhead during cloning and provisioning.</p>
 <h2 id="network-integration">Network Integration<a class="headerlink" href="#network-integration" title="Permanent link">&para;</a></h2>
 <p>ESXi networking uses either Standard vSwitch (vSS) or Distributed vSwitch (vDS). vDS is managed from vCenter and provides advanced features including LACP, LLDP, NetFlow, and port mirroring.</p>
@@ -846,15 +846,15 @@ vmkfstools -P /vmfs/volumes/&lt;datastore&gt;
 </table>
 <p><strong>LACP/LAG:</strong> On vDS, configure a Link Aggregation Group for uplink bonding. Requires LACP support on the upstream physical switch. Configure via vCenter &gt; vDS &gt; Configure &gt; LACP.</p>
 <p><strong>CDP/LLDP:</strong> ESXi supports Cisco Discovery Protocol (CDP) and Link Layer Discovery Protocol (LLDP) for upstream switch discovery. View neighbour information:</p>
-<pre><code class="language-bash">esxcli network nic get --nic-name=vmnic0
-# CDP/LLDP info visible in vSphere Client &gt; host &gt; Configure &gt; Physical Adapters
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>get<span class="w"> </span>--nic-name<span class="o">=</span>vmnic0
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># CDP/LLDP info visible in vSphere Client &gt; host &gt; Configure &gt; Physical Adapters</span>
+</code></pre></div>
 <h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Backup &amp; Replication</strong> uses the VMware VADP (vStorage APIs for Data Protection) framework. A Backup Proxy VM (Windows-based) connects to ESXi hosts and the vCenter API to read VM data.</p>
 <p>Changed Block Tracking (CBT) must be enabled on VMs for incremental backups:</p>
-<pre><code class="language-bash"># Check CBT status via PowerCLI
-Get-VM &lt;VMname&gt; | Get-View | Select -ExpandProperty Config | Select ChangeTrackingEnabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check CBT status via PowerCLI</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Get-VM<span class="w"> </span>&lt;VMname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-View<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>-ExpandProperty<span class="w"> </span>Config<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ChangeTrackingEnabled
+</code></pre></div>
 <p>CBT is enabled per VM in the VM's advanced settings (<code>ctkEnabled = TRUE</code>). Veeam enables this automatically when the first backup job runs.</p>
 <p><strong>Transport modes:</strong></p>
 <ul>
@@ -864,16 +864,16 @@ Get-VM &lt;VMname&gt; | Get-View | Select -ExpandProperty Config | Select Change
 </ul>
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Aria Operations for Logs (Log Insight):</strong> Forward ESXi syslog to a central log server:</p>
-<pre><code class="language-bash">esxcli system syslog config set --loghost=tcp://loginsight.example.com:514
-esxcli system syslog reload
-esxcli system syslog config get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span>tcp://loginsight.example.com:514
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
+</code></pre></div>
 <p>The Aria Operations for Logs VMware vSphere content pack parses ESXi syslog fields automatically.</p>
 <p><strong>SNMP:</strong> Configure SNMP traps for alerting to a monitoring platform:</p>
-<pre><code class="language-bash">esxcli system snmp set --communities=public --targets=monitor.example.com@162/public
-esxcli system snmp set --enable=true
-esxcli system snmp get
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--communities<span class="o">=</span>public<span class="w"> </span>--targets<span class="o">=</span>monitor.example.com@162/public
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>snmp<span class="w"> </span>get
+</code></pre></div>
 <p><strong>Aria Operations (vROps):</strong> The ESXi adapter connects through vCenter. Add vCenter as an account in Aria Operations and the ESXi adapter automatically discovers all managed hosts. Metrics include CPU ready, memory balloon, storage latency, and network utilisation per host.</p>
 
 

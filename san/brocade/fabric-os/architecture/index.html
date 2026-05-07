@@ -862,9 +862,9 @@
 <hr />
 <h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
 <p>Standard dual-fabric design:</p>
-<pre><code>Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
-Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Fabric A:  Host HBA Port 0 → G620-SW01 → Storage Target (Fabric A ports)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
+</code></pre></div>
 <p>Each fabric is independent. ISLs form trunk groups between switches within a fabric — not between Fabric A and Fabric B.</p>
 <p><strong>Trunk groups:</strong> Brocade ISL trunks group multiple physical ISL links into a single logical ISL for bandwidth aggregation and resilience. All links in a trunk must be same speed and between the same pair of switches.</p>
 <hr />
@@ -899,72 +899,72 @@ Fabric B:  Host HBA Port 1 → G620-SW02 → Storage Target (Fabric B ports)
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Check port type and state
-portshow &lt;port-number&gt;
-
-# Check all ports
-switchshow
-
-# Show detailed port statistics
-portstatsshow &lt;port-number&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check port type and state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>portshow<span class="w"> </span>&lt;port-number&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check all ports</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>switchshow
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show detailed port statistics</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>portstatsshow<span class="w"> </span>&lt;port-number&gt;
+</code></pre></div>
 <hr />
 <h2 id="principal-switch-and-domain-id">Principal Switch and Domain ID<a class="headerlink" href="#principal-switch-and-domain-id" title="Permanent link">&para;</a></h2>
 <p>One switch per fabric is the principal switch, elected by lowest WWN (by default) or by priority setting.</p>
-<pre><code class="language-bash"># Show current principal switch
-fabricshow
-# The principal switch has a &quot;&gt;&quot; marker
-
-# Show domain ID assignment
-switchshow | grep Domain
-
-# Show all switches in the fabric with domain IDs
-fabricshow
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current principal switch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fabricshow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># The principal switch has a &quot;&gt;&quot; marker</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show domain ID assignment</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Domain
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Show all switches in the fabric with domain IDs</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>fabricshow
+</code></pre></div>
 <p>Domain IDs are unique per switch within a fabric (1–239). They are assigned dynamically unless statically configured. Static domain IDs are strongly recommended for production fabrics to prevent reconfiguration after a fabric partition and rejoin.</p>
-<pre><code class="language-bash"># Set a static domain ID (requires fabric re-segmentation momentarily)
-configure
-# At &quot;Domain:&quot; prompt, enter the desired domain ID
-# At &quot;Fabric parameters&quot; prompt, set &quot;insistDomainId&quot; to 1
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Set a static domain ID (requires fabric re-segmentation momentarily)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>configure
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># At &quot;Domain:&quot; prompt, enter the desired domain ID</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt, set &quot;insistDomainId&quot; to 1</span>
+</code></pre></div>
 <hr />
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <p>Zoning controls initiator-to-target access. Best practice: <strong>single-initiator / single-target</strong> zones.</p>
-<pre><code class="language-bash"># Show active zone configuration
-cfgshow      # Full zone database (all zones, zone sets)
-zoneshow     # Active zone configuration only
-
-# Check if a specific WWPN is zoned
-zoneshow | grep &lt;wwpn&gt;
-
-# Show all aliases
-alishow
-
-# Show zone database size (relevant for large fabrics)
-cfgsave      # Saves zone database to persistent storage
-cfgsize      # Shows current zone database size vs limit
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show active zone configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cfgshow<span class="w">      </span><span class="c1"># Full zone database (all zones, zone sets)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>zoneshow<span class="w">     </span><span class="c1"># Active zone configuration only</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check if a specific WWPN is zoned</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zoneshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Show all aliases</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>alishow
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Show zone database size (relevant for large fabrics)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>cfgsave<span class="w">      </span><span class="c1"># Saves zone database to persistent storage</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>cfgsize<span class="w">      </span><span class="c1"># Shows current zone database size vs limit</span>
+</code></pre></div>
 <p>Activating a zone set replaces the currently active zone set on the fabric — always verify before activating to avoid removing existing zones.</p>
 <hr />
 <h2 id="fabric-health-checks">Fabric Health Checks<a class="headerlink" href="#fabric-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Overall fabric health
-fabricshow
-
-# Port error summary (check for CRC, loss of sync, etc.)
-porterrshow
-
-# Show fabric routing table
-topologyshow
-
-# Show name server (all logged-in devices)
-nsshow
-
-# Check switch temperature and hardware health
-sensorshow
-tempshow
-psshow   # Power supply status
-fanshow  # Fan status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Overall fabric health</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fabricshow
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Port error summary (check for CRC, loss of sync, etc.)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>porterrshow
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show fabric routing table</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>topologyshow
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Show name server (all logged-in devices)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>nsshow
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Check switch temperature and hardware health</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>sensorshow
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>tempshow
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>psshow<span class="w">   </span><span class="c1"># Power supply status</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>fanshow<span class="w">  </span><span class="c1"># Fan status</span>
+</code></pre></div>
 
 
 

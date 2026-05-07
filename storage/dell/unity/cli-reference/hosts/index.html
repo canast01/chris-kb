@@ -789,23 +789,30 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Access["Access"]
+    Access --&gt; S0["Hosts"]
+    Access --&gt; S1["Host OS Types"]
+    Access --&gt; S2["Initiators"]
+    Access --&gt; S3["LUN Access Control (Host Access)"]
+    Access --&gt; S4["End-to-End LUN Presentation"]</code></pre>
 <h2 id="hosts">Hosts<a class="headerlink" href="#hosts" title="Permanent link">&para;</a></h2>
 <p>Hosts represent servers that access Unity storage. Each host has associated initiators (WWNs or IQNs).</p>
-<pre><code class="language-bash"># List all hosts
-uemcli -d &lt;ip&gt; -u admin /remote/host show
-
-# Detailed host view — name, OS type, initiators, LUN access
-uemcli -d &lt;ip&gt; -u admin /remote/host show -detail
-
-# Specific host
-uemcli -d &lt;ip&gt; -u admin /remote/host -id &lt;host_id&gt; show -detail
-
-# Create a host
-uemcli -d &lt;ip&gt; -u admin /remote/host create \
-    -name &lt;hostname&gt; \
-    -type Initiator \
-    -osType Linux
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all hosts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed host view — name, OS type, initiators, LUN access</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specific host</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>-id<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Create a host</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>-name<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>-type<span class="w"> </span>Initiator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span>-osType<span class="w"> </span>Linux
+</code></pre></div>
 <h2 id="host-os-types">Host OS Types<a class="headerlink" href="#host-os-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -839,62 +846,62 @@ uemcli -d &lt;ip&gt; -u admin /remote/host create \
 </table>
 <h2 id="initiators">Initiators<a class="headerlink" href="#initiators" title="Permanent link">&para;</a></h2>
 <p>Each HBA port or iSCSI IQN is a separate initiator:</p>
-<pre><code class="language-bash"># List all initiators
-uemcli -d &lt;ip&gt; -u admin /remote/initiator show
-
-# Initiator detail — WWN/IQN, health, host association
-uemcli -d &lt;ip&gt; -u admin /remote/initiator show -detail
-
-# Register a Fibre Channel initiator (WWN)
-uemcli -d &lt;ip&gt; -u admin /remote/initiator create \
-    -host &lt;host_id&gt; \
-    -uid 20:00:00:90:fa:12:34:56 \
-    -type FC
-
-# Register an iSCSI initiator (IQN)
-uemcli -d &lt;ip&gt; -u admin /remote/initiator create \
-    -host &lt;host_id&gt; \
-    -uid iqn.2024-01.com.example:host01 \
-    -type iSCSI
-
-# Delete an initiator
-uemcli -d &lt;ip&gt; -u admin /remote/initiator -id &lt;initiator_id&gt; delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all initiators</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Initiator detail — WWN/IQN, health, host association</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Register a Fibre Channel initiator (WWN)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-uid<span class="w"> </span><span class="m">20</span>:00:00:90:fa:12:34:56<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>-type<span class="w"> </span>FC
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Register an iSCSI initiator (IQN)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>-uid<span class="w"> </span>iqn.2024-01.com.example:host01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>-type<span class="w"> </span>iSCSI
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Delete an initiator</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>-id<span class="w"> </span>&lt;initiator_id&gt;<span class="w"> </span>delete
+</code></pre></div>
 <h2 id="lun-access-control-host-access">LUN Access Control (Host Access)<a class="headerlink" href="#lun-access-control-host-access" title="Permanent link">&para;</a></h2>
 <p>LUN access grants a host access to a LUN:</p>
-<pre><code class="language-bash"># List all LUN access control entries
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl show
-
-# Access for a specific LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl show | grep &lt;lun_id&gt;
-
-# Grant a host access to a LUN
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create \
-    -lun &lt;lun_id&gt; \
-    -host &lt;host_id&gt;
-
-# With specific access type (production = read-write)
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create \
-    -lun &lt;lun_id&gt; \
-    -host &lt;host_id&gt; \
-    -accessType production
-
-# Revoke LUN access
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl -id &lt;acl_id&gt; delete
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all LUN access control entries</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Access for a specific LUN</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;lun_id&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Grant a host access to a LUN</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-lun<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># With specific access type (production = read-write)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>-lun<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>-host<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>-accessType<span class="w"> </span>production
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Revoke LUN access</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>-id<span class="w"> </span>&lt;acl_id&gt;<span class="w"> </span>delete
+</code></pre></div>
 <h2 id="end-to-end-lun-presentation">End-to-End LUN Presentation<a class="headerlink" href="#end-to-end-lun-presentation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — create or identify host
-uemcli -d &lt;ip&gt; -u admin /remote/host create -name server01 -type Initiator -osType Linux
-
-# Step 2 — register initiators
-uemcli -d &lt;ip&gt; -u admin /remote/initiator create -host &lt;host_id&gt; -uid &lt;wwn&gt; -type FC
-
-# Step 3 — grant LUN access
-uemcli -d &lt;ip&gt; -u admin /stor/config/lunacl create -lun &lt;lun_id&gt; -host &lt;host_id&gt;
-
-# Step 4 — on the host, rescan HBAs and confirm device appears
-# Linux: rescan-scsi-bus.sh or echo &quot;- - -&quot; &gt; /sys/class/scsi_host/host*/scan
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — create or identify host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>server01<span class="w"> </span>-type<span class="w"> </span>Initiator<span class="w"> </span>-osType<span class="w"> </span>Linux
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — register initiators</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/initiator<span class="w"> </span>create<span class="w"> </span>-host<span class="w"> </span>&lt;host_id&gt;<span class="w"> </span>-uid<span class="w"> </span>&lt;wwn&gt;<span class="w"> </span>-type<span class="w"> </span>FC
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Step 3 — grant LUN access</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>create<span class="w"> </span>-lun<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span>-host<span class="w"> </span>&lt;host_id&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 4 — on the host, rescan HBAs and confirm device appears</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Linux: rescan-scsi-bus.sh or echo &quot;- - -&quot; &gt; /sys/class/scsi_host/host*/scan</span>
+</code></pre></div>
 
 
 

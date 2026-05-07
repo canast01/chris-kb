@@ -800,6 +800,14 @@
 <blockquote>
 <p>Part of the <a href="../">ECS</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    ECS["ECS"]
+    ECS --&gt; S0["Quick-Reference Command Table"]
+    ECS --&gt; S1["ECS Management Shell (ecscli)"]
+    ECS --&gt; S2["S3 API (aws cli / s3cmd)"]
+    ECS --&gt; S3["Object Store Admin API (curl)"]
+    ECS --&gt; S4["System CLI (SSH — Node-Level Access)"]
+    ECS --&gt; S5["Common Troubleshooting Commands"]</code></pre>
 <hr />
 <p>ECS administration is split across three interfaces: the <strong>ECS Management Shell</strong> (<code>ecscli</code>), the <strong>ECS Management REST API</strong> (port 4443), and the <strong>S3-compatible object API</strong> (port 9020 HTTP / 9021 HTTPS). For system-level diagnostics, SSH access to individual nodes is also available.</p>
 <blockquote>
@@ -862,320 +870,320 @@
 <hr />
 <h2 id="ecs-management-shell-ecscli">ECS Management Shell (ecscli)<a class="headerlink" href="#ecs-management-shell-ecscli" title="Permanent link">&para;</a></h2>
 <p><code>ecscli</code> is a Python-based CLI that wraps the ECS Management REST API. Install it on a management workstation or use it from the ECS node directly.</p>
-<pre><code class="language-bash"># Install (requires Python 3 + pip)
-pip install ecscli
-
-# --- Authentication ---
-# Login and store session token (~/.ecscli/session)
-ecscli login \
-  -u sysadmin \
-  -p '&lt;password&gt;' \
-  -e &lt;ecs-node&gt;
-
-# Verify login (shows currently authenticated user)
-ecscli user whoami
-
-# Logout / invalidate token
-ecscli logout
-
-# --- Namespace management ---
-# List all namespaces
-ecscli namespace list
-
-# Show namespace details (quota, replication group, retention)
-ecscli namespace get --name &lt;namespace&gt;
-
-# Create a namespace
-ecscli namespace create \
-  --name app_team_ns \
-  --replication-group &lt;rg-id&gt; \
-  --is-stale-allowed true
-
-# --- Bucket management ---
-# List buckets in a namespace
-ecscli bucket list --namespace &lt;namespace&gt;
-
-# Show bucket details (versioning, quota, replication group, owner)
-ecscli bucket get --namespace &lt;namespace&gt; --name &lt;bucket&gt;
-
-# Create a bucket
-ecscli bucket create \
-  --namespace &lt;namespace&gt; \
-  --name app-data-bucket \
-  --replication-group &lt;rg-id&gt; \
-  --versioning-enabled false
-
-# Enable versioning on an existing bucket
-ecscli bucket update \
-  --namespace &lt;namespace&gt; \
-  --name app-data-bucket \
-  --versioning-enabled true
-
-# Set a bucket quota (in GB)
-ecscli bucket update \
-  --namespace &lt;namespace&gt; \
-  --name app-data-bucket \
-  --quota 5000
-
-# Delete a bucket (must be empty)
-ecscli bucket delete --namespace &lt;namespace&gt; --name app-data-bucket
-
-# --- Object users / IAM ---
-# List object users in a namespace
-ecscli user list-object-users --namespace &lt;namespace&gt;
-
-# Create an object user (S3 access)
-ecscli user create --namespace &lt;namespace&gt; --name svc_app_backup
-
-# Generate S3 access keys for a user
-ecscli user secret-key create \
-  --namespace &lt;namespace&gt; \
-  --name svc_app_backup
-
-# List user's secret keys (shows key IDs only, not values)
-ecscli user secret-key list \
-  --namespace &lt;namespace&gt; \
-  --name svc_app_backup
-
-# Delete a secret key
-ecscli user secret-key delete \
-  --namespace &lt;namespace&gt; \
-  --name svc_app_backup \
-  --secret-key &lt;key_id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install (requires Python 3 + pip)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span>ecscli
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># --- Authentication ---</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Login and store session token (~/.ecscli/session)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ecscli<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-u<span class="w"> </span>sysadmin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-p<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-e<span class="w"> </span>&lt;ecs-node&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Verify login (shows currently authenticated user)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ecscli<span class="w"> </span>user<span class="w"> </span>whoami
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Logout / invalidate token</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ecscli<span class="w"> </span><span class="nb">logout</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># --- Namespace management ---</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># List all namespaces</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Show namespace details (quota, replication group, retention)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>get<span class="w"> </span>--name<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Create a namespace</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--name<span class="w"> </span>app_team_ns<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--replication-group<span class="w"> </span>&lt;rg-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--is-stale-allowed<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># --- Bucket management ---</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># List buckets in a namespace</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># Show bucket details (versioning, quota, replication group, owner)</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>get<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;bucket&gt;
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="c1"># Create a bucket</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span>--name<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">  </span>--replication-group<span class="w"> </span>&lt;rg-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span>--versioning-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="c1"># Enable versioning on an existing bucket</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">  </span>--name<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">  </span>--versioning-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="c1"># Set a bucket quota (in GB)</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="w">  </span>--name<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="w">  </span>--quota<span class="w"> </span><span class="m">5000</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="c1"># Delete a bucket (must be empty)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>delete<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>app-data-bucket
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="c1"># --- Object users / IAM ---</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="c1"># List object users in a namespace</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>ecscli<span class="w"> </span>user<span class="w"> </span>list-object-users<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="c1"># Create an object user (S3 access)</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>ecscli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>svc_app_backup
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="c1"># Generate S3 access keys for a user</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a><span class="w">  </span>--name<span class="w"> </span>svc_app_backup
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a><span class="c1"># List user&#39;s secret keys (shows key IDs only, not values)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a><span class="w">  </span>--name<span class="w"> </span>svc_app_backup
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a><span class="c1"># Delete a secret key</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a><span class="w">  </span>--name<span class="w"> </span>svc_app_backup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a><span class="w">  </span>--secret-key<span class="w"> </span>&lt;key_id&gt;
+</code></pre></div>
 <hr />
 <h2 id="s3-api-aws-cli-s3cmd">S3 API (aws cli / s3cmd)<a class="headerlink" href="#s3-api-aws-cli-s3cmd" title="Permanent link">&para;</a></h2>
 <p>ECS is fully S3-compatible. Use the standard AWS CLI or s3cmd pointed at the ECS endpoint.</p>
-<pre><code class="language-bash"># --- AWS CLI configuration for ECS ---
-# Configure a named profile for ECS
-aws configure --profile ecs
-# AWS Access Key ID:     &lt;object_user_access_key&gt;
-# AWS Secret Access Key: &lt;object_user_secret_key&gt;
-# Default region:        us-east-1  (arbitrary; ECS ignores region)
-# Default output format: json
-
-# All commands below use: --endpoint-url https://&lt;ecs-node&gt;:9021 --profile ecs
-# Add --no-verify-ssl if using self-signed certificates
-
-ECS_EP=&quot;https://&lt;ecs-node&gt;:9021&quot;
-PROFILE=&quot;--profile ecs --endpoint-url $ECS_EP --no-verify-ssl&quot;
-
-# --- Bucket operations ---
-# List all buckets
-aws s3api list-buckets $PROFILE
-
-# Create a bucket
-aws s3api create-bucket --bucket new-bucket $PROFILE
-
-# Get bucket location
-aws s3api get-bucket-location --bucket app-data-bucket $PROFILE
-
-# --- Object operations ---
-# List objects in a bucket (top level)
-aws s3 ls s3://app-data-bucket $PROFILE
-
-# List objects recursively with sizes
-aws s3 ls s3://app-data-bucket --recursive --human-readable $PROFILE
-
-# Upload a file
-aws s3 cp /local/path/file.tar.gz s3://app-data-bucket/backups/ $PROFILE
-
-# Upload an entire directory (recursive)
-aws s3 sync /local/backup/ s3://app-data-bucket/backups/ $PROFILE
-
-# Download an object
-aws s3 cp s3://app-data-bucket/backups/file.tar.gz /local/restore/ $PROFILE
-
-# Delete an object
-aws s3 rm s3://app-data-bucket/backups/file.tar.gz $PROFILE
-
-# Delete a bucket and all its contents
-aws s3 rb s3://app-data-bucket --force $PROFILE
-
-# --- Versioning ---
-# Enable versioning
-aws s3api put-bucket-versioning \
-  --bucket app-data-bucket \
-  --versioning-configuration Status=Enabled $PROFILE
-
-# List object versions (including delete markers)
-aws s3api list-object-versions --bucket app-data-bucket $PROFILE
-
-# Abort incomplete multipart uploads (cleans orphaned upload capacity)
-aws s3api list-multipart-uploads --bucket app-data-bucket $PROFILE
-aws s3api abort-multipart-upload \
-  --bucket app-data-bucket \
-  --key backups/largefile.tar.gz \
-  --upload-id &lt;UploadId&gt; $PROFILE
-
-# --- Lifecycle policy (expire old versions after 90 days) ---
-aws s3api put-bucket-lifecycle-configuration \
-  --bucket app-data-bucket \
-  --lifecycle-configuration '{
-    &quot;Rules&quot;: [{
-      &quot;ID&quot;: &quot;expire-old-versions&quot;,
-      &quot;Status&quot;: &quot;Enabled&quot;,
-      &quot;Filter&quot;: {&quot;Prefix&quot;: &quot;&quot;},
-      &quot;NoncurrentVersionExpiration&quot;: {&quot;NoncurrentDays&quot;: 90}
-    }]
-  }' $PROFILE
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># --- AWS CLI configuration for ECS ---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Configure a named profile for ECS</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>aws<span class="w"> </span>configure<span class="w"> </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># AWS Access Key ID:     &lt;object_user_access_key&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># AWS Secret Access Key: &lt;object_user_secret_key&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Default region:        us-east-1  (arbitrary; ECS ignores region)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Default output format: json</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># All commands below use: --endpoint-url https://&lt;ecs-node&gt;:9021 --profile ecs</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Add --no-verify-ssl if using self-signed certificates</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">ECS_EP</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node&gt;:9021&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">PROFILE</span><span class="o">=</span><span class="s2">&quot;--profile ecs --endpoint-url </span><span class="nv">$ECS_EP</span><span class="s2"> --no-verify-ssl&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># --- Bucket operations ---</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List all buckets</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Create a bucket</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>aws<span class="w"> </span>s3api<span class="w"> </span>create-bucket<span class="w"> </span>--bucket<span class="w"> </span>new-bucket<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Get bucket location</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-location<span class="w"> </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># --- Object operations ---</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># List objects in a bucket (top level)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://app-data-bucket<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># List objects recursively with sizes</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://app-data-bucket<span class="w"> </span>--recursive<span class="w"> </span>--human-readable<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># Upload a file</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>/local/path/file.tar.gz<span class="w"> </span>s3://app-data-bucket/backups/<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1"># Upload an entire directory (recursive)</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>/local/backup/<span class="w"> </span>s3://app-data-bucket/backups/<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1"># Download an object</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>s3://app-data-bucket/backups/file.tar.gz<span class="w"> </span>/local/restore/<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="c1"># Delete an object</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>aws<span class="w"> </span>s3<span class="w"> </span>rm<span class="w"> </span>s3://app-data-bucket/backups/file.tar.gz<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="c1"># Delete a bucket and all its contents</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>aws<span class="w"> </span>s3<span class="w"> </span>rb<span class="w"> </span>s3://app-data-bucket<span class="w"> </span>--force<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1"># --- Versioning ---</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c1"># Enable versioning</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-versioning<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">  </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">  </span>--versioning-configuration<span class="w"> </span><span class="nv">Status</span><span class="o">=</span>Enabled<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="c1"># List object versions (including delete markers)</span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-object-versions<span class="w"> </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="c1"># Abort incomplete multipart uploads (cleans orphaned upload capacity)</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-multipart-uploads<span class="w"> </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>aws<span class="w"> </span>s3api<span class="w"> </span>abort-multipart-upload<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">  </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">  </span>--key<span class="w"> </span>backups/largefile.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">  </span>--upload-id<span class="w"> </span>&lt;UploadId&gt;<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="c1"># --- Lifecycle policy (expire old versions after 90 days) ---</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-lifecycle-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">  </span>--bucket<span class="w"> </span>app-data-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">  </span>--lifecycle-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="s1">    &quot;Rules&quot;: [{</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="s1">      &quot;ID&quot;: &quot;expire-old-versions&quot;,</span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="s1">      &quot;Status&quot;: &quot;Enabled&quot;,</span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="s1">      &quot;Filter&quot;: {&quot;Prefix&quot;: &quot;&quot;},</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="s1">      &quot;NoncurrentVersionExpiration&quot;: {&quot;NoncurrentDays&quot;: 90}</span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="s1">    }]</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="nv">$PROFILE</span>
+</code></pre></div>
 <hr />
 <h2 id="object-store-admin-api-curl">Object Store Admin API (curl)<a class="headerlink" href="#object-store-admin-api-curl" title="Permanent link">&para;</a></h2>
 <p>The ECS Management REST API runs on port 4443. All requests after login require the <code>X-SDS-AUTH-TOKEN</code> header.</p>
-<pre><code class="language-bash">ECS=&quot;https://&lt;ecs-node&gt;:4443&quot;
-PASS=&quot;&lt;sysadmin_password&gt;&quot;
-
-# --- Authentication ---
-# Get auth token (returned in response header X-SDS-AUTH-TOKEN)
-TOKEN=$(curl -s -k -u &quot;sysadmin:${PASS}&quot; \
-  &quot;${ECS}/login&quot; -D - | grep &quot;X-SDS-AUTH-TOKEN&quot; | awk '{print $2}' | tr -d '\r')
-
-AUTH=&quot;-H \&quot;X-SDS-AUTH-TOKEN: ${TOKEN}\&quot;&quot;
-
-# --- Capacity ---
-# Get VDC capacity (totalProvisioned_GB, totalFree_GB, usedStorageCapacity_GB)
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/capacity&quot; | python3 -m json.tool
-
-# --- Node status ---
-# List all nodes with health state
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/nodes&quot; | python3 -m json.tool
-
-# Get details for a specific node
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/nodes/&lt;node-id&gt;&quot; | python3 -m json.tool
-
-# --- Alerts ---
-# List active alerts
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/alerts&quot; | python3 -m json.tool
-
-# --- Namespaces ---
-# Create a namespace
-curl -s -k -X POST \
-  -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  &quot;${ECS}/object/namespaces/namespace&quot; \
-  -d '{
-    &quot;id&quot;: &quot;app_team_ns&quot;,
-    &quot;default_data_services_vpool&quot;: &quot;&lt;replication-group-id&gt;&quot;,
-    &quot;is_stale_allowed&quot;: true,
-    &quot;is_compliance_enabled&quot;: false
-  }' | python3 -m json.tool
-
-# List all namespaces
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/object/namespaces&quot; | python3 -m json.tool
-
-# --- Buckets ---
-# List buckets in a namespace
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/object/bucket?namespace=app_team_ns&quot; | python3 -m json.tool
-
-# Get bucket details
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/object/bucket/app-data-bucket/info?namespace=app_team_ns&quot; | python3 -m json.tool
-
-# --- Replication groups ---
-# List replication groups (Virtual Data Center pools)
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/data-service/vpools&quot; | python3 -m json.tool
-
-# --- Logout ---
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/logout&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">ECS</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">PASS</span><span class="o">=</span><span class="s2">&quot;&lt;sysadmin_password&gt;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># --- Authentication ---</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Get auth token (returned in response header X-SDS-AUTH-TOKEN)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/login&quot;</span><span class="w"> </span>-D<span class="w"> </span>-<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;-H \&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">\&quot;&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># --- Capacity ---</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Get VDC capacity (totalProvisioned_GB, totalFree_GB, usedStorageCapacity_GB)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># --- Node status ---</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># List all nodes with health state</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Get details for a specific node</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/nodes/&lt;node-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># --- Alerts ---</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># List active alerts</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># --- Namespaces ---</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># Create a namespace</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/object/namespaces/namespace&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="s1">    &quot;id&quot;: &quot;app_team_ns&quot;,</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="s1">    &quot;default_data_services_vpool&quot;: &quot;&lt;replication-group-id&gt;&quot;,</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="s1">    &quot;is_stale_allowed&quot;: true,</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="s1">    &quot;is_compliance_enabled&quot;: false</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="c1"># List all namespaces</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/object/namespaces&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="c1"># --- Buckets ---</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="c1"># List buckets in a namespace</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/object/bucket?namespace=app_team_ns&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="c1"># Get bucket details</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/object/bucket/app-data-bucket/info?namespace=app_team_ns&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="c1"># --- Replication groups ---</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="c1"># List replication groups (Virtual Data Center pools)</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/data-service/vpools&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>
+<a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a><span class="c1"># --- Logout ---</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/logout&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="system-cli-ssh-node-level-access">System CLI (SSH — Node-Level Access)<a class="headerlink" href="#system-cli-ssh-node-level-access" title="Permanent link">&para;</a></h2>
 <p>For hardware diagnostics and low-level checks, SSH to an individual node as <code>admin</code> or <code>root</code>.</p>
-<pre><code class="language-bash"># SSH to an ECS node
-ssh admin@&lt;ecs-node&gt;
-
-# Check disk usage on the data partition
-df -h /data/
-
-# Check all mount points
-df -h
-
-# Check data disk status (ECS uses XFS on large raw disks)
-lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
-
-# --- viprexec: run a command on ALL nodes in the cluster ---
-# Show disk usage on every node simultaneously
-viprexec -v -cmd &quot;df -h /data/&quot;
-
-# Show uptime on all nodes
-viprexec -v -cmd &quot;uptime&quot;
-
-# Check ECS service status on all nodes
-viprexec -v -cmd &quot;service storageos status&quot;
-
-# Restart ECS services on all nodes (use with caution)
-viprexec -v -cmd &quot;service storageos restart&quot;
-
-# --- Per-node service checks ---
-# Check all running ECS Java processes
-ps aux | grep -i ecs
-
-# View current ECS node log
-tail -f /opt/emc/caspian/fabric/agent/logs/agent.log
-
-# View storageos service log
-journalctl -u storageos -f
-
-# Check NTP sync status (ECS nodes are time-sensitive)
-chronyc tracking
-timedatectl status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to an ECS node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check disk usage on the data partition</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/data/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check all mount points</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>df<span class="w"> </span>-h
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check data disk status (ECS uses XFS on large raw disks)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># --- viprexec: run a command on ALL nodes in the cluster ---</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Show disk usage on every node simultaneously</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;df -h /data/&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Show uptime on all nodes</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;uptime&quot;</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Check ECS service status on all nodes</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;service storageos status&quot;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># Restart ECS services on all nodes (use with caution)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;service storageos restart&quot;</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1"># --- Per-node service checks ---</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Check all running ECS Java processes</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ecs
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># View current ECS node log</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/emc/caspian/fabric/agent/logs/agent.log
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="c1"># View storageos service log</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>storageos<span class="w"> </span>-f
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="c1"># Check NTP sync status (ECS nodes are time-sensitive)</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>timedatectl<span class="w"> </span>status
+</code></pre></div>
 <hr />
 <h2 id="common-troubleshooting-commands">Common Troubleshooting Commands<a class="headerlink" href="#common-troubleshooting-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- dtquery: check data table / chunk health ---
-# Run from any ECS node as root (internal diagnostic tool)
-ssh root@&lt;ecs-node&gt;
-
-# Query chunk status for a specific object
-/opt/storageos/tools/dtquery query --type CHUNK --id &lt;chunk-id&gt;
-
-# --- Cassandra (ECS metadata store) health ---
-# Check Cassandra ring status from a node
-/opt/storageos/tools/nodetool status
-
-# Check Cassandra compaction stats
-/opt/storageos/tools/nodetool compactionstats
-
-# Flush Cassandra memtables to disk
-/opt/storageos/tools/nodetool flush
-
-# Check Cassandra heap usage
-/opt/storageos/tools/nodetool info | grep -i heap
-
-# --- ZooKeeper (ECS coordination service) health ---
-# Check ZooKeeper cluster status from a node
-echo &quot;stat&quot; | nc localhost 2181
-
-# List ZooKeeper ensemble members
-echo &quot;conf&quot; | nc localhost 2181
-
-# Check ZooKeeper leader/follower role
-echo &quot;srvr&quot; | nc localhost 2181 | grep Mode
-
-# --- Geo-replication lag (REST API) ---
-curl -s -k -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/geo-replication/status&quot; | python3 -m json.tool
-
-# --- Check S3 endpoint responsiveness ---
-curl -sv --max-time 10 \
-  &quot;https://&lt;ecs-node&gt;:9021/&quot; \
-  --resolve &quot;&lt;ecs-node&gt;:9021:&lt;ecs-node-ip&gt;&quot; 2&gt;&amp;1 | grep -E &quot;&lt; HTTP|Connected|SSL&quot;
-
-# --- ECS log collection (for Dell Support) ---
-# Trigger diagnostic bundle from Management API
-curl -s -k -X POST \
-  -H &quot;X-SDS-AUTH-TOKEN: ${TOKEN}&quot; \
-  &quot;${ECS}/vdc/support-bundle&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># --- dtquery: check data table / chunk health ---</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Run from any ECS node as root (internal diagnostic tool)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ssh<span class="w"> </span>root@&lt;ecs-node&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Query chunk status for a specific object</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/opt/storageos/tools/dtquery<span class="w"> </span>query<span class="w"> </span>--type<span class="w"> </span>CHUNK<span class="w"> </span>--id<span class="w"> </span>&lt;chunk-id&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># --- Cassandra (ECS metadata store) health ---</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check Cassandra ring status from a node</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>/opt/storageos/tools/nodetool<span class="w"> </span>status
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check Cassandra compaction stats</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>/opt/storageos/tools/nodetool<span class="w"> </span>compactionstats
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Flush Cassandra memtables to disk</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>/opt/storageos/tools/nodetool<span class="w"> </span>flush
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Check Cassandra heap usage</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>/opt/storageos/tools/nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>heap
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># --- ZooKeeper (ECS coordination service) health ---</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Check ZooKeeper cluster status from a node</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">2181</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># List ZooKeeper ensemble members</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;conf&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">2181</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># Check ZooKeeper leader/follower role</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;srvr&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">2181</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Mode
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># --- Geo-replication lag (REST API) ---</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/geo-replication/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="c1"># --- Check S3 endpoint responsiveness ---</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>curl<span class="w"> </span>-sv<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:9021/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span>--resolve<span class="w"> </span><span class="s2">&quot;&lt;ecs-node&gt;:9021:&lt;ecs-node-ip&gt;&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;&lt; HTTP|Connected|SSL&quot;</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="c1"># --- ECS log collection (for Dell Support) ---</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="c1"># Trigger diagnostic bundle from Management API</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS</span><span class="si">}</span><span class="s2">/vdc/support-bundle&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 
 
 

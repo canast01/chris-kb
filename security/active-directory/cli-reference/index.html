@@ -809,115 +809,124 @@
 
 <h1 id="active-directory-cli-reference">Active Directory CLI Reference<a class="headerlink" href="#active-directory-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Active Directory management uses native tools (<code>repadmin</code>, <code>dcdiag</code>, <code>nltest</code>, <code>netdom</code>, <code>dsquery</code>) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.</p>
+<pre class="mermaid"><code>flowchart LR
+    Active_Directory["Active Directory"]
+    Active_Directory --&gt; S0["Replication Health"]
+    Active_Directory --&gt; S1["DC Diagnostics"]
+    Active_Directory --&gt; S2["FSMO Roles"]
+    Active_Directory --&gt; S3["Users and Groups"]
+    Active_Directory --&gt; S4["Computers"]
+    Active_Directory --&gt; S5["Domain Controllers"]
+    Active_Directory --&gt; S6["Trusts"]</code></pre>
 <hr />
 <h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
 <p>Replication issues cause authentication failures and stale data. Check replication before and after any DC change.</p>
-<pre><code class="language-bash"># High-level replication health across all DCs
-repadmin /replsummary
-
-# Show replication partners and last sync time for a DC
-repadmin /showrepl &lt;DC_name&gt;
-
-# Show replication failures only
-repadmin /showrepl * /errorsonly
-
-# Force replication from all partners
-repadmin /syncall /AdeP
-
-# Check replication queue
-repadmin /queue
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># High-level replication health across all DCs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>repadmin<span class="w"> </span>/replsummary
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show replication partners and last sync time for a DC</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>repadmin<span class="w"> </span>/showrepl<span class="w"> </span>&lt;DC_name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show replication failures only</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>repadmin<span class="w"> </span>/showrepl<span class="w"> </span>*<span class="w"> </span>/errorsonly
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Force replication from all partners</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>repadmin<span class="w"> </span>/syncall<span class="w"> </span>/AdeP
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check replication queue</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>repadmin<span class="w"> </span>/queue
+</code></pre></div>
 <hr />
 <h2 id="dc-diagnostics">DC Diagnostics<a class="headerlink" href="#dc-diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Full verbose DC diagnostic
-dcdiag /v
-
-# Replication-only test
-dcdiag /test:replications
-
-# DNS diagnostic
-dcdiag /test:dns /v
-
-# Run all tests on a remote DC
-dcdiag /s:&lt;DC_name&gt; /v
-
-# Locate a DC for a domain
-nltest /dsgetdc:&lt;domain_name&gt;
-
-# Verify secure channel to domain
-nltest /sc_verify:&lt;domain_name&gt;
-
-# Reset secure channel
-nltest /sc_reset:&lt;domain_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Full verbose DC diagnostic</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dcdiag<span class="w"> </span>/v
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Replication-only test</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dcdiag<span class="w"> </span>/test:replications
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># DNS diagnostic</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dcdiag<span class="w"> </span>/test:dns<span class="w"> </span>/v
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Run all tests on a remote DC</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dcdiag<span class="w"> </span>/s:&lt;DC_name&gt;<span class="w"> </span>/v
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Locate a DC for a domain</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nltest<span class="w"> </span>/dsgetdc:&lt;domain_name&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify secure channel to domain</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>nltest<span class="w"> </span>/sc_verify:&lt;domain_name&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Reset secure channel</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>nltest<span class="w"> </span>/sc_reset:&lt;domain_name&gt;
+</code></pre></div>
 <hr />
 <h2 id="fsmo-roles">FSMO Roles<a class="headerlink" href="#fsmo-roles" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all FSMO role holders
-netdom query fsmo
-
-# Transfer PDC emulator role (PowerShell)
-Move-ADDirectoryServerOperationMasterRole -Identity &lt;target_dc&gt; -OperationMasterRole PDCEmulator
-
-# Seize a role (only if holder is permanently offline)
-Move-ADDirectoryServerOperationMasterRole -Identity &lt;target_dc&gt; -OperationMasterRole PDCEmulator -Force
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all FSMO role holders</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>netdom<span class="w"> </span>query<span class="w"> </span>fsmo
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Transfer PDC emulator role (PowerShell)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Move-ADDirectoryServerOperationMasterRole<span class="w"> </span>-Identity<span class="w"> </span>&lt;target_dc&gt;<span class="w"> </span>-OperationMasterRole<span class="w"> </span>PDCEmulator
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Seize a role (only if holder is permanently offline)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Move-ADDirectoryServerOperationMasterRole<span class="w"> </span>-Identity<span class="w"> </span>&lt;target_dc&gt;<span class="w"> </span>-OperationMasterRole<span class="w"> </span>PDCEmulator<span class="w"> </span>-Force
+</code></pre></div>
 <hr />
 <h2 id="users-groups">Users &amp; Groups<a class="headerlink" href="#users-groups" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all users with password metadata
-Get-ADUser -Filter * -Properties PasswordLastSet, PasswordExpired, LastLogonDate |
-  Select SamAccountName, PasswordLastSet, PasswordExpired, LastLogonDate
-
-# Find users inactive for 90+ days
-$cutoff = (Get-Date).AddDays(-90)
-Get-ADUser -Filter {LastLogonDate -lt $cutoff} -Properties LastLogonDate
-
-# Find disabled accounts
-Get-ADUser -Filter {Enabled -eq $false}
-
-# Find users with passwords set to never expire
-Get-ADUser -Filter {PasswordNeverExpires -eq $true} -Properties PasswordNeverExpires
-
-# List members of a group
-Get-ADGroupMember -Identity &quot;&lt;group_name&gt;&quot; -Recursive
-
-# List all groups in an OU
-Get-ADGroup -Filter * -SearchBase &quot;OU=&lt;ou&gt;,DC=&lt;domain&gt;,DC=&lt;tld&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List all users with password metadata</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">PasswordLastSet</span><span class="p">,</span> <span class="n">PasswordExpired</span><span class="p">,</span> <span class="n">LastLogonDate</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Select </span><span class="n">SamAccountName</span><span class="p">,</span> <span class="n">PasswordLastSet</span><span class="p">,</span> <span class="n">PasswordExpired</span><span class="p">,</span> <span class="n">LastLogonDate</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Find users inactive for 90+ days</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">LastLogonDate</span> <span class="o">-lt</span> <span class="nv">$cutoff</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">LastLogonDate</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Find disabled accounts</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Enabled</span> <span class="o">-eq</span> <span class="nv">$false</span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Find users with passwords set to never expire</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">PasswordNeverExpires</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">PasswordNeverExpires</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c"># List members of a group</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;&lt;group_name&gt;&quot;</span> <span class="n">-Recursive</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c"># List all groups in an OU</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nb">Get-ADGroup</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-SearchBase</span> <span class="s2">&quot;OU=&lt;ou&gt;,DC=&lt;domain&gt;,DC=&lt;tld&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="computers">Computers<a class="headerlink" href="#computers" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all computers with last logon
-Get-ADComputer -Filter * -Properties LastLogonDate |
-  Select Name, LastLogonDate | Sort-Object LastLogonDate -Descending
-
-# Find stale computer accounts (90+ days)
-$cutoff = (Get-Date).AddDays(-90)
-Get-ADComputer -Filter {LastLogonDate -lt $cutoff} -Properties LastLogonDate
-
-# Test and repair machine secure channel
-Test-ComputerSecureChannel -Repair
-
-# Check if a computer is joined to the domain
-(Get-WmiObject Win32_ComputerSystem).PartOfDomain
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all computers with last logon</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="n">-Properties</span> <span class="n">LastLogonDate</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">LastLogonDate</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastLogonDate</span> <span class="n">-Descending</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Find stale computer accounts (90+ days)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">LastLogonDate</span> <span class="o">-lt</span> <span class="nv">$cutoff</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">LastLogonDate</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Test and repair machine secure channel</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Check if a computer is joined to the domain</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">PartOfDomain</span>
+</code></pre></div>
 <hr />
 <h2 id="domain-controllers">Domain Controllers<a class="headerlink" href="#domain-controllers" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all DCs in the domain
-Get-ADDomainController -Filter * | Select Name, Site, IPv4Address, IsGlobalCatalog
-
-# Show replication failures across the forest
-Get-ADReplicationFailure -Scope Forest
-
-# Check AD services on a DC
-Get-Service adws, kdc, netlogon, dns | Select Name, Status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># List all DCs in the domain</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ADDomainController</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Site</span><span class="p">,</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">IsGlobalCatalog</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Show replication failures across the forest</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-ADReplicationFailure</span> <span class="n">-Scope</span> <span class="n">Forest</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Check AD services on a DC</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-Service</span> <span class="n">adws</span><span class="p">,</span> <span class="n">kdc</span><span class="p">,</span> <span class="n">netlogon</span><span class="p">,</span> <span class="n">dns</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+</code></pre></div>
 <hr />
 <h2 id="trusts">Trusts<a class="headerlink" href="#trusts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List domain trusts
-netdom trust &lt;domain&gt; /verify
-
-# List all trusts via PowerShell
-Get-ADTrust -Filter * | Select Name, TrustType, Direction, TrustAttributes
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List domain trusts</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>netdom<span class="w"> </span>trust<span class="w"> </span>&lt;domain&gt;<span class="w"> </span>/verify
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List all trusts via PowerShell</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Get-ADTrust<span class="w"> </span>-Filter<span class="w"> </span>*<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>TrustType,<span class="w"> </span>Direction,<span class="w"> </span>TrustAttributes
+</code></pre></div>
 
 
 

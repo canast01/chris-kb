@@ -822,102 +822,112 @@
 <blockquote>
 <p>Part of the <a href="../">NSX-T CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Troubleshooting["Troubleshooting"]
+    Troubleshooting --&gt; S0["Central CLI (NSX Manager)"]
+    Troubleshooting --&gt; S1["Traceflow"]
+    Troubleshooting --&gt; S2["Packet Capture on Edge Node"]
+    Troubleshooting --&gt; S3["Log Management"]
+    Troubleshooting --&gt; S4["Connectivity Tests"]
+    Troubleshooting --&gt; S5["BGP and Routing Diagnostics"]
+    Troubleshooting --&gt; S6["Health and Cluster Status"]
+    Troubleshooting --&gt; S7["Common Diagnostic Scenarios"]</code></pre>
 <h2 id="central-cli-nsx-manager">Central CLI (NSX Manager)<a class="headerlink" href="#central-cli-nsx-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to NSX Manager via SSH then enter nsxcli
-nsxcli
-
-# Or run a single command without interactive mode
-nsxcli -c &quot;get managers&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to NSX Manager via SSH then enter nsxcli</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsxcli
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or run a single command without interactive mode</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nsxcli<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;get managers&quot;</span>
+</code></pre></div>
 <h2 id="traceflow">Traceflow<a class="headerlink" href="#traceflow" title="Permanent link">&para;</a></h2>
 <p>Traceflow injects a probe packet to trace its path through the logical network.</p>
-<pre><code class="language-bash"># List active traceflows
-get traceflows
-
-# Traceflow is primarily launched from NSX Manager UI:
-# Plan &amp; Troubleshoot → Traceflow
-# Or via API: POST /api/v1/traceflows
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List active traceflows</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>traceflows
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Traceflow is primarily launched from NSX Manager UI:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Plan &amp; Troubleshoot → Traceflow</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Or via API: POST /api/v1/traceflows</span>
+</code></pre></div>
 <h2 id="packet-capture-on-edge-node">Packet Capture on Edge Node<a class="headerlink" href="#packet-capture-on-edge-node" title="Permanent link">&para;</a></h2>
 <p>SSH to the Edge node, then:</p>
-<pre><code class="language-bash"># Capture on uplink (physical interface)
-debug packet capture interface fp-eth0 count 500
-
-# Capture on Geneve overlay interface
-debug packet capture interface nsx-geneve count 500
-
-# Capture with filter (BPF syntax)
-debug packet capture interface fp-eth0 filter &quot;host 10.0.0.1&quot; count 200
-
-# Write to file for Wireshark analysis
-debug packet capture interface fp-eth0 file /tmp/cap.pcap count 1000
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Capture on uplink (physical interface)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Capture on Geneve overlay interface</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>nsx-geneve<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Capture with filter (BPF syntax)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;host 10.0.0.1&quot;</span><span class="w"> </span>count<span class="w"> </span><span class="m">200</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Write to file for Wireshark analysis</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>file<span class="w"> </span>/tmp/cap.pcap<span class="w"> </span>count<span class="w"> </span><span class="m">1000</span>
+</code></pre></div>
 <h2 id="log-management">Log Management<a class="headerlink" href="#log-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View recent logs
-get logs
-
-# Follow logs in real time
-get log manager follow
-
-# Set log level (Edge or Manager node)
-set service manager logging-level debug
-set service manager logging-level info      # reset after troubleshooting
-
-# NSX log file locations (SSH to node)
-ls /var/log/vmware/nsx-*/
-tail -f /var/log/vmware/nsx-manager/manager.log
-tail -f /var/log/vmware/nsx-edge/edge.log
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View recent logs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>logs
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Follow logs in real time</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>log<span class="w"> </span>manager<span class="w"> </span>follow
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Set log level (Edge or Manager node)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>manager<span class="w"> </span>logging-level<span class="w"> </span>debug
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>manager<span class="w"> </span>logging-level<span class="w"> </span>info<span class="w">      </span><span class="c1"># reset after troubleshooting</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># NSX log file locations (SSH to node)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ls<span class="w"> </span>/var/log/vmware/nsx-*/
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/nsx-manager/manager.log
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/nsx-edge/edge.log
+</code></pre></div>
 <h2 id="connectivity-tests">Connectivity Tests<a class="headerlink" href="#connectivity-tests" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Ping from NSX Manager node
-vrf &lt;lr_id&gt;
-ping &lt;destination_ip&gt;
-ping &lt;destination_ip&gt; repeat 100 size 1400
-
-# Traceroute through overlay
-traceroute &lt;destination_ip&gt;
-
-# Test DNS resolution from Edge
-nslookup &lt;hostname&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Ping from NSX Manager node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ping<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ping<span class="w"> </span>&lt;destination_ip&gt;<span class="w"> </span>repeat<span class="w"> </span><span class="m">100</span><span class="w"> </span>size<span class="w"> </span><span class="m">1400</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Traceroute through overlay</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>traceroute<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Test DNS resolution from Edge</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>nslookup<span class="w"> </span>&lt;hostname&gt;
+</code></pre></div>
 <h2 id="bgp-and-routing-diagnostics">BGP and Routing Diagnostics<a class="headerlink" href="#bgp-and-routing-diagnostics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check BGP session state (run on Edge in gateway VRF)
-vrf &lt;lr_id&gt;
-get bgp neighbor summary
-
-# BGP route counts per neighbor
-get bgp neighbor &lt;neighbor_ip&gt;
-
-# Advertised routes to a peer
-get bgp neighbor &lt;neighbor_ip&gt; advertised-routes
-
-# Received routes from a peer
-get bgp neighbor &lt;neighbor_ip&gt; routes
-
-# Full forwarding table
-get forwarding
-
-# Check for route to a specific prefix
-get route &lt;prefix&gt;/&lt;mask&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check BGP session state (run on Edge in gateway VRF)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># BGP route counts per neighbor</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;neighbor_ip&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Advertised routes to a peer</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;neighbor_ip&gt;<span class="w"> </span>advertised-routes
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Received routes from a peer</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;neighbor_ip&gt;<span class="w"> </span>routes
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Full forwarding table</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>get<span class="w"> </span>forwarding
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Check for route to a specific prefix</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>get<span class="w"> </span>route<span class="w"> </span>&lt;prefix&gt;/&lt;mask&gt;
+</code></pre></div>
 <h2 id="health-and-cluster-status">Health and Cluster Status<a class="headerlink" href="#health-and-cluster-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NSX Manager cluster health
-get managers
-get clusters
-get cluster status
-
-# Corfu DB (control plane) status
-get corfu-cluster status
-
-# Individual service status
-get service manager
-get service http
-get service controller
-
-# Transport node connectivity
-get transport-nodes
-get transport-node-status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># NSX Manager cluster health</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>managers
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>clusters
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Corfu DB (control plane) status</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Individual service status</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>get<span class="w"> </span>service<span class="w"> </span>manager
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>get<span class="w"> </span>service<span class="w"> </span>http
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>get<span class="w"> </span>service<span class="w"> </span>controller
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Transport node connectivity</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>get<span class="w"> </span>transport-nodes
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>get<span class="w"> </span>transport-node-status
+</code></pre></div>
 <h2 id="common-diagnostic-scenarios">Common Diagnostic Scenarios<a class="headerlink" href="#common-diagnostic-scenarios" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

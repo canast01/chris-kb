@@ -829,27 +829,27 @@
 <li><strong>Witness</strong> — third-party tiebreaker for split-brain scenarios</li>
 </ul>
 <h2 id="check-distributed-device-status">Check Distributed Device Status<a class="headerlink" href="#check-distributed-device-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/distributed-devices/
-VPlexcli:/&gt; ll /distributed-storage/distributed-devices/&lt;device_name&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;/
+</code></pre></div>
 <p>Key attributes:
 - <code>service-status: running</code> — both legs active
 - <code>operational-status: ok</code>
 - <code>active-leg</code> — which cluster is currently active</p>
 <h2 id="check-active-leg">Check Active Leg<a class="headerlink" href="#check-active-leg" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/distributed-devices/&lt;device_name&gt;/
-# active-leg: /clusters/cluster-1  (or cluster-2)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># active-leg: /clusters/cluster-1  (or cluster-2)</span>
+</code></pre></div>
 <h2 id="planned-failover-migrate-active-leg">Planned Failover (Migrate Active Leg)<a class="headerlink" href="#planned-failover-migrate-active-leg" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Move active leg to cluster-2
-VPlexcli:/&gt; device migrate \
-    --device /distributed-storage/distributed-devices/&lt;device_name&gt; \
-    --target-cluster cluster-2
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Move active leg to cluster-2</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>migrate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--target-cluster<span class="w"> </span>cluster-2
+</code></pre></div>
 <h2 id="witness-configuration">Witness Configuration<a class="headerlink" href="#witness-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/witness/
-# Check: witness-connectivity = connected
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/witness/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Check: witness-connectivity = connected</span>
+</code></pre></div>
 <h2 id="split-brain-recovery">Split-Brain Recovery<a class="headerlink" href="#split-brain-recovery" title="Permanent link">&para;</a></h2>
 <p>If WAN COM link fails and both clusters believe they are active:</p>
 <ol>
@@ -858,19 +858,19 @@ VPlexcli:/&gt; device migrate \
 <li>Identify which cluster has the most recent I/O</li>
 <li>Suspend the stale cluster leg:</li>
 </ol>
-<pre><code class="language-bash">VPlexcli:/&gt; device suspend \
-    --device /distributed-storage/distributed-devices/&lt;device_name&gt; \
-    --clusters cluster-2
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--clusters<span class="w"> </span>cluster-2
+</code></pre></div>
 <ol>
 <li>After link recovery, resync:</li>
 </ol>
-<pre><code class="language-bash">VPlexcli:/&gt; device rebuild \
-    --device /distributed-storage/distributed-devices/&lt;device_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VPlexcli:/&gt;<span class="w"> </span>device<span class="w"> </span>rebuild<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>--device<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;
+</code></pre></div>
 <h2 id="wan-com-health">WAN COM Health<a class="headerlink" href="#wan-com-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/connectivity/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/clusters/cluster-1/connectivity/
+</code></pre></div>
 <p>Monitor inter-cluster latency — VPLEX Metro requires &lt; 5ms RTT between sites.</p>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

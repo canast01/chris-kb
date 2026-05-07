@@ -836,36 +836,65 @@
 <li>Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Log in to the APEX Console and review the Dashboard for any active service alerts or infrastructure health warnings</li>
-<li>Check current committed vs. consumed capacity to confirm usage is within the subscription tier</li>
-<li>Review the Billing &amp; Usage page for any unexpected burst consumption events</li>
-<li>Confirm the on-premises infrastructure is connected and reporting telemetry to APEX (APEX requires Secure Connect Gateway connectivity)</li>
-<li>Review any pending service requests or open incidents in the APEX Console support portal</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Log in to the APEX Console and review the Dashboard for any active ser</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check current committed vs. consumed capacity to confirm usage is with</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review the Billing &amp; Usage page for any unexpected burst consumption e</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm the on-premises infrastructure is connected and reporting tele</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review any pending service requests or open incidents in the APEX Cons</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Authenticate to the APEX REST API and retrieve a bearer token
-curl -s -X POST &quot;https://console.cloudapex.dell.com/api/v1/auth/token&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;client_id&quot;:&quot;&lt;client_id&gt;&quot;,&quot;client_secret&quot;:&quot;&lt;client_secret&gt;&quot;}' \
-  | jq -r '.access_token'
-
-# List all subscriptions for the account
-curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
-  &quot;https://console.cloudapex.dell.com/api/v1/subscriptions&quot; | jq .
-
-# Get capacity metrics for a specific subscription
-curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
-  &quot;https://console.cloudapex.dell.com/api/v1/subscriptions/&lt;subscription_id&gt;/capacity&quot; | jq .
-
-# Get active alerts for all APEX resources
-curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
-  &quot;https://console.cloudapex.dell.com/api/v1/alerts?status=active&quot; | jq .
-
-# List service requests
-curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
-  &quot;https://console.cloudapex.dell.com/api/v1/service-requests&quot; | jq .
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to the APEX REST API and retrieve a bearer token</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://console.cloudapex.dell.com/api/v1/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;client_id&quot;:&quot;&lt;client_id&gt;&quot;,&quot;client_secret&quot;:&quot;&lt;client_secret&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all subscriptions for the account</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="s2">&quot;https://console.cloudapex.dell.com/api/v1/subscriptions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Get capacity metrics for a specific subscription</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s2">&quot;https://console.cloudapex.dell.com/api/v1/subscriptions/&lt;subscription_id&gt;/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get active alerts for all APEX resources</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="s2">&quot;https://console.cloudapex.dell.com/api/v1/alerts?status=active&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List service requests</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="s2">&quot;https://console.cloudapex.dell.com/api/v1/service-requests&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -904,21 +933,67 @@ curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Raise a capacity increase request via APEX Console → Subscriptions → Request Capacity Increase</li>
-<li>Review monthly usage report from APEX Console → Billing &amp; Usage and export for finance reconciliation</li>
-<li>Add or modify user access to the APEX Console under Administration → Users &amp; Roles</li>
-<li>Open a support case for hardware or service issues via APEX Console → Support → Create Service Request</li>
-<li>Download the APEX API specification from the Console developer portal to build custom monitoring integrations</li>
-<li>Review the underlying platform health (PowerStore/PowerScale/PowerFlex) directly on the on-premises management interfaces if deeper diagnostics are needed</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raise a capacity increase request via APEX Console → Subscriptions → Request Cap</td>
+<td></td>
+</tr>
+<tr>
+<td>Review monthly usage report from APEX Console → Billing &amp; Usage and export for f</td>
+<td></td>
+</tr>
+<tr>
+<td>Add or modify user access to the APEX Console under Administration → Users &amp; Rol</td>
+<td></td>
+</tr>
+<tr>
+<td>Open a support case for hardware or service issues via APEX Console → Support →</td>
+<td></td>
+</tr>
+<tr>
+<td>Download the APEX API specification from the Console developer portal to build c</td>
+<td></td>
+</tr>
+<tr>
+<td>Review the underlying platform health (PowerStore/PowerScale/PowerFlex) directly</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibility — do not initiate firmware changes on APEX-managed infrastructure without coordination</li>
-<li>Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows for upgrades and communicate via the Console</li>
-<li>Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface</li>
-<li>After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibility — do not initiate firmware changes on APEX-managed infrastructure without coordination</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows for upgrades and communicate via the Console</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface</td>
+</tr>
+<tr>
+<td>4</td>
+<td>After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Keep Secure Connect Gateway appliances highly available (deploy two SCG appliances for redundancy) — loss of SCG connectivity causes telemetry gaps and may trigger alerts</li>

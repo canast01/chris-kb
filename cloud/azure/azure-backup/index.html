@@ -845,48 +845,48 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List Recovery Services vaults
-az backup vault list --query '[*].{Name:name,RG:resourceGroup}' -o table
-
-# List backup policies
-az backup policy list --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --query '[*].{Name:name,WorkloadType:properties.workloadType}' -o table
-
-# List protected items (VMs)
-az backup item list --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --query '[*].{VM:properties.sourceResourceId,Status:properties.protectionStatus,LastBackup:properties.lastBackupTime}' -o table
-
-# Trigger a manual backup
-az backup protection backup-now \
-  --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --container-name &lt;vm-resource-id&gt; \
-  --item-name &lt;vm-name&gt; \
-  --retain-until 2026-06-30 \
-  --backup-management-type AzureIaasVM
-
-# List restore points for a VM
-az backup recoverypoint list \
-  --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --container-name &lt;container-name&gt; \
-  --item-name &lt;vm-name&gt; \
-  --backup-management-type AzureIaasVM \
-  --query '[*].{Name:name,Time:properties.recoveryPointTime,Type:properties.recoveryPointType}' -o table
-
-# Check recent backup jobs
-az backup job list --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --query '[*].{VM:properties.entityFriendlyName,Operation:properties.operation,Status:properties.status,Start:properties.startTime}' \
-  -o table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List Recovery Services vaults</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List backup policies</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>backup<span class="w"> </span>policy<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,WorkloadType:properties.workloadType}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># List protected items (VMs)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>backup<span class="w"> </span>item<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{VM:properties.sourceResourceId,Status:properties.protectionStatus,LastBackup:properties.lastBackupTime}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Trigger a manual backup</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>az<span class="w"> </span>backup<span class="w"> </span>protection<span class="w"> </span>backup-now<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;vm-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--item-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--retain-until<span class="w"> </span><span class="m">2026</span>-06-30<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># List restore points for a VM</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>az<span class="w"> </span>backup<span class="w"> </span>recoverypoint<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--item-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--backup-management-type<span class="w"> </span>AzureIaasVM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Time:properties.recoveryPointTime,Type:properties.recoveryPointType}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Check recent backup jobs</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{VM:properties.entityFriendlyName,Operation:properties.operation,Status:properties.status,Start:properties.startTime}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>-o<span class="w"> </span>table
+</code></pre></div>
 <h2 id="restore-a-vm">Restore a VM<a class="headerlink" href="#restore-a-vm" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Restore VM disks to a storage account (then attach to new VM)
-az backup restore restore-disks \
-  --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --container-name &lt;container&gt; \
-  --item-name &lt;vm-name&gt; \
-  --rp-name &lt;recovery-point-name&gt; \
-  --storage-account &lt;storage-account-resource-id&gt; \
-  --target-resource-group &lt;target-rg&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore VM disks to a storage account (then attach to new VM)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>backup<span class="w"> </span>restore<span class="w"> </span>restore-disks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--item-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--rp-name<span class="w"> </span>&lt;recovery-point-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--storage-account<span class="w"> </span>&lt;storage-account-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--target-resource-group<span class="w"> </span>&lt;target-rg&gt;
+</code></pre></div>
 <h2 id="file-recovery-item-level-restore">File Recovery (Item-Level Restore)<a class="headerlink" href="#file-recovery-item-level-restore" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Portal: Vault → Backup items → select VM → <strong>File Recovery</strong></li>
@@ -896,25 +896,25 @@ az backup restore restore-disks \
 <li>Unmount the recovery volume</li>
 </ol>
 <h2 id="backup-policy-configuration">Backup Policy Configuration<a class="headerlink" href="#backup-policy-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create or modify a backup policy (via ARM template or portal)
-# Key settings:
-# - Backup frequency: Daily / Weekly / Hourly (enhanced policy)
-# - Retention: Daily points (up to 9999), Weekly, Monthly, Yearly
-# - Snapshot tier: Standard or Premium
-# - Cross-region restore: Enable for critical VMs (additional cost)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create or modify a backup policy (via ARM template or portal)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Key settings:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># - Backup frequency: Daily / Weekly / Hourly (enhanced policy)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># - Retention: Daily points (up to 9999), Weekly, Monthly, Yearly</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># - Snapshot tier: Standard or Premium</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># - Cross-region restore: Enable for critical VMs (additional cost)</span>
+</code></pre></div>
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check jobs with failures in last 24 hours
-az backup job list --vault-name &lt;vault&gt; -g &lt;rg&gt; \
-  --status Failed \
-  --query '[*].{VM:properties.entityFriendlyName,Status:properties.status,Error:properties.errorDetails[0].code}'
-</code></pre>
-<p><strong>KQL — backup alert in Log Analytics:</strong></p>
-<pre><code class="language-kql">AddonAzureBackupJobs
-| where JobStatus == &quot;Failed&quot;
-| project TimeGenerated, BackupItemUniqueId, JobOperation, ErrorTitle, JobDurationInSecs
-| sort by TimeGenerated desc
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check jobs with failures in last 24 hours</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span>--vault-name<span class="w"> </span>&lt;vault&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--status<span class="w"> </span>Failed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{VM:properties.entityFriendlyName,Status:properties.status,Error:properties.errorDetails[0].code}&#39;</span>
+</code></pre></div>
+<p><strong>KQL — backup alert in Log Analytics:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AddonAzureBackupJobs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">JobStatus</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;Failed&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">BackupItemUniqueId</span><span class="p">,</span><span class="w"> </span><span class="n">JobOperation</span><span class="p">,</span><span class="w"> </span><span class="n">ErrorTitle</span><span class="p">,</span><span class="w"> </span><span class="n">JobDurationInSecs</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div></p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

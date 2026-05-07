@@ -799,57 +799,57 @@
 <h1 id="capacity-review">Capacity Review<a class="headerlink" href="#capacity-review" title="Permanent link">&para;</a></h1>
 <p>Run this check weekly or after any significant workload addition.</p>
 <h2 id="cluster-cpu-and-memory">Cluster CPU and Memory<a class="headerlink" href="#cluster-cpu-and-memory" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Via vCenter PowerCLI
-$clusters = Get-Cluster
-foreach ($c in $clusters) {
-    $hosts = Get-VMHost -Location $c
-    $totalCPU = ($hosts | Measure-Object -Property NumCpu -Sum).Sum
-    $usedCPU  = ($hosts | Get-Stat -Stat cpu.usage.average -MaxSamples 1 | Measure-Object -Property Value -Average).Average
-    Write-Host &quot;$($c.Name): CPU=$($usedCPU.ToString('0.0'))%  Hosts=$($hosts.Count)&quot;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Via vCenter PowerCLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$clusters</span> <span class="p">=</span> <span class="nb">Get-Cluster</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$c</span> <span class="k">in</span> <span class="nv">$clusters</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="nv">$hosts</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="nv">$c</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nv">$totalCPU</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$hosts</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">NumCpu</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nv">$usedCPU</span>  <span class="p">=</span> <span class="p">(</span><span class="nv">$hosts</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span> <span class="n">-MaxSamples</span> <span class="n">1</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$c</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: CPU=</span><span class="p">$(</span><span class="nv">$usedCPU</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s1">&#39;0.0&#39;</span><span class="p">))</span><span class="s2">%  Hosts=</span><span class="p">$(</span><span class="nv">$hosts</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+</code></pre></div>
 <p>Thresholds:
 - CPU &gt; 70% average across cluster → investigate workload distribution
 - Memory balloon/swap &gt; 0 on any host → immediate action required</p>
 <h2 id="datastore-free-space">Datastore Free Space<a class="headerlink" href="#datastore-free-space" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Datastore | Select-Object Name, FreeSpaceGB, CapacityGB, @{
-    N=&quot;Used%&quot;; E={[math]::Round((1-($_.FreeSpaceGB/$_.CapacityGB))*100,1)}
-} | Sort-Object &quot;Used%&quot; -Descending | Format-Table -AutoSize
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="p">@{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">N</span><span class="p">=</span><span class="s2">&quot;Used%&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span><span class="p">-(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">))*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="s2">&quot;Used%&quot;</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 <p>Alert thresholds:
 - &gt; 75% used: review and plan expansion
 - &gt; 85% used: immediate action — thin provisioned disks may fail to inflate</p>
 <h2 id="vsan-capacity">vSAN Capacity<a class="headerlink" href="#vsan-capacity" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># On any cluster ESXi host
-esxcli vsan storage capacity get
-# Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)
-
-# Via vCenter UI: vSAN cluster → Monitor → Capacity
-# Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On any cluster ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>capacity<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Via vCenter UI: vSAN cluster → Monitor → Capacity</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom</span>
+</code></pre></div>
 <p>vSAN capacity thresholds:
 - &gt; 60% used: plan capacity expansion
 - &gt; 70% used: critical — rebuild operations may fail if a disk fails</p>
 <h2 id="snapshot-growth">Snapshot Growth<a class="headerlink" href="#snapshot-growth" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Find VMs with large or old snapshots
-Get-VM | Get-Snapshot | Where-Object {$_.SizeMB -gt 10240 -or $_.Created -lt (Get-Date).AddDays(-7)} |
-    Select-Object VM, Name, Created, SizeMB | Sort-Object SizeMB -Descending
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find VMs with large or old snapshots</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span>
+</code></pre></div>
 <p>Action: snapshots older than 7 days should be reviewed with the VM owner; snapshots &gt; 50 GB should be removed if not actively in use.</p>
 <h2 id="thin-provisioning-risk">Thin Provisioning Risk<a class="headerlink" href="#thin-provisioning-risk" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Compare provisioned vs. actual used space per datastore
-Get-Datastore | Where-Object {$_.Type -eq &quot;VMFS&quot;} | ForEach-Object {
-    $ds = $_
-    $vms = Get-VM -Datastore $ds
-    $provGB = ($vms | Get-HardDisk | Measure-Object -Property CapacityGB -Sum).Sum
-    [PSCustomObject]@{
-        Datastore = $ds.Name
-        CapacityGB = [math]::Round($ds.CapacityGB, 1)
-        ProvisionedGB = [math]::Round($provGB, 1)
-        OvercommitRatio = [math]::Round($provGB / $ds.CapacityGB, 2)
-    }
-} | Sort-Object OvercommitRatio -Descending
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">Datastore</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="n">CapacityGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">ProvisionedGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">OvercommitRatio</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">OvercommitRatio</span> <span class="n">-Descending</span>
+</code></pre></div>
 <p>Alert if overcommit ratio &gt; 2.0 on a datastore approaching 70% usage.</p>
 <h2 id="backup-repository-usage">Backup Repository Usage<a class="headerlink" href="#backup-repository-usage" title="Permanent link">&para;</a></h2>
 <p>Check primary and SOBR capacity tier fill levels — alert operators when performance tier &gt; 80% full:

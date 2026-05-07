@@ -821,45 +821,45 @@
 <h1 id="routing-validation">Routing Validation<a class="headerlink" href="#routing-validation" title="Permanent link">&para;</a></h1>
 <p>Verify routing paths are correct before and after network changes.</p>
 <h2 id="pre-change-baseline">Pre-Change Baseline<a class="headerlink" href="#pre-change-baseline" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Capture current route table
-ip route show &gt; /tmp/routes-before.txt
-
-# Capture traceroute to critical destinations
-traceroute &lt;production_host&gt; &gt;&gt; /tmp/routes-before.txt
-traceroute &lt;storage_vip&gt; &gt;&gt; /tmp/routes-before.txt
-traceroute &lt;replication_peer&gt; &gt;&gt; /tmp/routes-before.txt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capture current route table</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Capture traceroute to critical destinations</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>traceroute<span class="w"> </span>&lt;production_host&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>traceroute<span class="w"> </span>&lt;replication_peer&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/routes-before.txt
+</code></pre></div>
 <h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Compare route tables
-ip route show &gt; /tmp/routes-after.txt
-diff /tmp/routes-before.txt /tmp/routes-after.txt
-
-# Confirm specific routes still present
-ip route get &lt;destination&gt;
-
-# Trace paths to critical systems
-traceroute &lt;production_host&gt;
-traceroute &lt;storage_vip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Compare route tables</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>&gt;<span class="w"> </span>/tmp/routes-after.txt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>diff<span class="w"> </span>/tmp/routes-before.txt<span class="w"> </span>/tmp/routes-after.txt
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Confirm specific routes still present</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Trace paths to critical systems</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>traceroute<span class="w"> </span>&lt;production_host&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>traceroute<span class="w"> </span>&lt;storage_vip&gt;
+</code></pre></div>
 <h2 id="validate-default-gateway">Validate Default Gateway<a class="headerlink" href="#validate-default-gateway" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ip route show default
-ping &lt;gateway_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
+</code></pre></div>
 <h2 id="ospf-neighbor-validation">OSPF Neighbor Validation<a class="headerlink" href="#ospf-neighbor-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show ip ospf neighbor            # all neighbors in FULL state
-show ip ospf neighbor &lt;id&gt;       # specific neighbor detail
-show ip route ospf               # routes learned via OSPF
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w">            </span><span class="c1"># all neighbors in FULL state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>ip<span class="w"> </span>ospf<span class="w"> </span>neighbor<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># specific neighbor detail</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>show<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ospf<span class="w">               </span><span class="c1"># routes learned via OSPF</span>
+</code></pre></div>
 <h2 id="bgp-route-validation">BGP Route Validation<a class="headerlink" href="#bgp-route-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">show bgp summary                  # peer state: Established
-show bgp neighbors &lt;ip&gt; routes    # routes received from peer
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>show<span class="w"> </span>bgp<span class="w"> </span>summary<span class="w">                  </span><span class="c1"># peer state: Established</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>neighbors<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>routes<span class="w">    </span><span class="c1"># routes received from peer</span>
+</code></pre></div>
 <h2 id="test-application-level-connectivity">Test Application-Level Connectivity<a class="headerlink" href="#test-application-level-connectivity" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm key services reachable after routing change
-nc -zv &lt;storage_vip&gt; 443    # storage management
-nc -zv &lt;vcenter_fqdn&gt; 443   # vCenter
-curl -k https://&lt;app_vip&gt;/  # application VIP
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm key services reachable after routing change</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;storage_vip&gt;<span class="w"> </span><span class="m">443</span><span class="w">    </span><span class="c1"># storage management</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vcenter_fqdn&gt;<span class="w"> </span><span class="m">443</span><span class="w">   </span><span class="c1"># vCenter</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;app_vip&gt;/<span class="w">  </span><span class="c1"># application VIP</span>
+</code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Route table contains all expected routes</li>

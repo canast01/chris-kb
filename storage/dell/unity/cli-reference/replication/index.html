@@ -833,16 +833,27 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Replication["Replication"]
+    Replication --&gt; S0["Replication Sessions"]
+    Replication --&gt; S1["Session States"]
+    Replication --&gt; S2["Pause and Resume"]
+    Replication --&gt; S3["Manual Sync"]
+    Replication --&gt; S4["Planned Failover"]
+    Replication --&gt; S5["Failback"]
+    Replication --&gt; S6["Replication Connections"]
+    Replication --&gt; S7["Create a Replication Session"]
+    Replication --&gt; S8["Health Check"]</code></pre>
 <h2 id="replication-sessions">Replication Sessions<a class="headerlink" href="#replication-sessions" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all replication sessions
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session show
-
-# Detailed view — state, lag, source/destination resources
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session show -detail
-
-# Specific session
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; show -detail
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all replication sessions</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed view — state, lag, source/destination resources</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Specific session</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>show<span class="w"> </span>-detail
+</code></pre></div>
 <h2 id="session-states">Session States<a class="headerlink" href="#session-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -879,58 +890,58 @@ uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; show -det
 </tbody>
 </table>
 <h2 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Pause replication (source continues accepting writes)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; pause
-
-# Resume replication (re-syncs data accumulated during pause)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; resume
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pause replication (source continues accepting writes)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>pause
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Resume replication (re-syncs data accumulated during pause)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>resume
+</code></pre></div>
 <h2 id="manual-sync">Manual Sync<a class="headerlink" href="#manual-sync" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Trigger an immediate sync outside the RPO schedule
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger an immediate sync outside the RPO schedule</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>sync
+</code></pre></div>
 <h2 id="planned-failover">Planned Failover<a class="headerlink" href="#planned-failover" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Failover with final sync — syncs, then activates DR copy (recommended)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover -keepSync
-
-# Emergency failover without sync (data may be behind RPO)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failover
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Failover with final sync — syncs, then activates DR copy (recommended)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>failover<span class="w"> </span>-keepSync
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Emergency failover without sync (data may be behind RPO)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>failover
+</code></pre></div>
 <h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Step 1 — reverse replication (DR becomes source, primary becomes destination)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; reverse
-
-# Step 2 — sync data back to primary
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; sync
-
-# Step 3 — fail back to original primary
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session -id &lt;session_id&gt; failback
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — reverse replication (DR becomes source, primary becomes destination)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>reverse
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Step 2 — sync data back to primary</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>sync
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Step 3 — fail back to original primary</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>-id<span class="w"> </span>&lt;session_id&gt;<span class="w"> </span>failback
+</code></pre></div>
 <h2 id="replication-connections">Replication Connections<a class="headerlink" href="#replication-connections" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List connections (Unity ↔ Unity or Unity ↔ PowerStore)
-uemcli -d &lt;ip&gt; -u admin /prot/rep/connect show
-
-# Create a replication connection
-uemcli -d &lt;ip&gt; -u admin /prot/rep/connect create \
-    -destAddress &lt;destination_sp_ip&gt; \
-    -destUsername admin \
-    -destPassword &lt;password&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List connections (Unity ↔ Unity or Unity ↔ PowerStore)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/connect<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Create a replication connection</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/connect<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>-destAddress<span class="w"> </span>&lt;destination_sp_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>-destUsername<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>-destPassword<span class="w"> </span>&lt;password&gt;
+</code></pre></div>
 <h2 id="create-a-replication-session">Create a Replication Session<a class="headerlink" href="#create-a-replication-session" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replicate a LUN to a remote Unity
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session create \
-    -srcRes &lt;lun_id&gt; \
-    -dstSys &lt;connection_id&gt; \
-    -dstResName &lt;remote_lun_name&gt; \
-    -rpo 3600   # RPO in seconds (3600 = 1 hour)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Replicate a LUN to a remote Unity</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-srcRes<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-dstSys<span class="w"> </span>&lt;connection_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-dstResName<span class="w"> </span>&lt;remote_lun_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-rpo<span class="w"> </span><span class="m">3600</span><span class="w">   </span><span class="c1"># RPO in seconds (3600 = 1 hour)</span>
+</code></pre></div>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check all sessions for non-healthy states
-uemcli -d &lt;ip&gt; -u admin /prot/rep/session show | grep -v &quot;Active\|Idle\|Session&quot;
-
-# Replication-related alerts
-uemcli -d &lt;ip&gt; -u admin /prac/alert show | grep -i repl
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check all sessions for non-healthy states</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Active\|Idle\|Session&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Replication-related alerts</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prac/alert<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>repl
+</code></pre></div>
 
 
 

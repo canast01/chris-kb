@@ -910,46 +910,83 @@
 <li>Automated storage tiering with FAST VP to move data between NVMe, SAS, and NL-SAS tiers based on activity</li>
 </ul>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Open Unisphere for PowerMax and review the Dashboard for active alerts and system health status</li>
-<li>Run <code>symcfg -sid &lt;SID&gt; show</code> to confirm array-level health and director status</li>
-<li>Run <code>symdf list -sid &lt;SID&gt;</code> to check SRDF pair states — all R1 pairs should be <code>Synchronized</code> (SRDF/S) or <code>Consistent</code> (SRDF/A)</li>
-<li>Review <code>sympd list -sid &lt;SID&gt;</code> to confirm no physical drives are in a <code>Failed</code> or <code>Degraded</code> state</li>
-<li>Check storage group thin device pool utilisation via Unisphere or <code>symsg list -sid &lt;SID&gt;</code></li>
-<li>Confirm any SnapVX sessions that are no longer needed have been terminated to avoid hitting per-device limits</li>
-<li>Review Unisphere → Performance → Array to check I/O response time and throughput against baselines</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open Unisphere for PowerMax and review the Dashboard for active alerts</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Run <code>symcfg -sid &lt;SID&gt; show</code> to confirm array-level health and directo</td>
+<td><code>symcfg -sid &lt;SID&gt; show</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Run <code>symdf list -sid &lt;SID&gt;</code> to check SRDF pair states</td>
+<td><code>symdf list -sid &lt;SID&gt;</code></td>
+<td>all R1 pairs should be <code>Synchronized</code> (SRDF/S) or <code>Consistent</code> (SRDF/A)</td>
+</tr>
+<tr>
+<td>Review <code>sympd list -sid &lt;SID&gt;</code> to confirm no physical drives are in a</td>
+<td><code>sympd list -sid &lt;SID&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Check storage group thin device pool utilisation via Unisphere or <code>sym |</code>symsg list -sid <SID>`</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm any SnapVX sessions that are no longer needed have been termin</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Review Unisphere → Performance → Array to check I/O response time and</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all Symmetrix arrays visible to Solutions Enabler
-symcfg list
-
-# Show full array configuration and health for a specific SID
-symcfg -sid &lt;SID&gt; show
-
-# List SRDF groups (RDF groups) for the array
-symdf list -sid &lt;SID&gt;
-
-# Show SRDF pair state for a specific RDF group
-symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; query
-
-# List all storage groups
-symsg list -sid &lt;SID&gt;
-
-# List all device groups
-symdg list -sid &lt;SID&gt;
-
-# List all physical drives and their state
-sympd list -sid &lt;SID&gt;
-
-# List SnapVX snapshots for a storage group
-symsnap list -sid &lt;SID&gt; -sg &lt;storage-group&gt;
-
-# Show real-time I/O statistics (R2 side)
-symstat -sid &lt;SID&gt; -type r2
-
-# Show replication sessions (SRDF and SnapVX)
-symreplicate list -sid &lt;SID&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Symmetrix arrays visible to Solutions Enabler</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full array configuration and health for a specific SID</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List SRDF groups (RDF groups) for the array</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show SRDF pair state for a specific RDF group</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all storage groups</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all device groups</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List all physical drives and their state</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List SnapVX snapshots for a storage group</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;storage-group&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show real-time I/O statistics (R2 side)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>r2
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -993,26 +1030,87 @@ symreplicate list -sid &lt;SID&gt;
 </tbody>
 </table>
 <h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Create a new storage group with <code>symsg -sid &lt;SID&gt; create &lt;sg-name&gt;</code> and add thin devices</li>
-<li>Create a masking view to present a storage group to a host: configure initiator group, port group, storage group, then create the masking view in Unisphere or with <code>symmask</code></li>
-<li>Create a SnapVX snapshot: <code>symsnap -sid &lt;SID&gt; create -sg &lt;sg-name&gt; -name &lt;snap-name&gt;</code></li>
-<li>Link a SnapVX snapshot to a target storage group for dev/test or restore</li>
-<li>Establish an SRDF pair: define RDF groups on both arrays, then use <code>symrdf -sid &lt;SID&gt; createpair</code> or Unisphere wizard</li>
-<li>Change SRDF mode between synchronous and asynchronous via <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; set mode</code></li>
-<li>Perform a planned SRDF failover (split) and failback via <code>symrdf split</code> and <code>symrdf restore</code> during DR tests</li>
-<li>Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modify</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a new storage group with <code>symsg -sid &lt;SID&gt; create &lt;sg-name&gt;</code> and add thin</td>
+<td></td>
+</tr>
+<tr>
+<td>Create a masking view to present a storage group to a host</td>
+<td><code>symmask</code></td>
+</tr>
+<tr>
+<td>Create a SnapVX snapshot</td>
+<td><code>symsnap -sid &lt;SID&gt; create -sg &lt;sg-name&gt; -name &lt;snap-name&gt;</code></td>
+</tr>
+<tr>
+<td>Link a SnapVX snapshot to a target storage group for dev/test or restore</td>
+<td></td>
+</tr>
+<tr>
+<td>Establish an SRDF pair</td>
+<td><code>symrdf -sid &lt;SID&gt; createpair</code></td>
+</tr>
+<tr>
+<td>Change SRDF mode between synchronous and asynchronous via `symrdf -sid <SID> -rd</td>
+<td></td>
+</tr>
+<tr>
+<td>Perform a planned SRDF failover (split) and failback via <code>symrdf split</code> and `sym</td>
+<td></td>
+</tr>
+<tr>
+<td>Expand a thin pool by adding devices via Unisphere → Storage → Thin Pools → Modi</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Record the current PowerMaxOS and Solutions Enabler version from <code>symcfg list</code> and the Unisphere About page</li>
-<li>Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions</li>
-<li>Confirm all SRDF pairs are in <code>Synchronized</code> or <code>Consistent</code> state before upgrade; suspend replication if advised by release notes</li>
-<li>Back up the Solutions Enabler database and Unisphere configuration files to an external location</li>
-<li>Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes</li>
-<li>Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push</li>
-<li>After the upgrade completes, run <code>symcfg list</code>, <code>symdf list -sid &lt;SID&gt;</code>, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy</li>
-</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Record the current PowerMaxOS and Solutions Enabler version from <code>symcfg list</code> and the Unisphere About page</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Check the Dell Simple Support Matrix to confirm the target PowerMaxOS version is compatible with all connected host agent and Unisphere versions</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Confirm all SRDF pairs are in <code>Synchronized</code> or <code>Consistent</code> state before upgrade; suspend replication if advised by release notes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Back up the Solutions Enabler database and Unisphere configuration files to an external location</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Upgrade Solutions Enabler and Unisphere on management hosts before upgrading the array firmware, following the order specified in the release notes</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Apply the PowerMaxOS code upgrade via Unisphere → System → Upgrade; upgrades are non-disruptive and applied as a rolling microcode push</td>
+</tr>
+<tr>
+<td>7</td>
+<td>After the upgrade completes, run <code>symcfg list</code>, <code>symdf list -sid &lt;SID&gt;</code>, and check Unisphere alerts to confirm all directors, ports, and SRDF pairs are healthy</td>
+</tr>
+</tbody>
+</table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Use SRDF/A with write-order consistency groups (<code>symcg</code>) for multi-volume application workloads to ensure crash-consistent recovery at the DR site</li>

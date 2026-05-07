@@ -802,41 +802,66 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check if FOD burst is currently active on any array — burst should only be active if a planned workload increase justified it</li>
-<li>[ ] Review what percentage of the burst ceiling is consumed — flag if above 80% of the burst allowance</li>
-<li>[ ] Confirm whether the current month's consumption report is available in the Dell APEX console or from the Dell account team</li>
-<li>[ ] Check that base capacity allocation has not changed unexpectedly</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Check if FOD burst is currently active on any array</td>
+<td></td>
+<td>burst should only be active if a planned workload increase justified it</td>
+</tr>
+<tr>
+<td>[ ] Review what percentage of the burst ceiling is consumed</td>
+<td></td>
+<td>flag if above 80% of the burst allowance</td>
+</tr>
+<tr>
+<td>[ ] Confirm whether the current month's consumption report is availabl</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Check that base capacity allocation has not changed unexpectedly</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Authenticate to Unisphere REST API
-# Replace &lt;unisphere_ip&gt;, &lt;user&gt;, and &lt;password&gt; with actual values
-TOKEN=$(curl -s -k -X POST \
-  &quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/version/system/login&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;username&quot;:&quot;&lt;user&gt;&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}' | jq -r '.token')
-
-# Get FOD/flex capacity status for the array
-curl -s -k \
-  -H &quot;Authorization: ${TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  &quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;&quot; | \
-  jq '{sid: .symmetrixId, total_usable_cap_gb: .total_usable_cap_gb, total_subscribed_cap_gb: .total_subscribed_cap_gb}'
-
-# Get SRP details to review burst and allocated capacity
-curl -s -k \
-  -H &quot;Authorization: ${TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  &quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp&quot; | \
-  jq '.srpId[]'
-
-# Get detailed SRP capacity including emulation and burst state
-curl -s -k \
-  -H &quot;Authorization: ${TOKEN}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  &quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp/&lt;srp_id&gt;&quot; | \
-  jq '{srp: .srpId, emulation: .emulation, reserved_cap_percent: .reserved_cap_percent, total_usable_cap_gb: .srp_capacity.usable_total_tb}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to Unisphere REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Replace &lt;unisphere_ip&gt;, &lt;user&gt;, and &lt;password&gt; with actual values</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/version/system/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;&lt;user&gt;&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Get FOD/flex capacity status for the array</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{sid: .symmetrixId, total_usable_cap_gb: .total_usable_cap_gb, total_subscribed_cap_gb: .total_subscribed_cap_gb}&#39;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get SRP details to review burst and allocated capacity</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.srpId[]&#39;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Get detailed SRP capacity including emulation and burst state</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp/&lt;srp_id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{srp: .srpId, emulation: .emulation, reserved_cap_percent: .reserved_cap_percent, total_usable_cap_gb: .srp_capacity.usable_total_tb}&#39;</span>
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Estimate expected capacity growth from the planned workload increase (in TB)</li>

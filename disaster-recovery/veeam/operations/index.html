@@ -1042,24 +1042,24 @@
 <li>Expand the failed task — the <strong>Reason</strong> column contains the proximate cause.</li>
 <li>Note the time of failure and whether it was a retry or first attempt.</li>
 </ol>
-<pre><code class="language-powershell"># Quick PowerShell view of last result per job
-Get-VBRJob | Select-Object Name, LastResult, LastRun | Sort-Object LastResult
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Quick PowerShell view of last result per job</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastResult</span>
+</code></pre></div>
 <p>Expected output columns: <code>Name</code>, <code>LastResult</code> (Success / Warning / Failed / None), <code>LastRun</code> (timestamp).</p>
 <h3 id="failed-and-warning-jobs">Failed and Warning Jobs<a class="headerlink" href="#failed-and-warning-jobs" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Failed</strong> — investigate before the next scheduled run. Do not allow a job to accumulate two consecutive failures without a documented root cause.</li>
 <li><strong>Warning</strong> — commonly caused by a VM snapshot commit delay, VSS writer timeout, or guest processing credential issue. Document the cause. Repeated warnings on the same job indicate a structural problem.</li>
 </ul>
-<pre><code class="language-powershell"># List jobs with a non-success last result
-Get-VBRJob | Where-Object { $_.LastResult -ne &quot;Success&quot; -and $_.LastResult -ne &quot;None&quot; } |
-    Select-Object Name, LastResult, LastRun
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List jobs with a non-success last result</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;None&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
+</code></pre></div>
 <h3 id="sobr-capacity-check">SOBR Capacity Check<a class="headerlink" href="#sobr-capacity-check" title="Permanent link">&para;</a></h3>
 <p>In <strong>Backup Infrastructure &gt; Scale-Out Repositories</strong>, verify that no extent shows <strong>Sealed</strong> or <strong>Unavailable</strong> status. Check the free space on each performance tier extent.</p>
-<pre><code class="language-powershell"># Repository free space — all repos including SOBR extents
-Get-VBRRepository | Select-Object Name, @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpace/1GB,1)}}, @{N=&quot;TotalGB&quot;;E={[math]::Round($_.TotalSpace/1GB,1)}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Repository free space — all repos including SOBR extents</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+</code></pre></div>
 <p>Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).</p>
 <h3 id="tape-check-if-applicable">Tape Check (if applicable)<a class="headerlink" href="#tape-check-if-applicable" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1082,33 +1082,33 @@ Get-VBRRepository | Select-Object Name, @{N=&quot;FreeGB&quot;;E={[math]::Round(
 <h3 id="surebackup-verification-job-review">SureBackup Verification Job Review<a class="headerlink" href="#surebackup-verification-job-review" title="Permanent link">&para;</a></h3>
 <p>Run or review the scheduled SureBackup job for critical VM groups. In <strong>Home &gt; Last 24 Hours</strong> (adjust filter to last 7 days), locate SureBackup sessions and check the <strong>Verification</strong> column.</p>
 <p>A SureBackup failure means the backup is not confirmed restorable — escalate immediately.</p>
-<pre><code class="language-powershell"># List SureBackup sessions from the last 7 days
-Get-VBRBackupSession | Where-Object {
-    $_.JobType -eq &quot;SureBackup&quot; -and $_.CreationTime -gt (Get-Date).AddDays(-7)
-} | Select-Object JobName, Result, CreationTime, EndTime
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List SureBackup sessions from the last 7 days</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;SureBackup&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
+</code></pre></div>
 <h3 id="repository-capacity-trend">Repository Capacity Trend<a class="headerlink" href="#repository-capacity-trend" title="Permanent link">&para;</a></h3>
 <p>Pull weekly capacity snapshots and compare against the previous week to identify jobs with abnormal data growth.</p>
-<pre><code class="language-powershell"># Capacity across all repositories
-Get-VBRBackupRepository | Select-Object Name,
-    @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpace/1GB,1)}},
-    @{N=&quot;TotalGB&quot;;E={[math]::Round($_.TotalSpace/1GB,1)}},
-    @{N=&quot;UsedPct&quot;;E={[math]::Round((1 - $_.FreeSpace/$_.TotalSpace)*100,1)}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Capacity across all repositories</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">)*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+</code></pre></div>
 <p>Flag any repository trending to reach capacity within 30 days at current growth rate.</p>
 <h3 id="retention-compliance">Retention Compliance<a class="headerlink" href="#retention-compliance" title="Permanent link">&para;</a></h3>
 <p>Verify that restore point counts match the configured retention for each job. Orphaned restore points (job deleted but chain retained) consume space and should be cleaned up.</p>
-<pre><code class="language-powershell"># Count restore points per backup job
-Get-VBRBackup | ForEach-Object {
-    $rp = Get-VBRRestorePoint -Backup $_
-    [PSCustomObject]@{
-        Job        = $_.JobName
-        Points     = $rp.Count
-        Oldest     = ($rp | Sort-Object CreationTime | Select-Object -First 1).CreationTime
-        Newest     = ($rp | Sort-Object CreationTime -Descending | Select-Object -First 1).CreationTime
-    }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Count restore points per backup job</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$_</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">Job</span>        <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">Points</span>     <span class="p">=</span> <span class="nv">$rp</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">Oldest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">Newest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="verifying-a-backup-is-restorable">Verifying a Backup is Restorable<a class="headerlink" href="#verifying-a-backup-is-restorable" title="Permanent link">&para;</a></h2>
 <h3 id="instant-vm-recovery-test">Instant VM Recovery Test<a class="headerlink" href="#instant-vm-recovery-test" title="Permanent link">&para;</a></h3>
@@ -1122,10 +1122,10 @@ Get-VBRBackup | ForEach-Object {
 <li>Confirm the VM powers on and the guest OS boots successfully.</li>
 <li>Run <strong>Undo Instant Recovery</strong> to clean up — do not leave IVR VMs running.</li>
 </ol>
-<pre><code class="language-powershell"># Start Instant VM Recovery via PowerShell (requires Veeam PS module)
-$rp = Get-VBRRestorePoint -Name &quot;vm01&quot; | Sort-Object CreationTime -Descending | Select-Object -First 1
-Start-VBRInstantRecovery -RestorePoint $rp -Server &quot;esxi-host01&quot; -Datastore &quot;ds-recovery&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Start Instant VM Recovery via PowerShell (requires Veeam PS module)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Start-VBRInstantRecovery</span> <span class="n">-RestorePoint</span> <span class="nv">$rp</span> <span class="n">-Server</span> <span class="s2">&quot;esxi-host01&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;ds-recovery&quot;</span>
+</code></pre></div>
 <h3 id="file-level-restore-test">File-Level Restore Test<a class="headerlink" href="#file-level-restore-test" title="Permanent link">&para;</a></h3>
 <p>For Windows VMs, mount the backup and browse files to confirm data integrity:</p>
 <ol>
@@ -1183,18 +1183,18 @@ Start-VBRInstantRecovery -RestorePoint $rp -Server &quot;esxi-host01&quot; -Data
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Create a simple VM backup job via PowerShell
-$vm     = Find-VBRViEntity -Name &quot;vm01&quot;
-$repo   = Get-VBRBackupRepository -Name &quot;SOBR-Primary&quot;
-$cred   = Get-VBRCredentials -Name &quot;svc-veeam-guest&quot;
-
-Add-VBRViBackupJob `
-    -Name &quot;vm01-daily&quot; `
-    -Entity $vm `
-    -BackupRepository $repo `
-    -GuestCredentials $cred `
-    -ApplicationAwareProcessing $true
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create a simple VM backup job via PowerShell</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$vm</span>     <span class="p">=</span> <span class="nb">Find-VBRViEntity</span> <span class="n">-Name</span> <span class="s2">&quot;vm01&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$repo</span>   <span class="p">=</span> <span class="nb">Get-VBRBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$cred</span>   <span class="p">=</span> <span class="nb">Get-VBRCredentials</span> <span class="n">-Name</span> <span class="s2">&quot;svc-veeam-guest&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Add-VBRViBackupJob</span> <span class="p">`</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">-Name</span> <span class="s2">&quot;vm01-daily&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="p">`</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="n">-BackupRepository</span> <span class="nv">$repo</span> <span class="p">`</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="n">-GuestCredentials</span> <span class="nv">$cred</span> <span class="p">`</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">-ApplicationAwareProcessing</span> <span class="nv">$true</span>
+</code></pre></div>
 <p>After creation:
 - [ ] Run the job once manually and verify success before relying on the schedule.
 - [ ] Confirm the restore point appears under <strong>Home &gt; Backups</strong>.
@@ -1210,14 +1210,14 @@ Add-VBRViBackupJob `
 <li>Set the <strong>copy interval</strong> (e.g., every 1 day) and configure GFS retention independently of the source job.</li>
 <li>Enable <strong>encryption</strong> on the target if the repository is offsite or cloud.</li>
 </ol>
-<pre><code class="language-powershell"># List existing backup copy jobs
-Get-VBRJob -Type BackupSync | Select-Object Name, LastResult, LastRun
-
-# Check copy job sessions
-Get-VBRBackupSession | Where-Object { $_.JobType -eq &quot;BackupSync&quot; } |
-    Sort-Object CreationTime -Descending | Select-Object -First 10 |
-    Select-Object JobName, Result, CreationTime, EndTime
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># List existing backup copy jobs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">BackupSync</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Check copy job sessions</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;BackupSync&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
+</code></pre></div>
 <p><strong>Key configuration points:</strong></p>
 <ul>
 <li>Copy jobs should use a different window than the primary job to avoid proxy contention.</li>
@@ -1234,10 +1234,10 @@ Get-VBRBackupSession | Where-Object { $_.JobType -eq &quot;BackupSync&quot; } |
 <li><strong>Encrypt data uploaded to object storage</strong> — always enable for cloud targets.</li>
 </ul>
 <p>Trigger an immediate offload manually when an extent is approaching capacity:</p>
-<pre><code class="language-powershell"># Trigger SOBR offload (capacity tier upload)
-$sobr = Get-VBRScaleOutBackupRepository -Name &quot;SOBR-Primary&quot;
-Invoke-VBRScaleOutBackupRepositoryOffload -ScaleOutBackupRepository $sobr
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Trigger SOBR offload (capacity tier upload)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$sobr</span> <span class="p">=</span> <span class="nb">Get-VBRScaleOutBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Invoke-VBRScaleOutBackupRepositoryOffload</span> <span class="n">-ScaleOutBackupRepository</span> <span class="nv">$sobr</span>
+</code></pre></div>
 <h3 id="archive-tier">Archive Tier<a class="headerlink" href="#archive-tier" title="Permanent link">&para;</a></h3>
 <p>If using Glacier, Azure Archive, or similar cold storage as an archive tier, configure the <strong>Archive Tier</strong> tab within the SOBR:</p>
 <ul>
@@ -1259,8 +1259,8 @@ Invoke-VBRScaleOutBackupRepositoryOffload -ScaleOutBackupRepository $sobr
 <li>[ ] Read the Veeam release notes — check for breaking changes, deprecated features, and required component upgrades.</li>
 <li>[ ] Verify OS and SQL Server compatibility for the new version.</li>
 <li>[ ] Export the current VBR configuration backup:
-  <code>powershell
-  Export-VBRConfiguration -Path "C:\vbr-config-backup-$(Get-Date -Format yyyyMMdd).xml"</code></li>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Export-VBRConfiguration</span> <span class="n">-Path</span> <span class="s2">&quot;C:\vbr-config-backup-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.xml&quot;</span>
+</code></pre></div></li>
 <li>[ ] Take a snapshot of the Veeam Backup Server VM (if virtualised) immediately before the upgrade.</li>
 <li>[ ] Confirm all running jobs are complete and no jobs are scheduled to start during the upgrade window.</li>
 <li>[ ] Upgrade VMware Tools on the Backup Server VM if it is virtualised (unrelated to Veeam but good practice).</li>

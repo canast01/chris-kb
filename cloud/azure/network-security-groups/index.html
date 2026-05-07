@@ -823,71 +823,71 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List NSGs in a resource group
-az network nsg list -g &lt;rg&gt; --query '[*].{Name:name,Location:location}' -o table
-
-# Show rules for an NSG
-az network nsg rule list -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
-  --query '[*].{Priority:priority,Name:name,Direction:direction,Access:access,Protocol:protocol,Port:destinationPortRange,Source:sourceAddressPrefix}' \
-  --output table
-
-# Create an inbound allow rule
-az network nsg rule create \
-  -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
-  --name Allow-HTTPS-Inbound \
-  --priority 200 \
-  --direction Inbound \
-  --access Allow \
-  --protocol Tcp \
-  --destination-port-ranges 443 \
-  --source-address-prefixes 10.0.0.0/8
-
-# Create deny rule (catch-all, high priority number)
-az network nsg rule create \
-  -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; \
-  --name Deny-All-Inbound \
-  --priority 4000 \
-  --direction Inbound \
-  --access Deny \
-  --protocol '*' \
-  --destination-port-ranges '*'
-
-# Delete a rule
-az network nsg rule delete -g &lt;rg&gt; --nsg-name &lt;nsg-name&gt; --name &lt;rule-name&gt;
-
-# Associate NSG with a subnet
-az network vnet subnet update \
-  -g &lt;rg&gt; --vnet-name &lt;vnet-name&gt; \
-  --name &lt;subnet-name&gt; \
-  --network-security-group &lt;nsg-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List NSGs in a resource group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Location:location}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show rules for an NSG</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Priority:priority,Name:name,Direction:direction,Access:access,Protocol:protocol,Port:destinationPortRange,Source:sourceAddressPrefix}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Create an inbound allow rule</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--name<span class="w"> </span>Allow-HTTPS-Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--priority<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--access<span class="w"> </span>Allow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--protocol<span class="w"> </span>Tcp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--destination-port-ranges<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--source-address-prefixes<span class="w"> </span><span class="m">10</span>.0.0.0/8
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Create deny rule (catch-all, high priority number)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--name<span class="w"> </span>Deny-All-Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--priority<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--access<span class="w"> </span>Deny<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--protocol<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--destination-port-ranges<span class="w"> </span><span class="s1">&#39;*&#39;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Delete a rule</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--nsg-name<span class="w"> </span>&lt;nsg-name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;rule-name&gt;
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># Associate NSG with a subnet</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span>--name<span class="w"> </span>&lt;subnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span>--network-security-group<span class="w"> </span>&lt;nsg-name&gt;
+</code></pre></div>
 <h2 id="nsg-flow-logs">NSG Flow Logs<a class="headerlink" href="#nsg-flow-logs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable flow logs (requires Network Watcher and storage account)
-az network watcher flow-log create \
-  --location &lt;region&gt; \
-  --name &lt;flow-log-name&gt; \
-  --nsg &lt;nsg-resource-id&gt; \
-  --storage-account &lt;storage-account-id&gt; \
-  --enabled true \
-  --retention 30 \
-  --log-version 2
-
-# Enable Traffic Analytics (Log Analytics workspace required)
-az network watcher flow-log update \
-  --location &lt;region&gt; \
-  --name &lt;flow-log-name&gt; \
-  --traffic-analytics true \
-  --workspace &lt;log-analytics-workspace-id&gt; \
-  --interval 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable flow logs (requires Network Watcher and storage account)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>flow-log<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span>&lt;flow-log-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--nsg<span class="w"> </span>&lt;nsg-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--storage-account<span class="w"> </span>&lt;storage-account-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--retention<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--log-version<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Enable Traffic Analytics (Log Analytics workspace required)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>flow-log<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--name<span class="w"> </span>&lt;flow-log-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--traffic-analytics<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--workspace<span class="w"> </span>&lt;log-analytics-workspace-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--interval<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h2 id="effective-security-rules-whats-actually-applied-to-a-vm">Effective Security Rules (what's actually applied to a VM)<a class="headerlink" href="#effective-security-rules-whats-actually-applied-to-a-vm" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># See the merged effective rules for a VM NIC
-az network nic show-effective-nsg \
-  --name &lt;nic-name&gt; \
-  -g &lt;rg&gt; \
-  --query 'effectiveSecurityRules[*].{Name:name,Direction:direction,Access:access,Priority:priority,Dest:destinationAddressPrefix,Port:destinationPortRange}' \
-  -o table
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># See the merged effective rules for a VM NIC</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;effectiveSecurityRules[*].{Name:name,Direction:direction,Access:access,Priority:priority,Dest:destinationAddressPrefix,Port:destinationPortRange}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-o<span class="w"> </span>table
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -920,15 +920,15 @@ az network nic show-effective-nsg \
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Test if traffic is allowed (Network Watcher)
-az network watcher test-ip-flow \
-  --direction Inbound \
-  --protocol Tcp \
-  --local &lt;vm-private-ip&gt;:443 \
-  --remote &lt;source-ip&gt;:* \
-  --vm &lt;vm-resource-id&gt; \
-  --nic &lt;nic-resource-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test if traffic is allowed (Network Watcher)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>test-ip-flow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--protocol<span class="w"> </span>Tcp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--local<span class="w"> </span>&lt;vm-private-ip&gt;:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--remote<span class="w"> </span>&lt;source-ip&gt;:*<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--vm<span class="w"> </span>&lt;vm-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--nic<span class="w"> </span>&lt;nic-resource-id&gt;
+</code></pre></div>
 
 
 

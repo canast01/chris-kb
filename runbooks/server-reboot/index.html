@@ -798,62 +798,62 @@
 
 <h1 id="server-reboot-runbook">Server Reboot Runbook<a class="headerlink" href="#server-reboot-runbook" title="Permanent link">&para;</a></h1>
 <h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Who is logged in
-who
-w
-
-# System load and uptime
-uptime
-
-# Failed services
-systemctl --failed
-
-# Active jobs (backup agents, scheduled tasks)
-ps aux | grep -E &quot;backup|job|agent&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Who is logged in</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>who
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>w
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># System load and uptime</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>uptime
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Failed services</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Active jobs (backup agents, scheduled tasks)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;backup|job|agent&quot;</span>
+</code></pre></div>
 <p>Notify application owners and confirm maintenance window approval before proceeding.</p>
 <h2 id="graceful-service-shutdown-if-required">Graceful Service Shutdown (if required)<a class="headerlink" href="#graceful-service-shutdown-if-required" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">systemctl stop &lt;service&gt;
-systemctl status &lt;service&gt;    # confirm stopped
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;<span class="w">    </span><span class="c1"># confirm stopped</span>
+</code></pre></div>
 <h2 id="reboot">Reboot<a class="headerlink" href="#reboot" title="Permanent link">&para;</a></h2>
-<p><strong>Linux:</strong></p>
-<pre><code class="language-bash">sudo reboot
-# Scheduled with warning:
-sudo shutdown -r +5 &quot;Rebooting for maintenance&quot;
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell">Restart-Computer -Force
-# Scheduled:
-shutdown /r /t 300 /c &quot;Rebooting for maintenance&quot;
-</code></pre>
-<p><strong>VMware VM (PowerCLI):</strong></p>
-<pre><code class="language-powershell">Restart-VMGuest -VM &lt;vmname&gt;
-</code></pre>
+<p><strong>Linux:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>reboot
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Scheduled with warning:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>shutdown<span class="w"> </span>-r<span class="w"> </span>+5<span class="w"> </span><span class="s2">&quot;Rebooting for maintenance&quot;</span>
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Restart-Computer</span> <span class="n">-Force</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Scheduled:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">shutdown</span> <span class="p">/</span><span class="nb">r </span><span class="p">/</span><span class="n">t</span> <span class="n">300</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&quot;Rebooting for maintenance&quot;</span>
+</code></pre></div></p>
+<p><strong>VMware VM (PowerCLI):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Restart-VMGuest</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
+</code></pre></div></p>
 <h2 id="post-reboot-validation">Post-Reboot Validation<a class="headerlink" href="#post-reboot-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm server is responding
-ping -c 4 &lt;server_ip&gt;
-
-# Boot time
-uptime
-who -b
-
-# Failed services
-systemctl --failed
-
-# Check critical services
-systemctl status &lt;service1&gt; &lt;service2&gt;
-
-# Review boot errors
-journalctl -b -p err
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell"># Check any auto-start service not running
-Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
-
-# Recent system errors
-Get-EventLog -LogName System -EntryType Error -Newest 20
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm server is responding</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;server_ip&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Boot time</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>uptime
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>who<span class="w"> </span>-b
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Failed services</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check critical services</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service1&gt;<span class="w"> </span>&lt;service2&gt;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Review boot errors</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-p<span class="w"> </span>err
+</code></pre></div>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check any auto-start service not running</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="p">}</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Recent system errors</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span>
+</code></pre></div></p>
 <h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Change approval confirmed</li>

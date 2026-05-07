@@ -798,77 +798,84 @@
 
 <h1 id="pure1-cli-reference">Pure1 CLI Reference<a class="headerlink" href="#pure1-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Pure1 provides a REST API authenticated via OAuth2 client credentials. The <code>pure1</code> CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is <code>https://api.pure1.purestorage.com/api/1.latest</code>.</p>
+<pre class="mermaid"><code>flowchart LR
+    Pure1["Pure1"]
+    Pure1 --&gt; S0["Arrays and Fleet"]
+    Pure1 --&gt; S1["Health and Alerts"]
+    Pure1 --&gt; S2["Metrics"]
+    Pure1 --&gt; S3["Capacity"]
+    Pure1 --&gt; S4["Python SDK Example"]</code></pre>
 <hr />
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>Pure1 uses a self-signed RSA private key and a registered application ID for API access. Register the application at <code>https://pure1.purestorage.com/api-registration</code>.</p>
-<pre><code class="language-bash"># Generate RSA key pair for Pure1 API auth
-openssl genrsa -out pure1-private.pem 2048
-openssl rsa -in pure1-private.pem -pubout -out pure1-public.pem
-
-# Create a JWT assertion (Python example)
-python3 -c &quot;
-import jwt, time
-payload = {'iss': '&lt;application_id&gt;', 'iat': int(time.time()), 'exp': int(time.time()) + 86400}
-token = jwt.encode(payload, open('pure1-private.pem').read(), algorithm='RS256')
-print(token)
-&quot;
-
-# Exchange JWT for access token
-curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d &quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&amp;subject_token=&lt;jwt&gt;&amp;subject_token_type=urn:ietf:params:oauth:token-type:jwt&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Generate RSA key pair for Pure1 API auth</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>pure1-private.pem<span class="w"> </span><span class="m">2048</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>pure1-private.pem<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>pure1-public.pem
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Create a JWT assertion (Python example)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">import jwt, time</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s2">payload = {&#39;iss&#39;: &#39;&lt;application_id&gt;&#39;, &#39;iat&#39;: int(time.time()), &#39;exp&#39;: int(time.time()) + 86400}</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">token = jwt.encode(payload, open(&#39;pure1-private.pem&#39;).read(), algorithm=&#39;RS256&#39;)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">print(token)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Exchange JWT for access token</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.pure1.purestorage.com/oauth2/1.0/token<span class="w">   </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&amp;subject_token=&lt;jwt&gt;&amp;subject_token_type=urn:ietf:params:oauth:token-type:jwt&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="arrays-fleet">Arrays &amp; Fleet<a class="headerlink" href="#arrays-fleet" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all arrays registered in Pure1
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# Filter by model
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=model%3D%27FlashArray%2F%2FX%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# Get a specific array by name
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all arrays registered in Pure1</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Filter by model</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=model%3D%27FlashArray%2F%2FX%27&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get a specific array by name</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="health-alerts">Health &amp; Alerts<a class="headerlink" href="#health-alerts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all active alerts across fleet
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state%3D%27open%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# List alerts for a specific array
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=arrays.name%3D%27&lt;array_name&gt;%27&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all active alerts across fleet</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state%3D%27open%27&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List alerts for a specific array</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/alerts?filter=arrays.name%3D%27&lt;array_name&gt;%27&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List available metrics
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/metrics&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# Query array-level IOPS
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?ids=&lt;metric_id&gt;&amp;resource_ids=&lt;array_id&gt;&amp;start_time=&lt;epoch&gt;&amp;end_time=&lt;epoch&gt;&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List available metrics</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Query array-level IOPS</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?ids=&lt;metric_id&gt;&amp;resource_ids=&lt;array_id&gt;&amp;start_time=&lt;epoch&gt;&amp;end_time=&lt;epoch&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Get capacity metrics for all arrays
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-
-# Get capacity for a specific array
-curl -X GET &quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&amp;fields=name,capacity,space&quot;   -H &quot;Authorization: Bearer &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get capacity metrics for all arrays</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Get capacity for a specific array</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&amp;fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="python-sdk-example">Python SDK Example<a class="headerlink" href="#python-sdk-example" title="Permanent link">&para;</a></h2>
-<pre><code class="language-python">from py_pure_client import PureOneClient
-
-client = PureOneClient(private_key_file=&quot;pure1-private.pem&quot;,
-                       private_key_password=None,
-                       app_id=&quot;&lt;application_id&gt;&quot;)
-
-# List all arrays
-arrays = client.get_arrays()
-for a in arrays.items:
-    print(a.name, a.model)
-
-# Get active alerts
-alerts = client.get_alerts(filter=&quot;state='open'&quot;)
-for alert in alerts.items:
-    print(alert.summary, alert.severity)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">py_pure_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">PureOneClient</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">PureOneClient</span><span class="p">(</span><span class="n">private_key_file</span><span class="o">=</span><span class="s2">&quot;pure1-private.pem&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>                       <span class="n">private_key_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                       <span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;&lt;application_id&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List all arrays</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">arrays</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">()</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Get active alerts</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">alerts</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_alerts</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;state=&#39;open&#39;&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">alert</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">alert</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span>
+</code></pre></div>
 
 
 

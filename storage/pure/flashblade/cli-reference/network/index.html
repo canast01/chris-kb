@@ -822,78 +822,88 @@
 <blockquote>
 <p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Network["Network"]
+    Network --&gt; S0["Network Interfaces"]
+    Network --&gt; S1["Subnets"]
+    Network --&gt; S2["DNS"]
+    Network --&gt; S3["NTP"]
+    Network --&gt; S4["VIPs (Virtual IPs) for NFS/SMB"]
+    Network --&gt; S5["Routing"]
+    Network --&gt; S6["Network Troubleshooting"]
+    Network --&gt; S7["Common Issues"]</code></pre>
 <h2 id="network-interfaces">Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all interfaces (data, management, replication)
-purefb network-interface show
-
-# Specific interface detail
-purefb network-interface show --name &lt;if_name&gt;
-
-# Interface state (connected, disconnected, speed)
-purefb network-interface show | grep -E &quot;Name|Speed|State|Address&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all interfaces (data, management, replication)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Specific interface detail</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;if_name&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Interface state (connected, disconnected, speed)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Speed|State|Address&quot;</span>
+</code></pre></div>
 <h2 id="subnets">Subnets<a class="headerlink" href="#subnets" title="Permanent link">&para;</a></h2>
 <p>Subnets define the network layout for data and replication traffic:</p>
-<pre><code class="language-bash"># List subnets
-purefb subnet show
-
-# Create a subnet
-purefb subnet create \
-    --name &lt;subnet_name&gt; \
-    --prefix &lt;cidr&gt; \
-    --gateway &lt;gateway_ip&gt;
-
-# Delete a subnet
-purefb subnet delete --name &lt;subnet_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List subnets</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>subnet<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a subnet</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purefb<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--name<span class="w"> </span>&lt;subnet_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--prefix<span class="w"> </span>&lt;cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--gateway<span class="w"> </span>&lt;gateway_ip&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Delete a subnet</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>purefb<span class="w"> </span>subnet<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>&lt;subnet_name&gt;
+</code></pre></div>
 <h2 id="dns">DNS<a class="headerlink" href="#dns" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># View DNS configuration
-purefb dns show
-
-# Update DNS servers
-purefb dns update --nameservers &lt;ns1_ip&gt;,&lt;ns2_ip&gt;
-
-# Update search domain
-purefb dns update --search &lt;search_domain&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View DNS configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>dns<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Update DNS servers</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purefb<span class="w"> </span>dns<span class="w"> </span>update<span class="w"> </span>--nameservers<span class="w"> </span>&lt;ns1_ip&gt;,&lt;ns2_ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Update search domain</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purefb<span class="w"> </span>dns<span class="w"> </span>update<span class="w"> </span>--search<span class="w"> </span>&lt;search_domain&gt;
+</code></pre></div>
 <h2 id="ntp">NTP<a class="headerlink" href="#ntp" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Current NTP configuration and sync status
-purefb ntp show
-
-# Set NTP servers
-purefb ntp update --ntpservers &lt;ntp1_ip&gt;,&lt;ntp2_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Current NTP configuration and sync status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purefb<span class="w"> </span>ntp<span class="w"> </span>update<span class="w"> </span>--ntpservers<span class="w"> </span>&lt;ntp1_ip&gt;,&lt;ntp2_ip&gt;
+</code></pre></div>
 <h2 id="vips-virtual-ips-for-nfssmb">VIPs (Virtual IPs) for NFS/SMB<a class="headerlink" href="#vips-virtual-ips-for-nfssmb" title="Permanent link">&para;</a></h2>
 <p>FlashBlade uses VIPs for client data access. VIPs float between blades for availability:</p>
-<pre><code class="language-bash"># List VIPs
-purefb vip show
-
-# Create a VIP (floats across blades for the specified services)
-purefb vip create \
-    --name &lt;vip_name&gt; \
-    --address &lt;vip_ip&gt; \
-    --subnet &lt;subnet_name&gt; \
-    --services &lt;nfs,smb&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List VIPs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>vip<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a VIP (floats across blades for the specified services)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>vip<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--name<span class="w"> </span>&lt;vip_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--address<span class="w"> </span>&lt;vip_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>--subnet<span class="w"> </span>&lt;subnet_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>--services<span class="w"> </span>&lt;nfs,smb&gt;
+</code></pre></div>
 <h2 id="routing">Routing<a class="headerlink" href="#routing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Static routes
-purefb static-route show
-
-# Add a static route
-purefb static-route create \
-    --address &lt;destination_cidr&gt; \
-    --gateway &lt;gateway_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Static routes</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>static-route<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Add a static route</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purefb<span class="w"> </span>static-route<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--address<span class="w"> </span>&lt;destination_cidr&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--gateway<span class="w"> </span>&lt;gateway_ip&gt;
+</code></pre></div>
 <h2 id="network-troubleshooting">Network Troubleshooting<a class="headerlink" href="#network-troubleshooting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Interface errors and statistics
-purefb network-interface show --detailed | grep -i error
-
-# Ping from FlashBlade
-purefb ping --to &lt;destination_ip&gt;
-
-# DNS resolution test
-purefb dns-lookup --name &lt;hostname&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interface errors and statistics</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>network-interface<span class="w"> </span>show<span class="w"> </span>--detailed<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Ping from FlashBlade</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>ping<span class="w"> </span>--to<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># DNS resolution test</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purefb<span class="w"> </span>dns-lookup<span class="w"> </span>--name<span class="w"> </span>&lt;hostname&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

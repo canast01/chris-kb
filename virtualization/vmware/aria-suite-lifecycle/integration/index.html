@@ -826,11 +826,11 @@
 <li>Provide the VIDM FQDN and admin credentials</li>
 <li>All subsequent product deployments inherit VIDM as their SSO source</li>
 </ol>
-<p>Verify VIDM integration health:</p>
-<pre><code class="language-bash"># On LCM appliance (SSH)
-curl -k https://vidm.corp.local/SAAS/API/1.0/REST/system/health
-# Expected: {&quot;status&quot;: &quot;UP&quot;}
-</code></pre>
+<p>Verify VIDM integration health:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On LCM appliance (SSH)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
+</code></pre></div></p>
 <h2 id="vcenter-server">vCenter Server<a class="headerlink" href="#vcenter-server" title="Permanent link">&para;</a></h2>
 <p>LCM requires vCenter to deploy and manage OVA-based product appliances:</p>
 <ol>
@@ -838,12 +838,12 @@ curl -k https://vidm.corp.local/SAAS/API/1.0/REST/system/health
 <li>Provide vCenter FQDN, username (<code>svc-lcm@vsphere.local</code> or domain account), password</li>
 <li>Select target datacenter, cluster, and datastore during product deployment</li>
 </ol>
-<p>Required vCenter permissions for the LCM service account:</p>
-<pre><code>Virtual Machine Power User (or equivalent)
-Datastore — AllocateSpace
-Network — Assign
-Host — CIM interaction
-</code></pre>
+<p>Required vCenter permissions for the LCM service account:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Virtual Machine Power User (or equivalent)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Datastore — AllocateSpace
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Network — Assign
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Host — CIM interaction
+</code></pre></div></p>
 <h2 id="nsx-t-integration-optional">NSX-T Integration (Optional)<a class="headerlink" href="#nsx-t-integration-optional" title="Permanent link">&para;</a></h2>
 <p>If LCM-deployed products require new overlay segments:
 1. LCM → Settings → NSX-T → Add NSX-T Manager
@@ -857,14 +857,14 @@ Host — CIM interaction
 <p>Test SMTP: LCM → Settings → SMTP → Send Test Email.</p>
 <h2 id="nfs-binary-repository">NFS Binary Repository<a class="headerlink" href="#nfs-binary-repository" title="Permanent link">&para;</a></h2>
 <p>LCM stores downloaded product bundles on an NFS share:</p>
-<pre><code class="language-bash"># Verify NFS mount from LCM appliance
-df -h /data
-mount | grep /data
-# Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs
-
-# Check available space (requires &gt; 50 GB free per product version)
-du -sh /data/*
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NFS mount from LCM appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check available space (requires &gt; 50 GB free per product version)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
+</code></pre></div>
 <p>If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).</p>
 <h2 id="proxy-offline-depot">Proxy / Offline Depot<a class="headerlink" href="#proxy-offline-depot" title="Permanent link">&para;</a></h2>
 <p>For environments without direct internet access:</p>

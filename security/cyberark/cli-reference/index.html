@@ -787,99 +787,106 @@
 
 <h1 id="cyberark-cli-reference">CyberArk CLI Reference<a class="headerlink" href="#cyberark-cli-reference" title="Permanent link">&para;</a></h1>
 <p>CyberArk's primary programmatic interface is the PVWA REST API v2. The <code>psPAS</code> PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.</p>
+<pre class="mermaid"><code>flowchart LR
+    CyberArk["CyberArk"]
+    CyberArk --&gt; S0["REST API — Authentication"]
+    CyberArk --&gt; S1["REST API — Accounts"]
+    CyberArk --&gt; S2["REST API — Safes"]
+    CyberArk --&gt; S3["psPAS PowerShell Module"]
+    CyberArk --&gt; S4["PACLI (Legacy Vault CLI)"]</code></pre>
 <hr />
 <h2 id="rest-api-authentication">REST API — Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
 <p>The PVWA REST API base URL is <code>https://&lt;pvwa&gt;/PasswordVault/api</code>. Always end sessions with a Logoff call.</p>
-<pre><code class="language-bash"># Authenticate with CyberArk auth
-curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/CyberArk/Logon   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
-
-# Authenticate with LDAP
-curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/LDAP/Logon   -H &quot;Content-Type: application/json&quot;   -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}'
-
-# Logoff
-curl -X POST https://&lt;pvwa&gt;/PasswordVault/api/auth/Logoff   -H &quot;Authorization: &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate with CyberArk auth</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;pvwa&gt;/PasswordVault/api/auth/CyberArk/Logon<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Authenticate with LDAP</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;pvwa&gt;/PasswordVault/api/auth/LDAP/Logon<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Logoff</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;pvwa&gt;/PasswordVault/api/auth/Logoff<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="rest-api-accounts">REST API — Accounts<a class="headerlink" href="#rest-api-accounts" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List managed accounts
-curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?limit=100&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-
-# Search accounts by username
-curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?search=svc_oracle&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-
-# Retrieve an account password (CPM must allow retrieval)
-curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/password/retrieve&quot;   -H &quot;Authorization: &lt;token&gt;&quot;   -H &quot;Content-Type: application/json&quot;   -d '{&quot;reason&quot;:&quot;maintenance&quot;,&quot;TicketingSystemName&quot;:&quot;&quot;,&quot;TicketId&quot;:&quot;&quot;}'
-
-# Trigger immediate password rotation
-curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/change&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-
-# Verify current password
-curl -X POST &quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/verify&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List managed accounts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?limit=100&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Search accounts by username</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts?search=svc_oracle&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Retrieve an account password (CPM must allow retrieval)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/password/retrieve&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;reason&quot;:&quot;maintenance&quot;,&quot;TicketingSystemName&quot;:&quot;&quot;,&quot;TicketId&quot;:&quot;&quot;}&#39;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Trigger immediate password rotation</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/change&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify current password</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/accounts/&lt;id&gt;/verify&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="rest-api-safes">REST API — Safes<a class="headerlink" href="#rest-api-safes" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all safes
-curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-
-# Get safe details
-curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-
-# List safe members
-curl -X GET &quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;/members&quot;   -H &quot;Authorization: &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all safes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/safes&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Get safe details</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List safe members</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;pvwa&gt;/PasswordVault/api/safes/&lt;safe_name&gt;/members&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="pspas-powershell-module">psPAS PowerShell Module<a class="headerlink" href="#pspas-powershell-module" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Install module
-Install-Module psPAS
-
-# Authenticate
-$session = New-PASSession -Credential (Get-Credential) -BaseURI &quot;https://&lt;pvwa&gt;&quot;
-
-# List accounts
-Get-PASAccount | Select UserName, Address, SafeName
-
-# Get a specific account
-Get-PASAccount -SafeName &quot;ProdSafe&quot; | Where-Object { $_.UserName -eq &quot;svc_db&quot; }
-
-# Rotate a password
-Invoke-PASCPMOperation -AccountID &lt;id&gt; -ChangeTask
-
-# List safes
-Get-PASSafe | Select SafeName, NumberOfDaysRetention
-
-# Get safe members
-Get-PASSafeMember -SafeName &quot;ProdSafe&quot;
-
-# Component health summary
-Get-PASComponentSummary
-
-# End session
-Close-PASSession
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Install module</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Install-Module</span> <span class="n">psPAS</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Authenticate</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PASSession</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-BaseURI</span> <span class="s2">&quot;https://&lt;pvwa&gt;&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># List accounts</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-PASAccount</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">UserName</span><span class="p">,</span> <span class="n">Address</span><span class="p">,</span> <span class="n">SafeName</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Get a specific account</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-PASAccount</span> <span class="n">-SafeName</span> <span class="s2">&quot;ProdSafe&quot;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;svc_db&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Rotate a password</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Invoke-PASCPMOperation</span> <span class="n">-AccountID</span> <span class="p">&lt;</span><span class="n">id</span><span class="p">&gt;</span> <span class="n">-ChangeTask</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c"># List safes</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">Get-PASSafe</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">SafeName</span><span class="p">,</span> <span class="n">NumberOfDaysRetention</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># Get safe members</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Get-PASSafeMember</span> <span class="n">-SafeName</span> <span class="s2">&quot;ProdSafe&quot;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Component health summary</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">Get-PASComponentSummary</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c"># End session</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="nb">Close-PASSession</span>
+</code></pre></div>
 <hr />
 <h2 id="pacli-legacy-vault-cli">PACLI (Legacy Vault CLI)<a class="headerlink" href="#pacli-legacy-vault-cli" title="Permanent link">&para;</a></h2>
 <p>PACLI connects directly to the Vault, bypassing PVWA. Use only when PVWA is unavailable.</p>
-<pre><code class="language-bash"># Initialise PACLI
-PACLI INIT
-
-# Define the Vault server
-PACLI DEFINEVAULT vault=&lt;vault_name&gt; address=&lt;vault_ip&gt;
-
-# Logon
-PACLI LOGON vault=&lt;vault_name&gt; user=admin password=&lt;pass&gt;
-
-# Open a safe
-PACLI OPENFILE vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt;
-
-# List files in safe
-PACLI FILESLIST vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt;
-
-# Retrieve a credential file
-PACLI RETRIEVEFILE vault=&lt;vault_name&gt; user=admin safe=&lt;safe_name&gt; folder=Root file=&lt;account_name&gt; localfolder=/tmp
-
-# Logoff
-PACLI LOGOFF vault=&lt;vault_name&gt; user=admin
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Initialise PACLI</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PACLI<span class="w"> </span>INIT
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Define the Vault server</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>PACLI<span class="w"> </span>DEFINEVAULT<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">address</span><span class="o">=</span>&lt;vault_ip&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Logon</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>PACLI<span class="w"> </span>LOGON<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">user</span><span class="o">=</span>admin<span class="w"> </span><span class="nv">password</span><span class="o">=</span>&lt;pass&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Open a safe</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>PACLI<span class="w"> </span>OPENFILE<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">user</span><span class="o">=</span>admin<span class="w"> </span><span class="nv">safe</span><span class="o">=</span>&lt;safe_name&gt;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># List files in safe</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>PACLI<span class="w"> </span>FILESLIST<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">user</span><span class="o">=</span>admin<span class="w"> </span><span class="nv">safe</span><span class="o">=</span>&lt;safe_name&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Retrieve a credential file</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>PACLI<span class="w"> </span>RETRIEVEFILE<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">user</span><span class="o">=</span>admin<span class="w"> </span><span class="nv">safe</span><span class="o">=</span>&lt;safe_name&gt;<span class="w"> </span><span class="nv">folder</span><span class="o">=</span>Root<span class="w"> </span><span class="nv">file</span><span class="o">=</span>&lt;account_name&gt;<span class="w"> </span><span class="nv">localfolder</span><span class="o">=</span>/tmp
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Logoff</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>PACLI<span class="w"> </span>LOGOFF<span class="w"> </span><span class="nv">vault</span><span class="o">=</span>&lt;vault_name&gt;<span class="w"> </span><span class="nv">user</span><span class="o">=</span>admin
+</code></pre></div>
 
 
 

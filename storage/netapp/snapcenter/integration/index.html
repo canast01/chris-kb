@@ -810,9 +810,9 @@
 <h1 id="snapcenter-integration">SnapCenter Integration<a class="headerlink" href="#snapcenter-integration" title="Permanent link">&para;</a></h1>
 <h2 id="ontap-storage-systems">ONTAP Storage Systems<a class="headerlink" href="#ontap-storage-systems" title="Permanent link">&para;</a></h2>
 <p>Register ONTAP clusters in SnapCenter under Settings → Storage Systems. SnapCenter communicates with ONTAP via REST API (SnapCenter 6.x) or ZAPI (SnapCenter 5.x and earlier).</p>
-<pre><code class="language-powershell"># Add ONTAP storage system via PowerShell
-Add-SmStorageConnection -StorageName &lt;cluster-mgmt-fqdn&gt; -Protocol HTTPS -Port 443 -Credential (Get-Credential)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add ONTAP storage system via PowerShell</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-SmStorageConnection</span> <span class="n">-StorageName</span> <span class="p">&lt;</span><span class="n">cluster-mgmt-fqdn</span><span class="p">&gt;</span> <span class="n">-Protocol</span> <span class="n">HTTPS</span> <span class="n">-Port</span> <span class="n">443</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>Use a dedicated ONTAP service account with <code>vsadmin</code> role or a custom role scoped to the SVMs SnapCenter manages</li>
 <li>Register the cluster-management LIF, not individual node management LIFs</li>
@@ -830,15 +830,15 @@ Add-SmStorageConnection -StorageName &lt;cluster-mgmt-fqdn&gt; -Protocol HTTPS -
 <p>Use cases: VM-consistent snapshot backup, datastore backup, individual VMDK restore, and guest file restore without in-guest agents.</p>
 <h2 id="active-directory-rbac">Active Directory / RBAC<a class="headerlink" href="#active-directory-rbac" title="Permanent link">&para;</a></h2>
 <p>SnapCenter supports AD authentication for user accounts and group-based RBAC:</p>
-<pre><code class="language-powershell"># Add an AD user to SnapCenter with a specific role
-Add-SmUser -UserName domain\username -RoleName &quot;Application Backup and Clone Admin&quot;
-
-# Add an AD group
-Add-SmUser -UserName &quot;domain\SnapCenter-Admins&quot; -RoleName &quot;SnapCenter Admin&quot;
-
-# List all SnapCenter users and roles
-Get-SmUser | Select UserName, RoleName
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Add an AD user to SnapCenter with a specific role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="n">domain</span><span class="p">\</span><span class="n">username</span> <span class="n">-RoleName</span> <span class="s2">&quot;Application Backup and Clone Admin&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Add an AD group</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;domain\SnapCenter-Admins&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;SnapCenter Admin&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># List all SnapCenter users and roles</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-SmUser</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">UserName</span><span class="p">,</span> <span class="n">RoleName</span>
+</code></pre></div>
 <p>Built-in roles: SnapCenter Admin, Application Backup and Clone Admin, Backup and Clone Viewer, Infrastructure Admin. Create custom roles for granular delegation (e.g., Oracle DBA can restore/clone but not modify policies).</p>
 <h2 id="email-notifications">Email Notifications<a class="headerlink" href="#email-notifications" title="Permanent link">&para;</a></h2>
 <p>Configure SMTP in SnapCenter Settings → Global Settings → Email Notification:</p>
@@ -847,28 +847,28 @@ Get-SmUser | Select UserName, RoleName
 <li>Per-resource-group notification can override global settings: resource group → Edit → Notification tab</li>
 <li>Alert on: Never / On Error / On Error or Warning / Always — recommend "On Error or Warning" for production resource groups</li>
 </ul>
-<pre><code class="language-powershell"># Configure global email notification
-Set-SmEmailNotification -SmtpServer mail.corp.domain.com -From snapcenter@corp.domain.com -To storage-team@corp.domain.com -NotifyWhen OnFailure
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Configure global email notification</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Set-SmEmailNotification</span> <span class="n">-SmtpServer</span> <span class="n">mail</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">domain</span><span class="p">.</span><span class="n">com</span> <span class="n">-From</span> <span class="n">snapcenter</span><span class="nv">@corp</span><span class="p">.</span><span class="n">domain</span><span class="p">.</span><span class="n">com</span> <span class="n">-To</span> <span class="n">storage-team</span><span class="nv">@corp</span><span class="p">.</span><span class="n">domain</span><span class="p">.</span><span class="n">com</span> <span class="n">-NotifyWhen</span> <span class="n">OnFailure</span>
+</code></pre></div>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>SnapCenter exposes a full REST API for automation. The Swagger UI is at:</p>
-<pre><code>https://&lt;snapcenter-server&gt;:8146/swagger/
-</code></pre>
-<p>Authenticate with a token:</p>
-<pre><code class="language-bash"># Get an auth token
-curl -sk -X POST &quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/auth/login&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;&lt;password&gt;&quot;,&quot;Rolename&quot;:&quot;SnapCenter Admin&quot;}}}' \
-  | python3 -m json.tool
-
-# List all resource groups (use token from above response)
-curl -sk -X GET &quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/resourcegroups&quot; \
-  -H &quot;token: &lt;auth-token&gt;&quot; | python3 -m json.tool
-
-# Trigger an on-demand backup for a resource group
-curl -sk -X POST &quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/resourcegroups/&lt;rg-id&gt;/backup&quot; \
-  -H &quot;token: &lt;auth-token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>https://&lt;snapcenter-server&gt;:8146/swagger/
+</code></pre></div>
+<p>Authenticate with a token:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get an auth token</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/auth/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;UserOperationContext&quot;:{&quot;User&quot;:{&quot;Name&quot;:&quot;admin&quot;,&quot;Passphrase&quot;:&quot;&lt;password&gt;&quot;,&quot;Rolename&quot;:&quot;SnapCenter Admin&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List all resource groups (use token from above response)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/resourcegroups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: &lt;auth-token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Trigger an on-demand backup for a resource group</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;snapcenter-server&gt;:8146/api/3.0/resourcegroups/&lt;rg-id&gt;/backup&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;token: &lt;auth-token&gt;&quot;</span>
+</code></pre></div></p>
 <h2 id="oracle-plugin-integration">Oracle Plugin Integration<a class="headerlink" href="#oracle-plugin-integration" title="Permanent link">&para;</a></h2>
 <p>The SnapCenter Plug-in for Oracle communicates with the Oracle database via OS authentication (SYSDBA) to quiesce the database before snapshot. Requirements:
 - Oracle user running the database must be discoverable by the plugin

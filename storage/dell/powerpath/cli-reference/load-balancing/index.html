@@ -822,6 +822,16 @@
 <blockquote>
 <p>Part of the Dell PowerPath CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Policies["Policies"]
+    Policies --&gt; S0["Policy Overview"]
+    Policies --&gt; S1["Available Policies"]
+    Policies --&gt; S2["View Current Policy"]
+    Policies --&gt; S3["Set Policy"]
+    Policies --&gt; S4["Verifying Load Distribution"]
+    Policies --&gt; S5["Recommended Policies by Array"]
+    Policies --&gt; S6["Dynamic Path Prioritization"]
+    Policies --&gt; S7["Troubleshooting Uneven Load"]</code></pre>
 <h2 id="policy-overview">Policy Overview<a class="headerlink" href="#policy-overview" title="Permanent link">&para;</a></h2>
 <p>PowerPath distributes I/O across available paths using a configurable policy. The right policy depends on the storage array type and workload characteristics.</p>
 <h2 id="available-policies">Available Policies<a class="headerlink" href="#available-policies" title="Permanent link">&para;</a></h2>
@@ -862,33 +872,33 @@
 </tbody>
 </table>
 <h2 id="view-current-policy">View Current Policy<a class="headerlink" href="#view-current-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Policy for a specific device
-powermt display dev=emcpower0 | grep -i policy
-
-# Policy for all devices
-powermt display dev=all | grep -i policy
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Policy for a specific device</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Policy for all devices</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
+</code></pre></div>
 <h2 id="set-policy">Set Policy<a class="headerlink" href="#set-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Set policy on a specific device
-powermt set policy=co dev=emcpower0
-
-# Set policy across all devices of a specific class
-powermt set policy=co dev=all class=clariion
-powermt set policy=rr dev=all class=symmetrix
-
-# Set policy globally (all devices, all classes)
-powermt set policy=co dev=all
-
-# Save after changing policy (persists across reboots)
-powermt save
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set policy on a specific device</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set policy across all devices of a specific class</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>clariion
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>rr<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="nv">class</span><span class="o">=</span>symmetrix
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Set policy globally (all devices, all classes)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Save after changing policy (persists across reboots)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>powermt<span class="w"> </span>save
+</code></pre></div>
 <h2 id="verifying-load-distribution">Verifying Load Distribution<a class="headerlink" href="#verifying-load-distribution" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check path I/O statistics (bytes sent per path)
-powermt display dev=emcpower0 | grep -E &quot;Bytes|I/Os&quot;
-
-# Full device detail with path stats
-powermt display dev=emcpower0 port
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check path I/O statistics (bytes sent per path)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Bytes|I/Os&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Full device detail with path stats</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0<span class="w"> </span>port
+</code></pre></div>
 <h2 id="recommended-policies-by-array">Recommended Policies by Array<a class="headerlink" href="#recommended-policies-by-array" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -922,20 +932,20 @@ powermt display dev=emcpower0 port
 </table>
 <h2 id="dynamic-path-prioritization">Dynamic Path Prioritization<a class="headerlink" href="#dynamic-path-prioritization" title="Permanent link">&para;</a></h2>
 <p>With <code>co</code> policy, PowerPath prefers ALUA-optimized paths. If the owning storage processor fails:</p>
-<pre><code class="language-bash"># Paths will automatically shift to the non-optimized SP
-powermt display dev=emcpower0
-
-# After SP failover, confirm no dead paths
-powermt display dead
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Paths will automatically shift to the non-optimized SP</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>emcpower0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After SP failover, confirm no dead paths</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>dead
+</code></pre></div>
 <h2 id="troubleshooting-uneven-load">Troubleshooting Uneven Load<a class="headerlink" href="#troubleshooting-uneven-load" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check if policy is correctly applied
-powermt display dev=all | grep policy
-
-# If paths are unbalanced after array maintenance
-powermt restore
-powermt save
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if policy is correctly applied</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>policy
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If paths are unbalanced after array maintenance</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>powermt<span class="w"> </span>save
+</code></pre></div>
 
 
 

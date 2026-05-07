@@ -799,13 +799,13 @@
 <h1 id="srdfa-security">SRDF/A Security<a class="headerlink" href="#srdfa-security" title="Permanent link">&para;</a></h1>
 <h2 id="encryption-in-flight">Encryption In-Flight<a class="headerlink" href="#encryption-in-flight" title="Permanent link">&para;</a></h2>
 <p>SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:</p>
-<pre><code class="language-bash">symcfg list -rdfg -v | grep -i encrypt
-# Output should show: Encryption: Enabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Output should show: Encryption: Enabled</span>
+</code></pre></div>
 <p>Enable SRDF/E on an existing SRDF group:</p>
-<pre><code class="language-bash">symrdf -g &lt;rdfg&gt; set encrypt enable
-symcfg list -rdfg &lt;rdfg&gt; -v        # Verify Encryption: Enabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>encrypt<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>-v<span class="w">        </span><span class="c1"># Verify Encryption: Enabled</span>
+</code></pre></div>
 <h2 id="solutions-enabler-rbac">Solutions Enabler RBAC<a class="headerlink" href="#solutions-enabler-rbac" title="Permanent link">&para;</a></h2>
 <p>Solutions Enabler v9+ enforces role-based access at the array scope. Roles for SRDF operations:</p>
 <table>
@@ -831,8 +831,8 @@ symcfg list -rdfg &lt;rdfg&gt; -v        # Verify Encryption: Enabled
 </tbody>
 </table>
 <p>Create a dedicated service account per automation system; never use the root Solutions Enabler account:</p>
-<pre><code class="language-bash">symauth -sid &lt;SID&gt; add -username svc_dr_automation -role StorageAdmin -scope rdfg:&lt;group_number&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_dr_automation<span class="w"> </span>-role<span class="w"> </span>StorageAdmin<span class="w"> </span>-scope<span class="w"> </span>rdfg:&lt;group_number&gt;
+</code></pre></div>
 <h2 id="preventing-accidental-resync">Preventing Accidental Resync<a class="headerlink" href="#preventing-accidental-resync" title="Permanent link">&para;</a></h2>
 <p>For async operations, accidentally re-syncing from target to source (after a failover test) destroys production data. Guard against this:</p>
 <ul>
@@ -842,9 +842,9 @@ symcfg list -rdfg &lt;rdfg&gt; -v        # Verify Encryption: Enabled
 </ul>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All SRDF operations generate entries in the PowerMax audit log:</p>
-<pre><code class="language-bash">symevent list -sid &lt;SID&gt; -type rdf         # List all RDF events
-symevent show -sid &lt;SID&gt; -event_id &lt;ID&gt;    # Detail on specific event
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w">         </span><span class="c1"># List all RDF events</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-event_id<span class="w"> </span>&lt;ID&gt;<span class="w">    </span><span class="c1"># Detail on specific event</span>
+</code></pre></div>
 <p>Forward to SIEM via syslog:
 - Configure Unisphere: Settings → Notifications → Syslog → add SIEM IP, port 514 (UDP) or 6514 (TLS)
 - Alert on event types: <code>SRDF Split</code>, <code>SRDF Failover</code>, <code>SRDF Suspend</code>, <code>SRDF Establish</code></p>

@@ -842,64 +842,64 @@
 
 <h1 id="ontap-volumes">ONTAP Volumes<a class="headerlink" href="#ontap-volumes" title="Permanent link">&para;</a></h1>
 <h2 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume show
-volume show -vserver &lt;svm_name&gt;
-volume show -fields size,used,available,percent-used,state
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>volume<span class="w"> </span>show
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used,state
+</code></pre></div>
 <h2 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show offline or restricted volumes
-volume show -state !online
-
-# Show volumes nearing capacity
-volume show -fields percent-used | awk '$2 &gt; 80'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show offline or restricted volumes</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show volumes nearing capacity</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
+</code></pre></div>
 <h2 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume create \
-    -vserver &lt;svm_name&gt; \
-    -volume &lt;vol_name&gt; \
-    -aggregate &lt;aggr_name&gt; \
-    -size 500G \
-    -junction-path /&lt;vol_name&gt; \
-    -security-style unix
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>volume<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-size<span class="w"> </span>500G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-junction-path<span class="w"> </span>/&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-security-style<span class="w"> </span>unix
+</code></pre></div>
 <h2 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume size -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt; -new-size 1T
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>volume<span class="w"> </span>size<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-new-size<span class="w"> </span>1T
+</code></pre></div>
 <h2 id="volume-autosize">Volume Autosize<a class="headerlink" href="#volume-autosize" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume autosize -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt; \
-    -mode grow_shrink \
-    -maximum-size 2T \
-    -grow-threshold-percent 85
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>autosize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>-mode<span class="w"> </span>grow_shrink<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-maximum-size<span class="w"> </span>2T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-grow-threshold-percent<span class="w"> </span><span class="m">85</span>
+</code></pre></div>
 <h2 id="volume-efficiency-deduplication-compression">Volume Efficiency (Deduplication / Compression)<a class="headerlink" href="#volume-efficiency-deduplication-compression" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check efficiency state
-volume efficiency show -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-
-# Enable efficiency
-volume efficiency on -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-
-# Run deduplication manually
-volume efficiency start -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check efficiency state</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Enable efficiency</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Run deduplication manually</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="move-a-volume-between-aggregates">Move a Volume (Between Aggregates)<a class="headerlink" href="#move-a-volume-between-aggregates" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume move start \
-    -vserver &lt;svm_name&gt; \
-    -volume &lt;vol_name&gt; \
-    -destination-aggregate &lt;dest_aggr&gt;
-
-volume move show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>volume<span class="w"> </span>move<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-destination-aggregate<span class="w"> </span>&lt;dest_aggr&gt;
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>volume<span class="w"> </span>move<span class="w"> </span>show
+</code></pre></div>
 <h2 id="take-a-volume-offline-online">Take a Volume Offline / Online<a class="headerlink" href="#take-a-volume-offline-online" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume offline -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-volume online -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>volume<span class="w"> </span>online<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Offline first
-volume offline -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-
-# Delete
-volume delete -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Offline first</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>volume<span class="w"> </span>offline<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Delete</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>volume<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol_name&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

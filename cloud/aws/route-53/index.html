@@ -823,72 +823,72 @@
 </tbody>
 </table>
 <h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List hosted zones
-aws route53 list-hosted-zones \
-  --query 'HostedZones[*].{Name:Name,ID:Id,Type:Config.PrivateZone}' --output table
-
-# List records in a zone
-aws route53 list-resource-record-sets \
-  --hosted-zone-id &lt;zone-id&gt; \
-  --query 'ResourceRecordSets[*].{Name:Name,Type:Type,TTL:TTL}' --output table
-
-# Create an A record
-aws route53 change-resource-record-sets \
-  --hosted-zone-id &lt;zone-id&gt; \
-  --change-batch '{
-    &quot;Changes&quot;: [{
-      &quot;Action&quot;: &quot;CREATE&quot;,
-      &quot;ResourceRecordSet&quot;: {
-        &quot;Name&quot;: &quot;app.example.com.&quot;,
-        &quot;Type&quot;: &quot;A&quot;,
-        &quot;TTL&quot;: 300,
-        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.100&quot;}]
-      }
-    }]
-  }'
-
-# Update (UPSERT) a record — creates or replaces
-aws route53 change-resource-record-sets \
-  --hosted-zone-id &lt;zone-id&gt; \
-  --change-batch '{
-    &quot;Changes&quot;: [{
-      &quot;Action&quot;: &quot;UPSERT&quot;,
-      &quot;ResourceRecordSet&quot;: {
-        &quot;Name&quot;: &quot;app.example.com.&quot;,
-        &quot;Type&quot;: &quot;A&quot;,
-        &quot;TTL&quot;: 60,
-        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.200&quot;}]
-      }
-    }]
-  }'
-
-# Delete a record
-# Use same structure as CREATE but with &quot;Action&quot;: &quot;DELETE&quot; and exact matching values
-
-# Check propagation status of a change
-aws route53 get-change --id &lt;change-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List hosted zones</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>route53<span class="w"> </span>list-hosted-zones<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;HostedZones[*].{Name:Name,ID:Id,Type:Config.PrivateZone}&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List records in a zone</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>route53<span class="w"> </span>list-resource-record-sets<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--hosted-zone-id<span class="w"> </span>&lt;zone-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ResourceRecordSets[*].{Name:Name,Type:Type,TTL:TTL}&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Create an A record</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aws<span class="w"> </span>route53<span class="w"> </span>change-resource-record-sets<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--hosted-zone-id<span class="w"> </span>&lt;zone-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--change-batch<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">    &quot;Changes&quot;: [{</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">      &quot;Action&quot;: &quot;CREATE&quot;,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">      &quot;ResourceRecordSet&quot;: {</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">        &quot;Name&quot;: &quot;app.example.com.&quot;,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">        &quot;Type&quot;: &quot;A&quot;,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">        &quot;TTL&quot;: 300,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.100&quot;}]</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s1">      }</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="s1">    }]</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Update (UPSERT) a record — creates or replaces</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>aws<span class="w"> </span>route53<span class="w"> </span>change-resource-record-sets<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--hosted-zone-id<span class="w"> </span>&lt;zone-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--change-batch<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="s1">    &quot;Changes&quot;: [{</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="s1">      &quot;Action&quot;: &quot;UPSERT&quot;,</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="s1">      &quot;ResourceRecordSet&quot;: {</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="s1">        &quot;Name&quot;: &quot;app.example.com.&quot;,</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="s1">        &quot;Type&quot;: &quot;A&quot;,</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="s1">        &quot;TTL&quot;: 60,</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="s1">        &quot;ResourceRecords&quot;: [{&quot;Value&quot;: &quot;10.0.1.200&quot;}]</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="s1">      }</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="s1">    }]</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="c1"># Delete a record</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="c1"># Use same structure as CREATE but with &quot;Action&quot;: &quot;DELETE&quot; and exact matching values</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="c1"># Check propagation status of a change</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>aws<span class="w"> </span>route53<span class="w"> </span>get-change<span class="w"> </span>--id<span class="w"> </span>&lt;change-id&gt;
+</code></pre></div>
 <h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Create health check for an HTTP endpoint
-aws route53 create-health-check \
-  --caller-reference &quot;app-hc-$(date +%s)&quot; \
-  --health-check-config '{
-    &quot;IPAddress&quot;: &quot;10.0.1.100&quot;,
-    &quot;Port&quot;: 443,
-    &quot;Type&quot;: &quot;HTTPS&quot;,
-    &quot;ResourcePath&quot;: &quot;/health&quot;,
-    &quot;FullyQualifiedDomainName&quot;: &quot;app.example.com&quot;,
-    &quot;RequestInterval&quot;: 30,
-    &quot;FailureThreshold&quot;: 3
-  }'
-
-# List health checks
-aws route53 list-health-checks \
-  --query 'HealthChecks[*].{ID:Id,Type:HealthCheckConfig.Type,Status:HealthCheckConfig.Type}' --output table
-
-# Get health check status
-aws route53 get-health-check-status --health-check-id &lt;hc-id&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create health check for an HTTP endpoint</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-health-check<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="s2">&quot;app-hc-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--health-check-config<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;IPAddress&quot;: &quot;10.0.1.100&quot;,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;Port&quot;: 443,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;Type&quot;: &quot;HTTPS&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;ResourcePath&quot;: &quot;/health&quot;,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;FullyQualifiedDomainName&quot;: &quot;app.example.com&quot;,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;RequestInterval&quot;: 30,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;FailureThreshold&quot;: 3</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># List health checks</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>aws<span class="w"> </span>route53<span class="w"> </span>list-health-checks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;HealthChecks[*].{ID:Id,Type:HealthCheckConfig.Type,Status:HealthCheckConfig.Type}&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Get health check status</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>aws<span class="w"> </span>route53<span class="w"> </span>get-health-check-status<span class="w"> </span>--health-check-id<span class="w"> </span>&lt;hc-id&gt;
+</code></pre></div>
 <h2 id="routing-policies">Routing Policies<a class="headerlink" href="#routing-policies" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

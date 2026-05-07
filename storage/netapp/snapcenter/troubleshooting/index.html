@@ -828,38 +828,38 @@
 </tbody>
 </table>
 <h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Connect to SnapCenter via PowerShell
-Open-SmConnection -SMSbaseurl https://&lt;snapcenter-server&gt;:8146
-
-# List all jobs and filter by failed status
-Get-SmJob | Where-Object { $_.Status -eq &quot;Failed&quot; } | Select JobId, JobType, StartDateTime, ErrorMessage
-
-# List all resource groups and their current status
-Get-SmResourceGroup | Select ResourceGroupName, Status, LastRunTime
-
-# Check all registered hosts and plugin status
-Get-SmHost | Select HostName, HostType, PlugInStatus, HostStatus
-
-# List backups for a specific resource
-Get-SmBackup -ResourceName &lt;resource_name&gt; | Select BackupName, BackupTime, BackupType, Status
-
-# Get detailed information about a specific job
-Get-SmJobSummaryReport -JobId &lt;job_id&gt;
-
-# List all ONTAP storage connections
-Get-SmStorageConnection | Select StorageName, Protocol, ClusterVersion
-
-# Check email notification settings
-Get-SmEmailNotification
-</code></pre>
-<pre><code class="language-bash"># On a Linux plugin host — check SnapCenter agent service
-systemctl status spl
-journalctl -u spl -n 100
-
-# On a Windows plugin host (PowerShell)
-Get-Service SnapCenter*
-Get-EventLog -LogName Application -Source &quot;SnapCenter*&quot; -Newest 50
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Connect to SnapCenter via PowerShell</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseurl</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">snapcenter-server</span><span class="p">&gt;:</span><span class="n">8146</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># List all jobs and filter by failed status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-SmJob</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Failed&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobId</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">StartDateTime</span><span class="p">,</span> <span class="n">ErrorMessage</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># List all resource groups and their current status</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-SmResourceGroup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">ResourceGroupName</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">LastRunTime</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check all registered hosts and plugin status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">HostName</span><span class="p">,</span> <span class="n">HostType</span><span class="p">,</span> <span class="n">PlugInStatus</span><span class="p">,</span> <span class="n">HostStatus</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># List backups for a specific resource</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-SmBackup</span> <span class="n">-ResourceName</span> <span class="p">&lt;</span><span class="n">resource_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">BackupName</span><span class="p">,</span> <span class="n">BackupTime</span><span class="p">,</span> <span class="n">BackupType</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Get detailed information about a specific job</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Get-SmJobSummaryReport</span> <span class="n">-JobId</span> <span class="p">&lt;</span><span class="n">job_id</span><span class="p">&gt;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># List all ONTAP storage connections</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Get-SmStorageConnection</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">StorageName</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">ClusterVersion</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Check email notification settings</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">Get-SmEmailNotification</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On a Linux plugin host — check SnapCenter agent service</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>spl
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>spl<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># On a Windows plugin host (PowerShell)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-Service<span class="w"> </span>SnapCenter*
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Get-EventLog<span class="w"> </span>-LogName<span class="w"> </span>Application<span class="w"> </span>-Source<span class="w"> </span><span class="s2">&quot;SnapCenter*&quot;</span><span class="w"> </span>-Newest<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
 <h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

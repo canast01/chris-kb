@@ -836,55 +836,55 @@
 </tbody>
 </table>
 <h2 id="encryption-at-rest">Encryption at Rest<a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h2>
-<p><strong>Linux — LUKS:</strong></p>
-<pre><code class="language-bash"># Check if encrypted
-cryptsetup isLuks /dev/sdb &amp;&amp; echo &quot;LUKS&quot; || echo &quot;Not encrypted&quot;
-
-# List open encrypted volumes
-dmsetup ls --target crypt
-
-# Dump LUKS header info
-cryptsetup luksDump /dev/sdb
-</code></pre>
-<p><strong>Windows — BitLocker:</strong></p>
-<pre><code class="language-powershell"># Check status all volumes
-Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, EncryptionMethod, ProtectionStatus
-
-# Enable on a drive
-Enable-BitLocker -MountPoint &quot;D:&quot; -EncryptionMethod XtsAes256 -RecoveryPasswordProtector
-
-# Back up recovery key to AD
-Backup-BitLockerKeyProtector -MountPoint &quot;C:&quot; -KeyProtectorId (Get-BitLockerVolume C:).KeyProtector[0].KeyProtectorId
-</code></pre>
+<p><strong>Linux — LUKS:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check if encrypted</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cryptsetup<span class="w"> </span>isLuks<span class="w"> </span>/dev/sdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LUKS&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not encrypted&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List open encrypted volumes</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--target<span class="w"> </span>crypt
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Dump LUKS header info</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cryptsetup<span class="w"> </span>luksDump<span class="w"> </span>/dev/sdb
+</code></pre></div></p>
+<p><strong>Windows — BitLocker:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check status all volumes</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-BitLockerVolume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MountPoint</span><span class="p">,</span> <span class="n">VolumeStatus</span><span class="p">,</span> <span class="n">EncryptionMethod</span><span class="p">,</span> <span class="n">ProtectionStatus</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Enable on a drive</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Enable-BitLocker</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span> <span class="n">-EncryptionMethod</span> <span class="n">XtsAes256</span> <span class="n">-RecoveryPasswordProtector</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Back up recovery key to AD</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Backup-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-KeyProtectorId</span> <span class="p">(</span><span class="nb">Get-BitLockerVolume</span> <span class="n">C</span><span class="p">:).</span><span class="n">KeyProtector</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">KeyProtectorId</span>
+</code></pre></div></p>
 <p><strong>Storage arrays:</strong>
 - <strong>ONTAP</strong>: <code>security key-manager show</code> — confirm key manager connected; <code>volume show -fields encryption-state</code>
 - <strong>Pure FlashArray</strong>: always-on encryption — confirm via <code>purecli array get</code>
 - <strong>PowerMax</strong>: DARE — verify in Unisphere → Array Settings → Encryption</p>
 <h2 id="encryption-in-transit">Encryption in Transit<a class="headerlink" href="#encryption-in-transit" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Verify TLS version
-openssl s_client -connect &lt;host&gt;:443 -tls1_2
-openssl s_client -connect &lt;host&gt;:443 -tls1_3
-
-# Check nginx config
-grep -E &quot;ssl_protocols|ssl_ciphers&quot; /etc/nginx/nginx.conf
-
-# Comprehensive TLS audit
-./testssl.sh &lt;host&gt;:443
-</code></pre>
-<p><strong>Disable weak protocols (nginx):</strong></p>
-<pre><code class="language-nginx">ssl_protocols TLSv1.2 TLSv1.3;
-ssl_prefer_server_ciphers on;
-ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-tls1_2
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;host&gt;:443<span class="w"> </span>-tls1_3
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check nginx config</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ssl_protocols|ssl_ciphers&quot;</span><span class="w"> </span>/etc/nginx/nginx.conf
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Comprehensive TLS audit</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>./testssl.sh<span class="w"> </span>&lt;host&gt;:443
+</code></pre></div>
+<p><strong>Disable weak protocols (nginx):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384&#39;</span><span class="p">;</span>
+</code></pre></div></p>
 <h2 id="database-encryption">Database Encryption<a class="headerlink" href="#database-encryption" title="Permanent link">&para;</a></h2>
-<p><strong>MSSQL — TDE:</strong></p>
-<pre><code class="language-sql">CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256
-ENCRYPTION BY SERVER CERTIFICATE &lt;cert-name&gt;;
-ALTER DATABASE &lt;dbname&gt; SET ENCRYPTION ON;
-
-SELECT db_name(database_id), encryption_state, percent_complete
-FROM sys.dm_database_encryption_keys;
-</code></pre>
+<p><strong>MSSQL — TDE:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ENCRYPTION</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">ALGORITHM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AES_256</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">ENCRYPTION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">CERTIFICATE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">cert</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">dbname</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">ENCRYPTION</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">db_name</span><span class="p">(</span><span class="n">database_id</span><span class="p">),</span><span class="w"> </span><span class="n">encryption_state</span><span class="p">,</span><span class="w"> </span><span class="n">percent_complete</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_database_encryption_keys</span><span class="p">;</span>
+</code></pre></div></p>
 <h2 id="key-rotation-schedule">Key Rotation Schedule<a class="headerlink" href="#key-rotation-schedule" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

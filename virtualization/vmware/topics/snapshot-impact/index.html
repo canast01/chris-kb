@@ -821,10 +821,10 @@
 <h1 id="snapshot-performance-impact">Snapshot Performance Impact<a class="headerlink" href="#snapshot-performance-impact" title="Permanent link">&para;</a></h1>
 <p>Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.</p>
 <h2 id="how-snapshots-work">How Snapshots Work<a class="headerlink" href="#how-snapshots-work" title="Permanent link">&para;</a></h2>
-<pre><code>Base VMDK (read-only once snapshot exists)
-  └── Delta disk (-000001.vmdk) — all new writes go here
-        └── Delta disk (-000002.vmdk) — if a second snapshot is taken
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Base VMDK (read-only once snapshot exists)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Delta disk (-000001.vmdk) — all new writes go here
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Delta disk (-000002.vmdk) — if a second snapshot is taken
+</code></pre></div>
 <p>Every read must check whether the block exists in the delta chain before falling back to the base disk. Chain depth increases read latency.</p>
 <h2 id="performance-impact-by-chain-depth">Performance Impact by Chain Depth<a class="headerlink" href="#performance-impact-by-chain-depth" title="Permanent link">&para;</a></h2>
 <table>
@@ -859,55 +859,55 @@
 </tbody>
 </table>
 <h2 id="detecting-snapshot-issues">Detecting Snapshot Issues<a class="headerlink" href="#detecting-snapshot-issues" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List all VMs with snapshots, sorted by snapshot count
-Get-VM | Where-Object { $_.ExtensionData.Snapshot -ne $null } |
-    Select-Object Name,
-        @{N=&quot;SnapCount&quot;; E={ ($_ | Get-Snapshot | Measure-Object).Count }},
-        @{N=&quot;OldestSnap&quot;; E={ ($_ | Get-Snapshot | Sort-Object Created | Select-Object -First 1).Created }} |
-    Sort-Object SnapCount -Descending
-
-# Flag snapshots older than 3 days
-Get-VM | Get-Snapshot | Where-Object { $_.Created -lt (Get-Date).AddDays(-3) } |
-    Select-Object VM, Name, Created, SizeGB
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all VMs with snapshots, sorted by snapshot count</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Snapshot</span> <span class="o">-ne</span> <span class="nv">$null</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SnapCount&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span> <span class="p">}},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;OldestSnap&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Created</span> <span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Sort-Object</span> <span class="n">SnapCount</span> <span class="n">-Descending</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Flag snapshots older than 3 days</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span>
+</code></pre></div>
 <h2 id="consolidation-warnings">Consolidation Warnings<a class="headerlink" href="#consolidation-warnings" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Find VMs needing consolidation (orphaned delta files present)
-Get-VM | Where-Object { $_.ExtensionData.Runtime.ConsolidationNeeded -eq $true } |
-    Select-Object Name
-
-# Trigger consolidation
-Get-VM &quot;vm-name&quot; | Get-View | Invoke-Method -Name ConsolidateVMDisks_Task
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find VMs needing consolidation (orphaned delta files present)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Trigger consolidation</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">ConsolidateVMDisks_Task</span>
+</code></pre></div>
 <h2 id="esxtop-identifying-snapshot-latency">esxtop — Identifying Snapshot Latency<a class="headerlink" href="#esxtop-identifying-snapshot-latency" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to host, run esxtop in disk mode
-esxtop
-# Press 'u' for disk view
-# Look for GAVG (guest average latency) &gt; 25ms and DAVG (device latency) &gt; 15ms
-# Compare VMs with/without snapshots for correlation
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect to host, run esxtop in disk mode</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Press &#39;u&#39; for disk view</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Look for GAVG (guest average latency) &gt; 25ms and DAVG (device latency) &gt; 15ms</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Compare VMs with/without snapshots for correlation</span>
+</code></pre></div>
 <h2 id="backup-induced-snapshots">Backup-Induced Snapshots<a class="headerlink" href="#backup-induced-snapshots" title="Permanent link">&para;</a></h2>
 <p>Backup tools (Veeam, NBU, Commvault) create and delete a snapshot per job run. If the delta disk grows large during backup and consolidation is slow:</p>
 <ul>
 <li>I/O is redirected to the delta for the entire backup window.</li>
 <li>Consolidation after backup can cause a "stun" (VM pause of 1–30 seconds) while delta is merged.</li>
 </ul>
-<pre><code class="language-powershell"># Monitor consolidation task progress
-Get-Task | Where-Object { $_.Name -match &quot;ConsolidateVM&quot; } |
-    Select-Object ObjectId, State, PercentComplete, StartTime
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Monitor consolidation task progress</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ConsolidateVM&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">ObjectId</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">PercentComplete</span><span class="p">,</span> <span class="n">StartTime</span>
+</code></pre></div>
 <h2 id="storage-impact">Storage Impact<a class="headerlink" href="#storage-impact" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check total snapshot disk consumption per datastore
-Get-Datastore | ForEach-Object {
-    $ds = $_
-    $snaps = Get-VM -Datastore $ds | Get-Snapshot
-    [PSCustomObject]@{
-        Datastore     = $ds.Name
-        FreeSpaceGB   = [math]::Round($ds.FreeSpaceGB, 1)
-        SnapshotCount = ($snaps | Measure-Object).Count
-        SnapshotSizeGB= [math]::Round(($snaps | Measure-Object SizeGB -Sum).Sum, 1)
-    }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check total snapshot disk consumption per datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nv">$snaps</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">Datastore</span>     <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">FreeSpaceGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">SnapshotCount</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="n">SnapshotSizeGB</span><span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">SizeGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
+</code></pre></div>
 <h2 id="policy-and-remediation">Policy and Remediation<a class="headerlink" href="#policy-and-remediation" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

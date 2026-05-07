@@ -820,111 +820,120 @@
 
 <h1 id="dell-powerstore-cli-reference">Dell PowerStore CLI Reference<a class="headerlink" href="#dell-powerstore-cli-reference" title="Permanent link">&para;</a></h1>
 <p>PowerStore management uses the PowerStore Manager web UI, REST API, and the <code>pstcli</code> command-line interface. <code>pstcli</code> connects to the PowerStore management IP and supports scripting and automation for all array operations.</p>
+<pre class="mermaid"><code>flowchart LR
+    Dell_PowerStore["Dell PowerStore"]
+    Dell_PowerStore --&gt; S0["Connection"]
+    Dell_PowerStore --&gt; S1["Array and System Management"]
+    Dell_PowerStore --&gt; S2["Volume Operations"]
+    Dell_PowerStore --&gt; S3["Host Management"]
+    Dell_PowerStore --&gt; S4["Snapshots and Protection"]
+    Dell_PowerStore --&gt; S5["Capacity and Performance"]
+    Dell_PowerStore --&gt; S6["REST API (Alternative)"]</code></pre>
 <hr />
 <h2 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Connect to PowerStore CLI
-pstcli -d &lt;management-ip&gt; -u admin
-
-# Or set environment variables
-export PSTCLI_HOST=&lt;management-ip&gt;
-export PSTCLI_USER=admin
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to PowerStore CLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;management-ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or set environment variables</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PSTCLI_HOST</span><span class="o">=</span>&lt;management-ip&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PSTCLI_USER</span><span class="o">=</span>admin
+</code></pre></div>
 <hr />
 <h2 id="array-system-management">Array &amp; System Management<a class="headerlink" href="#array-system-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show system info and software version
-pstcli -d &lt;ip&gt; -u admin &quot;show /sys/primary_model&quot;
-
-# List all appliances
-pstcli -d &lt;ip&gt; -u admin &quot;show /appliance&quot;
-
-# Show hardware component status
-pstcli -d &lt;ip&gt; -u admin &quot;show /hardware&quot;
-
-# Show software version
-pstcli -d &lt;ip&gt; -u admin &quot;show /software_installed&quot;
-
-# Show active alerts
-pstcli -d &lt;ip&gt; -u admin &quot;show /alert?state=active&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show system info and software version</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /sys/primary_model&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List all appliances</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /appliance&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show hardware component status</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /hardware&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show software version</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /software_installed&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show active alerts</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /alert?state=active&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="volume-operations">Volume Operations<a class="headerlink" href="#volume-operations" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all volumes
-pstcli -d &lt;ip&gt; -u admin &quot;show /volume&quot;
-
-# Show volume details
-pstcli -d &lt;ip&gt; -u admin &quot;show /volume/&lt;id&gt;&quot;
-
-# Create a volume
-pstcli -d &lt;ip&gt; -u admin &quot;create /volume name=&lt;name&gt; size=&lt;size_bytes&gt;&quot;
-
-# Delete a volume
-pstcli -d &lt;ip&gt; -u admin &quot;delete /volume/&lt;id&gt;&quot;
-
-# Map volume to host
-pstcli -d &lt;ip&gt; -u admin &quot;create /volume/&lt;id&gt;/host_volume_mapping host_id=&lt;host_id&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all volumes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /volume&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show volume details</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /volume/&lt;id&gt;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create a volume</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;create /volume name=&lt;name&gt; size=&lt;size_bytes&gt;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete a volume</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;delete /volume/&lt;id&gt;&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Map volume to host</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;create /volume/&lt;id&gt;/host_volume_mapping host_id=&lt;host_id&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="host-management">Host Management<a class="headerlink" href="#host-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List hosts
-pstcli -d &lt;ip&gt; -u admin &quot;show /host&quot;
-
-# Create a host
-pstcli -d &lt;ip&gt; -u admin &quot;create /host name=&lt;name&gt; os_type=&lt;ESXi|Windows|Linux&gt;&quot;
-
-# Add initiator to host
-pstcli -d &lt;ip&gt; -u admin &quot;create /host_initiator host_id=&lt;id&gt; port_name=&lt;wwn_or_iqn&gt;&quot;
-
-# List host groups
-pstcli -d &lt;ip&gt; -u admin &quot;show /host_group&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List hosts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /host&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a host</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;create /host name=&lt;name&gt; os_type=&lt;ESXi|Windows|Linux&gt;&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Add initiator to host</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;create /host_initiator host_id=&lt;id&gt; port_name=&lt;wwn_or_iqn&gt;&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List host groups</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /host_group&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="snapshots-protection">Snapshots &amp; Protection<a class="headerlink" href="#snapshots-protection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List all snapshots
-pstcli -d &lt;ip&gt; -u admin &quot;show /volume_snapshot&quot;
-
-# Take a snapshot
-pstcli -d &lt;ip&gt; -u admin &quot;create /volume_snapshot volume_id=&lt;id&gt; name=&lt;snap_name&gt;&quot;
-
-# Delete a snapshot
-pstcli -d &lt;ip&gt; -u admin &quot;delete /volume_snapshot/&lt;id&gt;&quot;
-
-# List replication sessions
-pstcli -d &lt;ip&gt; -u admin &quot;show /replication_session&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all snapshots</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /volume_snapshot&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Take a snapshot</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;create /volume_snapshot volume_id=&lt;id&gt; name=&lt;snap_name&gt;&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Delete a snapshot</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;delete /volume_snapshot/&lt;id&gt;&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List replication sessions</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /replication_session&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="capacity-performance">Capacity &amp; Performance<a class="headerlink" href="#capacity-performance" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show capacity summary
-pstcli -d &lt;ip&gt; -u admin &quot;show /appliance/&lt;id&gt;/metrics/capacity&quot;
-
-# Show performance metrics
-pstcli -d &lt;ip&gt; -u admin &quot;show /appliance/&lt;id&gt;/metrics/performance&quot;
-
-# Show drive health
-pstcli -d &lt;ip&gt; -u admin &quot;show /drive&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show capacity summary</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /appliance/&lt;id&gt;/metrics/capacity&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show performance metrics</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /appliance/&lt;id&gt;/metrics/performance&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show drive health</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /drive&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="rest-api-alternative">REST API (Alternative)<a class="headerlink" href="#rest-api-alternative" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Authenticate and get token
-curl -k -X POST https://&lt;ip&gt;/api/rest/login_session \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}'
-
-# List volumes (use token from login)
-curl -k -X GET https://&lt;ip&gt;/api/rest/volume \
-  -H &quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;
-
-# List alerts
-curl -k -X GET https://&lt;ip&gt;/api/rest/alert \
-  -H &quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;ip&gt;/api/rest/login_session<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># List volumes (use token from login)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;ip&gt;/api/rest/volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List alerts</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;ip&gt;/api/rest/alert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Full health check sequence
-pstcli -d &lt;ip&gt; -u admin &quot;show /alert?state=active&quot;
-pstcli -d &lt;ip&gt; -u admin &quot;show /hardware&quot;
-pstcli -d &lt;ip&gt; -u admin &quot;show /drive&quot;
-pstcli -d &lt;ip&gt; -u admin &quot;show /replication_session&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Full health check sequence</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /alert?state=active&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /hardware&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /drive&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pstcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;show /replication_session&quot;</span>
+</code></pre></div>
 
 
 

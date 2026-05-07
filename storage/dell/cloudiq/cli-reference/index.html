@@ -811,6 +811,14 @@
 <blockquote>
 <p>Part of the <a href="../">CloudIQ</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    API["API"]
+    API --&gt; S0["Quick-Reference Command Table"]
+    API --&gt; S1["Systems API"]
+    API --&gt; S2["Alerts API"]
+    API --&gt; S3["Capacity API"]
+    API --&gt; S4["Performance API"]
+    API --&gt; S5["Tags API"]</code></pre>
 <hr />
 <p>CloudIQ has no local CLI. All programmatic interaction is via the <strong>CloudIQ REST API</strong> at <code>https://cloudiq.apis.dell.com</code>. Authentication uses the OAuth2 <strong>client credentials</strong> flow. API keys (client ID + secret) are generated in the CloudIQ web portal under <strong>Settings → API Keys</strong>.</p>
 <blockquote>
@@ -873,24 +881,24 @@
 <hr />
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>CloudIQ uses OAuth2 client credentials. The access token is a Bearer JWT valid for 3600 seconds.</p>
-<pre><code class="language-bash">CLIENT_ID=&quot;&lt;your_client_id&gt;&quot;
-CLIENT_SECRET=&quot;&lt;your_client_secret&gt;&quot;
-TOKEN_URL=&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;
-
-# --- Get access token ---
-TOKEN=$(curl -s -X POST &quot;${TOKEN_URL}&quot; \
-  -H &quot;Content-Type: application/x-www-form-urlencoded&quot; \
-  -d &quot;grant_type=client_credentials&quot; \
-  -d &quot;client_id=${CLIENT_ID}&quot; \
-  -d &quot;client_secret=${CLIENT_SECRET}&quot; \
-  | python3 -c &quot;import sys,json; print(json.load(sys.stdin)['access_token'])&quot;)
-
-echo &quot;Token: ${TOKEN:0:40}...&quot;   # Print first 40 chars to confirm success
-
-# --- Reusable header for all subsequent calls ---
-AUTH=&quot;Authorization: Bearer ${TOKEN}&quot;
-BASE=&quot;https://cloudiq.apis.dell.com/rest/v1&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your_client_id&gt;&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;&lt;your_client_secret&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TOKEN_URL</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># --- Get access token ---</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOKEN_URL</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">40</span><span class="si">}</span><span class="s2">...&quot;</span><span class="w">   </span><span class="c1"># Print first 40 chars to confirm success</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># --- Reusable header for all subsequent calls ---</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/rest/v1&quot;</span>
+</code></pre></div>
 <p><strong>Token management:</strong></p>
 <table>
 <thead>
@@ -916,228 +924,228 @@ BASE=&quot;https://cloudiq.apis.dell.com/rest/v1&quot;
 </table>
 <hr />
 <h2 id="systems-api">Systems API<a class="headerlink" href="#systems-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- List all monitored systems ---
-curl -s -X GET &quot;${BASE}/systems&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# List systems with pagination (default page size: 100)
-curl -s -X GET &quot;${BASE}/systems?limit=50&amp;offset=0&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Filter systems by type (e.g. POWERFLEX, POWERMAX, UNITY_XT, POWERSTORE)
-curl -s -X GET &quot;${BASE}/systems?type=POWERMAX&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Filter systems by a specific site/location tag
-curl -s -X GET &quot;${BASE}/systems?location=DC1&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Get details for a specific system ---
-SYSTEM_ID=&quot;&lt;system-id&gt;&quot;   # From the list above; e.g. &quot;PS00xxxxxxx&quot;
-
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Key fields returned:
-#   id               – CloudIQ system identifier
-#   model            – Array model string
-#   type             – Product type (POWERMAX, UNITY_XT, etc.)
-#   health_score     – 0–100 score (100 = fully healthy)
-#   health_issue_count – Number of open health issues
-#   location         – User-defined location label
-#   firmware_version – Current firmware / software version
-#   capacity_impact  – Capacity health indicator
-
-# --- Get system health score history ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/health-scores&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Get health issues (root causes of score degradation)
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/health-issues&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># --- List all monitored systems ---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List systems with pagination (default page size: 100)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?limit=50&amp;offset=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Filter systems by type (e.g. POWERFLEX, POWERMAX, UNITY_XT, POWERSTORE)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?type=POWERMAX&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Filter systems by a specific site/location tag</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?location=DC1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># --- Get details for a specific system ---</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">&quot;&lt;system-id&gt;&quot;</span><span class="w">   </span><span class="c1"># From the list above; e.g. &quot;PS00xxxxxxx&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Key fields returned:</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#   id               – CloudIQ system identifier</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   model            – Array model string</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   type             – Product type (POWERMAX, UNITY_XT, etc.)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   health_score     – 0–100 score (100 = fully healthy)</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1">#   health_issue_count – Number of open health issues</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1">#   location         – User-defined location label</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1">#   firmware_version – Current firmware / software version</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1">#   capacity_impact  – Capacity health indicator</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># --- Get system health score history ---</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/health-scores&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="c1"># Get health issues (root causes of score degradation)</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/health-issues&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <hr />
 <h2 id="alerts-api">Alerts API<a class="headerlink" href="#alerts-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- List all active alerts ---
-curl -s -X GET &quot;${BASE}/alerts&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Filter alerts by severity ---
-# Severity values: CRITICAL, HIGH, MEDIUM, LOW, INFO
-curl -s -X GET &quot;${BASE}/alerts?severity=CRITICAL&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-curl -s -X GET &quot;${BASE}/alerts?severity=HIGH&amp;severity=CRITICAL&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Filter alerts by system ---
-curl -s -X GET &quot;${BASE}/alerts?system_id=${SYSTEM_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Filter alerts by state ---
-# States: ACTIVE, ACKNOWLEDGED, RESOLVED
-curl -s -X GET &quot;${BASE}/alerts?state=ACTIVE&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Get details for a specific alert ---
-ALERT_ID=&quot;&lt;alert-id&gt;&quot;
-
-curl -s -X GET &quot;${BASE}/alerts/${ALERT_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Key alert fields:
-#   id               – Alert identifier
-#   severity         – CRITICAL / HIGH / MEDIUM / LOW / INFO
-#   state            – ACTIVE / ACKNOWLEDGED / RESOLVED
-#   description      – Human-readable alert text
-#   resource_name    – Affected resource
-#   create_time      – ISO8601 timestamp
-#   acknowledge_time – Set when acknowledged
-
-# --- Acknowledge an alert ---
-curl -s -X PATCH &quot;${BASE}/alerts/${ALERT_ID}&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{&quot;state&quot;: &quot;ACKNOWLEDGED&quot;}' | python3 -m json.tool
-
-# --- Bulk acknowledge all CRITICAL alerts for a system (shell pipeline) ---
-curl -s -X GET &quot;${BASE}/alerts?system_id=${SYSTEM_ID}&amp;severity=CRITICAL&amp;state=ACTIVE&quot; \
-  -H &quot;${AUTH}&quot; \
-  | python3 -c &quot;
-import sys, json, subprocess, os
-alerts = json.load(sys.stdin).get('results', [])
-for a in alerts:
-    aid = a['id']
-    print(f'Acknowledging alert: {aid}')
-    subprocess.run(['curl','-s','-X','PATCH',
-      f\&quot;{os.environ['BASE']}/alerts/{aid}\&quot;,
-      '-H', os.environ['AUTH'],
-      '-H','Content-Type: application/json',
-      '-d','{\&quot;state\&quot;:\&quot;ACKNOWLEDGED\&quot;}'
-    ])
-&quot; BASE=&quot;${BASE}&quot; AUTH=&quot;${AUTH}&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># --- List all active alerts ---</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># --- Filter alerts by severity ---</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Severity values: CRITICAL, HIGH, MEDIUM, LOW, INFO</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts?severity=CRITICAL&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts?severity=HIGH&amp;severity=CRITICAL&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># --- Filter alerts by system ---</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts?system_id=</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># --- Filter alerts by state ---</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># States: ACTIVE, ACKNOWLEDGED, RESOLVED</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts?state=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># --- Get details for a specific alert ---</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="nv">ALERT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;alert-id&gt;&quot;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts/</span><span class="si">${</span><span class="nv">ALERT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Key alert fields:</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1">#   id               – Alert identifier</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1">#   severity         – CRITICAL / HIGH / MEDIUM / LOW / INFO</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1">#   state            – ACTIVE / ACKNOWLEDGED / RESOLVED</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1">#   description      – Human-readable alert text</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1">#   resource_name    – Affected resource</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="c1">#   create_time      – ISO8601 timestamp</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1">#   acknowledge_time – Set when acknowledged</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="c1"># --- Acknowledge an alert ---</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts/</span><span class="si">${</span><span class="nv">ALERT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;state&quot;: &quot;ACKNOWLEDGED&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="c1"># --- Bulk acknowledge all CRITICAL alerts for a system (shell pipeline) ---</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts?system_id=</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&amp;severity=CRITICAL&amp;state=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="s2">import sys, json, subprocess, os</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="s2">alerts = json.load(sys.stdin).get(&#39;results&#39;, [])</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="s2">for a in alerts:</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="s2">    aid = a[&#39;id&#39;]</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="s2">    print(f&#39;Acknowledging alert: {aid}&#39;)</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="s2">    subprocess.run([&#39;curl&#39;,&#39;-s&#39;,&#39;-X&#39;,&#39;PATCH&#39;,</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="s2">      f\&quot;{os.environ[&#39;BASE&#39;]}/alerts/{aid}\&quot;,</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="s2">      &#39;-H&#39;, os.environ[&#39;AUTH&#39;],</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="s2">      &#39;-H&#39;,&#39;Content-Type: application/json&#39;,</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="s2">      &#39;-d&#39;,&#39;{\&quot;state\&quot;:\&quot;ACKNOWLEDGED\&quot;}&#39;</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="s2">    ])</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a><span class="s2">&quot;</span><span class="w"> </span><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="capacity-api">Capacity API<a class="headerlink" href="#capacity-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- Current capacity utilisation for a system ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/capacity&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Key capacity fields:
-#   total_subscribed_capacity_gb – Logical size allocated to hosts
-#   total_used_capacity_gb       – Physical data written
-#   total_physical_capacity_gb   – Raw usable capacity
-#   percent_used                 – Physical used %
-#   days_to_full                 – Forecast days until full (based on trend)
-#   forecast_confidence          – LOW / MEDIUM / HIGH
-
-# --- Capacity forecast ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/capacity/forecast&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Forecast with custom horizon (30 / 60 / 90 days)
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/capacity/forecast?days=90&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Capacity trending over time ---
-# Get capacity data points for the last 30 days
-END=$(date -u +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-START=$(date -u -v-30d +&quot;%Y-%m-%dT%H:%M:%SZ&quot; 2&gt;/dev/null \
-        || date -u -d &quot;30 days ago&quot; +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-
-curl -s -X GET \
-  &quot;${BASE}/systems/${SYSTEM_ID}/capacity/metrics?start_time=${START}&amp;end_time=${END}&amp;granularity=DAILY&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- List all systems approaching capacity (&gt;80% full) ---
-curl -s -X GET &quot;${BASE}/systems&quot; \
-  -H &quot;${AUTH}&quot; \
-  | python3 -c &quot;
-import sys, json
-data = json.load(sys.stdin)
-for s in data.get('results', []):
-    pct = s.get('percent_used', 0)
-    if pct and float(pct) &gt; 80:
-        print(f\&quot;{s['id']}  {s.get('model','?')}  used={pct}%  days_to_full={s.get('days_to_full','?')}\&quot;)&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># --- Current capacity utilisation for a system ---</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Key capacity fields:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   total_subscribed_capacity_gb – Logical size allocated to hosts</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   total_used_capacity_gb       – Physical data written</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   total_physical_capacity_gb   – Raw usable capacity</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">#   percent_used                 – Physical used %</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   days_to_full                 – Forecast days until full (based on trend)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">#   forecast_confidence          – LOW / MEDIUM / HIGH</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># --- Capacity forecast ---</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity/forecast&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Forecast with custom horizon (30 / 60 / 90 days)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity/forecast?days=90&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># --- Capacity trending over time ---</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Get capacity data points for the last 30 days</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nv">END</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nv">START</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-30d<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">        </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;30 days ago&quot;</span><span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity/metrics?start_time=</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">&amp;end_time=</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">&amp;granularity=DAILY&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="c1"># --- List all systems approaching capacity (&gt;80% full) ---</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="s2">for s in data.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="s2">    pct = s.get(&#39;percent_used&#39;, 0)</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="s2">    if pct and float(pct) &gt; 80:</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="s2">        print(f\&quot;{s[&#39;id&#39;]}  {s.get(&#39;model&#39;,&#39;?&#39;)}  used={pct}%  days_to_full={s.get(&#39;days_to_full&#39;,&#39;?&#39;)}\&quot;)&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="performance-api">Performance API<a class="headerlink" href="#performance-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- Get available performance metric types for a system ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/metrics/query&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Query performance metrics ---
-# Common metric keys: iops, throughput_mb, latency_ms, bandwidth_mb
-curl -s -X POST &quot;${BASE}/systems/${SYSTEM_ID}/metrics/query&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{
-    \&quot;metrics\&quot;: [\&quot;iops\&quot;, \&quot;latency_ms\&quot;, \&quot;throughput_mb\&quot;],
-    \&quot;start_time\&quot;: \&quot;${START}\&quot;,
-    \&quot;end_time\&quot;: \&quot;${END}\&quot;,
-    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;
-  }&quot; | python3 -m json.tool
-
-# --- Get real-time (latest) metrics ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/metrics/last&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Get storage object-level metrics (volumes, pools) ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/storage-pools&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Get metrics for a specific storage pool
-POOL_ID=&quot;&lt;pool-id&gt;&quot;
-curl -s -X POST &quot;${BASE}/systems/${SYSTEM_ID}/storage-pools/${POOL_ID}/metrics/query&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{
-    \&quot;metrics\&quot;: [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],
-    \&quot;start_time\&quot;: \&quot;${START}\&quot;,
-    \&quot;end_time\&quot;: \&quot;${END}\&quot;,
-    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;
-  }&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># --- Get available performance metric types for a system ---</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># --- Query performance metrics ---</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Common metric keys: iops, throughput_mb, latency_ms, bandwidth_mb</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    \&quot;metrics\&quot;: [\&quot;iops\&quot;, \&quot;latency_ms\&quot;, \&quot;throughput_mb\&quot;],</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    \&quot;start_time\&quot;: \&quot;</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">    \&quot;end_time\&quot;: \&quot;</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># --- Get real-time (latest) metrics ---</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/last&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># --- Get storage object-level metrics (volumes, pools) ---</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/storage-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Get metrics for a specific storage pool</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="nv">POOL_ID</span><span class="o">=</span><span class="s2">&quot;&lt;pool-id&gt;&quot;</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/storage-pools/</span><span class="si">${</span><span class="nv">POOL_ID</span><span class="si">}</span><span class="s2">/metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s2">    \&quot;metrics\&quot;: [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="s2">    \&quot;start_time\&quot;: \&quot;</span><span class="si">${</span><span class="nv">START</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="s2">    \&quot;end_time\&quot;: \&quot;</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="s2">    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <hr />
 <h2 id="tags-api">Tags API<a class="headerlink" href="#tags-api" title="Permanent link">&para;</a></h2>
 <p>Tags in CloudIQ allow grouping and filtering systems by environment, owner, location, or any custom label.</p>
-<pre><code class="language-bash"># --- List all existing tags ---
-curl -s -X GET &quot;${BASE}/tags&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Create a new tag ---
-curl -s -X POST &quot;${BASE}/tags&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d '{
-    &quot;name&quot;: &quot;env:production&quot;,
-    &quot;description&quot;: &quot;Production environment systems&quot;
-  }' | python3 -m json.tool
-
-TAG_ID=&quot;&lt;tag-id&gt;&quot;   # Returned from the create response
-
-# --- Assign a tag to a system ---
-curl -s -X POST &quot;${BASE}/systems/${SYSTEM_ID}/tags&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{\&quot;tag_ids\&quot;: [\&quot;${TAG_ID}\&quot;]}&quot; | python3 -m json.tool
-
-# --- List tags assigned to a system ---
-curl -s -X GET &quot;${BASE}/systems/${SYSTEM_ID}/tags&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Remove a tag from a system ---
-curl -s -X DELETE &quot;${BASE}/systems/${SYSTEM_ID}/tags/${TAG_ID}&quot; \
-  -H &quot;${AUTH}&quot;
-
-# --- Filter systems by tag ---
-curl -s -X GET &quot;${BASE}/systems?tag_id=${TAG_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Delete a tag (removes it globally) ---
-curl -s -X DELETE &quot;${BASE}/tags/${TAG_ID}&quot; \
-  -H &quot;${AUTH}&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># --- List all existing tags ---</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># --- Create a new tag ---</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    &quot;name&quot;: &quot;env:production&quot;,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">    &quot;description&quot;: &quot;Production environment systems&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">TAG_ID</span><span class="o">=</span><span class="s2">&quot;&lt;tag-id&gt;&quot;</span><span class="w">   </span><span class="c1"># Returned from the create response</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># --- Assign a tag to a system ---</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;tag_ids\&quot;: [\&quot;</span><span class="si">${</span><span class="nv">TAG_ID</span><span class="si">}</span><span class="s2">\&quot;]}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># --- List tags assigned to a system ---</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c1"># --- Remove a tag from a system ---</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/tags/</span><span class="si">${</span><span class="nv">TAG_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="c1"># --- Filter systems by tag ---</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?tag_id=</span><span class="si">${</span><span class="nv">TAG_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="c1"># --- Delete a tag (removes it globally) ---</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/tags/</span><span class="si">${</span><span class="nv">TAG_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
 
 
 

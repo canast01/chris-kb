@@ -901,48 +901,48 @@
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Pull recent high-priority security events
-Get-WinEvent -FilterHashtable @{
-  LogName = 'Security'
-  Id      = @(4720, 4728, 7045, 4698)
-  StartTime = (Get-Date).AddHours(-24)
-} | Select-Object TimeCreated, Id, Message | Format-List
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Pull recent high-priority security events</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">LogName</span> <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="n">Id</span>      <span class="p">=</span> <span class="p">@(</span><span class="n">4720</span><span class="p">,</span> <span class="n">4728</span><span class="p">,</span> <span class="n">7045</span><span class="p">,</span> <span class="n">4698</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+</code></pre></div>
 <h2 id="linux-security-monitoring">Linux Security Monitoring<a class="headerlink" href="#linux-security-monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Failed SSH attempts in last hour
-grep &quot;Failed password&quot; /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -10
-
-# Successful root logins
-grep &quot;session opened for user root&quot; /var/log/auth.log | tail -20
-
-# New users created
-grep &quot;useradd\|adduser&quot; /var/log/auth.log | tail -20
-
-# Sudo usage
-grep &quot;sudo:&quot; /var/log/auth.log | grep -v &quot;pam_unix&quot; | tail -30
-
-# Check auditd rules
-auditctl -l
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Failed SSH attempts in last hour</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $11}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Successful root logins</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>grep<span class="w"> </span><span class="s2">&quot;session opened for user root&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># New users created</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>grep<span class="w"> </span><span class="s2">&quot;useradd\|adduser&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Sudo usage</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>grep<span class="w"> </span><span class="s2">&quot;sudo:&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;pam_unix&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check auditd rules</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>auditctl<span class="w"> </span>-l
+</code></pre></div>
 <h2 id="correlation-rules-siem-examples">Correlation Rules (SIEM Examples)<a class="headerlink" href="#correlation-rules-siem-examples" title="Permanent link">&para;</a></h2>
-<p><strong>Brute force detection:</strong></p>
-<pre><code># &gt;10 failed logons from same source in 5 minutes
-index=security EventCode=4625
-| stats count by src_ip, user
-| where count &gt; 10
-</code></pre>
-<p><strong>Lateral movement — new admin account:</strong></p>
-<pre><code># Account created then added to privileged group within 60 minutes
-index=security (EventCode=4720 OR EventCode=4728)
-| transaction user maxspan=60m
-| where eventcount &gt; 1
-</code></pre>
-<p><strong>Off-hours privileged access:</strong></p>
-<pre><code>index=security EventCode=4648
-| eval hour=strftime(_time,&quot;%H&quot;)
-| where hour &lt; 6 OR hour &gt; 20
-| table _time, user, src_ip, dest
-</code></pre>
+<p><strong>Brute force detection:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># &gt;10 failed logons from same source in 5 minutes
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>index=security EventCode=4625
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| stats count by src_ip, user
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| where count &gt; 10
+</code></pre></div></p>
+<p><strong>Lateral movement — new admin account:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Account created then added to privileged group within 60 minutes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index=security (EventCode=4720 OR EventCode=4728)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>| transaction user maxspan=60m
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>| where eventcount &gt; 1
+</code></pre></div></p>
+<p><strong>Off-hours privileged access:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>index=security EventCode=4648
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>| eval hour=strftime(_time,&quot;%H&quot;)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| where hour &lt; 6 OR hour &gt; 20
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| table _time, user, src_ip, dest
+</code></pre></div></p>
 <h2 id="threat-detection-sources">Threat Detection Sources<a class="headerlink" href="#threat-detection-sources" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

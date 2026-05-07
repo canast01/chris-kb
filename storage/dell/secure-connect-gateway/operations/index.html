@@ -802,37 +802,62 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Confirm SCG appliance service is running (<code>dsagw status</code> — expect <code>active (running)</code>)</li>
-<li>[ ] Confirm all expected devices are listed and show a CONNECTED state (<code>dsagw list-devices</code>)</li>
-<li>[ ] Confirm no connectivity failures in the last 24 hours (review SCG event log or CloudIQ for "Not Reporting" systems)</li>
-<li>[ ] Confirm proactive alert forwarding is active — at least one SupportAssist test event should have forwarded successfully this week</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Confirm SCG appliance service is running (<code>dsagw status</code></td>
+<td><code>dsagw status</code></td>
+<td>expect <code>active (running)</code>)</td>
+</tr>
+<tr>
+<td>[ ] Confirm all expected devices are listed and show a CONNECTED state</td>
+<td><code>dsagw list-devices</code></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm no connectivity failures in the last 24 hours (review SCG</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>[ ] Confirm proactive alert forwarding is active</td>
+<td></td>
+<td>at least one SupportAssist test event should have forwarded successfully this week</td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SSH to the SCG appliance
-ssh admin@&lt;scg_appliance_ip&gt;
-
-# Check SCG gateway service status
-dsagw status
-
-# List all registered devices and their connectivity state
-dsagw list-devices
-
-# Show SCG version and build information
-dsagw version
-
-# Check recent SCG event log for errors or connectivity failures
-dsagw log show --last 100
-
-# Test connectivity to Dell backend (SupportAssist cloud)
-dsagw connectivity-check
-
-# Check TLS certificate validity (confirm cert is not near expiry)
-dsagw certificate show
-
-# Check proxy configuration (if SCG uses an outbound proxy)
-dsagw proxy show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the SCG appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;scg_appliance_ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check SCG gateway service status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dsagw<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all registered devices and their connectivity state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dsagw<span class="w"> </span>list-devices
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show SCG version and build information</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>dsagw<span class="w"> </span>version
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check recent SCG event log for errors or connectivity failures</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>dsagw<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>--last<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Test connectivity to Dell backend (SupportAssist cloud)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>dsagw<span class="w"> </span>connectivity-check
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check TLS certificate validity (confirm cert is not near expiry)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>dsagw<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Check proxy configuration (if SCG uses an outbound proxy)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>dsagw<span class="w"> </span>proxy<span class="w"> </span>show
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Confirm all connected devices are currently sending telemetry (<code>dsagw list-devices</code> — all CONNECTED)</li>
@@ -931,23 +956,25 @@ dsagw proxy show
 <li>Take a VM snapshot of the SCG appliance before beginning</li>
 <li>Notify stakeholders that SupportAssist auto-case creation will be briefly interrupted</li>
 <li>Stop the SCG service gracefully if required by the patch:
-   <code>bash
-   dsagw stop</code></li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dsagw<span class="w"> </span>stop
+</code></pre></div></li>
 <li>Apply the SCG patch/upgrade using the offline or online update method:
-   ```bash
-   # Online update (if SCG has internet access)
-   dsagw update</li>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Online update (if SCG has internet access)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dsagw<span class="w"> </span>update
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Offline update (upload update bundle first)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dsagw<span class="w"> </span>update<span class="w"> </span>--bundle<span class="w"> </span>/path/to/scg_update_bundle.bin
+</code></pre></div></li>
+<li>Start the SCG service after the update:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dsagw<span class="w"> </span>start
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dsagw<span class="w"> </span>status
+</code></pre></div></li>
+<li>Re-validate device connectivity:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dsagw<span class="w"> </span>list-devices
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dsagw<span class="w"> </span>connectivity-check
+</code></pre></div></li>
+<li>Delete the VM snapshot once validation is complete</li>
 </ol>
-<p># Offline update (upload update bundle first)
-   dsagw update --bundle /path/to/scg_update_bundle.bin
-   <code>5. Start the SCG service after the update:</code>bash
-   dsagw start
-   dsagw status
-   <code>6. Re-validate device connectivity:</code>bash
-   dsagw list-devices
-   dsagw connectivity-check
-   ```
-7. Delete the VM snapshot once validation is complete</p>
 <h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] <code>dsagw status</code> confirms service is <code>active (running)</code></li>

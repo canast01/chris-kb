@@ -837,35 +837,35 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List Recovery Services vaults
-az backup vault list --query '[*].{Name:name,RG:resourceGroup,Location:location}' -o table
-
-# List replicated items (VMs) in a vault
-az site-recovery protected-item list \
-  --vault-name &lt;vault-name&gt; -g &lt;rg&gt; \
-  --query '[*].{VM:name,State:properties.protectionState,Health:properties.replicationHealth}' -o table
-
-# Trigger test failover (non-destructive — creates test VMs in isolation)
-az site-recovery protected-item failover-cancel \
-  --vault-name &lt;vault-name&gt; -g &lt;rg&gt; \
-  --fabric-name &lt;target-fabric&gt; \
-  --protection-container-name &lt;container&gt; \
-  --replicated-protected-item-name &lt;item-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List Recovery Services vaults</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,Location:location}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List replicated items (VMs) in a vault</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>site-recovery<span class="w"> </span>protected-item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{VM:name,State:properties.protectionState,Health:properties.replicationHealth}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Trigger test failover (non-destructive — creates test VMs in isolation)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>site-recovery<span class="w"> </span>protected-item<span class="w"> </span>failover-cancel<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--fabric-name<span class="w"> </span>&lt;target-fabric&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--protection-container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--replicated-protected-item-name<span class="w"> </span>&lt;item-name&gt;
+</code></pre></div>
 <h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
 <p><strong>Portal checks (daily):</strong>
 1. Recovery Services vault → <strong>Replicated items</strong> — all items show <code>Protected</code> and <code>Healthy</code>
 2. Review <strong>Replication health</strong> — no warnings or errors
 3. Check <strong>RPO</strong> compliance — green means within SLA
 4. Review <strong>Jobs</strong> → any failed jobs from last 24 hours</p>
-<pre><code class="language-bash"># Get replication health for all items
-az site-recovery replication-protected-item list \
-  --vault-name &lt;vault-name&gt; \
-  --resource-group &lt;rg&gt; \
-  --fabric-name &lt;primary-fabric&gt; \
-  --protection-container-name &lt;container&gt; \
-  --query '[*].{Name:name,State:properties.protectionState,Health:properties.replicationHealth,RPO:properties.rpoInSeconds}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get replication health for all items</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>site-recovery<span class="w"> </span>replication-protected-item<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--vault-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--fabric-name<span class="w"> </span>&lt;primary-fabric&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--protection-container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,State:properties.protectionState,Health:properties.replicationHealth,RPO:properties.rpoInSeconds}&#39;</span>
+</code></pre></div>
 <h2 id="test-failover-workflow">Test Failover Workflow<a class="headerlink" href="#test-failover-workflow" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Portal: Vault → Replicated items → select VM → <strong>Test Failover</strong></li>

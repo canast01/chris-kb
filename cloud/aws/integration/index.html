@@ -810,93 +810,93 @@
 <h1 id="aws-integration">AWS Integration<a class="headerlink" href="#aws-integration" title="Permanent link">&para;</a></h1>
 <h2 id="direct-connect-vpn">Direct Connect + VPN<a class="headerlink" href="#direct-connect-vpn" title="Permanent link">&para;</a></h2>
 <p>On-premises to AWS connectivity:</p>
-<pre><code class="language-bash"># Check Direct Connect connection status
-aws directconnect describe-connections --query 'connections[*].[connectionId,connectionName,connectionState]'
-
-# Check Virtual Interface BGP state
-aws directconnect describe-virtual-interfaces --query 'virtualInterfaces[*].[virtualInterfaceId,bgpPeers]'
-
-# Verify Transit Gateway route tables
-aws ec2 describe-transit-gateway-route-tables
-aws ec2 search-transit-gateway-routes --transit-gateway-route-table-id &lt;tgw-rtb-id&gt; --filters &quot;Name=state,Values=active&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Direct Connect connection status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-connections<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;connections[*].[connectionId,connectionName,connectionState]&#39;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check Virtual Interface BGP state</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[*].[virtualInterfaceId,bgpPeers]&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify Transit Gateway route tables</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-transit-gateway-route-tables
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>search-transit-gateway-routes<span class="w"> </span>--transit-gateway-route-table-id<span class="w"> </span>&lt;tgw-rtb-id&gt;<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=state,Values=active&quot;</span>
+</code></pre></div>
 <p>VPN is configured as a backup to Direct Connect with lower BGP preference (AS-Path prepend or local preference).</p>
 <h2 id="active-directory">Active Directory<a class="headerlink" href="#active-directory" title="Permanent link">&para;</a></h2>
-<p><strong>AWS Managed Microsoft AD</strong> (new deployments):</p>
-<pre><code class="language-bash"># Create managed AD
-aws ds create-microsoft-ad --name corp.local --password &lt;pwd&gt; --vpc-settings VpcId=&lt;vpc&gt;,SubnetIds=&lt;sub1&gt;,&lt;sub2&gt;
-</code></pre>
-<p><strong>AD Connector</strong> (proxy authentication to on-premises AD without replication):</p>
-<pre><code class="language-bash">aws ds create-ad-connector --name corp.local --password &lt;svc-account-pwd&gt; \
-    --connect-settings VpcId=&lt;vpc&gt;,SubnetIds=&lt;sub1&gt;,&lt;sub2&gt;,CustomerDnsIps=&lt;dc1-ip&gt;,&lt;dc2-ip&gt;,CustomerUserName=svc_aws_connector
-</code></pre>
+<p><strong>AWS Managed Microsoft AD</strong> (new deployments):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create managed AD</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ds<span class="w"> </span>create-microsoft-ad<span class="w"> </span>--name<span class="w"> </span>corp.local<span class="w"> </span>--password<span class="w"> </span>&lt;pwd&gt;<span class="w"> </span>--vpc-settings<span class="w"> </span><span class="nv">VpcId</span><span class="o">=</span>&lt;vpc&gt;,SubnetIds<span class="o">=</span>&lt;sub1&gt;,&lt;sub2&gt;
+</code></pre></div></p>
+<p><strong>AD Connector</strong> (proxy authentication to on-premises AD without replication):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>ds<span class="w"> </span>create-ad-connector<span class="w"> </span>--name<span class="w"> </span>corp.local<span class="w"> </span>--password<span class="w"> </span>&lt;svc-account-pwd&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span>--connect-settings<span class="w"> </span><span class="nv">VpcId</span><span class="o">=</span>&lt;vpc&gt;,SubnetIds<span class="o">=</span>&lt;sub1&gt;,&lt;sub2&gt;,CustomerDnsIps<span class="o">=</span>&lt;dc1-ip&gt;,&lt;dc2-ip&gt;,CustomerUserName<span class="o">=</span>svc_aws_connector
+</code></pre></div></p>
 <h2 id="iam-identity-center-sso">IAM Identity Center (SSO)<a class="headerlink" href="#iam-identity-center-sso" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List permission sets
-aws sso-admin list-permission-sets --instance-arn &lt;sso-instance-arn&gt;
-
-# List account assignments for a permission set
-aws sso-admin list-account-assignments --instance-arn &lt;sso-arn&gt; \
-    --account-id &lt;account-id&gt; --permission-set-arn &lt;permission-set-arn&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List permission sets</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>sso-admin<span class="w"> </span>list-permission-sets<span class="w"> </span>--instance-arn<span class="w"> </span>&lt;sso-instance-arn&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List account assignments for a permission set</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>aws<span class="w"> </span>sso-admin<span class="w"> </span>list-account-assignments<span class="w"> </span>--instance-arn<span class="w"> </span>&lt;sso-arn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--account-id<span class="w"> </span>&lt;account-id&gt;<span class="w"> </span>--permission-set-arn<span class="w"> </span>&lt;permission-set-arn&gt;
+</code></pre></div>
 <h2 id="cloudtrail-to-siem">CloudTrail to SIEM<a class="headerlink" href="#cloudtrail-to-siem" title="Permanent link">&para;</a></h2>
 <p>Centralise CloudTrail logs to the log-archive account:</p>
-<pre><code class="language-bash"># Verify CloudTrail is enabled in all regions
-aws cloudtrail describe-trails --include-shadow-trails
-
-# Verify log delivery is healthy
-aws cloudtrail get-trail-status --name &lt;trail-name&gt; | jq '{LatestDeliveryTime, LatestDeliveryError}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify CloudTrail is enabled in all regions</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>describe-trails<span class="w"> </span>--include-shadow-trails
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify log delivery is healthy</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>get-trail-status<span class="w"> </span>--name<span class="w"> </span>&lt;trail-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{LatestDeliveryTime, LatestDeliveryError}&#39;</span>
+</code></pre></div>
 <p>Stream to Splunk/Elastic via Kinesis Firehose:
 1. Create Kinesis Data Firehose delivery stream to SIEM endpoint
 2. Configure CloudWatch Logs subscription filter → Kinesis Firehose
 3. Or use EventBridge → Lambda → SIEM API for enriched forwarding</p>
 <h2 id="aws-backup">AWS Backup<a class="headerlink" href="#aws-backup" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List backup plans
-aws backup list-backup-plans
-
-# Create backup plan for EC2 and RDS
-aws backup create-backup-plan --backup-plan '{
-  &quot;BackupPlanName&quot;: &quot;prod-daily&quot;,
-  &quot;Rules&quot;: [{
-    &quot;RuleName&quot;: &quot;Daily&quot;,
-    &quot;TargetBackupVaultName&quot;: &quot;prod-vault&quot;,
-    &quot;ScheduleExpression&quot;: &quot;cron(0 2 * * ? *)&quot;,
-    &quot;DeleteAfterDays&quot;: 30
-  }]
-}'
-
-# Enable cross-account backup (to log-archive account)
-aws backup put-backup-vault-access-policy --backup-vault-name prod-vault --policy file://vault-policy.json
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List backup plans</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>backup<span class="w"> </span>list-backup-plans
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Create backup plan for EC2 and RDS</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aws<span class="w"> </span>backup<span class="w"> </span>create-backup-plan<span class="w"> </span>--backup-plan<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">  &quot;BackupPlanName&quot;: &quot;prod-daily&quot;,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">  &quot;Rules&quot;: [{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;RuleName&quot;: &quot;Daily&quot;,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;TargetBackupVaultName&quot;: &quot;prod-vault&quot;,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    &quot;ScheduleExpression&quot;: &quot;cron(0 2 * * ? *)&quot;,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">    &quot;DeleteAfterDays&quot;: 30</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">  }]</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">}&#39;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Enable cross-account backup (to log-archive account)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>aws<span class="w"> </span>backup<span class="w"> </span>put-backup-vault-access-policy<span class="w"> </span>--backup-vault-name<span class="w"> </span>prod-vault<span class="w"> </span>--policy<span class="w"> </span>file://vault-policy.json
+</code></pre></div>
 <h2 id="github-actions-oidc">GitHub Actions + OIDC<a class="headerlink" href="#github-actions-oidc" title="Permanent link">&para;</a></h2>
 <p>No static access keys — use OIDC federation:</p>
-<pre><code class="language-yaml"># .github/workflows/deploy.yml
-- uses: aws-actions/configure-aws-credentials@v4
-  with:
-    role-to-assume: arn:aws:iam::&lt;account-id&gt;:role/github-actions-deploy
-    aws-region: eu-west-1
-</code></pre>
-<p>IAM trust policy for the role:</p>
-<pre><code class="language-json">{
-  &quot;Condition&quot;: {
-    &quot;StringEquals&quot;: {
-      &quot;token.actions.githubusercontent.com:sub&quot;: &quot;repo:org/repo:ref:refs/heads/main&quot;
-    }
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .github/workflows/deploy.yml</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::&lt;account-id&gt;:role/github-actions-deploy</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eu-west-1</span>
+</code></pre></div>
+<p>IAM trust policy for the role:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="nt">&quot;token.actions.githubusercontent.com:sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;repo:org/repo:ref:refs/heads/main&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
+</code></pre></div></p>
 <h2 id="terraform-remote-state">Terraform Remote State<a class="headerlink" href="#terraform-remote-state" title="Permanent link">&para;</a></h2>
-<pre><code class="language-hcl"># backend.tf
-terraform {
-  backend &quot;s3&quot; {
-    bucket         = &quot;corp-terraform-state-prod&quot;
-    key            = &quot;prod/vpc/terraform.tfstate&quot;
-    region         = &quot;eu-west-1&quot;
-    dynamodb_table = &quot;corp-terraform-locks&quot;
-    encrypt        = true
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># backend.tf</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;corp-terraform-state-prod&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod/vpc/terraform.tfstate&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;corp-terraform-locks&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
+</code></pre></div>
 <p>One state bucket per environment; versioning and MFA-delete enabled on state bucket.</p>
 
 

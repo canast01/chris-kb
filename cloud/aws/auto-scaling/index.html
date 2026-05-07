@@ -819,73 +819,73 @@
 </tbody>
 </table>
 <h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List Auto Scaling groups
-aws autoscaling describe-auto-scaling-groups \
-  --query 'AutoScalingGroups[*].{Name:AutoScalingGroupName,Min:MinSize,Max:MaxSize,Desired:DesiredCapacity,Instances:length(Instances)}' \
-  --output table
-
-# List instances in an ASG
-aws autoscaling describe-auto-scaling-instances \
-  --query 'AutoScalingInstances[?AutoScalingGroupName==`&lt;asg-name&gt;`].{ID:InstanceId,State:LifecycleState,Health:HealthStatus,AZ:AvailabilityZone}' \
-  --output table
-
-# Update desired capacity manually
-aws autoscaling set-desired-capacity \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --desired-capacity 5
-
-# Suspend scaling processes (for maintenance)
-aws autoscaling suspend-processes \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --scaling-processes Launch Terminate HealthCheck
-
-# Resume after maintenance
-aws autoscaling resume-processes \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --scaling-processes Launch Terminate HealthCheck
-
-# Detach an instance (remove without terminating — useful for debugging)
-aws autoscaling detach-instances \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --instance-ids &lt;i-id&gt; \
-  --should-decrement-desired-capacity
-
-# Terminate an instance and replace it
-aws autoscaling terminate-instance-in-auto-scaling-group \
-  --instance-id &lt;i-id&gt; \
-  --should-decrement-desired-capacity false
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List Auto Scaling groups</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>describe-auto-scaling-groups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;AutoScalingGroups[*].{Name:AutoScalingGroupName,Min:MinSize,Max:MaxSize,Desired:DesiredCapacity,Instances:length(Instances)}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># List instances in an ASG</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>describe-auto-scaling-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;AutoScalingInstances[?AutoScalingGroupName==`&lt;asg-name&gt;`].{ID:InstanceId,State:LifecycleState,Health:HealthStatus,AZ:AvailabilityZone}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Update desired capacity manually</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>set-desired-capacity<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--desired-capacity<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Suspend scaling processes (for maintenance)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>suspend-processes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--scaling-processes<span class="w"> </span>Launch<span class="w"> </span>Terminate<span class="w"> </span>HealthCheck
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Resume after maintenance</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>resume-processes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--scaling-processes<span class="w"> </span>Launch<span class="w"> </span>Terminate<span class="w"> </span>HealthCheck
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Detach an instance (remove without terminating — useful for debugging)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>detach-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;i-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">  </span>--should-decrement-desired-capacity
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Terminate an instance and replace it</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>terminate-instance-in-auto-scaling-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;i-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span>--should-decrement-desired-capacity<span class="w"> </span><span class="nb">false</span>
+</code></pre></div>
 <h2 id="scaling-policies">Scaling Policies<a class="headerlink" href="#scaling-policies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Target tracking — keep CPU at 60%
-aws autoscaling put-scaling-policy \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --policy-name cpu-target-tracking \
-  --policy-type TargetTrackingScaling \
-  --target-tracking-configuration '{
-    &quot;PredefinedMetricSpecification&quot;: {&quot;PredefinedMetricType&quot;: &quot;ASGAverageCPUUtilization&quot;},
-    &quot;TargetValue&quot;: 60.0,
-    &quot;DisableScaleIn&quot;: false
-  }'
-
-# Scheduled action — scale up before business hours
-aws autoscaling put-scheduled-update-group-action \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --scheduled-action-name morning-scale-up \
-  --recurrence &quot;0 7 * * 1-5&quot; \
-  --min-size 4 \
-  --desired-capacity 6
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Target tracking — keep CPU at 60%</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>put-scaling-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--policy-name<span class="w"> </span>cpu-target-tracking<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--policy-type<span class="w"> </span>TargetTrackingScaling<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--target-tracking-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;PredefinedMetricSpecification&quot;: {&quot;PredefinedMetricType&quot;: &quot;ASGAverageCPUUtilization&quot;},</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;TargetValue&quot;: 60.0,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;DisableScaleIn&quot;: false</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Scheduled action — scale up before business hours</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>put-scheduled-update-group-action<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--scheduled-action-name<span class="w"> </span>morning-scale-up<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--recurrence<span class="w"> </span><span class="s2">&quot;0 7 * * 1-5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--min-size<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--desired-capacity<span class="w"> </span><span class="m">6</span>
+</code></pre></div>
 <h2 id="instance-refresh-rolling-replacement">Instance Refresh (rolling replacement)<a class="headerlink" href="#instance-refresh-rolling-replacement" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Replace all instances gradually with new launch template version
-aws autoscaling start-instance-refresh \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --preferences '{&quot;MinHealthyPercentage&quot;: 90, &quot;InstanceWarmup&quot;: 300}'
-
-# Check refresh status
-aws autoscaling describe-instance-refreshes \
-  --auto-scaling-group-name &lt;asg-name&gt; \
-  --query 'InstanceRefreshes[0].{Status:Status,Progress:PercentageComplete,Reason:StatusReason}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Replace all instances gradually with new launch template version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>start-instance-refresh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--preferences<span class="w"> </span><span class="s1">&#39;{&quot;MinHealthyPercentage&quot;: 90, &quot;InstanceWarmup&quot;: 300}&#39;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check refresh status</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>describe-instance-refreshes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;asg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceRefreshes[0].{Status:Status,Progress:PercentageComplete,Reason:StatusReason}&#39;</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

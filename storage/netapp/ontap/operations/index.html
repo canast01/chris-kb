@@ -802,16 +802,57 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>cluster show</code> — verify all nodes are healthy and HA pairs are configured</li>
-<li>[ ] Run <code>storage disk show -broken</code> — confirm zero broken or failed disks</li>
-<li>[ ] Run <code>storage aggregate show -fields used-percent</code> — flag any aggregate above 85% used</li>
-<li>[ ] Run <code>snapmirror show -fields lag-time,healthy</code> — confirm all relationships healthy and lag within RPO</li>
-<li>[ ] Run <code>system health alert show</code> — review and action any active health alerts</li>
-<li>[ ] Run <code>storage failover show</code> — confirm HA takeover state is normal on all nodes</li>
-<li>[ ] Run <code>volume show -fields volume,state,percent-used</code> — confirm all volumes are online and below threshold</li>
-<li>[ ] Run <code>event log show -messagename callhome.*</code> — check for any callhome EMS events since last check</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Run <code>cluster show</code></td>
+<td><code>cluster show</code></td>
+<td>verify all nodes are healthy and HA pairs are configured</td>
+</tr>
+<tr>
+<td>[ ] Run <code>storage disk show -broken</code></td>
+<td><code>storage disk show -broken</code></td>
+<td>confirm zero broken or failed disks</td>
+</tr>
+<tr>
+<td>[ ] Run <code>storage aggregate show -fields used-percent</code></td>
+<td><code>storage aggregate show -fields used-percent</code></td>
+<td>flag any aggregate above 85% used</td>
+</tr>
+<tr>
+<td>[ ] Run <code>snapmirror show -fields lag-time,healthy</code></td>
+<td><code>snapmirror show -fields lag-time,healthy</code></td>
+<td>confirm all relationships healthy and lag within RPO</td>
+</tr>
+<tr>
+<td>[ ] Run <code>system health alert show</code></td>
+<td><code>system health alert show</code></td>
+<td>review and action any active health alerts</td>
+</tr>
+<tr>
+<td>[ ] Run <code>storage failover show</code></td>
+<td><code>storage failover show</code></td>
+<td>confirm HA takeover state is normal on all nodes</td>
+</tr>
+<tr>
+<td>[ ] Run <code>volume show -fields volume,state,percent-used</code></td>
+<td><code>volume show -fields volume,state,percent-used</code></td>
+<td>confirm all volumes are online and below threshold</td>
+</tr>
+<tr>
+<td>[ ] Run <code>event log show -messagename callhome.*</code></td>
+<td><code>event log show -messagename callhome.*</code></td>
+<td>check for any callhome EMS events since last check</td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Cluster node count and status match expected inventory</li>
@@ -823,32 +864,32 @@
 <li>[ ] Network interfaces all online: <code>network interface show -status-oper down</code> returns no results</li>
 <li>[ ] AutoSupport last sent within expected interval: <code>autosupport history show</code></li>
 </ul>
-<pre><code class="language-bash"># Cluster node and HA status
-cluster show
-storage failover show
-
-# Aggregate capacity — flag anything above 85%
-storage aggregate show -fields aggr-name,used-percent,state
-
-# Volume space usage across all SVMs
-volume show -fields volume,state,percent-used
-
-# SnapMirror relationship health and lag time
-snapmirror show -fields source-path,destination-path,lag-time,healthy,state
-
-# Broken or failed disks
-storage disk show -broken
-
-# Active health alerts
-system health alert show
-
-# Recent callhome EMS events
-event log show -messagename callhome.*
-
-# SVM and LIF status
-svm show
-network interface show -status-oper down
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and HA status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Aggregate capacity — flag anything above 85%</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,used-percent,state
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Volume space usage across all SVMs</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,state,percent-used
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SnapMirror relationship health and lag time</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Broken or failed disks</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Active health alerts</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Recent callhome EMS events</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># SVM and LIF status</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>svm<span class="w"> </span>show
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All aggregates have at least 15% free capacity to absorb workload shifts during the change</li>

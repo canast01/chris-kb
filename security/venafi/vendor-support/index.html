@@ -919,49 +919,49 @@
 <h2 id="pre-collection-checklist">Pre-Collection Checklist<a class="headerlink" href="#pre-collection-checklist" title="Permanent link">&para;</a></h2>
 <p>Collect the following before opening any support case to reduce round-trips:</p>
 <h3 id="tpp-version-and-environment">TPP Version and Environment<a class="headerlink" href="#tpp-version-and-environment" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># TPP version (run on TPP Policy Server)
-Get-ItemProperty &quot;HKLM:\Software\Venafi\Platform&quot; | Select-Object ProductVersion
-
-# Installed hotfixes
-Get-WmiObject Win32_QuickFixEngineering | Sort-Object InstalledOn -Descending | Select-Object -First 10
-
-# OS and hardware details
-Get-ComputerInfo | Select-Object WindowsProductName, OsVersion, CsProcessors, CsTotalPhysicalMemory
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># TPP version (run on TPP Policy Server)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\Software\Venafi\Platform&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ProductVersion</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Installed hotfixes</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_QuickFixEngineering</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># OS and hardware details</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-ComputerInfo</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">WindowsProductName</span><span class="p">,</span> <span class="n">OsVersion</span><span class="p">,</span> <span class="n">CsProcessors</span><span class="p">,</span> <span class="n">CsTotalPhysicalMemory</span>
+</code></pre></div>
 <h3 id="log-collection">Log Collection<a class="headerlink" href="#log-collection" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># TPP application logs (primary location)
-$logPath = &quot;$env:ProgramData\Venafi\log\&quot;
-Get-ChildItem $logPath -Filter &quot;VdcLogFile*.log&quot; | Sort-Object LastWriteTime -Descending | Select-Object -First 5
-
-# Collect last 24 hours of logs
-$cutoff = (Get-Date).AddHours(-24)
-Get-ChildItem $logPath -Filter &quot;VdcLogFile*.log&quot; |
-  Where-Object { $_.LastWriteTime -gt $cutoff } |
-  ForEach-Object { Copy-Item $_.FullName &quot;C:\Temp\VenafiLogs\&quot; }
-
-# Windows Event Log — Application source (Venafi)
-Get-WinEvent -FilterHashtable @{ LogName = &quot;Application&quot;; ProviderName = &quot;Venafi*&quot; } -MaxEvents 500 |
-  Select-Object TimeCreated, LevelDisplayName, Message |
-  Export-Csv &quot;C:\Temp\Venafi_EventLog.csv&quot; -NoTypeInformation
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># TPP application logs (primary location)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$logPath</span> <span class="p">=</span> <span class="s2">&quot;$env:ProgramData\Venafi\log\&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logPath</span> <span class="n">-Filter</span> <span class="s2">&quot;VdcLogFile*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Collect last 24 hours of logs</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-ChildItem</span> <span class="nv">$logPath</span> <span class="n">-Filter</span> <span class="s2">&quot;VdcLogFile*.log&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastWriteTime</span> <span class="o">-gt</span> <span class="nv">$cutoff</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Copy-Item</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FullName</span> <span class="s2">&quot;C:\Temp\VenafiLogs\&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Windows Event Log — Application source (Venafi)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span> <span class="p">=</span> <span class="s2">&quot;Application&quot;</span><span class="p">;</span> <span class="n">ProviderName</span> <span class="p">=</span> <span class="s2">&quot;Venafi*&quot;</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="nb">Export-Csv</span> <span class="s2">&quot;C:\Temp\Venafi_EventLog.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
 <h3 id="ca-connector-diagnostics">CA Connector Diagnostics<a class="headerlink" href="#ca-connector-diagnostics" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Test CA connector connectivity from TPP server
-# For ADCS (CES endpoint):
-Invoke-WebRequest -Uri &quot;https://adcs.corp.example.com/ADPolicyProvider_CEP_UsernamePassword/service.svc/CEP&quot; `
-  -UseDefaultCredentials
-
-# For external CA (DigiCert, Entrust):
-Test-NetConnection -ComputerName &quot;www.digicert.com&quot; -Port 443
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Test CA connector connectivity from TPP server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># For ADCS (CES endpoint):</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://adcs.corp.example.com/ADPolicyProvider_CEP_UsernamePassword/service.svc/CEP&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-UseDefaultCredentials</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># For external CA (DigiCert, Entrust):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="s2">&quot;www.digicert.com&quot;</span> <span class="n">-Port</span> <span class="n">443</span>
+</code></pre></div>
 <h3 id="certificate-specific-diagnostics">Certificate-Specific Diagnostics<a class="headerlink" href="#certificate-specific-diagnostics" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Get details of a specific certificate in Venafi via API
-$certDN = &quot;\\VED\\Policy\\Internal\\Production\\Servers\\app01.corp.example.com&quot;
-$body   = @{ CertificateDN = $certDN } | ConvertTo-Json
-
-Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates/Retrieve&quot; `
-  -Headers @{ &quot;X-Venafi-API-Key&quot; = $apiKey } `
-  -Method Post -ContentType &quot;application/json&quot; -Body $body
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Get details of a specific certificate in Venafi via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$certDN</span> <span class="p">=</span> <span class="s2">&quot;\\VED\\Policy\\Internal\\Production\\Servers\\app01.corp.example.com&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$body</span>   <span class="p">=</span> <span class="p">@{</span> <span class="n">CertificateDN</span> <span class="p">=</span> <span class="nv">$certDN</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedsdk/Certificates/Retrieve&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="n">-Headers</span> <span class="p">@{</span> <span class="s2">&quot;X-Venafi-API-Key&quot;</span> <span class="p">=</span> <span class="nv">$apiKey</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="nv">$body</span>
+</code></pre></div>
 <hr />
 <h2 id="required-information-for-sr">Required Information for SR<a class="headerlink" href="#required-information-for-sr" title="Permanent link">&para;</a></h2>
 <p>Include all of the following in the initial SR submission:</p>
@@ -1008,16 +1008,16 @@ Invoke-RestMethod -Uri &quot;https://venafi.corp.example.com/vedsdk/Certificates
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Quick health check: verify core Venafi services are running
-Get-Service -Name &quot;Venafi*&quot; | Select-Object Name, Status, StartType
-
-# Verify SQL connectivity
-$sql = New-Object System.Data.SqlClient.SqlConnection
-$sql.ConnectionString = &quot;Server=sql01.corp.example.com;Database=VenafiDB;Integrated Security=True&quot;
-$sql.Open()
-Write-Host &quot;SQL connection: $($sql.State)&quot;
-$sql.Close()
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Quick health check: verify core Venafi services are running</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Venafi*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Verify SQL connectivity</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$sql</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Data</span><span class="p">.</span><span class="n">SqlClient</span><span class="p">.</span><span class="n">SqlConnection</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$sql</span><span class="p">.</span><span class="n">ConnectionString</span> <span class="p">=</span> <span class="s2">&quot;Server=sql01.corp.example.com;Database=VenafiDB;Integrated Security=True&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$sql</span><span class="p">.</span><span class="n">Open</span><span class="p">()</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Write-Host</span> <span class="s2">&quot;SQL connection: </span><span class="p">$(</span><span class="nv">$sql</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$sql</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
+</code></pre></div>
 <hr />
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
 <ol>

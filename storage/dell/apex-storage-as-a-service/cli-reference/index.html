@@ -811,6 +811,15 @@
 <blockquote>
 <p>Part of the <a href="../">APEX Storage as a Service</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    API["API"]
+    API --&gt; S0["Quick-Reference Table"]
+    API --&gt; S1["Dell API Authentication"]
+    API --&gt; S2["APEX Systems API"]
+    API --&gt; S3["Subscription API"]
+    API --&gt; S4["Metrics API"]
+    API --&gt; S5["CloudIQ Integration"]
+    API --&gt; S6["Notes on APEX Management Boundaries"]</code></pre>
 <hr />
 <p>APEX Storage as a Service has no local CLI. All management is through the <strong>Dell APEX Console</strong> (web portal at console.dell.com) or the <strong>Dell Technologies Cloud API</strong> at <code>api.dell.com</code>. The API follows REST conventions and uses OAuth2 client credentials for authentication.</p>
 <p>APEX Block Storage surfaces in CloudIQ for performance and health monitoring — see the <a href="../../cloudiq/cli-reference/">CloudIQ API reference</a> for those endpoints.</p>
@@ -875,26 +884,26 @@
 <hr />
 <h2 id="dell-api-authentication">Dell API Authentication<a class="headerlink" href="#dell-api-authentication" title="Permanent link">&para;</a></h2>
 <p>APEX uses OAuth2 client credentials. Generate a <code>client_id</code> and <code>client_secret</code> in the APEX Console under <strong>Settings → API Keys</strong>. Access tokens expire after 3600 seconds.</p>
-<pre><code class="language-bash">CLIENT_ID=&quot;&lt;your_client_id&gt;&quot;
-CLIENT_SECRET=&quot;&lt;your_client_secret&gt;&quot;
-TOKEN_URL=&quot;https://api.dell.com/auth/oauth/v2/token&quot;
-
-# --- Get access token ---
-RESPONSE=$(curl -s -X POST &quot;${TOKEN_URL}&quot; \
-  -H &quot;Content-Type: application/x-www-form-urlencoded&quot; \
-  -d &quot;grant_type=client_credentials&quot; \
-  -d &quot;client_id=${CLIENT_ID}&quot; \
-  -d &quot;client_secret=${CLIENT_SECRET}&quot;)
-
-TOKEN=$(echo &quot;${RESPONSE}&quot; | python3 -c &quot;import sys,json; print(json.load(sys.stdin)['access_token'])&quot;)
-EXPIRES_IN=$(echo &quot;${RESPONSE}&quot; | python3 -c &quot;import sys,json; print(json.load(sys.stdin)['expires_in'])&quot;)
-
-echo &quot;Token acquired. Expires in ${EXPIRES_IN}s&quot;
-
-# --- Set convenience variables for subsequent calls ---
-AUTH=&quot;Authorization: Bearer ${TOKEN}&quot;
-BASE=&quot;https://api.dell.com&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your_client_id&gt;&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;&lt;your_client_secret&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TOKEN_URL</span><span class="o">=</span><span class="s2">&quot;https://api.dell.com/auth/oauth/v2/token&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># --- Get access token ---</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">RESPONSE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TOKEN_URL</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RESPONSE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;access_token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">EXPIRES_IN</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RESPONSE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;expires_in&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token acquired. Expires in </span><span class="si">${</span><span class="nv">EXPIRES_IN</span><span class="si">}</span><span class="s2">s&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># --- Set convenience variables for subsequent calls ---</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://api.dell.com&quot;</span>
+</code></pre></div>
 <p><strong>Token management:</strong></p>
 <table>
 <thead>
@@ -924,211 +933,211 @@ BASE=&quot;https://api.dell.com&quot;
 </table>
 <hr />
 <h2 id="apex-systems-api">APEX Systems API<a class="headerlink" href="#apex-systems-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- List all APEX Block Storage systems ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# List with pagination
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems?limit=50&amp;offset=0&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Filter by location / site
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems?location=DC1&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Get details for a specific APEX system ---
-SYSTEM_ID=&quot;&lt;system-id&gt;&quot;    # From list response
-
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Key system fields:
-#   id                  – APEX system identifier
-#   name                – Friendly name (set in APEX Console)
-#   model               – Hardware model (e.g. &quot;PowerStore 3200T&quot;)
-#   type                – BLOCK / FILE
-#   location            – Data centre / site label
-#   status              – ACTIVE / PROVISIONING / DEGRADED / OFFLINE
-#   software_version    – Current firmware/OS version
-#   health_status       – GOOD / WARNING / CRITICAL
-
-# --- Get system health ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/health&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Health response fields:
-#   health_score        – 0–100 (100 = fully healthy)
-#   health_issues[]     – Array of active health concerns
-#   last_updated        – ISO8601 timestamp
-
-# --- Get capacity for a system ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/capacity&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Capacity fields:
-#   committed_capacity_tb    – Contracted committed capacity
-#   burst_capacity_tb        – Available burst ceiling
-#   used_capacity_tb         – Currently consumed
-#   available_capacity_tb    – committed + burst - used
-#   percent_used             – Utilisation percentage
-
-# --- List storage volumes on a system ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/volumes&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Get a specific volume
-VOLUME_ID=&quot;&lt;volume-id&gt;&quot;
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/volumes/${VOLUME_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># --- List all APEX Block Storage systems ---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List with pagination</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems?limit=50&amp;offset=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Filter by location / site</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems?location=DC1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># --- Get details for a specific APEX system ---</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">&quot;&lt;system-id&gt;&quot;</span><span class="w">    </span><span class="c1"># From list response</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Key system fields:</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1">#   id                  – APEX system identifier</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1">#   name                – Friendly name (set in APEX Console)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1">#   model               – Hardware model (e.g. &quot;PowerStore 3200T&quot;)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">#   type                – BLOCK / FILE</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1">#   location            – Data centre / site label</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1">#   status              – ACTIVE / PROVISIONING / DEGRADED / OFFLINE</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">#   software_version    – Current firmware/OS version</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1">#   health_status       – GOOD / WARNING / CRITICAL</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># --- Get system health ---</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/health&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># Health response fields:</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1">#   health_score        – 0–100 (100 = fully healthy)</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1">#   health_issues[]     – Array of active health concerns</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1">#   last_updated        – ISO8601 timestamp</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1"># --- Get capacity for a system ---</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="c1"># Capacity fields:</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="c1">#   committed_capacity_tb    – Contracted committed capacity</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="c1">#   burst_capacity_tb        – Available burst ceiling</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="c1">#   used_capacity_tb         – Currently consumed</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1">#   available_capacity_tb    – committed + burst - used</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1">#   percent_used             – Utilisation percentage</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="c1"># --- List storage volumes on a system ---</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/volumes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="c1"># Get a specific volume</span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="nv">VOLUME_ID</span><span class="o">=</span><span class="s2">&quot;&lt;volume-id&gt;&quot;</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/volumes/</span><span class="si">${</span><span class="nv">VOLUME_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <hr />
 <h2 id="subscription-api">Subscription API<a class="headerlink" href="#subscription-api" title="Permanent link">&para;</a></h2>
 <p>APEX subscriptions define contracted capacity, term, service tier, and billing model. Use these endpoints to track contracted vs consumed figures.</p>
-<pre><code class="language-bash"># --- List all APEX subscriptions ---
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Filter by product type
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1?product_type=BLOCK&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Filter by status
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1?status=ACTIVE&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- Get details for a specific subscription ---
-SUB_ID=&quot;&lt;subscription-id&gt;&quot;
-
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1/${SUB_ID}&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Key subscription fields:
-#   id                      – Subscription identifier
-#   product_type            – BLOCK / FILE / OBJECT
-#   service_tier            – e.g. &quot;Performance&quot;, &quot;Capacity&quot;
-#   committed_capacity_tb   – Contracted base capacity (TB)
-#   burst_capacity_tb       – Burst ceiling (TB above committed)
-#   contract_start_date     – ISO8601
-#   contract_end_date       – ISO8601
-#   auto_renewal            – true/false
-#   status                  – ACTIVE / EXPIRED / SUSPENDED
-
-# --- Get subscription consumption (contracted vs consumed) ---
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1/${SUB_ID}/consumption&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Consumption fields:
-#   committed_capacity_tb    – Contracted TB
-#   burst_capacity_tb        – Burst ceiling TB
-#   current_usage_tb         – TB currently in use
-#   peak_usage_tb            – Peak TB used this billing period
-#   burst_usage_tb           – TB used above committed (billed at burst rate)
-#   billing_period_start     – ISO8601 start of current billing month
-#   billing_period_end       – ISO8601 end of current billing month
-
-# --- Check if burst is in use ---
-curl -s -X GET &quot;${BASE}/apex/subscriptions/v1/${SUB_ID}/consumption&quot; \
-  -H &quot;${AUTH}&quot; | python3 -c &quot;
-import sys, json
-data = json.load(sys.stdin)
-committed = data.get('committed_capacity_tb', 0)
-current   = data.get('current_usage_tb', 0)
-burst     = data.get('burst_usage_tb', 0)
-ceiling   = data.get('burst_capacity_tb', 0)
-print(f'Committed: {committed:.1f} TB  Used: {current:.1f} TB  Burst: {burst:.1f} TB  Ceiling: {ceiling:.1f} TB')
-if burst &gt; 0:
-    pct = (burst/ceiling*100) if ceiling else 0
-    print(f'BURST ACTIVE: {burst:.1f} TB at {pct:.1f}% of burst ceiling')
-&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># --- List all APEX subscriptions ---</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Filter by product type</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1?product_type=BLOCK&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Filter by status</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1?status=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># --- Get details for a specific subscription ---</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">SUB_ID</span><span class="o">=</span><span class="s2">&quot;&lt;subscription-id&gt;&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1/</span><span class="si">${</span><span class="nv">SUB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Key subscription fields:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1">#   id                      – Subscription identifier</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1">#   product_type            – BLOCK / FILE / OBJECT</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1">#   service_tier            – e.g. &quot;Performance&quot;, &quot;Capacity&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1">#   committed_capacity_tb   – Contracted base capacity (TB)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1">#   burst_capacity_tb       – Burst ceiling (TB above committed)</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1">#   contract_start_date     – ISO8601</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1">#   contract_end_date       – ISO8601</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1">#   auto_renewal            – true/false</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1">#   status                  – ACTIVE / EXPIRED / SUSPENDED</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># --- Get subscription consumption (contracted vs consumed) ---</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1/</span><span class="si">${</span><span class="nv">SUB_ID</span><span class="si">}</span><span class="s2">/consumption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="c1"># Consumption fields:</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1">#   committed_capacity_tb    – Contracted TB</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="c1">#   burst_capacity_tb        – Burst ceiling TB</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="c1">#   current_usage_tb         – TB currently in use</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="c1">#   peak_usage_tb            – Peak TB used this billing period</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="c1">#   burst_usage_tb           – TB used above committed (billed at burst rate)</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="c1">#   billing_period_start     – ISO8601 start of current billing month</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="c1">#   billing_period_end       – ISO8601 end of current billing month</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="c1"># --- Check if burst is in use ---</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/subscriptions/v1/</span><span class="si">${</span><span class="nv">SUB_ID</span><span class="si">}</span><span class="s2">/consumption&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="s2">committed = data.get(&#39;committed_capacity_tb&#39;, 0)</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="s2">current   = data.get(&#39;current_usage_tb&#39;, 0)</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="s2">burst     = data.get(&#39;burst_usage_tb&#39;, 0)</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="s2">ceiling   = data.get(&#39;burst_capacity_tb&#39;, 0)</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="s2">print(f&#39;Committed: {committed:.1f} TB  Used: {current:.1f} TB  Burst: {burst:.1f} TB  Ceiling: {ceiling:.1f} TB&#39;)</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="s2">if burst &gt; 0:</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="s2">    pct = (burst/ceiling*100) if ceiling else 0</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="s2">    print(f&#39;BURST ACTIVE: {burst:.1f} TB at {pct:.1f}% of burst ceiling&#39;)</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="metrics-api">Metrics API<a class="headerlink" href="#metrics-api" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># --- Get available metric types for a system ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/metrics/types&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# Common metric keys:
-#   iops              – Total IOPS (read + write)
-#   read_iops         – Read IOPS
-#   write_iops        – Write IOPS
-#   latency_ms        – Average latency in milliseconds
-#   throughput_mb     – MB/s (read + write combined)
-#   read_throughput_mb
-#   write_throughput_mb
-#   cpu_utilization   – Controller CPU %
-
-# --- Set time range helpers ---
-END=$(date -u +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-START_1H=$(date -u -v-1H +&quot;%Y-%m-%dT%H:%M:%SZ&quot; 2&gt;/dev/null \
-         || date -u -d &quot;1 hour ago&quot; +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-START_24H=$(date -u -v-24H +&quot;%Y-%m-%dT%H:%M:%SZ&quot; 2&gt;/dev/null \
-          || date -u -d &quot;24 hours ago&quot; +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-START_30D=$(date -u -v-30d +&quot;%Y-%m-%dT%H:%M:%SZ&quot; 2&gt;/dev/null \
-          || date -u -d &quot;30 days ago&quot; +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
-
-# --- Get performance metrics (last 24 hours, hourly granularity) ---
-curl -s -X POST &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/metrics&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{
-    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;, \&quot;throughput_mb\&quot;],
-    \&quot;start_time\&quot;:  \&quot;${START_24H}\&quot;,
-    \&quot;end_time\&quot;:    \&quot;${END}\&quot;,
-    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;
-  }&quot; | python3 -m json.tool
-
-# --- Get last-known (real-time) metrics snapshot ---
-curl -s -X GET &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/metrics/current&quot; \
-  -H &quot;${AUTH}&quot; | python3 -m json.tool
-
-# --- 30-day performance trend (daily granularity) ---
-curl -s -X POST &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/metrics&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{
-    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],
-    \&quot;start_time\&quot;:  \&quot;${START_30D}\&quot;,
-    \&quot;end_time\&quot;:    \&quot;${END}\&quot;,
-    \&quot;granularity\&quot;: \&quot;DAILY\&quot;
-  }&quot; | python3 -m json.tool
-
-# --- Volume-level performance metrics ---
-curl -s -X POST \
-  &quot;${BASE}/apex/block/v1/systems/${SYSTEM_ID}/volumes/${VOLUME_ID}/metrics&quot; \
-  -H &quot;${AUTH}&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &quot;{
-    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],
-    \&quot;start_time\&quot;:  \&quot;${START_24H}\&quot;,
-    \&quot;end_time\&quot;:    \&quot;${END}\&quot;,
-    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;
-  }&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># --- Get available metric types for a system ---</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/types&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Common metric keys:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">#   iops              – Total IOPS (read + write)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   read_iops         – Read IOPS</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   write_iops        – Write IOPS</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">#   latency_ms        – Average latency in milliseconds</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   throughput_mb     – MB/s (read + write combined)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">#   read_throughput_mb</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">#   write_throughput_mb</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">#   cpu_utilization   – Controller CPU %</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># --- Set time range helpers ---</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">END</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nv">START_1H</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1H<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">         </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nv">START_24H</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-24H<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">          </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nv">START_30D</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-30d<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">          </span><span class="o">||</span><span class="w"> </span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;30 days ago&quot;</span><span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># --- Get performance metrics (last 24 hours, hourly granularity) ---</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="s2">    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;, \&quot;throughput_mb\&quot;],</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="s2">    \&quot;start_time\&quot;:  \&quot;</span><span class="si">${</span><span class="nv">START_24H</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="s2">    \&quot;end_time\&quot;:    \&quot;</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="s2">    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="c1"># --- Get last-known (real-time) metrics snapshot ---</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/current&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="c1"># --- 30-day performance trend (daily granularity) ---</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="s2">    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="s2">    \&quot;start_time\&quot;:  \&quot;</span><span class="si">${</span><span class="nv">START_30D</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="s2">    \&quot;end_time\&quot;:    \&quot;</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="s2">    \&quot;granularity\&quot;: \&quot;DAILY\&quot;</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="c1"># --- Volume-level performance metrics ---</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/apex/block/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/volumes/</span><span class="si">${</span><span class="nv">VOLUME_ID</span><span class="si">}</span><span class="s2">/metrics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="s2">    \&quot;metrics\&quot;:     [\&quot;iops\&quot;, \&quot;latency_ms\&quot;],</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a><span class="s2">    \&quot;start_time\&quot;:  \&quot;</span><span class="si">${</span><span class="nv">START_24H</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="s2">    \&quot;end_time\&quot;:    \&quot;</span><span class="si">${</span><span class="nv">END</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="s2">    \&quot;granularity\&quot;: \&quot;HOURLY\&quot;</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <hr />
 <h2 id="cloudiq-integration">CloudIQ Integration<a class="headerlink" href="#cloudiq-integration" title="Permanent link">&para;</a></h2>
 <p>APEX Block Storage systems are automatically ingested into CloudIQ for health scoring, alerting, and capacity forecasting. Use the CloudIQ API to monitor APEX systems alongside other Dell products.</p>
-<pre><code class="language-bash"># CloudIQ base URL and auth are separate — see CloudIQ API Reference
-CIQ_TOKEN=&quot;&lt;cloudiq_access_token&gt;&quot;        # See CloudIQ auth section
-CIQ_BASE=&quot;https://cloudiq.apis.dell.com/rest/v1&quot;
-
-# --- List APEX systems visible in CloudIQ ---
-curl -s -X GET &quot;${CIQ_BASE}/systems?type=POWERSTORE&quot; \
-  -H &quot;Authorization: Bearer ${CIQ_TOKEN}&quot; | python3 -m json.tool
-
-# --- Get health score for an APEX system in CloudIQ ---
-APEX_CIQ_ID=&quot;&lt;cloudiq-system-id&gt;&quot;
-
-curl -s -X GET &quot;${CIQ_BASE}/systems/${APEX_CIQ_ID}&quot; \
-  -H &quot;Authorization: Bearer ${CIQ_TOKEN}&quot; | python3 -m json.tool
-
-# --- Get CloudIQ alerts for APEX systems ---
-curl -s -X GET &quot;${CIQ_BASE}/alerts?system_id=${APEX_CIQ_ID}&amp;state=ACTIVE&quot; \
-  -H &quot;Authorization: Bearer ${CIQ_TOKEN}&quot; | python3 -m json.tool
-
-# --- Capacity forecast via CloudIQ ---
-curl -s -X GET &quot;${CIQ_BASE}/systems/${APEX_CIQ_ID}/capacity/forecast?days=90&quot; \
-  -H &quot;Authorization: Bearer ${CIQ_TOKEN}&quot; | python3 -m json.tool
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># CloudIQ base URL and auth are separate — see CloudIQ API Reference</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">CIQ_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;cloudiq_access_token&gt;&quot;</span><span class="w">        </span><span class="c1"># See CloudIQ auth section</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">CIQ_BASE</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/rest/v1&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># --- List APEX systems visible in CloudIQ ---</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CIQ_BASE</span><span class="si">}</span><span class="s2">/systems?type=POWERSTORE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># --- Get health score for an APEX system in CloudIQ ---</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">APEX_CIQ_ID</span><span class="o">=</span><span class="s2">&quot;&lt;cloudiq-system-id&gt;&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CIQ_BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">APEX_CIQ_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># --- Get CloudIQ alerts for APEX systems ---</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CIQ_BASE</span><span class="si">}</span><span class="s2">/alerts?system_id=</span><span class="si">${</span><span class="nv">APEX_CIQ_ID</span><span class="si">}</span><span class="s2">&amp;state=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># --- Capacity forecast via CloudIQ ---</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CIQ_BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">APEX_CIQ_ID</span><span class="si">}</span><span class="s2">/capacity/forecast?days=90&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">CIQ_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <blockquote>
 <p>APEX systems appear in CloudIQ with the model of the underlying hardware (e.g. <code>PowerStore 3200T</code>). Filter by type <code>POWERSTORE</code>, <code>POWERMAX</code>, or <code>UNITY_XT</code> depending on which APEX SKU is deployed. See the <a href="../../cloudiq/cli-reference/">CloudIQ CLI Reference</a> for full CloudIQ API coverage.</p>
 </blockquote>

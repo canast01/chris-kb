@@ -862,65 +862,65 @@
 </tbody>
 </table>
 <h2 id="venafi-tpp-adcs-ca-integration">Venafi TPP — ADCS CA Integration<a class="headerlink" href="#venafi-tpp-adcs-ca-integration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># On the Venafi server — verify CA connector is reachable
-# TPP UI → Configuration → Certificate Authorities → Test Connection
-
-# ADCS template must have &quot;Enroll&quot; permission granted to the Venafi service account
-# Certificate Templates → Right-click → Properties → Security → Add svc-venafi → Enroll
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># On the Venafi server — verify CA connector is reachable</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># TPP UI → Configuration → Certificate Authorities → Test Connection</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># ADCS template must have &quot;Enroll&quot; permission granted to the Venafi service account</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Certificate Templates → Right-click → Properties → Security → Add svc-venafi → Enroll</span>
+</code></pre></div>
 <h2 id="hashicorp-vault-pki">HashiCorp Vault PKI<a class="headerlink" href="#hashicorp-vault-pki" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable PKI secrets engine
-vault secrets enable -path=pki pki
-vault secrets tune -max-lease-ttl=87600h pki
-
-# Generate or import CA
-vault write pki/root/generate/internal common_name=&quot;corp.local Internal CA&quot; ttl=87600h
-
-# Create a role for issuing certs
-vault write pki/roles/internal-services \
-    allowed_domains=&quot;corp.local,svc.cluster.local&quot; \
-    allow_subdomains=true \
-    max_ttl=720h
-
-# Issue a certificate
-vault write pki/issue/internal-services common_name=&quot;myservice.svc.cluster.local&quot; ttl=168h
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable PKI secrets engine</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vault<span class="w"> </span>secrets<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-path<span class="o">=</span>pki<span class="w"> </span>pki
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vault<span class="w"> </span>secrets<span class="w"> </span>tune<span class="w"> </span>-max-lease-ttl<span class="o">=</span>87600h<span class="w"> </span>pki
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Generate or import CA</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vault<span class="w"> </span>write<span class="w"> </span>pki/root/generate/internal<span class="w"> </span><span class="nv">common_name</span><span class="o">=</span><span class="s2">&quot;corp.local Internal CA&quot;</span><span class="w"> </span><span class="nv">ttl</span><span class="o">=</span>87600h
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Create a role for issuing certs</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vault<span class="w"> </span>write<span class="w"> </span>pki/roles/internal-services<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nv">allowed_domains</span><span class="o">=</span><span class="s2">&quot;corp.local,svc.cluster.local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nv">allow_subdomains</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nv">max_ttl</span><span class="o">=</span>720h
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Issue a certificate</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vault<span class="w"> </span>write<span class="w"> </span>pki/issue/internal-services<span class="w"> </span><span class="nv">common_name</span><span class="o">=</span><span class="s2">&quot;myservice.svc.cluster.local&quot;</span><span class="w"> </span><span class="nv">ttl</span><span class="o">=</span>168h
+</code></pre></div>
 <h2 id="kubernetes-cert-manager">Kubernetes cert-manager<a class="headerlink" href="#kubernetes-cert-manager" title="Permanent link">&para;</a></h2>
-<pre><code class="language-yaml"># ClusterIssuer pointing at Vault PKI
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: vault-issuer
-spec:
-  vault:
-    server: https://vault.corp.local:8200
-    path: pki/sign/internal-services
-    auth:
-      kubernetes:
-        role: cert-manager
-        mountPath: /v1/auth/kubernetes
-        serviceAccountRef:
-          name: cert-manager
-</code></pre>
-<pre><code class="language-bash"># Check certificate status in cluster
-kubectl get certificates -A
-kubectl describe certificate &lt;name&gt; -n &lt;namespace&gt;
-
-# Check cert-manager logs for issuance errors
-kubectl logs -n cert-manager deploy/cert-manager | tail -50
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ClusterIssuer pointing at Vault PKI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager.io/v1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vault-issuer</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">vault</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://vault.corp.local:8200</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pki/sign/internal-services</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">kubernetes</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/v1/auth/kubernetes</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">serviceAccountRef</span><span class="p">:</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check certificate status in cluster</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>certificate<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check cert-manager logs for issuance errors</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>cert-manager<span class="w"> </span>deploy/cert-manager<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
 <h2 id="lets-encrypt-acme-dns-01-challenge">Let's Encrypt ACME (DNS-01 Challenge)<a class="headerlink" href="#lets-encrypt-acme-dns-01-challenge" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Using certbot with Route53 DNS-01 challenge
-certbot certonly \
-  --dns-route53 \
-  -d &quot;*.corp.example.com&quot; \
-  --email certs@corp.example.com \
-  --agree-tos \
-  --non-interactive
-
-# Auto-renewal via cron (certbot renew checks expiry &lt; 30 days)
-0 3 * * * /usr/bin/certbot renew --quiet --post-hook &quot;systemctl reload nginx&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Using certbot with Route53 DNS-01 challenge</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>certbot<span class="w"> </span>certonly<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--dns-route53<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;*.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--email<span class="w"> </span>certs@corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--agree-tos<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--non-interactive
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Auto-renewal via cron (certbot renew checks expiry &lt; 30 days)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="m">0</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>/usr/bin/certbot<span class="w"> </span>renew<span class="w"> </span>--quiet<span class="w"> </span>--post-hook<span class="w"> </span><span class="s2">&quot;systemctl reload nginx&quot;</span>
+</code></pre></div>
 <h2 id="servicenow-approval-workflow">ServiceNow Approval Workflow<a class="headerlink" href="#servicenow-approval-workflow" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP can trigger a ServiceNow workflow for certificates that require business approval:</p>
 <ol>
@@ -930,17 +930,17 @@ certbot certonly \
 <li>Certificate deployed to target system via TPP driver.</li>
 </ol>
 <h2 id="expiry-alerting">Expiry Alerting<a class="headerlink" href="#expiry-alerting" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check certificate expiry on a remote host
-echo | openssl s_client -connect host.corp.local:443 2&gt;/dev/null | \
-  openssl x509 -noout -dates
-
-# Bulk expiry scan (Bash loop)
-for host in vcenter nsxmgr aria-ops aria-auto; do
-  expiry=$(echo | openssl s_client -connect ${host}.corp.local:443 2&gt;/dev/null | \
-    openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
-  echo &quot;${host}: ${expiry}&quot;
-done
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry on a remote host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Bulk expiry scan (Bash loop)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter<span class="w"> </span>nsxmgr<span class="w"> </span>aria-ops<span class="w"> </span>aria-auto<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">: </span><span class="si">${</span><span class="nv">expiry</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">done</span>
+</code></pre></div>
 <p>Venafi TPP / Aria Operations integrations provide dashboard-level expiry visibility — raw CLI checks above are for ad-hoc verification.</p>
 
 

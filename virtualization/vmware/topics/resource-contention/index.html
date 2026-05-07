@@ -825,18 +825,18 @@
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># CPU usage across all hosts
-Get-VMHost | Select-Object Name,
-    @{N=&quot;CPUUsageMHz&quot;;E={$_.CpuUsageMhz}},
-    @{N=&quot;CPUTotalMHz&quot;;E={$_.CpuTotalMhz}},
-    @{N=&quot;UsedPct&quot;;E={[math]::Round($_.CpuUsageMhz / $_.CpuTotalMhz * 100, 1)}}
-
-# Per-VM CPU ready (use esxtop or performance charts — not directly queryable via PowerCLI)
-# In esxtop: press 'c' for CPU view — %RDY column
-</code></pre>
-<pre><code class="language-bash"># esxtop CPU view — look for %RDY &gt; 10
-esxtop   # press 'c', then look at %RDY per world
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># CPU usage across all hosts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPUUsageMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span><span class="p">}},</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPUTotalMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span><span class="p">}},</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Per-VM CPU ready (use esxtop or performance charts — not directly queryable via PowerCLI)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># In esxtop: press &#39;c&#39; for CPU view — %RDY column</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># esxtop CPU view — look for %RDY &gt; 10</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop<span class="w">   </span><span class="c1"># press &#39;c&#39;, then look at %RDY per world</span>
+</code></pre></div>
 <h2 id="memory-contention">Memory Contention<a class="headerlink" href="#memory-contention" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -869,15 +869,15 @@ esxtop   # press 'c', then look at %RDY per world
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Memory state per host
-Get-VMHost | Select-Object Name,
-    @{N=&quot;MemUsedGB&quot;;E={[math]::Round($_.MemoryUsageGB,1)}},
-    @{N=&quot;MemTotalGB&quot;;E={[math]::Round($_.MemoryTotalGB,1)}},
-    @{N=&quot;UsedPct&quot;;E={[math]::Round($_.MemoryUsageGB / $_.MemoryTotalGB * 100, 1)}}
-</code></pre>
-<pre><code class="language-bash"># esxtop memory view — look for MCTLSZ (balloon) and SWPRD/SWPWT (swap)
-esxtop   # press 'm'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Memory state per host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MemUsedGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MemTotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># esxtop memory view — look for MCTLSZ (balloon) and SWPRD/SWPWT (swap)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop<span class="w">   </span><span class="c1"># press &#39;m&#39;</span>
+</code></pre></div>
 <h2 id="storage-latency">Storage Latency<a class="headerlink" href="#storage-latency" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -905,10 +905,10 @@ esxtop   # press 'm'
 </tr>
 </tbody>
 </table>
-<pre><code class="language-powershell"># Datastore latency (requires performance metrics collection enabled)
-$stats = Get-Stat -Entity (Get-Datastore &quot;&lt;ds_name&gt;&quot;) -Stat &quot;datastore.totalReadLatency.average&quot;, &quot;datastore.totalWriteLatency.average&quot; -Realtime -MaxSamples 20
-$stats | Select-Object Entity, MetricId, Value, Timestamp
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Datastore latency (requires performance metrics collection enabled)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$stats</span> <span class="p">=</span> <span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;&lt;ds_name&gt;&quot;</span><span class="p">)</span> <span class="n">-Stat</span> <span class="s2">&quot;datastore.totalReadLatency.average&quot;</span><span class="p">,</span> <span class="s2">&quot;datastore.totalWriteLatency.average&quot;</span> <span class="n">-Realtime</span> <span class="n">-MaxSamples</span> <span class="n">20</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$stats</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Timestamp</span>
+</code></pre></div>
 <h2 id="network-contention">Network Contention<a class="headerlink" href="#network-contention" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -936,12 +936,12 @@ $stats | Select-Object Entity, MetricId, Value, Timestamp
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># NIC utilisation
-esxcli network nic stats get -n vmnic0 | grep -E &quot;Bytes|Dropped&quot;
-
-# Real-time: esxtop network view
-esxtop   # press 'n'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># NIC utilisation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Bytes|Dropped&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Real-time: esxtop network view</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxtop<span class="w">   </span><span class="c1"># press &#39;n&#39;</span>
+</code></pre></div>
 <h2 id="contention-response-actions">Contention Response Actions<a class="headerlink" href="#contention-response-actions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -980,13 +980,13 @@ esxtop   # press 'n'
 </tbody>
 </table>
 <h2 id="drs-imbalance-score">DRS Imbalance Score<a class="headerlink" href="#drs-imbalance-score" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># DRS migration recommendations pending
-Get-Cluster &quot;&lt;cluster&gt;&quot; | Select-Object Name,
-    @{N=&quot;DRSScore&quot;;E={$_.ExtensionData.Summary.UsagesSummary.OverallUsage}}
-
-# Review DRS recommendations
-(Get-Cluster &quot;&lt;cluster&gt;&quot;).ExtensionData.RecommendedAction
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># DRS migration recommendations pending</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster&gt;&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;DRSScore&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">UsagesSummary</span><span class="p">.</span><span class="n">OverallUsage</span><span class="p">}}</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Review DRS recommendations</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster&gt;&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">RecommendedAction</span>
+</code></pre></div>
 
 
 

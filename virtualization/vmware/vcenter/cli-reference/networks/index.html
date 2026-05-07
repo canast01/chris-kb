@@ -811,73 +811,82 @@
 <blockquote>
 <p>Part of the <a href="../">vCenter CLI Reference (PowerCLI &amp; DCLI)</a>.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    Networks["Networks"]
+    Networks --&gt; S0["Standard vSwitches"]
+    Networks --&gt; S1["Distributed vSwitches (VDS)"]
+    Networks --&gt; S2["VMkernel Adapters"]
+    Networks --&gt; S3["Physical NICs (vmnic)"]
+    Networks --&gt; S4["DNS and Routing"]
+    Networks --&gt; S5["NIC Teaming Policy"]
+    Networks --&gt; S6["VLAN Report"]</code></pre>
 <h2 id="standard-vswitches">Standard vSwitches<a class="headerlink" href="#standard-vswitches" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># List standard vSwitches on a host
-Get-VirtualSwitch -VMHost &lt;host&gt;
-Get-VirtualSwitch -VMHost &lt;host&gt; | Select-Object Name, NumPorts, Nic, @{N=&quot;MTU&quot;;E={$_.Mtu}}
-
-# Port groups on a standard switch
-Get-VirtualPortGroup -VMHost &lt;host&gt;
-Get-VirtualPortGroup -VMHost &lt;host&gt; | Select-Object Name, VLanId, @{N=&quot;vSwitch&quot;;E={$_.VirtualSwitchName}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List standard vSwitches on a host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VirtualSwitch</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-VirtualSwitch</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">NumPorts</span><span class="p">,</span> <span class="n">Nic</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MTU&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Mtu</span><span class="p">}}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Port groups on a standard switch</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-VirtualPortGroup</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Get-VirtualPortGroup</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VLanId</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;vSwitch&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VirtualSwitchName</span><span class="p">}}</span>
+</code></pre></div>
 <h2 id="distributed-vswitches-vds">Distributed vSwitches (VDS)<a class="headerlink" href="#distributed-vswitches-vds" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># All distributed switches
-Get-VDSwitch
-
-# VDS detail — name, version, uplinks, port count
-Get-VDSwitch | Select-Object Name, NumPorts, Version, Mtu,
-    @{N=&quot;Uplinks&quot;;E={$_.ExtensionData.Config.UplinkPortPolicy.UplinkPortName -join &quot;, &quot;}}
-
-# Distributed port groups
-Get-VDPortgroup
-Get-VDPortgroup | Select-Object Name, VlanConfiguration, NumPorts,
-    @{N=&quot;VDS&quot;;E={$_.VDSwitch.Name}}
-
-# VMs connected to a specific DVPortgroup
-Get-VDPortgroup -Name &quot;&lt;portgroup_name&gt;&quot; | Get-VM | Select-Object Name, PowerState
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># All distributed switches</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VDSwitch</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># VDS detail — name, version, uplinks, port count</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VDSwitch</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">NumPorts</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Mtu</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Uplinks&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">UplinkPortPolicy</span><span class="p">.</span><span class="n">UplinkPortName</span> <span class="n">-join</span> <span class="s2">&quot;, &quot;</span><span class="p">}}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Distributed port groups</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-VDPortgroup</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-VDPortgroup</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">VlanConfiguration</span><span class="p">,</span> <span class="n">NumPorts</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VDS&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VDSwitch</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># VMs connected to a specific DVPortgroup</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;portgroup_name&gt;&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+</code></pre></div>
 <h2 id="vmkernel-adapters">VMkernel Adapters<a class="headerlink" href="#vmkernel-adapters" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># All VMkernel adapters on a host
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel
-
-# With IP, subnet, and traffic type flags
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -VMKernel |
-    Select-Object Name, IP, SubnetMask, Mac,
-    VMotionEnabled, ManagementTrafficEnabled,
-    FaultToleranceLoggingEnabled, VsanTrafficEnabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># All VMkernel adapters on a host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-VMKernel</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># With IP, subnet, and traffic type flags</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-VMKernel</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">IP</span><span class="p">,</span> <span class="n">SubnetMask</span><span class="p">,</span> <span class="n">Mac</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">VMotionEnabled</span><span class="p">,</span> <span class="n">ManagementTrafficEnabled</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">FaultToleranceLoggingEnabled</span><span class="p">,</span> <span class="n">VsanTrafficEnabled</span>
+</code></pre></div>
 <h2 id="physical-nics-vmnic">Physical NICs (vmnic)<a class="headerlink" href="#physical-nics-vmnic" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Physical NICs on a host
-Get-VMHostNetworkAdapter -VMHost &lt;host&gt; -Physical |
-    Select-Object Name, Mac, BitRatePerSec,
-    @{N=&quot;Speed&quot;;E={$_.BitRatePerSec / 1000000}},
-    @{N=&quot;LinkUp&quot;;E={$_.ExtensionData.LinkSpeed -ne $null}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Physical NICs on a host</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VMHostNetworkAdapter</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Physical</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Mac</span><span class="p">,</span> <span class="n">BitRatePerSec</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Speed&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">BitRatePerSec</span> <span class="p">/</span> <span class="n">1000000</span><span class="p">}},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LinkUp&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">LinkSpeed</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
+</code></pre></div>
 <h2 id="dns-and-routing">DNS and Routing<a class="headerlink" href="#dns-and-routing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># DNS configuration on a host
-Get-VMHostNetwork -VMHost &lt;host&gt; | Select-Object HostName, DomainName, DnsAddress
-
-# Default gateway
-(Get-VMHostNetwork -VMHost &lt;host&gt;).ConsoleGateway
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># DNS configuration on a host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VMHostNetwork</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">HostName</span><span class="p">,</span> <span class="n">DomainName</span><span class="p">,</span> <span class="n">DnsAddress</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Default gateway</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">(</span><span class="nb">Get-VMHostNetwork</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;).</span><span class="n">ConsoleGateway</span>
+</code></pre></div>
 <h2 id="nic-teaming-policy">NIC Teaming Policy<a class="headerlink" href="#nic-teaming-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Teaming policy for a standard port group
-$pg = Get-VirtualPortGroup -VMHost &lt;host&gt; -Name &quot;&lt;portgroup_name&gt;&quot;
-$pg.ExtensionData.ComputedPolicy.NicTeaming
-
-# Active/standby NICs for a portgroup
-$pg.ExtensionData.ComputedPolicy.NicTeaming.NicOrder
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Teaming policy for a standard port group</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$pg</span> <span class="p">=</span> <span class="nb">Get-VirtualPortGroup</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;portgroup_name&gt;&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$pg</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ComputedPolicy</span><span class="p">.</span><span class="n">NicTeaming</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Active/standby NICs for a portgroup</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">$pg</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ComputedPolicy</span><span class="p">.</span><span class="n">NicTeaming</span><span class="p">.</span><span class="n">NicOrder</span>
+</code></pre></div>
 <h2 id="vlan-report">VLAN Report<a class="headerlink" href="#vlan-report" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># All VLANs in use across VDS port groups
-Get-VDPortgroup | Select-Object Name, @{N=&quot;VLAN&quot;;E={$_.VlanConfiguration.VlanId}} |
-    Sort-Object VLAN
-
-# VLAN range trunks (access vs trunk)
-Get-VDPortgroup | Select-Object Name,
-    @{N=&quot;VLANType&quot;;E={$_.VlanConfiguration.GetType().Name}},
-    @{N=&quot;VLANId&quot;;E={$_.VlanConfiguration.VlanId}}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># All VLANs in use across VDS port groups</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VDPortgroup</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VLAN&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VlanConfiguration</span><span class="p">.</span><span class="n">VlanId</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Sort-Object</span> <span class="n">VLAN</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># VLAN range trunks (access vs trunk)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-VDPortgroup</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VLANType&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VlanConfiguration</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VLANId&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VlanConfiguration</span><span class="p">.</span><span class="n">VlanId</span><span class="p">}}</span>
+</code></pre></div>
 
 
 

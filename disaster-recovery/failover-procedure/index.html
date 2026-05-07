@@ -866,14 +866,14 @@
 - [ ] RPO/RTO requirements reviewed — is failover the right action vs. wait-and-restore?
 - [ ] Change authority (CAB emergency or delegated approver) has approved</p>
 <h2 id="phase-1-validate-replication-state">Phase 1 — Validate Replication State<a class="headerlink" href="#phase-1-validate-replication-state" title="Permanent link">&para;</a></h2>
-<p><strong>SRDF (PowerMax):</strong></p>
-<pre><code class="language-bash">symrdf -g &lt;rdfgroup&gt; query
-# Confirm R2 volumes are Synchronized or Consistent before failing over
-</code></pre>
-<p><strong>NetApp SnapMirror:</strong></p>
-<pre><code class="language-bash">snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt;
-# Confirm relationship is SnapMirrored (not broken or lagging &gt;RPO)
-</code></pre>
+<p><strong>SRDF (PowerMax):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>query
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Confirm R2 volumes are Synchronized or Consistent before failing over</span>
+</code></pre></div></p>
+<p><strong>NetApp SnapMirror:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Confirm relationship is SnapMirrored (not broken or lagging &gt;RPO)</span>
+</code></pre></div></p>
 <p><strong>Veeam — check last successful backup:</strong>
 Navigate to: Home → Jobs → check Last Result and Last Run columns</p>
 <p><strong>VMware SRM:</strong>
@@ -888,21 +888,21 @@ Navigate to: Home → Jobs → check Last Result and Last Run columns</p>
 </ul>
 <h2 id="phase-3-initiate-failover">Phase 3 — Initiate Failover<a class="headerlink" href="#phase-3-initiate-failover" title="Permanent link">&para;</a></h2>
 <h3 id="storage-failover">Storage Failover<a class="headerlink" href="#storage-failover" title="Permanent link">&para;</a></h3>
-<p><strong>NetApp SnapMirror — break and make R2 writeable:</strong></p>
-<pre><code class="language-bash"># Break mirror (R2 becomes writable, R1 no longer replicating)
-snapmirror break -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
-
-# Verify
-snapmirror show -destination-path &lt;dr-svm&gt;:&lt;dr-vol&gt;
-# State should show: Broken-off
-</code></pre>
-<p><strong>SRDF — failover to R2:</strong></p>
-<pre><code class="language-bash"># Planned failover (R1 accessible)
-symrdf -g &lt;rdfgroup&gt; failover -force
-
-# Unplanned (R1 unavailable)
-symrdf -g &lt;rdfgroup&gt; failover -noprompt -immediate
-</code></pre>
+<p><strong>NetApp SnapMirror — break and make R2 writeable:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Break mirror (R2 becomes writable, R1 no longer replicating)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># State should show: Broken-off</span>
+</code></pre></div></p>
+<p><strong>SRDF — failover to R2:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Planned failover (R1 accessible)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>failover<span class="w"> </span>-force
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Unplanned (R1 unavailable)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfgroup&gt;<span class="w"> </span>failover<span class="w"> </span>-noprompt<span class="w"> </span>-immediate
+</code></pre></div></p>
 <h3 id="vm-failover-vmware-srm">VM Failover — VMware SRM<a class="headerlink" href="#vm-failover-vmware-srm" title="Permanent link">&para;</a></h3>
 <ol>
 <li>vCenter → Site Recovery → Recovery Plans</li>
@@ -911,38 +911,38 @@ symrdf -g &lt;rdfgroup&gt; failover -noprompt -immediate
 <li>SRM will: power off protected VMs at primary, register VMs at recovery, start VMs in priority order</li>
 </ol>
 <h3 id="vm-failover-manual-powercli">VM Failover — Manual (PowerCLI)<a class="headerlink" href="#vm-failover-manual-powercli" title="Permanent link">&para;</a></h3>
-<pre><code class="language-powershell"># Register and power on VM from replica datastore
-$ds = Get-Datastore -Name &quot;&lt;dr-datastore&gt;&quot;
-$vmx = &quot;[&lt;dr-datastore&gt;] &lt;vm-name&gt;/&lt;vm-name&gt;.vmx&quot;
-$vm = New-VM -VMFilePath $vmx -VMHost (Get-VMHost &quot;&lt;dr-host&gt;&quot;) -Datastore $ds -RunAsync
-Start-VM -VM &quot;&lt;vm-name&gt;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Register and power on VM from replica datastore</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$ds</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;dr-datastore&gt;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$vmx</span> <span class="p">=</span> <span class="s2">&quot;[&lt;dr-datastore&gt;] &lt;vm-name&gt;/&lt;vm-name&gt;.vmx&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">New-VM</span> <span class="n">-VMFilePath</span> <span class="nv">$vmx</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;&lt;dr-host&gt;&quot;</span><span class="p">)</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="n">-RunAsync</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span>
+</code></pre></div>
 <h2 id="phase-4-post-failover-validation">Phase 4 — Post-Failover Validation<a class="headerlink" href="#phase-4-post-failover-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Confirm storage volumes visible to DR hosts
-multipath -ll
-lsblk
-
-# Confirm filesystems mounted
-df -h | grep &lt;expected-mount&gt;
-
-# Start application services
-systemctl start &lt;service&gt;
-systemctl status &lt;service&gt;
-</code></pre>
-<p><strong>Application health checks:</strong></p>
-<pre><code class="language-bash"># HTTP health check
-curl -vk https://&lt;dr-app-url&gt;/health
-
-# DB connectivity
-psql -h &lt;dr-db-host&gt; -U &lt;user&gt; -c &quot;SELECT 1;&quot;
-</code></pre>
-<p><strong>Windows:</strong></p>
-<pre><code class="language-powershell"># Confirm services started
-Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
-
-# Test connectivity
-Test-NetConnection -ComputerName &lt;dr-app-server&gt; -Port 443
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm storage volumes visible to DR hosts</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>lsblk
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Confirm filesystems mounted</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;expected-mount&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Start application services</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+</code></pre></div>
+<p><strong>Application health checks:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># HTTP health check</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;dr-app-url&gt;/health
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># DB connectivity</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;dr-db-host&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span>
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Confirm services started</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="p">}</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Test connectivity</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">dr-app-server</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+</code></pre></div></p>
 <h2 id="phase-5-dr-site-monitoring">Phase 5 — DR Site Monitoring<a class="headerlink" href="#phase-5-dr-site-monitoring" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Update monitoring targets to DR site IPs/hostnames</li>

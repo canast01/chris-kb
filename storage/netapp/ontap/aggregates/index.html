@@ -821,49 +821,49 @@
 <h1 id="ontap-aggregates">ONTAP Aggregates<a class="headerlink" href="#ontap-aggregates" title="Permanent link">&para;</a></h1>
 <p>Aggregates are ONTAP's physical storage pools, built from disks or SSDs. Volumes reside within aggregates.</p>
 <h2 id="list-aggregates">List Aggregates<a class="headerlink" href="#list-aggregates" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage aggregate show
-storage aggregate show -fields size,used,percent-used,state
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used,state
+</code></pre></div>
 <h2 id="check-aggregate-health">Check Aggregate Health<a class="headerlink" href="#check-aggregate-health" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage aggregate show -state !online
-# Any aggregate not online requires immediate investigation
-
-storage aggregate show-status
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Any aggregate not online requires immediate investigation</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status
+</code></pre></div>
 <h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show used/available per aggregate
-storage aggregate show -fields size,used,available,percent-used
-
-# Identify aggregates over 80% full
-storage aggregate show -fields percent-used | awk '$2 &gt; 80'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show used/available per aggregate</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Identify aggregates over 80% full</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$2 &gt; 80&#39;</span>
+</code></pre></div>
 <p>Alert thresholds (standard practice):
 - <strong>80%</strong> — warning
 - <strong>90%</strong> — critical; investigate and plan expansion</p>
 <h2 id="raid-status">RAID Status<a class="headerlink" href="#raid-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage aggregate show-status -aggregate &lt;aggr_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+</code></pre></div>
 <p>RAID states:
 - <code>normal</code> — healthy
 - <code>degraded</code> — one or more disks failed; not yet broken
 - <code>broken</code> — aggregate offline due to disk failures</p>
 <h2 id="disk-assignment">Disk Assignment<a class="headerlink" href="#disk-assignment" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show unassigned disks
-storage disk show -container-type unassigned
-
-# Assign disk to node
-storage disk assign -disk &lt;disk_id&gt; -owner &lt;node_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show unassigned disks</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>unassigned
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Assign disk to node</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>storage<span class="w"> </span>disk<span class="w"> </span>assign<span class="w"> </span>-disk<span class="w"> </span>&lt;disk_id&gt;<span class="w"> </span>-owner<span class="w"> </span>&lt;node_name&gt;
+</code></pre></div>
 <h2 id="add-disks-to-an-aggregate">Add Disks to an Aggregate<a class="headerlink" href="#add-disks-to-an-aggregate" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">storage aggregate add-disks -aggregate &lt;aggr_name&gt; -diskcount &lt;n&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>add-disks<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-diskcount<span class="w"> </span>&lt;n&gt;
+</code></pre></div>
 <h2 id="relocation-ha-pairs">Relocation (HA Pairs)<a class="headerlink" href="#relocation-ha-pairs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Move aggregate ownership to partner node (planned maintenance)
-storage aggregate relocation start -node &lt;source_node&gt; -destination &lt;dest_node&gt; -aggregates &lt;aggr_name&gt;
-
-# Check relocation status
-storage aggregate relocation show
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Move aggregate ownership to partner node (planned maintenance)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>relocation<span class="w"> </span>start<span class="w"> </span>-node<span class="w"> </span>&lt;source_node&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;dest_node&gt;<span class="w"> </span>-aggregates<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check relocation status</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>relocation<span class="w"> </span>show
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

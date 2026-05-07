@@ -821,97 +821,97 @@
 <h1 id="api-connectivity">API Connectivity<a class="headerlink" href="#api-connectivity" title="Permanent link">&para;</a></h1>
 <p>Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.</p>
 <h2 id="basic-connectivity-tests">Basic Connectivity Tests<a class="headerlink" href="#basic-connectivity-tests" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># HTTP status check
-curl -o /dev/null -sw &quot;%{http_code} %{time_total}s\n&quot; https://api.example.com/health
-
-# Full response headers (useful for auth debugging)
-curl -v -I https://api.example.com/endpoint
-
-# Test with Bearer token
-curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; https://api.example.com/v1/resource | jq .
-
-# Test with API key header
-curl -s -H &quot;X-API-Key: &lt;key&gt;&quot; https://api.example.com/v1/resource
-
-# Test POST with JSON body
-curl -s -X POST \
-  -H &quot;Content-Type: application/json&quot; \
-  -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
-  -d '{&quot;key&quot;:&quot;value&quot;}' \
-  https://api.example.com/v1/resource | jq .
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># HTTP status check</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-sw<span class="w"> </span><span class="s2">&quot;%{http_code} %{time_total}s\n&quot;</span><span class="w"> </span>https://api.example.com/health
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Full response headers (useful for auth debugging)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-v<span class="w"> </span>-I<span class="w"> </span>https://api.example.com/endpoint
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Test with Bearer token</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span>https://api.example.com/v1/resource<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Test with API key header</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-API-Key: &lt;key&gt;&quot;</span><span class="w"> </span>https://api.example.com/v1/resource
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Test POST with JSON body</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;key&quot;:&quot;value&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>https://api.example.com/v1/resource<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
 <h2 id="tls-certificate-checks">TLS / Certificate Checks<a class="headerlink" href="#tls-certificate-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check TLS handshake and certificate chain
-openssl s_client -connect api.example.com:443 -servername api.example.com &lt;/dev/null 2&gt;&amp;1 | \
-  grep -E &quot;Verify return|subject|issuer|Not After&quot;
-
-# Check cipher and protocol
-curl -v --tlsv1.2 https://api.example.com 2&gt;&amp;1 | grep -E &quot;SSL|cipher&quot;
-
-# Certificate expiry
-echo | openssl s_client -connect api.example.com:443 2&gt;/dev/null | openssl x509 -noout -enddate
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check TLS handshake and certificate chain</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>api.example.com:443<span class="w"> </span>-servername<span class="w"> </span>api.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return|subject|issuer|Not After&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check cipher and protocol</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-v<span class="w"> </span>--tlsv1.2<span class="w"> </span>https://api.example.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SSL|cipher&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Certificate expiry</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>api.example.com:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
 <h2 id="dns-resolution">DNS Resolution<a class="headerlink" href="#dns-resolution" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Resolve API hostname
-dig +short api.example.com
-nslookup api.example.com
-
-# Check for CNAME chain
-dig api.example.com CNAME
-
-# Test from container / pod namespace
-kubectl run -it --rm debug --image=curlimages/curl -- curl -v https://api.example.com/health
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Resolve API hostname</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>api.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>nslookup<span class="w"> </span>api.example.com
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check for CNAME chain</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dig<span class="w"> </span>api.example.com<span class="w"> </span>CNAME
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Test from container / pod namespace</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>debug<span class="w"> </span>--image<span class="o">=</span>curlimages/curl<span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-v<span class="w"> </span>https://api.example.com/health
+</code></pre></div>
 <h2 id="authentication-checks">Authentication Checks<a class="headerlink" href="#authentication-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># OAuth2 — obtain token via client credentials flow
-curl -s -X POST https://auth.example.com/oauth/token \
-  -d &quot;grant_type=client_credentials&amp;client_id=&lt;id&gt;&amp;client_secret=&lt;secret&gt;&amp;scope=read&quot; | jq .access_token
-
-# Azure — get bearer token via managed identity
-curl -s &quot;http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&amp;resource=https://management.azure.com/&quot; \
-  -H &quot;Metadata: true&quot; | jq .access_token
-
-# AWS — call API via IAM role (SigV4 — use AWS CLI)
-aws sts get-caller-identity    # verify identity before API calls
-
-# Check token expiry (JWT)
-echo &quot;&lt;jwt-payload-base64&gt;&quot; | base64 -d | jq .exp | xargs -I {} date -d @{}
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># OAuth2 — obtain token via client credentials flow</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://auth.example.com/oauth/token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;id&gt;&amp;client_secret=&lt;secret&gt;&amp;scope=read&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.access_token
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Azure — get bearer token via managed identity</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&amp;resource=https://management.azure.com/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Metadata: true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.access_token
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># AWS — call API via IAM role (SigV4 — use AWS CLI)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w">    </span><span class="c1"># verify identity before API calls</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check token expiry (JWT)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;jwt-payload-base64&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.exp<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span>@<span class="o">{}</span>
+</code></pre></div>
 <h2 id="platform-api-health-checks">Platform API Health Checks<a class="headerlink" href="#platform-api-health-checks" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Azure Resource Manager API
-az rest --method get --url &quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot; | jq '.value | length'
-
-# AWS — test API reachability
-aws sts get-caller-identity --region eu-west-1
-
-# Kubernetes API
-kubectl get --raw /healthz
-kubectl get --raw /readyz
-
-# Vault (HashiCorp)
-curl -s http://vault:8200/v1/sys/health | jq '{sealed:.sealed,initialized:.initialized}'
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Azure Resource Manager API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>rest<span class="w"> </span>--method<span class="w"> </span>get<span class="w"> </span>--url<span class="w"> </span><span class="s2">&quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.value | length&#39;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># AWS — test API reachability</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--region<span class="w"> </span>eu-west-1
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Kubernetes API</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/healthz
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/readyz
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Vault (HashiCorp)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://vault:8200/v1/sys/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{sealed:.sealed,initialized:.initialized}&#39;</span>
+</code></pre></div>
 <h2 id="rate-limiting-and-throttling">Rate Limiting and Throttling<a class="headerlink" href="#rate-limiting-and-throttling" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Check rate limit headers in response
-curl -v https://api.example.com/endpoint 2&gt;&amp;1 | grep -i &quot;x-rate-limit\|retry-after\|x-ratelimit&quot;
-
-# Test with retry on 429
-curl --retry 5 --retry-delay 10 --retry-max-time 120 https://api.example.com/endpoint
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check rate limit headers in response</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://api.example.com/endpoint<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;x-rate-limit\|retry-after\|x-ratelimit&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test with retry on 429</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>--retry<span class="w"> </span><span class="m">5</span><span class="w"> </span>--retry-delay<span class="w"> </span><span class="m">10</span><span class="w"> </span>--retry-max-time<span class="w"> </span><span class="m">120</span><span class="w"> </span>https://api.example.com/endpoint
+</code></pre></div>
 <h2 id="api-monitoring-script">API Monitoring Script<a class="headerlink" href="#api-monitoring-script" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">#!/bin/bash
-# Quick health check across multiple endpoints
-declare -A ENDPOINTS=(
-  [&quot;azure-mgmt&quot;]=&quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot;
-  [&quot;app-api&quot;]=&quot;https://api.example.com/health&quot;
-  [&quot;vault&quot;]=&quot;http://vault:8200/v1/sys/health&quot;
-)
-
-for name in &quot;${!ENDPOINTS[@]}&quot;; do
-  code=$(curl -o /dev/null -sw &quot;%{http_code}&quot; &quot;${ENDPOINTS[$name]}&quot; 2&gt;/dev/null)
-  echo &quot;$name: HTTP $code&quot;
-done
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Quick health check across multiple endpoints</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">declare</span><span class="w"> </span>-A<span class="w"> </span><span class="nv">ENDPOINTS</span><span class="o">=(</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="o">[</span><span class="s2">&quot;azure-mgmt&quot;</span><span class="o">]=</span><span class="s2">&quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="o">[</span><span class="s2">&quot;app-api&quot;</span><span class="o">]=</span><span class="s2">&quot;https://api.example.com/health&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="o">[</span><span class="s2">&quot;vault&quot;</span><span class="o">]=</span><span class="s2">&quot;http://vault:8200/v1/sys/health&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="o">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">for</span><span class="w"> </span>name<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="p">!ENDPOINTS[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nv">code</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-sw<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ENDPOINTS</span><span class="p">[</span><span class="nv">$name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$name</span><span class="s2">: HTTP </span><span class="nv">$code</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">done</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

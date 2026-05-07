@@ -820,8 +820,8 @@
 
 <h1 id="linux-build-standards">Linux Build Standards<a class="headerlink" href="#linux-build-standards" title="Permanent link">&para;</a></h1>
 <h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
-<pre><code>&lt;site&gt;-&lt;role&gt;-&lt;nn&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-&lt;role&gt;-&lt;nn&gt;
+</code></pre></div>
 <p>Examples:
 - <code>dc1-app-01</code> — first application server at DC1
 - <code>dc1-db-01</code> — first database server at DC1
@@ -915,40 +915,40 @@
 </table>
 <p>Application data in a separate VG (<code>vg_data</code>) — sized per role.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SSH key-based authentication only
-# /etc/ssh/sshd_config enforced via Ansible
-PasswordAuthentication no
-PermitRootLogin no
-ChallengeResponseAuthentication no
-PubkeyAuthentication yes
-</code></pre>
-<p>Sudo access granted via AD group membership:</p>
-<pre><code class="language-bash"># /etc/sudoers.d/infra-admins
-%infra_admins ALL=(ALL) ALL
-# No NOPASSWD — all privileged operations require password confirmation
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH key-based authentication only</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># /etc/ssh/sshd_config enforced via Ansible</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ChallengeResponseAuthentication<span class="w"> </span>no
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PubkeyAuthentication<span class="w"> </span>yes
+</code></pre></div>
+<p>Sudo access granted via AD group membership:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/infra-admins</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>%infra_admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># No NOPASSWD — all privileged operations require password confirmation</span>
+</code></pre></div></p>
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># /etc/chrony.conf (RHEL)
-server ntp1.corp.local iburst
-server ntp2.corp.local iburst
-makestep 1.0 3
-rtcsync
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/chrony.conf (RHEL)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>server<span class="w"> </span>ntp1.corp.local<span class="w"> </span>iburst
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>server<span class="w"> </span>ntp2.corp.local<span class="w"> </span>iburst
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>makestep<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>rtcsync
+</code></pre></div>
 <p>Verify: <code>chronyc tracking</code> — <code>System time</code> offset should be &lt; 1ms.</p>
 <h2 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># /etc/rsyslog.d/00-forward.conf
-*.info @siem.corp.local:514
-# Or TLS:
-*.info @@siem.corp.local:6514
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/rsyslog.d/00-forward.conf</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>*.info<span class="w"> </span>@siem.corp.local:514
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Or TLS:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>*.info<span class="w"> </span>@@siem.corp.local:6514
+</code></pre></div>
 <h2 id="package-repository-policy">Package Repository Policy<a class="headerlink" href="#package-repository-policy" title="Permanent link">&para;</a></h2>
-<p>Production servers point only to approved internal mirrors:</p>
-<pre><code class="language-bash"># RHEL: subscription-manager repos — configure approved repos only
-subscription-manager repos --disable=&quot;*&quot; --enable=rhel-9-for-x86_64-baseos-rpms --enable=rhel-9-for-x86_64-appstream-rpms
-
-# Ubuntu: /etc/apt/sources.list — point to internal mirror
-deb http://mirror.corp.local/ubuntu jammy main restricted universe
-</code></pre>
+<p>Production servers point only to approved internal mirrors:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># RHEL: subscription-manager repos — configure approved repos only</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>subscription-manager<span class="w"> </span>repos<span class="w"> </span>--disable<span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-baseos-rpms<span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-appstream-rpms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Ubuntu: /etc/apt/sources.list — point to internal mirror</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>deb<span class="w"> </span>http://mirror.corp.local/ubuntu<span class="w"> </span>jammy<span class="w"> </span>main<span class="w"> </span>restricted<span class="w"> </span>universe
+</code></pre></div></p>
 <p>No direct internet access from production servers — all package traffic via mirror.</p>
 <h2 id="software-installation-policy">Software Installation Policy<a class="headerlink" href="#software-installation-policy" title="Permanent link">&para;</a></h2>
 <ul>

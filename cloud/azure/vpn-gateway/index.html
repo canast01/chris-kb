@@ -826,64 +826,64 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List VPN gateways
-az network vnet-gateway list -g &lt;rg&gt; \
-  --query '[*].{Name:name,SKU:sku.name,VPN:vpnType,BGP:enableBgp,State:provisioningState}' -o table
-
-# List VPN connections
-az network vpn-connection list -g &lt;rg&gt; \
-  --query '[*].{Name:name,State:connectionStatus,SharedKey:sharedKey,Protocol:ipsecPolicies}' -o table
-
-# Check connection status
-az network vpn-connection show -g &lt;rg&gt; -n &lt;connection-name&gt; \
-  --query '{State:connectionStatus,IngressBytes:ingressBytesTransferred,EgressBytes:egressBytesTransferred}'
-
-# Reset gateway (clears stuck tunnels)
-az network vnet-gateway reset -g &lt;rg&gt; -n &lt;gateway-name&gt;
-
-# Reset a specific connection
-az network vpn-connection reset -g &lt;rg&gt; -n &lt;connection-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List VPN gateways</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet-gateway<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,SKU:sku.name,VPN:vpnType,BGP:enableBgp,State:provisioningState}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List VPN connections</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,State:connectionStatus,SharedKey:sharedKey,Protocol:ipsecPolicies}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check connection status</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;connection-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{State:connectionStatus,IngressBytes:ingressBytesTransferred,EgressBytes:egressBytesTransferred}&#39;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Reset gateway (clears stuck tunnels)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>vnet-gateway<span class="w"> </span>reset<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;gateway-name&gt;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Reset a specific connection</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>reset<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;connection-name&gt;
+</code></pre></div>
 <h2 id="create-s2s-vpn-connection">Create S2S VPN Connection<a class="headerlink" href="#create-s2s-vpn-connection" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># 1. Create Local Network Gateway (represents on-premises)
-az network local-gateway create -g &lt;rg&gt; -n &lt;lgw-name&gt; \
-  --gateway-ip-address &lt;on-prem-public-ip&gt; \
-  --local-address-prefixes 10.0.0.0/8
-
-# 2. Create VPN Connection
-az network vpn-connection create -g &lt;rg&gt; -n &lt;conn-name&gt; \
-  --vnet-gateway1 &lt;azure-gw-name&gt; \
-  --local-gateway2 &lt;lgw-name&gt; \
-  --shared-key &lt;pre-shared-key&gt; \
-  --connection-type IPsec
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Create Local Network Gateway (represents on-premises)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>network<span class="w"> </span>local-gateway<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;lgw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--gateway-ip-address<span class="w"> </span>&lt;on-prem-public-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--local-address-prefixes<span class="w"> </span><span class="m">10</span>.0.0.0/8
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 2. Create VPN Connection</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;conn-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--vnet-gateway1<span class="w"> </span>&lt;azure-gw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--local-gateway2<span class="w"> </span>&lt;lgw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--shared-key<span class="w"> </span>&lt;pre-shared-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--connection-type<span class="w"> </span>IPsec
+</code></pre></div>
 <h2 id="ike-ipsec-policy">IKE / IPsec Policy<a class="headerlink" href="#ike-ipsec-policy" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Set custom IKE/IPsec policy on a connection
-az network vpn-connection ipsec-policy add -g &lt;rg&gt; \
-  --connection-name &lt;conn-name&gt; \
-  --ike-encryption AES256 \
-  --ike-integrity SHA256 \
-  --dh-group DHGroup14 \
-  --ipsec-encryption AES256 \
-  --ipsec-integrity SHA256 \
-  --pfs-group PFS2048 \
-  --sa-lifetime 3600 \
-  --sa-max-size 102400000
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set custom IKE/IPsec policy on a connection</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>vpn-connection<span class="w"> </span>ipsec-policy<span class="w"> </span>add<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--connection-name<span class="w"> </span>&lt;conn-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--ike-encryption<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--ike-integrity<span class="w"> </span>SHA256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--dh-group<span class="w"> </span>DHGroup14<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--ipsec-encryption<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--ipsec-integrity<span class="w"> </span>SHA256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--pfs-group<span class="w"> </span>PFS2048<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--sa-lifetime<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--sa-max-size<span class="w"> </span><span class="m">102400000</span>
+</code></pre></div>
 <h2 id="diagnostic-logs">Diagnostic Logs<a class="headerlink" href="#diagnostic-logs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable gateway diagnostic logging
-az monitor diagnostic-settings create \
-  --name vpn-diag \
-  --resource &lt;gateway-resource-id&gt; \
-  --logs '[{&quot;category&quot;:&quot;GatewayDiagnosticLog&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;TunnelDiagnosticLog&quot;,&quot;enabled&quot;:true}]' \
-  --workspace &lt;log-analytics-workspace-id&gt;
-</code></pre>
-<p><strong>KQL — check tunnel events:</strong></p>
-<pre><code class="language-kql">AzureDiagnostics
-| where Category == &quot;TunnelDiagnosticLog&quot;
-| project TimeGenerated, operationName_s, status_s, remoteIP_s, message_s
-| sort by TimeGenerated desc
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable gateway diagnostic logging</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span>vpn-diag<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource<span class="w"> </span>&lt;gateway-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--logs<span class="w"> </span><span class="s1">&#39;[{&quot;category&quot;:&quot;GatewayDiagnosticLog&quot;,&quot;enabled&quot;:true},{&quot;category&quot;:&quot;TunnelDiagnosticLog&quot;,&quot;enabled&quot;:true}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--workspace<span class="w"> </span>&lt;log-analytics-workspace-id&gt;
+</code></pre></div>
+<p><strong>KQL — check tunnel events:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AzureDiagnostics</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">Category</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;TunnelDiagnosticLog&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">operationName_s</span><span class="p">,</span><span class="w"> </span><span class="n">status_s</span><span class="p">,</span><span class="w"> </span><span class="n">remoteIP_s</span><span class="p">,</span><span class="w"> </span><span class="n">message_s</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">sort</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+</code></pre></div></p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

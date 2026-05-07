@@ -811,63 +811,72 @@
 <blockquote>
 <p>Part of the Pure FlashBlade CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    SMB["SMB)"]
+    SMB --&gt; S0["List File Systems"]
+    SMB --&gt; S1["Create a File System"]
+    SMB --&gt; S2["Resize a File System"]
+    SMB --&gt; S3["Update NFS Export Rules"]
+    SMB --&gt; S4["SMB Shares"]
+    SMB --&gt; S5["Destroy and Eradicate"]
+    SMB --&gt; S6["Common Issues"]</code></pre>
 <h2 id="list-file-systems">List File Systems<a class="headerlink" href="#list-file-systems" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb filesystem show
-purefb filesystem show --name &lt;name&gt;
-purefb filesystem show --all    # includes destroyed
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>show
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>show<span class="w"> </span>--all<span class="w">    </span><span class="c1"># includes destroyed</span>
+</code></pre></div>
 <h2 id="create-a-file-system">Create a File System<a class="headerlink" href="#create-a-file-system" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NFS file system with export rules
-purefb filesystem create \
-    --name &lt;name&gt; \
-    --size 10T \
-    --nfs \
-    --nfs-rules &quot;*(rw,no_root_squash)&quot;
-
-# SMB file system
-purefb filesystem create --name &lt;name&gt; --size 10T --smb
-
-# Both NFS and SMB
-purefb filesystem create \
-    --name &lt;name&gt; \
-    --size 10T \
-    --nfs --nfs-rules &quot;*(rw,no_root_squash)&quot; \
-    --smb
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># NFS file system with export rules</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--size<span class="w"> </span>10T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;*(rw,no_root_squash)&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># SMB file system</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--size<span class="w"> </span>10T<span class="w"> </span>--smb
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Both NFS and SMB</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>--size<span class="w"> </span>10T<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--nfs<span class="w"> </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;*(rw,no_root_squash)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>--smb
+</code></pre></div>
 <h2 id="resize-a-file-system">Resize a File System<a class="headerlink" href="#resize-a-file-system" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">purefb filesystem update --name &lt;name&gt; --size 20T
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--size<span class="w"> </span>20T
+</code></pre></div>
 <h2 id="update-nfs-export-rules">Update NFS Export Rules<a class="headerlink" href="#update-nfs-export-rules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Restrict to specific network
-purefb filesystem update \
-    --name &lt;name&gt; \
-    --nfs-rules &quot;&lt;ip_cidr&gt;(rw,no_root_squash)&quot;
-
-# Multiple rules
-purefb filesystem update \
-    --name &lt;name&gt; \
-    --nfs-rules &quot;10.0.1.0/24(rw,no_root_squash):10.0.2.0/24(ro)&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict to specific network</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;&lt;ip_cidr&gt;(rw,no_root_squash)&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Multiple rules</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash):10.0.2.0/24(ro)&quot;</span>
+</code></pre></div>
 <h2 id="smb-shares">SMB Shares<a class="headerlink" href="#smb-shares" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List SMB shares
-purefb smb-share show
-
-# Create an SMB share
-purefb smb-share create --name &lt;share_name&gt; --filesystem &lt;fs_name&gt;
-
-# Delete an SMB share
-purefb smb-share destroy --name &lt;share_name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List SMB shares</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create an SMB share</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;share_name&gt;<span class="w"> </span>--filesystem<span class="w"> </span>&lt;fs_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Delete an SMB share</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>destroy<span class="w"> </span>--name<span class="w"> </span>&lt;share_name&gt;
+</code></pre></div>
 <h2 id="destroy-and-eradicate">Destroy and Eradicate<a class="headerlink" href="#destroy-and-eradicate" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Destroy (recoverable for 24 hours)
-purefb filesystem destroy --name &lt;name&gt;
-
-# Permanently eradicate
-purefb filesystem eradicate --name &lt;name&gt;
-
-# Recover a destroyed file system
-purefb filesystem recover --name &lt;name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Destroy (recoverable for 24 hours)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>destroy<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Permanently eradicate</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>eradicate<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Recover a destroyed file system</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>recover<span class="w"> </span>--name<span class="w"> </span>&lt;name&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

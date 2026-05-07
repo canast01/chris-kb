@@ -843,16 +843,16 @@
 <h1 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h1>
 <p>Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Document evidence for the change record.</p>
 <h2 id="immediate-validation-within-15-minutes-of-upgrade-completion">Immediate Validation (within 15 minutes of upgrade completion)<a class="headerlink" href="#immediate-validation-within-15-minutes-of-upgrade-completion" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># 1. Confirm vCenter is reachable and version is correct
-(Get-View ServiceInstance).Content.About.Version
-(Get-View ServiceInstance).Content.About.Build
-
-# 2. All hosts connected
-Get-VMHost | Where-Object {$_.ConnectionState -ne &quot;Connected&quot;} | Select-Object Name, ConnectionState
-
-# 3. No unexpected VM power state changes
-Get-VM | Where-Object {$_.PowerState -ne &quot;PoweredOn&quot; -and $_.PowerState -ne &quot;PoweredOff&quot;} | Select-Object Name, PowerState
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># 1. Confirm vCenter is reachable and version is correct</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">About</span><span class="p">.</span><span class="n">Version</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">About</span><span class="p">.</span><span class="n">Build</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># 2. All hosts connected</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s2">&quot;Connected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># 3. No unexpected VM power state changes</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOn&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOff&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
+</code></pre></div>
 <h2 id="vcenter-health">vCenter Health<a class="headerlink" href="#vcenter-health" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Login to vCenter with SSO admin credentials: <code>administrator@vsphere.local</code></li>
@@ -862,34 +862,34 @@ Get-VM | Where-Object {$_.PowerState -ne &quot;PoweredOn&quot; -and $_.PowerStat
 <li>[ ] vSphere Client loads without certificate errors</li>
 </ul>
 <h2 id="cluster-ha-and-drs">Cluster HA and DRS<a class="headerlink" href="#cluster-ha-and-drs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-Cluster | Select-Object Name, HAEnabled, HAAdmissionControlEnabled, DrsEnabled, DrsAutomationLevel
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span>
+</code></pre></div>
 <ul>
 <li>[ ] HA re-enabled and showing green</li>
 <li>[ ] DRS re-enabled in correct automation level</li>
 <li>[ ] No <code>HA error</code> events on any host (check host Events tab)</li>
 </ul>
 <h2 id="vsan-validation-if-applicable">vSAN Validation (if applicable)<a class="headerlink" href="#vsan-validation-if-applicable" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># On any cluster host
-esxcli vsan health cluster list | grep -v Green    # Should return nothing
-esxcli vsan debug resync summary                   # Should show no active resync
-esxcli vsan debug object list | grep -v Healthy    # Should return nothing
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On any cluster host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Green<span class="w">    </span><span class="c1"># Should return nothing</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w">                   </span><span class="c1"># Should show no active resync</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy<span class="w">    </span><span class="c1"># Should return nothing</span>
+</code></pre></div>
 <h2 id="nsx-validation-if-nsx-was-upgraded-or-touched">NSX Validation (if NSX was upgraded or touched)<a class="headerlink" href="#nsx-validation-if-nsx-was-upgraded-or-touched" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># SSH to NSX Manager
-get cluster status        # STABLE
-get services              # All core services running
-get edge-clusters         # All edge clusters healthy
-
-# Verify edge BGP sessions
-get bgp neighbor summary  # All peers Established
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to NSX Manager</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w">        </span><span class="c1"># STABLE</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>services<span class="w">              </span><span class="c1"># All core services running</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>edge-clusters<span class="w">         </span><span class="c1"># All edge clusters healthy</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify edge BGP sessions</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">  </span><span class="c1"># All peers Established</span>
+</code></pre></div>
 <h2 id="vxrail-validation-if-applicable">VxRail Validation (if applicable)<a class="headerlink" href="#vxrail-validation-if-applicable" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># VxRail Manager
-# Log in to VxRail Manager → Cluster → Health
-# All nodes should show &quot;Healthy&quot;
-# VxRail version should reflect the upgrade target
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VxRail Manager</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Log in to VxRail Manager → Cluster → Health</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># All nodes should show &quot;Healthy&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># VxRail version should reflect the upgrade target</span>
+</code></pre></div>
 <h2 id="aria-suite-validation-if-lcm-managed">Aria Suite Validation (if LCM-managed)<a class="headerlink" href="#aria-suite-validation-if-lcm-managed" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Log in to LCM: all environments show green health</li>
@@ -897,24 +897,24 @@ get bgp neighbor summary  # All peers Established
 <li>[ ] Log in to Aria Automation: service health page shows all services running</li>
 </ul>
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell"># Check if backup jobs can still enumerate VMs (Veeam example)
-# Run a &quot;Quick Backup&quot; on a non-critical VM to confirm backup proxy connectivity is intact
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check if backup jobs can still enumerate VMs (Veeam example)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Run a &quot;Quick Backup&quot; on a non-critical VM to confirm backup proxy connectivity is intact</span>
+</code></pre></div>
 <ul>
 <li>[ ] Trigger a test backup of one non-critical VM — confirm it completes successfully</li>
 <li>[ ] Confirm monitoring agents are still collecting from all hosts</li>
 </ul>
 <h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
 <p>Capture post-upgrade versions for CMDB update and future reference:</p>
-<pre><code class="language-powershell"># Capture all component versions
-Get-VMHost | Select-Object Name, Version, Build | Sort-Object Name | Export-Csv -Path /tmp/host_versions_$(Get-Date -Format yyyyMMdd).csv
-
-# vCenter version
-(Get-View ServiceInstance).Content.About | Select-Object Version, Build
-
-# NSX version (SSH to NSX Manager)
-# get version
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Capture all component versions</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">host_versions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># vCenter version</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="nb">Get-View</span> <span class="n">ServiceInstance</span><span class="p">).</span><span class="n">Content</span><span class="p">.</span><span class="n">About</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Build</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># NSX version (SSH to NSX Manager)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># get version</span>
+</code></pre></div>
 <h2 id="change-record-closure">Change Record Closure<a class="headerlink" href="#change-record-closure" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All hosts connected: confirmed</li>

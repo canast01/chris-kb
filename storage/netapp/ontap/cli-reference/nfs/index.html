@@ -811,56 +811,65 @@
 <blockquote>
 <p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    NFS["NFS"]
+    NFS --&gt; S0["NFS Service"]
+    NFS --&gt; S1["Export Policies"]
+    NFS --&gt; S2["Export Rules"]
+    NFS --&gt; S3["Assign Policy to Volume"]
+    NFS --&gt; S4["NFS Client Verification"]
+    NFS --&gt; S5["Connected NFS Clients"]
+    NFS --&gt; S6["Common Issues"]</code></pre>
 <h2 id="nfs-service">NFS Service<a class="headerlink" href="#nfs-service" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show NFS configuration per SVM
-vserver nfs show
-vserver nfs show -vserver &lt;svm&gt;
-
-# Enable NFS on an SVM
-vserver nfs create -vserver &lt;svm&gt; -v3 enabled -v4.0 enabled -v4.1 enabled
-
-# Modify NFS version settings
-vserver nfs modify -vserver &lt;svm&gt; -v4.1 enabled
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show NFS configuration per SVM</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Enable NFS on an SVM</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v3<span class="w"> </span>enabled<span class="w"> </span>-v4.0<span class="w"> </span>enabled<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Modify NFS version settings</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-v4.1<span class="w"> </span>enabled
+</code></pre></div>
 <h2 id="export-policies">Export Policies<a class="headerlink" href="#export-policies" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List export policies
-vserver export-policy show
-vserver export-policy show -vserver &lt;svm&gt;
-
-# Create an export policy
-vserver export-policy create -vserver &lt;svm&gt; -policyname &lt;name&gt;
-
-# Delete an export policy
-vserver export-policy delete -vserver &lt;svm&gt; -policyname &lt;name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List export policies</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create an export policy</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Delete an export policy</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+</code></pre></div>
 <h2 id="export-rules">Export Rules<a class="headerlink" href="#export-rules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List rules for a policy
-vserver export-policy rule show
-vserver export-policy rule show -vserver &lt;svm&gt; -policyname &lt;name&gt;
-
-# Create a rule (allow subnet read-write with SYS auth)
-vserver export-policy rule create \
-    -vserver &lt;svm&gt; \
-    -policyname &lt;name&gt; \
-    -ruleindex 1 \
-    -clientmatch &lt;cidr_or_ip&gt; \
-    -rorule sys \
-    -rwrule sys \
-    -superuser sys
-
-# Delete a rule
-vserver export-policy rule delete -vserver &lt;svm&gt; -policyname &lt;name&gt; -ruleindex &lt;n&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List rules for a policy</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a rule (allow subnet read-write with SYS auth)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-ruleindex<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-clientmatch<span class="w"> </span>&lt;cidr_or_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-rorule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>-rwrule<span class="w"> </span>sys<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>-superuser<span class="w"> </span>sys
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Delete a rule</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-ruleindex<span class="w"> </span>&lt;n&gt;
+</code></pre></div>
 <h2 id="assign-policy-to-volume">Assign Policy to Volume<a class="headerlink" href="#assign-policy-to-volume" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -policy &lt;export-policy&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>volume<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-policy<span class="w"> </span>&lt;export-policy&gt;
+</code></pre></div>
 <h2 id="nfs-client-verification">NFS Client Verification<a class="headerlink" href="#nfs-client-verification" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Test if a specific client IP can access the export
-vserver nfs check-client -vserver &lt;svm&gt; -client-ip &lt;ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test if a specific client IP can access the export</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>check-client<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-client-ip<span class="w"> </span>&lt;ip&gt;
+</code></pre></div>
 <h2 id="connected-nfs-clients">Connected NFS Clients<a class="headerlink" href="#connected-nfs-clients" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">nfs connected-client show -vserver &lt;svm&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

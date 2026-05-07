@@ -805,15 +805,15 @@
 <hr />
 <h2 id="high-host-write-latency">High Host Write Latency<a class="headerlink" href="#high-host-write-latency" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Applications report write slowness; storage latency exceeds baseline; no hardware alerts.</p>
-<pre><code class="language-bash"># Check current SRDF link RTT and write pending counts
-symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v | grep -E &quot;RTT\|Pending\|Link&quot;
-
-# Check write latency per device
-symdev -sid &lt;r1_sid&gt; show &lt;dev_id&gt; | grep -E &quot;Write|Response&quot;
-
-# Check array performance overview in Unisphere
-# Performance → Directors → SRDF directors → check write pending
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current SRDF link RTT and write pending counts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RTT\|Pending\|Link&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check write latency per device</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Write|Response&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check array performance overview in Unisphere</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Performance → Directors → SRDF directors → check write pending</span>
+</code></pre></div>
 <p><strong>Root cause:</strong> Any increase in the WAN RTT adds directly to host write latency for SRDF/S. Every 1ms of additional RTT adds ~2ms to host write response time.</p>
 <p><strong>Immediate action:</strong>
 1. Get the current RTT from the network team — compare to the baseline measured at deployment.
@@ -823,89 +823,89 @@ symdev -sid &lt;r1_sid&gt; show &lt;dev_id&gt; | grep -E &quot;Write|Response&qu
 <h2 id="pair-enters-write-disabled-state">Pair Enters Write Disabled State<a class="headerlink" href="#pair-enters-write-disabled-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>symrdf query</code> shows pair state as <code>Write Disabled</code>; hosts may report I/O errors.</p>
 <p><code>Write Disabled</code> indicates the R1 array could not complete writes to R2 within the write timeout threshold (typically due to RTT spike or link loss). The R1 array disables writes on the affected R1 devices to preserve data consistency.</p>
-<pre><code class="language-bash"># Confirm Write Disabled state
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query | grep &quot;Write Disabled&quot;
-
-# Check for link errors
-symcfg -sid &lt;r1_sid&gt; list -rdfg &lt;group_num&gt; -v
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm Write Disabled state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Write Disabled&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for link errors</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-v
+</code></pre></div>
 <p><strong>Recovery:</strong></p>
 <ol>
 <li>Resolve the underlying link or RTT issue first.</li>
 <li>Once the link is stable, re-establish the SRDF pair:</li>
 </ol>
-<pre><code class="language-bash"># Resync from R1 to R2 (R1 data is authoritative in this scenario)
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resync -noprompt
-
-# Monitor until pair returns to Synchronized
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Resync from R1 to R2 (R1 data is authoritative in this scenario)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor until pair returns to Synchronized</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+</code></pre></div>
 <hr />
 <h2 id="pair-in-invalid-state">Pair in <code>Invalid</code> State<a class="headerlink" href="#pair-in-invalid-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Pair state shows <code>Invalid</code> — typically after an unresolved split or an earlier failover that was not cleanly restored.</p>
-<pre><code class="language-bash"># Check the event log for the event that caused the Invalid state
-symevent -sid &lt;r1_sid&gt; list -last 30 | grep -i &quot;SRDF\|Invalid\|failover&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check the event log for the event that caused the Invalid state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SRDF\|Invalid\|failover&quot;</span>
+</code></pre></div>
 <p><strong>Resolution (R1 is authoritative — no real failover occurred):</strong></p>
-<pre><code class="language-bash">symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resync -noprompt
-# Pushes R1 data to R2 and re-establishes sync
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Pushes R1 data to R2 and re-establishes sync</span>
+</code></pre></div>
 <p><strong>Resolution (R2 has the latest data — a real failover occurred):</strong></p>
-<pre><code class="language-bash"># Confirm with application team that R2 has the correct data
-# Then fail back to R1
-symrdf -g &lt;dgname&gt; -sid &lt;r2_sid&gt; failback -noprompt
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Then fail back to R1</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
+</code></pre></div>
 <p><strong>Do not resync or restore without first confirming which side has the authoritative data.</strong> An incorrect resync will permanently overwrite data.</p>
 <hr />
 <h2 id="pair-in-split-state">Pair in <code>Split</code> State<a class="headerlink" href="#pair-in-split-state" title="Permanent link">&para;</a></h2>
 <p>A <code>Split</code> state means both R1 and R2 are R/W and data is diverging. This is normal during a planned failover but is an incident if unexpected.</p>
-<pre><code class="language-bash"># Check when the split occurred
-symevent -sid &lt;r1_sid&gt; list -last 24h | grep -i &quot;split\|SRDF&quot;
-
-# Identify which side has writes since the split
-symdev -sid &lt;r1_sid&gt; show &lt;dev_id&gt; | grep &quot;Modified&quot;
-symdev -sid &lt;r2_sid&gt; show &lt;dev_id&gt; | grep &quot;Modified&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check when the split occurred</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span>24h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;split\|SRDF&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Identify which side has writes since the split</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+</code></pre></div>
 <p><strong>Never re-establish a split pair without application team sign-off.</strong> Restoring R1 overwrites any R2 writes made during the split period and vice versa.</p>
 <hr />
 <h2 id="isl-fcip-link-failure">ISL / FCIP Link Failure<a class="headerlink" href="#isl-fcip-link-failure" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> SRDF link is down; pairs move to <code>Suspended</code> or <code>Write Disabled</code>.</p>
-<pre><code class="language-bash"># Check SRDF director port state
-symcfg -sid &lt;r1_sid&gt; list -dir all -v | grep -E &quot;RDF|Port|State&quot;
-
-# From SAN switch (Cisco MDS)
-show fcip session
-show port-channel summary  # if using port-channel
-show interface gigabitEthernet X/X
-
-# From Brocade
-portshow &lt;port&gt;
-portcfgshow  # check FCIP port config
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check SRDF director port state</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port|State&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># From SAN switch (Cisco MDS)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary<span class="w">  </span><span class="c1"># if using port-channel</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># From Brocade</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>portcfgshow<span class="w">  </span><span class="c1"># check FCIP port config</span>
+</code></pre></div>
 <p><strong>Recovery after link restoration:</strong></p>
-<pre><code class="language-bash"># Pair should auto-resume once link is restored (depending on configuration)
-# If pairs remain Suspended, manually resume:
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
-
-# Verify Synchronized state is reached (may take time to fully sync)
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># If pairs remain Suspended, manually resume:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify Synchronized state is reached (may take time to fully sync)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+</code></pre></div>
 <hr />
 <h2 id="unintended-failover-during-maintenance">Unintended Failover During Maintenance<a class="headerlink" href="#unintended-failover-during-maintenance" title="Permanent link">&para;</a></h2>
 <p><strong>Cause:</strong> Maintenance was performed without declaring a maintenance window; SRDF monitors triggered automatic protection responses.</p>
 <p><strong>Prevention:</strong></p>
-<pre><code class="language-bash"># Before any maintenance that touches SRDF links, directors, or the arrays:
-# Step 1 — Suspend SRDF/S pair (converts to async temporarily)
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; suspend -noprompt
-
-# Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration
-
-# Step 3 — Perform maintenance
-
-# Step 4 — Resume and verify Synchronized state before re-enabling monitoring
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; resume -noprompt
-symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Before any maintenance that touches SRDF links, directors, or the arrays:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Step 1 — Suspend SRDF/S pair (converts to async temporarily)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Step 3 — Perform maintenance</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Step 4 — Resume and verify Synchronized state before re-enabling monitoring</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+</code></pre></div>
 
 
 

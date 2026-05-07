@@ -827,62 +827,62 @@
 </tbody>
 </table>
 <h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List application gateways
-az network application-gateway list -g &lt;rg&gt; \
-  --query '[*].{Name:name,SKU:sku.name,State:provisioningState,Tier:sku.tier}' -o table
-
-# Show backend health
-az network application-gateway show-backend-health -g &lt;rg&gt; -n &lt;agw-name&gt; \
-  --query 'backendAddressPools[*].backendHttpSettingsCollection[*].servers[*].{Address:address,Health:health}' -o table
-
-# List backend pools
-az network application-gateway address-pool list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --query '[*].{Name:name,Backends:backendAddresses}' -o table
-
-# List HTTP settings
-az network application-gateway http-settings list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --query '[*].{Name:name,Port:port,Protocol:protocol,Timeout:requestTimeout}' -o table
-
-# List routing rules
-az network application-gateway rule list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --query '[*].{Name:name,Type:ruleType,Listener:httpListener.id,BackendPool:backendAddressPool.id}' -o table
-
-# Add a backend pool member
-az network application-gateway address-pool update -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --name &lt;pool-name&gt; \
-  --servers 10.0.1.10 10.0.1.11
-
-# Get WAF configuration
-az network application-gateway waf-config show -g &lt;rg&gt; --gateway-name &lt;agw-name&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List application gateways</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,SKU:sku.name,State:provisioningState,Tier:sku.tier}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show backend health</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>show-backend-health<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;backendAddressPools[*].backendHttpSettingsCollection[*].servers[*].{Address:address,Health:health}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List backend pools</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>address-pool<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Backends:backendAddresses}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List HTTP settings</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>http-settings<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Port:port,Protocol:protocol,Timeout:requestTimeout}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># List routing rules</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>rule<span class="w"> </span>list<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Type:ruleType,Listener:httpListener.id,BackendPool:backendAddressPool.id}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Add a backend pool member</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>address-pool<span class="w"> </span>update<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--name<span class="w"> </span>&lt;pool-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--servers<span class="w"> </span><span class="m">10</span>.0.1.10<span class="w"> </span><span class="m">10</span>.0.1.11
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Get WAF configuration</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>waf-config<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;
+</code></pre></div>
 <h2 id="ssl-certificate-management">SSL Certificate Management<a class="headerlink" href="#ssl-certificate-management" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Add a PFX certificate
-az network application-gateway ssl-cert create -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --name &lt;cert-name&gt; \
-  --cert-file cert.pfx \
-  --cert-password &lt;password&gt;
-
-# Use Key Vault certificate (managed identity required)
-az network application-gateway ssl-cert create -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --name &lt;cert-name&gt; \
-  --key-vault-secret-id &lt;keyvault-secret-uri&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add a PFX certificate</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>ssl-cert<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;cert-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--cert-file<span class="w"> </span>cert.pfx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--cert-password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Use Key Vault certificate (managed identity required)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>ssl-cert<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--name<span class="w"> </span>&lt;cert-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--key-vault-secret-id<span class="w"> </span>&lt;keyvault-secret-uri&gt;
+</code></pre></div>
 <h2 id="waf-mode-and-rules">WAF Mode and Rules<a class="headerlink" href="#waf-mode-and-rules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Set WAF to Prevention mode (blocks; Detection only logs)
-az network application-gateway waf-config set -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --enabled true \
-  --firewall-mode Prevention \
-  --rule-set-type OWASP \
-  --rule-set-version 3.2
-
-# Add WAF exclusion (for false positives)
-az network application-gateway waf-config set -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
-  --enabled true \
-  --firewall-mode Prevention \
-  --rule-set-type OWASP \
-  --rule-set-version 3.2 \
-  --exclusion RequestHeaderNames StartsWith &quot;X-Custom&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set WAF to Prevention mode (blocks; Detection only logs)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>waf-config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--firewall-mode<span class="w"> </span>Prevention<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--rule-set-type<span class="w"> </span>OWASP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--rule-set-version<span class="w"> </span><span class="m">3</span>.2
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Add WAF exclusion (for false positives)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>az<span class="w"> </span>network<span class="w"> </span>application-gateway<span class="w"> </span>waf-config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--gateway-name<span class="w"> </span>&lt;agw-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--firewall-mode<span class="w"> </span>Prevention<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--rule-set-type<span class="w"> </span>OWASP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--rule-set-version<span class="w"> </span><span class="m">3</span>.2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--exclusion<span class="w"> </span>RequestHeaderNames<span class="w"> </span>StartsWith<span class="w"> </span><span class="s2">&quot;X-Custom&quot;</span>
+</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

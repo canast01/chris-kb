@@ -823,26 +823,36 @@
 <p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
 </blockquote>
 <p>ONTAP quotas limit disk space and file counts on volumes, trees (qtrees), or users.</p>
+<pre class="mermaid"><code>flowchart LR
+    Quotas["Quotas"]
+    Quotas --&gt; S0["View Quota Status"]
+    Quotas --&gt; S1["Enable and Disable Quotas"]
+    Quotas --&gt; S2["Quota Rule Types"]
+    Quotas --&gt; S3["Create Quota Rules"]
+    Quotas --&gt; S4["Modify a Quota Rule"]
+    Quotas --&gt; S5["Delete a Quota Rule"]
+    Quotas --&gt; S6["Quota Report Interpretation"]
+    Quotas --&gt; S7["Common Issues"]</code></pre>
 <h2 id="view-quota-status">View Quota Status<a class="headerlink" href="#view-quota-status" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Quota status on all volumes
-volume quota show
-
-# Quota report for a specific volume (current usage vs limits)
-volume quota report -vserver &lt;svm&gt; -volume &lt;vol&gt;
-
-# Quota rules for an SVM
-volume quota policy rule show -vserver &lt;svm&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Quota status on all volumes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Quota report for a specific volume (current usage vs limits)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>volume<span class="w"> </span>quota<span class="w"> </span>report<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Quota rules for an SVM</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+</code></pre></div>
 <h2 id="enable-and-disable-quotas">Enable and Disable Quotas<a class="headerlink" href="#enable-and-disable-quotas" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Enable quotas on a volume
-volume quota on -vserver &lt;svm&gt; -volume &lt;vol&gt;
-
-# Disable quotas
-volume quota off -vserver &lt;svm&gt; -volume &lt;vol&gt;
-
-# Resize without disabling (picks up new rules)
-volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable quotas on a volume</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>on<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Disable quotas</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>quota<span class="w"> </span>off<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Resize without disabling (picks up new rules)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>quota<span class="w"> </span>resize<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+</code></pre></div>
 <h2 id="quota-rule-types">Quota Rule Types<a class="headerlink" href="#quota-rule-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -867,55 +877,55 @@ volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;
 </tbody>
 </table>
 <h2 id="create-quota-rules">Create Quota Rules<a class="headerlink" href="#create-quota-rules" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Tree quota — limit a qtree to 500 GB
-volume quota policy rule create \
-    -vserver &lt;svm&gt; \
-    -policy-name default \
-    -volume &lt;vol&gt; \
-    -type tree \
-    -target /qtree_name \
-    -disk-limit 500g \
-    -soft-disk-limit 400g
-
-# User quota — default user limit (empty target = all users)
-volume quota policy rule create \
-    -vserver &lt;svm&gt; \
-    -policy-name default \
-    -volume &lt;vol&gt; \
-    -type user \
-    -target &quot;&quot; \
-    -disk-limit 100g
-
-# Specific user quota
-volume quota policy rule create \
-    -vserver &lt;svm&gt; \
-    -policy-name default \
-    -volume &lt;vol&gt; \
-    -type user \
-    -target &quot;DOMAIN\username&quot; \
-    -disk-limit 200g
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Tree quota — limit a qtree to 500 GB</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-policy-name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-disk-limit<span class="w"> </span>500g<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-soft-disk-limit<span class="w"> </span>400g
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># User quota — default user limit (empty target = all users)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>-policy-name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>-target<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span>-disk-limit<span class="w"> </span>100g
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Specific user quota</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>-policy-name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span>-type<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span>-target<span class="w"> </span><span class="s2">&quot;DOMAIN\username&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span>-disk-limit<span class="w"> </span>200g
+</code></pre></div>
 <h2 id="modify-a-quota-rule">Modify a Quota Rule<a class="headerlink" href="#modify-a-quota-rule" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume quota policy rule modify \
-    -vserver &lt;svm&gt; \
-    -policy-name default \
-    -volume &lt;vol&gt; \
-    -type tree \
-    -target /qtree_name \
-    -disk-limit 1t
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-policy-name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>-target<span class="w"> </span>/qtree_name<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>-disk-limit<span class="w"> </span>1t
+</code></pre></div>
 <h2 id="delete-a-quota-rule">Delete a Quota Rule<a class="headerlink" href="#delete-a-quota-rule" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">volume quota policy rule delete \
-    -vserver &lt;svm&gt; \
-    -policy-name default \
-    -volume &lt;vol&gt; \
-    -type tree \
-    -target /qtree_name
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>volume<span class="w"> </span>quota<span class="w"> </span>policy<span class="w"> </span>rule<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-policy-name<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>-type<span class="w"> </span>tree<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>-target<span class="w"> </span>/qtree_name
+</code></pre></div>
 <h2 id="quota-report-interpretation">Quota Report Interpretation<a class="headerlink" href="#quota-report-interpretation" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Full report output
-volume quota report -vserver &lt;svm&gt; -volume &lt;vol&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Full report output</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>quota<span class="w"> </span>report<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;
+</code></pre></div>
 <table>
 <thead>
 <tr>

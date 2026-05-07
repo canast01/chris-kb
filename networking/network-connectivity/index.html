@@ -839,61 +839,61 @@
 <p>Structured approach to diagnosing end-to-end connectivity failures.</p>
 <h2 id="layer-by-layer-triage">Layer-by-Layer Triage<a class="headerlink" href="#layer-by-layer-triage" title="Permanent link">&para;</a></h2>
 <h3 id="layer-1-physical">Layer 1 — Physical<a class="headerlink" href="#layer-1-physical" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Linux — check interface link state
-ip link show
-ethtool &lt;interface&gt;    # speed, duplex, link detected
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Linux — check interface link state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w">    </span><span class="c1"># speed, duplex, link detected</span>
+</code></pre></div>
 <h3 id="layer-2-switching">Layer 2 — Switching<a class="headerlink" href="#layer-2-switching" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Check ARP table (confirm MAC resolved)
-arp -a
-ip neigh show
-
-# Check interface is in correct VLAN
-# On switch: show interface status, show vlan brief
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check ARP table (confirm MAC resolved)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>arp<span class="w"> </span>-a
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ip<span class="w"> </span>neigh<span class="w"> </span>show
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check interface is in correct VLAN</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># On switch: show interface status, show vlan brief</span>
+</code></pre></div>
 <h3 id="layer-3-ip-routing">Layer 3 — IP / Routing<a class="headerlink" href="#layer-3-ip-routing" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Confirm IP configuration
-ip addr show
-
-# Confirm route exists
-ip route show
-ip route get &lt;destination_ip&gt;
-
-# Default gateway
-ip route show default
-ping &lt;gateway_ip&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm IP configuration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm route exists</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Default gateway</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
+</code></pre></div>
 <h3 id="layer-4-transport">Layer 4 — Transport<a class="headerlink" href="#layer-4-transport" title="Permanent link">&para;</a></h3>
-<pre><code class="language-bash"># Test specific TCP port
-nc -zv &lt;host&gt; &lt;port&gt;
-telnet &lt;host&gt; &lt;port&gt;
-curl -v http://&lt;host&gt;:&lt;port&gt;/
-
-# Check local firewall
-iptables -L -n | grep &lt;port&gt;
-firewall-cmd --list-all
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test specific TCP port</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>telnet<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check local firewall</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>firewall-cmd<span class="w"> </span>--list-all
+</code></pre></div>
 <h2 id="path-tracing">Path Tracing<a class="headerlink" href="#path-tracing" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">traceroute &lt;destination&gt;    # Linux/Mac
-tracert &lt;destination&gt;       # Windows
-mtr &lt;destination&gt;           # continuous path trace
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux/Mac</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>mtr<span class="w"> </span>&lt;destination&gt;<span class="w">           </span><span class="c1"># continuous path trace</span>
+</code></pre></div>
 <h2 id="common-connectivity-tests">Common Connectivity Tests<a class="headerlink" href="#common-connectivity-tests" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># ICMP ping
-ping -c 4 &lt;host&gt;
-
-# MTU test (verify no fragmentation)
-ping -M do -s 1472 &lt;host&gt;    # Linux (1500 MTU = 1472 payload + 28 headers)
-ping -f -l 1472 &lt;host&gt;       # Windows
-
-# DNS and then connect
-curl -v https://&lt;fqdn&gt;/
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># ICMP ping</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># MTU test (verify no fragmentation)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">    </span><span class="c1"># Linux (1500 MTU = 1472 payload + 28 headers)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">       </span><span class="c1"># Windows</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># DNS and then connect</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://&lt;fqdn&gt;/
+</code></pre></div>
 <h2 id="connectivity-from-windows">Connectivity from Windows<a class="headerlink" href="#connectivity-from-windows" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Test-NetConnection -ComputerName &lt;host&gt; -Port &lt;port&gt;
-Test-NetConnection &lt;host&gt;    # ICMP test
-Resolve-DnsName &lt;host&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Test-NetConnection</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>    <span class="c"># ICMP test</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+</code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
