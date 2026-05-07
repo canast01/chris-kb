@@ -836,33 +836,17 @@
 <p>Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics platform that collects, indexes, and correlates log data from VMware infrastructure and other sources. It is based on an Elasticsearch-backed storage and indexing engine.</p>
 <hr />
 <h2 id="log-pipeline-architecture">Log Pipeline Architecture<a class="headerlink" href="#log-pipeline-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                   Aria Operations for Logs Cluster                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Master Node                                                    │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  Query engine  |  Index coordinator  |  Web UI  |  REST API    │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  └──────────────────────────────┬──────────────────────────────── ┘    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │                                 │  cluster replication                 │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  ┌──────────────────────────────▼──────────────────────────────────┐   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  Worker Nodes (2+)                                              │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  Elasticsearch index shards  |  Log storage  |  Query workers  │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  └─────────────────────────────────────────────────────────────── ┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └───────────────────────────────────┬──────────────────────────────────── ┘
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                      │  log ingestion
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          ┌───────────────────────────┼────────────────────────────┐
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          │                           │                            │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  ┌───────▼────────┐         ┌────────▼────────┐          ┌───────▼────────┐
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  Syslog agent  │         │  Syslog (UDP    │          │  REST API      │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  (LI agent on  │         │  514 / TCP 1514)│          │  ingest        │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  ESXi / vCenter│         │  Windows events │          │  (third-party) │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  └───────┬────────┘         └─────────────────┘          └────────────────┘
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>          │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  ┌───────▼─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  │  Sources                                                             │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  │  ESXi  vCenter  NSX  vSAN  physical hosts  firewalls  Linux/Windows  │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  └──────────────────────────────────────────────────────────────────── ┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  SRC1(["ESXi / vCenter syslog"]) &amp; SRC2(["NSX / VMs syslog"]) &amp; SRC3(["Linux / Windows agent"]) --&gt; VRLI["Aria Operations for Logs\n(Log Intelligence cluster)"]
+  VRLI --&gt; IDX[("Log Index\nhot + warm retention")]
+  VRLI --&gt; ALERTS["Alert Rules &amp; Notifications"]
+  ADMIN(["Operator"]) --&gt;|"browser"| VRLI
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class VRLI ctrl
+  class IDX store
+  class SRC1,SRC2,SRC3,ADMIN host</code></pre>
 <h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

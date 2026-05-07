@@ -874,16 +874,19 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operations platform providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. The platform is fully SaaS-delivered with no customer-managed AI compute components. Telemetry is collected on-premises by the Secure Connect Gateway (SCG) and processed by Dell's cloud AI pipeline.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>On-Premises                              Dell Cloud AI Pipeline
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────┐             ┌──────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Dell Storage Arrays      │             │  Anomaly Detection Engine         │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  (PowerStore, PowerMax,   │──[SCG]─────►│  Root Cause Analysis (RCA)        │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   PowerScale, Unity XT)   │  HTTPS      │  Capacity Forecasting (ML models) │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                           │  443        │  Recommendation Generator         │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  Secure Connect Gateway   │             │                                   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  (On-premises OVA)        │             │  CloudIQ / APEX Console (Web UI)  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└──────────────────────────┘             └──────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  ARRAYS["Dell Storage Arrays\n(telemetry streams)"] --&gt; AIOPS["Dell AIOps\n(AI analytics engine)"]
+  AIOPS --&gt; ANOM["Anomaly Detection"]
+  AIOPS --&gt; PRED["Predictive Insights"]
+  AIOPS --&gt; RECS["Actionable Recommendations"]
+  AIOPS --&gt; CIQ["CloudIQ Integration"]
+  ADMIN(["Storage Team"]) --&gt;|"dashboard"| AIOPS
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAYS ctrl
+  class AIOPS,ANOM,PRED,RECS,CIQ cloud
+  class ADMIN host</code></pre>
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

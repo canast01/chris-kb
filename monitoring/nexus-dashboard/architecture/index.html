@@ -836,16 +836,18 @@
 <p>Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI and NX-OS data centre fabrics. It provides unified management, health monitoring, policy orchestration, and network insights through a microservices-based architecture. Services including Nexus Dashboard Fabric Controller (NDFC) and Nexus Dashboard Insights (NDI) run on top of the ND platform and are independently licensed and deployed.</p>
 <h2 id="cluster-architecture">Cluster Architecture<a class="headerlink" href="#cluster-architecture" title="Permanent link">&para;</a></h2>
 <p>A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point regardless of which node the client connects to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>          ┌─────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>          │          Management VIP                  │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>          └────────────┬────────────────────────────┘
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>          ┌────────────┼──────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>     ND Node 01    ND Node 02    ND Node 03
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   (Master)      (Worker)       (Worker)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   [API GW]      [Services]    [Services]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   [UI]          [NDFC]        [NDI]
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  ND["Cisco Nexus Dashboard\n(3-node cluster)"] --&gt; NDFC["NDFC — Fabric Controller"]
+  ND --&gt; NDI["ND Insights\ntelemetry · flow analysis"]
+  ND --&gt; NDO["ND Orchestrator\nmulti-site ACI"]
+  NDFC &amp; NDI &amp; NDO --&gt; FABRICS["Managed Fabrics\nNexus · ACI · MDS"]
+  ADMIN(["Network Admin"]) --&gt;|"browser"| ND
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ND ctrl
+  class NDFC,NDI,NDO mgmt
+  class ADMIN,FABRICS host</code></pre>
 <table>
 <thead>
 <tr>
@@ -927,10 +929,10 @@
 <p>Services are installed and managed from <strong>Admin &gt; App Store</strong> or via a downloaded service image.</p>
 <h2 id="aci-integration">ACI Integration<a class="headerlink" href="#aci-integration" title="Permanent link">&para;</a></h2>
 <p>For ACI fabrics, the ACI APIC cluster is added to Nexus Dashboard as a managed site. ND communicates with APIC via its northbound REST API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Admin &gt; Sites &gt; Add Site
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Site type: ACI
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- APIC address: &lt;APIC-cluster-VIP&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Username/password: (read-only for monitoring, admin for NDFC/NDO)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Admin &gt; Sites &gt; Add Site
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Site type: ACI
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- APIC address: &lt;APIC-cluster-VIP&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Username/password: (read-only for monitoring, admin for NDFC/NDO)
 </code></pre></div>
 <h2 id="nx-os-ndfc-integration">NX-OS / NDFC Integration<a class="headerlink" href="#nx-os-ndfc-integration" title="Permanent link">&para;</a></h2>
 <p>For NX-OS fabrics managed by NDFC, switches are discovered and onboarded via NDFC's fabric creation workflow. NDFC communicates with switches via SSH and SNMP.</p>

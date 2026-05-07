@@ -813,29 +813,16 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.</p>
 <h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                    SnapMirror Architecture                               │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  Source Cluster                            Destination Cluster           │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  ─────────────────────────────────         ────────────────────────────  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  ┌───────────────────────────────┐         ┌──────────────────────────┐  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  SVM / Volume (R/W)           │         │  SVM / Volume (DP/RO)    │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │                               │         │                          │  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  SnapMirror Async  ───────────┼─────────►  RPO = schedule interval │  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  (XDP / SnapVault)            │         │  (hourly / daily)        │  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │                               │         │                          │  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  SnapMirror Sync  ◄───────────┼─────────►  RPO = 0 (synchronous)  │  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  (SM-S / SMBC)                │  NVLOG  │  AutomatedFailOver (SAN) │  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │                               │  mirror │                          │  │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  └───────────────────────────────┘         └──────────────────────────┘  │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │                                                                          │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  Relationship management always from destination:                        │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  snapmirror create / initialize / update / resync / break / quiesce     │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │                                                                          │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  Mediator (SM-S): third cluster or host — tiebreak for transparent      │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  failover when both clusters disagree on primary state                  │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  └──────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph LR
+  SRC["Source Volume\nSVM / Cluster A"] --&gt;|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
+  SRC --&gt; SNAP[("Local Snapshots")]
+  DST --&gt;|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class SRC,DST ctrl
+  class SNAP store
+  class DRACT dr</code></pre>
 <h2 id="replication-types">Replication Types<a class="headerlink" href="#replication-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -881,7 +868,7 @@
 <p>Intercluster LIFs must be on a dedicated replication network, separate from data and management traffic. ONTAP uses TCP ports 11104 and 11105 for intercluster replication. Cluster peering must be established before SVM peering, and SVM peering is required before any volume or SVM-level relationship can be created. Bandwidth requirements are driven by the daily change rate of source data — higher change rates require proportionally more replication bandwidth to sustain the configured RPO.</p>
 <h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
 <p>Estimate required replication bandwidth using:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Required bandwidth = (Daily change rate × source volume size) / replication window (seconds)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Required bandwidth = (Daily change rate × source volume size) / replication window (seconds)
 </code></pre></div>
 <table>
 <thead>

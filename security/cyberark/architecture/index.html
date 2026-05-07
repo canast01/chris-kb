@@ -878,53 +878,37 @@
 </table>
 <hr />
 <h2 id="pam-component-topology">PAM Component Topology<a class="headerlink" href="#pam-component-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                         CyberArk PAM Platform                           │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌────────────────────────────────────────────────────────────────┐     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Digital Vault Server (DVS)                                    │     │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  Encrypted credential store  |  Hardened OS  |  No network FS  │     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  DR Vault (async replication) ◄────────────────────────────    │     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  └───────┬──────────────────────────────────────────┬────────────┘     │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │          │  Vault API (TCP 1858)                    │                  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  ┌───────▼──────────┐                    ┌──────────▼─────────────┐    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  PVWA            │                    │  CPM                   │    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  Web UI + REST   │                    │  Password rotation      │    │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  API gateway     │                    │  Verification &amp; change │    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  (IIS on Windows)│                    │  Platform plugins       │    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  └───────┬──────────┘                    └────────────────────────┘    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │          │  session launch                                              │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │  PSM  (Privileged Session Manager)                               │  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  │  RDP / SSH proxy  |  Session recording  |  Keystroke logging     │  │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  │  No credential reaches end user — PSM injects transparently      │  │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  └──────────────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  │          │  proxied session to target                                   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  ┌───────▼──────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  │  │  Target Systems                                                   │  │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  │  │  Windows servers  Linux / Unix  Network devices  Databases        │  │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  │  └──────────────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  └──────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  PVWA["PVWA\n(web interface)"] &amp; PSM["PSM\n(session proxy)"] &amp; CPM["CPM\n(rotation engine)"] --&gt; VAULT["CyberArk Vault\n(encrypted credential store)"]
+  USER(["Privileged User"]) --&gt;|"browser"| PVWA
+  PSM --&gt;|"RDP / SSH proxy\nsession recording"| TARGET(["Target Servers"])
+  CPM --&gt;|"password rotation"| TARGET
+  VAULT -.-&gt;|"audit stream"| SIEM(["SIEM"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class VAULT store
+  class PVWA,PSM,CPM ctrl
+  class USER,TARGET,SIEM host</code></pre>
 <h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Admin workstation / PAW]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>         |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>         | HTTPS (443)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>         v
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>[PVWA (load-balanced pair)]  &lt;-- AD LDAP/LDAPS (389/636)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>         |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>         | Vault SDK (1858)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>         v
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>[Digital Vault (primary)]  &lt;--&gt; [DR Vault]
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>         |                      (replication: 1858)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>         |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    +---------+----------+
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    |                    |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>[CPM]                 [PSM (load-balanced)]
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    |                    |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    | (target protocols) | RDP/SSH (through session)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    v                    v
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>[Target systems]     [Target systems]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[Admin workstation / PAW]
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         |
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>         | HTTPS (443)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>         v
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[PVWA (load-balanced pair)]  &lt;-- AD LDAP/LDAPS (389/636)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>         |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>         | Vault SDK (1858)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>         v
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>[Digital Vault (primary)]  &lt;--&gt; [DR Vault]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         |                      (replication: 1858)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>         |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    +---------+----------+
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    |                    |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>[CPM]                 [PSM (load-balanced)]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    |                    |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    | (target protocols) | RDP/SSH (through session)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    v                    v
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>[Target systems]     [Target systems]
 </code></pre></div>
 <p>Key ports:
 - PVWA → Vault: TCP 1858
@@ -941,26 +925,26 @@
 <li>Vault OS hardened per CyberArk Vault Hardening Guide (firewall restricts all traffic except port 1858 from CPM/PSM/PVWA and replication to DR Vault)</li>
 <li>Vault event logs forwarded to SIEM via syslog</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check Vault service health (run locally on Vault server)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;CyberArk Vault&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># View Vault operational logs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\PrivateArk\Server\Logs\vault.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Check replication status to DR Vault</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\PrivateArk\Server\Logs\dbsync.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check Vault service health (run locally on Vault server)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;CyberArk Vault&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># View Vault operational logs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\PrivateArk\Server\Logs\vault.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check replication status to DR Vault</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\PrivateArk\Server\Logs\dbsync.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
 </code></pre></div>
 <hr />
 <h2 id="central-policy-manager-cpm">Central Policy Manager (CPM)<a class="headerlink" href="#central-policy-manager-cpm" title="Permanent link">&para;</a></h2>
 <p>CPM connects to target systems on schedule or on-demand to rotate passwords. Each CPM instance handles a partition of accounts determined by safe assignment.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check CPM service health</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;CyberArk Central Policy Manager Scanner&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View CPM operational logs</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\pm.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Find accounts with failed rotation (via PVWA REST API — see scripts page)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Or: In PVWA -&gt; Reports -&gt; CPM Status Report</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check CPM service health</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;CyberArk Central Policy Manager Scanner&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># View CPM operational logs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\Password Manager\Logs\pm.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Find accounts with failed rotation (via PVWA REST API — see scripts page)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Or: In PVWA -&gt; Reports -&gt; CPM Status Report</span>
 </code></pre></div>
 <p>Common CPM failure reasons:
 - Target host unreachable (firewall / network change)
@@ -975,16 +959,16 @@
 <li>Session isolation: PSM uses a Windows Server with AppLocker and restricted user profile.</li>
 <li>PSM nodes are load-balanced; session stickiness is not required (each session is independent).</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check PSM service health</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Cyber-Ark Privileged Session Manager&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># View PSM connection logs</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># List active sessions (via PVWA REST API)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://pvwa.corp.example.com/PasswordVault/API/LiveSessions&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="n">-Method</span> <span class="n">Get</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check PSM service health</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Cyber-Ark Privileged Session Manager&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View PSM connection logs</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># List active sessions (via PVWA REST API)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://pvwa.corp.example.com/PasswordVault/API/LiveSessions&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="n">-Method</span> <span class="n">Get</span>
 </code></pre></div>
 <hr />
 <h2 id="pvwa-password-vault-web-access">PVWA (Password Vault Web Access)<a class="headerlink" href="#pvwa-password-vault-web-access" title="Permanent link">&para;</a></h2>
@@ -994,12 +978,12 @@
 - Safe and account management
 - REST API gateway for automation</p>
 <p>PVWA is deployed as an IIS application on Windows Server, behind a load balancer.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check PVWA IIS application pool health</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-WebConfiguration</span> <span class="n">-Filter</span> <span class="s2">&quot;system.applicationHost/applicationPools/add[@name=&#39;DefaultAppPool&#39;]&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-WebApplication</span> <span class="n">-Site</span> <span class="s2">&quot;Default Web Site&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;PasswordVault&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Verify PVWA can reach the Vault (from PVWA server)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">vault01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">1858</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check PVWA IIS application pool health</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-WebConfiguration</span> <span class="n">-Filter</span> <span class="s2">&quot;system.applicationHost/applicationPools/add[@name=&#39;DefaultAppPool&#39;]&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Get-WebApplication</span> <span class="n">-Site</span> <span class="s2">&quot;Default Web Site&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;PasswordVault&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Verify PVWA can reach the Vault (from PVWA server)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">vault01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">1858</span>
 </code></pre></div>
 <hr />
 <h2 id="high-availability-and-dr">High Availability and DR<a class="headerlink" href="#high-availability-and-dr" title="Permanent link">&para;</a></h2>

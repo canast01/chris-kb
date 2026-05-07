@@ -811,29 +811,32 @@
 
 <h1 id="azure-architecture">Azure Architecture<a class="headerlink" href="#azure-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="management-group-hierarchy">Management Group Hierarchy<a class="headerlink" href="#management-group-hierarchy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Tenant Root Group
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Corp Root
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Platform
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │   ├── Connectivity Subscription     (hub VNet, ExpressRoute, VPN, Azure Firewall)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │   ├── Identity Subscription         (AD Connect, Entra ID P2, PIM)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │   └── Management Subscription       (Defender for Cloud, Log Analytics, Automation)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Workloads
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ├── Production Subscription
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        ├── Staging Subscription
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        └── Development Subscription
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  TENANT["Azure Tenant\n(Entra ID)"] --&gt; MG["Management Groups\nCorp &gt; Prod &gt; Non-Prod"]
+  MG --&gt; SUBP["Production Subscription"]
+  MG --&gt; SUBD["Dev/Test Subscription"]
+  SUBP --&gt; HUB["Hub VNet\nFirewall · Bastion · VPN GW"]
+  SUBP --&gt; SP1["Spoke VNet 1\n(Workload A)"]
+  SUBP --&gt; SP2["Spoke VNet 2\n(Workload B)"]
+  HUB &lt;--&gt;|"VNet peering"| SP1 &amp; SP2
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class TENANT,MG ctrl
+  class SUBP,SUBD cloud
+  class HUB,SP1,SP2 net</code></pre>
 <p>Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.</p>
 <h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
 <p>Hub-and-spoke topology:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                                    │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                   ┌────────────────┼────────────────┐
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                   ▼                ▼                 ▼
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            ├── snet-web      
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            ├── snet-app      
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            └── snet-db (isolated — no internet)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                   ┌────────────────┼────────────────┐
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                   ▼                ▼                 ▼
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            ├── snet-web      
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            ├── snet-app      
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            └── snet-db (isolated — no internet)
 </code></pre></div>
 <p>Azure Firewall in the hub VNet controls all east-west and internet-bound traffic from spokes.</p>
 <h2 id="compute-options">Compute Options<a class="headerlink" href="#compute-options" title="Permanent link">&para;</a></h2>
@@ -907,16 +910,16 @@
 </tbody>
 </table>
 <h2 id="identity-architecture">Identity Architecture<a class="headerlink" href="#identity-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Entra ID (cloud identity plane)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    ├── Entra ID Governance (lifecycle, access reviews)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    ├── Privileged Identity Management (PIM — JIT role activation)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    └── Conditional Access Policies (MFA, compliant device requirements)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Humans: SSO via Entra ID, MFA required
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Managed Identities: used by Azure services (no credentials to manage)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Entra ID (cloud identity plane)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── Entra ID Governance (lifecycle, access reviews)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── Privileged Identity Management (PIM — JIT role activation)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └── Conditional Access Policies (MFA, compliant device requirements)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Humans: SSO via Entra ID, MFA required
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Managed Identities: used by Azure services (no credentials to manage)
 </code></pre></div>
 
 

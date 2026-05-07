@@ -811,38 +811,23 @@
 
 <h1 id="powermax-architecture">PowerMax Architecture<a class="headerlink" href="#powermax-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="powermax-architecture_1">PowerMax Architecture<a class="headerlink" href="#powermax-architecture_1" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                     PowerMax 8000 Array                              │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌──────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │             Director Layer (active-active)                    │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │  FA Dir   │  │  FA Dir   │  │  SRDF Dir │  │  SRDF Dir │ │    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  │ (FC/NVMe) │  │ (FC/NVMe) │  │(replication│  │(replication│ │    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  │  ports)   │  │  ports)   │  │  ports)   │  │  ports)   │ │    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  └────────┼──────────────┼──────────────┼──────────────┼────────┘    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │           │              │              │              │             │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  ┌────────▼──────────────▼──────────────▼──────────────▼────────┐    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │              Crossbar Interconnect (low-latency)              │    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  └───────────────────────────┬───────────────────────────────────┘    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │                              │                                        │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  ┌───────────────────────────▼───────────────────────────────────┐    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │              NVMe Flash Drives (NVMe-SCM / eTLC)              │    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  │           (data + FAST VP tiering, SnapVX metadata)           │    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  └───────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  └─────────────────────┬─────────────────────┬────────────────────────── ┘
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                        │  FC / NVMe-oF        │ SRDF replication
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>           ┌────────────▼──────────┐   ┌───────▼───────────────────┐
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>           │    SAN Fabric          │   │   Remote PowerMax Array   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>           │  (Brocade / Cisco MDS) │   │   (SRDF/S or SRDF/A)      │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>           └────────────┬──────────┘   └───────────────────────────┘
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>           ┌────────────▼──────────────────────────┐
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>           │  Hosts (MPIO / PowerPath)              │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>           │  Oracle RAC / SQL Server / SAP HANA    │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>           └───────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  FA1["FA Director A\nFC / NVMe-oF"] &amp; FA2["FA Director B\nFC / NVMe-oF"] --&gt; XB["Crossbar Interconnect"]
+  SR1["SRDF Director A"] &amp; SR2["SRDF Director B"] --&gt; XB
+  XB --&gt; FLASH[("NVMe Flash\nNVMe-SCM / eTLC")]
+  FA1 &amp; FA2 --&gt; FAB["SAN Fabric\n(Brocade / Cisco)"]
+  FAB --&gt; H(["Hosts — Oracle / SQL / SAP"])
+  SR1 &amp; SR2 --&gt;|"SRDF/S or SRDF/A"| REMOTE["Remote PowerMax"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class FA1,FA2,SR1,SR2 ctrl
+  class XB,FAB net
+  class FLASH store
+  class H host
+  class REMOTE dr</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: <strong>PowerMax 2000</strong> (1–4 engines) and <strong>PowerMax 8000</strong> (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over Fibre Channel or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS (formerly Enginuity/HYPERMAX OS) and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).</p>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>

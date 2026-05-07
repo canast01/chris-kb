@@ -815,33 +815,19 @@
 <p>Each FlashBlade blade is an independent storage node containing its own NVMe flash and compute resources. The chassis hosts multiple blades plus Fabric Modules (FMs) that provide the high-speed internal interconnect. This architecture delivers consistently high aggregate throughput regardless of the access pattern — critical for workloads like GPU training jobs that demand tens of GB/s of sustained bandwidth.</p>
 <p>FlashBlade serves multiple protocols natively from a single platform without any protocol gateway: NFS v3/v4.1, SMB 2/3, S3 object, and HDFS, all from the same filesystem or object store namespace.</p>
 <h2 id="scale-out-blade-architecture">Scale-Out Blade Architecture<a class="headerlink" href="#scale-out-blade-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                     FlashBlade Chassis (17U)                             │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Fabric Management Module (FMM)  /  Blade Mgmt Module (BMM)     │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  NVMe-oF internal fabric  |  Out-of-band management plane       │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │ Blade 01 │ │ Blade 02 │ │ Blade 03 │ │  ...     │ │ Blade 15 │     │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │ CPU+NVMe │ │ CPU+NVMe │ │ CPU+NVMe │ │          │ │ CPU+NVMe │     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │ 17 / 52T │ │ 17 / 52T │ │ 17 / 52T │ │          │ │ 17 / 52T │     │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │       └────────────┴────────────┴─────────────┴────────────┘           │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │                         internal NVMe-oF fabric                        │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  └──────────────────────────────┬──────────────────────────────────────────┘
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                                 │  10 / 25 / 100 GbE
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>               ┌─────────────────▼───────────────────────┐
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>               │  Ethernet Fabric (leaf-spine)            │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>               │  NFS v3/v4.1  |  S3  |  SMB  |  NFS/S3  │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>               └────────────────┬────────────────────────┘
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        ┌───────────────────────▼────────────────────────────┐
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        │  Clients                                            │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        │  GPU nodes (AI/ML)  Hadoop  Backup  Analytics       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        └─────────────────────────────────────────────────────┘
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  Scale: 1 to 15 blades per chassis, up to 20 chassis in a cluster
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  FMM["Fabric Management Module\n(NVMe-oF internal fabric)"]
+  B1["Blade 1"] &amp; B2["Blade 2"] &amp; B3["Blade 3"] &amp; BN["Blade N…"] --&gt; FMM
+  FMM --&gt; ETH["10 / 25 / 100 GbE\nData Ports"]
+  ETH --&gt; NFS(["NFS v3/v4.1 Clients"])
+  ETH --&gt; S3(["S3 / Object Clients"])
+  ETH --&gt; SMB(["SMB Clients"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FMM,B1,B2,B3,BN ctrl
+  class ETH net
+  class NFS,S3,SMB host</code></pre>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

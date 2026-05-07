@@ -925,20 +925,21 @@
 <p>Per-host configuration; does not synchronise across hosts. Each host has its own vSS with port groups. Suitable for simple deployments or management isolation.</p>
 <h3 id="distributed-vswitch-vds">Distributed vSwitch (vDS)<a class="headerlink" href="#distributed-vswitch-vds" title="Permanent link">&para;</a></h3>
 <p>Managed at vCenter cluster level; consistent configuration across all hosts in the cluster. Required for vMotion reliability, NSX-T, NIOC, and LACP.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Physical NICs (pNICs/vmnic0, vmnic1, ...)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    vDS Uplink Port Group
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ┌───┴──────────────────────┐
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │   vSphere Distributed    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    │         Switch           │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │  ┌──────────────────┐   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    │  │ Port Group A     │   │  ← VM Network
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    │  │ Port Group B     │   │  ← vMotion
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    │  │ Port Group C     │   │  ← vSAN
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    │  └──────────────────┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    └──────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  ESXI["ESXi Hypervisor\n(VMkernel)"]
+  ESXI --&gt; VMK0["vmk0 — Management"]
+  ESXI --&gt; VMK1["vmk1 — vMotion"]
+  ESXI --&gt; VMK2["vmk2 — Storage iSCSI/NFS"]
+  ESXI --&gt; VMS(["Virtual Machines"])
+  ESXI --&gt; VSWITCH["vSwitch / VDS\n(port groups)"]
+  VSWITCH --&gt; VMNIC["Physical NICs\nvmnic0 · vmnic1 · vmnic2 · vmnic3"]
+  ESXI --&gt; HBA["FC HBAs\n(SAN connectivity)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ESXI ctrl
+  class VMK0,VMK1,VMK2,VSWITCH,VMNIC,HBA net
+  class VMS host</code></pre>
 <h3 id="nioc-network-io-control">NIOC (Network I/O Control)<a class="headerlink" href="#nioc-network-io-control" title="Permanent link">&para;</a></h3>
 <p>NIOC enforces bandwidth allocation on a shared uplink across traffic types: VM traffic, vMotion, vSAN, management, iSCSI, NFS. Prevents one traffic type from starving others.</p>
 <h3 id="lacp-link-aggregation">LACP / Link Aggregation<a class="headerlink" href="#lacp-link-aggregation" title="Permanent link">&para;</a></h3>
@@ -1062,7 +1063,7 @@
 </tbody>
 </table>
 <p>Verify PSP for a device:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;device&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;device&gt;
 </code></pre></div></p>
 <h2 id="high-availability-at-host-level">High Availability at Host Level<a class="headerlink" href="#high-availability-at-host-level" title="Permanent link">&para;</a></h2>
 <p>ESXi hosts do not provide HA themselves — HA is orchestrated by vCenter through the <strong>HA cluster</strong>. When a host fails:</p>

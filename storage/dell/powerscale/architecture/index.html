@@ -813,29 +813,18 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the <strong>OneFS</strong> distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at <code>/ifs</code> across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes, with each node added linearly contributing both capacity and throughput. PowerScale is available in all-flash (F-series), hybrid (H-series), and archive (A-series) node families.</p>
 <h2 id="scale-out-nas-cluster">Scale-Out NAS Cluster<a class="headerlink" href="#scale-out-nas-cluster" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                  PowerScale (OneFS) Cluster                              │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Node 1  │  │  Node 2  │  │  Node 3  │  │  Node N  │  │  Node N+1│  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  F810    │  │  F810    │  │  F810    │  │  H700    │  │  A2000   │  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  (flash) │  │  (flash) │  │  (flash) │  │ (hybrid) │  │(archive) │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │       └────────────────────────────────────────────────────────┘        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │                       InfiniBand / 25 GbE backend                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │                       (OneFS distributed storage fabric)                │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │                                                                          │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  ┌──────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  Frontend network (10/25 GbE)                                    │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │  SmartConnect DNS  ──► distributes client connections            │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  └──────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │              │  NFS v3/v4  SMB 2/3  HDFS  S3  FTP                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  ┌───────────▼─────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  │  Clients  (Linux, Windows, Hadoop, AI/ML GPU nodes)              │    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  └──────────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  Single namespace: /ifs  — visible from all nodes simultaneously        │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  └──────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  N1["Node 1"] &amp; N2["Node 2"] &amp; N3["Node 3"] &amp; NN["Node N…"] --&gt; INT["InfiniBand / 100GbE\nInternal Cluster Network"]
+  INT --&gt; SC["SmartConnect\n(DNS-based load balancing)"]
+  SC --&gt; NFS(["NFS v3/v4 Clients"])
+  SC --&gt; SMB(["SMB / CIFS Clients"])
+  SC --&gt; HDFS(["HDFS / S3 Clients"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2,N3,NN ctrl
+  class INT,SC net
+  class NFS,SMB,HDFS host</code></pre>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

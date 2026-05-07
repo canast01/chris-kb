@@ -872,18 +872,20 @@
 <li><strong>iSCSI Splitter</strong> — used where FC splitters are unavailable</li>
 </ul>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Site A (Production)                    Site B (DR)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────┐                       ┌──────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Host / VM   │                       │  Host / VM   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│      │       │                       │              │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  [Splitter]  │                       │              │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│      │       │                       │              │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  RPA Cluster │ ──── WAN link ──────▶ │  RPA Cluster │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│      │       │                       │      │       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  PowerMax    │                       │  PowerMax    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└──────────────┘                       └──────────────┘
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   Journal Vol                            Journal Vol
-</code></pre></div>
+<pre class="mermaid"><code>graph LR
+  RPA1["RPA Cluster\nSite A"] --&gt; STG_A[("Storage A\nProduction LUNs")]
+  RPA2["RPA Cluster\nSite B"] --&gt; STG_B[("Storage B\nReplica + Journal")]
+  RPA1 &lt;--&gt;|"WAN — compressed replication"| RPA2
+  STG_A --&gt;|"captured writes"| RPA1
+  H_A(["Production Hosts"]) --&gt; STG_A
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class RPA1 ctrl
+  class RPA2 dr
+  class STG_A,STG_B store
+  class H_A host</code></pre>
 <h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

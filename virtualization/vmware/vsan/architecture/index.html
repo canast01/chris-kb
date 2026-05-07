@@ -822,30 +822,21 @@
 
 <h1 id="vmware-vsan-architecture">VMware vSAN Architecture<a class="headerlink" href="#vmware-vsan-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="vsan-cluster-topology">vSAN Cluster Topology<a class="headerlink" href="#vsan-cluster-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                         vSAN Cluster (3-host minimum)                   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌───────────────────────┐  ┌───────────────────────┐  ┌─────────────── │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │       ESXi-01         │  │       ESXi-02         │  │  ESXi-03       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌── │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Ca │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SS │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └── │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │     └────┬────┘       │  │     └────┬────┘       │  │     └────┬──── │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │    Disk Group 1       │  │    Disk Group 1       │  │    Disk Group 1 │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1 │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  └────┬────────┬─────────┘  └────┬────────┬─────────┘  └────┬────────┬─ │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └───────┼────────┼─────────────────┼────────┼─────────────────┼────────┼──┘
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │        │                 │        │                 │        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  ┌───────▼────────▼─────────────────▼────────▼─────────────────▼────────▼──┐
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │             vSAN VMkernel Network (dedicated 10/25 GbE VLAN)            │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │              [object components distributed across all hosts]           │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  └──────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  FTT=1 (RAID-1): object has 2 data replicas + 1 witness — survives 1 host loss
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  FTT=1 (RAID-5): 4+ hosts required — more space-efficient than RAID-1
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  FTT=2 (RAID-6): 6+ hosts required — survives 2 concurrent host failures
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  H1["ESXi-01\nCache NVMe + Capacity SSD"] &amp; H2["ESXi-02\nCache NVMe + Capacity SSD"] &amp; H3["ESXi-03\nCache NVMe + Capacity SSD"] --&gt; VSANNET["vSAN VMkernel Network\n25 / 10 GbE dedicated"]
+  VSANNET --&gt; DS[("vSAN Datastore\nFTT policy — RAID-1 / RAID-5 / RAID-6")]
+  DS --&gt; VM(["VM Workloads"])
+  VCSA["vCenter\n(vSAN management)"] --&gt; VSANNET
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class H1,H2,H3 ctrl
+  class VSANNET net
+  class DS store
+  class VM host
+  class VCSA mgmt</code></pre>
 <div class="kb-grid kb-grid-15">
 
 <a class="kb-card" href="cli-reference/">
@@ -1064,7 +1055,7 @@
 <p>In a stretched cluster, the default FTT policy becomes 1 across sites. An FTT=1 RAID-1 policy means one copy per site.</p>
 <h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
 <p><strong>Capacity planning:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Usable capacity = (Raw capacity) / (Space overhead factor × slack factor)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Usable capacity = (Raw capacity) / (Space overhead factor × slack factor)
 </code></pre></div>
 <ul>
 <li>Slack factor: reserve 30% for resync, snapshots, and operational headroom.</li>

@@ -834,43 +834,46 @@
 <h1 id="active-directory-architecture">Active Directory Architecture<a class="headerlink" href="#active-directory-architecture" title="Permanent link">&para;</a></h1>
 <h2 id="forest-and-domain-hierarchy">Forest and Domain Hierarchy<a class="headerlink" href="#forest-and-domain-hierarchy" title="Permanent link">&para;</a></h2>
 <p>Active Directory is organised in a Forest → Domain → OU hierarchy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Forest (security boundary)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Forest Root Domain (corp.local)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Enterprise Admins (forest-wide admin group)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Schema Master (schema changes — DC in root domain)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── Domain Naming Master
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Regional/Child Domains (optional)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        └── domain.corp.local
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  FOREST["AD Forest\n(security boundary)"] --&gt; ROOT["Forest Root Domain\ncorp.example.com"]
+  ROOT --&gt; DC1["DC-01 Site A\nPDC · RID · Infra Master"]
+  ROOT --&gt; DC2["DC-02 Site A\nGlobal Catalog"]
+  ROOT --&gt;|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
+  ROOT --&gt; CHILD["Child Domain\ndivision.corp.example.com"]
+  CHILD --&gt; CDC["Child DC"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class DC1,DC2,DC3,CDC ctrl
+  class FOREST,ROOT,CHILD mgmt</code></pre>
 <p>The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.</p>
 <h2 id="forest-and-domain-topology">Forest and Domain Topology<a class="headerlink" href="#forest-and-domain-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  │                         AD Forest                                        │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  │                                                                          │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  │  ┌────────────────────────────────────────────────────────────────┐     │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  │  │  Forest Root Domain  (corp.example.com)                        │     │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  │  │  ┌────────────────────────────────────────────────────────┐   │     │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  │  │  │  Schema Master  Domain Naming Master  Global Catalogue  │   │     │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  │  │                                                                │     │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐    │     │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  │  │  │  DC-01 (Site A PDC) │  │  DC-02 (Site A)             │    │     │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  │  │  │  RID / PDC Emulator │  │  Global Catalogue           │    │     │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  │  │  │  Infra Master       │  │                             │    │     │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  │  │  └────────┬────────────┘  └─────────────────────────────┘    │     │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  │  │           │ AD replication (inter-site: IP / SMTP)            │     │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  │  │  ┌────────▼──────────────────────────────────────────────┐   │     │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  │  │  │  DC-03 (Site B)  DC-04 (Site B)  — replica DCs        │   │     │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  │  └────────────────────────────────────────────────────────────────┘     │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  │                                                                          │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  │  │  Child Domains (if used)                                        │    │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  │  │  eu.corp.example.com    apac.corp.example.com                   │    │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  │  │  (trust is automatic within forest — transitive two-way)        │    │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  └──────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  DNS: every DC is also a DNS server; AD relies entirely on DNS SRV records
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                         AD Forest                                        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌────────────────────────────────────────────────────────────────┐     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Forest Root Domain  (corp.example.com)                        │     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌────────────────────────────────────────────────────────┐   │     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │  Schema Master  Domain Naming Master  Global Catalogue  │   │     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │                                                                │     │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐    │     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  │  DC-01 (Site A PDC) │  │  DC-02 (Site A)             │    │     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  │  RID / PDC Emulator │  │  Global Catalogue           │    │     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  │  Infra Master       │  │                             │    │     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  └────────┬────────────┘  └─────────────────────────────┘    │     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │           │ AD replication (inter-site: IP / SMTP)            │     │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  │  ┌────────▼──────────────────────────────────────────────┐   │     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  │  │  DC-03 (Site B)  DC-04 (Site B)  — replica DCs        │   │     │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  └────────────────────────────────────────────────────────────────┘     │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │                                                                          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  │  │  Child Domains (if used)                                        │    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  │  eu.corp.example.com    apac.corp.example.com                   │    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  │  │  (trust is automatic within forest — transitive two-way)        │    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  └──────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  DNS: every DC is also a DNS server; AD relies entirely on DNS SRV records
 </code></pre></div>
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
 <table>
@@ -949,10 +952,10 @@
 </tbody>
 </table>
 <p>Verify current FSMO holders:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Or:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Or:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
 </code></pre></div></p>
 <h2 id="key-services-and-ports">Key Services and Ports<a class="headerlink" href="#key-services-and-ports" title="Permanent link">&para;</a></h2>
 <table>
@@ -1023,16 +1026,16 @@
 </table>
 <h2 id="sites-and-replication">Sites and Replication<a class="headerlink" href="#sites-and-replication" title="Permanent link">&para;</a></h2>
 <p>Sites define physical network boundaries for efficient replication and logon:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># List sites</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ADReplicationSite</span> <span class="n">-Filter</span> <span class="p">*</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># List site links</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADReplicationSiteLink</span> <span class="n">-Filter</span> <span class="p">*</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Check replication health</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>   <span class="c"># Summary of replication success/failure</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List sites</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-ADReplicationSite</span> <span class="n">-Filter</span> <span class="p">*</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># List site links</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ADReplicationSiteLink</span> <span class="n">-Filter</span> <span class="p">*</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Check replication health</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>   <span class="c"># Summary of replication success/failure</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
 </code></pre></div>
 <p>AD replicates via multi-master within a site (frequent, fast) and between sites via site links (scheduled, based on link interval).</p>
 <h2 id="dc-high-availability-design">DC High Availability Design<a class="headerlink" href="#dc-high-availability-design" title="Permanent link">&para;</a></h2>
@@ -1043,13 +1046,13 @@
 <p>In the event DC1 fails: DC2 handles all authentication and DNS. FSMO roles should be seized only if DC1 cannot be restored within 24 hours.</p>
 <h2 id="active-directory-database">Active Directory Database<a class="headerlink" href="#active-directory-database" title="Permanent link">&para;</a></h2>
 <p>The AD database file is <code>NTDS.DIT</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>SYSVOL: C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SYSVOL: C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
 </code></pre></div></p>
 <p>Back up via Windows Server Backup (System State backup) or bare-metal backup:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
 </code></pre></div></p>
 
 

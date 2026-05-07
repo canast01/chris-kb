@@ -824,31 +824,21 @@
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
 <p>Use this page for practical Vmware Cloud Foundation Architecture notes, checks, troubleshooting, commands, change notes, and field references.</p>
 <h2 id="sddc-stack-architecture">SDDC Stack Architecture<a class="headerlink" href="#sddc-stack-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                  VMware Cloud Foundation (VCF)                           │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  SDDC Manager                                                   │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  Lifecycle orchestration  |  Workload domain management         │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  Certificate / password management  |  API / UI                 │    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  └───────────────────────────────────────────────────────────────── ┘    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │          │  manages                                                      │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  ┌───────┴────────────────────────────────────────────────────────┐     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  Workload Domains                                              │     │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  ┌──────────────────────┐    ┌──────────────────────────────┐  │     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  │  Management Domain   │    │  VI Workload Domain(s)       │  │     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  │  vCenter (mgmt)      │    │  vCenter (workload)          │  │     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │  │  NSX Manager cluster │    │  NSX (per domain or shared)  │  │     │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  │  │  vSAN (mgmt)         │    │  vSAN / external storage     │  │     │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  │  └──────────────────────┘    └──────────────────────────────┘  │     │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  └────────────────────────────────────────────────────────────────┘     │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │                                                                          │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  │  Shared Services (Cloud Builder automates day-0 bring-up)       │    │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  │  │  vCenter  NSX  vSAN  SDDC Manager  Aria Ops  Aria Automation    │    │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  └──────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>graph TB
+  SDDC["SDDC Manager\n(VCF orchestration)"] --&gt; MGMT["Management Domain\nvCenter · NSX · vSAN"]
+  SDDC --&gt; WL1["Workload Domain I\n(VI workloads)"]
+  SDDC --&gt; WL2["Workload Domain II\n(VVF cloud workloads)"]
+  MGMT --&gt; EMH["ESXi Mgmt Hosts\n(4 minimum)"]
+  WL1 --&gt; EWH["ESXi Workload Hosts"]
+  SDDC --&gt; CLOUD["VMware Cloud\n(optional hybrid)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class SDDC mgmt
+  class MGMT,WL1,WL2 ctrl
+  class EMH,EWH host
+  class CLOUD cloud</code></pre>
 <h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm current health</li>
