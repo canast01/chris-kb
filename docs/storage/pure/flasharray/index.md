@@ -53,6 +53,40 @@
 </a>
 
 </div>
+
+## ActiveCluster Topology
+
+```
+  Site A                                                  Site B
+  ──────────────────────────────────────────────────────────────────────────
+  ┌─────────────────────────────┐        ┌─────────────────────────────┐
+  │   FlashArray (FA-A)         │        │   FlashArray (FA-B)         │
+  │   CT0         CT1           │        │   CT0         CT1           │
+  │   ┌──────┐  ┌──────┐        │        │   ┌──────┐  ┌──────┐        │
+  │   │ pod1 │  │ pod1 │  ◄─────┼────────┼─► │ pod1 │  │ pod1 │        │
+  │   └──────┘  └──────┘        │        │   └──────┘  └──────┘        │
+  └─────────────┬───────────────┘        └───────────────┬─────────────┘
+                │  FC / NVMe-oF                           │  FC / NVMe-oF
+        ┌───────▼───────┐                        ┌───────▼───────┐
+        │  FC Fabric A  │                        │  FC Fabric A  │
+        │  FC Fabric B  │                        │  FC Fabric B  │
+        └───────┬───────┘                        └───────┬───────┘
+                │                                        │
+  ┌─────────────▼──────────────────────────────────────────────────────┐
+  │   Hosts (MPIO — both fabrics, both sites)                          │
+  │   ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐      │
+  │   │  ESXi-01  │  │  ESXi-02  │  │  ESXi-03  │  │  ESXi-04  │      │
+  │   │  (Site A) │  │  (Site A) │  │  (Site B) │  │  (Site B) │      │
+  │   └───────────┘  └───────────┘  └───────────┘  └───────────┘      │
+  └────────────────────────────────────────────────────────────────────┘
+                        │ heartbeat / tiebreak
+                ┌───────▼────────┐
+                │  Purity Mediator│
+                │  (Pure1 / VM)  │
+                └────────────────┘
+  Synchronous replication (≤5ms RTT) — zero RPO, transparent failover
+```
+
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS, available in the //X series (NVMe-based, highest performance), //C series (QLC flash, capacity-optimized), and //E series (maximum density). All models run in an active-active dual-controller configuration with no single point of failure, and support FC, iSCSI, NVMe/FC, NVMe/RoCE, and NVMe/TCP host protocols. Fleet-wide monitoring, AI-driven analytics, and workload planning are delivered via Pure1 cloud management without requiring on-premises management infrastructure.

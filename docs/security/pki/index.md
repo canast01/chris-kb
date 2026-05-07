@@ -9,6 +9,54 @@ Root CA (offline, air-gapped)
         └── Code signing certificates
 ```
 
+## TLS Handshake Flow
+
+```
+  Client                                          Server
+    │                                               │
+    │── ClientHello ───────────────────────────────►│
+    │   (TLS version, cipher suites, client random) │
+    │                                               │
+    │◄── ServerHello ──────────────────────────────│
+    │    (chosen cipher, server random)             │
+    │◄── Certificate ──────────────────────────────│
+    │    (server cert + chain)                      │
+    │◄── ServerHelloDone ──────────────────────────│
+    │                                               │
+    │   [Client validates cert chain]               │
+    │   [Checks: not expired, trusted CA, CN/SAN]   │
+    │   [Checks: CRL / OCSP — not revoked]          │
+    │                                               │
+    │── ClientKeyExchange ────────────────────────►│
+    │   (pre-master secret, enc with server pubkey) │
+    │── ChangeCipherSpec ─────────────────────────►│
+    │── Finished (enc) ───────────────────────────►│
+    │                                               │
+    │◄── ChangeCipherSpec ─────────────────────────│
+    │◄── Finished (enc) ───────────────────────────│
+    │                                               │
+    │          [TLS session established]            │
+    │◄──────── Application Data (encrypted) ───────►│
+```
+
+## Certificate Validation Chain
+
+```
+  Browser / Client
+       │  verify signature
+       ▼
+  Issuing CA cert  ──────── OCSP / CRL check ──► CA's OCSP Responder
+       │  verify signature                             (revoked? yes/no)
+       ▼
+  Intermediate CA cert
+       │  verify signature
+       ▼
+  Root CA cert  ──── in OS / browser trust store? ──► Trust anchor
+       │
+       └── [trusted]  →  chain valid
+           [not found] →  UNKNOWN_CA / PKIX error
+```
+
 ## ADCS Health Checks
 
 ```powershell

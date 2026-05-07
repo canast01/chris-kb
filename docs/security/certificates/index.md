@@ -81,3 +81,48 @@ Certificates operational notes and deep-dive references.
 </a>
 
 </div>
+
+## Certificate Lifecycle
+
+```
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │                    Certificate Lifecycle States                         │
+  │                                                                         │
+  │  Generate CSR  ──►  Submit to CA  ──►  CA signs cert  ──►  Deploy      │
+  │  (private key)      (CSR + proof)      (DV/OV/EV)          (server/app) │
+  │                                                                         │
+  │                 ┌─────────────────────────────────────────┐            │
+  │  Monitor expiry │  Valid → Warning (30d) → Critical (7d)  │ ◄── alerts │
+  │                 └─────────────────────────────────────────┘            │
+  │                                                                         │
+  │  Renew / Rotate  ──►  Test new cert  ──►  Hot-swap  ──►  Revoke old    │
+  │  (before expiry)       (staging)          (zero downtime)   (CRL/OCSP) │
+  └─────────────────────────────────────────────────────────────────────────┘
+```
+
+## SAML SSO Authentication Flow
+
+```
+  User (Browser)          Service Provider (SP)          Identity Provider (IdP)
+         │                          │                              │
+         │── Access resource ──────►│                              │
+         │                          │── No session — redirect ────►│
+         │◄── 302 to IdP (SAML req) │   (AuthnRequest, signed)     │
+         │                          │                              │
+         │── GET IdP login page ───────────────────────────────►  │
+         │◄── Login form ──────────────────────────────────────── │
+         │                          │                              │
+         │── Username + Password ──────────────────────────────►  │
+         │   (+ MFA if enforced)    │                              │
+         │◄── SAML Response (POST) ────────────────────────────── │
+         │    (assertion, signed by IdP)                           │
+         │                          │                              │
+         │── POST to SP ACS URL ───►│                              │
+         │   (SAML assertion)       │── Verify signature ─────────►│
+         │                          │◄── Valid / Invalid ──────────│
+         │                          │── Create session             │
+         │◄── Set cookie + redirect─│                              │
+         │                          │                              │
+         │── Access resource ──────►│                              │
+         │◄── 200 OK (content) ─────│                              │
+```

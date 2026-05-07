@@ -27,9 +27,36 @@
   <span>Sessions notes, checks, commands, and references.</span>
 </a>
 </div>
+
 ## Overview
 
 CyberArk manages privileged credentials, password rotation, and secure access to administrative systems.
+
+## Privileged Access Flow
+
+```
+  Admin / User                CyberArk                  Target System
+       │                          │                           │
+       │── Login (AD/LDAP) ──────►│                           │
+       │   + MFA challenge        │                           │
+       │◄── Session token ────────│                           │
+       │                          │                           │
+       │── Request account ──────►│                           │
+       │   (safe + platform)      │── CPM: verify / rotate ──►│
+       │                          │◄─ Rotation confirmed ─────│
+       │◄── Credential issued ────│                           │
+       │    (one-time / timed)    │                           │
+       │                          │                           │
+       │── PSM Connect ──────────►│── Proxy session ─────────►│
+       │   (RDP / SSH / CLI)      │   (no credential exposed)  │
+       │◄── Session recording ────│◄── Session stream ─────────│
+       │   streams to vault       │                           │
+       │                          │                           │
+       │── Session end ──────────►│── CPM: auto-rotate ──────►│
+       │                          │   (invalidate used cred)  │
+       │                          │                           │
+       │                    [Audit log written to vault]      │
+```
 
 ## Daily Checks
 

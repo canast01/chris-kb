@@ -2,6 +2,34 @@
 
 Technical and operational KBs for vSAN.
 
+## vSAN Cluster Topology
+
+```
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │                         vSAN Cluster (3-host minimum)                   │
+  │                                                                          │
+  │  ┌───────────────────────┐  ┌───────────────────────┐  ┌─────────────── │
+  │  │       ESXi-01         │  │       ESXi-02         │  │  ESXi-03       │
+  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌────────┐  │  │  ┌─────┐  ┌── │
+  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Capacity│  │  │  │Cache│  │Ca │
+  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SSD/NL  │  │  │  │NVMe │  │SS │
+  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └───┬────┘  │  │  └──┬──┘  └── │
+  │  │     └────┬────┘       │  │     └────┬────┘       │  │     └────┬──── │
+  │  │    Disk Group 1       │  │    Disk Group 1       │  │    Disk Group 1 │
+  │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1       │  │  vmnic0  vmnic1 │
+  │  └────┬────────┬─────────┘  └────┬────────┬─────────┘  └────┬────────┬─ │
+  └───────┼────────┼─────────────────┼────────┼─────────────────┼────────┼──┘
+          │        │                 │        │                 │        │
+  ┌───────▼────────▼─────────────────▼────────▼─────────────────▼────────▼──┐
+  │             vSAN VMkernel Network (dedicated 10/25 GbE VLAN)            │
+  │              [object components distributed across all hosts]           │
+  └──────────────────────────────────────────────────────────────────────────┘
+
+  FTT=1 (RAID-1): object has 2 data replicas + 1 witness — survives 1 host loss
+  FTT=1 (RAID-5): 4+ hosts required — more space-efficient than RAID-1
+  FTT=2 (RAID-6): 6+ hosts required — survives 2 concurrent host failures
+```
+
 <div class="kb-grid kb-grid-15">
 
 <a class="kb-card" href="cli-reference/">

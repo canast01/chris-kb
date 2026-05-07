@@ -2,6 +2,49 @@
 
 Active Directory operational notes and deep-dive references.
 
+## Kerberos Authentication Flow
+
+```
+  Client                  KDC (DC)                  Application Server
+    │                        │                               │
+    │── AS-REQ (username) ──►│                               │
+    │   (pre-auth: enc TS)   │                               │
+    │◄── AS-REP (TGT) ───────│                               │
+    │    enc with krbtgt key  │                               │
+    │                        │                               │
+    │── TGS-REQ (TGT) ──────►│                               │
+    │   (request: service SPN)│                               │
+    │◄── TGS-REP (ST) ───────│                               │
+    │    enc with svc key     │                               │
+    │                        │                               │
+    │── AP-REQ (ST + auth) ──────────────────────────────►  │
+    │   (mutual auth option)  │                               │
+    │◄── AP-REP ─────────────────────────────────────────── │
+    │                        │                               │
+    │           [Session established — Kerberos ticket valid]│
+    │                        │                               │
+    │── Resource Access ─────────────────────────────────►  │
+    │◄── Response ────────────────────────────────────────── │
+```
+
+## LDAP Bind Flow
+
+```
+  Client                         Active Directory (LDAP)
+    │                                      │
+    │── TCP SYN ──────────────────────────►│  (port 389 / 636)
+    │◄── TCP SYN-ACK ─────────────────────│
+    │── LDAP Bind Request (DN + password) ►│
+    │◄── Bind Response (success / error) ──│
+    │                                      │
+    │── Search Request (filter + scope) ──►│
+    │◄── Search Entries ───────────────────│
+    │◄── Search Done ──────────────────────│
+    │                                      │
+    │── Unbind ───────────────────────────►│
+    │── TCP FIN ──────────────────────────►│
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>HA topology, components, connectivity, and sizing.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>
