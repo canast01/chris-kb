@@ -5,31 +5,32 @@
 ---
 ## Cisco MDS Fabric Topology
 
-```
-  ┌─────────────────────────────────────────────────────────────────────────┐
-  │                          VSAN 10 (Production)                           │
-  │                                                                         │
-  │  ┌───────────────────────────┐     ┌───────────────────────────┐        │
-  │  │   MDS-9710 Director A     │     │   MDS-9710 Director B     │        │
-  │  │                           │     │                           │        │
-  │  │  Slot 1: 48p 32Gb FC      │     │  Slot 1: 48p 32Gb FC      │        │
-  │  │  Slot 2: 48p 32Gb FC      │─────│  Slot 2: 48p 32Gb FC      │        │
-  │  │  Slot 3: 4x 100G ISL      │ ISL │  Slot 3: 4x 100G ISL      │        │
-  │  └──────┬──────────┬─────────┘     └─────────┬──────────┬──────┘        │
-  │         │          │                         │          │               │
-  │    Fabric A    Fabric A                 Fabric B    Fabric B            │
-  │         │          │                         │          │               │
-  │  ┌──────▼──┐  ┌────▼────┐           ┌────────▼──┐  ┌───▼─────┐         │
-  │  │ESXi-01  │  │ESXi-02  │           │ESXi-01    │  │ESXi-02  │         │
-  │  │HBA0     │  │HBA0     │           │HBA1       │  │HBA1     │         │
-  │  └─────────┘  └─────────┘           └───────────┘  └─────────┘         │
-  │                                                                         │
-  │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
-  │  │  FlashArray  │    │  PowerMax    │    │  NetApp AFF  │               │
-  │  │  CT0: Fab A  │    │  Dir A: Fa A │    │  Node 1: Fa A│               │
-  │  │  CT1: Fab B  │    │  Dir B: Fa B │    │  Node 2: Fa B│               │
-  │  └──────────────┘    └──────────────┘    └──────────────┘               │
-  └─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+  subgraph FabricA["Fabric A — VSAN 10"]
+    H1A["esxi-01\nHBA0"]
+    H2A["esxi-02\nHBA0"]
+    MDSA["MDS-9710\nDirector A\n2× 48p 32Gb FC"]
+    H1A --> MDSA
+    H2A --> MDSA
+  end
+
+  subgraph FabricB["Fabric B — VSAN 11"]
+    H1B["esxi-01\nHBA1"]
+    H2B["esxi-02\nHBA1"]
+    MDSB["MDS-9710\nDirector B\n2× 48p 32Gb FC"]
+    H1B --> MDSB
+    H2B --> MDSB
+  end
+
+  MDSA <-->|"4× 100G ISL"| MDSB
+
+  MDSA --> FA_CT0["FlashArray\nCT0"]
+  MDSA --> PM_A["PowerMax\nDir A"]
+  MDSA --> NA_N1["NetApp AFF\nNode 1"]
+  MDSB --> FA_CT1["FlashArray\nCT1"]
+  MDSB --> PM_B["PowerMax\nDir B"]
+  MDSB --> NA_N2["NetApp AFF\nNode 2"]
 ```
 
 ## Overview
