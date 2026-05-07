@@ -2,7 +2,12 @@
 
 Certificates operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-4">
+
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>certutil, openssl, PowerShell certificate store commands, and TLS verification.</p>
+  </div>
 
   <div class="kb-card">
     <h3><a href="inventory/">Inventory</a></h3>

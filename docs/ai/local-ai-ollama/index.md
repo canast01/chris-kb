@@ -2,7 +2,12 @@
 
 Local Ai Ollama operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-6">
+
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>ollama run, pull, push, list, copy, delete, serve, and model management commands.</p>
+  </div>
 
   <div class="kb-card">
     <h3><a href="install-notes/">Install Notes</a></h3>

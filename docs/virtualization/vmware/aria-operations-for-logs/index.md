@@ -2,7 +2,12 @@
 
 Aria Operations for Logs collects logs from vCenter, ESXi hosts, NSX, applications, and other systems.
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-6">
+
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>li-admin, vracli, REST API queries, ingestion API, alert management, and agent connectivity.</p>
+  </div>
 
   <div class="kb-card">
     <h3><a href="queries/">Queries</a></h3>

@@ -2,7 +2,12 @@
 
 Pure1 operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-6">
+
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>Pure1 REST API, OAuth2 authentication, array health, capacity, and performance queries.</p>
+  </div>
 
   <div class="kb-card">
     <h3><a href="health/">Health</a></h3>

@@ -12,6 +12,11 @@ Dell Storage knowledge base articles, operational references, troubleshooting no
   <span>Enterprise block storage operations.</span>
 </a>
 
+<a class="kb-card" href="powerstore/">
+  <strong>PowerStore</strong>
+  <span>Midrange and enterprise all-flash block and file storage.</span>
+</a>
+
 <a class="kb-card" href="powerscale/">
   <strong>PowerScale</strong>
   <span>Scale-out NAS operations.</span>

@@ -2,7 +2,12 @@
 
 Superna Eyeglass operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-6">
+
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>igls CLI, REST API, failover, failback, sync status, and OneFS SyncIQ commands.</p>
+  </div>
 
   <div class="kb-card">
     <h3><a href="health-checks/">Health Checks</a></h3>
