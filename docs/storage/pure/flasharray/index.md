@@ -1,5 +1,19 @@
 # Pure FlashArray
 
+<div class="kb-grid kb-grid-3">
+  <div class="kb-card">
+    <h3><a href="cli-reference/">CLI Reference</a></h3>
+    <p>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</p>
+  </div>
+  <a class="kb-card" href="scripts/">
+    <strong>Scripts</strong>
+    <span>Python REST API health check, ActiveCluster monitor, Bash volume report, and Ansible playbook.</span>
+  </a>
+  <div class="kb-card">
+    <h3><a href="operations/">Operations</a></h3>
+    <p>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</p>
+  </div>
+</div>
 
 ## Overview
 

@@ -1,5 +1,23 @@
 # Dell VPLEX
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Bash distributed device health check, Perl Metro consistency group monitor, and director status scripts.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>vplexcli commands: cluster health, virtual volumes, distributed devices, storage views, and migration.</span>
+</a>
+
+</div>
 
 ## Overview
 
