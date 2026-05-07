@@ -2,12 +2,6 @@
 
 Certificates operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-3">
-
-  <div class="kb-card">
-    <h3><a href="inventory/">Inventory</a></h3>
-    <p>Inventory notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="expiration/">Expiration</a></h3>
