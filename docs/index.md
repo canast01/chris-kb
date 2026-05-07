@@ -14,88 +14,9 @@
 
 ## Platforms
 
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="virtualization/">
-  <strong>Virtualization</strong>
-  <span>VMware VCF, vCenter, ESXi, vSAN, NSX, VxRail, and Aria.</span>
-</a>
-
-<a class="kb-card" href="storage/">
-  <strong>Storage</strong>
-  <span>Dell, Pure, NetApp — block, file, object, and replication.</span>
-</a>
-
-<a class="kb-card" href="cloud/">
-  <strong>Cloud</strong>
-  <span>AWS and Azure — identity, compute, networking, storage, and cost.</span>
-</a>
-
-<a class="kb-card" href="san/">
-  <strong>SAN</strong>
-  <span>Cisco, Brocade, zoning, fabrics, ISLs, ports, and host paths.</span>
-</a>
-
-<a class="kb-card" href="compute/">
-  <strong>Compute</strong>
-  <span>Windows Server, Linux, host operations, and server support.</span>
-</a>
-
-<a class="kb-card" href="networking/">
-  <strong>Networking</strong>
-  <span>Routing, DNS, DHCP, VLANs, and connectivity references.</span>
-</a>
-
-</div>
 
 ## Operations
 
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="automation/">
-  <strong>Automation</strong>
-  <span>Ansible, PowerShell, Python, Terraform — scripts and playbooks for infrastructure tasks.</span>
-</a>
-
-<a class="kb-card" href="monitoring/">
-  <strong>Monitoring</strong>
-  <span>Dashboards, alerting, health monitoring, and metrics baselines.</span>
-</a>
-
-<a class="kb-card" href="security/">
-  <strong>Security</strong>
-  <span>Identity, certificates, privileged access, compliance, and audit.</span>
-</a>
-
-<a class="kb-card" href="disaster-recovery/">
-  <strong>Disaster Recovery</strong>
-  <span>DR tools, failover, failback, runbooks, and validation.</span>
-</a>
-
-<a class="kb-card" href="data-protection/">
-  <strong>Data Protection</strong>
-  <span>Backup, restore, retention, recovery, and validation references.</span>
-</a>
-
-</div>
 
 ## Reference
 
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="tools/">
-  <strong>Tools</strong>
-  <span>ServiceNow, Jira, Confluence, Git, and daily admin tooling.</span>
-</a>
-
-<a class="kb-card" href="protocols/">
-  <strong>Protocols</strong>
-  <span>Fibre Channel, iSCSI, NFS, SMB, DNS, DHCP, NTP, SNMP, LDAP, TLS.</span>
-</a>
-
-<a class="kb-card" href="inventory/">
-  <strong>Inventory</strong>
-  <span>Infrastructure inventory references and asset tracking.</span>
-</a>
-
-</div>
