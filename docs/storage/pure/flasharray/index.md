@@ -1,10 +1,17 @@
 # Pure FlashArray
 
-<div class="kb-grid kb-grid-8">
-  <div class="kb-card">
-    <h3><a href="cli-reference/">CLI Reference</a></h3>
-    <p>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</p>
-  
+<div class="kb-grid kb-grid-5">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+</a>
+
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>Architecture overview, components, and design patterns.</span>
@@ -22,7 +29,7 @@
 
 <a class="kb-card" href="protection-groups/">
   <strong>Protection Groups</strong>
-  <span>Protection Groups notes, checks, commands, and references.</span>
+  <span>Snapshot scheduling, replication, and retention policies.</span>
 </a>
 
 <a class="kb-card" href="security/">
@@ -35,19 +42,16 @@
   <span>Configuration standards, naming conventions, and baselines.</span>
 </a>
 
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Python REST API health check, ActiveCluster monitor, Bash volume report, and Ansible playbook.</span>
+</a>
+
 <a class="kb-card" href="vendor-support/">
   <strong>Vendor Support</strong>
   <span>Support bundles, case management, and escalation paths.</span>
 </a>
-</div>
-  <a class="kb-card" href="scripts/">
-    <strong>Scripts</strong>
-    <span>Python REST API health check, ActiveCluster monitor, Bash volume report, and Ansible playbook.</span>
-  </a>
-  <div class="kb-card">
-    <h3><a href="operations/">Operations</a></h3>
-    <p>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</p>
-  </div>
+
 </div>
 
 ## Overview
