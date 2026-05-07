@@ -2,12 +2,6 @@
 
 SMB operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="shares/">Shares</a></h3>
-    <p>Shares notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="permissions/">Permissions</a></h3>
