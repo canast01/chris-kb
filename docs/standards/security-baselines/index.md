@@ -2,12 +2,6 @@
 
 Security Baselines operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="identity/">Identity</a></h3>
-    <p>Identity notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="certificates/">Certificates</a></h3>
