@@ -2,12 +2,6 @@
 
 Storage operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="vendor-tracks/">Vendor Tracks</a></h3>
-    <p>Vendor Tracks notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="products/">Products</a></h3>
