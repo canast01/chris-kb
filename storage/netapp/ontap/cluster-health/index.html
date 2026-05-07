@@ -21,7 +21,7 @@
     
     
       
-        <title>Cluster Health - Chris KB</title>
+        <title>ONTAP Cluster Health - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cluster-health" class="md-skip">
+        <a href="#ontap-cluster-health" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cluster Health
+              ONTAP Cluster Health
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#overall-cluster-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Overall Cluster Status
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#node-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Node Health
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#ha-pair-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        HA Pair Status
       
     </span>
   </a>
@@ -791,10 +745,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#disk-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Disk Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregate-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ems-events-recent-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMS Events (Recent Errors)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Summary Table
       
     </span>
   </a>
@@ -820,31 +840,124 @@
 
 
 
-<h1 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Cluster Health.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="ontap-cluster-health">ONTAP Cluster Health<a class="headerlink" href="#ontap-cluster-health" title="Permanent link">&para;</a></h1>
+<h2 id="overall-cluster-status">Overall Cluster Status<a class="headerlink" href="#overall-cluster-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">cluster show
+# All nodes should show health: true and eligibility: true
+
+system health status show
+# Overall status should be: ok
+</code></pre>
+<h2 id="node-health">Node Health<a class="headerlink" href="#node-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">system node show
+# All nodes should be: up
+
+system node show -fields uptime,health
+</code></pre>
+<h2 id="ha-pair-status">HA Pair Status<a class="headerlink" href="#ha-pair-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage failover show
+# Both nodes should show: Connected, Not in takeover
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connected, Not in takeover</td>
+<td>Healthy — HA active</td>
+</tr>
+<tr>
+<td>Connected, Waiting for giveback</td>
+<td>Node in takeover; manual giveback may be needed</td>
+</tr>
+<tr>
+<td>Disconnected</td>
+<td>HA link down; investigate immediately</td>
+</tr>
+</tbody>
+</table>
+<h2 id="disk-health">Disk Health<a class="headerlink" href="#disk-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage disk show -broken
+# Any output here requires investigation
+
+storage disk show -container-type spare
+# Confirm spare disks are available for RAID rebuild
+</code></pre>
+<h2 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage aggregate show -state !online
+# Should return no output if all aggregates are healthy
+
+storage aggregate show-status | grep -v normal
+</code></pre>
+<h2 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume show -state !online
+# Should return no output under normal conditions
+
+volume show -fields state,health | grep -v true
+</code></pre>
+<h2 id="interface-health">Interface Health<a class="headerlink" href="#interface-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">network interface show -status-oper down
+# Any interfaces down should be investigated
+</code></pre>
+<h2 id="ems-events-recent-errors">EMS Events (Recent Errors)<a class="headerlink" href="#ems-events-recent-errors" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">event log show -severity ERROR -time-range &quot;1h&quot;
+event log show -severity CRITICAL
+</code></pre>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>[ ] All nodes <code>health: true</code></li>
+<li>[ ] HA pair connected, not in takeover</li>
+<li>[ ] No broken disks; spares available</li>
+<li>[ ] All aggregates online</li>
+<li>[ ] All volumes online</li>
+<li>[ ] No critical EMS events in past 24 hours</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Command</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster</td>
+<td><code>cluster show</code></td>
+<td>health: true</td>
+</tr>
+<tr>
+<td>HA</td>
+<td><code>storage failover show</code></td>
+<td>Connected</td>
+</tr>
+<tr>
+<td>Disks</td>
+<td><code>storage disk show -broken</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>Aggregates</td>
+<td><code>storage aggregate show -state !online</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>Volumes</td>
+<td><code>volume show -state !online</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>EMS</td>
+<td><code>event log show -severity CRITICAL</code></td>
+<td>No output</td>
+</tr>
+</tbody>
+</table>
 
 
 

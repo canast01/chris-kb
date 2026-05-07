@@ -21,7 +21,7 @@
     
     
       
-        <title>Alerts - Chris KB</title>
+        <title>NetApp Operations — Alerts - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#alerts" class="md-skip">
+        <a href="#netapp-operations-alerts" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Alerts
+              NetApp Operations — Alerts
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#ontap-ems-alerts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        ONTAP EMS Alerts
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#autosupport-notifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        AutoSupport Notifications
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#snmp-alerting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        SNMP Alerting
       
     </span>
   </a>
@@ -791,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#bluexp-alerts-keystone-cloud-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        BlueXP Alerts (Keystone / Cloud Manager)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-triage-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Triage Priority
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolving-health-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolving Health Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Alerts
       
     </span>
   </a>
@@ -820,31 +807,107 @@
 
 
 
-<h1 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Alerts.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="netapp-operations-alerts">NetApp Operations — Alerts<a class="headerlink" href="#netapp-operations-alerts" title="Permanent link">&para;</a></h1>
+<h2 id="ontap-ems-alerts">ONTAP EMS Alerts<a class="headerlink" href="#ontap-ems-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show active health alerts
+system health alert show
+
+# Show recent critical/error events
+event log show -severity critical
+event log show -severity error -time &quot;&gt;24h&quot;
+
+# Show subsystem health
+system health subsystem show
+</code></pre>
+<h2 id="autosupport-notifications">AutoSupport Notifications<a class="headerlink" href="#autosupport-notifications" title="Permanent link">&para;</a></h2>
+<p>AutoSupport triggers automatic case creation with NetApp support for critical events. Verify it is configured:</p>
+<pre><code class="language-bash">system node autosupport show -fields state,support,transport,mail-hosts
+</code></pre>
+<p>Expected: <code>state: enable</code>, <code>support: true</code>.</p>
+<h2 id="snmp-alerting">SNMP Alerting<a class="headerlink" href="#snmp-alerting" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show SNMP communities and trap hosts
+system snmp show
+system snmp traphost show
+</code></pre>
+<p>Verify trap destinations are configured to route to your monitoring platform (SCOM, Zabbix, etc.).</p>
+<h2 id="bluexp-alerts-keystone-cloud-manager">BlueXP Alerts (Keystone / Cloud Manager)<a class="headerlink" href="#bluexp-alerts-keystone-cloud-manager" title="Permanent link">&para;</a></h2>
+<p>For Keystone subscriptions and Cloud Volumes ONTAP, alerts are surfaced in:
+- <strong>BlueXP → Notifications</strong> — capacity, health, and service alerts
+- <strong>BlueXP → Digital Wallet</strong> — burst capacity warnings</p>
+<h2 id="alert-triage-priority">Alert Triage Priority<a class="headerlink" href="#alert-triage-priority" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Example</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Emergency</td>
+<td>Aggregate offline</td>
+<td>Immediate — page on-call</td>
+</tr>
+<tr>
+<td>Alert</td>
+<td>Disk failed, HA link down</td>
+<td>Same business day</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>LIF down, volume near full</td>
+<td>Investigate within 24h</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>Efficiency below threshold</td>
+<td>Review at next available</td>
+</tr>
+</tbody>
+</table>
+<h2 id="resolving-health-alerts">Resolving Health Alerts<a class="headerlink" href="#resolving-health-alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View active alerts with detail
+system health alert show
+
+# Acknowledge an alert (after resolution)
+system health alert modify -node &lt;node&gt; -alert-id &lt;id&gt; -acknowledge true
+
+# Clear alert after fixing underlying issue
+system health alert delete -node &lt;node&gt; -alert-id &lt;id&gt;
+</code></pre>
+<h2 id="common-alerts">Common Alerts<a class="headerlink" href="#common-alerts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Alert</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume full</td>
+<td>Data growth</td>
+<td>Resize or enable autosize</td>
+</tr>
+<tr>
+<td>Disk failed</td>
+<td>Hardware failure</td>
+<td>Replace disk, verify RAID rebuild</td>
+</tr>
+<tr>
+<td>HA interconnect down</td>
+<td>Cable/port failure</td>
+<td>Investigate HA link</td>
+</tr>
+<tr>
+<td>AutoSupport failure</td>
+<td>Proxy or network</td>
+<td>Verify outbound connectivity</td>
+</tr>
+</tbody>
+</table>
 
 
 

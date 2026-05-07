@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-srdf-groups-and-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List SRDF Groups and Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-group-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Group Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdfa-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/A Specific
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,31 +789,115 @@
 <blockquote>
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List SRDF groups
+<p>SRDF (Symmetrix Remote Data Facility) provides synchronous and asynchronous replication between PowerMax arrays.</p>
+<h2 id="srdf-modes">SRDF Modes<a class="headerlink" href="#srdf-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRDF/S (Synchronous)</td>
+<td>Write acknowledged only after replicated</td>
+<td>Zero</td>
+</tr>
+<tr>
+<td>SRDF/A (Asynchronous)</td>
+<td>Writes batched and replicated in cycles</td>
+<td>Seconds to minutes</td>
+</tr>
+<tr>
+<td>SRDF/Metro</td>
+<td>Active-active with zero RPO</td>
+<td>Zero</td>
+</tr>
+</tbody>
+</table>
+<h2 id="list-srdf-groups-and-devices">List SRDF Groups and Devices<a class="headerlink" href="#list-srdf-groups-and-devices" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all SRDF groups on the array
 symrdf -sid &lt;sid&gt; list
+
+# List devices in a specific SRDF group
 symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list
+
+# Query status of all devices in an SRDF group
 symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; query
-
-# Device group operations (requires a DG or SG)
+</code></pre>
+<h2 id="storage-group-operations">Storage Group Operations<a class="headerlink" href="#storage-group-operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Query SRDF status for an SG
 symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; establish
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; split
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; suspend
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; resume
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; update
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failover
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failback
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; swap
-symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; verify
 
-# SRDF/A specific
+# Establish (start replication)
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; establish
+
+# Split (make R2 writable — local copy for testing)
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; split
+
+# Suspend replication
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; suspend
+
+# Resume replication after suspend
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; resume
+
+# Force a delta resync
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; update
+
+# Planned failover (R2 becomes primary)
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failover
+
+# Failback to original R1
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failback
+
+# Swap R1/R2 roles
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; swap
+
+# Verify consistency
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; verify
+</code></pre>
+<h2 id="srdfa-specific">SRDF/A Specific<a class="headerlink" href="#srdfa-specific" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Query SRDF/A cycle and lag info
 symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query -srdf_a
 symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; verify -srdf_a
 
-# SRDF cycle / lag info
+# Show SRDF/A cycle details (lag time, delta)
 symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list -v
 </code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRDF link down</td>
+<td>RDF group connectivity</td>
+<td>Check inter-array FC links</td>
+</tr>
+<tr>
+<td>High SRDF/A lag</td>
+<td>Bandwidth or I/O burst</td>
+<td>Monitor cycle time; increase bandwidth</td>
+</tr>
+<tr>
+<td>Split failed</td>
+<td>Existing split</td>
+<td>Check device state</td>
+</tr>
+<tr>
+<td>Failover won't complete</td>
+<td>Ongoing I/O</td>
+<td>Suspend writes to R1 first</td>
+</tr>
+</tbody>
+</table>
 
 
 

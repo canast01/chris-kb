@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>VPLEX Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#vplex-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              VPLEX Health Checks
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#cluster-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Cluster Status
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#director-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Director Health
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#storage-volume-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Storage Volume Health
       
     </span>
   </a>
@@ -791,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#virtual-volume-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Virtual Volume Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-device-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Device Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inter-cluster-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inter-cluster Communication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Summary Table
       
     </span>
   </a>
@@ -820,31 +829,88 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vplex-health-checks">VPLEX Health Checks<a class="headerlink" href="#vplex-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/
+VPlexcli:/&gt; ll /clusters/cluster-1/
+VPlexcli:/&gt; ll /clusters/cluster-2/
+</code></pre>
+<p>All clusters should show <code>operational-status: ok</code>.</p>
+<h2 id="director-health">Director Health<a class="headerlink" href="#director-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /engines/*/directors/
+VPlexcli:/&gt; ll /engines/engine-1-1/directors/
+</code></pre>
+<p>All directors should be <code>operational-status: ok</code> and <code>health-state: ok</code>.</p>
+<h2 id="storage-volume-health">Storage Volume Health<a class="headerlink" href="#storage-volume-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/storage-elements/storage-volumes/
+</code></pre>
+<p>Each storage volume should show <code>operational-status: ok</code>.</p>
+<h2 id="virtual-volume-health">Virtual Volume Health<a class="headerlink" href="#virtual-volume-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/virtual-volumes/
+</code></pre>
+<p>Look for any volume with operational-status other than <code>ok</code>.</p>
+<h2 id="distributed-device-health">Distributed Device Health<a class="headerlink" href="#distributed-device-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/distributed-devices/
+</code></pre>
+<p>Each distributed device should show <code>operational-status: ok</code> and <code>service-status: running</code>.</p>
+<h2 id="inter-cluster-communication">Inter-cluster Communication<a class="headerlink" href="#inter-cluster-communication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/connectivity/
+</code></pre>
+<p>Verify WAN COM links are <code>operational-status: ok</code>.</p>
+<h2 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /alerts/
+</code></pre>
+<p>Review any active alerts.</p>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>[ ] All directors <code>operational-status: ok</code></li>
+<li>[ ] All storage volumes <code>operational-status: ok</code></li>
+<li>[ ] Distributed devices <code>service-status: running</code></li>
+<li>[ ] No active critical alerts</li>
+<li>[ ] Inter-cluster connectivity healthy</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Check</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster</td>
+<td><code>ll /clusters/</code></td>
+<td>operational-status: ok</td>
+</tr>
+<tr>
+<td>Directors</td>
+<td><code>ll /engines/*/directors/</code></td>
+<td>health-state: ok</td>
+</tr>
+<tr>
+<td>Storage volumes</td>
+<td><code>ll .../storage-volumes/</code></td>
+<td>operational-status: ok</td>
+</tr>
+<tr>
+<td>Virtual volumes</td>
+<td><code>ll .../virtual-volumes/</code></td>
+<td>operational-status: ok</td>
+</tr>
+<tr>
+<td>WAN COM</td>
+<td><code>ll .../connectivity/</code></td>
+<td>operational-status: ok</td>
+</tr>
+<tr>
+<td>Alerts</td>
+<td><code>ll /alerts/</code></td>
+<td>No critical alerts</td>
+</tr>
+</tbody>
+</table>
 
 
 

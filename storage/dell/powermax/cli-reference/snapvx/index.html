@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-snapshot-to-a-target-sg-expose-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Link Snapshot to a Target SG (Expose for Testing)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unlink-a-target-sg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unlink a Target SG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rename-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rename a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-policies-timefinder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Policies (TimeFinder)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,32 +833,79 @@
 <blockquote>
 <p>Part of the Dell PowerMax CLI Reference (SYMCLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List snapshots
+<p>SnapVX provides near-instantaneous, space-efficient snapshots of storage groups on PowerMax.</p>
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># All snapshots on the array
 symsnapvx list -sid &lt;sid&gt;
+
+# Snapshots for a specific storage group
 symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt;
+
+# Specific snapshot detail
 symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt; -snapshot_name &lt;snap_name&gt;
-
-# Create snapshot
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; establish
-
-# Delete / terminate snapshot
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate --force
-
-# Link snapshot to target SG
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt;
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt; -copy
-
-# Unlink
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; unlink -lnsg &lt;target_sg&gt;
-
-# Restore
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; restore
-
-# Rename snapshot
-symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; rename -new_name &lt;new_snap_name&gt;
 </code></pre>
+<h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; establish
+</code></pre>
+<p>Snapshots are instant and do not require I/O quiesce, though application-consistent snapshots require application coordination.</p>
+<h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Terminate (delete) a snapshot
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate
+
+# Force terminate (if linked)
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate --force
+</code></pre>
+<h2 id="link-snapshot-to-a-target-sg-expose-for-testing">Link Snapshot to a Target SG (Expose for Testing)<a class="headerlink" href="#link-snapshot-to-a-target-sg-expose-for-testing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Link (read-only view for testing)
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt;
+
+# Link with copy (full copy — writable)
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt; -copy
+</code></pre>
+<h2 id="unlink-a-target-sg">Unlink a Target SG<a class="headerlink" href="#unlink-a-target-sg" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; unlink -lnsg &lt;target_sg&gt;
+</code></pre>
+<h2 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; restore
+</code></pre>
+<p>Restore overwrites the source SG with snapshot data. Quiesce or offline the source devices from the host before restoring.</p>
+<h2 id="rename-a-snapshot">Rename a Snapshot<a class="headerlink" href="#rename-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; rename -new_name &lt;new_snap_name&gt;
+</code></pre>
+<h2 id="snapshot-policies-timefinder">Snapshot Policies (TimeFinder)<a class="headerlink" href="#snapshot-policies-timefinder" title="Permanent link">&para;</a></h2>
+<p>For automated snapshot scheduling, use Unisphere for PowerMax or Solutions Enabler snapshot policies.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terminate fails</td>
+<td>Snapshot is linked</td>
+<td>Unlink first: <code>unlink -lnsg</code></td>
+</tr>
+<tr>
+<td>Restore fails</td>
+<td>Host has active I/O</td>
+<td>Offline volumes on host before restore</td>
+</tr>
+<tr>
+<td>Link fails</td>
+<td>Target SG size mismatch</td>
+<td>Target SG must match source capacity</td>
+</tr>
+<tr>
+<td>Snapshot count at limit</td>
+<td>Per-device snapshot limit</td>
+<td>Delete older snapshots</td>
+</tr>
+</tbody>
+</table>
 
 
 

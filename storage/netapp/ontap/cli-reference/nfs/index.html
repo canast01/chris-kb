@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#nfs_1" class="md-nav__link">
+  <a href="#nfs-service" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NFS
+        NFS Service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assign-policy-to-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign Policy to Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-client-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Client Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connected-nfs-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connected NFS Clients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -789,33 +809,90 @@
 
 <h1 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
+<p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="nfs_1">NFS<a class="headerlink" href="#nfs_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># NFS service
+<h2 id="nfs-service">NFS Service<a class="headerlink" href="#nfs-service" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show NFS configuration per SVM
 vserver nfs show
-vserver nfs create -vserver &lt;svm&gt; -v3 enabled -v4.0 enabled -v4.1 enabled
-vserver nfs modify -vserver &lt;svm&gt; -v4.1 enabled
+vserver nfs show -vserver &lt;svm&gt;
 
-# Export policies
+# Enable NFS on an SVM
+vserver nfs create -vserver &lt;svm&gt; -v3 enabled -v4.0 enabled -v4.1 enabled
+
+# Modify NFS version settings
+vserver nfs modify -vserver &lt;svm&gt; -v4.1 enabled
+</code></pre>
+<h2 id="export-policies">Export Policies<a class="headerlink" href="#export-policies" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List export policies
 vserver export-policy show
 vserver export-policy show -vserver &lt;svm&gt;
-vserver export-policy create -vserver &lt;svm&gt; -policyname &lt;name&gt;
-vserver export-policy delete -vserver &lt;svm&gt; -policyname &lt;name&gt;
 
-# Export rules
+# Create an export policy
+vserver export-policy create -vserver &lt;svm&gt; -policyname &lt;name&gt;
+
+# Delete an export policy
+vserver export-policy delete -vserver &lt;svm&gt; -policyname &lt;name&gt;
+</code></pre>
+<h2 id="export-rules">Export Rules<a class="headerlink" href="#export-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List rules for a policy
 vserver export-policy rule show
 vserver export-policy rule show -vserver &lt;svm&gt; -policyname &lt;name&gt;
-vserver export-policy rule create -vserver &lt;svm&gt; -policyname &lt;name&gt; -ruleindex 1 -clientmatch &lt;cidr&gt; -rorule sys -rwrule sys -superuser sys
+
+# Create a rule (allow subnet read-write with SYS auth)
+vserver export-policy rule create \
+    -vserver &lt;svm&gt; \
+    -policyname &lt;name&gt; \
+    -ruleindex 1 \
+    -clientmatch &lt;cidr_or_ip&gt; \
+    -rorule sys \
+    -rwrule sys \
+    -superuser sys
+
+# Delete a rule
 vserver export-policy rule delete -vserver &lt;svm&gt; -policyname &lt;name&gt; -ruleindex &lt;n&gt;
-
-# Assign policy to volume
-volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -policy &lt;export-policy&gt;
-
-# NFS client check
+</code></pre>
+<h2 id="assign-policy-to-volume">Assign Policy to Volume<a class="headerlink" href="#assign-policy-to-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -policy &lt;export-policy&gt;
+</code></pre>
+<h2 id="nfs-client-verification">NFS Client Verification<a class="headerlink" href="#nfs-client-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Test if a specific client IP can access the export
 vserver nfs check-client -vserver &lt;svm&gt; -client-ip &lt;ip&gt;
 </code></pre>
+<h2 id="connected-nfs-clients">Connected NFS Clients<a class="headerlink" href="#connected-nfs-clients" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">nfs connected-client show -vserver &lt;svm&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mount fails — permission denied</td>
+<td>Export rule client match</td>
+<td>Verify CIDR includes client IP</td>
+</tr>
+<tr>
+<td>NFSv4 ID mapping fails</td>
+<td>LDAP/DNS</td>
+<td>Configure <code>idmapping</code> service</td>
+</tr>
+<tr>
+<td>Mount hangs</td>
+<td>LIF reachable</td>
+<td>Ping NFS LIF; check routing</td>
+</tr>
+<tr>
+<td>Root squash blocking writes</td>
+<td>Superuser setting</td>
+<td>Set <code>-superuser sys</code> if intentional root access needed</td>
+</tr>
+</tbody>
+</table>
 
 
 

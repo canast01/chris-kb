@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#security-users_1" class="md-nav__link">
+  <a href="#user-logins" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security &amp; Users
+        User Logins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -789,29 +787,109 @@
 
 <h1 id="security-users">Security &amp; Users<a class="headerlink" href="#security-users" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
+<p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="security-users_1">Security &amp; Users<a class="headerlink" href="#security-users_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Logins
+<h2 id="user-logins">User Logins<a class="headerlink" href="#user-logins" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all login accounts
 security login show
 security login show -vserver &lt;svm&gt;
-security login create -username &lt;user&gt; -application ssh -authentication-method password -role admin -vserver &lt;svm&gt;
+
+# Create a user (SSH + password auth)
+security login create \
+    -username &lt;user&gt; \
+    -application ssh \
+    -authentication-method password \
+    -role admin \
+    -vserver &lt;svm&gt;
+
+# Delete a user
 security login delete -username &lt;user&gt; -application ssh -vserver &lt;svm&gt;
+
+# Change password
 security login password -username &lt;user&gt; -vserver &lt;svm&gt;
+
+# Lock / unlock an account
 security login lock -username &lt;user&gt; -vserver &lt;svm&gt;
 security login unlock -username &lt;user&gt; -vserver &lt;svm&gt;
-
-# Roles
+</code></pre>
+<h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List roles
 security login role show
-security login role create -role &lt;name&gt; -vserver &lt;svm&gt; -cmddirname DEFAULT -access none
+security login role show -vserver &lt;svm&gt;
 
-# Certificates
+# Create a custom role (deny-all baseline)
+security login role create \
+    -role &lt;role_name&gt; \
+    -vserver &lt;svm&gt; \
+    -cmddirname DEFAULT \
+    -access none
+
+# Grant specific command to a role
+security login role create \
+    -role &lt;role_name&gt; \
+    -vserver &lt;svm&gt; \
+    -cmddirname &quot;volume show&quot; \
+    -access readonly
+</code></pre>
+<h2 id="certificates">Certificates<a class="headerlink" href="#certificates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List installed certificates
 security certificate show
 security certificate show -vserver &lt;svm&gt;
+
+# Install a certificate
 security certificate install -vserver &lt;svm&gt; -type server
-security certificate generate-csr -common-name &lt;cn&gt; -size 2048 -country US -state &lt;state&gt; -locality &lt;city&gt; -organization &lt;org&gt;
+
+# Generate a CSR
+security certificate generate-csr \
+    -common-name &lt;cn&gt; \
+    -size 2048 \
+    -country US \
+    -state &lt;state&gt; \
+    -locality &lt;city&gt; \
+    -organization &lt;org&gt;
 </code></pre>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show audit configuration
+vserver audit show -vserver &lt;svm&gt;
+
+# Create audit config (enable file access auditing)
+vserver audit create -vserver &lt;svm&gt; -destination /audit_logs -format xml
+
+# Enable auditing
+vserver audit enable -vserver &lt;svm&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login denied</td>
+<td>Account locked</td>
+<td><code>security login unlock</code></td>
+</tr>
+<tr>
+<td>SSH fails</td>
+<td>Application type</td>
+<td>Verify <code>-application ssh</code> on login</td>
+</tr>
+<tr>
+<td>Certificate expired</td>
+<td><code>certificate show</code></td>
+<td>Reinstall or renew</td>
+</tr>
+<tr>
+<td>Role too permissive</td>
+<td>Role config</td>
+<td>Review and restrict with <code>access none</code> baseline</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Consistency Groups - Chris KB</title>
+        <title>VPLEX Consistency Groups - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#consistency-groups" class="md-skip">
+        <a href="#vplex-consistency-groups" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Consistency Groups
+              VPLEX Consistency Groups
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-consistency-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Consistency Groups
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#view-cg-details" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        View CG Details
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#create-a-consistency-group" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Create a Consistency Group
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#add-volumes-to-a-cg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Add Volumes to a CG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-a-volume-from-a-cg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove a Volume from a CG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-consistency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Consistency Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detach-re-attach-cg-metro-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detach / Re-attach CG (Metro Failover)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,74 @@
 
 
 
-<h1 id="consistency-groups">Consistency Groups<a class="headerlink" href="#consistency-groups" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Consistency Groups.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="vplex-consistency-groups">VPLEX Consistency Groups<a class="headerlink" href="#vplex-consistency-groups" title="Permanent link">&para;</a></h1>
+<p>Consistency groups (CGs) in VPLEX ensure that a set of virtual volumes is treated as a crash-consistent unit during failover and recovery operations.</p>
+<h2 id="list-consistency-groups">List Consistency Groups<a class="headerlink" href="#list-consistency-groups" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/
+VPlexcli:/&gt; ll /clusters/cluster-2/consistency-groups/
+</code></pre>
+<h2 id="view-cg-details">View CG Details<a class="headerlink" href="#view-cg-details" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+</code></pre>
+<p>Key attributes:
+- <code>operational-status</code> — should be <code>ok</code>
+- <code>type</code> — <code>local</code> or <code>distributed</code>
+- <code>virtual-volumes</code> — list of member volumes</p>
+<h2 id="create-a-consistency-group">Create a Consistency Group<a class="headerlink" href="#create-a-consistency-group" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; consistency-group create --name &lt;cg_name&gt; --cluster-name cluster-1
+</code></pre>
+<h2 id="add-volumes-to-a-cg">Add Volumes to a CG<a class="headerlink" href="#add-volumes-to-a-cg" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; consistency-group add-virtual-volume \
+    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt; \
+    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre>
+<h2 id="remove-a-volume-from-a-cg">Remove a Volume from a CG<a class="headerlink" href="#remove-a-volume-from-a-cg" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; consistency-group remove-virtual-volume \
+    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt; \
+    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre>
+<h2 id="distributed-consistency-groups">Distributed Consistency Groups<a class="headerlink" href="#distributed-consistency-groups" title="Permanent link">&para;</a></h2>
+<p>For Metro configurations, CGs span both clusters:</p>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;/
+# Check: type = distributed
+# Check: operational-status = ok on both clusters
+</code></pre>
+<h2 id="detach-re-attach-cg-metro-failover">Detach / Re-attach CG (Metro Failover)<a class="headerlink" href="#detach-re-attach-cg-metro-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Detach from cluster-2 (planned maintenance or failover)
+VPlexcli:/&gt; consistency-group detach \
+    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+
+# Re-attach after recovery
+VPlexcli:/&gt; consistency-group attach \
+    --consistency-group /clusters/cluster-1/consistency-groups/&lt;cg_name&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CG degraded</td>
+<td>Check cluster connectivity</td>
+<td>Investigate inter-cluster link</td>
+</tr>
+<tr>
+<td>CG detached</td>
+<td>Planned or unplanned detach</td>
+<td>Re-attach after recovery</td>
+</tr>
+<tr>
+<td>Volume not in CG</td>
+<td>Missed during provisioning</td>
+<td>Add via <code>add-virtual-volume</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

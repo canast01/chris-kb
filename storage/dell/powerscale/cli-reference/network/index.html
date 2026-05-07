@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subnets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subnets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ip-pools-smartconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Pools (SmartConnect)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smartconnect-zones-dns-balancing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SmartConnect Zones (DNS Balancing)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,32 +811,87 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Interfaces
+<h2 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all network interfaces
 isi network interfaces list
 isi network interfaces view &lt;iface&gt;
 
-# Subnets
-isi network subnets list
-isi network subnets view &lt;subnet_name&gt;
-
-# IP pools
-isi network pools list
-isi network pools view &lt;pool_name&gt;
-isi network pools create --name &lt;pool&gt; --subnet &lt;subnet&gt; --access-zone &lt;zone&gt;
-
-# Rules (SmartConnect)
-isi network rules list
-isi network rules view &lt;rule_name&gt;
-
-# DNS
-isi network dns view
-isi network external settings view
-
-# Ping / connectivity
-ping &lt;ip&gt;
+# Filter by node
 isi network interfaces list --node-id &lt;node_id&gt;
 </code></pre>
+<h2 id="subnets">Subnets<a class="headerlink" href="#subnets" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi network subnets list
+isi network subnets view &lt;subnet_name&gt;
+
+# Create a subnet
+isi network subnets create &lt;subnet_name&gt; --subnet-mask &lt;mask&gt; --gateway &lt;gateway&gt;
+</code></pre>
+<h2 id="ip-pools-smartconnect">IP Pools (SmartConnect)<a class="headerlink" href="#ip-pools-smartconnect" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List IP pools
+isi network pools list
+isi network pools view &lt;pool_name&gt;
+
+# Create an IP pool
+isi network pools create \
+    --name &lt;pool_name&gt; \
+    --subnet &lt;subnet_name&gt; \
+    --access-zone &lt;zone_name&gt;
+
+# Add an IP range to a pool
+isi network pools modify &lt;pool_name&gt; --add-ranges &lt;ip_start&gt;-&lt;ip_end&gt;
+</code></pre>
+<h2 id="smartconnect-zones-dns-balancing">SmartConnect Zones (DNS Balancing)<a class="headerlink" href="#smartconnect-zones-dns-balancing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View SmartConnect rules
+isi network rules list
+isi network rules view &lt;rule_name&gt;
+</code></pre>
+<p>SmartConnect policies:
+| Policy | Behavior |
+|---|---|
+| round-robin | Rotates IPs across connections |
+| cpu-usage | Directs to least-loaded node |
+| throughput | Directs to lowest-throughput node |
+| connection-count | Directs to node with fewest connections |</p>
+<h2 id="dns-settings">DNS Settings<a class="headerlink" href="#dns-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi network dns view
+isi network external settings view
+</code></pre>
+<h2 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">ping &lt;ip&gt;
+isi network interfaces list --node-id &lt;node_id&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client can't mount</td>
+<td>IP pool and DNS</td>
+<td>Verify SmartConnect DNS zone</td>
+</tr>
+<tr>
+<td>Node not accepting connections</td>
+<td>Interface status</td>
+<td>Check interface state</td>
+</tr>
+<tr>
+<td>Wrong node handling client</td>
+<td>SmartConnect policy</td>
+<td>Review and change pool policy</td>
+</tr>
+<tr>
+<td>IP not responding</td>
+<td>Pool membership</td>
+<td>Verify IP in pool range</td>
+</tr>
+</tbody>
+</table>
 
 
 

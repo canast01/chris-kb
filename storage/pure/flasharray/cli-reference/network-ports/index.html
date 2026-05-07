@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purenetwork-network" class="md-nav__link">
+  <a href="#network-interfaces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        purenetwork — Network
+        Network Interfaces
       
     </span>
   </a>
@@ -769,10 +723,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pureport-ports" class="md-nav__link">
+  <a href="#fc-and-ethernet-ports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        pureport — Ports
+        FC and Ethernet Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initiator-host-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initiator (Host) Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandwidth-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-port-wwns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Port WWNs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iscsi-port-ip-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iSCSI Port IP Addresses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -800,27 +820,85 @@
 
 <h1 id="network-ports">Network &amp; Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Pure FlashArray CLI Reference</a>.</p>
+<p>Part of the Pure FlashArray CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="purenetwork-network">purenetwork — Network<a class="headerlink" href="#purenetwork-network" title="Permanent link">&para;</a></h2>
-<p>Displays management and replication network configuration.</p>
+<h2 id="network-interfaces">Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all network interfaces (management, replication, iSCSI)
+purenetwork list
+
+# Show interface detail
+purenetwork list --resolve-hostnames
+</code></pre>
+<h2 id="fc-and-ethernet-ports">FC and Ethernet Ports<a class="headerlink" href="#fc-and-ethernet-ports" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all array ports
+pureport list
+
+# FC ports only
+pureport list --type fc
+
+# Ethernet ports only
+pureport list --type eth
+
+# Filter to a specific controller
+pureport list --raw --filter &quot;name='CT0.FC*'&quot;
+pureport list --raw --filter &quot;name='CT1.FC*'&quot;
+</code></pre>
+<h2 id="initiator-host-ports">Initiator (Host) Ports<a class="headerlink" href="#initiator-host-ports" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show connected host initiator ports
+pureport list --initiator
+
+# Filter by WWN
+pureport list --initiator --raw --filter &quot;initiator.wwn='1000000000000001'&quot;
+</code></pre>
+<h2 id="bandwidth-monitoring">Bandwidth Monitoring<a class="headerlink" href="#bandwidth-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">pureport monitor --bandwidth
+</code></pre>
+<h2 id="fc-port-wwns">FC Port WWNs<a class="headerlink" href="#fc-port-wwns" title="Permanent link">&para;</a></h2>
+<p>To identify array target WWNs for SAN zoning:</p>
+<pre><code class="language-bash">pureport list --type fc
+</code></pre>
+<p>The <code>wwn</code> column shows the array-side WWN for each FC port. Zone each host initiator port to the array target WWNs on the corresponding switch.</p>
+<h2 id="iscsi-port-ip-addresses">iSCSI Port IP Addresses<a class="headerlink" href="#iscsi-port-ip-addresses" title="Permanent link">&para;</a></h2>
 <pre><code class="language-bash">purenetwork list
 </code></pre>
-<hr />
-<h2 id="pureport-ports">pureport — Ports<a class="headerlink" href="#pureport-ports" title="Permanent link">&para;</a></h2>
-<p>Displays array host connection ports.</p>
-<pre><code class="language-bash">pureport list
-pureport list --initiator
-pureport list --type fc
-pureport list --type eth
-pureport list --raw --filter &quot;name='*FC*'&quot;
-pureport list --raw --filter &quot;name='*ETH*'&quot;
-pureport list --raw --filter &quot;name='CT0.FC*'&quot;
-pureport list --initiator --raw --filter &quot;name='CT0.FC0'&quot;
-pureport list --initiator --raw --filter &quot;initiator.wwn='1000000000000001'&quot;
-pureport monitor --bandwidth
+<p>iSCSI initiators connect to the array using the IP addresses shown for iSCSI-enabled ports.</p>
+<h2 id="port-health">Port Health<a class="headerlink" href="#port-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">pureport list --type fc
+# Check: speed, status — all ports should show expected link speed
 </code></pre>
+<p>Any port showing <code>0Gb</code> or no speed may indicate a disconnected or failed port.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host can't see array via FC</td>
+<td>Port WWN not zoned</td>
+<td>Verify SAN zoning matches <code>pureport list --type fc</code></td>
+</tr>
+<tr>
+<td>iSCSI sessions not establishing</td>
+<td>IP reachability</td>
+<td>Ping array iSCSI IP from host</td>
+</tr>
+<tr>
+<td>Bandwidth below expected</td>
+<td>Port speed</td>
+<td><code>pureport list --type eth</code> — check link speed</td>
+</tr>
+<tr>
+<td>Initiator not registering</td>
+<td>WWN mismatch</td>
+<td>Verify host HBA WWN vs. registered initiator</td>
+</tr>
+</tbody>
+</table>
 
 
 

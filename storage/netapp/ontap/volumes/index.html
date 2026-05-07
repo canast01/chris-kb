@@ -21,7 +21,7 @@
     
     
       
-        <title>Volumes - Chris KB</title>
+        <title>ONTAP Volumes - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#volumes" class="md-skip">
+        <a href="#ontap-volumes" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Volumes
+              ONTAP Volumes
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-volumes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Volumes
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#volume-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Volume Health
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#create-a-volume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Create a Volume
       
     </span>
   </a>
@@ -791,10 +745,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#resize-a-volume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Resize a Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-autosize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Autosize
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-efficiency-deduplication-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Efficiency (Deduplication / Compression)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#move-a-volume-between-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Move a Volume (Between Aggregates)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#take-a-volume-offline-online" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Take a Volume Offline / Online
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +840,98 @@
 
 
 
-<h1 id="volumes">Volumes<a class="headerlink" href="#volumes" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Volumes.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="ontap-volumes">ONTAP Volumes<a class="headerlink" href="#ontap-volumes" title="Permanent link">&para;</a></h1>
+<h2 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume show
+volume show -vserver &lt;svm_name&gt;
+volume show -fields size,used,available,percent-used,state
+</code></pre>
+<h2 id="volume-health">Volume Health<a class="headerlink" href="#volume-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show offline or restricted volumes
+volume show -state !online
+
+# Show volumes nearing capacity
+volume show -fields percent-used | awk '$2 &gt; 80'
+</code></pre>
+<h2 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume create \
+    -vserver &lt;svm_name&gt; \
+    -volume &lt;vol_name&gt; \
+    -aggregate &lt;aggr_name&gt; \
+    -size 500G \
+    -junction-path /&lt;vol_name&gt; \
+    -security-style unix
+</code></pre>
+<h2 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume size -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt; -new-size 1T
+</code></pre>
+<h2 id="volume-autosize">Volume Autosize<a class="headerlink" href="#volume-autosize" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume autosize -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt; \
+    -mode grow_shrink \
+    -maximum-size 2T \
+    -grow-threshold-percent 85
+</code></pre>
+<h2 id="volume-efficiency-deduplication-compression">Volume Efficiency (Deduplication / Compression)<a class="headerlink" href="#volume-efficiency-deduplication-compression" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check efficiency state
+volume efficiency show -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+
+# Enable efficiency
+volume efficiency on -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+
+# Run deduplication manually
+volume efficiency start -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+</code></pre>
+<h2 id="move-a-volume-between-aggregates">Move a Volume (Between Aggregates)<a class="headerlink" href="#move-a-volume-between-aggregates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume move start \
+    -vserver &lt;svm_name&gt; \
+    -volume &lt;vol_name&gt; \
+    -destination-aggregate &lt;dest_aggr&gt;
+
+volume move show
+</code></pre>
+<h2 id="take-a-volume-offline-online">Take a Volume Offline / Online<a class="headerlink" href="#take-a-volume-offline-online" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">volume offline -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+volume online -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+</code></pre>
+<h2 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Offline first
+volume offline -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+
+# Delete
+volume delete -vserver &lt;svm_name&gt; -volume &lt;vol_name&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume full</td>
+<td>Percent-used</td>
+<td>Resize or enable autosize</td>
+</tr>
+<tr>
+<td>Volume offline</td>
+<td>State</td>
+<td>Bring online or investigate</td>
+</tr>
+<tr>
+<td>Poor efficiency</td>
+<td>Dedup/compress off</td>
+<td>Enable volume efficiency</td>
+</tr>
+<tr>
+<td>Mount fails</td>
+<td>Junction path</td>
+<td>Verify <code>-junction-path</code> set</td>
+</tr>
+</tbody>
+</table>
 
 
 

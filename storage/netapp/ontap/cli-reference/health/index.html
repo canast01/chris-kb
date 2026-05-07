@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#system-health-events_1" class="md-nav__link">
+  <a href="#system-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        System Health &amp; Events
+        System Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ems-event-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMS Event Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ems-notification-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMS Notification Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware &amp; Software
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autosupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AutoSupport
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
       
     </span>
   </a>
@@ -789,28 +798,99 @@
 
 <h1 id="system-health-events">System Health &amp; Events<a class="headerlink" href="#system-health-events" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
+<p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="system-health-events_1">System Health &amp; Events<a class="headerlink" href="#system-health-events_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Health
+<h2 id="system-health">System Health<a class="headerlink" href="#system-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overall health status
 system health status show
-system health alert show
-system health subsystem show
-system health node-connectivity show
+# Expected: ok
 
-# Event log
+# Health alerts (unresolved issues)
+system health alert show
+
+# Health subsystems
+system health subsystem show
+
+# Node-level connectivity
+system health node-connectivity show
+</code></pre>
+<h2 id="ems-event-log">EMS Event Log<a class="headerlink" href="#ems-event-log" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Recent events (default: last 1000)
 event log show
+
+# Filter by severity
 event log show -severity emergency
 event log show -severity alert
-event log show -node &lt;node&gt;
-event log show -time &gt;1h
+event log show -severity error
 
-# Firmware / images
+# Filter by node
+event log show -node &lt;node_name&gt;
+
+# Filter by time window
+event log show -time &quot;&gt;1h&quot;
+event log show -time &quot;&gt;24h&quot;
+
+# Filter by message name
+event log show -messagename wafl.vol.full
+</code></pre>
+<h2 id="ems-notification-config">EMS Notification Config<a class="headerlink" href="#ems-notification-config" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show EMS destinations (email, syslog, etc.)
+event notification show
+event notification destination show
+</code></pre>
+<h2 id="firmware-software">Firmware &amp; Software<a class="headerlink" href="#firmware-software" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show current installed image versions
 system node image show
-system node image update -node &lt;node&gt; -package &lt;pkg&gt;
+
+# Update firmware (disk, shelf, SP)
+system node firmware update -node &lt;node&gt;
+
+# Show pending upgrades
 system node upgrade-revert show
 </code></pre>
+<h2 id="autosupport">AutoSupport<a class="headerlink" href="#autosupport" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check AutoSupport status
+system node autosupport show
+system node autosupport show -fields state,last-successful-destination
+
+# Send manual AutoSupport
+system node autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual test&quot;
+</code></pre>
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system health status show</code></td>
+<td>Overall health</td>
+</tr>
+<tr>
+<td><code>system health alert show</code></td>
+<td>Active alerts</td>
+</tr>
+<tr>
+<td><code>event log show -severity error</code></td>
+<td>Recent errors</td>
+</tr>
+<tr>
+<td><code>storage failover show</code></td>
+<td>HA pair state</td>
+</tr>
+<tr>
+<td><code>cluster show</code></td>
+<td>Node health</td>
+</tr>
+<tr>
+<td><code>network interface show -status-oper down</code></td>
+<td>Down LIFs</td>
+</tr>
+</tbody>
+</table>
 
 
 

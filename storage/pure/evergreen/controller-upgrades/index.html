@@ -21,7 +21,7 @@
     
     
       
-        <title>Controller Upgrades - Chris KB</title>
+        <title>Pure Storage Controller Upgrades - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#controller-upgrades" class="md-skip">
+        <a href="#pure-storage-controller-upgrades" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Controller Upgrades
+              Pure Storage Controller Upgrades
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#how-controller-upgrades-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        How Controller Upgrades Work
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#customer-pre-upgrade-responsibilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Customer Pre-Upgrade Responsibilities
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#during-the-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        During the Upgrade
       
     </span>
   </a>
@@ -791,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#verifying-paths-duringafter-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Verifying Paths During/After Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-upgrade-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Considerations
       
     </span>
   </a>
@@ -820,31 +796,84 @@
 
 
 
-<h1 id="controller-upgrades">Controller Upgrades<a class="headerlink" href="#controller-upgrades" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Controller Upgrades.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="pure-storage-controller-upgrades">Pure Storage Controller Upgrades<a class="headerlink" href="#pure-storage-controller-upgrades" title="Permanent link">&para;</a></h1>
+<p>Under the Evergreen program, Pure Storage performs non-disruptive controller upgrades as part of the subscription — there is no hardware refresh cycle or capital expenditure.</p>
+<h2 id="how-controller-upgrades-work">How Controller Upgrades Work<a class="headerlink" href="#how-controller-upgrades-work" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Pure Storage proactively schedules controller upgrades based on technology lifecycle</li>
+<li>Customer receives advance notice (typically 90+ days)</li>
+<li>The upgrade is performed non-disruptively by Pure Storage engineers</li>
+<li>Active I/O continues during the upgrade — hosts see no interruption</li>
+</ol>
+<h2 id="customer-pre-upgrade-responsibilities">Customer Pre-Upgrade Responsibilities<a class="headerlink" href="#customer-pre-upgrade-responsibilities" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>Confirm maintenance window with the Pure Storage team</li>
+<li>Verify all hosts are healthy and paths are redundant</li>
+<li>Ensure no in-progress background tasks (e.g., parity rebuilds) would extend the window</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check array health before upgrade
+purecli array list
+purecli drive list
+purecli alert list
+</code></pre>
+<p>Or via Pure1 / Purity GUI:
+- <strong>Storage → Array</strong> — confirm all drives healthy
+- <strong>Analysis → Alerts</strong> — no active critical alerts</p>
+<h2 id="during-the-upgrade">During the Upgrade<a class="headerlink" href="#during-the-upgrade" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
+<li>Pure Storage engineers manage the process remotely or on-site</li>
+<li>Active controller is drained non-disruptively before replacement</li>
+<li>Paths fail over to the secondary controller — multipathing handles this transparently</li>
+<li>Expect brief I/O latency increase during path failover (seconds, not minutes)</li>
 </ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="verifying-paths-duringafter-upgrade">Verifying Paths During/After Upgrade<a class="headerlink" href="#verifying-paths-duringafter-upgrade" title="Permanent link">&para;</a></h2>
+<p><strong>On the host:</strong></p>
+<pre><code class="language-bash"># Linux with multipath
+multipath -ll
+
+# Windows PowerShell (MPIO)
+mpclaim -s -d
+
+# VMware
+esxcli storage nmp device list
+</code></pre>
+<p>Confirm all expected paths are active after the upgrade completes.</p>
+<h2 id="post-upgrade-verification">Post-Upgrade Verification<a class="headerlink" href="#post-upgrade-verification" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purecli array list     # Confirm new controller hardware
+purecli hardware list  # All components healthy
+purecli alert list     # No post-upgrade alerts
+</code></pre>
+<h2 id="common-considerations">Common Considerations<a class="headerlink" href="#common-considerations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Downtime</td>
+<td>None — non-disruptive by design</td>
+</tr>
+<tr>
+<td>Pre-requisite</td>
+<td>Dual-path host connectivity required</td>
+</tr>
+<tr>
+<td>Scheduling</td>
+<td>Coordinated with Pure Storage</td>
+</tr>
+<tr>
+<td>Data migration</td>
+<td>None — data stays in place</td>
+</tr>
+<tr>
+<td>Host action required</td>
+<td>None (verify paths post-upgrade)</td>
+</tr>
+</tbody>
+</table>
 
 
 

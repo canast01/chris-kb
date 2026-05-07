@@ -21,7 +21,7 @@
     
     
       
-        <title>Restores - Chris KB</title>
+        <title>SnapCenter Restores - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#restores" class="md-skip">
+        <a href="#snapcenter-restores" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Restores
+              SnapCenter Restores
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#restore-from-snapcenter-ui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Restore from SnapCenter UI
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#sql-server-database-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        SQL Server Database Restore
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#oracle-database-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Oracle Database Restore
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#file-system-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        File System Restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#single-file-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single File Restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternate-location-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternate Location Restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-after-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate After Restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,91 @@
 
 
 
-<h1 id="restores">Restores<a class="headerlink" href="#restores" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Restores.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="snapcenter-restores">SnapCenter Restores<a class="headerlink" href="#snapcenter-restores" title="Permanent link">&para;</a></h1>
+<h2 id="restore-from-snapcenter-ui">Restore from SnapCenter UI<a class="headerlink" href="#restore-from-snapcenter-ui" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>Resources</strong> → select the resource (database, file system, VM)</li>
+<li>Click <strong>Restore</strong></li>
+<li>Select the backup copy (snapshot) to restore from</li>
+<li>Choose restore scope:</li>
+<li><strong>Complete restore</strong> — full volume/database restore</li>
+<li><strong>File-level restore</strong> — individual files or directories</li>
+<li><strong>Item-level</strong> — application-specific (mailbox, database, table)</li>
+<li>Confirm and monitor via <strong>Monitor → Jobs</strong></li>
+</ol>
+<h2 id="sql-server-database-restore">SQL Server Database Restore<a class="headerlink" href="#sql-server-database-restore" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>Resources → Microsoft SQL Server</strong></li>
+<li>Select the database → <strong>Restore</strong></li>
+<li>Choose backup set and log chain (for point-in-time)</li>
+<li>Select restore destination (original or alternate instance)</li>
+<li>SnapCenter quiesces, reverts snapshot, and replays logs</li>
+</ol>
+<h2 id="oracle-database-restore">Oracle Database Restore<a class="headerlink" href="#oracle-database-restore" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>Resources → Oracle</strong></li>
+<li>Select the database → <strong>Restore</strong></li>
+<li>Choose restore point (snapshot + archive log apply)</li>
+<li>SnapCenter recovers to the selected SCN or timestamp</li>
+</ol>
+<h2 id="file-system-restore">File System Restore<a class="headerlink" href="#file-system-restore" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>Resources → Windows / UNIX File Systems</strong></li>
+<li>Select the resource → <strong>Restore</strong></li>
+<li>Choose snapshot and target path</li>
+<li>SnapCenter mounts the snapshot and restores files</li>
+</ol>
+<h2 id="single-file-restore">Single File Restore<a class="headerlink" href="#single-file-restore" title="Permanent link">&para;</a></h2>
+<p>For granular recovery without full volume revert:</p>
+<ol>
+<li>Navigate to the backup copy</li>
+<li>Click <strong>Mount</strong> to temporarily mount the snapshot</li>
+<li>Copy the required file(s) from the mounted path</li>
+<li>Unmount after recovery</li>
+</ol>
+<h2 id="alternate-location-restore">Alternate Location Restore<a class="headerlink" href="#alternate-location-restore" title="Permanent link">&para;</a></h2>
+<p>Restore to a different host or path:
+1. In the restore wizard, select <strong>Alternate location</strong>
+2. Specify destination host, instance, or path
+3. SnapCenter handles clone/mount operations</p>
+<h2 id="validate-after-restore">Validate After Restore<a class="headerlink" href="#validate-after-restore" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>Bring the application online and verify data integrity</li>
+<li>Run application-level checks (DBCC CHECKDB for SQL, RMAN validate for Oracle)</li>
+<li>Confirm backup resumes on the restored resource</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restore fails at mount step</td>
+<td>Array connectivity</td>
+<td>Check ONTAP LIF and iSCSI/NFS</td>
+</tr>
+<tr>
+<td>Log replay fails</td>
+<td>Logs missing</td>
+<td>Restore from an earlier consistent point</td>
+</tr>
+<tr>
+<td>Plugin error during restore</td>
+<td>Plugin stopped</td>
+<td>Restart plugin on target host</td>
+</tr>
+<tr>
+<td>Alternate restore fails</td>
+<td>Credentials</td>
+<td>Verify SnapCenter credentials for destination</td>
+</tr>
+</tbody>
+</table>
 
 
 

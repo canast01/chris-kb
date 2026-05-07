@@ -21,7 +21,7 @@
     
     
       
-        <title>Health Checks - Chris KB</title>
+        <title>NetApp Operations — Health Checks - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#health-checks" class="md-skip">
+        <a href="#netapp-operations-health-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Health Checks
+              NetApp Operations — Health Checks
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#daily-health-check-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Daily Health Check Workflow
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#autosupport-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        AutoSupport Validation
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#pre-change-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Pre-Change Checklist
       
     </span>
   </a>
@@ -791,10 +745,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#health-summary-table" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Health Summary Table
       
     </span>
   </a>
@@ -820,31 +774,108 @@
 
 
 
-<h1 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Health Checks.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="netapp-operations-health-checks">NetApp Operations — Health Checks<a class="headerlink" href="#netapp-operations-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="daily-health-check-workflow">Daily Health Check Workflow<a class="headerlink" href="#daily-health-check-workflow" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># 1. Overall cluster health
+cluster show
+system health status show
+
+# 2. HA pair status
+storage failover show
+
+# 3. Disk health
+storage disk show -broken
+
+# 4. Aggregate health
+storage aggregate show -state !online
+storage aggregate show -fields percent-used | awk '$2 &gt; 80'
+
+# 5. Volume health
+volume show -state !online
+volume show -fields percent-used | awk '$2 &gt; 85'
+
+# 6. Interface health
+network interface show -status-oper down
+
+# 7. EMS critical events (last 24 hours)
+event log show -severity critical -time &quot;&gt;24h&quot;
+event log show -severity error -time &quot;&gt;24h&quot;
+
+# 8. SnapMirror health
+snapmirror show -health false
+</code></pre>
+<h2 id="autosupport-validation">AutoSupport Validation<a class="headerlink" href="#autosupport-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">system node autosupport show -fields state,last-successful-destination
+</code></pre>
+<p>Confirm last successful delivery is recent (within 24 hours for daily AutoSupport).</p>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>[ ] Cluster health: <code>system health status show</code> → ok</li>
+<li>[ ] HA connected: <code>storage failover show</code> → Connected</li>
+<li>[ ] No broken disks: <code>storage disk show -broken</code> → no output</li>
+<li>[ ] All aggregates online: <code>storage aggregate show -state !online</code> → no output</li>
+<li>[ ] All volumes online: <code>volume show -state !online</code> → no output</li>
+<li>[ ] No down LIFs: <code>network interface show -status-oper down</code> → no output</li>
+<li>[ ] No critical EMS events in 24h</li>
+<li>[ ] SnapMirror relationships healthy</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster nodes</td>
+<td><code>cluster show</code></td>
+<td>health: true</td>
+</tr>
+<tr>
+<td>HA pair</td>
+<td><code>storage failover show</code></td>
+<td>Connected</td>
+</tr>
+<tr>
+<td>Disks</td>
+<td><code>storage disk show -broken</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>Aggregates</td>
+<td><code>storage aggregate show -state !online</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>Capacity</td>
+<td><code>storage aggregate show</code></td>
+<td>&lt; 80%</td>
+</tr>
+<tr>
+<td>Volumes</td>
+<td><code>volume show -state !online</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>LIFs</td>
+<td><code>network interface show -status-oper down</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>EMS</td>
+<td><code>event log show -severity critical</code></td>
+<td>No output</td>
+</tr>
+<tr>
+<td>SnapMirror</td>
+<td><code>snapmirror show -health false</code></td>
+<td>No output</td>
+</tr>
+</tbody>
+</table>
 
 
 

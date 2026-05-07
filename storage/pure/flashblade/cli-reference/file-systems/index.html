@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,76 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#file-systems-nfs-smb_1" class="md-nav__link">
+  <a href="#list-file-systems" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File Systems (NFS / SMB)
+        List File Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a File System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resize-a-file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resize a File System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-nfs-export-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update NFS Export Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smb-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMB Shares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#destroy-and-eradicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destroy and Eradicate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -789,34 +809,97 @@
 
 <h1 id="file-systems-nfs-smb">File Systems (NFS / SMB)<a class="headerlink" href="#file-systems-nfs-smb" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
+<p>Part of the Pure FlashBlade CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="file-systems-nfs-smb_1">File Systems (NFS / SMB)<a class="headerlink" href="#file-systems-nfs-smb_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># List file systems
-purefb filesystem show
+<h2 id="list-file-systems">List File Systems<a class="headerlink" href="#list-file-systems" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb filesystem show
 purefb filesystem show --name &lt;name&gt;
+purefb filesystem show --all    # includes destroyed
+</code></pre>
+<h2 id="create-a-file-system">Create a File System<a class="headerlink" href="#create-a-file-system" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># NFS file system with export rules
+purefb filesystem create \
+    --name &lt;name&gt; \
+    --size 10T \
+    --nfs \
+    --nfs-rules &quot;*(rw,no_root_squash)&quot;
 
-# Create file system
-purefb filesystem create --name &lt;name&gt; --size 10T --nfs --nfs-rules &quot;*(rw,no_root_squash)&quot;
+# SMB file system
 purefb filesystem create --name &lt;name&gt; --size 10T --smb
 
-# Resize
-purefb filesystem update --name &lt;name&gt; --size 20T
+# Both NFS and SMB
+purefb filesystem create \
+    --name &lt;name&gt; \
+    --size 10T \
+    --nfs --nfs-rules &quot;*(rw,no_root_squash)&quot; \
+    --smb
+</code></pre>
+<h2 id="resize-a-file-system">Resize a File System<a class="headerlink" href="#resize-a-file-system" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb filesystem update --name &lt;name&gt; --size 20T
+</code></pre>
+<h2 id="update-nfs-export-rules">Update NFS Export Rules<a class="headerlink" href="#update-nfs-export-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Restrict to specific network
+purefb filesystem update \
+    --name &lt;name&gt; \
+    --nfs-rules &quot;&lt;ip_cidr&gt;(rw,no_root_squash)&quot;
 
-# Destroy / eradicate
-purefb filesystem destroy --name &lt;name&gt;
-purefb filesystem eradicate --name &lt;name&gt;
-
-# NFS exports
-purefb filesystem show --name &lt;name&gt;
-purefb filesystem update --name &lt;name&gt; --nfs-rules &quot;&lt;ip_or_cidr&gt;(rw,no_root_squash)&quot;
-
-# SMB shares
+# Multiple rules
+purefb filesystem update \
+    --name &lt;name&gt; \
+    --nfs-rules &quot;10.0.1.0/24(rw,no_root_squash):10.0.2.0/24(ro)&quot;
+</code></pre>
+<h2 id="smb-shares">SMB Shares<a class="headerlink" href="#smb-shares" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List SMB shares
 purefb smb-share show
+
+# Create an SMB share
 purefb smb-share create --name &lt;share_name&gt; --filesystem &lt;fs_name&gt;
+
+# Delete an SMB share
 purefb smb-share destroy --name &lt;share_name&gt;
 </code></pre>
+<h2 id="destroy-and-eradicate">Destroy and Eradicate<a class="headerlink" href="#destroy-and-eradicate" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Destroy (recoverable for 24 hours)
+purefb filesystem destroy --name &lt;name&gt;
+
+# Permanently eradicate
+purefb filesystem eradicate --name &lt;name&gt;
+
+# Recover a destroyed file system
+purefb filesystem recover --name &lt;name&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS mount refused</td>
+<td>Export rules</td>
+<td>Verify client IP is in NFS rules</td>
+</tr>
+<tr>
+<td>SMB share not visible</td>
+<td>SMB enabled</td>
+<td>Ensure <code>--smb</code> flag was used at create</td>
+</tr>
+<tr>
+<td>File system full</td>
+<td>Capacity</td>
+<td><code>purefb filesystem update --size</code></td>
+</tr>
+<tr>
+<td>Cannot destroy</td>
+<td>Not empty (NFS mounts active)</td>
+<td>Unmount all clients first</td>
+</tr>
+</tbody>
+</table>
 
 
 

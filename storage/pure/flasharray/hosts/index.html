@@ -21,7 +21,7 @@
     
     
       
-        <title>Hosts - Chris KB</title>
+        <title>FlashArray Hosts - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#hosts" class="md-skip">
+        <a href="#flasharray-hosts" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Hosts
+              FlashArray Hosts
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-hosts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Hosts
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#create-a-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Create a Host
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#add-initiators-to-an-existing-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Add Initiators to an Existing Host
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#connect-a-volume-to-a-host" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Connect a Volume to a Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disconnect-a-volume-from-a-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disconnect a Volume from a Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,89 @@
 
 
 
-<h1 id="hosts">Hosts<a class="headerlink" href="#hosts" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Hosts.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="flasharray-hosts">FlashArray Hosts<a class="headerlink" href="#flasharray-hosts" title="Permanent link">&para;</a></h1>
+<p>Hosts in Pure Storage represent the servers (physical or virtual) that are granted access to volumes via iSCSI IQN or Fibre Channel WWN registration.</p>
+<h2 id="list-hosts">List Hosts<a class="headerlink" href="#list-hosts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purecli host list
+purecli host list --connect   # show volume connections
+</code></pre>
+<h2 id="create-a-host">Create a Host<a class="headerlink" href="#create-a-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create host with FC WWNs
+purecli host create &lt;hostname&gt; --wwns &lt;wwn1,wwn2&gt;
+
+# Create host with iSCSI IQNs
+purecli host create &lt;hostname&gt; --iqns &lt;iqn1&gt;
+
+# Create host with NVMe NQNs
+purecli host create &lt;hostname&gt; --nqns &lt;nqn1&gt;
+</code></pre>
+<h2 id="add-initiators-to-an-existing-host">Add Initiators to an Existing Host<a class="headerlink" href="#add-initiators-to-an-existing-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add WWN
+purecli host update &lt;hostname&gt; --add-wwns &lt;new_wwn&gt;
+
+# Add IQN
+purecli host update &lt;hostname&gt; --add-iqns &lt;new_iqn&gt;
+</code></pre>
+<h2 id="connect-a-volume-to-a-host">Connect a Volume to a Host<a class="headerlink" href="#connect-a-volume-to-a-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purecli host connect &lt;hostname&gt; --vol &lt;volume_name&gt;
+</code></pre>
+<p>This creates the host-to-volume connection (analogous to LUN masking on traditional arrays).</p>
+<h2 id="disconnect-a-volume-from-a-host">Disconnect a Volume from a Host<a class="headerlink" href="#disconnect-a-volume-from-a-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purecli host disconnect &lt;hostname&gt; --vol &lt;volume_name&gt;
+</code></pre>
+<h2 id="host-groups">Host Groups<a class="headerlink" href="#host-groups" title="Permanent link">&para;</a></h2>
+<p>For clustered hosts (e.g., ESXi cluster), use host groups so volumes can be connected to all members:</p>
+<pre><code class="language-bash"># Create host group
+purecli hgroup create &lt;hostgroup_name&gt;
+
+# Add hosts to group
+purecli hgroup update &lt;hostgroup_name&gt; --add-hosts &lt;hostname1,hostname2&gt;
+
+# Connect volume to host group
+purecli hgroup connect &lt;hostgroup_name&gt; --vol &lt;volume_name&gt;
+
+# List host group connections
+purecli hgroup list --connect
+</code></pre>
+<h2 id="delete-a-host">Delete a Host<a class="headerlink" href="#delete-a-host" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Disconnect all volumes first
+purecli host disconnect &lt;hostname&gt; --vol &lt;volume_name&gt;
+
+# Delete host
+purecli host delete &lt;hostname&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume not visible to host</td>
+<td>Connection exists?</td>
+<td><code>purecli host list --connect</code></td>
+</tr>
+<tr>
+<td>Duplicate WWN error</td>
+<td>WWN already registered</td>
+<td>Remove from old host entry</td>
+</tr>
+<tr>
+<td>Host group volume not seen</td>
+<td>All hosts in group?</td>
+<td><code>purecli hgroup list</code></td>
+</tr>
+<tr>
+<td>iSCSI host not connecting</td>
+<td>IQN correct</td>
+<td>Verify IQN on host with <code>iscsiadm</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

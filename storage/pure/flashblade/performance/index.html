@@ -21,7 +21,7 @@
     
     
       
-        <title>Performance - Chris KB</title>
+        <title>FlashBlade Performance - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#performance" class="md-skip">
+        <a href="#flashblade-performance" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Performance
+              FlashBlade Performance
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#array-level-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Array-Level Performance
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#file-system-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        File System Performance
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#object-store-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Object Store Performance
       
     </span>
   </a>
@@ -791,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#flashblade-performance-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        FlashBlade Performance Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure1-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure1 Performance Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identify-top-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify Top Consumers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandwidth-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-throughput-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Throughput Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +829,101 @@
 
 
 
-<h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Performance.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="flashblade-performance">FlashBlade Performance<a class="headerlink" href="#flashblade-performance" title="Permanent link">&para;</a></h1>
+<h2 id="array-level-performance">Array-Level Performance<a class="headerlink" href="#array-level-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb array --performance
+</code></pre>
+<p>Key metrics:
+- <code>read_bytes_per_sec</code> / <code>write_bytes_per_sec</code> — throughput
+- <code>reads_per_sec</code> / <code>writes_per_sec</code> — IOPS
+- <code>usec_per_read_op</code> / <code>usec_per_write_op</code> — latency</p>
+<h2 id="file-system-performance">File System Performance<a class="headerlink" href="#file-system-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb fs list --performance
+purefb fs list &lt;fs_name&gt; --performance
+</code></pre>
+<h2 id="object-store-performance">Object Store Performance<a class="headerlink" href="#object-store-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb bucket list --performance
+</code></pre>
+<h2 id="flashblade-performance-targets">FlashBlade Performance Targets<a class="headerlink" href="#flashblade-performance-targets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Expected Latency</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS (sequential)</td>
+<td>&lt; 1 ms</td>
+<td>High-bandwidth workloads</td>
+</tr>
+<tr>
+<td>NFS (small random)</td>
+<td>&lt; 5 ms</td>
+<td>Metadata-heavy workloads</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>&lt; 5 ms</td>
+<td>Object GET/PUT</td>
+</tr>
+</tbody>
+</table>
+<p>FlashBlade is optimized for high-bandwidth, large-block workloads — analytics, backup targets, media rendering, AI/ML datasets.</p>
+<h2 id="pure1-performance-analysis">Pure1 Performance Analysis<a class="headerlink" href="#pure1-performance-analysis" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>Pure1 → Analysis → Performance</strong> — array throughput, IOPS, latency over time</li>
+<li><strong>Pure1 → Analysis → Workload</strong> — per-file-system breakdown</li>
+<li>AI-driven anomaly detection surfaces unexpected performance changes</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="identify-top-consumers">Identify Top Consumers<a class="headerlink" href="#identify-top-consumers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Rank file systems by throughput
+purefb fs list --performance | sort -k3 -rn
+
+# Rank buckets by throughput
+purefb bucket list --performance
+</code></pre>
+<h2 id="bandwidth-limits">Bandwidth Limits<a class="headerlink" href="#bandwidth-limits" title="Permanent link">&para;</a></h2>
+<p>FlashBlade does not enforce per-file-system QoS on most versions. Capacity planning and workload isolation (dedicated file systems per application) is the standard approach.</p>
+<h2 id="network-throughput-limits">Network Throughput Limits<a class="headerlink" href="#network-throughput-limits" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check network interface utilization
+purefb network-interface list
+</code></pre>
+<p>Each FlashBlade chassis has multiple 100GbE or 25GbE ports. Aggregate bandwidth is the limiting factor for very large workloads.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low NFS throughput</td>
+<td>Client mount options</td>
+<td>Use <code>rsize/wsize=1048576</code></td>
+</tr>
+<tr>
+<td>High latency</td>
+<td>Network congestion</td>
+<td>Check switch utilization</td>
+</tr>
+<tr>
+<td>S3 slow</td>
+<td>Large object count</td>
+<td>Optimize key namespace; check prefix distribution</td>
+</tr>
+<tr>
+<td>Blade degraded</td>
+<td>Blade health</td>
+<td><code>purefb blade list</code> — contact Pure Support</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Relationship Health - Chris KB</title>
+        <title>SnapMirror Relationship Health - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#relationship-health" class="md-skip">
+        <a href="#snapmirror-relationship-health" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Relationship Health
+              SnapMirror Relationship Health
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#view-all-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        View All Relationships
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#identify-unhealthy-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Identify Unhealthy Relationships
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#relationship-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Relationship States
       
     </span>
   </a>
@@ -791,10 +745,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#lag-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Lag Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-last-transfer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Last Transfer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-force-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update (Force Sync)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resume-a-quiesced-relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume a Quiesced Relationship
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-initialize-a-broken-relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Re-initialize a Broken Relationship
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +840,109 @@
 
 
 
-<h1 id="relationship-health">Relationship Health<a class="headerlink" href="#relationship-health" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Relationship Health.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="snapmirror-relationship-health">SnapMirror Relationship Health<a class="headerlink" href="#snapmirror-relationship-health" title="Permanent link">&para;</a></h1>
+<h2 id="view-all-relationships">View All Relationships<a class="headerlink" href="#view-all-relationships" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">snapmirror show
+snapmirror show -fields source-path,destination-path,state,health,lag-time,last-transfer-size
+</code></pre>
+<h2 id="identify-unhealthy-relationships">Identify Unhealthy Relationships<a class="headerlink" href="#identify-unhealthy-relationships" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show only unhealthy relationships
+snapmirror show -health false
+
+# Show relationships with high lag
+snapmirror show -fields lag-time | sort -k2 -r
+</code></pre>
+<h2 id="relationship-states">Relationship States<a class="headerlink" href="#relationship-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Snapmirrored</td>
+<td>Healthy — replication current</td>
+</tr>
+<tr>
+<td>Uninitialized</td>
+<td>Never seeded; baseline transfer needed</td>
+</tr>
+<tr>
+<td>Broken-off</td>
+<td>Intentionally or unintentionally broken</td>
+</tr>
+<tr>
+<td>Quiesced</td>
+<td>Paused; not replicating</td>
+</tr>
+<tr>
+<td>Transferring</td>
+<td>Actively replicating</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lag-time">Lag Time<a class="headerlink" href="#lag-time" title="Permanent link">&para;</a></h2>
+<p>Lag time is the age of the last successful transfer. For async SnapMirror:
+- <strong>&lt; 1 hour</strong> — normal for hourly schedule
+- <strong>&gt; 4 hours</strong> — investigate
+- <strong>&gt; RPO threshold</strong> — escalate</p>
+<pre><code class="language-bash">snapmirror show -fields lag-time
+</code></pre>
+<h2 id="check-last-transfer">Check Last Transfer<a class="headerlink" href="#check-last-transfer" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">snapmirror show -destination-path &lt;svm:vol&gt; -fields last-transfer-duration,last-transfer-size,last-transfer-type
+</code></pre>
+<h2 id="update-force-sync">Update (Force Sync)<a class="headerlink" href="#update-force-sync" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">snapmirror update -destination-path &lt;dest_svm:dest_vol&gt;
+snapmirror show -destination-path &lt;dest_svm:dest_vol&gt;
+</code></pre>
+<h2 id="resume-a-quiesced-relationship">Resume a Quiesced Relationship<a class="headerlink" href="#resume-a-quiesced-relationship" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">snapmirror resume -destination-path &lt;dest_svm:dest_vol&gt;
+</code></pre>
+<h2 id="re-initialize-a-broken-relationship">Re-initialize a Broken Relationship<a class="headerlink" href="#re-initialize-a-broken-relationship" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Initialize from scratch (baseline transfer — may take hours)
+snapmirror initialize -destination-path &lt;dest_svm:dest_vol&gt;
+</code></pre>
+<h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>[ ] All relationships show <code>health: true</code></li>
+<li>[ ] Lag time within RPO tolerance</li>
+<li>[ ] No relationships in <code>Uninitialized</code> or <code>Broken-off</code> state</li>
+<li>[ ] Last transfer size not anomalous</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relationship unhealthy</td>
+<td>State and error field</td>
+<td>Run <code>snapmirror update</code>; check network</td>
+</tr>
+<tr>
+<td>Lag exceeding RPO</td>
+<td>Last transfer time</td>
+<td>Check schedule; run manual update</td>
+</tr>
+<tr>
+<td>Transfer failing</td>
+<td>ONTAP event log</td>
+<td>Check EMS errors on source/dest</td>
+</tr>
+<tr>
+<td>Relationship not found</td>
+<td>SVM/volume name</td>
+<td>Verify source and destination paths</td>
+</tr>
+</tbody>
+</table>
 
 
 

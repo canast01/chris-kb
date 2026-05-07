@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-level-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster-Level Stats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-level-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-Level Stats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drive-disk-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drive &amp; Disk Stats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#throughput-iops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Throughput &amp; IOPS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historical-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historical Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insightiq-cloudpools-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InsightIQ / CloudPools Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,29 +822,101 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Live cluster stats
+<h2 id="cluster-level-stats">Cluster-Level Stats<a class="headerlink" href="#cluster-level-stats" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Live cluster-wide stats
 isi statistics system list
+
+# Per-client breakdown
 isi statistics client list
+
+# Protocol-level stats
 isi statistics protocol list
 
-# Protocol breakdown
+# Filter by specific protocol
 isi statistics protocol list --protocol nfs3
 isi statistics protocol list --protocol smb2
-
-# Drive stats
-isi statistics drive list
-
-# Node-level stats
+</code></pre>
+<h2 id="node-level-stats">Node-Level Stats<a class="headerlink" href="#node-level-stats" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Stats per node
 isi statistics node list
 isi statistics node list --node-id &lt;node_id&gt;
-
-# Throughput and IOPS
+</code></pre>
+<h2 id="drive-disk-stats">Drive &amp; Disk Stats<a class="headerlink" href="#drive-disk-stats" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi statistics drive list
+</code></pre>
+<h2 id="throughput-iops">Throughput &amp; IOPS<a class="headerlink" href="#throughput-iops" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Active NFS client stats
 isi statistics query current --stats node.clientstats.active.nfs
 
-# Performance history
-isi statistics history list
+# Active SMB client stats
+isi statistics query current --stats node.clientstats.active.smb2
 </code></pre>
+<h2 id="historical-performance">Historical Performance<a class="headerlink" href="#historical-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi statistics history list
+</code></pre>
+<h2 id="performance-thresholds">Performance Thresholds<a class="headerlink" href="#performance-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Normal</th>
+<th>Action if Exceeded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node CPU utilization</td>
+<td>&lt; 70%</td>
+<td>Investigate top protocol clients</td>
+</tr>
+<tr>
+<td>Disk latency</td>
+<td>&lt; 10 ms</td>
+<td>Check drives; consider SSD tier</td>
+</tr>
+<tr>
+<td>Network throughput</td>
+<td>&lt; 80% link capacity</td>
+<td>Review top clients</td>
+</tr>
+</tbody>
+</table>
+<h2 id="insightiq-cloudpools-analysis">InsightIQ / CloudPools Analysis<a class="headerlink" href="#insightiq-cloudpools-analysis" title="Permanent link">&para;</a></h2>
+<p>Dell PowerScale integrates with InsightIQ for historical performance trending and capacity forecasting. If InsightIQ is deployed:
+- Access via the InsightIQ web UI
+- Reports available: protocol throughput, latency, client activity, node utilization</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High latency on NFS</td>
+<td><code>isi statistics protocol list --protocol nfs3</code></td>
+<td>Identify top clients</td>
+</tr>
+<tr>
+<td>One node overloaded</td>
+<td>Node stats</td>
+<td>Review SmartConnect zone policy</td>
+</tr>
+<tr>
+<td>Drive latency high</td>
+<td><code>isi statistics drive list</code></td>
+<td>Check for failing drives</td>
+</tr>
+<tr>
+<td>Protocol stats unavailable</td>
+<td>OneFS version</td>
+<td>Verify stats collection enabled</td>
+</tr>
+</tbody>
+</table>
 
 
 

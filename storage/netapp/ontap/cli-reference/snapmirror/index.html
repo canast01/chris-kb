@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#snapmirror_1" class="md-nav__link">
+  <a href="#view-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SnapMirror
+        View Relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Delete
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -789,32 +787,96 @@
 
 <h1 id="snapmirror">SnapMirror<a class="headerlink" href="#snapmirror" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">NetApp ONTAP CLI Reference</a>.</p>
+<p>Part of the NetApp ONTAP CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="snapmirror_1">SnapMirror<a class="headerlink" href="#snapmirror_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Show relationships
+<h2 id="view-relationships">View Relationships<a class="headerlink" href="#view-relationships" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all relationships
 snapmirror show
+
+# Filter by destination
 snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror show -fields source-path,destination-path,state,lag-time,healthy
 
-# Create / delete
-snapmirror create -source-path &lt;svm&gt;:&lt;vol&gt; -destination-path &lt;svm&gt;:&lt;vol&gt; -type DP -policy MirrorAllSnapshots
-snapmirror delete -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror release -source-path &lt;svm&gt;:&lt;vol&gt; -destination-path &lt;svm&gt;:&lt;vol&gt;
+# Show key health fields
+snapmirror show -fields source-path,destination-path,state,lag-time,health
 
-# Operations
-snapmirror initialize -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror update -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror quiesce -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror break -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror resync -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror abort -destination-path &lt;svm&gt;:&lt;vol&gt;
-
-# History and lag
-snapmirror history show -destination-path &lt;svm&gt;:&lt;vol&gt;
-snapmirror lag show
+# Show unhealthy relationships only
+snapmirror show -health false
 </code></pre>
+<h2 id="create-and-delete">Create and Delete<a class="headerlink" href="#create-and-delete" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create async DP relationship
+snapmirror create \
+    -source-path &lt;src_svm&gt;:&lt;src_vol&gt; \
+    -destination-path &lt;dest_svm&gt;:&lt;dest_vol&gt; \
+    -type DP \
+    -policy MirrorAllSnapshots
+
+# Delete relationship (destination side)
+snapmirror delete -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Release source side (after delete)
+snapmirror release -source-path &lt;svm&gt;:&lt;vol&gt; -destination-path &lt;svm&gt;:&lt;vol&gt;
+</code></pre>
+<h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Initialize (baseline transfer)
+snapmirror initialize -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Manual update (force sync)
+snapmirror update -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Quiesce (pause transfers)
+snapmirror quiesce -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Break (make destination writable — for failover)
+snapmirror break -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Resync (re-establish after break)
+snapmirror resync -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Abort in-progress transfer
+snapmirror abort -destination-path &lt;svm&gt;:&lt;vol&gt;
+</code></pre>
+<h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Transfer history
+snapmirror history show -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Lag across all relationships
+snapmirror lag show
+
+# Show active transfers
+snapmirror show -transfer-progress
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relationship unhealthy</td>
+<td>State and error</td>
+<td>Run <code>snapmirror update</code></td>
+</tr>
+<tr>
+<td>Lag exceeds RPO</td>
+<td>Last transfer time</td>
+<td>Check schedule; run manual update</td>
+</tr>
+<tr>
+<td>Break fails</td>
+<td>Relationship must be snapmirrored</td>
+<td>Check state first</td>
+</tr>
+<tr>
+<td>Initialize slow</td>
+<td>Network bandwidth</td>
+<td>Schedule baseline during off-peak</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>PowerPath Troubleshooting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#powerpath-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              PowerPath Troubleshooting
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#dead-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Dead Paths
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#all-paths-dead-to-a-device" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        All Paths Dead to a Device
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#device-not-visible" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Device Not Visible
       
     </span>
   </a>
@@ -791,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#incorrect-path-count" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Incorrect Path Count
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrong-load-balance-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrong Load Balance Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powerpath-not-starting-after-reboot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerPath Not Starting After Reboot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +807,97 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Troubleshooting.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="powerpath-troubleshooting">PowerPath Troubleshooting<a class="headerlink" href="#powerpath-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="dead-paths">Dead Paths<a class="headerlink" href="#dead-paths" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Identify dead paths
+powermt display dev=all | grep -A5 dead
+
+# Attempt automatic path restore
+powermt restore
+
+# Force re-check of all paths
+powermt check_registration
+</code></pre>
+<p>If paths remain dead after <code>powermt restore</code>:
+1. Check HBA port state on the host (<code>systool -c fc_host -v</code> on Linux)
+2. Check SAN switch port state (Cisco: <code>show interface fc x/x</code>, Brocade: <code>portshow x</code>)
+3. Check array port state on the storage array console</p>
+<h2 id="all-paths-dead-to-a-device">All Paths Dead to a Device<a class="headerlink" href="#all-paths-dead-to-a-device" title="Permanent link">&para;</a></h2>
+<p>If all paths to a device are dead:</p>
+<ol>
+<li>Confirm LUN masking is still in place on the array</li>
+<li>Confirm host HBA WWNs still match the masking configuration</li>
+<li>Check SAN fabric for zoning changes</li>
+<li>Reboot HBA driver if needed: <code>echo 1 &gt; /sys/class/fc_host/hostX/issue_lip</code></li>
+</ol>
+<h2 id="device-not-visible">Device Not Visible<a class="headerlink" href="#device-not-visible" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Rescan after new LUN provisioned
+powermt config
+
+# If still missing, rescan HBA
+echo &quot;- - -&quot; &gt; /sys/class/scsi_host/hostX/scan
+
+# Confirm array has presented the LUN to this host
+</code></pre>
+<h2 id="incorrect-path-count">Incorrect Path Count<a class="headerlink" href="#incorrect-path-count" title="Permanent link">&para;</a></h2>
+<p>Expected 4 paths, seeing 2:
+- Check both SAN fabrics are connected (dual-fabric design)
+- Verify both HBA ports are online
+- Verify zoning includes both initiator ports on both fabrics</p>
+<h2 id="wrong-load-balance-policy">Wrong Load Balance Policy<a class="headerlink" href="#wrong-load-balance-policy" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Reset policy to CLAROpt (Active/Optimized)
+powermt set policy=co dev=all
+
+# Verify
+powermt display dev=all | grep policy
+</code></pre>
+<h2 id="powerpath-not-starting-after-reboot">PowerPath Not Starting After Reboot<a class="headerlink" href="#powerpath-not-starting-after-reboot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check service status
+systemctl status PowerPath
+
+# Check kernel module loaded
+lsmod | grep emcp
+
+# Re-load module manually
+modprobe emcp
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dead paths after reboot</td>
+<td>HBA driver load order</td>
+<td>Run <code>powermt restore</code> after boot</td>
+</tr>
+<tr>
+<td>Device missing</td>
+<td>LUN not presented or rescan needed</td>
+<td><code>powermt config</code></td>
+</tr>
+<tr>
+<td>Performance issues</td>
+<td>Suboptimal path policy</td>
+<td><code>powermt set policy=co dev=all</code></td>
+</tr>
+<tr>
+<td>Path flapping</td>
+<td>SAN fabric instability</td>
+<td>Check switch and cable</td>
+</tr>
+<tr>
+<td>multipathd conflict</td>
+<td>Both multipath stacks active</td>
+<td>Disable <code>multipathd</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

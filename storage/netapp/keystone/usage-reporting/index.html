@@ -21,7 +21,7 @@
     
     
       
-        <title>Usage Reporting - Chris KB</title>
+        <title>Keystone Usage Reporting - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#usage-reporting" class="md-skip">
+        <a href="#keystone-usage-reporting" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage Reporting
+              Keystone Usage Reporting
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#bluexp-digital-wallet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        BlueXP Digital Wallet
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#keystone-collector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Keystone Collector
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#monthly-consumption-reports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Monthly Consumption Reports
       
     </span>
   </a>
@@ -791,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#identifying-high-consuming-volumes-ontap-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Identifying High-Consuming Volumes (ONTAP CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-discrepancies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting Discrepancies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics
       
     </span>
   </a>
@@ -820,31 +796,84 @@
 
 
 
-<h1 id="usage-reporting">Usage Reporting<a class="headerlink" href="#usage-reporting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Usage Reporting.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="keystone-usage-reporting">Keystone Usage Reporting<a class="headerlink" href="#keystone-usage-reporting" title="Permanent link">&para;</a></h1>
+<h2 id="bluexp-digital-wallet">BlueXP Digital Wallet<a class="headerlink" href="#bluexp-digital-wallet" title="Permanent link">&para;</a></h2>
+<p>Primary source for Keystone consumption reporting:</p>
+<ol>
+<li>Log in to <strong>BlueXP</strong> (console.bluexp.netapp.com)</li>
+<li>Navigate to <strong>Digital Wallet → Keystone Subscriptions</strong></li>
+<li>Select your subscription to view:</li>
+<li>Committed capacity per service level</li>
+<li>Consumed (logical) capacity per service level</li>
+<li>Burst usage and burst limits</li>
+<li>Month-to-date consumption trend</li>
+</ol>
+<h2 id="keystone-collector">Keystone Collector<a class="headerlink" href="#keystone-collector" title="Permanent link">&para;</a></h2>
+<p>The Keystone Collector is a virtual appliance deployed on-premises that collects and transmits consumption telemetry to NetApp:</p>
+<pre><code class="language-bash"># SSH to the Keystone Collector appliance
+ssh admin@&lt;collector_ip&gt;
+
+# Check collector service status
+systemctl status keystone-collector
+
+# View last collection run
+journalctl -u keystone-collector --since &quot;1 hour ago&quot;
+</code></pre>
+<p>If the collector is offline, NetApp cannot generate accurate invoices — restore connectivity promptly.</p>
+<h2 id="monthly-consumption-reports">Monthly Consumption Reports<a class="headerlink" href="#monthly-consumption-reports" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li>Reports are generated monthly by NetApp</li>
+<li>Available in BlueXP Keystone dashboard before invoice generation</li>
+<li>Review consumption report against committed capacity before month-end</li>
+<li>If burst consumption is unexpected, identify the source before the invoice is finalized</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="identifying-high-consuming-volumes-ontap-cli">Identifying High-Consuming Volumes (ONTAP CLI)<a class="headerlink" href="#identifying-high-consuming-volumes-ontap-cli" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List volumes sorted by used capacity
+volume show -vserver * -fields size,used,percent-used | sort -k4 -nr
+
+# Identify volumes in burst service levels
+qos statistics volume show
+</code></pre>
+<h2 id="reporting-discrepancies">Reporting Discrepancies<a class="headerlink" href="#reporting-discrepancies" title="Permanent link">&para;</a></h2>
+<p>If the consumption report shows unexpected usage:</p>
+<ol>
+<li>Compare ONTAP volume usage with Keystone report</li>
+<li>Check for any large snapshots or recently provisioned volumes</li>
+<li>Engage the Keystone Success Manager via the BlueXP support portal</li>
+<li>Discrepancies must be raised before the invoice is finalized</li>
+</ol>
+<h2 id="key-metrics">Key Metrics<a class="headerlink" href="#key-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Where to Find</th>
+<th>Normal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Committed capacity</td>
+<td>BlueXP Digital Wallet</td>
+<td>Contractual baseline</td>
+</tr>
+<tr>
+<td>Burst usage</td>
+<td>BlueXP Digital Wallet</td>
+<td>0 (or expected seasonal)</td>
+</tr>
+<tr>
+<td>Collector health</td>
+<td>Collector appliance status</td>
+<td>Running, no errors</td>
+</tr>
+<tr>
+<td>Telemetry latency</td>
+<td>Last collection timestamp</td>
+<td>Within last 24 hours</td>
+</tr>
+</tbody>
+</table>
 
 
 

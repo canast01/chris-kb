@@ -21,7 +21,7 @@
     
     
       
-        <title>Snapshots - Chris KB</title>
+        <title>FlashBlade Snapshots - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapshots" class="md-skip">
+        <a href="#flashblade-snapshots" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Snapshots
+              FlashBlade Snapshots
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Snapshots
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#create-a-snapshot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Create a Snapshot
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#accessing-snapshot-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Accessing Snapshot Data
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#restore-a-file-system-from-snapshot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Restore a File System from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copy-a-snapshot-to-a-new-file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copy a Snapshot to a New File System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-policy-automated-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Policy (Automated Scheduling)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,82 @@
 
 
 
-<h1 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Snapshots.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="flashblade-snapshots">FlashBlade Snapshots<a class="headerlink" href="#flashblade-snapshots" title="Permanent link">&para;</a></h1>
+<p>FlashBlade supports snapshots at the file system level. Snapshots are space-efficient and near-instantaneous.</p>
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb fs-snapshot list
+purefb fs-snapshot list --filter &quot;source='&lt;fs_name&gt;'&quot;
+</code></pre>
+<h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb fs-snapshot create --source &lt;fs_name&gt; --suffix &lt;snap_name&gt;
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">purefb fs-snapshot create --source prod-nfs --suffix daily-2026-05-06
+</code></pre>
+<h2 id="accessing-snapshot-data">Accessing Snapshot Data<a class="headerlink" href="#accessing-snapshot-data" title="Permanent link">&para;</a></h2>
+<p>Snapshots are accessible via the NFS <code>.snapshot</code> directory (if enabled):</p>
+<pre><code class="language-bash">ls /mnt/&lt;fs_mount&gt;/.snapshot/
+# Lists available snapshots by suffix
+</code></pre>
+<p>Users can browse and copy files directly from the <code>.snapshot</code> path without administrator involvement.</p>
+<h2 id="restore-a-file-system-from-snapshot">Restore a File System from Snapshot<a class="headerlink" href="#restore-a-file-system-from-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Overwrite the live file system with snapshot content
+purefb fs-snapshot restore &lt;fs_name&gt;.&lt;snap_name&gt; --overwrite-fs
+</code></pre>
+<blockquote>
+<p>This replaces all current data on the file system — ensure this is intentional.</p>
+</blockquote>
+<h2 id="copy-a-snapshot-to-a-new-file-system">Copy a Snapshot to a New File System<a class="headerlink" href="#copy-a-snapshot-to-a-new-file-system" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purefb fs-snapshot copy &lt;fs_name&gt;.&lt;snap_name&gt; --name &lt;new_fs_name&gt;
+</code></pre>
+<p>Creates a new independent file system from the snapshot without affecting the original.</p>
+<h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Destroy (recoverable for 24 hours)
+purefb fs-snapshot destroy &lt;fs_name&gt;.&lt;snap_name&gt;
+
+# Eradicate permanently
+purefb fs-snapshot eradicate &lt;fs_name&gt;.&lt;snap_name&gt;
+</code></pre>
+<h2 id="snapshot-policy-automated-scheduling">Snapshot Policy (Automated Scheduling)<a class="headerlink" href="#snapshot-policy-automated-scheduling" title="Permanent link">&para;</a></h2>
+<p>FlashBlade supports policy-based snapshots via the GUI:
+1. Navigate to <strong>Protection → Snapshot Policies</strong>
+2. Create a policy with frequency and retention settings
+3. Assign the policy to file systems</p>
+<pre><code class="language-bash"># View policies via CLI
+purefb policies list
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.snapshot</code> not visible</td>
+<td>Snapshots enabled on FS</td>
+<td><code>purefb fs update &lt;name&gt; --snapshot-enabled true</code></td>
+</tr>
+<tr>
+<td>Snapshot create fails</td>
+<td>Capacity</td>
+<td>Check array free space</td>
+</tr>
+<tr>
+<td>Restore failed</td>
+<td>File system in use</td>
+<td>Unmount/quiesce clients first</td>
+</tr>
+<tr>
+<td>Snapshots not auto-created</td>
+<td>Policy attached?</td>
+<td>Verify snapshot policy assignment</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Performance - Chris KB</title>
+        <title>FlashArray Performance - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#performance" class="md-skip">
+        <a href="#flasharray-performance" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Performance
+              FlashArray Performance
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#array-level-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Array-Level Performance
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#volume-level-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Volume-Level Performance
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#host-level-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Host-Level Performance
       
     </span>
   </a>
@@ -791,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#flasharray-latency-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        FlashArray Latency Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure1-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure1 Performance Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qos-limits-bandwidth-throttling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QoS Limits (Bandwidth Throttling)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +807,87 @@
 
 
 
-<h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Performance.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="flasharray-performance">FlashArray Performance<a class="headerlink" href="#flasharray-performance" title="Permanent link">&para;</a></h1>
+<h2 id="array-level-performance">Array-Level Performance<a class="headerlink" href="#array-level-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Real-time array performance (reads, writes, IOPS, latency)
+purecli array list --performance
+
+# Bandwidth and IOPS summary
+purecli array list --performance | grep -E &quot;read_bytes|write_bytes|reads_per_sec|writes_per_sec|usec_per_read|usec_per_write&quot;
+</code></pre>
+<h2 id="volume-level-performance">Volume-Level Performance<a class="headerlink" href="#volume-level-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Performance stats for all volumes
+purecli volume list --performance
+
+# Performance for a specific volume
+purecli volume list &lt;volume_name&gt; --performance
+</code></pre>
+<p>Key metrics:
+| Metric | Normal Range | Action if High |
+|---|---|---|
+| <code>usec_per_read_op</code> | &lt; 500 µs | Investigate host I/O pattern |
+| <code>usec_per_write_op</code> | &lt; 500 µs | Check queue depth |
+| <code>reads_per_sec</code> | Workload-dependent | Correlate with application |
+| <code>write_bytes_per_sec</code> | Workload-dependent | Check for runaway writes |</p>
+<h2 id="host-level-performance">Host-Level Performance<a class="headerlink" href="#host-level-performance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">purecli host list --performance
+purecli hgroup list --performance
+</code></pre>
+<h2 id="flasharray-latency-targets">FlashArray Latency Targets<a class="headerlink" href="#flasharray-latency-targets" title="Permanent link">&para;</a></h2>
+<p>Pure FlashArray (all-NVMe) typical latency:
+- <strong>&lt; 500 µs</strong> read/write — normal
+- <strong>500 µs – 1 ms</strong> — elevated; investigate
+- <strong>&gt; 1 ms</strong> — abnormal; check for queue depth, host connectivity, or array load</p>
+<h2 id="pure1-performance-analysis">Pure1 Performance Analysis<a class="headerlink" href="#pure1-performance-analysis" title="Permanent link">&para;</a></h2>
+<p>For historical trending and anomaly detection:
+- <strong>Pure1 → Analysis → Performance</strong> — array-wide IOPS/latency/bandwidth over time
+- <strong>Pure1 → Analysis → Workload</strong> — per-volume breakdown
+- AI-driven anomaly alerts surfaced in Pure1</p>
+<h2 id="qos-limits-bandwidth-throttling">QoS Limits (Bandwidth Throttling)<a class="headerlink" href="#qos-limits-bandwidth-throttling" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show QoS settings on a volume
+purecli volume list &lt;volume_name&gt; --details
+
+# Set IOPS limit on a volume
+purecli volume setattr &lt;volume_name&gt; --iops-limit 5000
+
+# Set bandwidth limit
+purecli volume setattr &lt;volume_name&gt; --bandwidth-limit 1G
+
+# Remove QoS limit
+purecli volume setattr &lt;volume_name&gt; --iops-limit 0
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High latency (&gt; 1ms)</td>
+<td>Volume performance</td>
+<td>Check queue depth, host I/O pattern</td>
+</tr>
+<tr>
+<td>Array fully loaded</td>
+<td>IOPS at max</td>
+<td>Apply QoS to top consumers</td>
+</tr>
+<tr>
+<td>Latency spikes</td>
+<td>Specific volume</td>
+<td>Investigate host application</td>
+</tr>
+<tr>
+<td>Low data reduction</td>
+<td>Workload incompressible</td>
+<td>Expected for encrypted/compressed data</td>
+</tr>
+</tbody>
+</table>
 
 
 

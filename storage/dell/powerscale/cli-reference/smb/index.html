@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Shares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-a-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify a Share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#share-permissions-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Share Permissions (ACL)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smb-service-global-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMB Service &amp; Global Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-smb-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active SMB Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Zones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,31 +833,88 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List shares
-isi smb shares list
+<h2 id="list-shares">List Shares<a class="headerlink" href="#list-shares" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi smb shares list
 isi smb shares view &lt;share_name&gt;
-
-# Create share
-isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt;
-
-# Modify share
-isi smb shares modify &lt;share_name&gt; --description &quot;&lt;text&gt;&quot;
-
-# Delete share
-isi smb shares delete &lt;share_name&gt;
-
-# Share permissions
-isi smb shares permission list &lt;share_name&gt;
-isi smb shares permission create &lt;share_name&gt; --authority &lt;domain\\user&gt; --permission-type allow --permission full
-
-# SMB settings
-isi smb settings global view
-isi smb settings service view
-
-# Sessions
-isi smb sessions list
 </code></pre>
+<h2 id="create-a-share">Create a Share<a class="headerlink" href="#create-a-share" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt;
+</code></pre>
+<h2 id="modify-a-share">Modify a Share<a class="headerlink" href="#modify-a-share" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi smb shares modify &lt;share_name&gt; --description &quot;&lt;text&gt;&quot;
+
+# Enable Access Based Enumeration
+isi smb shares modify &lt;share_name&gt; --access-based-enumeration true
+
+# Set continuous availability (for CA shares)
+isi smb shares modify &lt;share_name&gt; --continuously-available true
+</code></pre>
+<h2 id="delete-a-share">Delete a Share<a class="headerlink" href="#delete-a-share" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi smb shares delete &lt;share_name&gt;
+</code></pre>
+<h2 id="share-permissions-acl">Share Permissions (ACL)<a class="headerlink" href="#share-permissions-acl" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List permissions
+isi smb shares permission list &lt;share_name&gt;
+
+# Grant full control to a group
+isi smb shares permission create &lt;share_name&gt; \
+    --authority &lt;DOMAIN\\Group&gt; \
+    --permission-type allow \
+    --permission full
+
+# Remove a permission
+isi smb shares permission delete &lt;share_name&gt; --authority &lt;DOMAIN\\Group&gt;
+</code></pre>
+<h2 id="smb-service-global-settings">SMB Service &amp; Global Settings<a class="headerlink" href="#smb-service-global-settings" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View global SMB settings (SMB versions, security)
+isi smb settings global view
+
+# Enable SMB2 and SMB3 (disable SMB1 for security)
+isi smb settings global modify --support-smb2 true
+
+# View SMB service status
+isi smb settings service view
+</code></pre>
+<h2 id="active-smb-sessions">Active SMB Sessions<a class="headerlink" href="#active-smb-sessions" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi smb sessions list
+</code></pre>
+<h2 id="access-zones">Access Zones<a class="headerlink" href="#access-zones" title="Permanent link">&para;</a></h2>
+<p>PowerScale SMB shares are created within an access zone. Verify the correct zone is specified:</p>
+<pre><code class="language-bash">isi smb shares list --zone &lt;zone_name&gt;
+isi smb shares create &lt;share_name&gt; /ifs/&lt;path&gt; --zone &lt;zone_name&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Share inaccessible</td>
+<td>Share exists?</td>
+<td><code>isi smb shares list</code></td>
+</tr>
+<tr>
+<td>Permission denied</td>
+<td>ACL</td>
+<td><code>isi smb shares permission list</code></td>
+</tr>
+<tr>
+<td>Share in wrong zone</td>
+<td>Zone</td>
+<td>Specify <code>--zone</code> on create</td>
+</tr>
+<tr>
+<td>SMB1 negotiated</td>
+<td>SMB settings</td>
+<td>Disable SMB1 globally</td>
+</tr>
+</tbody>
+</table>
 
 
 

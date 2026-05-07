@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#object-store-s3_1" class="md-nav__link">
+  <a href="#buckets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Object Store (S3)
+        Buckets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bucket-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bucket Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 Endpoint
       
     </span>
   </a>
@@ -789,27 +798,71 @@
 
 <h1 id="object-store-s3">Object Store (S3)<a class="headerlink" href="#object-store-s3" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Part of the <a href="../">Pure FlashBlade CLI Reference</a>.</p>
+<p>Part of the Pure FlashBlade CLI Reference.</p>
 </blockquote>
-<hr />
-<h2 id="object-store-s3_1">Object Store (S3)<a class="headerlink" href="#object-store-s3_1" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash"># Buckets
-purefb bucket show
-purefb bucket create --name &lt;bucket&gt; --account &lt;account&gt;
-purefb bucket destroy --name &lt;bucket&gt;
-purefb bucket eradicate --name &lt;bucket&gt;
+<h2 id="buckets">Buckets<a class="headerlink" href="#buckets" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List buckets
+purefb bucket list
+purefb bucket list --all          # includes destroyed
 
-# Accounts
-purefb object-store-account show
+# Create a bucket
+purefb bucket create --name &lt;bucket&gt; --account &lt;account&gt;
+
+# Destroy a bucket (must be empty)
+purefb bucket destroy --name &lt;bucket&gt;
+
+# Eradicate permanently
+purefb bucket eradicate --name &lt;bucket&gt;
+</code></pre>
+<h2 id="accounts">Accounts<a class="headerlink" href="#accounts" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List object store accounts
+purefb object-store-account list
+
+# Create an account
 purefb object-store-account create --name &lt;account&gt;
 
-# Users
-purefb object-store-user show
+# Destroy an account
+purefb object-store-account destroy --name &lt;account&gt;
+</code></pre>
+<h2 id="users">Users<a class="headerlink" href="#users" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List users
+purefb object-store-user list
+
+# Create a user under an account
 purefb object-store-user create --name &lt;user&gt; --account &lt;account&gt;
 
-# Access keys
-purefb object-store-access-key show
+# Destroy a user
+purefb object-store-user destroy --name &lt;user&gt; --account &lt;account&gt;
+</code></pre>
+<h2 id="access-keys">Access Keys<a class="headerlink" href="#access-keys" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List all access keys
+purefb object-store-access-key list
+
+# Create an access key for a user
 purefb object-store-access-key create --user &lt;user&gt;/&lt;account&gt;
+
+# Delete an access key
+purefb object-store-access-key destroy --name &lt;key_id&gt;
+</code></pre>
+<blockquote>
+<p>The secret access key is only shown at creation time — store it securely immediately.</p>
+</blockquote>
+<h2 id="bucket-replication">Bucket Replication<a class="headerlink" href="#bucket-replication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List bucket replica links
+purefb bucket-replica-link list
+
+# Create a replica link to a remote FlashBlade
+purefb bucket-replica-link create \
+    --local-bucket &lt;local_bucket&gt; \
+    --remote-bucket &lt;remote_bucket&gt; \
+    --remote &lt;remote_array_name&gt;
+</code></pre>
+<h2 id="s3-endpoint">S3 Endpoint<a class="headerlink" href="#s3-endpoint" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show S3 service endpoint
+purefb array | grep s3
+
+# Test S3 connectivity
+aws s3 ls --endpoint-url https://&lt;flashblade_s3_vip&gt;/
 </code></pre>
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Metro Operations - Chris KB</title>
+        <title>VPLEX Metro Operations - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#metro-operations" class="md-skip">
+        <a href="#vplex-metro-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Metro Operations
+              VPLEX Metro Operations
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#metro-architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Metro Architecture Overview
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#check-distributed-device-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Check Distributed Device Status
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#check-active-leg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Check Active Leg
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#planned-failover-migrate-active-leg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Planned Failover (Migrate Active Leg)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#witness-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Witness Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#split-brain-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split-Brain Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wan-com-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAN COM Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,92 @@
 
 
 
-<h1 id="metro-operations">Metro Operations<a class="headerlink" href="#metro-operations" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Metro Operations.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="vplex-metro-operations">VPLEX Metro Operations<a class="headerlink" href="#vplex-metro-operations" title="Permanent link">&para;</a></h1>
+<p>VPLEX Metro stretches virtual volumes across two sites with synchronous mirroring, enabling transparent failover.</p>
+<h2 id="metro-architecture-overview">Metro Architecture Overview<a class="headerlink" href="#metro-architecture-overview" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
+<li><strong>Cluster-1</strong> — Site A (local cluster)</li>
+<li><strong>Cluster-2</strong> — Site B (remote cluster)</li>
+<li><strong>WAN COM</strong> — inter-cluster communication link (Fibre Channel or Ethernet)</li>
+<li><strong>Distributed Devices</strong> — virtual volumes that span both clusters</li>
+<li><strong>Witness</strong> — third-party tiebreaker for split-brain scenarios</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h2 id="check-distributed-device-status">Check Distributed Device Status<a class="headerlink" href="#check-distributed-device-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/distributed-devices/
+VPlexcli:/&gt; ll /distributed-storage/distributed-devices/&lt;device_name&gt;/
+</code></pre>
+<p>Key attributes:
+- <code>service-status: running</code> — both legs active
+- <code>operational-status: ok</code>
+- <code>active-leg</code> — which cluster is currently active</p>
+<h2 id="check-active-leg">Check Active Leg<a class="headerlink" href="#check-active-leg" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/distributed-devices/&lt;device_name&gt;/
+# active-leg: /clusters/cluster-1  (or cluster-2)
+</code></pre>
+<h2 id="planned-failover-migrate-active-leg">Planned Failover (Migrate Active Leg)<a class="headerlink" href="#planned-failover-migrate-active-leg" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Move active leg to cluster-2
+VPlexcli:/&gt; device migrate \
+    --device /distributed-storage/distributed-devices/&lt;device_name&gt; \
+    --target-cluster cluster-2
+</code></pre>
+<h2 id="witness-configuration">Witness Configuration<a class="headerlink" href="#witness-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /distributed-storage/witness/
+# Check: witness-connectivity = connected
+</code></pre>
+<h2 id="split-brain-recovery">Split-Brain Recovery<a class="headerlink" href="#split-brain-recovery" title="Permanent link">&para;</a></h2>
+<p>If WAN COM link fails and both clusters believe they are active:</p>
+<ol>
+<li>Witness should automatically resolve by suspending one cluster</li>
+<li>If witness is unavailable, manual intervention required</li>
+<li>Identify which cluster has the most recent I/O</li>
+<li>Suspend the stale cluster leg:</li>
+</ol>
+<pre><code class="language-bash">VPlexcli:/&gt; device suspend \
+    --device /distributed-storage/distributed-devices/&lt;device_name&gt; \
+    --clusters cluster-2
+</code></pre>
+<ol>
+<li>After link recovery, resync:</li>
+</ol>
+<pre><code class="language-bash">VPlexcli:/&gt; device rebuild \
+    --device /distributed-storage/distributed-devices/&lt;device_name&gt;
+</code></pre>
+<h2 id="wan-com-health">WAN COM Health<a class="headerlink" href="#wan-com-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/connectivity/
+</code></pre>
+<p>Monitor inter-cluster latency — VPLEX Metro requires &lt; 5ms RTT between sites.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device degraded</td>
+<td>Check WAN COM link</td>
+<td>Investigate network</td>
+</tr>
+<tr>
+<td>Split-brain</td>
+<td>Witness connectivity</td>
+<td>Manual suspension of stale leg</td>
+</tr>
+<tr>
+<td>High replication lag</td>
+<td>WAN latency</td>
+<td>Check inter-cluster network</td>
+</tr>
+<tr>
+<td>Device suspended</td>
+<td>Prior split-brain event</td>
+<td>Resync after link recovery</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#list-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-files-from-a-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Files from a Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-schedules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Schedules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Aliases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-space-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Space Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,29 +822,80 @@
 <blockquote>
 <p>Part of the Dell PowerScale (Isilon) CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># List snapshots
-isi snapshot snapshots list
+<h2 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi snapshot snapshots list
 isi snapshot snapshots view &lt;snap_id&gt;
-
-# Create snapshot
-isi snapshot snapshots create /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-
-# Delete snapshot
-isi snapshot snapshots delete &lt;snap_id&gt;
+</code></pre>
+<h2 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi snapshot snapshots create /ifs/&lt;path&gt; --name &lt;snap_name&gt;
+</code></pre>
+<h2 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">isi snapshot snapshots delete &lt;snap_id&gt;
 isi snapshot snapshots delete --path /ifs/&lt;path&gt; --name &lt;snap_name&gt;
-
-# Restore (copy back from snapshot)
+</code></pre>
+<h2 id="restore-files-from-a-snapshot">Restore Files from a Snapshot<a class="headerlink" href="#restore-files-from-a-snapshot" title="Permanent link">&para;</a></h2>
+<p>Snapshots are accessible via the <code>.snapshot</code> directory in the file system:</p>
+<pre><code class="language-bash">ls /ifs/&lt;path&gt;/.snapshot/
 cp -a /ifs/.snapshot/&lt;snap_name&gt;/&lt;path&gt;/* /ifs/&lt;path&gt;/
-
-# Snapshot schedules
+</code></pre>
+<h2 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List schedules
 isi snapshot schedules list
 isi snapshot schedules view &lt;schedule_name&gt;
-isi snapshot schedules create &lt;schedule_name&gt; /ifs/&lt;path&gt; &lt;frequency&gt;
 
-# Snapshot aliases
-isi snapshot aliases list
+# Create a schedule (daily at midnight)
+isi snapshot schedules create &lt;schedule_name&gt; /ifs/&lt;path&gt; &quot;every day&quot;
+
+# Modify retention
+isi snapshot schedules modify &lt;schedule_name&gt; --duration 7D
+
+# Delete a schedule
+isi snapshot schedules delete &lt;schedule_name&gt;
 </code></pre>
+<h2 id="snapshot-aliases">Snapshot Aliases<a class="headerlink" href="#snapshot-aliases" title="Permanent link">&para;</a></h2>
+<p>Aliases are pointers to specific snapshots, useful for mounting a "latest" snapshot without changing the mount path:</p>
+<pre><code class="language-bash">isi snapshot aliases list
+isi snapshot aliases create &lt;alias_name&gt; --target &lt;snap_id&gt;
+</code></pre>
+<h2 id="snapshot-space-usage">Snapshot Space Usage<a class="headerlink" href="#snapshot-space-usage" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View space used by snapshots
+isi quota list --type directory --path /ifs/&lt;path&gt;
+
+# Or from snapshot list
+isi snapshot snapshots list --verbose
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Snapshot not found</td>
+<td>Path or name</td>
+<td><code>isi snapshot snapshots list</code></td>
+</tr>
+<tr>
+<td><code>.snapshot</code> not visible</td>
+<td>Client mount options</td>
+<td>Verify NFS client has access to <code>.snapshot</code></td>
+</tr>
+<tr>
+<td>Snapshot space growing</td>
+<td>Retention policy</td>
+<td>Reduce schedule duration</td>
+</tr>
+<tr>
+<td>Restore incomplete</td>
+<td>Snapshot covers only part of path</td>
+<td>Use correct snap path</td>
+</tr>
+</tbody>
+</table>
 
 
 

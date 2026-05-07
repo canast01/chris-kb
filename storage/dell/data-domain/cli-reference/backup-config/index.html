@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-configuration-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Configuration Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-alerting-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP &amp; Alerting Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-config-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Config Capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,15 +811,91 @@
 <blockquote>
 <p>Part of the Dell Data Domain CLI Reference.</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># Config backup
+<h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Create a config backup
 config backup create
+
+# List available backups
+config backup list
+
+# Show backup details
 config backup show
 
-# Config restore
-config backup list
+# Restore from a named backup
 config backup restore &lt;backup_name&gt;
 </code></pre>
+<h2 id="system-configuration-export">System Configuration Export<a class="headerlink" href="#system-configuration-export" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show current system config summary
+config show
+
+# Show network configuration
+net show config
+
+# Show all interface settings
+net show hostname
+net show dns
+</code></pre>
+<h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show current NTP settings
+ntp status
+ntp show
+
+# Add NTP server
+ntp add timesever &lt;ntp_server_ip&gt;
+
+# Enable/disable NTP
+ntp enable
+ntp disable
+</code></pre>
+<h2 id="snmp-alerting-configuration">SNMP &amp; Alerting Configuration<a class="headerlink" href="#snmp-alerting-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show SNMP configuration
+snmp show config
+
+# Show alert notification config
+alerts notify-list show
+</code></pre>
+<h2 id="syslog-configuration">Syslog Configuration<a class="headerlink" href="#syslog-configuration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show syslog configuration
+log show config
+
+# Forward logs to syslog server (via GUI or config file)
+# Admintools → Maintenance → Syslog
+</code></pre>
+<h2 id="pre-change-config-capture">Pre-Change Config Capture<a class="headerlink" href="#pre-change-config-capture" title="Permanent link">&para;</a></h2>
+<p>Before any change, capture current state:</p>
+<pre><code class="language-bash">config backup create
+system show version
+net show config
+filesys show compression
+replication show all
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Config backup fails</td>
+<td>Disk space</td>
+<td>Check <code>filesys show space</code></td>
+</tr>
+<tr>
+<td>Restore fails</td>
+<td>Backup name typo</td>
+<td>Run <code>config backup list</code> first</td>
+</tr>
+<tr>
+<td>NTP drift</td>
+<td>NTP server unreachable</td>
+<td>Check network and NTP config</td>
+</tr>
+</tbody>
+</table>
 
 
 

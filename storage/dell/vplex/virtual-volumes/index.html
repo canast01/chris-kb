@@ -21,7 +21,7 @@
     
     
       
-        <title>Virtual Volumes - Chris KB</title>
+        <title>VPLEX Virtual Volumes - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#virtual-volumes" class="md-skip">
+        <a href="#vplex-virtual-volumes" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Virtual Volumes
+              VPLEX Virtual Volumes
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-virtual-volumes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Virtual Volumes
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#create-a-virtual-volume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Create a Virtual Volume
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#register-virtual-volume-to-initiator-masking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Register Virtual Volume to Initiator (Masking)
       
     </span>
   </a>
@@ -791,10 +745,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#unregister-delete-virtual-volume" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Unregister / Delete Virtual Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-volume-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Volume Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +796,92 @@
 
 
 
-<h1 id="virtual-volumes">Virtual Volumes<a class="headerlink" href="#virtual-volumes" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Virtual Volumes.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="vplex-virtual-volumes">VPLEX Virtual Volumes<a class="headerlink" href="#vplex-virtual-volumes" title="Permanent link">&para;</a></h1>
+<p>Virtual volumes are the logical storage objects presented to hosts via VPLEX. They are built on top of storage volumes from back-end arrays.</p>
+<h2 id="list-virtual-volumes">List Virtual Volumes<a class="headerlink" href="#list-virtual-volumes" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/virtual-volumes/
+
+# Detailed view of a specific volume
+VPlexcli:/&gt; ll /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;/
+</code></pre>
+<p>Key attributes:
+- <code>operational-status</code> — should be <code>ok</code>
+- <code>capacity</code> — size of the volume
+- <code>supporting-device</code> — the underlying storage device
+- <code>visibility</code> — which initiators/hosts can see this volume</p>
+<h2 id="create-a-virtual-volume">Create a Virtual Volume<a class="headerlink" href="#create-a-virtual-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># First, claim the back-end storage volume as an extent
+VPlexcli:/&gt; storage-volume claim \
+    --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/&lt;sv_name&gt;
+
+# Create a device from the extent
+VPlexcli:/&gt; device create \
+    --device-name &lt;device_name&gt; \
+    --extent /clusters/cluster-1/storage-elements/extents/&lt;extent_name&gt;
+
+# Create the virtual volume
+VPlexcli:/&gt; virtual-volume create \
+    --volume-name &lt;vol_name&gt; \
+    --device /clusters/cluster-1/devices/&lt;device_name&gt;
+</code></pre>
+<h2 id="register-virtual-volume-to-initiator-masking">Register Virtual Volume to Initiator (Masking)<a class="headerlink" href="#register-virtual-volume-to-initiator-masking" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; initiator-port register \
+    --port-wwn &lt;host_wwn&gt; \
+    --cluster cluster-1
+
+VPlexcli:/&gt; storage-view create \
+    --name &lt;view_name&gt; \
+    --cluster cluster-1
+
+VPlexcli:/&gt; storage-view add-initiator-port \
+    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
+    --port-wwn &lt;host_wwn&gt;
+
+VPlexcli:/&gt; storage-view add-virtual-volume \
+    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
+    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre>
+<h2 id="unregister-delete-virtual-volume">Unregister / Delete Virtual Volume<a class="headerlink" href="#unregister-delete-virtual-volume" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Remove from storage view first
+VPlexcli:/&gt; storage-view remove-virtual-volume \
+    --storage-view /clusters/cluster-1/exports/storage-views/&lt;view_name&gt; \
+    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+
+# Destroy the virtual volume
+VPlexcli:/&gt; virtual-volume destroy \
+    --virtual-volume /clusters/cluster-1/virtual-volumes/&lt;vol_name&gt;
+</code></pre>
+<h2 id="check-volume-visibility">Check Volume Visibility<a class="headerlink" href="#check-volume-visibility" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">VPlexcli:/&gt; ll /clusters/cluster-1/exports/storage-views/
+VPlexcli:/&gt; ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume not visible to host</td>
+<td>Storage view membership</td>
+<td>Add volume to storage view</td>
+</tr>
+<tr>
+<td>Operational-status not ok</td>
+<td>Back-end storage issue</td>
+<td>Check supporting device</td>
+</tr>
+<tr>
+<td>Volume missing after reboot</td>
+<td>Host rescan needed</td>
+<td>Rescan HBAs on host</td>
+</tr>
+</tbody>
+</table>
 
 
 

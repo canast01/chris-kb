@@ -249,25 +249,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -751,6 +705,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nas-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAS Servers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Shares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifs-shares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIFS Shares
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-system-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File System Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -772,30 +800,103 @@
 <blockquote>
 <p>Part of the Dell Unity CLI Reference (Unisphere CLI).</p>
 </blockquote>
-<hr />
-<pre><code class="language-bash"># NAS servers
+<h2 id="nas-servers">NAS Servers<a class="headerlink" href="#nas-servers" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List NAS servers
 uemcli -d &lt;ip&gt; /net/nas/server show
 uemcli -d &lt;ip&gt; /net/nas/server show -detail
-uemcli -d &lt;ip&gt; /net/nas/server create -name &lt;nas_name&gt; -sp &lt;sp_id&gt; -pool &lt;pool_id&gt;
 
-# File systems
+# Create a NAS server
+uemcli -d &lt;ip&gt; /net/nas/server create \
+    -name &lt;nas_name&gt; \
+    -sp &lt;sp_id&gt; \
+    -pool &lt;pool_id&gt;
+</code></pre>
+<h2 id="file-systems">File Systems<a class="headerlink" href="#file-systems" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List file systems
 uemcli -d &lt;ip&gt; /stor/config/fs show
 uemcli -d &lt;ip&gt; /stor/config/fs show -detail
-uemcli -d &lt;ip&gt; /stor/config/fs create -name &lt;fs_name&gt; -nasServer &lt;nas_id&gt; -pool &lt;pool_id&gt; -size 1T
+
+# Create a file system
+uemcli -d &lt;ip&gt; /stor/config/fs create \
+    -name &lt;fs_name&gt; \
+    -nasServer &lt;nas_id&gt; \
+    -pool &lt;pool_id&gt; \
+    -size 1T
+
+# Resize a file system
 uemcli -d &lt;ip&gt; /stor/config/fs -id &lt;fs_id&gt; set -size 2T
+
+# Delete a file system
 uemcli -d &lt;ip&gt; /stor/config/fs -id &lt;fs_id&gt; delete
-
-# NFS shares
+</code></pre>
+<h2 id="nfs-shares">NFS Shares<a class="headerlink" href="#nfs-shares" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List NFS shares
 uemcli -d &lt;ip&gt; /stor/config/nfs show
-uemcli -d &lt;ip&gt; /stor/config/nfs create -fs &lt;fs_id&gt; -path / -nfsVersion NFSv3
-uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; set -hostAccess &quot;&lt;ip&gt;(rw)&quot;
-uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; delete
 
-# CIFS shares
+# Create an NFS share
+uemcli -d &lt;ip&gt; /stor/config/nfs create -fs &lt;fs_id&gt; -path / -nfsVersion NFSv3
+
+# Set host access
+uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; set -hostAccess &quot;&lt;ip&gt;(rw)&quot;
+
+# Delete an NFS share
+uemcli -d &lt;ip&gt; /stor/config/nfs -id &lt;nfs_id&gt; delete
+</code></pre>
+<h2 id="cifs-shares">CIFS Shares<a class="headerlink" href="#cifs-shares" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List CIFS shares
 uemcli -d &lt;ip&gt; /stor/config/cifs show
+
+# Create a CIFS share
 uemcli -d &lt;ip&gt; /stor/config/cifs create -name &lt;share_name&gt; -fs &lt;fs_id&gt; -path /
+
+# Delete a CIFS share
 uemcli -d &lt;ip&gt; /stor/config/cifs -id &lt;cifs_id&gt; delete
 </code></pre>
+<h2 id="file-system-snapshots">File System Snapshots<a class="headerlink" href="#file-system-snapshots" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List snapshots for a file system
+uemcli -d &lt;ip&gt; /prot/snap show -res &lt;fs_id&gt;
+
+# Create a snapshot
+uemcli -d &lt;ip&gt; /prot/snap create -name &lt;snap_name&gt; -res &lt;fs_id&gt;
+
+# Restore
+uemcli -d &lt;ip&gt; /prot/snap -id &lt;snap_id&gt; restore
+
+# Delete
+uemcli -d &lt;ip&gt; /prot/snap -id &lt;snap_id&gt; delete
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS mount fails</td>
+<td>NFS share access</td>
+<td>Set <code>-hostAccess</code> with correct IP</td>
+</tr>
+<tr>
+<td>File system full</td>
+<td>Capacity</td>
+<td>Resize with <code>-size</code></td>
+</tr>
+<tr>
+<td>NAS server not responding</td>
+<td>SP health</td>
+<td>Check SP status in Unisphere</td>
+</tr>
+<tr>
+<td>CIFS share inaccessible</td>
+<td>AD join</td>
+<td>Verify NAS server AD status</td>
+</tr>
+</tbody>
+</table>
 
 
 

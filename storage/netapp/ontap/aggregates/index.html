@@ -21,7 +21,7 @@
     
     
       
-        <title>Aggregates - Chris KB</title>
+        <title>ONTAP Aggregates - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aggregates" class="md-skip">
+        <a href="#ontap-aggregates" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Aggregates
+              ONTAP Aggregates
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-aggregates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List Aggregates
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#check-aggregate-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Check Aggregate Health
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#capacity-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Capacity Monitoring
       
     </span>
   </a>
@@ -791,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#raid-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        RAID Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Assignment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-disks-to-an-aggregate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Disks to an Aggregate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relocation-ha-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relocation (HA Pairs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +818,84 @@
 
 
 
-<h1 id="aggregates">Aggregates<a class="headerlink" href="#aggregates" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Aggregates.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="ontap-aggregates">ONTAP Aggregates<a class="headerlink" href="#ontap-aggregates" title="Permanent link">&para;</a></h1>
+<p>Aggregates are ONTAP's physical storage pools, built from disks or SSDs. Volumes reside within aggregates.</p>
+<h2 id="list-aggregates">List Aggregates<a class="headerlink" href="#list-aggregates" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage aggregate show
+storage aggregate show -fields size,used,percent-used,state
+</code></pre>
+<h2 id="check-aggregate-health">Check Aggregate Health<a class="headerlink" href="#check-aggregate-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage aggregate show -state !online
+# Any aggregate not online requires immediate investigation
+
+storage aggregate show-status
+</code></pre>
+<h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show used/available per aggregate
+storage aggregate show -fields size,used,available,percent-used
+
+# Identify aggregates over 80% full
+storage aggregate show -fields percent-used | awk '$2 &gt; 80'
+</code></pre>
+<p>Alert thresholds (standard practice):
+- <strong>80%</strong> — warning
+- <strong>90%</strong> — critical; investigate and plan expansion</p>
+<h2 id="raid-status">RAID Status<a class="headerlink" href="#raid-status" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage aggregate show-status -aggregate &lt;aggr_name&gt;
+</code></pre>
+<p>RAID states:
+- <code>normal</code> — healthy
+- <code>degraded</code> — one or more disks failed; not yet broken
+- <code>broken</code> — aggregate offline due to disk failures</p>
+<h2 id="disk-assignment">Disk Assignment<a class="headerlink" href="#disk-assignment" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Show unassigned disks
+storage disk show -container-type unassigned
+
+# Assign disk to node
+storage disk assign -disk &lt;disk_id&gt; -owner &lt;node_name&gt;
+</code></pre>
+<h2 id="add-disks-to-an-aggregate">Add Disks to an Aggregate<a class="headerlink" href="#add-disks-to-an-aggregate" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">storage aggregate add-disks -aggregate &lt;aggr_name&gt; -diskcount &lt;n&gt;
+</code></pre>
+<h2 id="relocation-ha-pairs">Relocation (HA Pairs)<a class="headerlink" href="#relocation-ha-pairs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Move aggregate ownership to partner node (planned maintenance)
+storage aggregate relocation start -node &lt;source_node&gt; -destination &lt;dest_node&gt; -aggregates &lt;aggr_name&gt;
+
+# Check relocation status
+storage aggregate relocation show
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aggregate degraded</td>
+<td>Disk failure</td>
+<td>Check <code>storage disk show -broken</code></td>
+</tr>
+<tr>
+<td>Over 80% capacity</td>
+<td>Volume growth</td>
+<td>Add disks or move volumes</td>
+</tr>
+<tr>
+<td>Aggregate offline</td>
+<td>RAID broken</td>
+<td>Engage NetApp support immediately</td>
+</tr>
+<tr>
+<td>No space for new volumes</td>
+<td>Fragmentation</td>
+<td>Run <code>aggr efficiency</code> or add disks</td>
+</tr>
+</tbody>
+</table>
 
 
 

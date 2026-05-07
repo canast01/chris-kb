@@ -21,7 +21,7 @@
     
     
       
-        <title>Svms - Chris KB</title>
+        <title>SVMs (Storage Virtual Machines) - Chris KB</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#svms" class="md-skip">
+        <a href="#svms-storage-virtual-machines" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Svms
+              SVMs (Storage Virtual Machines)
             
           </span>
         </div>
@@ -238,25 +238,6 @@
     
   
   About
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../start-here/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Start Here
 
       </a>
     </li>
@@ -432,33 +413,6 @@
     
   
     About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../start-here/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Start Here
   
 
     
@@ -758,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#list-svms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        List SVMs
       
     </span>
   </a>
@@ -769,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#svm-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        SVM Health
       
     </span>
   </a>
@@ -780,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#create-an-svm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Create an SVM
       
     </span>
   </a>
@@ -791,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#lif-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        LIF Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-configuration-per-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Configuration per SVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nis-ldap-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NIS / LDAP Lookup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-start-an-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop / Start an SVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-an-svm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete an SVM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -820,31 +829,99 @@
 
 
 
-<h1 id="svms">Svms<a class="headerlink" href="#svms" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Operational notes, checks, troubleshooting, commands, and validation steps for Svms.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm system health</li>
-<li>Review alerts</li>
-<li>Review recent changes</li>
-<li>Capture current state</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Symptom</li>
-<li>Impact</li>
-<li>Start time</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Resolution</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Approval</li>
-<li>Rollback plan</li>
-<li>Validation steps</li>
-</ul>
+<h1 id="svms-storage-virtual-machines">SVMs (Storage Virtual Machines)<a class="headerlink" href="#svms-storage-virtual-machines" title="Permanent link">&para;</a></h1>
+<p>SVMs are logical storage containers within an ONTAP cluster. Each SVM has its own namespaces, LIFs, and protocol configurations.</p>
+<h2 id="list-svms">List SVMs<a class="headerlink" href="#list-svms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vserver show
+vserver show -fields type,state,admin-state
+</code></pre>
+<h2 id="svm-health">SVM Health<a class="headerlink" href="#svm-health" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Confirm all SVMs are running
+vserver show -state !running
+
+# Check SVM root volume health
+volume show -vserver &lt;svm_name&gt; -volume &lt;svm_name&gt;_root
+</code></pre>
+<h2 id="create-an-svm">Create an SVM<a class="headerlink" href="#create-an-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vserver create \
+    -vserver &lt;svm_name&gt; \
+    -aggregate &lt;aggr_name&gt; \
+    -rootvolume &lt;svm_name&gt;_root \
+    -rootvolume-security-style unix
+</code></pre>
+<h2 id="lif-management">LIF Management<a class="headerlink" href="#lif-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List LIFs for an SVM
+network interface show -vserver &lt;svm_name&gt;
+
+# Create a data LIF
+network interface create \
+    -vserver &lt;svm_name&gt; \
+    -lif &lt;lif_name&gt; \
+    -role data \
+    -home-node &lt;node_name&gt; \
+    -home-port e0c \
+    -address &lt;ip&gt; \
+    -netmask &lt;mask&gt; \
+    -data-protocol nfs,cifs
+
+# Migrate a LIF to a different port
+network interface migrate -vserver &lt;svm_name&gt; -lif &lt;lif_name&gt; -dest-node &lt;node&gt; -dest-port &lt;port&gt;
+</code></pre>
+<h2 id="dns-configuration-per-svm">DNS Configuration per SVM<a class="headerlink" href="#dns-configuration-per-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vserver services name-service dns show -vserver &lt;svm_name&gt;
+
+vserver services name-service dns create \
+    -vserver &lt;svm_name&gt; \
+    -domains &lt;domain&gt; \
+    -name-servers &lt;dns_ip1&gt;,&lt;dns_ip2&gt;
+</code></pre>
+<h2 id="nis-ldap-lookup">NIS / LDAP Lookup<a class="headerlink" href="#nis-ldap-lookup" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vserver services name-service ns-switch show -vserver &lt;svm_name&gt;
+vserver services name-service ldap show -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="stop-start-an-svm">Stop / Start an SVM<a class="headerlink" href="#stop-start-an-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">vserver stop -vserver &lt;svm_name&gt;
+vserver start -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="delete-an-svm">Delete an SVM<a class="headerlink" href="#delete-an-svm" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Ensure no volumes except root
+volume show -vserver &lt;svm_name&gt;
+
+# Delete root volume and SVM
+vserver delete -vserver &lt;svm_name&gt;
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SVM not running</td>
+<td>Admin-state</td>
+<td><code>vserver start</code></td>
+</tr>
+<tr>
+<td>LIF not reachable</td>
+<td>LIF status / port</td>
+<td>Migrate LIF or fix port</td>
+</tr>
+<tr>
+<td>Protocol not serving</td>
+<td>Service enabled?</td>
+<td><code>vserver nfs create</code> or equivalent</td>
+</tr>
+<tr>
+<td>DNS resolution failing</td>
+<td>SVM DNS config</td>
+<td>Verify DNS server IPs</td>
+</tr>
+</tbody>
+</table>
 
 
 
