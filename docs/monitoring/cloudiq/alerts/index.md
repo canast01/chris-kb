@@ -1,43 +1,93 @@
-# Alerts
-## Purpose
+# CloudIQ: Alert Types, Severity, and Notification Configuration
 
-Use this page for practical CloudIQ Alerts notes, checks, troubleshooting, commands, change notes, and field references.
+Dell CloudIQ surfaces alerts from connected storage, data protection, networking, and hyperconverged infrastructure systems. This page covers alert types, severity levels, notification setup, and dismissal workflows.
 
-## Common checks
+## Alert Types and Sources
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+CloudIQ aggregates alerts from all registered systems. Alerts are sourced from the hardware itself (telemetry pushed via phone-home) and enriched by CloudIQ's analytics engine.
 
-## Incident notes
+Navigation: **CloudIQ > Alerts**
 
-Capture:
+| Alert Source | Examples |
+|---|---|
+| PowerStore | Drive failure, replication lag, pool near-full |
+| PowerMax / VMAX | Director offline, SRDF link degraded |
+| PowerScale (Isilon) | Node down, quota exceeded, SRS connectivity |
+| PowerProtect / Avamar | Job failure, catalogue corruption, capacity |
+| PowerEdge Servers | Drive predictive failure, RAID degradation |
+| PowerSwitch | Port down, STP topology change |
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+## Severity Levels
 
-## Change notes
+| Severity | Colour | Meaning | Response Time |
+|---|---|---|---|
+| Critical | Red | System or service impact is occurring | Immediate |
+| Major | Orange | Risk of imminent impact | Within 1 hour |
+| Minor | Yellow | Degraded state, no immediate impact | Business hours |
+| Informational | Blue | Configuration or state change logged | Review when convenient |
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Viewing and Filtering Alerts
 
-## Useful commands
+```bash
+# Query active alerts via CloudIQ REST API v1
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20%27ACTIVE%27" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json" | jq '.results[] | {id, severity, summary, system_name}'
 
-Add tested commands here.
+# Filter by severity
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts?filter=severity%20eq%20%27CRITICAL%27" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json"
+```
 
-## Known issues
+## Notification Configuration
 
-Add known issues here as they come up.
+CloudIQ sends alert notifications via email. Configure recipients at the tenant level.
+
+Navigation: **CloudIQ > Settings > Notifications**
+
+Steps to configure email alerts:
+1. Go to **Settings > Notifications > Alert Notifications**.
+2. Click **+ Add Recipient**.
+3. Enter email address and select severity threshold.
+4. Choose specific systems or **All Systems**.
+5. Save and send a test notification.
+
+| Option | Description |
+|---|---|
+| Severity Threshold | Minimum severity that triggers an email |
+| System Scope | All systems, or specific registered systems |
+| Digest vs Immediate | Send each alert individually or in a daily digest |
+| Test Notification | Sends a synthetic alert to verify delivery |
+
+## Dismissing and Acknowledging Alerts
+
+Alerts can be dismissed when the issue is known and accepted, or acknowledged to indicate someone is investigating.
+
+```bash
+# Acknowledge an alert via API
+curl -sk -X POST \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/<alertId>/acknowledge" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"comment": "Investigating - ticket INC0012345"}'
+
+# Dismiss an alert
+curl -sk -X POST \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/<alertId>/dismiss" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"comment": "Accepted risk - hardware replacement scheduled"}'
+```
+
+## Common Alert Issues
+
+| Issue | Likely Cause | Fix |
+|---|---|---|
+| No alerts appearing | System not registered or phone-home blocked | Check system connectivity and SRS/ESRS config |
+| Email notifications not received | Recipient not added or spam filter | Verify recipients in Settings > Notifications |
+| Alerts not clearing after fix | System has not reported resolved state | Wait for next telemetry cycle (up to 30 min) |
+| Duplicate alerts for same event | Multiple notification rules overlapping | Review and deduplicate notification rules |
+| Historical alerts missing | Retention limit reached | CloudIQ retains 90 days of alert history by default |

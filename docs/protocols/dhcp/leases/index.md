@@ -1,43 +1,80 @@
-# Leases
+# DHCP Leases
 
-## Purpose
+## Overview
 
-Use this page for practical DHCP Leases notes, checks, troubleshooting, commands, standards, and field references.
+DHCP leases track which IP address is assigned to which client. On Windows Server, lease management is done with the `DhcpServer` PowerShell module. Stale leases can cause address exhaustion and ghost entries in DNS.
 
-## Common checks
+## Viewing Leases
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```powershell
+# List all leases in a scope
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0
 
-## Incident notes
+# List active leases only
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0 | Where-Object { $_.AddressState -eq "Active" }
 
-Capture:
+# Find a lease by IP
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0 -IPAddress 192.168.10.55
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Find a lease by MAC address
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0 | Where-Object { $_.ClientId -eq "00-11-22-33-44-55" }
 
-## Change notes
+# Search across all scopes on a server
+Get-DhcpServerv4Scope | ForEach-Object {
+  Get-DhcpServerv4Lease -ScopeId $_.ScopeId
+} | Where-Object { $_.ClientId -eq "00-11-22-33-44-55" }
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Finding IP from MAC
 
-## Useful commands or references
+```powershell
+$mac = "00-1A-2B-3C-4D-5E"
+Get-DhcpServerv4Scope | ForEach-Object {
+  Get-DhcpServerv4Lease -ScopeId $_.ScopeId -ErrorAction SilentlyContinue
+} | Where-Object { $_.ClientId -like "*$mac*" } |
+  Select-Object IPAddress, ClientId, HostName, LeaseExpiryTime, AddressState
+```
 
-Add tested commands, links, or notes here.
+## Lease States Reference
 
-## Known issues
+| State | Description |
+|-------|-------------|
+| Active | Lease is current and in use |
+| Expired | Lease time elapsed, client has not renewed |
+| Declined | Client rejected the offered address |
+| Inactive | Address offered but not yet acknowledged |
+| ActiveReservation | IP assigned via reservation |
 
-Add known issues here as they come up.
+## Clearing Stale Leases
+
+```powershell
+# Remove a single expired lease
+Remove-DhcpServerv4Lease -ScopeId 192.168.10.0 -IPAddress 192.168.10.55
+
+# Remove all expired leases in a scope
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0 |
+  Where-Object { $_.AddressState -eq "Expired" } |
+  Remove-DhcpServerv4Lease
+
+# Reconcile scope (fixes inconsistencies between DB and registry)
+Repair-DhcpServerv4IPRecord -ScopeId 192.168.10.0 -Force
+```
+
+## Exporting and Importing Leases
+
+```powershell
+# Export lease database (full server)
+Export-DhcpServer -File C:\dhcp-backup\dhcp-export.xml -Leases
+
+# Export single scope
+Export-DhcpServer -File C:\dhcp-backup\scope10-export.xml -ScopeId 192.168.10.0 -Leases
+
+# Import on new/replacement server
+Import-DhcpServer -File C:\dhcp-backup\dhcp-export.xml `
+  -BackupPath C:\Windows\System32\dhcp\backup -Leases -Force
+```
+
+## Known Issues
+
+- DNS records for expired leases linger if DNS dynamic update cleanup is not enabled. Enable scavenging on the DNS zone and confirm the DHCP server is authorized to update DNS.
+- `Repair-DhcpServerv4IPRecord` marks inconsistent entries as declined; the address becomes available on the next scope cleanup cycle (default 1 hour).

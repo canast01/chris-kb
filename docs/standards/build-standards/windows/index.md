@@ -1,43 +1,122 @@
-# Windows
+# Windows Build Standards
 
-## Purpose
+## Hostname Convention and Domain Join
 
-Use this page for practical Build Standards Windows notes, checks, troubleshooting, commands, standards, and field references.
+Windows hostnames follow the same schema as all servers: `{site}{role}{env}{num}`. Maximum length is 15 characters (NetBIOS limit). Choose abbreviations accordingly.
 
-## Common checks
+| Component | Max chars | Example |
+|---|---|---|
+| Site code | 3 | `dc1` |
+| Role code | 4 | `wsql` |
+| Env code | 3 | `prd` |
+| Number | 2 | `01` |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+Full example: `dc1wsqlprd01` (12 chars — within limit).
 
-## Incident notes
+Domain join must be completed before any application installation. All Windows servers join `corp.example.com`. The join is performed using the `svc-domainjoin` service account, which has rights scoped to a specific OU. After join, move the computer object to the correct OU immediately.
 
-Capture:
+```powershell
+# Verify domain membership
+(Get-WmiObject -Class Win32_ComputerSystem).Domain
+nltest /dsgetdc:corp.example.com
+```
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## NTP Configuration
 
-## Change notes
+Windows domain members automatically use the domain hierarchy for time. The PDC emulator synchronises to the internal NTP infrastructure. Do not configure external NTP sources on domain members.
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+Verify time sync:
 
-## Useful commands or references
+```powershell
+w32tm /query /status
+w32tm /query /source
+```
 
-Add tested commands, links, or notes here.
+Expected output: source is the domain PDC or a DC. If `Local CMOS Clock` appears, the domain time sync is broken — re-run `w32tm /resync /force`.
 
-## Known issues
+| Check | Expected |
+|---|---|
+| Source | Domain controller or internal NTP server |
+| Stratum | 4 or better |
+| Last sync offset | Under 1 second |
+| Next sync time | Within 8 hours |
 
-Add known issues here as they come up.
+## Windows Update and Patch Policy
+
+Windows Update is managed via WSUS or Windows Update for Business, not via direct internet access. Servers must be pointed at the internal WSUS server within 1 hour of domain join.
+
+```powershell
+# Confirm WSUS server is configured
+(Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate").WUServer
+
+# Force update detection
+wuauclt /detectnow
+UsoClient StartScan
+```
+
+Patching schedule:
+
+| Environment | Patch window | Reboot handling |
+|---|---|---|
+| Production | Second Tuesday of month + 7 days | Scheduled maintenance window |
+| Staging | Second Tuesday of month | Automatic reboot |
+| Dev | Weekly | Automatic reboot |
+
+Security-only patches with CVSS 9.0+ are applied out-of-band within 72 hours, regardless of environment.
+
+## Local Administrator and Accounts
+
+The built-in `Administrator` account must be renamed and a strong random password set via LAPS (Local Administrator Password Solution). LAPS must be deployed and reporting to AD before build sign-off.
+
+```powershell
+# Verify LAPS is installed and reporting
+Get-AdmPwdPassword -ComputerName dc1wsqlprd01
+
+# Check LAPS client is installed
+Get-WmiObject -Namespace root\cimv2 -Class Win32_Product | Where-Object { $_.Name -like "*LAPS*" }
+```
+
+Additional local accounts:
+- No shared local accounts permitted
+- All service accounts created in AD, not locally
+- Local `Guest` account: must be disabled
+- Local `Administrator` account: renamed to `lcladmin`, managed by LAPS
+
+## Audit Policy
+
+Windows audit policy is configured via Group Policy. The following categories must be enabled:
+
+| Audit Category | Success | Failure |
+|---|---|---|
+| Account Logon | Enabled | Enabled |
+| Account Management | Enabled | Enabled |
+| Logon/Logoff | Enabled | Enabled |
+| Object Access (file system) | Enabled | Enabled |
+| Policy Change | Enabled | Enabled |
+| Privilege Use | Enabled | Enabled |
+| System | Enabled | Enabled |
+| Process Creation | Enabled | — |
+
+Security event log size must be set to a minimum of 1 GB. Logs are forwarded to the SIEM via Windows Event Forwarding (WEF) or the Elastic/Splunk agent.
+
+```powershell
+# Confirm audit policy
+auditpol /get /category:*
+
+# Check event log size
+Get-EventLog -LogName Security | Select-Object -ExpandProperty MaximumKilobytes
+```
+
+## Build Completion Checklist
+
+- [ ] Hostname set and matches naming convention (max 15 chars)
+- [ ] DNS forward and reverse resolve correctly
+- [ ] Domain joined to `corp.example.com`, computer object in correct OU
+- [ ] NTP source confirmed as domain controller; offset under 1 second
+- [ ] WSUS pointing to internal server; update scan completed
+- [ ] LAPS deployed and reporting password to AD
+- [ ] Built-in Administrator renamed; Guest disabled
+- [ ] Audit policy applied and confirmed via `auditpol`
+- [ ] Security event log size set to 1 GB minimum
+- [ ] WEF or SIEM agent deployed and events visible in SIEM
+- [ ] Server visible in monitoring platform within 15 minutes of build

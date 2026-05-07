@@ -1,43 +1,106 @@
-# Reporting
-## Purpose
+# CloudIQ: Reports — On-Demand, Scheduled, Export, and Sharing
 
-Use this page for practical CloudIQ Reporting notes, checks, troubleshooting, commands, change notes, and field references.
+Dell CloudIQ provides built-in reporting for capacity, health, alerts, and recommendations across your Dell infrastructure fleet. Reports can be generated on demand or scheduled for recurring delivery.
 
-## Common checks
+## Report Types Available
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+Navigation: **CloudIQ > Reports**
 
-## Incident notes
+| Report Type | Content | Audience |
+|---|---|---|
+| System Health Summary | Health scores, active alerts, component status | Operations team |
+| Capacity Forecast | Utilisation trends and days-until-full per system | Storage administrators |
+| Alert History | All alerts over a date range by severity | Operations, management |
+| Recommendations Summary | Active and resolved recommendations | Architects, engineers |
+| Data Reduction | Deduplication and compression ratios | Capacity planners |
+| Performance Summary | Throughput, IOPS, latency averages | Performance engineers |
 
-Capture:
+## Generating an On-Demand Report
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+```bash
+# Trigger an on-demand health report via CloudIQ API
+curl -sk -X POST \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/reports" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "HEALTH_SUMMARY",
+    "system_ids": ["<systemId1>", "<systemId2>"],
+    "date_range": {
+      "start": "2026-04-01T00:00:00Z",
+      "end": "2026-04-30T23:59:59Z"
+    },
+    "format": "PDF"
+  }'
 
-## Change notes
+# Check report generation status
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/reports/<reportId>" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json" | jq '{status, download_url}'
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# Download completed report
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/reports/<reportId>/download" \
+  -H "Authorization: Bearer <access_token>" \
+  -o cloudiq-health-report.pdf
+```
 
-## Useful commands
+## Scheduling Recurring Reports
 
-Add tested commands here.
+Navigation: **CloudIQ > Reports > Scheduled Reports > + New Schedule**
 
-## Known issues
+Schedule configuration options:
 
-Add known issues here as they come up.
+| Field | Options |
+|---|---|
+| Report Type | Health, Capacity, Alerts, etc. |
+| Frequency | Daily, Weekly, Monthly |
+| Day / Time | Specific day and UTC time |
+| Systems | All systems or selected subset |
+| Format | PDF or CSV |
+| Recipients | Comma-separated email addresses |
+
+```bash
+# Create a weekly capacity forecast schedule via API
+curl -sk -X POST \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/report_schedules" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "CAPACITY_FORECAST",
+    "frequency": "WEEKLY",
+    "day_of_week": "MONDAY",
+    "time_utc": "07:00",
+    "format": "PDF",
+    "recipients": ["storage-team@example.com", "manager@example.com"]
+  }'
+```
+
+## Exporting Data for External Analysis
+
+For raw metric data, use the CloudIQ API to export CSV-format data suitable for import into Excel, Power BI, or Grafana via a scheduled script.
+
+```bash
+# Export capacity metrics as CSV for all systems
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,capacity_used_tb,capacity_total_tb,days_until_full&format=csv" \
+  -H "Authorization: Bearer <access_token>" \
+  -o capacity-export.csv
+```
+
+## Sharing Reports
+
+- **PDF reports** can be emailed directly from the scheduler or manually from the Reports UI using **Share > Email**.
+- **Shareable links** are not supported; recipients need a CloudIQ login to view live dashboards.
+- For stakeholders without CloudIQ access, schedule PDF delivery to their inbox.
+
+## Common Report Issues
+
+| Issue | Likely Cause | Fix |
+|---|---|---|
+| Report not delivered | Email address not verified or spam filtered | Confirm address in Settings, whitelist cloudiq.dell.com |
+| Report shows no data | No systems in selected scope | Re-check system filter in report config |
+| CSV export malformed | Special characters in system names | Use API with explicit field selection |
+| Scheduled report skipped | Temporary CloudIQ service interruption | Reports auto-retry; check History for status |
+| Report download link expired | Links expire after 24 hours | Re-generate the report from Reports > History |

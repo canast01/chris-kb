@@ -1,43 +1,82 @@
-# Pre Change
+# Pre-Change Health Check
 
-## Purpose
+## Overview
 
-Use this page for practical Health Checks Pre Change notes, checks, troubleshooting, commands, standards, and field references.
+The pre-change check confirms that the environment is in a stable, known-good state before a change window opens. Implementing a change into an already-degraded environment makes root cause analysis harder, increases risk, and can breach the backout plan assumptions. If the environment is not healthy, the change should not proceed.
 
-## Common checks
+---
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Pre-Change Check Timeline
 
-## Incident notes
+| Activity                           | When                        |
+|------------------------------------|-----------------------------|
+| Full pre-check sweep               | 24 hours before window      |
+| Backup verification                | 24 hours before window      |
+| Stakeholder notification sent      | 24–48 hours before window   |
+| Go/no-go confirmation check        | 30 minutes before window    |
+| Pre-change baseline snapshot       | Immediately before start    |
 
-Capture:
+If the 24-hour sweep identifies issues, decide whether to resolve them or postpone the change before the go/no-go check.
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+---
 
-## Change notes
+## Pre-Change Checklist
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+- [ ] All services affected by the change are currently healthy
+- [ ] No active incidents or P1/P2 issues on affected systems
+- [ ] No monitoring alerts currently firing on affected CIs
+- [ ] Recent backup confirmed successful (check backup console, not just schedule)
+- [ ] Rollback / backout plan reviewed and tested in non-production
+- [ ] Change ticket approved and all required approvals in place
+- [ ] Change window confirmed with stakeholders (notification sent)
+- [ ] All team members confirmed available and on the change bridge
+- [ ] Escalation contacts confirmed available (vendor support, on-call lead)
+- [ ] Access to all required systems confirmed (VPN, jump hosts, credentials)
+- [ ] Runbook / implementation plan steps reviewed by the implementing engineer
 
-## Useful commands or references
+---
 
-Add tested commands, links, or notes here.
+## Go / No-Go Decision
 
-## Known issues
+The go/no-go check happens 30 minutes before the change window opens. Anyone on the bridge can call no-go if they have a valid concern.
 
-Add known issues here as they come up.
+| Condition                                       | Decision      |
+|-------------------------------------------------|---------------|
+| All pre-checks passed                           | Go            |
+| Minor alert firing, unrelated to change scope   | Go (document) |
+| Backup failed in last 24 hours                  | No-Go         |
+| Active incident on an affected service          | No-Go         |
+| Required team member unavailable, no backup     | No-Go         |
+| Approval missing from required approver         | No-Go         |
+| Environment behaving differently than expected  | No-Go pending investigation |
+
+A no-go decision must be recorded in the change ticket with the reason. Reschedule promptly and communicate to stakeholders.
+
+---
+
+## Baseline Snapshot
+
+Immediately before starting the change, record these values. You will compare against them in the post-change check.
+
+| Metric               | Captured Value | Timestamp |
+|----------------------|----------------|-----------|
+| Service error rate   |                |           |
+| Response time (p95)  |                |           |
+| CPU utilisation      |                |           |
+| Memory utilisation   |                |           |
+| Disk usage           |                |           |
+| Active connections   |                |           |
+
+Store the snapshot in the change ticket. This is your baseline for validating success.
+
+---
+
+## Backup Verification
+
+Backup verification is not just confirming the backup job ran — it is confirming the backup is restorable.
+
+- [ ] Backup job completed without errors (check logs, not just status)
+- [ ] Backup file is present in the expected location
+- [ ] Backup file size is consistent with previous runs (significant deviation is a warning sign)
+- [ ] For critical changes, perform a test restore of a representative subset to confirm integrity
+- [ ] Record backup timestamp and location in the change ticket

@@ -1,47 +1,160 @@
-# Lifecycle Management
-## Purpose
+# Azure Storage Lifecycle Management
 
-Use this page for practical Azure Storage Lifecycle Management notes, checks, troubleshooting, commands, change notes, and field references.
+## Overview
 
-## Common checks
+Azure Storage lifecycle management policies automate blob tier transitions and deletion based on object age and conditions. Policies run daily and evaluate blobs against defined rules, applying transitions from Hot to Cool, Cold, or Archive, and deleting objects after a configured number of days.
 
-- Confirm subscription
-- Confirm resource group
-- Confirm region
-- Review active alerts
-- Review recent changes
-- Check activity logs
-- Check permissions
-- Capture current state before changes
+## Policy Structure
 
-## Incident notes
+A lifecycle policy is a JSON document containing one or more rules. Each rule has a filter (which blobs it applies to) and an action set (what to do).
 
-Capture:
+```bash
+# View existing lifecycle policy
+az storage account management-policy show \
+  --resource-group rg-storage-prod \
+  --account-name stprodblobs01
 
-- Symptom
-- Start time
-- Impact
-- Subscription
-- Resource group
-- Resource name
-- Error message
-- What changed
-- What was checked
-- Next action
+# Create or replace a policy from JSON file
+az storage account management-policy create \
+  --resource-group rg-storage-prod \
+  --account-name stprodblobs01 \
+  --policy @lifecycle-policy.json
 
-## Change notes
+# Delete a policy
+az storage account management-policy delete \
+  --resource-group rg-storage-prod \
+  --account-name stprodblobs01
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Tier Transitions
 
-## Useful commands
+Example policy with full tier transition and deletion chain:
 
-Add tested Azure CLI or PowerShell commands here.
+```json
+{
+  "rules": [
+    {
+      "name": "archive-and-expire-backups",
+      "enabled": true,
+      "type": "Lifecycle",
+      "definition": {
+        "filters": {
+          "blobTypes": ["blockBlob"],
+          "prefixMatch": ["backups/"]
+        },
+        "actions": {
+          "baseBlob": {
+            "tierToCool": {
+              "daysAfterModificationGreaterThan": 30
+            },
+            "tierToCold": {
+              "daysAfterModificationGreaterThan": 60
+            },
+            "tierToArchive": {
+              "daysAfterModificationGreaterThan": 90
+            },
+            "delete": {
+              "daysAfterModificationGreaterThan": 365
+            }
+          },
+          "snapshot": {
+            "delete": {
+              "daysAfterCreationGreaterThan": 90
+            }
+          },
+          "version": {
+            "delete": {
+              "daysAfterCreationGreaterThan": 90
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
 
-## Known issues
+## Filter Sets
 
-Add known issues here as they come up.
+Filters control which blobs a rule applies to:
+
+| Filter Field | Type | Example |
+|---|---|---|
+| `blobTypes` | Array | `["blockBlob"]`, `["appendBlob"]` |
+| `prefixMatch` | Array of strings | `["logs/", "backups/2025"]` |
+| `blobIndexMatch` | Tag-based filter | `{"name": "env", "op": "==", "value": "prod"}` |
+
+```bash
+# Create a policy targeting blobs with a specific index tag
+az storage account management-policy create \
+  --resource-group rg-storage-prod \
+  --account-name stprodblobs01 \
+  --policy '{
+    "rules": [{
+      "name": "archive-archived-tagged",
+      "enabled": true,
+      "type": "Lifecycle",
+      "definition": {
+        "filters": {
+          "blobTypes": ["blockBlob"],
+          "blobIndexMatch": [{"name": "lifecycle", "op": "==", "value": "archive"}]
+        },
+        "actions": {
+          "baseBlob": {
+            "tierToArchive": {"daysAfterModificationGreaterThan": 1}
+          }
+        }
+      }
+    }]
+  }'
+```
+
+## Deletion Rules
+
+```json
+{
+  "name": "delete-temp-objects",
+  "enabled": true,
+  "type": "Lifecycle",
+  "definition": {
+    "filters": {
+      "blobTypes": ["blockBlob"],
+      "prefixMatch": ["temp/", "staging/"]
+    },
+    "actions": {
+      "baseBlob": {
+        "delete": {"daysAfterModificationGreaterThan": 7}
+      }
+    }
+  }
+}
+```
+
+## Lifecycle Policy Limitations
+
+| Constraint | Value |
+|---|---|
+| Max rules per policy | 100 |
+| Max prefix filters per rule | 10 |
+| Max blob index match filters | 10 |
+| Policy evaluation frequency | Once per day |
+| Minimum Cool tier retention | 30 days (penalties apply if deleted earlier) |
+| Minimum Archive tier retention | 180 days (early deletion fee applies) |
+
+## Monitoring Policy Execution
+
+```bash
+# Check storage account activity logs for lifecycle policy runs
+az monitor activity-log list \
+  --resource-group rg-storage-prod \
+  --resource-type "Microsoft.Storage/storageAccounts" \
+  --query "[?operationName.value=='Microsoft.Storage/storageAccounts/managementPolicies/write']" \
+  --output table
+
+# Get blob lifecycle events via storage diagnostics logs
+az storage logging update \
+  --account-name stprodblobs01 \
+  --log rwd \
+  --services b \
+  --retention 7
+```

@@ -1,43 +1,79 @@
-# Ownership
+# Asset Ownership and Accountability
 
-## Purpose
+## Overview
 
-Use this page for practical Asset Inventory Ownership notes, checks, troubleshooting, commands, standards, and field references.
+Every CI in the CMDB must have a named owner. Ownership determines who approves changes, who is accountable during incidents, who carries the cost, and who authorises decommission. Unowned assets are a governance risk and a common source of audit findings.
 
-## Common checks
+---
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Ownership Model
 
-## Incident notes
+Use a two-level ownership model: Technical Owner and Business Owner.
 
-Capture:
+| Role             | Responsibility                                                   |
+|------------------|------------------------------------------------------------------|
+| Technical Owner  | Day-to-day operations, patching, incident response, change approval |
+| Business Owner   | Funding, strategic direction, decommission approval              |
+| Cost Centre       | Chargeback target; not a person but must be set on every CI     |
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+Both owners must be individuals (not team aliases) so that accountability is unambiguous. Use team aliases only in the notification fields, not the owner fields.
 
-## Change notes
+---
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Ownership Assignment Process
 
-## Useful commands or references
+When a new CI is onboarded:
 
-Add tested commands, links, or notes here.
+- [ ] Identify technical owner from the team responsible for the service
+- [ ] Identify business owner from the sponsoring department
+- [ ] Confirm cost centre code with Finance
+- [ ] Populate all three fields in CMDB before setting status to Active
+- [ ] Send confirmation email to both owners with a link to the CI record
+- [ ] Set a 90-day review reminder for newly onboarded CIs
 
-## Known issues
+For bulk imports, include owner fields in the import template. Do not complete an import that leaves owner fields blank.
 
-Add known issues here as they come up.
+---
+
+## Ownership Handover
+
+When an owner changes (role change, team restructure, leaver):
+
+- [ ] Identify replacement owner before the current owner departs
+- [ ] Raise a CMDB update ticket with old and new owner details
+- [ ] Update CMDB within 5 business days of the handover date
+- [ ] Notify the new owner by email with CI list and key responsibilities
+- [ ] Update any related service catalogue entries and escalation paths
+- [ ] Run a 30-day check-in with the new owner to confirm no issues
+
+| Trigger Event         | Action Required                         | SLA            |
+|-----------------------|-----------------------------------------|----------------|
+| Staff departure       | Replace owner before last day           | Before last day|
+| Team restructure      | Bulk update during transition project   | Within 2 weeks |
+| Service transfer      | Formal handover document required       | Before go-live |
+| Acquisition / merger  | Asset owner mapping exercise            | Within 30 days |
+
+---
+
+## Cost Allocation
+
+Ownership drives chargeback. The cost centre on a CI determines which department is billed for:
+
+- Cloud compute and storage costs
+- Licensing and support contract costs
+- Hardware depreciation
+- Managed service fees
+
+Review cost allocation quarterly. Ensure CIs transferred between teams have their cost centre updated promptly — delayed updates create reconciliation disputes at financial year-end.
+
+---
+
+## Accountability and Compliance
+
+During audits, every CI must be traceable to a responsible person.
+
+- [ ] Confirm no CIs have blank owner fields before each quarterly audit
+- [ ] Run an "unowned CI" report monthly and assign owners within 10 business days
+- [ ] Include ownership accuracy in the CMDB health dashboard
+- [ ] Escalate unresolved unowned CIs to the line manager of the relevant team
+- [ ] Document owner assignment rationale for shared infrastructure (e.g., shared DB clusters)

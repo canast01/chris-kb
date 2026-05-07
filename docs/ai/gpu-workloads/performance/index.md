@@ -1,43 +1,125 @@
-# Performance
+# GPU Performance Tuning
 
-## Purpose
+Getting the most out of GPU hardware requires profiling to identify bottlenecks, then applying targeted optimisations such as mixed precision, larger batch sizes, and multi-GPU communication tuning.
 
-Use this page for practical Gpu Workloads Performance notes, checks, troubleshooting, commands, standards, and field references.
+## Profiling with Nsight and PyTorch Profiler
 
-## Common checks
+Start by measuring before optimising. Guessing at bottlenecks wastes time.
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```python
+import torch
+from torch.profiler import profile, record_function, ProfilerActivity
 
-## Incident notes
+model = MyModel().cuda()
+inputs = torch.randn(32, 3, 224, 224).cuda()
 
-Capture:
+with profile(
+    activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
+    record_shapes=True,
+    profile_memory=True,
+    with_stack=True
+) as prof:
+    with record_function("forward_pass"):
+        outputs = model(inputs)
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Print top operations by CUDA time
+print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=20))
 
-## Change notes
+# Export for TensorBoard
+prof.export_chrome_trace("/tmp/trace.json")
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+For kernel-level profiling, use Nsight Systems:
 
-## Useful commands or references
+```bash
+nsys profile --trace=cuda,nvtx,osrt \
+  --output /tmp/profile_output \
+  python train.py --epochs 1 --steps 100
+```
 
-Add tested commands, links, or notes here.
+## Mixed Precision Training
 
-## Known issues
+AMP (Automatic Mixed Precision) reduces memory usage by ~50% and accelerates throughput on Tensor Cores by using FP16 for most operations while keeping FP32 for numerically sensitive parts.
 
-Add known issues here as they come up.
+```python
+import torch
+from torch.cuda.amp import GradScaler, autocast
+
+model    = MyModel().cuda()
+optimiser = torch.optim.AdamW(model.parameters(), lr=1e-4)
+scaler   = GradScaler()
+
+for batch in dataloader:
+    inputs, labels = batch[0].cuda(), batch[1].cuda()
+    optimiser.zero_grad()
+
+    with autocast():
+        outputs = model(inputs)
+        loss    = criterion(outputs, labels)
+
+    scaler.scale(loss).backward()
+    scaler.step(optimiser)
+    scaler.update()
+```
+
+## Batch Size and Throughput
+
+Larger batch sizes improve GPU utilisation but increase memory pressure. Find the largest batch size that fits in VRAM:
+
+```python
+def find_max_batch_size(model, input_shape, start=8, max_bs=2048):
+    bs = start
+    while bs <= max_bs:
+        try:
+            x = torch.randn(bs, *input_shape).cuda()
+            _ = model(x)
+            torch.cuda.empty_cache()
+            print(f"Batch size {bs}: OK")
+            bs *= 2
+        except RuntimeError as e:
+            if "out of memory" in str(e):
+                print(f"Batch size {bs}: OOM — use {bs // 2}")
+                torch.cuda.empty_cache()
+                return bs // 2
+            raise
+    return bs
+```
+
+## NCCL and Multi-GPU Communication
+
+For distributed training, NCCL handles GPU-to-GPU communication. Tuning NCCL can significantly improve multi-GPU scaling efficiency.
+
+```bash
+# Enable NCCL debug logging
+export NCCL_DEBUG=INFO
+export NCCL_DEBUG_SUBSYS=ALL
+
+# Force NVLink (preferred over PCIe)
+export NCCL_P2P_LEVEL=NVL
+
+# For InfiniBand / RDMA clusters
+export NCCL_IB_DISABLE=0
+export NCCL_IB_HCA=mlx5_0
+
+# Launch distributed training (4 GPUs on 1 node)
+torchrun --nproc_per_node=4 train.py --distributed
+```
+
+## Performance Benchmarking
+
+| Metric | Command | Target |
+|---|---|---|
+| Memory bandwidth | `bandwidthTest` (CUDA samples) | >900 GB/s (A100 SXM) |
+| Compute throughput | `deviceQuery` | Check vs spec sheet |
+| Model throughput | Samples/sec logged during training | Increase with AMP + larger batch |
+| NVLink bandwidth | `nvidia-smi nvlink --status` | 600 GB/s (A100 NVLink 3.0) |
+
+## Common Bottlenecks
+
+| Bottleneck | Symptom | Fix |
+|---|---|---|
+| CPU data loading | GPU at <50% util, CPU at 100% | Increase DataLoader workers, use pin_memory |
+| Small batch size | Low FLOP/s efficiency | Gradient accumulation to simulate larger batch |
+| FP32 where FP16 works | Slow throughput on Tensor Core hardware | Enable AMP |
+| PCIe bottleneck | High PCIe tx/rx, NVLink idle | Use NVLink topology, reduce host-device copies |
+| Memory copies | High cudaMemcpy in profiler | Pre-allocate tensors, use async transfers |

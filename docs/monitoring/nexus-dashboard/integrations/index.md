@@ -1,43 +1,111 @@
-# Integrations
-## Purpose
+# Nexus Dashboard: Insights, Orchestrator, and Data Broker Integrations
 
-Use this page for practical Nexus Dashboard Integrations notes, checks, troubleshooting, commands, change notes, and field references.
+Cisco Nexus Dashboard acts as a hosting platform for multiple services: Nexus Dashboard Insights (NDI), Nexus Dashboard Orchestrator (NDO), and Nexus Dashboard Data Broker (NDDB). This page covers how to install, configure, and verify these service integrations.
 
-## Common checks
+## Nexus Dashboard Services Overview
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+Nexus Dashboard is the hosting platform — individual services are installed as separate applications.
 
-## Incident notes
+| Service | Purpose | Primary Fabric Type |
+|---|---|---|
+| Nexus Dashboard Insights (NDI) | Telemetry, anomaly detection, health scoring | ACI, NX-OS (NDFC) |
+| Nexus Dashboard Orchestrator (NDO) | Multi-site ACI policy management | ACI multi-site |
+| Nexus Dashboard Data Broker (NDDB) | Traffic tapping, monitoring port groups | ACI, NX-OS |
+| Nexus Dashboard Fabric Controller (NDFC) | NX-OS fabric provisioning and management | NX-OS |
 
-Capture:
+## Installing a Service Application
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+```bash
+# List installed services on Nexus Dashboard
+curl -sk -X GET \
+  "https://nexus-dashboard.example.com/nexus/infra/api/v1/apps" \
+  -H "Authorization: Bearer <token>" \
+  | jq '.data[] | {name, version, status}'
 
-## Change notes
+# Trigger service installation from a local image
+curl -sk -X POST \
+  "https://nexus-dashboard.example.com/nexus/infra/api/v1/apps/install" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@nd-insights-4.2.1.tar.gz"
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+Service installation requirements:
 
-## Useful commands
+| Service | Minimum ND Cluster Nodes | Minimum Per-Node Memory | Minimum Per-Node CPU |
+|---|---|---|---|
+| NDI (small fabric) | 3 | 64 GB | 16 vCPU |
+| NDO | 3 | 32 GB | 16 vCPU |
+| NDDB | 3 | 16 GB | 8 vCPU |
+| NDFC | 3 | 64 GB | 16 vCPU |
 
-Add tested commands here.
+## Configuring NDI Fabric Connection
 
-## Known issues
+After installing NDI, register the ACI APIC or NX-OS NDFC fabric:
 
-Add known issues here as they come up.
+Navigation: **NDI > Settings > Fabric Connections > Add**
+
+```bash
+# Add an ACI fabric to NDI via API
+curl -sk -X POST \
+  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/siteconnectivity" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fabricName": "prod-aci",
+    "siteType": "ACI",
+    "apicUrl": "https://apic.example.com",
+    "username": "ndi-readonly",
+    "password": "password",
+    "verifySSL": false
+  }'
+```
+
+## Configuring NDO Multi-Site
+
+NDO manages policy across multiple ACI sites from a single pane.
+
+Navigation: **NDO > Infrastructure > Sites > Add Site**
+
+```bash
+# Register an APIC site to NDO
+curl -sk -X POST \
+  "https://nexus-dashboard.example.com/mso/api/v1/sites" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "site-london",
+    "type": "aci",
+    "apicUrls": ["https://apic-lon.example.com"],
+    "username": "ndo-admin",
+    "password": "password",
+    "useProxy": false
+  }'
+```
+
+## NDDB Traffic Tapping
+
+NDDB allows traffic from production ACI ports to be mirrored to monitoring tool ports without dedicated TAPs.
+
+Configuration steps:
+1. Navigate to **NDDB > Monitoring Domains > Add**.
+2. Define monitoring tool ports (where traffic is sent).
+3. Create a filter (match traffic by VLAN, IP prefix, or port).
+4. Create a monitoring session linking production ports to tool ports.
+
+```bash
+# List NDDB monitoring sessions
+curl -sk -X GET \
+  "https://nexus-dashboard.example.com/nddb/api/v1/sessions" \
+  -H "Authorization: Bearer <token>" | jq '.sessions[] | {name, status, filterCount}'
+```
+
+## Common Integration Issues
+
+| Issue | Likely Cause | Fix |
+|---|---|---|
+| NDI fabric shows "Disconnected" | APIC credentials changed or expired | Update credentials in NDI > Settings > Fabric Connections |
+| NDO site sync failing | ND and APIC version incompatibility | Check Cisco compatibility matrix |
+| Service app stuck in "Installing" | Insufficient cluster resources | Verify ND node CPU/memory meets requirements |
+| NDDB session not capturing traffic | SPAN filter mismatch | Review VLAN/EPG filter configuration |
+| NDI telemetry gaps | Network path between leaf and ND blocked | Open UDP 5640 (ERSPAN) between fabric and ND cluster |

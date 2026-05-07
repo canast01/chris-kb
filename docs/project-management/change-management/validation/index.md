@@ -1,43 +1,68 @@
-# Validation
+# Post-Change Validation
 
-## Purpose
+## Overview
 
-Use this page for practical Change Management Validation notes, checks, troubleshooting, commands, standards, and field references.
+Validation confirms that a change achieved its intended outcome without introducing new problems. It is distinct from the implementation checklist — implementation confirms tasks were executed; validation confirms the service is healthy and behaving correctly. Both must be completed before a change is closed.
 
-## Common checks
+---
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Validation Principles
 
-## Incident notes
+- Validate against the success criteria defined at the time of change approval — not a retrospective interpretation
+- Always check both the directly changed component and its dependencies
+- Validation must be performed by someone other than the sole implementer where possible
+- Time-box the validation period: agree the duration before the change window starts
 
-Capture:
+---
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## Standard Validation Checklist
 
-## Change notes
+- [ ] Service health endpoint returns expected status
+- [ ] Application logs show no new errors or exceptions introduced by the change
+- [ ] Key user journeys tested (login, core function, data retrieval)
+- [ ] Monitoring dashboards reviewed — no unexpected alerts firing
+- [ ] Performance metrics within normal range (latency, error rate, queue depth)
+- [ ] Downstream services confirmed unaffected
+- [ ] Backup jobs still scheduled and functional
+- [ ] DNS, load balancer, and certificate status verified if networking was touched
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+---
 
-## Useful commands or references
+## Validation by Change Type
 
-Add tested commands, links, or notes here.
+| Change Type              | Validation Focus                                          |
+|--------------------------|-----------------------------------------------------------|
+| OS patching              | Services restarted cleanly; no new errors in system logs  |
+| Application deployment   | Smoke test; error rate; key API endpoints return 200      |
+| Network change           | Connectivity between affected segments; routing correct   |
+| Database change          | Query execution; row counts; replication lag (if clustered)|
+| Certificate renewal      | TLS handshake succeeds; expiry date correct               |
+| Firewall rule change      | Expected traffic permitted; blocked traffic still blocked |
+| Storage change           | Read/write operations; capacity reported correctly        |
 
-## Known issues
+---
 
-Add known issues here as they come up.
+## Monitoring Observation Period
+
+After validation, maintain an elevated monitoring period proportional to risk.
+
+| Risk Level | Observation Period | Who Monitors               |
+|------------|--------------------|-----------------------------|
+| Low        | 1 hour             | Implementing engineer       |
+| Medium     | 4 hours            | Implementing engineer       |
+| High       | 24 hours           | Engineer + on-call team     |
+| Critical   | 48–72 hours        | On-call team + management   |
+
+During the observation period, agree on escalation criteria. If a new alert fires within the observation window that may be related to the change, treat it as a post-change issue and raise an incident.
+
+---
+
+## Sign-Off
+
+Validation sign-off must be recorded in the change ticket before the change is closed.
+
+- [ ] Implementer confirms all validation checks passed
+- [ ] Change owner (or delegate) provides written sign-off in the ticket
+- [ ] If any check failed, document what was done to resolve it or why risk is accepted
+- [ ] Monitoring observation period confirmed active and owner assigned
+- [ ] Change status updated to reflect validated outcome

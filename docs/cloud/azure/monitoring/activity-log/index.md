@@ -1,47 +1,139 @@
 # Activity Log
-## Purpose
 
-Use this page for practical Azure Monitoring Activity Log notes, checks, troubleshooting, commands, change notes, and field references.
+The Azure Activity Log is a platform log that records subscription-level events — resource creation, modification, deletion, and administrative operations. It is retained for 90 days natively and can be exported for longer-term storage or querying.
 
-## Common checks
+## Querying the Activity Log
 
-- Confirm subscription
-- Confirm resource group
-- Confirm region
-- Review active alerts
-- Review recent changes
-- Check activity logs
-- Check permissions
-- Capture current state before changes
+Use `az monitor activity-log list` to retrieve events. Filter by resource group, resource type, time range, or caller.
 
-## Incident notes
+```bash
+# List events for a resource group in the last 24 hours
+az monitor activity-log list \
+  --resource-group myRG \
+  --start-time $(date -u -v-1d +%Y-%m-%dT%H:%MZ) \
+  --output table
 
-Capture:
+# Filter by caller and status
+az monitor activity-log list \
+  --resource-group myRG \
+  --caller user@example.com \
+  --status Succeeded \
+  --output json
 
-- Symptom
-- Start time
-- Impact
-- Subscription
-- Resource group
-- Resource name
-- Error message
-- What changed
-- What was checked
-- Next action
+# Events for a specific resource
+az monitor activity-log list \
+  --resource /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM \
+  --start-time 2026-05-01T00:00:00Z \
+  --output table
+```
 
-## Change notes
+## Exporting to a Log Analytics Workspace
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+Export the activity log to a Log Analytics workspace for long-term KQL querying and integration with alert rules.
 
-## Useful commands
+```bash
+# Create a diagnostic setting targeting a LA workspace
+az monitor diagnostic-settings create \
+  --name "activity-to-law" \
+  --resource /subscriptions/<sub-id> \
+  --workspace /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace \
+  --logs '[{"category":"Administrative","enabled":true},{"category":"Security","enabled":true},{"category":"ServiceHealth","enabled":true},{"category":"Alert","enabled":true},{"category":"Policy","enabled":true},{"category":"ResourceHealth","enabled":true}]'
 
-Add tested Azure CLI or PowerShell commands here.
+# Verify the setting
+az monitor diagnostic-settings show \
+  --name "activity-to-law" \
+  --resource /subscriptions/<sub-id>
+```
 
-## Known issues
+Once exported, query with KQL using the `AzureActivity` table:
 
-Add known issues here as they come up.
+```kql
+AzureActivity
+| where TimeGenerated > ago(7d)
+| where OperationNameValue contains "delete"
+| summarize count() by Caller, ResourceGroup
+| order by count_ desc
+```
+
+## Retention and Archival Destinations
+
+The default platform retention is 90 days. Export to extend this.
+
+| Destination       | Retention         | Use Case                               |
+|-------------------|-------------------|----------------------------------------|
+| Log Analytics     | Up to 2 years     | Interactive querying and alerting      |
+| Storage Account   | Configurable      | Compliance archival, cold storage      |
+| Event Hub         | 1–7 days (EH)     | SIEM forwarding, stream processing     |
+| Partner solution  | Varies            | Third-party observability platforms    |
+
+```bash
+# Export to a storage account with 365-day retention policy
+az monitor diagnostic-settings create \
+  --name "activity-to-storage" \
+  --resource /subscriptions/<sub-id> \
+  --storage-account /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount \
+  --logs '[{"category":"Administrative","enabled":true,"retentionPolicy":{"enabled":true,"days":365}}]'
+```
+
+## Alerts on Activity Log Events
+
+Activity log alerts fire when a specific event matches defined conditions. Common uses include detecting VM deletions, role assignment changes, or policy state changes.
+
+```bash
+# Create an action group
+az monitor action-group create \
+  --name "ops-action-group" \
+  --resource-group myRG \
+  --short-name "OpsAG" \
+  --action email ops-email ops@example.com
+
+# Alert on VM deletion
+az monitor activity-log alert create \
+  --name "alert-vm-delete" \
+  --resource-group myRG \
+  --condition category=Administrative operationName=Microsoft.Compute/virtualMachines/delete \
+  --action-group /subscriptions/<sub-id>/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group \
+  --description "Fires when a VM is deleted"
+
+# Alert on RBAC role assignment write
+az monitor activity-log alert create \
+  --name "alert-rbac-change" \
+  --resource-group myRG \
+  --condition category=Administrative operationName=Microsoft.Authorization/roleAssignments/write \
+  --action-group /subscriptions/<sub-id>/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-action-group
+```
+
+## Activity Log Categories
+
+| Category        | Description                                          |
+|-----------------|------------------------------------------------------|
+| Administrative  | CRUD operations on resources via ARM                 |
+| Security        | Alerts generated by Microsoft Defender for Cloud     |
+| ServiceHealth   | Azure service incidents affecting your subscription  |
+| ResourceHealth  | Changes to individual resource health state          |
+| Alert           | Activations of Azure Monitor alerts                  |
+| Policy          | Policy evaluation results (effect actions)           |
+| Autoscale       | Scale-in and scale-out events                        |
+| Recommendation  | Azure Advisor recommendation events                  |
+
+## Audit and Compliance Queries
+
+```bash
+# Find all operations by a specific service principal
+az monitor activity-log list \
+  --caller <service-principal-object-id> \
+  --start-time 2026-04-01T00:00:00Z \
+  --output json | jq '.[].operationName.value'
+
+# Find failed deployments in the last 7 days
+az monitor activity-log list \
+  --status Failed \
+  --start-time $(date -u -v-7d +%Y-%m-%dT%H:%MZ) \
+  --output table
+
+# Export to file for audit review
+az monitor activity-log list \
+  --resource-group myRG \
+  --start-time 2026-05-01T00:00:00Z \
+  --output json > activity-log-export.json
+```

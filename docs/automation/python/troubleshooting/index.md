@@ -1,43 +1,121 @@
-# Troubleshooting
-## Purpose
+# Python Troubleshooting
 
-Use this page for practical Python Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.
+## Virtualenv and Environment Issues
 
-## Common checks
+```bash
+# Create a virtual environment
+python3 -m venv .venv
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+# Activate (Linux/macOS)
+source .venv/bin/activate
 
-## Incident notes
+# Activate (Windows PowerShell)
+.\.venv\Scripts\Activate.ps1
 
-Capture:
+# Verify which Python is in use
+which python
+python --version
+python -c "import sys; print(sys.executable)"
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+# Recreate a broken venv
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-## Change notes
+# Check for conflicting system packages
+pip list | grep <package>
+pip show <package>
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Import Errors
 
-## Useful commands
+```bash
+# ModuleNotFoundError — package not installed
+pip install requests
 
-Add tested commands here.
+# ImportError with installed package — likely wrong Python/venv
+python -c "import sys; print(sys.path)"
+pip show requests   # check installed location vs sys.path
 
-## Known issues
+# Circular import — check module dependency order
+# Use lazy imports or restructure modules
 
-Add known issues here as they come up.
+# Check all installed packages in the active environment
+pip list
+pip freeze > requirements.txt
+```
+
+```python
+# Diagnose an import issue at runtime
+import importlib.util
+spec = importlib.util.find_spec('requests')
+print(spec.origin if spec else "Not found")
+```
+
+## API and Network Timeouts
+
+```python
+import requests
+
+# Always set a timeout — default is None (hangs forever)
+try:
+    resp = requests.get('https://api.example.com/data',
+                        timeout=(5, 30))  # (connect, read) seconds
+    resp.raise_for_status()
+except requests.exceptions.ConnectTimeout:
+    print("Connection timed out — check host and port")
+except requests.exceptions.ReadTimeout:
+    print("Server accepted connection but response took too long")
+except requests.exceptions.ConnectionError as e:
+    print(f"Network error: {e}")
+```
+
+## Debugging with pdb and logging
+
+```python
+# Drop into the interactive debugger at a specific line
+import pdb; pdb.set_trace()
+
+# Python 3.7+ built-in breakpoint()
+breakpoint()
+
+# pdb commands:
+# n (next line), s (step into), c (continue), q (quit)
+# p variable (print), l (list code), w (where / stack trace)
+
+# Structured logging instead of print()
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(name)s: %(message)s'
+)
+log = logging.getLogger(__name__)
+
+log.debug("Connecting to %s", host)
+log.info("Processing %d records", len(records))
+log.warning("Rate limit approaching: %d requests remaining", remaining)
+log.error("Failed to connect: %s", error)
+log.exception("Unhandled exception")   # includes full traceback
+```
+
+## Common Errors Reference
+
+| Error | Cause | Fix |
+|---|---|---|
+| `ModuleNotFoundError` | Package not installed or wrong venv active | `pip install <pkg>` in correct venv |
+| `PermissionError` | Script lacks write access to a path | Use a writable path or run with elevated privileges |
+| `JSONDecodeError` | API returned non-JSON (e.g. HTML error page) | Check `resp.text` before calling `resp.json()` |
+| `KeyError` | Dict key doesn't exist | Use `.get()` with a default; check API response schema |
+| `AttributeError: NoneType` | Function returned None unexpectedly | Add None check; review return values |
+| `SSL: CERTIFICATE_VERIFY_FAILED` | Untrusted cert or missing CA bundle | Pass `verify='/path/to/ca-bundle.crt'` or update certifi |
+
+```python
+# Check what an API actually returned before parsing
+resp = requests.get(url, timeout=10)
+print(resp.status_code, resp.headers.get('Content-Type'))
+print(resp.text[:500])   # first 500 chars
+resp.raise_for_status()
+data = resp.json()
+```

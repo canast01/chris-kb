@@ -1,43 +1,137 @@
-# Builds
-## Purpose
+# GitHub Actions Builds
 
-Use this page for practical GitHub Actions Builds notes, checks, troubleshooting, commands, change notes, and field references.
+## Workflow Triggers
 
-## Common checks
+Workflows are triggered by events defined under the `on:` key.
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+```yaml
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1-5'   # weekdays at 06:00 UTC
+  workflow_dispatch:          # manual trigger
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+```
 
-## Incident notes
+## Jobs and Steps
 
-Capture:
+```yaml
+jobs:
+  build:
+    name: Build application
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-## Change notes
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-## Useful commands
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
 
-Add tested commands here.
+      - name: Build package
+        run: python -m build
+```
 
-## Known issues
+## Artifacts
 
-Add known issues here as they come up.
+Upload build outputs to persist them between jobs or download after a workflow run.
+
+```yaml
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-packages
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-packages
+          path: dist/
+```
+
+## Matrix Builds
+
+Matrix strategy runs the same job across multiple combinations of parameters.
+
+```yaml
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+        python: ['3.10', '3.11', '3.12']
+        exclude:
+          - os: macos-latest
+            python: '3.10'
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -r requirements.txt && pytest
+```
+
+## Key Build Concepts
+
+| Concept | Description |
+|---|---|
+| `needs` | Job dependency — wait for listed jobs to succeed |
+| `if` | Conditional job/step execution |
+| `timeout-minutes` | Kill job if it exceeds this duration |
+| `continue-on-error` | Mark step failure as non-fatal |
+| `env` | Environment variables for the job or step |
+| `outputs` | Pass values from one job to another |
+
+## Passing Outputs Between Jobs
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Get version
+        id: get_version
+        run: echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Use version
+        run: echo "Deploying version ${{ needs.build.outputs.version }}"
+```

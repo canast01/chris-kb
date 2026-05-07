@@ -1,43 +1,109 @@
-# Model Access
+# Bedrock Model Access
 
-## Purpose
+AWS Bedrock requires explicit model access to be enabled per AWS account and region. Models are not available by default. This page covers enabling models, throughput modes, and quota management.
 
-Use this page for practical Aws Bedrock Model Access notes, checks, troubleshooting, commands, standards, and field references.
+## Enabling Model Access
 
-## Common checks
+Model access is granted through the Bedrock console under **Model access** or via the API. Access requests for third-party models (Anthropic, Meta, Mistral) may take minutes to hours depending on the provider.
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```bash
+# List models and their access status
+aws bedrock list-foundation-models \
+  --query 'modelSummaries[*].{id:modelId,provider:providerName,status:modelLifecycle.status}' \
+  --output table \
+  --region us-east-1
 
-## Incident notes
+# Check access status for a specific model
+aws bedrock get-foundation-model \
+  --model-identifier "anthropic.claude-3-5-sonnet-20241022-v2:0" \
+  --region us-east-1
+```
 
-Capture:
+Access is per-region. A model enabled in `us-east-1` is not automatically available in `eu-west-1`.
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## On-Demand vs Provisioned Throughput
 
-## Change notes
+| Mode | Description | Billing | Use Case |
+|---|---|---|---|
+| On-Demand | Pay per input/output token, no commitment | Per token | Development, variable workloads |
+| Provisioned Throughput | Reserved model units (MU), guaranteed capacity | Per hour (committed) | Production, latency-sensitive |
+| Cross-Region Inference | Routes to nearest available region | Per token + small surcharge | High availability |
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+For production workloads with predictable traffic, Provisioned Throughput avoids throttling and provides consistent latency.
 
-## Useful commands or references
+## Provisioned Throughput Setup
 
-Add tested commands, links, or notes here.
+```bash
+# Create a provisioned throughput commitment
+aws bedrock create-provisioned-model-throughput \
+  --provisioned-model-name "prod-claude-sonnet" \
+  --model-id "anthropic.claude-3-sonnet-20240229-v1:0" \
+  --model-units 2 \
+  --commitment-duration "SixMonths" \
+  --region us-east-1
 
-## Known issues
+# Get the provisioned model ARN for use in InvokeModel calls
+aws bedrock get-provisioned-model-throughput \
+  --provisioned-model-id "prod-claude-sonnet" \
+  --region us-east-1 \
+  --query 'provisionedModelArn'
+```
 
-Add known issues here as they come up.
+Each Model Unit provides a defined tokens-per-minute (TPM) rate that varies by model. Check the Bedrock pricing page for current MU rates.
+
+## Invoking Models
+
+```python
+import boto3, json
+
+bedrock = boto3.client("bedrock-runtime", region_name="us-east-1")
+
+# On-demand invocation
+response = bedrock.invoke_model(
+    modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
+    body=json.dumps({
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 1024,
+        "messages": [{"role": "user", "content": "Summarise this document."}]
+    }),
+    contentType="application/json",
+    accept="application/json"
+)
+
+result = json.loads(response["body"].read())
+print(result["content"][0]["text"])
+```
+
+## Service Quotas
+
+Default quotas are conservative. Request increases through the Service Quotas console.
+
+```bash
+# List current Bedrock quotas
+aws service-quotas list-service-quotas \
+  --service-code bedrock \
+  --query 'Quotas[*].{Name:QuotaName,Value:Value}' \
+  --output table
+
+# Request a quota increase
+aws service-quotas request-service-quota-increase \
+  --service-code bedrock \
+  --quota-code L-XXXXXXXX \
+  --desired-value 100000
+```
+
+Key quotas to monitor: `InvokeModel` requests per minute (RPM) and tokens per minute (TPM) per model.
+
+## Cross-Region Inference Profiles
+
+Use inference profiles to route to the nearest region automatically:
+
+```bash
+aws bedrock invoke-model \
+  --model-id "us.anthropic.claude-3-5-sonnet-20241022-v2:0" \
+  --body '{"anthropic_version":"bedrock-2023-05-31","max_tokens":512,"messages":[{"role":"user","content":"Hello"}]}' \
+  --region us-east-1 \
+  output.json
+```
+
+The `us.` prefix denotes the US cross-region inference profile. Use `eu.` for Europe and `ap.` for Asia-Pacific.

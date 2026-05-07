@@ -1,43 +1,62 @@
-# Troubleshooting
+# SAN Troubleshooting
 
-## Purpose
+## Diagnostic Scenario Reference
 
-Use this page for practical SAN Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.
+| Symptom | First Check | Root Cause Candidates |
+|---|---|---|
+| Host not logging into fabric | FLOGI status on switch port | Link down, SFP failure, speed mismatch, Domain ID conflict |
+| Host visible in fabric but cannot see LUN | Active zone set, LUN masking | WWPN not in zone, zone set not activated, LUN not masked to host |
+| Zone exists but I/O not working | Zone set activation | Correct zone set must be active — adding a zone to the DB does not take effect until zone set activation |
+| ISL went down | Physical layer, BB_Credit | SFP failure, cable, E_Port speed mismatch, trunk misconfiguration |
+| Fabric segmented into two | Domain ID conflict | Check domain ID of each switch; one must be changed and re-merged |
+| RSCN storm | Link or HBA flapping | Check for unstable HBA, bad SFP, or misconfigured link |
+| I/O latency spike | ISL congestion, credit starvation | Check ISL utilization, verify buffer credits per port, check for slow drain devices |
 
-## Common checks
+## FLOGI Failure — Troubleshooting Sequence
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+1. Confirm physical link is up: check port LED, SFP insertion, fiber connectivity
+2. Check speed/duplex auto-negotiation — FC does not use duplex but speed must match
+3. Verify VSAN (Cisco) or Virtual Fabric (Brocade) assignment on the port
+4. Check for Domain ID conflict: `switchshow` (Brocade) or `show flogi database` (Cisco)
+5. Verify port is configured as F_Port (not disabled or in wrong mode)
+6. Check Name Server registration: `nsshow` (Brocade) or `show fcns database` (Cisco)
 
-## Incident notes
+## Zone Not Active — Troubleshooting Sequence
 
-Capture:
+1. Confirm which zone set is currently active: `cfgshow` (Brocade), `show zone active` (Cisco)
+2. Verify that both the initiator WWPN and target WWPN are in the same zone
+3. Check if zone changes were made to the zone DB but the zone set was never re-activated
+4. Confirm zone DB is consistent across all switches in the fabric (verify no segmentation)
+5. After making zone changes, explicitly activate the zone set: `cfgenable <cfgname>` (Brocade), `zone commit vsan <id>` (Cisco)
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## ISL Down — Troubleshooting Sequence
 
-## Change notes
+1. Check physical: SFP, cable, patch panel — reseat or swap SFP
+2. Verify E_Port or TE_Port mode on both sides
+3. Check that ISL speed matches on both ends (auto-neg can fail between vendors)
+4. Check for Domain ID conflict if the ISL came up and then went to a segmented state
+5. Verify trunk configuration matches if using ISL trunking
+6. Check BB_Credit configuration — mismatched long-distance buffer credit settings cause link instability
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Key CLI Commands
 
-## Useful commands or references
+| Platform | Command | Purpose |
+|---|---|---|
+| Brocade | `switchshow` | Port status, WWPN, link state |
+| Brocade | `nsshow` | Name Server registrations |
+| Brocade | `cfgshow` | Zone database and active configuration |
+| Brocade | `portlogshow` | Port event log — shows FLOGI/LOGO events |
+| Cisco MDS | `show flogi database` | FLOGI registrations per VSAN |
+| Cisco MDS | `show zone active vsan <id>` | Active zone set members |
+| Cisco MDS | `show fcns database vsan <id>` | Fabric Name Server entries |
+| Cisco MDS | `show interface fc <x/y>` | Port state, counters, BB_Credit |
 
-Add tested commands, links, or notes here.
+## Study Checklist
 
-## Known issues
-
-Add known issues here as they come up.
+- [ ] Walk through FLOGI failure troubleshooting sequence without reference
+- [ ] Explain why a zone change requires zone set activation to take effect
+- [ ] Describe three causes of ISL instability
+- [ ] Know Brocade CLI commands: switchshow, nsshow, cfgshow, portlogshow
+- [ ] Know Cisco MDS CLI commands: show flogi database, show zone active, show fcns database
+- [ ] Explain the impact of a Domain ID conflict on fabric behavior
+- [ ] Describe how to identify and resolve a slow drain device causing I/O latency

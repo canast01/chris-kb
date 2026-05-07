@@ -1,43 +1,151 @@
-# Testing
+# Ollama Testing and Benchmarking
 
-## Purpose
+This page covers testing Ollama with the CLI and REST API, benchmarking inference speed, comparing models, and validating API compatibility.
 
-Use this page for practical Local Ai Ollama Testing notes, checks, troubleshooting, commands, standards, and field references.
+## Basic CLI Testing
 
-## Common checks
+```bash
+# Interactive chat
+ollama run llama3.1:8b
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+# Single-shot non-interactive prompt
+ollama run llama3.1:8b "Explain TCP/IP in one paragraph"
 
-## Incident notes
+# Pipe input
+echo "What is 2+2?" | ollama run llama3.1:8b
 
-Capture:
+# Read from file
+ollama run llama3.1:8b < prompt.txt
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Multi-line prompt
+ollama run llama3.1:8b "$(cat << 'EOF'
+You are a helpful assistant.
+Question: What are the main differences between TCP and UDP?
+EOF
+)"
+```
 
-## Change notes
+## REST API Testing with curl
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+The Ollama REST API is compatible with the OpenAI API format.
 
-## Useful commands or references
+```bash
+# Generate (non-chat) completion
+curl http://localhost:11434/api/generate \
+  -d '{
+    "model": "llama3.1:8b",
+    "prompt": "What is Kubernetes?",
+    "stream": false
+  }' | jq '.response'
 
-Add tested commands, links, or notes here.
+# Chat completion (OpenAI-compatible)
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.1:8b",
+    "messages": [
+      {"role": "system", "content": "You are a concise assistant."},
+      {"role": "user", "content": "What is a container?"}
+    ],
+    "temperature": 0.7,
+    "max_tokens": 256
+  }' | jq '.choices[0].message.content'
 
-## Known issues
+# List available models
+curl http://localhost:11434/api/tags | jq '.models[].name'
 
-Add known issues here as they come up.
+# Check running model status
+curl http://localhost:11434/api/ps | jq
+```
+
+## Streaming Responses
+
+```python
+import requests, json
+
+response = requests.post(
+    "http://localhost:11434/api/generate",
+    json={"model": "llama3.1:8b", "prompt": "Write a haiku about GPUs"},
+    stream=True
+)
+
+for line in response.iter_lines():
+    if line:
+        chunk = json.loads(line)
+        print(chunk.get("response", ""), end="", flush=True)
+        if chunk.get("done"):
+            print()
+            print(f"\nTokens: {chunk['prompt_eval_count']} prompt, {chunk['eval_count']} generated")
+            print(f"Speed: {chunk['eval_count'] / (chunk['eval_duration'] / 1e9):.1f} tokens/sec")
+```
+
+## Benchmarking Throughput
+
+```bash
+# Simple throughput test using time
+time ollama run llama3.1:8b "Write 500 words about machine learning" --nowordwrap > /dev/null
+
+# Measure tokens per second from API response stats
+curl -s http://localhost:11434/api/generate \
+  -d '{"model":"llama3.1:8b","prompt":"Count from 1 to 100","stream":false}' \
+  | jq '{
+    tokens_per_sec: (.eval_count / (.eval_duration / 1e9)),
+    prompt_tokens: .prompt_eval_count,
+    output_tokens: .eval_count,
+    total_duration_s: (.total_duration / 1e9)
+  }'
+```
+
+## Model Comparison Script
+
+```python
+import requests, time, json
+
+MODELS = ["llama3.1:8b", "mistral:7b", "phi3:mini"]
+PROMPT = "Explain what a neural network is in 3 sentences."
+
+results = []
+for model in MODELS:
+    start = time.time()
+    resp = requests.post(
+        "http://localhost:11434/api/generate",
+        json={"model": model, "prompt": PROMPT, "stream": False}
+    ).json()
+    elapsed = time.time() - start
+
+    tps = resp["eval_count"] / (resp["eval_duration"] / 1e9)
+    results.append({
+        "model": model,
+        "tokens": resp["eval_count"],
+        "tokens_per_sec": round(tps, 1),
+        "total_sec": round(elapsed, 2),
+        "response": resp["response"][:150]
+    })
+
+# Print comparison table
+print(f"{'Model':<25} {'Tokens':>7} {'T/s':>8} {'Time(s)':>9}")
+print("-" * 55)
+for r in results:
+    print(f"{r['model']:<25} {r['tokens']:>7} {r['tokens_per_sec']:>8} {r['total_sec']:>9}")
+```
+
+## Performance Reference Table
+
+Approximate tokens/sec on common hardware (Q4_K_M, context=2048):
+
+| Model | RTX 3060 12GB | RTX 4090 | A10G | A100 80GB |
+|---|---|---|---|---|
+| 7B / 8B | ~50 t/s | ~110 t/s | ~80 t/s | ~180 t/s |
+| 13B | ~28 t/s | ~65 t/s | ~45 t/s | ~120 t/s |
+| 30B–34B | OOM | ~30 t/s | OOM | ~55 t/s |
+| 70B | OOM | OOM | OOM | ~28 t/s |
+
+## Embeddings API
+
+```bash
+curl http://localhost:11434/api/embed \
+  -d '{
+    "model": "nomic-embed-text",
+    "input": "The sky is blue"
+  }' | jq '.embeddings[0] | length'
+```

@@ -1,43 +1,114 @@
-# Deployments
+# Azure OpenAI Deployments
 
-## Purpose
+Azure OpenAI requires you to deploy a model before use — the model version, deployment name, and capacity all affect availability and cost. This page covers creating deployments, capacity planning, and PTU vs consumption billing.
 
-Use this page for practical Azure OpenAI Deployments notes, checks, troubleshooting, commands, standards, and field references.
+## Creating a Deployment
 
-## Common checks
+Deployments are created per Azure OpenAI resource (which is region-scoped). The deployment name is what your application references in API calls.
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```bash
+# Using the Azure CLI with the cognitive services extension
+az cognitiveservices account deployment create \
+  --name my-aoai-resource \
+  --resource-group my-rg \
+  --deployment-name gpt4o-prod \
+  --model-name gpt-4o \
+  --model-version "2024-11-20" \
+  --model-format OpenAI \
+  --sku-capacity 100 \
+  --sku-name "Standard"
+```
 
-## Incident notes
+Or via the REST API:
 
-Capture:
+```bash
+curl -X PUT \
+  "https://management.azure.com/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource/deployments/gpt4o-prod?api-version=2023-05-01" \
+  -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sku": {"name": "Standard", "capacity": 100},
+    "properties": {
+      "model": {"format": "OpenAI", "name": "gpt-4o", "version": "2024-11-20"}
+    }
+  }'
+```
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## Deployment Types: Consumption vs PTU
 
-## Change notes
+| Type | Billing | Latency | Quota | Best For |
+|---|---|---|---|---|
+| Standard (consumption) | Per 1K tokens | Variable | Shared regional pool | Dev, variable traffic |
+| Provisioned (PTU) | Per PTU/hour | Consistent | Dedicated | Production, high volume |
+| Global Standard | Per 1K tokens | Variable | Global pool | Burst capacity |
+| Global Provisioned | Per PTU/hour | Consistent | Global | Global low-latency prod |
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+PTU (Provisioned Throughput Units) are purchased in increments and guarantee a tokens-per-minute rate that scales linearly with PTU count.
 
-## Useful commands or references
+## Capacity Planning
 
-Add tested commands, links, or notes here.
+```python
+from openai import AzureOpenAI
 
-## Known issues
+client = AzureOpenAI(
+    azure_endpoint="https://my-aoai-resource.openai.azure.com",
+    api_key="YOUR_API_KEY",
+    api_version="2024-02-01"
+)
 
-Add known issues here as they come up.
+# List existing deployments
+import httpx, os
+
+response = httpx.get(
+    f"https://my-aoai-resource.openai.azure.com/openai/deployments?api-version=2024-02-01",
+    headers={"api-key": os.environ["AZURE_OPENAI_API_KEY"]}
+)
+for dep in response.json()["data"]:
+    print(dep["id"], dep["model"], dep["scale_settings"])
+```
+
+## Deployment Names
+
+The deployment name is arbitrary and decoupled from the model name. Use descriptive names that include environment and purpose.
+
+| Deployment Name Pattern | Example |
+|---|---|
+| `{model}-{env}` | `gpt4o-prod`, `gpt4o-dev` |
+| `{purpose}-{env}` | `summariser-prod`, `classifier-staging` |
+| `{team}-{model}-{version}` | `platform-gpt4o-nov24` |
+
+Reference by deployment name in API calls:
+
+```python
+response = client.chat.completions.create(
+    model="gpt4o-prod",   # deployment name, not model name
+    messages=[{"role": "user", "content": "Summarise this text."}],
+    max_tokens=512
+)
+```
+
+## Updating and Deleting Deployments
+
+```bash
+# Scale capacity up
+az cognitiveservices account deployment update \
+  --name my-aoai-resource \
+  --resource-group my-rg \
+  --deployment-name gpt4o-prod \
+  --capacity 200
+
+# Delete a deployment (stops billing immediately)
+az cognitiveservices account deployment delete \
+  --name my-aoai-resource \
+  --resource-group my-rg \
+  --deployment-name gpt4o-old
+```
+
+## Common Deployment Issues
+
+| Issue | Cause | Fix |
+|---|---|---|
+| `DeploymentNotFound` | Wrong deployment name in code | Check exact name via portal or CLI |
+| Quota exceeded on creation | Insufficient regional TPM quota | Request quota increase in Azure Portal |
+| PTU commitment not available | Region doesn't support PTU for that model | Check model availability matrix |
+| 429 on Standard deployment | Shared quota exhausted | Add retry with exponential backoff or use PTU |

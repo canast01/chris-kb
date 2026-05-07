@@ -1,43 +1,87 @@
-# Reservations
+# DHCP Reservations
 
-## Purpose
+## Overview
 
-Use this page for practical DHCP Reservations notes, checks, troubleshooting, commands, standards, and field references.
+A DHCP reservation pins a specific IP address to a client's MAC address. The IP must fall within the scope range but is excluded from the dynamic pool. Reservations inherit scope options unless overridden at the reservation level.
 
-## Common checks
+## Creating a Reservation
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```powershell
+# Create a single reservation
+Add-DhcpServerv4Reservation `
+  -ScopeId 192.168.10.0 `
+  -IPAddress 192.168.10.200 `
+  -ClientId "00-1A-2B-3C-4D-5E" `
+  -Name "printer-floor2" `
+  -Description "HP LaserJet MFP floor 2"
 
-## Incident notes
+# Verify it was created
+Get-DhcpServerv4Reservation -ScopeId 192.168.10.0
+```
 
-Capture:
+## Bulk Reservations from CSV
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+```powershell
+# CSV columns: IPAddress,ClientId,Name,Description
+# Example row: 192.168.10.201,00-AA-BB-CC-DD-01,srv-mon,Monitoring server
 
-## Change notes
+$reservations = Import-Csv -Path C:\dhcp-reservations.csv
+foreach ($r in $reservations) {
+  Add-DhcpServerv4Reservation `
+    -ScopeId 192.168.10.0 `
+    -IPAddress $r.IPAddress `
+    -ClientId $r.ClientId `
+    -Name $r.Name `
+    -Description $r.Description
+}
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Reservation Conflicts
 
-## Useful commands or references
+If a reservation IP is already leased to a different client, the new client will not receive it until the existing lease expires or is removed.
 
-Add tested commands, links, or notes here.
+```powershell
+# Check if the target IP is currently leased
+Get-DhcpServerv4Lease -ScopeId 192.168.10.0 -IPAddress 192.168.10.200
 
-## Known issues
+# Remove the conflicting lease before creating the reservation
+Remove-DhcpServerv4Lease -ScopeId 192.168.10.0 -IPAddress 192.168.10.200
 
-Add known issues here as they come up.
+# Convert an existing active lease to a reservation
+$lease = Get-DhcpServerv4Lease -ScopeId 192.168.10.0 -IPAddress 192.168.10.55
+Add-DhcpServerv4Reservation `
+  -ScopeId 192.168.10.0 `
+  -IPAddress $lease.IPAddress `
+  -ClientId $lease.ClientId `
+  -Name $lease.HostName
+```
+
+## Reservation Management Reference
+
+| Action | Command |
+|--------|---------|
+| List all reservations in scope | `Get-DhcpServerv4Reservation -ScopeId` |
+| Remove a reservation | `Remove-DhcpServerv4Reservation -ScopeId -IPAddress` |
+| Update reservation name | `Set-DhcpServerv4Reservation -IPAddress -Name` |
+| Export reservations | `Export-DhcpServer -File -ScopeId` |
+| Set reservation-level option | `Set-DhcpServerv4OptionValue -ScopeId -ReservedIP -OptionId` |
+
+## Reservation Option Overrides
+
+```powershell
+# Set a reservation-level DNS server (overrides scope)
+Set-DhcpServerv4OptionValue `
+  -ScopeId 192.168.10.0 `
+  -ReservedIP 192.168.10.200 `
+  -OptionId 6 `
+  -Value 10.0.0.60
+
+# View reservation-level options
+Get-DhcpServerv4OptionValue -ScopeId 192.168.10.0 -ReservedIP 192.168.10.200
+```
+
+## Known Issues
+
+- MAC address format must use dashes (`00-AA-BB-CC-DD-EE`), not colons. The cmdlet rejects colon-separated MACs.
+- If the reserved IP is outside the scope range, the cmdlet succeeds but the client never receives the address. Always verify the IP falls within the scope's start/end range.
+- Wireless clients using MAC address randomization will not reliably receive reservations. Disable randomization on managed endpoints or use 802.1X identity-based assignment instead.

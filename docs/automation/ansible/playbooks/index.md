@@ -1,43 +1,161 @@
-# Playbooks
-## Purpose
+# Ansible Playbooks
 
-Use this page for practical Ansible Playbooks notes, checks, troubleshooting, commands, change notes, and field references.
+## Playbook Structure
 
-## Common checks
+A playbook is a YAML file containing one or more plays. Each play targets hosts and defines tasks.
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+```yaml
+# site.yml
+---
+- name: Configure web servers
+  hosts: webservers
+  become: true
+  gather_facts: true
+  vars:
+    app_port: 8080
 
-## Incident notes
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
 
-Capture:
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+    - name: Start and enable nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
 
-## Change notes
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Tasks, Handlers, and Notify
 
-## Useful commands
+Handlers run once at the end of a play, triggered by `notify`. They are deduplicated even if notified multiple times.
 
-Add tested commands here.
+```yaml
+tasks:
+  - name: Deploy nginx config
+    ansible.builtin.template:
+      src: nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+      owner: root
+      mode: '0644'
+    notify: Reload nginx
 
-## Known issues
+  - name: Deploy vhost config
+    ansible.builtin.template:
+      src: vhost.conf.j2
+      dest: /etc/nginx/sites-enabled/app.conf
+    notify: Reload nginx      # handler only runs once
 
-Add known issues here as they come up.
+handlers:
+  - name: Reload nginx
+    ansible.builtin.service:
+      name: nginx
+      state: reloaded
+```
+
+## Loops and Conditionals
+
+```yaml
+tasks:
+  - name: Install required packages
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - git
+      - curl
+      - unzip
+
+  - name: Create app users
+    ansible.builtin.user:
+      name: "{{ item.name }}"
+      groups: "{{ item.groups }}"
+    loop:
+      - { name: appuser, groups: www-data }
+      - { name: deploy,  groups: sudo }
+
+  - name: Only restart on RedHat
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
+    when: ansible_os_family == "RedHat"
+
+  - name: Skip if already done
+    ansible.builtin.command: /opt/setup.sh
+    when: not setup_done | default(false)
+```
+
+## Tags
+
+Tags let you selectively run subsets of tasks without editing the playbook.
+
+```yaml
+tasks:
+  - name: Install packages
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ packages }}"
+    tags:
+      - packages
+      - install
+
+  - name: Deploy config
+    ansible.builtin.template:
+      src: app.conf.j2
+      dest: /etc/app/app.conf
+    tags:
+      - config
+      - deploy
+```
+
+```bash
+# Run only tasks tagged 'config'
+ansible-playbook site.yml --tags config
+
+# Skip tasks tagged 'packages'
+ansible-playbook site.yml --skip-tags packages
+
+# List all tags in a playbook
+ansible-playbook site.yml --list-tags
+
+# Dry-run (check mode)
+ansible-playbook site.yml --check --diff
+```
+
+## Running Playbooks
+
+| Flag | Purpose |
+|---|---|
+| `-i inventory/` | Specify inventory path |
+| `--limit web01` | Target a subset of hosts |
+| `--check` | Dry run, no changes made |
+| `--diff` | Show file diffs on changes |
+| `-v / -vvv` | Increase verbosity |
+| `--start-at-task "name"` | Resume from a specific task |
+| `--tags / --skip-tags` | Filter by tag |
+| `-e "key=value"` | Pass extra variables |
+
+```bash
+# Standard run
+ansible-playbook -i inventory/ site.yml
+
+# Limit to one host with verbose output
+ansible-playbook -i inventory/ site.yml --limit web01 -vv
+
+# Run only deploy-tagged tasks on production
+ansible-playbook -i inventory/ site.yml --tags deploy --limit production
+```

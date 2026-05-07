@@ -1,47 +1,128 @@
-# Disk Snapshots
-## Purpose
+# Azure Disk Snapshots
 
-Use this page for practical Azure Storage Disk Snapshots notes, checks, troubleshooting, commands, change notes, and field references.
+## Overview
 
-## Common checks
+Azure managed disk snapshots capture the full state of a managed disk at a point in time. Incremental snapshots store only changed blocks since the last snapshot, significantly reducing storage costs and copy time. Snapshots are stored as page blobs in Azure Storage and can be used to restore disks or copy across regions.
 
-- Confirm subscription
-- Confirm resource group
-- Confirm region
-- Review active alerts
-- Review recent changes
-- Check activity logs
-- Check permissions
-- Capture current state before changes
+## Creating Snapshots
 
-## Incident notes
+```bash
+# Full snapshot of a managed disk
+az snapshot create \
+  --resource-group rg-compute-prod \
+  --name "snap-vm01-osdisk-20260507" \
+  --source "/subscriptions/<sub-id>/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk" \
+  --sku Standard_LRS \
+  --location eastus
 
-Capture:
+# Incremental snapshot (recommended — much lower cost)
+az snapshot create \
+  --resource-group rg-compute-prod \
+  --name "snap-vm01-osdisk-20260507-incr" \
+  --source "/subscriptions/<sub-id>/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk" \
+  --incremental true \
+  --sku Standard_LRS
 
-- Symptom
-- Start time
-- Impact
-- Subscription
-- Resource group
-- Resource name
-- Error message
-- What changed
-- What was checked
-- Next action
+# List all snapshots in a resource group
+az snapshot list \
+  --resource-group rg-compute-prod \
+  --output table
 
-## Change notes
+# Show snapshot details including size and incremental chain
+az snapshot show \
+  --resource-group rg-compute-prod \
+  --name "snap-vm01-osdisk-20260507-incr"
+```
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Snapshot vs Full Backup Comparison
 
-## Useful commands
+| Property | Full Snapshot | Incremental Snapshot |
+|---|---|---|
+| First snapshot size | Full disk size | Full disk size |
+| Subsequent sizes | Full disk size again | Changed blocks only |
+| Copy speed | Slower (full copy) | Faster (delta only) |
+| Storage cost | Higher | Lower |
+| Restore capability | From single object | Requires snapshot chain |
+| Cross-region copy | Supported | Supported |
 
-Add tested Azure CLI or PowerShell commands here.
+## Restoring from Snapshot
 
-## Known issues
+```bash
+# Create a new managed disk from a snapshot
+az disk create \
+  --resource-group rg-compute-prod \
+  --name "vm01-osdisk-restored" \
+  --source "/subscriptions/<sub-id>/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507" \
+  --sku Premium_LRS \
+  --location eastus
 
-Add known issues here as they come up.
+# Swap the OS disk of a stopped VM to the restored disk
+az vm stop --resource-group rg-compute-prod --name vm01
+az vm update \
+  --resource-group rg-compute-prod \
+  --name vm01 \
+  --os-disk "/subscriptions/<sub-id>/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-osdisk-restored"
+az vm start --resource-group rg-compute-prod --name vm01
+```
+
+## Cross-Region Snapshot Copy
+
+```bash
+# Copy a snapshot to another region
+az snapshot create \
+  --resource-group rg-compute-dr \
+  --name "snap-vm01-osdisk-20260507-westus" \
+  --source "/subscriptions/<sub-id>/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507" \
+  --location westus2 \
+  --sku Standard_LRS \
+  --copy-start true
+
+# Check copy status
+az snapshot show \
+  --resource-group rg-compute-dr \
+  --name "snap-vm01-osdisk-20260507-westus" \
+  --query "completionPercent"
+```
+
+## Snapshot Retention and Cleanup
+
+```bash
+# List snapshots older than 30 days
+az snapshot list \
+  --resource-group rg-compute-prod \
+  --query "[?timeCreated < '$(date -u -d '30 days ago' +%Y-%m-%dT%H:%MZ)'].{name:name, created:timeCreated, size:diskSizeGB}" \
+  --output table
+
+# Delete a specific snapshot
+az snapshot delete \
+  --resource-group rg-compute-prod \
+  --name "snap-vm01-osdisk-20260407"
+
+# Delete multiple old snapshots matching a pattern
+for snap in $(az snapshot list \
+  --resource-group rg-compute-prod \
+  --query "[?timeCreated < '2026-04-01T00:00Z'].name" \
+  --output tsv); do
+  echo "Deleting $snap"
+  az snapshot delete --resource-group rg-compute-prod --name "$snap" --yes
+done
+```
+
+## Snapshot Costs
+
+```bash
+# Get snapshot storage used (bytes)
+az snapshot show \
+  --resource-group rg-compute-prod \
+  --name "snap-vm01-osdisk-20260507-incr" \
+  --query "{name:name, diskSize:diskSizeGB, incrementalSizeGB:incrementalSnapshotFamilyId}" \
+  --output json
+```
+
+Snapshot storage pricing reference:
+
+| SKU | Price Tier | Notes |
+|---|---|---|
+| Standard_LRS | Low | Locally redundant; suitable for backups |
+| Standard_ZRS | Medium | Zone-redundant; higher availability |
+| Premium_LRS | Higher | Required if source disk is Premium |

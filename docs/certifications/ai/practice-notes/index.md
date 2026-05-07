@@ -1,43 +1,74 @@
-# Practice Notes
+# AI Practice Notes
 
-## Purpose
+## Question Pattern Recognition
 
-Use this page for practical AI Practice Notes notes, checks, troubleshooting, commands, standards, and field references.
+Most AI certification exams use scenario-based questions. Common patterns:
 
-## Common checks
+| Pattern Type | What to Look For | Typical Wrong Answers |
+|---|---|---|
+| "Best approach for X" | Constraints in the scenario (cost, latency, freshness) | Ignoring stated constraints |
+| "Which service provides Y" | Managed vs self-managed distinction | Confusing SageMaker with Bedrock |
+| "Most cost-effective" | On-demand vs provisioned, batch inference | Always picking provisioned |
+| "Responsible AI" | Bias, fairness, transparency, explainability | Treating it as only a security question |
+| "Fine-tune vs RAG" | Knowledge update frequency, data volume | Defaulting to fine-tuning for freshness |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Common Wrong Answers to Avoid
 
-## Incident notes
+- **Fine-tuning for freshness**: Fine-tuning is NOT the right answer when knowledge must be updated frequently — use RAG instead.
+- **Temperature = creativity**: Temperature controls randomness/diversity. High temperature → more random, not necessarily more creative.
+- **Larger model = better**: For specific narrow tasks a smaller fine-tuned model often outperforms a large general model at lower cost.
+- **Embedding = output**: Embeddings are intermediate representations, not final model outputs.
+- **RAG eliminates hallucination**: RAG reduces hallucination by grounding responses but does NOT eliminate it.
+- **Tokens = words**: 1 token ≈ 0.75 words in English; code and non-English text tokenize differently.
 
-Capture:
+## Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C01)
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+| Domain | Weight |
+|---|---|
+| Domain 1: Fundamentals of AI and ML | 20% |
+| Domain 2: Fundamentals of Generative AI | 24% |
+| Domain 3: Applications of Foundation Models | 28% |
+| Domain 4: Guidelines for Responsible AI | 14% |
+| Domain 5: Security, Compliance, and Governance | 14% |
 
-## Change notes
+Passing score: 700/1000. Exam length: 85 questions, 90 minutes.
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Key Terminology Distinctions
 
-## Useful commands or references
+| Term A | Term B | Key Difference |
+|---|---|---|
+| Training | Inference | Training updates weights; inference uses fixed weights |
+| Supervised | Unsupervised | Supervised needs labels; unsupervised finds structure |
+| Pre-training | Fine-tuning | Pre-training from scratch on large corpus; fine-tuning adapts |
+| RLHF | SFT | RLHF uses human preference ranking; SFT uses demonstration data |
+| Prompt engineering | Fine-tuning | Prompt engineering modifies input only; fine-tuning modifies weights |
+| Hard prompt | Soft prompt | Hard: human-readable text; soft: learned continuous embeddings |
+| Hallucination | Bias | Hallucination: factual errors; bias: systematic skewed outputs |
 
-Add tested commands, links, or notes here.
+## Scoring and Exam Strategy
 
-## Known issues
+- Questions scored 100–1000; raw score is scaled — passing is typically 700
+- Unscored pilot questions (~15) are mixed in; you cannot identify them
+- Flag and return strategy: do not get stuck; spend ~60 seconds per question on first pass
+- For "most"/"best" questions: eliminate obviously wrong answers first, then choose the option that most directly addresses all stated constraints
+- Responsible AI questions: map to fairness, explainability, privacy, robustness, governance, transparency pillars
 
-Add known issues here as they come up.
+## Service Boundary Quick Reference
+
+| Scenario | Correct Service | Common Mistake |
+|---|---|---|
+| Call a Claude model via API without GPU management | AWS Bedrock | SageMaker |
+| Train a custom ML model on your own data | SageMaker | Bedrock |
+| Add guardrails to a Bedrock model call | Bedrock Guardrails | Lambda |
+| Managed RAG from S3 | Bedrock Knowledge Bases | Kendra alone |
+| NLP on structured data (sentiment, entities) | Amazon Comprehend | Bedrock |
+
+## Study Checklist
+
+- [ ] Complete at least 2 full practice exams (65+ questions each)
+- [ ] Review all incorrect answers and identify the wrong-answer trap used
+- [ ] Memorize domain weights and topic coverage percentages
+- [ ] Practice distinguishing RAG vs fine-tuning scenarios
+- [ ] Know Bedrock, SageMaker, and Comprehend service boundaries
+- [ ] Review AWS Responsible AI documentation and pillar definitions
+- [ ] Time yourself: target 60–75 seconds per question average

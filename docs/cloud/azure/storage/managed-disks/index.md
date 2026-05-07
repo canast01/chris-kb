@@ -1,47 +1,145 @@
-# Managed Disks
-## Purpose
+# Azure Managed Disks
 
-Use this page for practical Azure Storage Managed Disks notes, checks, troubleshooting, commands, change notes, and field references.
+## Overview
 
-## Common checks
+Azure Managed Disks are block-level storage volumes managed by Azure and attached to Azure VMs. They abstract the underlying Storage Account and provide high availability through replication. The disk type determines IOPS, throughput, and cost.
 
-- Confirm subscription
-- Confirm resource group
-- Confirm region
-- Review active alerts
-- Review recent changes
-- Check activity logs
-- Check permissions
-- Capture current state before changes
+## Disk Types
 
-## Incident notes
+| Type | SKU | Max IOPS | Max Throughput | Max Size | Use Case |
+|---|---|---|---|---|---|
+| Standard HDD | Standard_LRS | 2,000 | 500 MB/s | 32 TiB | Dev/test, low priority |
+| Standard SSD | StandardSSD_LRS | 6,000 | 750 MB/s | 32 TiB | Web servers, light workloads |
+| Premium SSD v1 | Premium_LRS | 20,000 | 900 MB/s | 32 TiB | Production databases, enterprise apps |
+| Premium SSD v2 | PremiumV2_LRS | 80,000 | 1,200 MB/s | 64 TiB | High-throughput databases (configurable IOPS) |
+| Ultra Disk | UltraSSD_LRS | 160,000 | 4,000 MB/s | 64 TiB | Latency-sensitive, SAP HANA, top-tier SQL |
 
-Capture:
+## Creating and Attaching Disks
 
-- Symptom
-- Start time
-- Impact
-- Subscription
-- Resource group
-- Resource name
-- Error message
-- What changed
-- What was checked
-- Next action
+```bash
+# Create a Premium SSD managed disk
+az disk create \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk01" \
+  --size-gb 512 \
+  --sku Premium_LRS \
+  --location eastus \
+  --zone 1
 
-## Change notes
+# Create a Premium SSD v2 disk with custom IOPS and throughput
+az disk create \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk02" \
+  --size-gb 1024 \
+  --sku PremiumV2_LRS \
+  --location eastus \
+  --zone 1 \
+  --disk-iops-read-write 40000 \
+  --disk-mbps-read-write 600
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# Attach a disk to a running VM
+az vm disk attach \
+  --resource-group rg-compute-prod \
+  --vm-name vm01 \
+  --name "vm01-datadisk01"
 
-## Useful commands
+# Attach as read-only (e.g., for shared access)
+az vm disk attach \
+  --resource-group rg-compute-prod \
+  --vm-name vm01 \
+  --name "vm01-datadisk01" \
+  --caching ReadOnly
+```
 
-Add tested Azure CLI or PowerShell commands here.
+## Resizing Disks
 
-## Known issues
+```bash
+# Stop the VM before resizing the OS disk (required)
+az vm deallocate --resource-group rg-compute-prod --name vm01
 
-Add known issues here as they come up.
+# Resize a disk (must be stopped for OS disk; data disk can be hot-resized on some SKUs)
+az disk update \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk01" \
+  --size-gb 1024
+
+# Start the VM after resize
+az vm start --resource-group rg-compute-prod --name vm01
+
+# Extend the filesystem inside the OS after disk resize (Linux)
+# Run on the VM:
+sudo growpart /dev/sda 1
+sudo resize2fs /dev/sda1          # ext4
+# or: sudo xfs_growfs /mount/point  # XFS
+```
+
+## SKU Comparison and Selection
+
+```bash
+# List available disk SKUs for a region and zone
+az disk list-skus \
+  --location eastus \
+  --query "[?diskSku!=null].{name:name, tier:tier, maxSizeGB:capabilities[?name=='MaxSizeGiB'].value|[0]}" \
+  --output table
+
+# Show current disk configuration
+az disk show \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk01" \
+  --query "{sku:sku.name, sizeGB:diskSizeGb, iops:diskIOPSReadWrite, mbps:diskMBpsReadWrite}"
+
+# Change disk SKU (VM must be stopped)
+az disk update \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk01" \
+  --sku StandardSSD_LRS
+```
+
+## Shared Disks
+
+Premium SSD, Premium SSD v2, and Ultra Disk support shared access for clustered workloads:
+
+```bash
+# Create a shared Premium SSD disk (max 3 shares)
+az disk create \
+  --resource-group rg-compute-prod \
+  --name "shared-disk-cluster01" \
+  --size-gb 256 \
+  --sku Premium_LRS \
+  --max-shares 2 \
+  --location eastus
+
+# Attach to first cluster node
+az vm disk attach \
+  --resource-group rg-compute-prod \
+  --vm-name cluster-node01 \
+  --name "shared-disk-cluster01"
+
+# Attach to second cluster node
+az vm disk attach \
+  --resource-group rg-compute-prod \
+  --vm-name cluster-node02 \
+  --name "shared-disk-cluster01"
+```
+
+## Disk Management Operations
+
+```bash
+# List all disks in a resource group
+az disk list \
+  --resource-group rg-compute-prod \
+  --query "[].{name:name, sku:sku.name, sizeGB:diskSizeGb, state:diskState}" \
+  --output table
+
+# Find unattached disks (state: Unattached)
+az disk list \
+  --resource-group rg-compute-prod \
+  --query "[?diskState=='Unattached'].{name:name, sizeGB:diskSizeGb, created:timeCreated}" \
+  --output table
+
+# Delete an unattached disk
+az disk delete \
+  --resource-group rg-compute-prod \
+  --name "vm01-datadisk01-old" \
+  --yes
+```

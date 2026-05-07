@@ -1,43 +1,118 @@
-# Drivers
+# NVIDIA GPU Drivers
 
-## Purpose
+Installing and maintaining NVIDIA drivers correctly is critical for GPU workloads. A driver mismatch between the kernel, CUDA toolkit, and frameworks is the most common source of GPU failures.
 
-Use this page for practical Gpu Workloads Drivers notes, checks, troubleshooting, commands, standards, and field references.
+## Checking Current State
 
-## Common checks
+```bash
+# Check installed driver version
+nvidia-smi
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+# Check kernel module version
+cat /proc/driver/nvidia/version
 
-## Incident notes
+# Check CUDA toolkit version (separate from driver)
+nvcc --version
 
-Capture:
+# List installed NVIDIA packages
+dpkg -l | grep -i nvidia
+rpm -qa | grep -i nvidia   # RHEL/CentOS
+```
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+The NVIDIA driver includes a CUDA driver (minimum CUDA version). The CUDA toolkit is installed separately and must be compatible but can be newer than the driver's minimum.
 
-## Change notes
+## Installing Drivers on Ubuntu/Debian
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+```bash
+# Add NVIDIA repository
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+dpkg -i cuda-keyring_1.1-1_all.deb
+apt-get update
 
-## Useful commands or references
+# Install the recommended driver (auto-detects GPU)
+ubuntu-drivers autoinstall
 
-Add tested commands, links, or notes here.
+# Or install a specific driver version
+apt-get install -y nvidia-driver-535
 
-## Known issues
+# Reboot required after driver install
+reboot
 
-Add known issues here as they come up.
+# Verify after reboot
+nvidia-smi
+```
+
+## Installing Drivers on RHEL/Rocky Linux
+
+```bash
+# Add CUDA repo for RHEL 9
+dnf config-manager --add-repo \
+  https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+
+# Install driver
+dnf module install nvidia-driver:535
+
+# Load kernel module
+modprobe nvidia
+
+# Verify
+nvidia-smi
+```
+
+## CUDA Toolkit Installation
+
+```bash
+# Install CUDA 12.3 toolkit (Ubuntu 22.04)
+apt-get install -y cuda-toolkit-12-3
+
+# Add to PATH and LD_LIBRARY_PATH
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Verify
+nvcc --version
+```
+
+## Driver and CUDA Compatibility Matrix
+
+| Driver Version | Max CUDA Version | Notes |
+|---|---|---|
+| 525.x | CUDA 12.0 | LTS branch |
+| 535.x | CUDA 12.2 | Recommended stable |
+| 545.x | CUDA 12.3 | |
+| 550.x | CUDA 12.4 | Current LTS |
+| 560.x | CUDA 12.6 | Latest production |
+
+PyTorch and TensorFlow have their own CUDA requirements — check framework docs before choosing a driver version.
+
+## Updating Drivers
+
+```bash
+# Check available driver versions
+apt-cache search nvidia-driver
+
+# Remove old driver before installing new one
+apt-get purge nvidia-driver-535
+apt-get install -y nvidia-driver-550
+
+# On RHEL, switch module stream
+dnf module switch-to nvidia-driver:550
+```
+
+Never update drivers mid-workload. Schedule updates during maintenance windows and test thoroughly — driver updates occasionally require CUDA toolkit and framework updates as well.
+
+## DKMS and Kernel Updates
+
+NVIDIA drivers use DKMS to rebuild the kernel module when the kernel is updated.
+
+```bash
+# Check DKMS status
+dkms status
+
+# Manually rebuild if needed
+dkms autoinstall
+
+# Pin kernel to prevent unplanned updates breaking drivers
+apt-mark hold linux-image-generic linux-headers-generic
+```

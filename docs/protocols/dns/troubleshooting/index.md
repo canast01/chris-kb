@@ -1,43 +1,97 @@
-# Troubleshooting
+# DNS Troubleshooting
 
-## Purpose
+## Overview
 
-Use this page for practical DNS Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.
+DNS failures manifest as name resolution errors, application connectivity issues, or authentication failures. Systematic diagnosis starts with isolating whether the problem is client-side cache, server-side zone data, replication, or network connectivity to the resolver.
 
-## Common checks
+## Resolution Failure Triage
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```bash
+# Step 1: test from the client
+nslookup host.corp.local
+# Note which server answered and what was returned
 
-## Incident notes
+# Step 2: query the authoritative server directly
+nslookup host.corp.local 10.0.0.53
 
-Capture:
+# Step 3: check if the record exists on the server
+dig @10.0.0.53 host.corp.local +nocmd +noall +answer
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Step 4: flush client cache and retry
+ipconfig /flushdns        # Windows
+resolvectl flush-caches   # Linux (systemd-resolved)
+```
 
-## Change notes
+## dcdiag /test:dns
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+`dcdiag /test:dns` is the first tool for DNS issues on Active Directory domains.
 
-## Useful commands or references
+```powershell
+# Run full DNS test on local DC
+dcdiag /test:dns /v
 
-Add tested commands, links, or notes here.
+# Run against a specific DC
+dcdiag /test:dns /s:dc02.corp.local /v
 
-## Known issues
+# Test all DCs in the forest
+dcdiag /test:dns /e /v
 
-Add known issues here as they come up.
+# Common failures and what they mean
+# DNS_ERROR_RCODE_NAME_ERROR  -> record missing or zone not loaded
+# LDAP bind failed            -> connectivity or credential issue
+# Missing delegation          -> child zone not delegated from parent
+```
+
+## Cache Poisoning Checks
+
+```powershell
+# Verify DNSSEC validation is enabled (Windows DNS)
+Get-DnsServerResponseRateLimiting
+
+# Check if the server accepts non-secure updates only on intended zones
+Get-DnsServerZone | Select-Object ZoneName, DynamicUpdate
+
+# Inspect cached records (look for unexpected entries)
+Get-DnsServerCache | Where-Object { $_.RecordType -eq "A" } |
+  Sort-Object TimeToLive
+
+# Clear server cache
+Clear-DnsServerCache -Force
+```
+
+## Replication Issues
+
+```powershell
+# Force AD replication (DNS zones stored in AD replicate with AD)
+repadmin /syncall /AdeP
+
+# Check replication status
+repadmin /showrepl
+
+# Verify DNS partitions are replicating
+repadmin /showrepl * /csv | ConvertFrom-Csv |
+  Where-Object { $_."Number of Failures" -gt 0 }
+
+# Check zone is present on all DCs
+$zone = "corp.local"
+(Get-ADDomainController -Filter *).HostName | ForEach-Object {
+  $r = Resolve-DnsName $zone -Server $_ -ErrorAction SilentlyContinue
+  [pscustomobject]@{ DC=$_; Resolved=[bool]$r }
+}
+```
+
+## Common Error Reference
+
+| Error | Likely Cause | Action |
+|-------|--------------|--------|
+| SERVFAIL | Server cannot reach forwarder or root | Check forwarder connectivity |
+| NXDOMAIN | Record does not exist | Add record or check zone |
+| REFUSED | Server not authoritative and no forwarder | Configure forwarder or check ACL |
+| Timeout | Network issue or DNS service down | Check firewall UDP/TCP 53, DNS service |
+| Wrong IP returned | Stale cache or stale record | Flush cache, remove old record |
+
+## Known Issues
+
+- If `dcdiag /test:dns` reports "Missing glue record", the NS record for a delegated child zone has no corresponding A record in the parent. Add the glue A record in the parent zone.
+- DNS resolution works for some clients but not others on the same subnet: check client DNS server settings — some machines may point to a server that has a stale conditional forwarder.
+- After a DC promotion, DNS replication may lag by up to 15 minutes. Use `repadmin /syncall` to force convergence before testing.

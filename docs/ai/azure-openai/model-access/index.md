@@ -1,43 +1,112 @@
-# Model Access
+# Azure OpenAI Model Access
 
-## Purpose
+Azure OpenAI model availability varies by region and subscription tier. Some models require explicit access approval. This page covers checking availability, requesting quota, and managing rate limits.
 
-Use this page for practical Azure OpenAI Model Access notes, checks, troubleshooting, commands, standards, and field references.
+## Model Availability by Region
 
-## Common checks
+Not all models are available in all regions. Use the Azure portal or CLI to list available models for your resource's region.
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```bash
+# List models available in a region
+az cognitiveservices account list-models \
+  --name my-aoai-resource \
+  --resource-group my-rg \
+  --output table
 
-## Incident notes
+# Or via REST
+curl -s \
+  "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2023-05-01" \
+  -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)" \
+  | jq '.value[] | select(.kind=="OpenAI") | {name:.model.name, version:.model.version, capacity:.model.maxCapacity}'
+```
 
-Capture:
+Key models and typical regional availability (as of early 2026):
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+| Model | Generally Available Regions |
+|---|---|
+| gpt-4o (2024-11-20) | eastus, eastus2, swedencentral, westus, westus3 |
+| gpt-4o-mini | eastus, eastus2, swedencentral, westeurope |
+| o1 | eastus2, swedencentral |
+| o3-mini | eastus, eastus2, swedencentral |
+| text-embedding-3-large | Most regions |
 
-## Change notes
+## Requesting Access for Gated Models
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+Some models (e.g., o1, GPT-4o fine-tuning) require a request form. Submit via the Azure OpenAI Limited Access portal. Access is typically granted within 1–5 business days.
 
-## Useful commands or references
+For standard models, access is automatic once you have an Azure OpenAI resource in a supported region.
 
-Add tested commands, links, or notes here.
+## Quota and Rate Limits
 
-## Known issues
+Quota is expressed in Tokens Per Minute (TPM) per model per region, shared across all Standard deployments of that model in the region.
 
-Add known issues here as they come up.
+```bash
+# Check current quota usage
+az cognitiveservices usage list \
+  --location eastus \
+  --query "[?contains(name.value,'OpenAI')]" \
+  --output table
+
+# Request a quota increase via REST
+curl -X PUT \
+  "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/commitmentPlans/gpt-4o-quota?api-version=2023-05-01" \
+  -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)" \
+  -H "Content-Type: application/json" \
+  -d '{"properties":{"hostingModel":"Web","planType":"ProvisionedManaged","current":{"tier":"T1","count":1}}}'
+```
+
+## Rate Limit Headers
+
+The API returns rate limit info in response headers. Log these to detect approaching limits before 429s occur.
+
+```python
+from openai import AzureOpenAI
+import os
+
+client = AzureOpenAI(
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    api_key=os.environ["AZURE_OPENAI_API_KEY"],
+    api_version="2024-02-01"
+)
+
+# Access raw HTTP response to read headers
+with client.chat.completions.with_raw_response.create(
+    model="gpt4o-prod",
+    messages=[{"role": "user", "content": "Hello"}]
+) as response:
+    print("Remaining requests:", response.headers.get("x-ratelimit-remaining-requests"))
+    print("Remaining tokens:", response.headers.get("x-ratelimit-remaining-tokens"))
+    print("Reset time:", response.headers.get("x-ratelimit-reset-requests"))
+    completion = response.parse()
+```
+
+## Multi-Region Strategy
+
+Distribute load across regions to increase effective quota and improve resilience.
+
+```python
+import random
+from openai import AzureOpenAI
+
+ENDPOINTS = [
+    {"endpoint": "https://aoai-eastus.openai.azure.com", "key": "KEY_EASTUS"},
+    {"endpoint": "https://aoai-swedencentral.openai.azure.com", "key": "KEY_SWEDEN"},
+]
+
+def get_client():
+    ep = random.choice(ENDPOINTS)
+    return AzureOpenAI(
+        azure_endpoint=ep["endpoint"],
+        api_key=ep["key"],
+        api_version="2024-02-01"
+    )
+```
+
+## Common Access Issues
+
+| Error | Meaning | Resolution |
+|---|---|---|
+| `ResourceNotFound` | Model not deployed | Create deployment in the resource |
+| `PermissionDenied` | No access to model family | Submit access request form |
+| `QuotaExceeded` | Regional TPM limit reached | Request quota increase or add region |
+| `ModelVersionRetired` | Using old API version | Update to a supported model version |

@@ -1,43 +1,99 @@
-# Health
-## Purpose
+# CloudIQ: Health Score, Component Status, and Connectivity
 
-Use this page for practical CloudIQ Health notes, checks, troubleshooting, commands, change notes, and field references.
+Dell CloudIQ assigns a health score to each registered system based on active alerts, hardware status, and connectivity. This page covers how the health score is calculated, how to interpret component status, and how to verify and restore system connectivity.
 
-## Common checks
+## Health Score Overview
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+Each system receives a health score from 0 to 100 (100 = fully healthy). The score is computed from the number and severity of active issues.
 
-## Incident notes
+Navigation: **CloudIQ > Health**
 
-Capture:
+Health score bands:
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+| Score Range | Status | Interpretation |
+|---|---|---|
+| 90 – 100 | Healthy (green) | No significant issues |
+| 70 – 89 | Warning (yellow) | Minor or informational issues present |
+| 40 – 69 | Degraded (orange) | Major issues require attention |
+| 0 – 39 | Critical (red) | Critical issues; service impact likely |
 
-## Change notes
+```bash
+# Get health score for all registered systems
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=id,name,health_score,health_issues_count" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json" | jq '.results[] | {name, health_score, issues: .health_issues_count}'
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# Get health details for a specific system
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems/<systemId>/health" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json"
+```
 
-## Useful commands
+## Component-Level Health
 
-Add tested commands here.
+Clicking into a system shows component-level status. Components vary by system type but typically include:
 
-## Known issues
+| Component | System Types | Common Issues |
+|---|---|---|
+| Drives / SSDs | PowerStore, PowerMax, PowerScale | Predictive failure, read errors |
+| Controllers / Engines | PowerStore, PowerMax | Controller offline, firmware mismatch |
+| Nodes | PowerScale | Node offline, network partition |
+| Enclosures | All | Fans, power supplies, temperature |
+| Replication Links | PowerStore, PowerMax | SRDF link degraded, replication lag |
+| Battery Backup Units | PowerStore | BBU charge < threshold |
 
-Add known issues here as they come up.
+## Connectivity Checks
+
+CloudIQ relies on the system's phone-home channel (SRS or ESRS) to receive telemetry. If a system goes grey or shows stale data, check connectivity first.
+
+```bash
+# Check last contact time for all systems
+curl -sk -X GET \
+  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,last_contact_timestamp,connectivity_status" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Accept: application/json" | jq '.results[] | {name, last_contact: .last_contact_timestamp, status: .connectivity_status}'
+```
+
+Connectivity status values:
+
+| Status | Meaning | Action |
+|---|---|---|
+| Connected | Telemetry flowing normally | None |
+| Disconnected | No data received | Check SRS/ESRS gateway and firewall rules |
+| Degraded | Intermittent connectivity | Review proxy/network path between system and gateway |
+
+Outbound connectivity requirements for SRS/ESRS:
+
+| Destination | Port | Protocol |
+|---|---|---|
+| esrs.emc.com | 443 | HTTPS |
+| cloudiq.dell.com | 443 | HTTPS |
+| api.dell.com | 443 | HTTPS |
+
+## Verifying SRS Connectivity on PowerScale
+
+```bash
+# On PowerScale OneFS CLI
+ssh admin@powerscale.example.com
+
+# Check SRS (SmartConnect Remote Support) status
+isi remotesupport connectemc status
+
+# Trigger a manual connectivity test
+isi remotesupport connectemc start
+
+# View SRS daemon logs
+grep -i "connectemc" /var/log/messages | tail -30
+```
+
+## Common Health Issues
+
+| Issue | Likely Cause | Fix |
+|---|---|---|
+| System shows grey in CloudIQ | Phone-home disconnected | Verify SRS/ESRS gateway, check firewall |
+| Health score drops unexpectedly | New hardware alert generated | Check Alerts tab, drill into component detail |
+| Component status stale | Delayed telemetry | Last contact > 1 hour indicates connectivity issue |
+| Drive predictive failure alert | Vendor analysis from telemetry | Open support case — proactive replacement |
+| Replication link health degraded | WAN latency or packet loss | Check network path between replication endpoints |

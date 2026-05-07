@@ -1,43 +1,109 @@
-# Queries
+# LDAP Queries
 
-## Purpose
+## Overview
 
-Use this page for practical LDAP Queries notes, checks, troubleshooting, commands, standards, and field references.
+LDAP queries use a filter syntax based on RFC 4515. Filters are composed of attribute-value assertions enclosed in parentheses. Boolean operators (`&`, `|`, `!`) combine multiple assertions. Knowing the common AD attributes and search bases is essential for effective directory lookups.
 
-## Common checks
+| Filter | Matches |
+|---|---|
+| `(objectClass=user)` | All user objects |
+| `(sAMAccountName=jsmith)` | Specific user by login name |
+| `(mail=*)` | Objects with any email address |
+| `(&(objectClass=user)(enabled=TRUE))` | Enabled users (use `userAccountControl`) |
+| `(memberOf=CN=Finance,OU=Groups,DC=corp,DC=example,DC=com)` | Members of a group (direct) |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Filter Syntax
 
-## Incident notes
+```bash
+# Single attribute match
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" "(sAMAccountName=jsmith)"
 
-Capture:
+# AND filter — user named jsmith with an email address
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(&(objectClass=user)(sAMAccountName=jsmith)(mail=*))"
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# OR filter — objects that are either users or contacts
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(|(objectClass=user)(objectClass=contact))"
 
-## Change notes
+# NOT filter — all users except disabled accounts
+# userAccountControl bit 2 = ACCOUNTDISABLE
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(&(objectClass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))"
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Common AD Attributes
 
-## Useful commands or references
+```bash
+# Return specific attributes only (saves bandwidth)
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(objectClass=user)" cn sAMAccountName mail userPrincipalName memberOf
 
-Add tested commands, links, or notes here.
+# Find all groups a user belongs to (recursive via AD memberOf)
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(sAMAccountName=jsmith)" memberOf
 
-## Known issues
+# Find all members of a group
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    "(CN=Finance Team)" member
+```
 
-Add known issues here as they come up.
+## PowerShell: Get-ADObject
+
+```powershell
+# Basic user lookup
+Get-ADUser -Identity "jsmith" -Properties mail, memberOf, LastLogonDate
+
+# Find all disabled users
+Get-ADUser -Filter { Enabled -eq $false } -Properties DistinguishedName |
+    Select-Object Name, DistinguishedName
+
+# Raw LDAP filter with Get-ADObject
+Get-ADObject -LDAPFilter "(&(objectClass=user)(mail=*@corp.example.com))" `
+             -Properties sAMAccountName, mail |
+    Select-Object sAMAccountName, mail
+
+# Search with a specific search base (limit to one OU)
+Get-ADUser -SearchBase "OU=Finance,DC=corp,DC=example,DC=com" `
+           -Filter * -Properties Title, Department |
+    Select-Object Name, Title, Department
+```
+
+## Search Scope and Base
+
+```bash
+# Scope: base (only the entry itself), one (one level below), sub (full subtree, default)
+# Search base only
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" -s base "(objectClass=*)"
+
+# One level below the search base
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" -s one "(objectClass=organizationalUnit)" ou
+
+# Full subtree (default)
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "OU=Finance,DC=corp,DC=example,DC=com" -s sub "(objectClass=user)" cn
+```
+
+## Paging Large Result Sets
+
+```bash
+# Enable paged results to retrieve more than 1000 objects (AD default limit)
+ldapsearch -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass" \
+    -b "DC=corp,DC=example,DC=com" \
+    -E pr=500/noprompt \
+    "(objectClass=user)" cn sAMAccountName
+
+# PowerShell: ResultPageSize controls paging automatically
+Get-ADUser -Filter * -ResultPageSize 200 -Properties mail |
+    Select-Object SamAccountName, mail |
+    Export-Csv -Path "C:\Temp\all_users.csv" -NoTypeInformation
+```

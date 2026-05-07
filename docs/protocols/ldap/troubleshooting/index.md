@@ -1,43 +1,104 @@
-# Troubleshooting
+# LDAP Troubleshooting
 
-## Purpose
+## Overview
 
-Use this page for practical LDAP Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.
+LDAP failures usually manifest as bind errors, query timeouts, certificate problems, or referrals to other directories. Identify the failure layer first: DNS, TCP connectivity, TLS, bind credentials, or query filter.
 
-## Common checks
+| Error | Common Cause | First Check |
+|---|---|---|
+| `49` Invalid credentials | Wrong DN or password | Verify DN format, account lock status |
+| `32` No such object | Wrong search base or DN | Check OU structure in AD |
+| `52e` Invalid credentials (AD) | Account disabled or locked | `Get-ADUser -Identity` check |
+| Connection refused | Port closed or DC not running | `Test-NetConnection -Port 389` |
+| SSL handshake failure | Cert untrusted or expired | `openssl s_client -connect :636` |
+| Referral returned | Query crossed domain boundary | Use GC port 3268 instead |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Bind Failure Diagnostics
 
-## Incident notes
+```bash
+# Test anonymous bind (check if anonymous access is allowed)
+ldapsearch -H ldap://dc01.corp.example.com -x \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
 
-Capture:
+# Test simple bind with explicit DN
+ldapsearch -H ldap://dc01.corp.example.com -x \
+           -D "CN=svc-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com" \
+           -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Test bind using UPN format (common for AD)
+ldapsearch -H ldap://dc01.corp.example.com -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
+```
 
-## Change notes
+## Certificate Errors
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+```bash
+# Check certificate presented by the LDAPS server
+openssl s_client -connect dc01.corp.example.com:636 </dev/null 2>&1 | \
+    grep -E "subject=|issuer=|Verify return code"
 
-## Useful commands or references
+# Check certificate expiry date
+openssl s_client -connect dc01.corp.example.com:636 </dev/null 2>/dev/null | \
+    openssl x509 -noout -dates
 
-Add tested commands, links, or notes here.
+# Test with certificate verification disabled (confirms cert is the problem)
+LDAPTLS_REQCERT=never ldapsearch -H ldaps://dc01.corp.example.com:636 -x \
+    -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+    -b "" -s base "(objectClass=*)" supportedSASLMechanisms
 
-## Known issues
+# Add DC CA cert to trusted store (Linux)
+cp corp-root-ca.crt /usr/local/share/ca-certificates/
+update-ca-certificates
+```
 
-Add known issues here as they come up.
+## Using ldp.exe (Windows GUI Tool)
+
+`ldp.exe` is built into Windows and provides a graphical interface for LDAP testing.
+
+```powershell
+# Launch ldp.exe
+ldp.exe
+
+# Steps in ldp.exe:
+# 1. Connection > Connect: enter DC hostname and port (389 or 636)
+# 2. Connection > Bind: enter credentials
+# 3. View > Tree: set base DN to browse directory
+# 4. Browse > Search: enter custom LDAP filters
+```
+
+## LDAP Referrals
+
+Referrals occur when a DC redirects a query to another directory server (typically another domain). Use the Global Catalog to avoid cross-domain referrals.
+
+```bash
+# If ldapsearch returns referrals, add -r to follow them automatically
+ldapsearch -H ldap://dc01.corp.example.com -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" \
+           -r "(objectClass=user)" cn
+
+# Alternatively, query the GC to span the entire forest without referrals
+ldapsearch -H ldap://dc01.corp.example.com:3268 -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" \
+           "(sAMAccountName=jsmith)" cn mail
+```
+
+## Event Log and Debug Logging
+
+```powershell
+# Enable LDAP interface event logging on the DC (level 2 = verbose)
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics" `
+                 -Name "16 LDAP Interface Events" -Value 2
+
+# View LDAP events in Directory Service log
+Get-WinEvent -LogName "Directory Service" -MaxEvents 50 |
+    Where-Object { $_.Message -like "*LDAP*" } |
+    Select-Object TimeCreated, Id, Message
+
+# Return logging to default (1 = errors only)
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics" `
+                 -Name "16 LDAP Interface Events" -Value 1
+```

@@ -1,43 +1,103 @@
-# Ports
+# LDAP Ports
 
-## Purpose
+## Overview
 
-Use this page for practical LDAP Ports notes, checks, troubleshooting, commands, standards, and field references.
+LDAP uses a small set of well-known TCP ports. All are required in different scenarios — plain LDAP for legacy compatibility, LDAPS for encrypted binds, and Global Catalog ports for forest-wide searches in Active Directory.
 
-## Common checks
+| Port | Protocol | Purpose |
+|---|---|---|
+| 389 | TCP/UDP | Standard LDAP (cleartext or StartTLS) |
+| 636 | TCP | LDAPS — LDAP over TLS (always encrypted) |
+| 3268 | TCP | LDAP Global Catalog (forest-wide, cleartext) |
+| 3269 | TCP | LDAPS Global Catalog (forest-wide, encrypted) |
+| 49152–65535 | TCP | Dynamic RPC ports (AD replication) |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Port 389 and 636
 
-## Incident notes
+Port 389 is the default LDAP port. Traffic is cleartext unless the client issues a StartTLS extended operation to upgrade the connection. Port 636 always uses TLS from the initial connection.
 
-Capture:
+```bash
+# Test port 389 connectivity
+nc -zv dc01.corp.example.com 389
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Test port 636 connectivity
+nc -zv dc01.corp.example.com 636
 
-## Change notes
+# Query via LDAP (port 389)
+ldapsearch -H ldap://dc01.corp.example.com:389 -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+# Query via LDAPS (port 636)
+ldapsearch -H ldaps://dc01.corp.example.com:636 -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
+```
 
-## Useful commands or references
+## Global Catalog Ports (3268 and 3269)
 
-Add tested commands, links, or notes here.
+The Global Catalog contains a partial replica of all objects across all domains in the AD forest. Use these ports when queries must span multiple domains.
 
-## Known issues
+```bash
+# Test GC port 3268
+nc -zv dc01.corp.example.com 3268
 
-Add known issues here as they come up.
+# Query Global Catalog
+ldapsearch -H ldap://dc01.corp.example.com:3268 -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" \
+           "(mail=jsmith@corp.example.com)" cn sAMAccountName
+
+# Query Global Catalog over SSL (port 3269)
+ldapsearch -H ldaps://dc01.corp.example.com:3269 -x \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" \
+           "(sAMAccountName=jsmith)" memberOf
+```
+
+## Firewall Rules
+
+```bash
+# Linux: allow LDAP and LDAPS outbound from an application server
+iptables -A OUTPUT -p tcp -d 10.0.0.0/8 --dport 389 -j ACCEPT
+iptables -A OUTPUT -p tcp -d 10.0.0.0/8 --dport 636 -j ACCEPT
+iptables -A OUTPUT -p tcp -d 10.0.0.0/8 --dport 3268 -j ACCEPT
+iptables -A OUTPUT -p tcp -d 10.0.0.0/8 --dport 3269 -j ACCEPT
+
+# Windows Firewall: allow inbound LDAP to a DC
+netsh advfirewall firewall add rule name="LDAP" protocol=TCP dir=in localport=389 action=allow
+netsh advfirewall firewall add rule name="LDAPS" protocol=TCP dir=in localport=636 action=allow
+netsh advfirewall firewall add rule name="LDAP-GC" protocol=TCP dir=in localport=3268 action=allow
+netsh advfirewall firewall add rule name="LDAPS-GC" protocol=TCP dir=in localport=3269 action=allow
+```
+
+## StartTLS vs LDAPS
+
+```bash
+# Use StartTLS on port 389 (upgrade cleartext connection to TLS)
+ldapsearch -H ldap://dc01.corp.example.com:389 -ZZ \
+           -D "svc-ldap@corp.example.com" -w "P@ssw0rd!" \
+           -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
+
+# Verify if StartTLS is supported
+ldapsearch -H ldap://dc01.corp.example.com -x \
+           -b "" -s base "(objectClass=*)" supportedExtension
+# Look for OID 1.3.6.1.4.1.1466.20037 = StartTLS
+
+# Test LDAPS certificate
+openssl s_client -connect dc01.corp.example.com:636 -showcerts </dev/null 2>/dev/null |
+    openssl x509 -noout -text | grep -E "Subject:|Issuer:|Not After"
+```
+
+## Port Troubleshooting
+
+```powershell
+# Test from Windows client
+Test-NetConnection -ComputerName dc01.corp.example.com -Port 389
+Test-NetConnection -ComputerName dc01.corp.example.com -Port 636
+Test-NetConnection -ComputerName dc01.corp.example.com -Port 3268
+Test-NetConnection -ComputerName dc01.corp.example.com -Port 3269
+
+# Check DC is listening on LDAP ports
+netstat -an | findstr ":389\|:636\|:3268\|:3269"
+```

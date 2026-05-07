@@ -1,47 +1,129 @@
-# Assignments
-## Purpose
+# Policy and Initiative Assignments
 
-Use this page for practical Azure Governance Assignments notes, checks, troubleshooting, commands, change notes, and field references.
+A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism that makes a policy active and enforceable.
 
-## Common checks
+## Creating a Policy Assignment
 
-- Confirm subscription
-- Confirm resource group
-- Confirm region
-- Review active alerts
-- Review recent changes
-- Check activity logs
-- Check permissions
-- Capture current state before changes
+```bash
+# Assign a built-in policy by definition ID
+az policy assignment create \
+  --name "deny-public-ip" \
+  --policy "9daedab3-fb2d-461e-b861-71790eead4f6" \
+  --scope "/subscriptions/<subscription-id>" \
+  --description "Deny creation of public IP addresses" \
+  --display-name "Deny Public IP Addresses"
 
-## Incident notes
+# Assign policy at resource group scope
+az policy assignment create \
+  --name "require-tags-rg" \
+  --policy "96670d01-0a4d-4649-9c89-2d3abc0a5025" \
+  --scope "/subscriptions/<sub-id>/resourceGroups/rg-production" \
+  --params '{"tagName": {"value": "environment"}}'
 
-Capture:
+# Assign policy at management group scope
+az policy assignment create \
+  --name "audit-storage-https" \
+  --policy "404c3081-a854-4457-ae30-26a93ef643f9" \
+  --scope "/providers/Microsoft.Management/managementGroups/mg-platform"
 
-- Symptom
-- Start time
-- Impact
-- Subscription
-- Resource group
-- Resource name
-- Error message
-- What changed
-- What was checked
-- Next action
+# List all assignments on a scope
+az policy assignment list \
+  --scope "/subscriptions/<subscription-id>" \
+  --output table
 
-## Change notes
+# Show a specific assignment
+az policy assignment show \
+  --name "deny-public-ip" \
+  --scope "/subscriptions/<subscription-id>"
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# Delete an assignment
+az policy assignment delete \
+  --name "deny-public-ip" \
+  --scope "/subscriptions/<subscription-id>"
+```
 
-## Useful commands
+## Assignment Scope
 
-Add tested Azure CLI or PowerShell commands here.
+The scope of an assignment determines which resources are evaluated.
 
-## Known issues
+| Scope Level | Example | Typical Use |
+|---|---|---|
+| Management Group | `/providers/Microsoft.Management/managementGroups/<mg>` | Organisation-wide baseline |
+| Subscription | `/subscriptions/<sub-id>` | Environment-level controls |
+| Resource Group | `/subscriptions/<sub-id>/resourceGroups/<rg>` | Team or workload-specific |
+| Resource | Full resource ARM ID | Edge-case single-resource control |
 
-Add known issues here as they come up.
+Assignments inherit downward — a policy assigned at MG scope applies to all subscriptions and resource groups within that MG.
+
+## Parameters
+
+Policy parameters allow a single policy definition to be reused across assignments with different configuration values.
+
+```bash
+# Assign policy with multiple parameters
+az policy assignment create \
+  --name "allowed-locations" \
+  --policy "e56962a6-4747-49cd-b67b-bf8b01975c4f" \
+  --scope "/subscriptions/<subscription-id>" \
+  --params '{
+    "listOfAllowedLocations": {
+      "value": ["uksouth", "ukwest", "northeurope"]
+    }
+  }'
+
+# View the parameters of an existing assignment
+az policy assignment show \
+  --name "allowed-locations" \
+  --scope "/subscriptions/<subscription-id>" \
+  --query "parameters"
+```
+
+## Exemptions
+
+Specific resources or resource groups can be excluded from an assignment using exclusions (set at assignment time) or exemptions (created post-assignment).
+
+```bash
+# Add an exclusion scope at assignment creation time
+az policy assignment create \
+  --name "deny-public-ip" \
+  --policy "9daedab3-fb2d-461e-b861-71790eead4f6" \
+  --scope "/subscriptions/<subscription-id>" \
+  --not-scopes "/subscriptions/<sub-id>/resourceGroups/rg-legacy"
+
+# Create an exemption for a specific resource after assignment
+az policy exemption create \
+  --name "legacy-vm-exemption" \
+  --policy-assignment "/subscriptions/<sub-id>/providers/Microsoft.Authorization/policyAssignments/deny-public-ip" \
+  --scope "/subscriptions/<sub-id>/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01" \
+  --exemption-category Waiver \
+  --expires-on 2026-12-31T00:00:00Z
+```
+
+## Assignment Managed Identity
+
+Policies with the `deployIfNotExists` or `modify` effect require a managed identity to perform remediation actions.
+
+```bash
+# Assign policy with system-assigned managed identity for remediation
+az policy assignment create \
+  --name "deploy-diag-settings" \
+  --policy "<policy-definition-id>" \
+  --scope "/subscriptions/<subscription-id>" \
+  --mi-system-assigned \
+  --location uksouth
+
+# List assignments that have a managed identity
+az policy assignment list \
+  --scope "/subscriptions/<subscription-id>" \
+  --query "[?identity != null].{Name:name, IdentityType:identity.type}" \
+  --output table
+```
+
+## Common Assignment Patterns
+
+| Pattern | Description |
+|---|---|
+| Baseline at MG scope | Apply audit policies to all subscriptions via management group |
+| Deny at subscription scope | Block dangerous operations per environment |
+| Modify at RG scope | Auto-tag resources on creation within a team's RG |
+| Exemption with expiry | Time-bound exception for legacy resources or migration windows |

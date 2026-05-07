@@ -1,43 +1,55 @@
-# Review Plan
+# SAN Certification Review Plan
 
-## Purpose
+## Target Certifications
 
-Use this page for practical SAN Review Plan notes, checks, troubleshooting, commands, standards, and field references.
+| Certification | Vendor | Level | Notes |
+|---|---|---|---|
+| Brocade Certified Fabric Professional (BCFP) | Broadcom / Brocade | Professional | FC fabric design and troubleshooting |
+| Cisco Certified Network Professional — Data Center (CCNP DC) | Cisco | Professional | Includes SAN (DCSAN exam 300-625) |
+| EMC Proven Professional | Dell / EMC | Various | Storage array + SAN design tracks |
+| NetApp Certified SAN Specialist (NCSS) | NetApp | Specialist | ONTAP SAN protocol implementation |
 
-## Common checks
+## Study Resources
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+| Resource | Type | URL / Location |
+|---|---|---|
+| Broadcom FOS Administration Guide | Vendor documentation | support.broadcom.com |
+| Cisco MDS 9000 NX-OS Configuration Guide | Vendor documentation | cisco.com/c/en/us/support |
+| SNIA Training Courses | Standards body training | snia.org/education |
+| "Fibre Channel for Beginners" (SNIA) | White paper | snia.org |
+| Cisco DCSAN (300-625) Exam Topics | Official exam blueprint | cisco.com/go/certifications |
+| Brocade SAN Design Guide | Architecture reference | support.broadcom.com |
+| INE / CBT Nuggets SAN courses | Video training | ine.com, cbtnuggets.com |
 
-## Incident notes
+## 8-Week SAN Study Plan
 
-Capture:
+| Week | Focus | Topics |
+|---|---|---|
+| Week 1 | FC fundamentals | Layers FC-0 through FC-4, port types, WWN |
+| Week 2 | Fabric login and addressing | FLOGI, PLOGI, PRLI, FCID structure, Name Server |
+| Week 3 | Zoning | Zone types, zone sets, hard vs soft, WWPN vs port zoning |
+| Week 4 | Fabric design | ISL, trunk groups, VSAN/Virtual Fabric, domain IDs |
+| Week 5 | Vendor-specific: Brocade | FOS CLI, switchshow, zoneshow, portcfg, fabric merge |
+| Week 6 | Vendor-specific: Cisco | NX-OS VSAN, DPVM, zone configuration, IVR |
+| Week 7 | Troubleshooting scenarios | FLOGI failures, zone not active, ISL down, BB_Credit |
+| Week 8 | Practice exams and review | Full practice sets, review flagged topics |
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## Hands-On Lab Options
 
-## Change notes
+| Lab Option | Notes |
+|---|---|
+| GNS3 / EVE-NG with Cisco MDS images | Requires licensed Cisco NX-OS images |
+| Cisco DevNet sandbox | Free MDS 9000 lab environments |
+| Brocade vLAB | Contact Broadcom partner portal for access |
+| Physical lab access (work environment) | Best option — use production SAN in maintenance windows |
+| VMware vSphere lab with software iSCSI | Simulates SAN concepts without FC hardware |
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Study Checklist
 
-## Useful commands or references
-
-Add tested commands, links, or notes here.
-
-## Known issues
-
-Add known issues here as they come up.
+- [ ] Read Brocade FOS Administration Guide chapters: Zoning, Fabric, Troubleshooting
+- [ ] Read Cisco MDS NX-OS SAN Switching Configuration Guide: VSAN and Zoning chapters
+- [ ] Complete the SNIA Fibre Channel overview white paper
+- [ ] Practice at least 20 zoning scenario questions
+- [ ] Do hands-on: create zones, activate zone set, add/remove members
+- [ ] Practice troubleshooting: simulate a zone not active and ISL down scenario
+- [ ] Review Cisco DCSAN 300-625 exam blueprint for topic weights
