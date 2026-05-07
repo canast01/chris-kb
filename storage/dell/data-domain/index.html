@@ -847,17 +847,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --&gt; S0["Where It Fits"]
+    Data_Domain --&gt; S1["Daily Checks"]
+    Data_Domain --&gt; S2["Health Commands"]
+    Data_Domain --&gt; S3["Common Issues"]
+    Data_Domain --&gt; S4["Operational Tasks"]
+    Data_Domain --&gt; S5["Upgrade Notes"]
+    Data_Domain --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance that performs inline global deduplication as data is written, achieving typical reduction ratios of 20:1 or higher. It serves as a backup target for leading data protection software via DDBoost, NFS, CIFS, and VTL interfaces. MTrees provide logical partitioning of the DD filesystem, enabling multi-tenant or per-application isolation of backup streams.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Backup target for Avamar, NetWorker, Veeam, Commvault, and other backup software via DDBoost protocol</li>
-<li>Deduplication landing zone for long-term backup retention and tape replacement</li>
-<li>Replication target for disaster recovery — MTree or collection replication to a remote DD</li>
-<li>Cloud tier gateway for offloading aged backup data to AWS S3, Azure Blob, or Elastic Cloud Storage</li>
-<li>Multi-tenant backup storage — separate MTrees per business unit or application owner</li>
-<li>Integration with copy data management workflows where a deduplicated source is required</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup target for Avamar, NetWorker, Veeam, Commvault, and other backup software via DDBoost protocol</td>
+</tr>
+<tr>
+<td>Deduplication landing zone for long-term backup retention and tape replacement</td>
+</tr>
+<tr>
+<td>Replication target for disaster recovery — MTree or collection replication to a remote DD</td>
+</tr>
+<tr>
+<td>Cloud tier gateway for offloading aged backup data to AWS S3, Azure Blob, or Elastic Cloud Storage</td>
+</tr>
+<tr>
+<td>Multi-tenant backup storage — separate MTrees per business unit or application owner</td>
+</tr>
+<tr>
+<td>Integration with copy data management workflows where a deduplicated source is required</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1066,16 +1094,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Schedule <code>filesys clean</code> no more than once per week; running it more frequently can cause disk fragmentation and degrade restore and replication performance</li>
-<li>Target a global dedup ratio of 20:1 or better; investigate drops with <code>filesys show compression</code> before they become capacity issues</li>
-<li>Use MTree replication (not collection replication) for granular per-application or per-tenant replication control</li>
-<li>Set MTree soft and hard quotas to prevent a single backup stream from consuming all available capacity</li>
-<li>Enable DD Encryption at Rest (D@RE) during initial setup; retroactively enabling it requires a filesys rebuild</li>
-<li>Keep at least 10–15% of raw capacity free to allow the filesystem cleaner to operate efficiently</li>
-<li>Monitor DDBoost client connections regularly; stale or orphaned clients can hold locks that impact performance</li>
-<li>Test end-to-end recovery from the DD target at least quarterly to validate both dedup integrity and restore throughput</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schedule <code>filesys clean</code> no more than once per week</td>
+<td>running it more frequently can cause disk fragmentation and degrade restore and replication performance</td>
+</tr>
+<tr>
+<td>Target a global dedup ratio of 20:1 or better</td>
+<td>investigate drops with <code>filesys show compression</code> before they become capacity issues</td>
+</tr>
+<tr>
+<td>Use MTree replication (not collection replication) for</td>
+<td>Use MTree replication (not collection replication) for granular per-application or per-tenant replication control</td>
+</tr>
+<tr>
+<td>Set MTree soft and hard quotas to prevent a single backup</td>
+<td>Set MTree soft and hard quotas to prevent a single backup stream from consuming all available capacity</td>
+</tr>
+<tr>
+<td>Enable DD Encryption at Rest (D@RE) during initial setup</td>
+<td>retroactively enabling it requires a filesys rebuild</td>
+</tr>
+<tr>
+<td>Keep at least 10–15% of raw capacity free to allow the</td>
+<td>Keep at least 10–15% of raw capacity free to allow the filesystem cleaner to operate efficiently</td>
+</tr>
+<tr>
+<td>Monitor DDBoost client connections regularly</td>
+<td>stale or orphaned clients can hold locks that impact performance</td>
+</tr>
+<tr>
+<td>Test end-to-end recovery from the DD target at least</td>
+<td>Test end-to-end recovery from the DD target at least quarterly to validate both dedup integrity and restore throughput</td>
+</tr>
+</tbody>
+</table>
 
 
 

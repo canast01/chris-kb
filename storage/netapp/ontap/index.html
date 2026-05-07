@@ -884,17 +884,45 @@
   <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
 </a>
 </div></p>
+<pre class="mermaid"><code>flowchart LR
+    NetApp_ONTAP["NetApp ONTAP"]
+    NetApp_ONTAP --&gt; S0["Where It Fits"]
+    NetApp_ONTAP --&gt; S1["Daily Checks"]
+    NetApp_ONTAP --&gt; S2["Health Commands"]
+    NetApp_ONTAP --&gt; S3["Common Issues"]
+    NetApp_ONTAP --&gt; S4["Operational Tasks"]
+    NetApp_ONTAP --&gt; S5["Upgrade Notes"]
+    NetApp_ONTAP --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NetApp ONTAP is the enterprise storage operating system running on AFF (all-flash), FAS (hybrid flash/disk), and ONTAP Select (software-defined) platforms. It organizes storage in a hierarchy of cluster → nodes → aggregates → SVMs (Storage VMs) → volumes → LUNs or shares, and serves data over NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3. Built-in data protection features include SnapMirror for replication, SnapVault for backup retention, and SyncMirror for RAID-level mirroring across disk shelves or HA pairs.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Primary NAS and SAN storage for enterprise applications, databases, and VMware/Hyper-V environments</li>
-<li>Multi-protocol file sharing (NFS for Linux/VMware, SMB for Windows) from a single SVM</li>
-<li>Block storage for Oracle, SQL Server, and other applications via iSCSI, FC, or NVMe/FC</li>
-<li>Disaster recovery and data vaulting using SnapMirror and SnapVault relationships to a secondary cluster or cloud</li>
-<li>High-availability production storage with non-disruptive takeover/giveback via HA pairs and storage failover</li>
-<li>Test/dev environments leveraging writable FlexClone volumes from production snapshots at near-zero space cost</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary NAS and SAN storage for enterprise applications, databases, and VMware/Hyper-V environments</td>
+</tr>
+<tr>
+<td>Multi-protocol file sharing (NFS for Linux/VMware, SMB for Windows) from a single SVM</td>
+</tr>
+<tr>
+<td>Block storage for Oracle, SQL Server, and other applications via iSCSI, FC, or NVMe/FC</td>
+</tr>
+<tr>
+<td>Disaster recovery and data vaulting using SnapMirror and SnapVault relationships to a secondary cluster or cloud</td>
+</tr>
+<tr>
+<td>High-availability production storage with non-disruptive takeover/giveback via HA pairs and storage failover</td>
+</tr>
+<tr>
+<td>Test/dev environments leveraging writable FlexClone volumes from production snapshots at near-zero space cost</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1099,16 +1127,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Enable volume autogrow with an explicit maximum (<code>volume modify -autosize-mode grow -max-autosize</code>) to prevent unexpected out-of-space conditions without allowing unbounded growth</li>
-<li>Set volume space guarantee to <code>none</code> for thin provisioning; ensure aggregate free space is monitored continuously to back thin-provisioned volumes</li>
-<li>Keep aggregates below 90% used capacity — above this threshold WAFL metadata operations slow and Snapshot spill-over risk increases</li>
-<li>Configure QoS policies (throughput floors and ceilings) on critical workloads to protect latency-sensitive applications from noisy neighbors</li>
-<li>Enable AutoSupport to allow NetApp proactive support to detect potential hardware failures and send callhome alerts before they become outages</li>
-<li>Schedule SnapMirror and storage efficiency jobs (deduplication, compression) in non-overlapping maintenance windows to avoid resource contention</li>
-<li>Use SVM DR in addition to volume-level SnapMirror for full namespace, NFS export, and CIFS share recovery at the DR site</li>
-<li>Review the Active IQ / BlueXP dashboard weekly for capacity forecasts, performance advisories, and firmware update recommendations</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enable volume autogrow with an explicit maximum (<code>volume | Enable volume autogrow with an explicit maximum (</code>volume modify -autosize-mode grow -max-autosize`) to prevent unexpected out-of-space conditions without allowing unbounded growth</td>
+<td></td>
+</tr>
+<tr>
+<td>Set volume space guarantee to <code>none</code> for thin provisioning</td>
+<td>ensure aggregate free space is monitored continuously to back thin-provisioned volumes</td>
+</tr>
+<tr>
+<td>Keep aggregates below 90% used capacity</td>
+<td>above this threshold WAFL metadata operations slow and Snapshot spill-over risk increases</td>
+</tr>
+<tr>
+<td>Configure QoS policies (throughput floors and ceilings) on</td>
+<td>Configure QoS policies (throughput floors and ceilings) on critical workloads to protect latency-sensitive applications from noisy neighbors</td>
+</tr>
+<tr>
+<td>Enable AutoSupport to allow NetApp proactive support to</td>
+<td>Enable AutoSupport to allow NetApp proactive support to detect potential hardware failures and send callhome alerts before they become outages</td>
+</tr>
+<tr>
+<td>Schedule SnapMirror and storage efficiency jobs</td>
+<td>Schedule SnapMirror and storage efficiency jobs (deduplication, compression) in non-overlapping maintenance windows to avoid resource contention</td>
+</tr>
+<tr>
+<td>Use SVM DR in addition to volume-level SnapMirror for full</td>
+<td>Use SVM DR in addition to volume-level SnapMirror for full namespace, NFS export, and CIFS share recovery at the DR site</td>
+</tr>
+<tr>
+<td>Review the Active IQ / BlueXP dashboard weekly for capacity</td>
+<td>Review the Active IQ / BlueXP dashboard weekly for capacity forecasts, performance advisories, and firmware update recommendations</td>
+</tr>
+</tbody>
+</table>
 
 
 

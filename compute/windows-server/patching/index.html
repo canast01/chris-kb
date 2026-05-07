@@ -820,6 +820,16 @@
 
 <h1 id="windows-server-patching">Windows Server Patching<a class="headerlink" href="#windows-server-patching" title="Permanent link">&para;</a></h1>
 <p>Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.</p>
+<pre class="mermaid"><code>flowchart LR
+    Server_Patching["Server Patching"]
+    Server_Patching --&gt; S0["Pre-Patch Checklist"]
+    Server_Patching --&gt; S1["Windows Update via PowerShell (PSWindowsUpdate)"]
+    Server_Patching --&gt; S2["Windows Update via COM (No Module Required)"]
+    Server_Patching --&gt; S3["WSUS — Force Client Update Cycle"]
+    Server_Patching --&gt; S4["Checking Installed Updates"]
+    Server_Patching --&gt; S5["Pending Reboot Detection"]
+    Server_Patching --&gt; S6["Post-Patch Validation"]
+    Server_Patching --&gt; S7["Patch Schedule Standards"]</code></pre>
 <h2 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># 1. Confirm system health</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>

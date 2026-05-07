@@ -809,6 +809,15 @@
 
 <h1 id="cluster-state-validation">Cluster State Validation<a class="headerlink" href="#cluster-state-validation" title="Permanent link">&para;</a></h1>
 <p>Quick checks to confirm a vSphere cluster is healthy before and after changes.</p>
+<pre class="mermaid"><code>flowchart LR
+    State_Validation["State Validation"]
+    State_Validation --&gt; S0["Host Connectivity"]
+    State_Validation --&gt; S1["HA and DRS Status"]
+    State_Validation --&gt; S2["Active Alarms"]
+    State_Validation --&gt; S3["vSAN Cluster Health"]
+    State_Validation --&gt; S4["Resource Utilisation"]
+    State_Validation --&gt; S5["DRS Migration Recommendations"]
+    State_Validation --&gt; S6["Healthy State Checklist"]</code></pre>
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># All hosts should show ConnectionState: Connected, PowerState: PoweredOn</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VMHost</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;ClusterName&quot;</span><span class="p">)</span> <span class="p">|</span>

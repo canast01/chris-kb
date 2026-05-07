@@ -820,6 +820,16 @@
 
 <h1 id="management-access-check">Management Access Check<a class="headerlink" href="#management-access-check" title="Permanent link">&para;</a></h1>
 <p>Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.</p>
+<pre class="mermaid"><code>flowchart LR
+    Access_Check["Access Check"]
+    Access_Check --&gt; S0["Connectivity Checks"]
+    Access_Check --&gt; S1["vCenter Access"]
+    Access_Check --&gt; S2["NSX Manager Access"]
+    Access_Check --&gt; S3["SDDC Manager Access (VCF)"]
+    Access_Check --&gt; S4["Aria Operations Access"]
+    Access_Check --&gt; S5["AD/LDAP Identity Source Health"]
+    Access_Check --&gt; S6["Access Control Review"]
+    Access_Check --&gt; S7["Failed Login Monitoring"]</code></pre>
 <h2 id="connectivity-checks">Connectivity Checks<a class="headerlink" href="#connectivity-checks" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify DNS resolution for management FQDNs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>fqdn<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.corp.local<span class="w"> </span>nsx.corp.local<span class="w"> </span>sddc-manager.corp.local<span class="w"> </span>aria-ops.corp.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>

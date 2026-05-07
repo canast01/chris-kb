@@ -888,17 +888,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Pure_FlashBlade["Pure FlashBlade"]
+    Pure_FlashBlade --&gt; S0["Where It Fits"]
+    Pure_FlashBlade --&gt; S1["Daily Checks"]
+    Pure_FlashBlade --&gt; S2["Health Commands"]
+    Pure_FlashBlade --&gt; S3["Common Issues"]
+    Pure_FlashBlade --&gt; S4["Operational Tasks"]
+    Pure_FlashBlade --&gt; S5["Upgrade Notes"]
+    Pure_FlashBlade --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Pure Storage FlashBlade is an all-flash scale-out storage platform running Purity//FB OS, designed for unstructured data workloads including AI/ML, analytics, backup, and high-performance computing. Each chassis holds multiple blades that combine compute and NVMe flash storage, allowing capacity and performance to scale together by adding blades. It natively serves NFS v3/v4.1, SMB 2/3, S3 object, and HDFS protocols from a single platform, and supports asynchronous replication (ActiveDR) and synchronous replication (ActiveCluster for file systems) for data protection.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>AI/ML training data repositories requiring high-throughput parallel access from GPU clusters via NFS or S3</li>
-<li>High-performance backup target for Veeam, Commvault, and Veritas using the Rapid Restore integration</li>
-<li>Object storage for analytics pipelines consuming S3-compatible data with high concurrency</li>
-<li>Unstructured data consolidation replacing legacy NAS filers with a single scale-out platform</li>
-<li>HDFS-compatible storage for Hadoop-based analytics workloads without requiring a full Hadoop cluster</li>
-<li>Disaster recovery target using ActiveDR asynchronous replication from a primary FlashBlade or FlashArray</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI/ML training data repositories requiring high-throughput parallel access from GPU clusters via NFS or S3</td>
+</tr>
+<tr>
+<td>High-performance backup target for Veeam, Commvault, and Veritas using the Rapid Restore integration</td>
+</tr>
+<tr>
+<td>Object storage for analytics pipelines consuming S3-compatible data with high concurrency</td>
+</tr>
+<tr>
+<td>Unstructured data consolidation replacing legacy NAS filers with a single scale-out platform</td>
+</tr>
+<tr>
+<td>HDFS-compatible storage for Hadoop-based analytics workloads without requiring a full Hadoop cluster</td>
+</tr>
+<tr>
+<td>Disaster recovery target using ActiveDR asynchronous replication from a primary FlashBlade or FlashArray</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1104,16 +1132,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Separate filesystems per application or team rather than sharing a single large filesystem — this enables independent capacity limits, snapshot schedules, and replication policies per workload</li>
-<li>Use S3 lifecycle policies (object expiry rules on buckets) to automatically expire old objects and prevent uncontrolled storage growth for analytics or backup workloads</li>
-<li>Configure Pure1 monitoring with capacity threshold alerts (e.g., at 70% and 85% used) and hardware fault notifications so issues are caught before they impact operations</li>
-<li>Test ActiveDR failover and failback procedures at least annually — include NFS and S3 client remounting steps in the DR runbook, not just the FlashBlade-side commands</li>
-<li>Use SAML/SSO integration for admin access rather than local accounts — this enforces MFA, enables central access revocation, and provides audit trail through your identity provider</li>
-<li>For backup workloads (Veeam, Commvault), use a dedicated filesystem per backup tier (daily, weekly, monthly) with matching snapshot retention so recovery points are easy to identify and manage</li>
-<li>Set NFS export policies to restrict client IP ranges to authorized subnets only — avoid exporting with <code>*</code> (all hosts) in production environments</li>
-<li>Monitor replication lag daily and define a documented RPO threshold; set alerts when lag exceeds the acceptable window rather than discovering breaches during an incident</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Separate filesystems per application or team rather than sharing a single large filesystem</td>
+<td>this enables independent capacity limits, snapshot schedules, and replication policies per workload</td>
+</tr>
+<tr>
+<td>Use S3 lifecycle policies (object expiry rules on buckets)</td>
+<td>Use S3 lifecycle policies (object expiry rules on buckets) to automatically expire old objects and prevent uncontrolled storage growth for analytics or backup workloads</td>
+</tr>
+<tr>
+<td>Configure Pure1 monitoring with capacity threshold alerts</td>
+<td>Configure Pure1 monitoring with capacity threshold alerts (e.g., at 70% and 85% used) and hardware fault notifications so issues are caught before they impact operations</td>
+</tr>
+<tr>
+<td>Test ActiveDR failover and failback procedures at least annually</td>
+<td>include NFS and S3 client remounting steps in the DR runbook, not just the FlashBlade-side commands</td>
+</tr>
+<tr>
+<td>Use SAML/SSO integration for admin access rather than local accounts</td>
+<td>this enforces MFA, enables central access revocation, and provides audit trail through your identity provider</td>
+</tr>
+<tr>
+<td>For backup workloads (Veeam, Commvault), use a dedicated</td>
+<td>For backup workloads (Veeam, Commvault), use a dedicated filesystem per backup tier (daily, weekly, monthly) with matching snapshot retention so recovery points are easy to identify and manage</td>
+</tr>
+<tr>
+<td>Set NFS export policies to restrict client IP ranges to authorized subnets only</td>
+<td>avoid exporting with <code>*</code> (all hosts) in production environments</td>
+</tr>
+<tr>
+<td>Monitor replication lag daily and define a documented RPO threshold</td>
+<td>set alerts when lag exceeds the acceptable window rather than discovering breaches during an incident</td>
+</tr>
+</tbody>
+</table>
 
 
 

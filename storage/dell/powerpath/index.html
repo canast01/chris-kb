@@ -883,16 +883,42 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Dell_PowerPath["Dell PowerPath"]
+    Dell_PowerPath --&gt; S0["Where It Fits"]
+    Dell_PowerPath --&gt; S1["Daily Checks"]
+    Dell_PowerPath --&gt; S2["Health Commands"]
+    Dell_PowerPath --&gt; S3["Common Issues"]
+    Dell_PowerPath --&gt; S4["Operational Tasks"]
+    Dell_PowerPath --&gt; S5["Upgrade Notes"]
+    Dell_PowerPath --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerPath is host-based multipath I/O software that manages multiple physical paths between a host and storage arrays from Dell/EMC, providing automatic path failover and dynamic load balancing. It runs on Linux, Windows, AIX, HP-UX, and Solaris, and is controlled via the <code>powermt</code> CLI. PowerPath presents a single pseudo device per LUN to the OS, abstracting the underlying physical paths.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Hosts connected to Dell/EMC arrays (PowerMax, VMAX, Unity, PowerStore) over Fibre Channel or iSCSI</li>
-<li>Production environments requiring automatic path failover without host-side intervention</li>
-<li>Performance-sensitive workloads that benefit from intelligent load balancing across multiple HBA paths</li>
-<li>Environments with zoning changes or fabric maintenance where path counts change dynamically</li>
-<li>Any host where native OS multipath (DM-Multipath) is being replaced or supplemented with a vendor-managed solution</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hosts connected to Dell/EMC arrays (PowerMax, VMAX, Unity, PowerStore) over Fibre Channel or iSCSI</td>
+</tr>
+<tr>
+<td>Production environments requiring automatic path failover without host-side intervention</td>
+</tr>
+<tr>
+<td>Performance-sensitive workloads that benefit from intelligent load balancing across multiple HBA paths</td>
+</tr>
+<tr>
+<td>Environments with zoning changes or fabric maintenance where path counts change dynamically</td>
+</tr>
+<tr>
+<td>Any host where native OS multipath (DM-Multipath) is being replaced or supplemented with a vendor-managed solution</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1080,15 +1106,44 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Always use the CLAROpt (<code>co</code>) policy for Dell/EMC CLARiiON, Unity, and mid-range arrays — do not use RoundRobin, which ignores array-side optimisation</li>
-<li>Run <code>powermt save</code> immediately after every policy change, path addition, or <code>powermt config</code> operation to ensure settings persist across reboots</li>
-<li>Maintain a documented baseline of expected path counts per host and device; compare after every fabric or zoning change</li>
-<li>Run <code>powermt check_registration</code> after any OS upgrade or kernel update to confirm the license is still valid</li>
-<li>After any fabric change, run <code>powermt restore</code> before checking path state — this instructs PowerPath to retry paths marked dead</li>
-<li>Do not mix PowerPath and DM-Multipath managing the same devices on the same host; disable DM-Multipath for devices managed by PowerPath</li>
-<li>Review the Dell PowerPath release notes and support matrix before any kernel or OS upgrade to confirm compatibility</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always use the CLAROpt (<code>co</code>) policy for Dell/EMC CLARiiON, Unity, and mid-range arrays</td>
+<td>do not use RoundRobin, which ignores array-side optimisation</td>
+</tr>
+<tr>
+<td>Run <code>powermt save</code> immediately after every policy change,</td>
+<td>Run <code>powermt save</code> immediately after every policy change, path addition, or <code>powermt config</code> operation to ensure settings persist across reboots</td>
+</tr>
+<tr>
+<td>Maintain a documented baseline of expected path counts per host and device</td>
+<td>compare after every fabric or zoning change</td>
+</tr>
+<tr>
+<td>Run <code>powermt check_registration</code> after any OS upgrade or</td>
+<td>Run <code>powermt check_registration</code> after any OS upgrade or kernel update to confirm the license is still valid</td>
+</tr>
+<tr>
+<td>After any fabric change, run <code>powermt restore</code> before checking path state</td>
+<td>this instructs PowerPath to retry paths marked dead</td>
+</tr>
+<tr>
+<td>Do not mix PowerPath and DM-Multipath managing the same devices on the same host</td>
+<td>disable DM-Multipath for devices managed by PowerPath</td>
+</tr>
+<tr>
+<td>Review the Dell PowerPath release notes and support matrix</td>
+<td>Review the Dell PowerPath release notes and support matrix before any kernel or OS upgrade to confirm compatibility</td>
+</tr>
+</tbody>
+</table>
 
 
 

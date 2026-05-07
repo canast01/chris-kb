@@ -883,17 +883,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Dell_ECS["Dell ECS"]
+    Dell_ECS --&gt; S0["Where It Fits"]
+    Dell_ECS --&gt; S1["Daily Checks"]
+    Dell_ECS --&gt; S2["Health Commands"]
+    Dell_ECS --&gt; S3["Common Issues"]
+    Dell_ECS --&gt; S4["Operational Tasks"]
+    Dell_ECS --&gt; S5["Upgrade Notes"]
+    Dell_ECS --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival)</li>
-<li>Long-term retention and compliance storage with CAS (fixed-content, WORM)</li>
-<li>Geo-distributed active-active object storage across multiple data centres using VDC replication groups</li>
-<li>Multi-tenant storage service — separate namespaces and IAM policies per team or application</li>
-<li>On-premises alternative to public cloud object storage where data sovereignty or latency requirements apply</li>
-<li>Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival)</td>
+</tr>
+<tr>
+<td>Long-term retention and compliance storage with CAS (fixed-content, WORM)</td>
+</tr>
+<tr>
+<td>Geo-distributed active-active object storage across multiple data centres using VDC replication groups</td>
+</tr>
+<tr>
+<td>Multi-tenant storage service — separate namespaces and IAM policies per team or application</td>
+</tr>
+<tr>
+<td>On-premises alternative to public cloud object storage where data sovereignty or latency requirements apply</td>
+</tr>
+<tr>
+<td>Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1092,16 +1120,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Separate namespaces per team or application — do not share a single namespace across unrelated workloads</li>
-<li>Enable bucket versioning only where application recovery requirements demand it; versioning causes unbounded capacity growth without lifecycle policies</li>
-<li>Always attach a lifecycle policy to versioned buckets to expire non-current versions after the required retention period</li>
-<li>Use replication groups spanning at least two VDCs for any production data to achieve geo-redundancy</li>
-<li>Configure namespace and bucket quotas to prevent a single tenant from consuming cluster-wide capacity</li>
-<li>Authenticate to the Management API with a service account rather than the <code>sysadmin</code> default credential in automation scripts</li>
-<li>Monitor cluster utilisation and plan capacity expansion before reaching 70% of usable space; ECS performance degrades as utilisation approaches 85%</li>
-<li>Document replication group topology and VDC peering configuration — changes to replication groups are difficult to reverse without data movement</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Separate namespaces per team or application</td>
+<td>do not share a single namespace across unrelated workloads</td>
+</tr>
+<tr>
+<td>Enable bucket versioning only where application recovery requirements demand it</td>
+<td>versioning causes unbounded capacity growth without lifecycle policies</td>
+</tr>
+<tr>
+<td>Always attach a lifecycle policy to versioned buckets to</td>
+<td>Always attach a lifecycle policy to versioned buckets to expire non-current versions after the required retention period</td>
+</tr>
+<tr>
+<td>Use replication groups spanning at least two VDCs for any</td>
+<td>Use replication groups spanning at least two VDCs for any production data to achieve geo-redundancy</td>
+</tr>
+<tr>
+<td>Configure namespace and bucket quotas to prevent a single</td>
+<td>Configure namespace and bucket quotas to prevent a single tenant from consuming cluster-wide capacity</td>
+</tr>
+<tr>
+<td>Authenticate to the Management API with a service account</td>
+<td>Authenticate to the Management API with a service account rather than the <code>sysadmin</code> default credential in automation scripts</td>
+</tr>
+<tr>
+<td>Monitor cluster utilisation and plan capacity expansion before reaching 70% of usable space</td>
+<td>ECS performance degrades as utilisation approaches 85%</td>
+</tr>
+<tr>
+<td>Document replication group topology and VDC peering configuration</td>
+<td>changes to replication groups are difficult to reverse without data movement</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -837,17 +837,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    NetApp_SnapMirror["NetApp SnapMirror"]
+    NetApp_SnapMirror --&gt; S0["Where It Fits"]
+    NetApp_SnapMirror --&gt; S1["Daily Checks"]
+    NetApp_SnapMirror --&gt; S2["Health Commands"]
+    NetApp_SnapMirror --&gt; S3["Common Issues"]
+    NetApp_SnapMirror --&gt; S4["Operational Tasks"]
+    NetApp_SnapMirror --&gt; S5["Upgrade Notes"]
+    NetApp_SnapMirror --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NetApp SnapMirror is ONTAP's native replication engine for volume and SVM-level data protection, supporting disaster recovery and long-term backup retention. It operates in asynchronous mode (RPO-based, most common), synchronous mode (zero RPO, requires sub-10ms inter-site latency), and XDP mode (extended data protection, replacing legacy SnapVault for disk-to-disk backup with independent retention). Relationships are always managed from the destination cluster, and SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Disaster recovery replication between primary and secondary ONTAP clusters (async, RPO in minutes)</li>
-<li>Zero-RPO synchronous replication for tier-1 SAN workloads requiring no data loss (SnapMirror Synchronous)</li>
-<li>Long-term backup retention on secondary storage using XDP relationships with vault policies (replacing SnapVault)</li>
-<li>SVM-level disaster recovery to replicate an entire data SVM including volumes, LIF configuration, and CIFS shares</li>
-<li>SnapMirror Business Continuity (SMBC) for metro-cluster-like transparent failover without host-side changes</li>
-<li>Cloud tiering and replication to ONTAP Select or Cloud Volumes ONTAP using the same SnapMirror interface</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disaster recovery replication between primary and secondary ONTAP clusters (async, RPO in minutes)</td>
+</tr>
+<tr>
+<td>Zero-RPO synchronous replication for tier-1 SAN workloads requiring no data loss (SnapMirror Synchronous)</td>
+</tr>
+<tr>
+<td>Long-term backup retention on secondary storage using XDP relationships with vault policies (replacing SnapVault)</td>
+</tr>
+<tr>
+<td>SVM-level disaster recovery to replicate an entire data SVM including volumes, LIF configuration, and CIFS shares</td>
+</tr>
+<tr>
+<td>SnapMirror Business Continuity (SMBC) for metro-cluster-like transparent failover without host-side changes</td>
+</tr>
+<tr>
+<td>Cloud tiering and replication to ONTAP Select or Cloud Volumes ONTAP using the same SnapMirror interface</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1053,16 +1081,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Always monitor lag time against your defined RPO; set ONTAP EMS alerts on <code>snapmirror.lag.warn</code> thresholds so you know before an RPO breach</li>
-<li>Use consistency groups (CGs) for multi-volume workloads (e.g., database data + log volumes) to ensure crash-consistent replication across related volumes</li>
-<li>Never leave a relationship in <code>broken-off</code> state after a DR test — resync immediately to restore protection; track DR tests in a runbook with mandatory resync steps</li>
-<li>Use XDP with <code>MirrorAndVault</code> policy for DR relationships that also need long-term snapshot retention on the destination, avoiding the need for a separate SnapVault relationship</li>
-<li>Test complete failover and failback procedures (not just <code>snapmirror break</code>) at least annually — include host-side mount, application start, and failback steps</li>
-<li>For SnapMirror Synchronous, validate that inter-site latency is consistently below 10ms RTT; sustained latency above this threshold forces an automatic demotion to async mode</li>
-<li>Label relationships with comments using <code>-comment</code> to document ownership, RPO tier, and last test date for operational visibility</li>
-<li>Use SVM-DR (not just volume-level relationships) for workloads where full SVM configuration (shares, exports, LIFs) must be recoverable at the DR site</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always monitor lag time against your defined RPO</td>
+<td>set ONTAP EMS alerts on <code>snapmirror.lag.warn</code> thresholds so you know before an RPO breach</td>
+</tr>
+<tr>
+<td>Use consistency groups (CGs) for multi-volume workloads</td>
+<td>Use consistency groups (CGs) for multi-volume workloads (e.g., database data + log volumes) to ensure crash-consistent replication across related volumes</td>
+</tr>
+<tr>
+<td>Never leave a relationship in <code>broken-off</code> state after a DR test</td>
+<td>resync immediately to restore protection; track DR tests in a runbook with mandatory resync steps</td>
+</tr>
+<tr>
+<td>Use XDP with <code>MirrorAndVault</code> policy for DR relationships</td>
+<td>Use XDP with <code>MirrorAndVault</code> policy for DR relationships that also need long-term snapshot retention on the destination, avoiding the need for a separate SnapVault relationship</td>
+</tr>
+<tr>
+<td>Test complete failover and failback procedures (not just <code>snapmirror break</code>) at least annually</td>
+<td>include host-side mount, application start, and failback steps</td>
+</tr>
+<tr>
+<td>For SnapMirror Synchronous, validate that inter-site latency is consistently below 10ms RTT</td>
+<td>sustained latency above this threshold forces an automatic demotion to async mode</td>
+</tr>
+<tr>
+<td>Label relationships with comments using <code>-comment</code> to</td>
+<td>Label relationships with comments using <code>-comment</code> to document ownership, RPO tier, and last test date for operational visibility</td>
+</tr>
+<tr>
+<td>Use SVM-DR (not just volume-level relationships) for</td>
+<td>Use SVM-DR (not just volume-level relationships) for workloads where full SVM configuration (shares, exports, LIFs) must be recoverable at the DR site</td>
+</tr>
+</tbody>
+</table>
 
 
 

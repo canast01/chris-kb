@@ -868,17 +868,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Dell_VPLEX["Dell VPLEX"]
+    Dell_VPLEX --&gt; S0["Where It Fits"]
+    Dell_VPLEX --&gt; S1["Daily Checks"]
+    Dell_VPLEX --&gt; S2["Health Commands"]
+    Dell_VPLEX --&gt; S3["Common Issues"]
+    Dell_VPLEX --&gt; S4["Operational Tasks"]
+    Dell_VPLEX --&gt; S5["Upgrade Notes"]
+    Dell_VPLEX --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell VPLEX is a storage virtualization platform that presents a federated storage layer across heterogeneous arrays, abstracting physical storage into virtual volumes accessible to hosts. VPLEX Local provides active-active LUN access within a single data center across two arrays; VPLEX Metro extends this across two data centers up to ~10ms RTT with synchronous mirroring and transparent failover; VPLEX Geo adds asynchronous replication for greater distances using RecoverPoint. Management is via the <code>vplexcli</code> command-line interface or Unisphere for VPLEX.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Active-active block storage access across two arrays in a single data center (VPLEX Local)</li>
-<li>Non-disruptive data migration between heterogeneous storage arrays</li>
-<li>Zero-RPO, zero-RTO Metro cluster for VMware or physical host workloads requiring transparent failover</li>
-<li>Long-distance asynchronous disaster recovery combined with RecoverPoint (VPLEX Geo)</li>
-<li>Storage consolidation behind a single virtualization layer without host-side changes</li>
-<li>Workload mobility between sites during planned maintenance or hardware refresh</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active-active block storage access across two arrays in a single data center (VPLEX Local)</td>
+</tr>
+<tr>
+<td>Non-disruptive data migration between heterogeneous storage arrays</td>
+</tr>
+<tr>
+<td>Zero-RPO, zero-RTO Metro cluster for VMware or physical host workloads requiring transparent failover</td>
+</tr>
+<tr>
+<td>Long-distance asynchronous disaster recovery combined with RecoverPoint (VPLEX Geo)</td>
+</tr>
+<tr>
+<td>Storage consolidation behind a single virtualization layer without host-side changes</td>
+</tr>
+<tr>
+<td>Workload mobility between sites during planned maintenance or hardware refresh</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1073,16 +1101,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Always deploy a Witness server in a third failure domain for every VPLEX Metro configuration — without it, loss of the ICL will suspend I/O on all consistency group volumes</li>
-<li>Use consistency groups for every set of related distributed volumes to maintain write-order fidelity across sites</li>
-<li>Document storage view names, initiator WWNs, and virtual volume mappings in a CMDB or runbook; changes are difficult to reverse without this reference</li>
-<li>Test Metro failover (planned site switch) in a maintenance window before production go-live and repeat annually</li>
-<li>Perform back-end array firmware upgrades and VPLEX GeoSynchrony upgrades in separate maintenance windows to isolate failure domains</li>
-<li>Maintain port balance across directors; uneven I/O distribution degrades performance and makes single-director failure more impactful</li>
-<li>Keep VPLEX management server (VMS) VM backups current — losing the VMS does not impact I/O but makes configuration changes impossible until it is restored</li>
-<li>Review Dell Support advisories for VPLEX before any firmware or OS upgrade on attached hosts or back-end arrays</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always deploy a Witness server in a third failure domain for every VPLEX Metro configuration</td>
+<td>without it, loss of the ICL will suspend I/O on all consistency group volumes</td>
+</tr>
+<tr>
+<td>Use consistency groups for every set of related distributed</td>
+<td>Use consistency groups for every set of related distributed volumes to maintain write-order fidelity across sites</td>
+</tr>
+<tr>
+<td>Document storage view names, initiator WWNs, and virtual volume mappings in a CMDB or runbook</td>
+<td>changes are difficult to reverse without this reference</td>
+</tr>
+<tr>
+<td>Test Metro failover (planned site switch) in a maintenance</td>
+<td>Test Metro failover (planned site switch) in a maintenance window before production go-live and repeat annually</td>
+</tr>
+<tr>
+<td>Perform back-end array firmware upgrades and VPLEX</td>
+<td>Perform back-end array firmware upgrades and VPLEX GeoSynchrony upgrades in separate maintenance windows to isolate failure domains</td>
+</tr>
+<tr>
+<td>Maintain port balance across directors</td>
+<td>uneven I/O distribution degrades performance and makes single-director failure more impactful</td>
+</tr>
+<tr>
+<td>Keep VPLEX management server (VMS) VM backups current</td>
+<td>losing the VMS does not impact I/O but makes configuration changes impossible until it is restored</td>
+</tr>
+<tr>
+<td>Review Dell Support advisories for VPLEX before any</td>
+<td>Review Dell Support advisories for VPLEX before any firmware or OS upgrade on attached hosts or back-end arrays</td>
+</tr>
+</tbody>
+</table>
 
 
 

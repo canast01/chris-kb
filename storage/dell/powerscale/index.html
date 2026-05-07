@@ -847,17 +847,45 @@
 </a>
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Dell_PowerScale["Dell PowerScale"]
+    Dell_PowerScale --&gt; S0["Where It Fits"]
+    Dell_PowerScale --&gt; S1["Daily Checks"]
+    Dell_PowerScale --&gt; S2["Health Commands"]
+    Dell_PowerScale --&gt; S3["Common Issues"]
+    Dell_PowerScale --&gt; S4["Operational Tasks"]
+    Dell_PowerScale --&gt; S5["Upgrade Notes"]
+    Dell_PowerScale --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS distributed operating system, where all nodes form a single shared namespace under <code>/ifs</code>. Clusters scale from 3 to 252 nodes, with each node added linearly increasing both capacity and throughput. PowerScale supports multi-protocol access including NFS, SMB/CIFS, HDFS, S3, and FTP from the same file system.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Unstructured data at scale: media and entertainment workflows, genomics, EDA, home directories</li>
-<li>Multi-protocol environments where the same data must be accessible via NFS and SMB simultaneously</li>
-<li>Hadoop and analytics workloads using HDFS access directly against <code>/ifs</code></li>
-<li>Disaster recovery and data replication targets via SyncIQ asynchronous replication</li>
-<li>Tiered storage environments using SmartPools to automatically migrate data across SSD, SAS, and SATA node pools</li>
-<li>Object storage workloads via the S3-compatible access zone interface</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unstructured data at scale: media and entertainment workflows, genomics, EDA, home directories</td>
+</tr>
+<tr>
+<td>Multi-protocol environments where the same data must be accessible via NFS and SMB simultaneously</td>
+</tr>
+<tr>
+<td>Hadoop and analytics workloads using HDFS access directly against <code>/ifs</code></td>
+</tr>
+<tr>
+<td>Disaster recovery and data replication targets via SyncIQ asynchronous replication</td>
+</tr>
+<tr>
+<td>Tiered storage environments using SmartPools to automatically migrate data across SSD, SAS, and SATA node pools</td>
+</tr>
+<tr>
+<td>Object storage workloads via the S3-compatible access zone interface</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1061,15 +1089,44 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Design access zones per client group or business unit rather than per individual volume — this simplifies protocol and authentication policy management</li>
-<li>Always configure three quota threshold levels (advisory, soft with grace period, hard) on user-facing directories to prevent sudden write failures</li>
-<li>Validate SyncIQ RPO and RTO regularly by checking the last successful replication timestamp in <code>isi sync reports list</code> against your recovery objectives</li>
-<li>Use SmartConnect zones with round-robin or CPU-based connection balancing to distribute NFS and SMB client connections evenly across nodes</li>
-<li>Keep OneFS within N-2 versions of the current release to remain within Dell's supported upgrade paths and receive security patches</li>
-<li>Do not store data outside of <code>/ifs</code> — all persistent data must reside within the cluster file system to benefit from protection and replication</li>
-<li>Monitor per-node performance with <code>isi statistics</code> regularly to identify hot nodes; rebalance workloads across access zones if persistent imbalance is observed</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Design access zones per client group or business unit rather than per individual volume</td>
+<td>this simplifies protocol and authentication policy management</td>
+</tr>
+<tr>
+<td>Always configure three quota threshold levels (advisory,</td>
+<td>Always configure three quota threshold levels (advisory, soft with grace period, hard) on user-facing directories to prevent sudden write failures</td>
+</tr>
+<tr>
+<td>Validate SyncIQ RPO and RTO regularly by checking the last</td>
+<td>Validate SyncIQ RPO and RTO regularly by checking the last successful replication timestamp in <code>isi sync reports list</code> against your recovery objectives</td>
+</tr>
+<tr>
+<td>Use SmartConnect zones with round-robin or CPU-based</td>
+<td>Use SmartConnect zones with round-robin or CPU-based connection balancing to distribute NFS and SMB client connections evenly across nodes</td>
+</tr>
+<tr>
+<td>Keep OneFS within N-2 versions of the current release to</td>
+<td>Keep OneFS within N-2 versions of the current release to remain within Dell's supported upgrade paths and receive security patches</td>
+</tr>
+<tr>
+<td>Do not store data outside of <code>/ifs</code></td>
+<td>all persistent data must reside within the cluster file system to benefit from protection and replication</td>
+</tr>
+<tr>
+<td>Monitor per-node performance with <code>isi statistics</code> regularly to identify hot nodes</td>
+<td>rebalance workloads across access zones if persistent imbalance is observed</td>
+</tr>
+</tbody>
+</table>
 
 
 

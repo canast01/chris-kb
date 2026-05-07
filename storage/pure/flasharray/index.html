@@ -873,17 +873,45 @@
 
 </div>
 
+<pre class="mermaid"><code>flowchart LR
+    Pure_FlashArray["Pure FlashArray"]
+    Pure_FlashArray --&gt; S0["Where It Fits"]
+    Pure_FlashArray --&gt; S1["Daily Checks"]
+    Pure_FlashArray --&gt; S2["Health Commands"]
+    Pure_FlashArray --&gt; S3["Common Issues"]
+    Pure_FlashArray --&gt; S4["Operational Tasks"]
+    Pure_FlashArray --&gt; S5["Upgrade Notes"]
+    Pure_FlashArray --&gt; S6["Best Practices"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS, available in the //X series (NVMe-based, highest performance), //C series (QLC flash, capacity-optimized), and //E series (maximum density). All models run in an active-active dual-controller configuration with no single point of failure, and support FC, iSCSI, NVMe/FC, NVMe/RoCE, and NVMe/TCP host protocols. Fleet-wide monitoring, AI-driven analytics, and workload planning are delivered via Pure1 cloud management without requiring on-premises management infrastructure.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Tier-1 block storage for databases (Oracle, SQL Server, SAP HANA) requiring sub-millisecond latency</li>
-<li>VMware vSphere datastores (VMFS and vVols) with vSphere Plugin integration for VM-level management</li>
-<li>NVMe/FC or NVMe/RoCE for latency-sensitive workloads demanding the lowest possible response time</li>
-<li>ActiveCluster (synchronous replication) for metro/stretch cluster deployments requiring zero RPO and transparent host failover across two sites within 5ms RTT</li>
-<li>Dev/test provisioning via instant FlashArray snapshot clones (space-efficient, no copy required)</li>
-<li>VDI boot volume acceleration with predictable, consistent IOPS regardless of load</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier-1 block storage for databases (Oracle, SQL Server, SAP HANA) requiring sub-millisecond latency</td>
+</tr>
+<tr>
+<td>VMware vSphere datastores (VMFS and vVols) with vSphere Plugin integration for VM-level management</td>
+</tr>
+<tr>
+<td>NVMe/FC or NVMe/RoCE for latency-sensitive workloads demanding the lowest possible response time</td>
+</tr>
+<tr>
+<td>ActiveCluster (synchronous replication) for metro/stretch cluster deployments requiring zero RPO and transparent host failover across two sites within 5ms RTT</td>
+</tr>
+<tr>
+<td>Dev/test provisioning via instant FlashArray snapshot clones (space-efficient, no copy required)</td>
+</tr>
+<tr>
+<td>VDI boot volume acceleration with predictable, consistent IOPS regardless of load</td>
+</tr>
+</tbody>
+</table>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1098,16 +1126,48 @@
 </tbody>
 </table>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Always connect volumes through host groups (<code>purehgroup</code>) rather than individual hosts — this simplifies management and ensures consistent access policies as hosts are added or replaced</li>
-<li>Use a consistent volume naming convention such as <code>&lt;env&gt;-&lt;app&gt;-&lt;vol##&gt;</code> (e.g., <code>prod-oracle-vol01</code>) to make automation and troubleshooting faster</li>
-<li>Configure Pure1 monitoring and set up email or webhook alerts for hardware faults, capacity thresholds, and replication health — do not rely solely on CLI polling</li>
-<li>Test ActiveCluster pod failover in a maintenance window at least annually — confirm hosts continue serving I/O during a simulated site failure and that the mediator functions correctly</li>
-<li>Keep Purity within the N-2 supported version window; running older versions risks missing critical bug fixes and losing support eligibility</li>
-<li>Schedule protection group snapshot policies to align with application RPO requirements and set expiry windows to prevent uncontrolled capacity growth from retained snapshots</li>
-<li>Use the FlashArray vSphere Plugin for VMware environments — it enables VM-level snapshot management directly from vCenter and integrates with VASA for vVols support</li>
-<li>Review Pure1 AI-driven performance recommendations (Pure1 Meta) quarterly to identify workload imbalances or right-sizing opportunities before they become capacity or performance issues</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always connect volumes through host groups (<code>purehgroup</code>) rather than individual hosts</td>
+<td>this simplifies management and ensures consistent access policies as hosts are added or replaced</td>
+</tr>
+<tr>
+<td>Use a consistent volume naming convention such as</td>
+<td>Use a consistent volume naming convention such as <code>&lt;env&gt;-&lt;app&gt;-&lt;vol##&gt;</code> (e.g., <code>prod-oracle-vol01</code>) to make automation and troubleshooting faster</td>
+</tr>
+<tr>
+<td>Configure Pure1 monitoring and set up email or webhook alerts for hardware faults, capacity thresholds, and replication health</td>
+<td>do not rely solely on CLI polling</td>
+</tr>
+<tr>
+<td>Test ActiveCluster pod failover in a maintenance window at least annually</td>
+<td>confirm hosts continue serving I/O during a simulated site failure and that the mediator functions correctly</td>
+</tr>
+<tr>
+<td>Keep Purity within the N-2 supported version window</td>
+<td>running older versions risks missing critical bug fixes and losing support eligibility</td>
+</tr>
+<tr>
+<td>Schedule protection group snapshot policies to align with</td>
+<td>Schedule protection group snapshot policies to align with application RPO requirements and set expiry windows to prevent uncontrolled capacity growth from retained snapshots</td>
+</tr>
+<tr>
+<td>Use the FlashArray vSphere Plugin for VMware environments</td>
+<td>it enables VM-level snapshot management directly from vCenter and integrates with VASA for vVols support</td>
+</tr>
+<tr>
+<td>Review Pure1 AI-driven performance recommendations (Pure1</td>
+<td>Review Pure1 AI-driven performance recommendations (Pure1 Meta) quarterly to identify workload imbalances or right-sizing opportunities before they become capacity or performance issues</td>
+</tr>
+</tbody>
+</table>
 
 
 

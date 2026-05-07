@@ -803,6 +803,14 @@
 <p>SRDF/S issues typically manifest as pair state transitions away from <code>Synchronized</code>, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation <strong>directly impacts production write latency</strong> — treat RTT increases above 5ms as a storage incident, not purely a network event.</p>
 <p>Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
 <hr />
+<pre class="mermaid"><code>flowchart LR
+    SRDF_S_Troubleshooti["SRDF/S Troubleshooting"]
+    SRDF_S_Troubleshooti --&gt; S0["High Host Write Latency"]
+    SRDF_S_Troubleshooti --&gt; S1["Pair Enters Write Disabled State"]
+    SRDF_S_Troubleshooti --&gt; S2["Pair in `Invalid` State"]
+    SRDF_S_Troubleshooti --&gt; S3["Pair in `Split` State"]
+    SRDF_S_Troubleshooti --&gt; S4["ISL / FCIP Link Failure"]
+    SRDF_S_Troubleshooti --&gt; S5["Unintended Failover During Maintenance"]</code></pre>
 <h2 id="high-host-write-latency">High Host Write Latency<a class="headerlink" href="#high-host-write-latency" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Applications report write slowness; storage latency exceeds baseline; no hardware alerts.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current SRDF link RTT and write pending counts</span>
