@@ -2,12 +2,6 @@
 
 Aws Bedrock operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="model-access/">Model Access</a></h3>
-    <p>Model Access notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="agents/">Agents</a></h3>

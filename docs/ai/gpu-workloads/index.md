@@ -2,12 +2,6 @@
 
 Gpu Workloads operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="sizing/">Sizing</a></h3>
-    <p>Sizing notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="drivers/">Drivers</a></h3>
