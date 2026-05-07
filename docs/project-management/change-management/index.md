@@ -2,12 +2,6 @@
 
 Change Management operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="risk/">Risk</a></h3>
-    <p>Risk notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="approval/">Approval</a></h3>
