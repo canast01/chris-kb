@@ -2,12 +2,6 @@
 
 Pure1 operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="health/">Health</a></h3>
-    <p>Health notes, checks, commands, troubleshooting, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="capacity/">Capacity</a></h3>
