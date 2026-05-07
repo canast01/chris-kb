@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#process-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Process Flow
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#graceful-service-shutdown-if-required" class="md-nav__link">
+  <a href="#step-1-pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graceful Service Shutdown (if required)
+        Step 1 — Pre-Checks
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reboot" class="md-nav__link">
+  <a href="#step-2-graceful-service-shutdown" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reboot
+        Step 2 — Graceful Service Shutdown
       
     </span>
   </a>
@@ -757,10 +757,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-reboot-validation" class="md-nav__link">
+  <a href="#step-3-reboot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Post-Reboot Validation
+        Step 3 — Reboot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-post-reboot-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Post-Reboot Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-application-health-confirmation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Application Health Confirmation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
       
     </span>
   </a>
@@ -772,17 +805,6 @@
     <span class="md-ellipsis">
       
         Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
       
     </span>
   </a>
@@ -810,101 +832,149 @@
 
 
 <h1 id="server-reboot-runbook">Server Reboot Runbook<a class="headerlink" href="#server-reboot-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Who is logged in</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>who
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>w
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># System load and uptime</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>uptime
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Failed services</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Active jobs (backup agents, scheduled tasks)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;backup|job|agent&quot;</span>
-</code></pre></div>
-<p>Notify application owners and confirm maintenance window approval before proceeding.</p>
-<h2 id="graceful-service-shutdown-if-required">Graceful Service Shutdown (if required)<a class="headerlink" href="#graceful-service-shutdown-if-required" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;<span class="w">    </span><span class="c1"># confirm stopped</span>
-</code></pre></div>
-<h2 id="reboot">Reboot<a class="headerlink" href="#reboot" title="Permanent link">&para;</a></h2>
-<p><strong>Linux:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>reboot
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Scheduled with warning:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>shutdown<span class="w"> </span>-r<span class="w"> </span>+5<span class="w"> </span><span class="s2">&quot;Rebooting for maintenance&quot;</span>
-</code></pre></div></p>
-<p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Restart-Computer</span> <span class="n">-Force</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Scheduled:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">shutdown</span> <span class="p">/</span><span class="nb">r </span><span class="p">/</span><span class="n">t</span> <span class="n">300</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&quot;Rebooting for maintenance&quot;</span>
-</code></pre></div></p>
-<p><strong>VMware VM (PowerCLI):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Restart-VMGuest</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
-</code></pre></div></p>
-<h2 id="post-reboot-validation">Post-Reboot Validation<a class="headerlink" href="#post-reboot-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm server is responding</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;server_ip&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Boot time</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>uptime
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>who<span class="w"> </span>-b
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Failed services</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>systemctl<span class="w"> </span>--failed
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check critical services</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service1&gt;<span class="w"> </span>&lt;service2&gt;
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Review boot errors</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-p<span class="w"> </span>err
-</code></pre></div>
-<p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check any auto-start service not running</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="p">}</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Recent system errors</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span>
-</code></pre></div></p>
-<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Change approval confirmed</li>
-<li>[ ] Active users notified and logged off</li>
-<li>[ ] Application services gracefully stopped</li>
-<li>[ ] Reboot initiated</li>
-<li>[ ] Server responds to ping</li>
-<li>[ ] All services running</li>
-<li>[ ] Application health confirmed</li>
-<li>[ ] Monitoring alert cleared</li>
-</ul>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Issue</th>
-<th>Check</th>
-<th>Action</th>
+<th>Field</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Server doesn't respond</td>
-<td>Console/iDRAC</td>
-<td>Check BMC console for boot errors</td>
+<td>Risk</td>
+<td>Medium</td>
 </tr>
 <tr>
-<td>Service fails after reboot</td>
-<td><code>systemctl --failed</code></td>
-<td>Investigate; manual start if needed</td>
+<td>Approval</td>
+<td>Change ticket required; maintenance window recommended for production</td>
 </tr>
 <tr>
-<td>Boot loop or fsck running</td>
-<td>Console</td>
-<td>Wait for fsck to complete; investigate disk</td>
+<td>Estimated time</td>
+<td>15–30 minutes (excludes application validation)</td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>Server and hosted services unavailable during reboot</td>
 </tr>
 </tbody>
 </table>
+<h2 id="process-flow">Process Flow<a class="headerlink" href="#process-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Reboot request received
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Change approved + window confirmed? ─── No ──► Stop. Obtain approval.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>           │ Yes
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>           ▼
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  Active users or in-flight jobs? ──────── Yes ──► Wait or force-notify; schedule
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>           │ No
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>           ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Stop dependent application services gracefully
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>           │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>           ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  Initiate reboot
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>           ▼
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  Server responds to ping within 15 min? ── No ──► Check console / iDRAC / BMC
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>           │ Yes
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>           ▼
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  All services running? ─────────────────── No ──► Investigate; restart manually
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>           │ Yes
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>           ▼
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  Application health confirmed?
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>           ▼
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  Close change ticket + clear monitoring alert
+</code></pre></div>
+<h2 id="step-1-pre-checks">Step 1 — Pre-Checks<a class="headerlink" href="#step-1-pre-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Who is logged in</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>who
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>w
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># System load and uptime</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>uptime
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Failed services</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Active backup agents or scheduled jobs</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;backup|job|agent|oracle|sql&quot;</span>
+</code></pre></div>
+<p><strong>Stop here if:</strong> critical jobs are running and cannot be deferred. Reschedule the reboot.</p>
+<h2 id="step-2-graceful-service-shutdown">Step 2 — Graceful Service Shutdown<a class="headerlink" href="#step-2-graceful-service-shutdown" title="Permanent link">&para;</a></h2>
+<p>Stop application services in dependency order (app → middleware → DB):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;app-service&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;middleware&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;db-service&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm each is stopped before continuing</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+</code></pre></div>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>    <span class="c"># confirm Stopped</span>
+</code></pre></div></p>
+<h2 id="step-3-reboot">Step 3 — Reboot<a class="headerlink" href="#step-3-reboot" title="Permanent link">&para;</a></h2>
+<p><strong>Linux:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>shutdown<span class="w"> </span>-r<span class="w"> </span>+1<span class="w"> </span><span class="s2">&quot;Rebooting for maintenance — &lt;reason&gt;&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># or immediate:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>sudo<span class="w"> </span>reboot
+</code></pre></div></p>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Restart-Computer</span> <span class="n">-Force</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># With delay:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">shutdown</span> <span class="p">/</span><span class="nb">r </span><span class="p">/</span><span class="n">t</span> <span class="n">60</span> <span class="p">/</span><span class="n">c</span> <span class="s2">&quot;Rebooting for maintenance&quot;</span>
+</code></pre></div></p>
+<p><strong>VMware VM via PowerCLI:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Restart-VMGuest</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
+</code></pre></div></p>
+<h2 id="step-4-post-reboot-validation">Step 4 — Post-Reboot Validation<a class="headerlink" href="#step-4-post-reboot-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm online</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;server_ip&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Boot time and uptime</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>uptime
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>who<span class="w"> </span>-b
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Failed services</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Critical service status</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service1&gt;<span class="w"> </span>&lt;service2&gt;
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Review boot errors</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>journalctl<span class="w"> </span>-b<span class="w"> </span>-p<span class="w"> </span>err
+</code></pre></div>
+<p><strong>Windows:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Services set to Automatic but not running</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s1">&#39;Automatic&#39;</span> <span class="p">}</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Recent system errors since boot</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span>
+</code></pre></div></p>
+<h2 id="step-5-application-health-confirmation">Step 5 — Application Health Confirmation<a class="headerlink" href="#step-5-application-health-confirmation" title="Permanent link">&para;</a></h2>
+<p>Confirm with the application owner or run the service's own health check before closing the ticket.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-host&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>OK
+</code></pre></div>
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>A reboot is inherently non-reversible. If a service fails to start post-reboot:</p>
+<ol>
+<li>Check <code>journalctl -u &lt;service&gt; -n 100</code> or Windows Event Viewer</li>
+<li>Restore from last known-good config backup if a config change caused the failure</li>
+<li>Escalate to application owner if service cannot be recovered within SLA</li>
+</ol>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Change approved and maintenance window confirmed</li>
+<li>[ ] Active users notified and logged off</li>
+<li>[ ] Active jobs confirmed clear</li>
+<li>[ ] Application services stopped gracefully</li>
+<li>[ ] Reboot initiated</li>
+<li>[ ] Server responds to ping</li>
+<li>[ ] All services running</li>
+<li>[ ] Application health confirmed by owner</li>
+<li>[ ] Monitoring alert cleared</li>
+<li>[ ] Change ticket closed</li>
+</ul>
 
 
 

@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identify-locked-accounts" class="md-nav__link">
+  <a href="#process-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Identify Locked Accounts
+        Process Flow
       
     </span>
   </a>
@@ -735,10 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#find-the-lockout-source" class="md-nav__link">
+  <a href="#step-1-identify-the-locked-account" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Find the Lockout Source
+        Step 1 — Identify the Locked Account
       
     </span>
   </a>
@@ -746,10 +746,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#unlock-an-account" class="md-nav__link">
+  <a href="#step-2-find-the-lockout-source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Unlock an Account
+        Step 2 — Find the Lockout Source
       
     </span>
   </a>
@@ -757,10 +757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bulk-unlock-with-caution" class="md-nav__link">
+  <a href="#step-3-fix-root-cause" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bulk Unlock (with caution)
+        Step 3 — Fix Root Cause
       
     </span>
   </a>
@@ -768,10 +768,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reset-password-and-unlock-combined" class="md-nav__link">
+  <a href="#step-4-unlock-the-account" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reset Password and Unlock (combined)
+        Step 4 — Unlock the Account
       
     </span>
   </a>
@@ -779,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#linux-ldap-account-if-applicable" class="md-nav__link">
+  <a href="#step-5-validate-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Linux / LDAP Account (if applicable)
+        Step 5 — Validate Authentication
       
     </span>
   </a>
@@ -790,10 +790,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#linux-sssd-if-applicable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Linux / SSSD (if applicable)
       
     </span>
   </a>
@@ -805,17 +805,6 @@
     <span class="md-ellipsis">
       
         Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-causes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Causes
       
     </span>
   </a>
@@ -843,104 +832,167 @@
 
 
 <h1 id="account-unlock-runbook">Account Unlock Runbook<a class="headerlink" href="#account-unlock-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="identify-locked-accounts">Identify Locked Accounts<a class="headerlink" href="#identify-locked-accounts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Find all locked-out accounts</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Search-ADAccount</span> <span class="n">-LockedOut</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">LastLogonDate</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check a specific account</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">LastLogonDate</span>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Risk</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>Verify requester identity — no change ticket required for standard user accounts</td>
+</tr>
+<tr>
+<td>Estimated time</td>
+<td>5–15 minutes</td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>User regains access; no service disruption</td>
+</tr>
+</tbody>
+</table>
+<h2 id="process-flow">Process Flow<a class="headerlink" href="#process-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Ticket received: account locked
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Confirm requester identity ────── Cannot confirm? ──► Escalate to manager
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>           │ Confirmed
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>           ▼
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  Service account?  ─────────────── Yes ──────────────► Require owner approval
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>           │ No (standard user)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>           ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Find lockout source (Event ID 4740 on PDC)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>           │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>           ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  Identify root cause (stale creds / task / device)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>           ▼
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  Fix root cause first ──── Cannot fix now? ──► Unlock and document — user re-locks risk
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>           │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>           ▼
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  Unlock account + confirm authentication
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>           ▼
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  Update ticket with lockout source
 </code></pre></div>
-<h2 id="find-the-lockout-source">Find the Lockout Source<a class="headerlink" href="#find-the-lockout-source" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># On the PDC Emulator — query Security event log for lockout events (4740)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="p">(</span><span class="nb">Get-ADDomain</span><span class="p">).</span><span class="n">PDCEmulator</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">LogName</span> <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">Id</span>      <span class="p">=</span> <span class="n">4740</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Value</span> <span class="o">-eq</span> <span class="s1">&#39;&lt;username&gt;&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<h2 id="step-1-identify-the-locked-account">Step 1 — Identify the Locked Account<a class="headerlink" href="#step-1-identify-the-locked-account" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find all locked-out accounts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Search-ADAccount</span> <span class="n">-LockedOut</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">LastLogonDate</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check a specific account</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LastLogonDate</span>
 </code></pre></div>
-<p>Key fields in Event 4740:
-- <strong>Caller Computer Name</strong> — the source machine generating the bad password
-- <strong>Account Name</strong> — the locked-out account</p>
-<h2 id="unlock-an-account">Unlock an Account<a class="headerlink" href="#unlock-an-account" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Unlock single account</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Confirm unlock</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span>
+<h2 id="step-2-find-the-lockout-source">Step 2 — Find the Lockout Source<a class="headerlink" href="#step-2-find-the-lockout-source" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># On the PDC Emulator — query Security event log for lockout events (4740)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="p">(</span><span class="nb">Get-ADDomain</span><span class="p">).</span><span class="n">PDCEmulator</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">LogName</span> <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">Id</span>      <span class="p">=</span> <span class="n">4740</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Value</span> <span class="o">-eq</span> <span class="s1">&#39;&lt;username&gt;&#39;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
 </code></pre></div>
-<h2 id="bulk-unlock-with-caution">Bulk Unlock (with caution)<a class="headerlink" href="#bulk-unlock-with-caution" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Unlock all locked accounts — use only after reviewing list</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Search-ADAccount</span> <span class="n">-LockedOut</span> <span class="p">|</span> <span class="nb">Unlock-ADAccount</span>
-</code></pre></div>
-<h2 id="reset-password-and-unlock-combined">Reset Password and Unlock (combined)<a class="headerlink" href="#reset-password-and-unlock-combined" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Set-ADAccountPassword</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Reset</span> <span class="n">-NewPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;&lt;NewPass&gt;&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span>
-</code></pre></div>
-<h2 id="linux-ldap-account-if-applicable">Linux / LDAP Account (if applicable)<a class="headerlink" href="#linux-ldap-account-if-applicable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check account status (PAM / pam_tally2)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pam_tally2<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Unlock</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pam_tally2<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># faillock (RHEL 8+)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
-</code></pre></div>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Confirm unlocked and can authenticate</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Test authentication (requires PSCredential)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span> <span class="n">-UserName</span> <span class="s2">&quot;&lt;domain&gt;\&lt;username&gt;&quot;</span> <span class="n">-Message</span> <span class="s2">&quot;Test auth&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">(</span><span class="nb">New-Object</span> <span class="n">DirectoryServices</span><span class="p">.</span><span class="n">DirectoryEntry</span><span class="p">(</span><span class="s2">&quot;LDAP://DC=domain,DC=com&quot;</span><span class="p">,</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">UserName</span><span class="p">,</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">GetNetworkCredential</span><span class="p">().</span><span class="n">Password</span><span class="p">)).</span><span class="n">distinguishedName</span>
-</code></pre></div>
-<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Requester identity confirmed</li>
-<li>[ ] Account ownership verified (not a shared/service account without approval)</li>
-<li>[ ] Lockout source identified</li>
-<li>[ ] Root cause noted (stale cached credentials, scheduled task, bad app config, etc.)</li>
-<li>[ ] Account unlocked</li>
-<li>[ ] User confirmed able to authenticate</li>
-<li>[ ] Ticket updated with lockout source</li>
-</ul>
-<h2 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h2>
+<p>Key fields in Event ID 4740:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caller Computer Name</td>
+<td>Machine generating bad password attempts</td>
+</tr>
+<tr>
+<td>Account Name</td>
+<td>Locked account</td>
+</tr>
+<tr>
+<td>Failure Reason</td>
+<td>Usually "bad password"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-3-fix-root-cause">Step 3 — Fix Root Cause<a class="headerlink" href="#step-3-fix-root-cause" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Cause</th>
-<th>Check</th>
-<th>Action</th>
+<th>Where to look</th>
+<th>Fix</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Stale cached credentials</td>
-<td>Mobile device / remote session</td>
+<td>Mobile device, Remote Desktop saved creds</td>
 <td>Clear saved credentials on device</td>
 </tr>
 <tr>
-<td>Scheduled task with old password</td>
-<td>Task Scheduler / cron</td>
+<td>Scheduled task</td>
+<td>Task Scheduler on caller machine</td>
 <td>Update task credentials</td>
 </tr>
 <tr>
-<td>Service account bad password</td>
-<td>Services console / SC config</td>
-<td>Update service password</td>
+<td>Service with old password</td>
+<td>Services console / <code>sc qc &lt;svc&gt;</code></td>
+<td>Update service account password</td>
 </tr>
 <tr>
-<td>Mapped drive with old creds</td>
+<td>Mapped drive</td>
 <td><code>net use</code> output</td>
 <td>Remove and re-add drive mapping</td>
 </tr>
 <tr>
-<td>Repeated failed MFA push</td>
+<td>Repeated MFA failure</td>
 <td>Azure AD Sign-In logs</td>
-<td>Check for unauthorized attempts</td>
+<td>Investigate for unauthorised attempts</td>
 </tr>
 </tbody>
 </table>
+<h2 id="step-4-unlock-the-account">Step 4 — Unlock the Account<a class="headerlink" href="#step-4-unlock-the-account" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Unlock single account</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Confirm unlocked</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span>
+</code></pre></div>
+<p><strong>Reset password and unlock (if password is also compromised):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Set-ADAccountPassword</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Reset</span> <span class="p">`</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">-NewPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;&lt;NewPass&gt;&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span>
+</code></pre></div></p>
+<h2 id="step-5-validate-authentication">Step 5 — Validate Authentication<a class="headerlink" href="#step-5-validate-authentication" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">username</span><span class="p">&gt;</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span> <span class="p">|</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># LockedOut should be False; BadLogonCount should be 0</span>
+</code></pre></div>
+<h2 id="linux-sssd-if-applicable">Linux / SSSD (if applicable)<a class="headerlink" href="#linux-sssd-if-applicable" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check lock state (RHEL 7 / pam_tally2)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pam_tally2<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pam_tally2<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># RHEL 8+ (faillock)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>faillock<span class="w"> </span>--user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--reset
+</code></pre></div>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Requester identity confirmed</li>
+<li>[ ] Account ownership verified (not an unattended service account)</li>
+<li>[ ] Lockout source identified and documented</li>
+<li>[ ] Root cause fixed or noted if deferred</li>
+<li>[ ] Account unlocked</li>
+<li>[ ] User confirmed able to authenticate</li>
+<li>[ ] Ticket updated with lockout source and fix applied</li>
+</ul>
 
 
 

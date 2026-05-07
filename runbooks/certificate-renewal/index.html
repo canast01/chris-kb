@@ -724,10 +724,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#renewal-timeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Renewal Timeline
       
     </span>
   </a>
@@ -735,49 +735,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#renewal-process" class="md-nav__link">
+  <a href="#process-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Renewal Process
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Renewal Process">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#self-signed-internal-ca" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Self-Signed / Internal CA
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#external-public-ca" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        External / Public CA
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-certificate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install Certificate
+        Process Flow
       
     </span>
   </a>
@@ -785,10 +746,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-renewal-validation" class="md-nav__link">
+  <a href="#step-1-confirm-current-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Post-Renewal Validation
+        Step 1 — Confirm Current Certificate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-generate-private-key-and-csr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Generate Private Key and CSR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-submit-to-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Submit to CA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-install-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Install Certificate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-post-renewal-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Post-Renewal Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
       
     </span>
   </a>
@@ -800,6 +816,17 @@
     <span class="md-ellipsis">
       
         Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
       
     </span>
   </a>
@@ -827,56 +854,141 @@
 
 
 <h1 id="certificate-renewal-runbook">Certificate Renewal Runbook<a class="headerlink" href="#certificate-renewal-runbook" title="Permanent link">&para;</a></h1>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check certificate expiration date</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert.pem&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check expiry on a live service</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check via curl</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;expire\|valid\|issuer&quot;</span>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Risk</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>Standard change for planned renewals; emergency change if &lt; 7 days to expiry</td>
+</tr>
+<tr>
+<td>Estimated time</td>
+<td>30–60 minutes</td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>Brief service interruption during hot-swap (seconds); expired cert causes full outage</td>
+</tr>
+</tbody>
+</table>
+<h2 id="renewal-timeline">Renewal Timeline<a class="headerlink" href="#renewal-timeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  30 days to expiry ──► Begin renewal process (this runbook)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  14 days to expiry ──► Escalate if renewal not yet complete
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   7 days to expiry ──► Emergency change; on-call engineer engaged
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>   0 days           ──► Certificate expired — service unavailable to clients
 </code></pre></div>
-<p>Alert threshold: begin renewal at <strong>30 days</strong> before expiry; escalate at <strong>14 days</strong>.</p>
-<h2 id="renewal-process">Renewal Process<a class="headerlink" href="#renewal-process" title="Permanent link">&para;</a></h2>
-<h3 id="self-signed-internal-ca">Self-Signed / Internal CA<a class="headerlink" href="#self-signed-internal-ca" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Generate CSR:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span>-keyout<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-out<span class="w"> </span>&lt;hostname&gt;.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;hostname&gt;/O=&lt;org&gt;/C=US&quot;</span>
-</code></pre></div></li>
-<li>Submit CSR to internal CA (AD CS, Venafi, etc.)</li>
-<li>Download signed certificate (PEM format)</li>
-</ol>
-<h3 id="external-public-ca">External / Public CA<a class="headerlink" href="#external-public-ca" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Generate CSR as above</li>
-<li>Submit to CA via web portal or ACME (Let's Encrypt)</li>
-<li>Complete domain validation</li>
-<li>Download signed certificate + chain</li>
-</ol>
-<h2 id="install-certificate">Install Certificate<a class="headerlink" href="#install-certificate" title="Permanent link">&para;</a></h2>
-<p><strong>Linux service (nginx/apache):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt<span class="w"> </span>/etc/ssl/certs/
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span>/etc/ssl/private/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<h2 id="process-flow">Process Flow<a class="headerlink" href="#process-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  Expiry alert triggered (30-day threshold)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>           │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>           ▼
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Confirm cert details: CN, SANs, issuing CA, service
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>           │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>           ▼
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Generate new private key + CSR
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>           │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>           ▼
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Internal CA?  ──── Yes ──► Submit to ADCS / Venafi
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>           │ No (external)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>           ▼
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Submit CSR to public CA; complete domain validation
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>           │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>           ▼
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  Download signed cert + full chain
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>           │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>           ▼
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  Test new cert in staging (if available)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>           │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>           ▼
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  Install cert + reload service
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>           │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>           ▼
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  Validate: new expiry date visible from browser / openssl
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>           │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>           ▼
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  Update cert inventory; close ticket
+</code></pre></div>
+<h2 id="step-1-confirm-current-certificate">Step 1 — Confirm Current Certificate<a class="headerlink" href="#step-1-confirm-current-certificate" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cert on disk</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>&lt;cert.pem&gt;<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check cert on live service</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check via curl (shows TLS negotiation)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>-vk<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;expire\|valid\|issuer\|subject&quot;</span>
+</code></pre></div>
+<p><strong>Capture:</strong> CN, SANs, issuing CA, expiry date, key algorithm.</p>
+<h2 id="step-2-generate-private-key-and-csr">Step 2 — Generate Private Key and CSR<a class="headerlink" href="#step-2-generate-private-key-and-csr" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># RSA 2048 (minimum); prefer RSA 4096 or ECDSA P-256 for new certs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-keyout<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-out<span class="w"> </span>&lt;hostname&gt;.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;hostname&gt;/O=&lt;org&gt;/C=GB&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># With SANs (required for modern browsers)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-keyout<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-out<span class="w"> </span>&lt;hostname&gt;.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-config<span class="w"> </span>&lt;<span class="o">(</span>cat<span class="w"> </span>/etc/ssl/openssl.cnf<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;\n[SAN]\nsubjectAltName=DNS:&lt;hostname&gt;,DNS:&lt;alias&gt;&quot;</span><span class="o">))</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-reqexts<span class="w"> </span>SAN
+</code></pre></div>
+<h2 id="step-3-submit-to-ca">Step 3 — Submit to CA<a class="headerlink" href="#step-3-submit-to-ca" title="Permanent link">&para;</a></h2>
+<p><strong>Internal (ADCS):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Submit CSR via PowerShell</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:&lt;TemplateName&gt;&quot;</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">csr</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;.</span><span class="n">cer</span>
+</code></pre></div></p>
+<p><strong>Venafi:</strong>
+- Upload CSR in Aperture → Request Certificate → Paste CSR</p>
+<p><strong>External / Let's Encrypt (ACME):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>certbot<span class="w"> </span>certonly<span class="w"> </span>--manual<span class="w"> </span>--preferred-challenges<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>&lt;hostname&gt;
+</code></pre></div></p>
+<h2 id="step-4-install-certificate">Step 4 — Install Certificate<a class="headerlink" href="#step-4-install-certificate" title="Permanent link">&para;</a></h2>
+<p><strong>Linux (nginx / apache):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cp<span class="w"> </span>&lt;ca-chain&gt;.pem<span class="w"> </span>/etc/ssl/certs/&lt;ca-chain&gt;.pem
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Test config before reload</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>nginx<span class="w"> </span>-t
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
 </code></pre></div></p>
 <p><strong>VMware vCenter:</strong>
-- Managed via vSphere Client → Administration → Certificate Management</p>
+- vSphere Client → Administration → Certificate Management → Replace Certificate</p>
 <p><strong>NetApp ONTAP:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>security<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-type<span class="w"> </span>server
 </code></pre></div></p>
-<h2 id="post-renewal-validation">Post-Renewal Validation<a class="headerlink" href="#post-renewal-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm new certificate is live</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm chain is valid</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>&lt;ca-chain.pem&gt;<span class="w"> </span>&lt;hostname&gt;.crt
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check from browser — verify no certificate warning</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://&lt;hostname&gt;/
+<p><strong>Windows IIS:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="p">&lt;</span><span class="n">cert</span><span class="p">.</span><span class="n">pfx</span><span class="p">&gt;</span> <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Then bind in IIS Manager → Site → Bindings → Edit → Select new cert</span>
+</code></pre></div></p>
+<h2 id="step-5-post-renewal-validation">Step 5 — Post-Renewal Validation<a class="headerlink" href="#step-5-post-renewal-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm new expiry date is live</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify chain is valid</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>&lt;ca-chain.pem&gt;<span class="w"> </span>&lt;hostname&gt;.crt
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Test from client</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SSL\|expire\|valid&quot;</span>
+</code></pre></div>
+<p>Expected: <code>notAfter</code> should show the new expiry date (typically 1–2 years out).</p>
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>Keep the old certificate and key until the new cert is confirmed working:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Restore old cert if new cert causes issues</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cp<span class="w"> </span>&lt;hostname&gt;.crt.bak<span class="w"> </span>/etc/ssl/certs/&lt;hostname&gt;.crt
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>cp<span class="w"> </span>&lt;hostname&gt;.key.bak<span class="w"> </span>/etc/ssl/private/&lt;hostname&gt;.key
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -894,22 +1006,41 @@
 <td>Include full chain in cert file</td>
 </tr>
 <tr>
-<td>Wrong hostname</td>
-<td>CN or SAN mismatch</td>
-<td>Reissue cert with correct SAN</td>
+<td>CN / SAN mismatch</td>
+<td><code>openssl x509 -noout -text</code></td>
+<td>Reissue with correct SANs</td>
 </tr>
 <tr>
 <td>Private key mismatch</td>
-<td>Key doesn't match cert</td>
-<td>Re-generate CSR with correct key</td>
+<td><code>openssl x509 -noout -modulus</code> vs <code>openssl rsa -noout -modulus</code></td>
+<td>Regenerate CSR with original key or new key pair</td>
 </tr>
 <tr>
 <td>Service still showing old cert</td>
 <td>Service not reloaded</td>
-<td>Restart / reload the service</td>
+<td>Reload / restart service; check if cert path is correct in config</td>
+</tr>
+<tr>
+<td>Browser shows warning after install</td>
+<td>Intermediate CA not installed</td>
+<td>Append CA chain to cert file</td>
 </tr>
 </tbody>
 </table>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Expiry date and service confirmed</li>
+<li>[ ] CN and SANs documented</li>
+<li>[ ] New private key and CSR generated</li>
+<li>[ ] CSR submitted to correct CA</li>
+<li>[ ] Signed cert and chain downloaded</li>
+<li>[ ] Old cert backed up</li>
+<li>[ ] New cert installed</li>
+<li>[ ] Service reloaded</li>
+<li>[ ] New expiry date confirmed via openssl</li>
+<li>[ ] Cert inventory updated (Venafi / spreadsheet)</li>
+<li>[ ] Ticket closed</li>
+</ul>
 
 
 
