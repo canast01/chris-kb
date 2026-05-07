@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Capabilities
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#ssl-certificate-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        SSL Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#waf-mode-and-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAF Mode and Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,140 @@
 
 
 <h1 id="application-gateway">Application Gateway<a class="headerlink" href="#application-gateway" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure application gateway and web traffic notes.
-</div>
+<p>Azure Application Gateway — layer 7 load balancer with SSL termination, URL routing, WAF, and autoscaling.</p>
+<h2 id="key-capabilities">Key Capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL path-based routing</td>
+<td>Route <code>/api/*</code> to one backend, <code>/static/*</code> to another</td>
+</tr>
+<tr>
+<td>Host-based routing</td>
+<td>Route by hostname (multi-site hosting)</td>
+</tr>
+<tr>
+<td>SSL termination</td>
+<td>Offload TLS at the gateway; backend communication in HTTP</td>
+</tr>
+<tr>
+<td>SSL end-to-end</td>
+<td>Re-encrypt traffic to backend (requires trusted root cert on backend)</td>
+</tr>
+<tr>
+<td>WAF (v2)</td>
+<td>OWASP CRS rule sets; custom rules; bot protection</td>
+</tr>
+<tr>
+<td>Autoscaling (v2)</td>
+<td>Automatic scale-out based on traffic volume</td>
+</tr>
+<tr>
+<td>Rewrite rules</td>
+<td>Modify HTTP headers and URL before sending to backend</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List application gateways
+az network application-gateway list -g &lt;rg&gt; \
+  --query '[*].{Name:name,SKU:sku.name,State:provisioningState,Tier:sku.tier}' -o table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# Show backend health
+az network application-gateway show-backend-health -g &lt;rg&gt; -n &lt;agw-name&gt; \
+  --query 'backendAddressPools[*].backendHttpSettingsCollection[*].servers[*].{Address:address,Health:health}' -o table
+
+# List backend pools
+az network application-gateway address-pool list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --query '[*].{Name:name,Backends:backendAddresses}' -o table
+
+# List HTTP settings
+az network application-gateway http-settings list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --query '[*].{Name:name,Port:port,Protocol:protocol,Timeout:requestTimeout}' -o table
+
+# List routing rules
+az network application-gateway rule list -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --query '[*].{Name:name,Type:ruleType,Listener:httpListener.id,BackendPool:backendAddressPool.id}' -o table
+
+# Add a backend pool member
+az network application-gateway address-pool update -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --name &lt;pool-name&gt; \
+  --servers 10.0.1.10 10.0.1.11
+
+# Get WAF configuration
+az network application-gateway waf-config show -g &lt;rg&gt; --gateway-name &lt;agw-name&gt;
+</code></pre>
+<h2 id="ssl-certificate-management">SSL Certificate Management<a class="headerlink" href="#ssl-certificate-management" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Add a PFX certificate
+az network application-gateway ssl-cert create -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --name &lt;cert-name&gt; \
+  --cert-file cert.pfx \
+  --cert-password &lt;password&gt;
+
+# Use Key Vault certificate (managed identity required)
+az network application-gateway ssl-cert create -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --name &lt;cert-name&gt; \
+  --key-vault-secret-id &lt;keyvault-secret-uri&gt;
+</code></pre>
+<h2 id="waf-mode-and-rules">WAF Mode and Rules<a class="headerlink" href="#waf-mode-and-rules" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Set WAF to Prevention mode (blocks; Detection only logs)
+az network application-gateway waf-config set -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --enabled true \
+  --firewall-mode Prevention \
+  --rule-set-type OWASP \
+  --rule-set-version 3.2
+
+# Add WAF exclusion (for false positives)
+az network application-gateway waf-config set -g &lt;rg&gt; --gateway-name &lt;agw-name&gt; \
+  --enabled true \
+  --firewall-mode Prevention \
+  --rule-set-type OWASP \
+  --rule-set-version 3.2 \
+  --exclusion RequestHeaderNames StartsWith &quot;X-Custom&quot;
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>502 Bad Gateway</td>
+<td>Backend health</td>
+<td>Run <code>show-backend-health</code>; verify backends are healthy and reachable</td>
+</tr>
+<tr>
+<td>SSL cert error</td>
+<td>Cert attached to listener</td>
+<td>Verify correct cert is on HTTPS listener; check expiry</td>
+</tr>
+<tr>
+<td>WAF blocking legitimate traffic</td>
+<td>WAF logs</td>
+<td>Check Azure Monitor WAF logs; add exclusion for false positive rule</td>
+</tr>
+<tr>
+<td>High latency</td>
+<td>Connection draining / backend</td>
+<td>Check backend response time; review timeout settings in HTTP settings</td>
+</tr>
+<tr>
+<td>Path routing not working</td>
+<td>Rule priority</td>
+<td>Lower priority number wins; check rule order</td>
+</tr>
+</tbody>
+</table>
 
 
 

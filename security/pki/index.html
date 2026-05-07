@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pki-architecture-typical-enterprise" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        PKI Architecture (Typical Enterprise)
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#adcs-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        ADCS Health Checks
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#crl-and-ocsp-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        CRL and OCSP Monitoring
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
+  <a href="#certificate-inventory-and-expiry-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Workflow
+        Certificate Inventory and Expiry Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-lifecycle-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Lifecycle Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-revocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Revocation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-and-dr-for-adcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and DR for ADCS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -775,27 +819,140 @@
 
 
 <h1 id="public-key-infrastructure-pki">Public Key Infrastructure (PKI)<a class="headerlink" href="#public-key-infrastructure-pki" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>PKI manages digital certificates used for encryption, authentication, and secure communication across infrastructure, applications, and services.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify certificate expiration dates</li>
-<li>Check certificate authority services</li>
-<li>Review certificate revocation list status</li>
-<li>Validate auto-enrollment operations</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">certutil -viewstore My
-certutil -CRL
-Get-Service certsvc
+<h2 id="pki-architecture-typical-enterprise">PKI Architecture (Typical Enterprise)<a class="headerlink" href="#pki-architecture-typical-enterprise" title="Permanent link">&para;</a></h2>
+<pre><code>Root CA (offline, air-gapped)
+  └── Intermediate / Issuing CA (online, ADCS)
+        ├── Server certificates (internal services)
+        ├── User certificates (smart card / email encryption)
+        └── Code signing certificates
 </code></pre>
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Backup certificate authority database</li>
-<li>Verify certificate templates</li>
-<li>Apply OS or certificate authority updates</li>
-<li>Validate certificate issuance and renewal</li>
-</ol>
+<h2 id="adcs-health-checks">ADCS Health Checks<a class="headerlink" href="#adcs-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Confirm CA service is running
+Get-Service -Name CertSvc
+
+# List CA configuration
+certutil -getconfig
+
+# View pending certificate requests
+certutil -view -restrict &quot;disposition=9&quot; -out &quot;requestID,requesterName,CommonName,NotAfter&quot;
+
+# Check CRL validity
+certutil -URL &lt;crl-distribution-point-url&gt;
+
+# Verify CRL freshness and OCSP
+certutil -verifyCRL C:\Windows\System32\certsrv\CertEnroll\&lt;ca&gt;.crl
+
+# View issued certificates (last 100)
+certutil -view -restrict &quot;Disposition=20&quot; -out &quot;RequestID,CommonName,NotBefore,NotAfter,Requester&quot; | head -100
+</code></pre>
+<h2 id="crl-and-ocsp-monitoring">CRL and OCSP Monitoring<a class="headerlink" href="#crl-and-ocsp-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — verify OCSP responder
+openssl ocsp \
+  -issuer issuing-ca.pem \
+  -cert server.pem \
+  -url http://&lt;ocsp-responder&gt;/ocsp \
+  -resp_text
+
+# Verify CRL freshness from a PEM cert
+openssl crl -in &lt;crl-file&gt;.crl -noout -nextupdate
+# nextUpdate must be in the future — if expired, CRL is stale
+</code></pre>
+<h2 id="certificate-inventory-and-expiry-check">Certificate Inventory and Expiry Check<a class="headerlink" href="#certificate-inventory-and-expiry-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check expiry for a certificate
+openssl x509 -in cert.pem -noout -dates -subject -issuer
+
+# Scan a live service
+echo | openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt; 2&gt;/dev/null | \
+  openssl x509 -noout -dates -subject
+
+# Bulk check from a list of hosts
+while read host; do
+  expiry=$(echo | openssl s_client -connect &quot;${host}:443&quot; -servername &quot;$host&quot; 2&gt;/dev/null | \
+    openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
+  echo &quot;$host: $expiry&quot;
+done &lt; hosts.txt
+</code></pre>
+<h2 id="certificate-lifecycle-events">Certificate Lifecycle Events<a class="headerlink" href="#certificate-lifecycle-events" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certificate expiring in 60 days</td>
+<td>Initiate renewal</td>
+</tr>
+<tr>
+<td>Certificate expiring in 30 days</td>
+<td>Escalate if not renewed</td>
+</tr>
+<tr>
+<td>Certificate expiring in 7 days</td>
+<td>Emergency renewal; notify service owners</td>
+</tr>
+<tr>
+<td>CA certificate expiring in 6 months</td>
+<td>Plan CA renewal (impacts all issued certs)</td>
+</tr>
+<tr>
+<td>Key compromise suspected</td>
+<td>Revoke immediately; issue replacement</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-revocation">Certificate Revocation<a class="headerlink" href="#certificate-revocation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Revoke a certificate in ADCS
+# Get request ID from certutil -view output
+certutil -revoke &lt;request-id&gt; 3   # 3 = keyCompromise
+
+# Publish new CRL immediately after revocation
+certutil -CRL
+</code></pre>
+<h2 id="backup-and-dr-for-adcs">Backup and DR for ADCS<a class="headerlink" href="#backup-and-dr-for-adcs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Backup CA database and private key
+certutil -backup C:\CA-Backup
+
+# Or full backup including config
+certutil -backupdb C:\CA-Backup
+
+# Verify backup
+certutil -verifystore -enterprise NTAuth
+</code></pre>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRL too large / slow to download</td>
+<td>Number of revoked certs</td>
+<td>Enable Delta CRL; increase CRL publication frequency</td>
+</tr>
+<tr>
+<td>OCSP not responding</td>
+<td>OCSP responder service</td>
+<td>Restart Online Responder service; check CRL is current</td>
+</tr>
+<tr>
+<td>Auto-enrollment failing</td>
+<td>Group Policy / template</td>
+<td>Check "Certificate Services Client - Auto-Enrollment" GPO; verify user has Enroll permission on template</td>
+</tr>
+<tr>
+<td>CA certificate expired</td>
+<td>CA cert validity</td>
+<td>Renew CA cert; redistribute trust to all clients via GPO</td>
+</tr>
+</tbody>
+</table>
 
 
 

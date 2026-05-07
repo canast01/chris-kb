@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-azure-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common Azure CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#common-built-in-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Common Built-In Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-policy-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Policy Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,178 @@
 
 
 <h1 id="azure-policy">Azure Policy<a class="headerlink" href="#azure-policy" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-Azure governance and policy notes.
-</div>
+<p>Azure Policy — governance guardrails that audit and enforce configuration standards across Azure resources.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Policy definition</td>
+<td>Rule that evaluates resources against conditions</td>
+</tr>
+<tr>
+<td>Initiative (policy set)</td>
+<td>Group of policy definitions applied together</td>
+</tr>
+<tr>
+<td>Assignment</td>
+<td>Applies a policy or initiative to a scope (subscription, RG, management group)</td>
+</tr>
+<tr>
+<td>Effect</td>
+<td>What the policy does: <code>Audit</code>, <code>Deny</code>, <code>Modify</code>, <code>DeployIfNotExists</code>, <code>AuditIfNotExists</code></td>
+</tr>
+<tr>
+<td>Compliance</td>
+<td>Dashboard showing compliant vs non-compliant resources</td>
+</tr>
+<tr>
+<td>Remediation task</td>
+<td>Runs a <code>DeployIfNotExists</code> or <code>Modify</code> policy on existing non-compliant resources</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-azure-cli-commands">Common Azure CLI Commands<a class="headerlink" href="#common-azure-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List policy definitions (built-in only)
+az policy definition list --query '[?policyType==`BuiltIn`].{Name:displayName,ID:name}' -o table | head -20
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List policy assignments at subscription scope
+az policy assignment list \
+  --query '[*].{Name:displayName,Policy:policyDefinitionId,Scope:scope}' -o table
+
+# Create a policy assignment (built-in: require tags on resources)
+az policy assignment create \
+  --name &quot;require-env-tag&quot; \
+  --display-name &quot;Require environment tag&quot; \
+  --policy &quot;/providers/Microsoft.Authorization/policyDefinitions/&lt;built-in-policy-id&gt;&quot; \
+  --scope /subscriptions/&lt;sub-id&gt; \
+  --params '{&quot;tagName&quot;:{&quot;value&quot;:&quot;Environment&quot;}}'
+
+# Get compliance state for an assignment
+az policy state summarize \
+  --policy-assignment &lt;assignment-id&gt; \
+  --query 'results.policyDetails[*].{Policy:policyDefinitionId,NonCompliant:nonCompliantResources}'
+
+# List non-compliant resources
+az policy state list \
+  --filter &quot;complianceState eq 'NonCompliant'&quot; \
+  --query '[*].{Resource:resourceId,Policy:policyDefinitionName,Time:timestamp}' -o table
+
+# Create a remediation task (for DeployIfNotExists policies)
+az policy remediation create \
+  --name &lt;remediation-name&gt; \
+  --policy-assignment &lt;assignment-id&gt; \
+  -g &lt;rg&gt;
+</code></pre>
+<h2 id="common-built-in-policies">Common Built-In Policies<a class="headerlink" href="#common-built-in-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Effect</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allowed locations</td>
+<td>Deny</td>
+<td>Restrict resources to approved regions</td>
+</tr>
+<tr>
+<td>Require a tag and its value</td>
+<td>Deny</td>
+<td>Enforce resource tagging</td>
+</tr>
+<tr>
+<td>Audit VMs that do not use managed disks</td>
+<td>Audit</td>
+<td>Surface unmanaged disks</td>
+</tr>
+<tr>
+<td>Deploy Log Analytics agent for VMs</td>
+<td>DeployIfNotExists</td>
+<td>Auto-install monitoring agent</td>
+</tr>
+<tr>
+<td>Require encryption on storage accounts</td>
+<td>Deny</td>
+<td>Enforce storage encryption</td>
+</tr>
+<tr>
+<td>Not allowed resource types</td>
+<td>Deny</td>
+<td>Block specific resource types</td>
+</tr>
+</tbody>
+</table>
+<h2 id="custom-policy-definition">Custom Policy Definition<a class="headerlink" href="#custom-policy-definition" title="Permanent link">&para;</a></h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;All&quot;,
+  &quot;displayName&quot;: &quot;Deny public IP on VMs&quot;,
+  &quot;policyRule&quot;: {
+    &quot;if&quot;: {
+      &quot;allOf&quot;: [
+        {
+          &quot;field&quot;: &quot;type&quot;,
+          &quot;equals&quot;: &quot;Microsoft.Network/publicIPAddresses&quot;
+        },
+        {
+          &quot;field&quot;: &quot;Microsoft.Network/publicIPAddresses/sku.name&quot;,
+          &quot;notEquals&quot;: &quot;Basic&quot;
+        }
+      ]
+    },
+    &quot;then&quot;: {
+      &quot;effect&quot;: &quot;Deny&quot;
+    }
+  }
+}
+</code></pre>
+<pre><code class="language-bash"># Create custom policy
+az policy definition create \
+  --name &quot;deny-public-ip-vm&quot; \
+  --display-name &quot;Deny public IPs on VMs&quot; \
+  --rules policy-rule.json \
+  --mode All
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource creation denied unexpectedly</td>
+<td>Active policy assignments</td>
+<td>Check <code>az policy assignment list</code> for Deny effects at the scope</td>
+</tr>
+<tr>
+<td>Compliance showing stale data</td>
+<td>Evaluation trigger</td>
+<td>Trigger re-evaluation: <code>az policy state trigger-scan</code></td>
+</tr>
+<tr>
+<td>Remediation task failing</td>
+<td>Managed identity permissions</td>
+<td>Assign remediation identity the required RBAC role on scope</td>
+</tr>
+<tr>
+<td>Policy not applying to existing resources</td>
+<td>Effect type</td>
+<td>Only <code>Audit</code>/<code>Deny</code> apply to new resources; use remediation for existing</td>
+</tr>
+</tbody>
+</table>
 
 
 

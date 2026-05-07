@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#patch-classification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Patch Classification
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#windows-patch-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Windows Patch Compliance
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#linux-patch-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Linux Patch Compliance
       
     </span>
   </a>
@@ -745,10 +745,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compliance-workflow" class="md-nav__link">
+  <a href="#sccm-endpoint-manager-windows-fleet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compliance Workflow
+        SCCM / Endpoint Manager (Windows fleet)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patch-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Reporting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-checks-by-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Checks by Tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Handling
       
     </span>
   </a>
@@ -775,26 +808,129 @@
 
 
 <h1 id="patch-compliance-monitoring">Patch Compliance Monitoring<a class="headerlink" href="#patch-compliance-monitoring" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Patch compliance ensures systems meet required security patch levels.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review missing patches</li>
-<li>Confirm patch schedules</li>
-<li>Validate system reboot status</li>
-<li>Check patch reporting dashboards</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-powershell">Get-HotFix
-Get-WindowsUpdateLog
+<h2 id="patch-classification">Patch Classification<a class="headerlink" href="#patch-classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Definition</th>
+<th>Deployment SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Remote code execution, active exploitation</td>
+<td>15 days</td>
+</tr>
+<tr>
+<td>Important</td>
+<td>Privilege escalation, data exposure</td>
+<td>30 days</td>
+</tr>
+<tr>
+<td>Moderate</td>
+<td>Requires unusual conditions or local access</td>
+<td>90 days</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Minimal impact</td>
+<td>Next scheduled window</td>
+</tr>
+</tbody>
+</table>
+<h2 id="windows-patch-compliance">Windows Patch Compliance<a class="headerlink" href="#windows-patch-compliance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># List installed hotfixes sorted by date
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 20
+
+# List missing updates (requires Windows Update module)
+$session = New-Object -ComObject Microsoft.Update.Session
+$searcher = $session.CreateUpdateSearcher()
+$missing = $searcher.Search(&quot;IsInstalled=0 and Type='Software'&quot;)
+$missing.Updates | Select-Object Title, MsrcSeverity | Sort-Object MsrcSeverity
+
+# WSUS — get patch compliance per computer
+# Run on WSUS server (requires UpdateServices module)
+$wsus = Get-WsusServer -Name wsus01 -PortNumber 8530
+$computers = Get-WsusComputer -UpdateServer $wsus -All
+$computers | Select-Object FullDomainName, LastSyncTime, @{N='NotInstalled';E={$_.GetUpdateInstallationSummary().NotInstalled}} |
+  Sort-Object NotInstalled -Descending | Select-Object -First 20
 </code></pre>
-<h2 id="compliance-workflow">Compliance Workflow<a class="headerlink" href="#compliance-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Identify missing patches</li>
-<li>Schedule patch deployment</li>
-<li>Verify installation success</li>
-<li>Confirm system stability</li>
-</ol>
+<h2 id="linux-patch-compliance">Linux Patch Compliance<a class="headerlink" href="#linux-patch-compliance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># RHEL/CentOS — list available security updates
+yum updateinfo list security available 2&gt;/dev/null
+
+# Count critical updates
+yum updateinfo summary security 2&gt;/dev/null | grep &quot;Critical&quot;
+
+# Ubuntu/Debian — list upgradable security packages
+apt list --upgradable 2&gt;/dev/null | grep -i security
+
+# Confirm last update date
+rpm -qa --last | head -10          # RHEL
+grep &quot;install&quot; /var/log/dpkg.log | tail -10  # Debian
+
+# Check kernel version vs latest available
+uname -r
+rpm -q kernel | sort -V | tail    # RHEL — latest installed kernel
+</code></pre>
+<h2 id="sccm-endpoint-manager-windows-fleet">SCCM / Endpoint Manager (Windows fleet)<a class="headerlink" href="#sccm-endpoint-manager-windows-fleet" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Query SCCM database for patch compliance (run on SCCM server)
+$query = &quot;SELECT SMS_R_System.Name, SMS_UpdateComplianceStatus.Status FROM SMS_R_System
+          INNER JOIN SMS_UpdateComplianceStatus ON SMS_R_System.ResourceID = SMS_UpdateComplianceStatus.MachineID
+          WHERE SMS_UpdateComplianceStatus.ArticleID = '&lt;KB-number&gt;'&quot;
+</code></pre>
+<h2 id="patch-reporting">Patch Reporting<a class="headerlink" href="#patch-reporting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical patches applied within 15 days</td>
+<td>&gt;95% of hosts</td>
+</tr>
+<tr>
+<td>High patches applied within 30 days</td>
+<td>&gt;90% of hosts</td>
+</tr>
+<tr>
+<td>Systems with no patches &gt;90 days</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Unapproved exceptions</td>
+<td>Must have documented business justification + compensating control</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compliance-checks-by-tool">Compliance Checks by Tool<a class="headerlink" href="#compliance-checks-by-tool" title="Permanent link">&para;</a></h2>
+<p><strong>Qualys / Tenable patch compliance:</strong></p>
+<pre><code class="language-bash"># Query Tenable.io for patch compliance data
+curl -s -H &quot;X-ApiKey: accessKey=&lt;ak&gt;;secretKey=&lt;sk&gt;&quot; \
+  &quot;https://cloud.tenable.com/workbenches/assets/vulnerabilities&quot; \
+  | jq '.vulnerabilities[] | select(.plugin_family==&quot;Windows : Microsoft Bulletins&quot;) | {name,severity,count}'
+</code></pre>
+<p><strong>Azure Update Manager:</strong></p>
+<pre><code class="language-bash"># List VMs with missing critical updates
+az maintenance configuration list -o table
+
+# Check update status for a VM
+az maintenance update list -g &lt;rg&gt; --resource-name &lt;vm-name&gt; --resource-type VirtualMachines \
+  --provider-name Microsoft.Compute \
+  --query '[?properties.maintenanceScope==`InGuestPatch`]'
+</code></pre>
+<h2 id="exception-handling">Exception Handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h2>
+<p>When a patch cannot be applied within the SLA:
+1. Document the exception with system name, patch, and reason
+2. Identify compensating controls (WAF rule, network segmentation, IDS signature)
+3. Set review date (maximum 30-day extension for non-critical systems)
+4. Obtain security team and management sign-off
+5. Track in vulnerability management system</p>
 
 
 

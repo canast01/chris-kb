@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#key-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
+        Key Concepts
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-tasks" class="md-nav__link">
+  <a href="#common-cli-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Tasks
+        Common CLI Commands
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-references" class="md-nav__link">
+  <a href="#service-control-policy-scp-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands / References
+        Service Control Policy (SCP) Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consolidated-billing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consolidated Billing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,23 +786,153 @@
 
 
 <h1 id="aws-organizations">AWS Organizations<a class="headerlink" href="#aws-organizations" title="Permanent link">&para;</a></h1>
-<div class="kb-note">
-AWS account structure and organization policy notes.
-</div>
+<p>AWS Organizations — multi-account management, service control policies (SCPs), and consolidated billing.</p>
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organization</td>
+<td>Root container for all accounts</td>
+</tr>
+<tr>
+<td>Management account</td>
+<td>Root account that owns the org (formerly "master")</td>
+</tr>
+<tr>
+<td>Member account</td>
+<td>Any other account in the org</td>
+</tr>
+<tr>
+<td>Organizational Unit (OU)</td>
+<td>Group of accounts for policy targeting</td>
+</tr>
+<tr>
+<td>Service Control Policy (SCP)</td>
+<td>Permission guardrails — limit what member accounts can do</td>
+</tr>
+<tr>
+<td>Delegated admin</td>
+<td>Member account authorized to manage specific AWS services</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-commands">Common CLI Commands<a class="headerlink" href="#common-cli-commands" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List accounts in the organization
+aws organizations list-accounts \
+  --query 'Accounts[*].{ID:Id,Name:Name,Email:Email,Status:Status}' --output table
 
-<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
-<p>Use this page for working notes, build standards, troubleshooting steps, operational checks, and useful links.</p>
-<h2 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Architecture notes</li>
-<li>Daily operations</li>
-<li>Troubleshooting</li>
-<li>Upgrade notes</li>
-<li>Health checks</li>
-<li>Support references</li>
-</ul>
-<h2 id="commands-references">Commands / References<a class="headerlink" href="#commands-references" title="Permanent link">&para;</a></h2>
-<p>Add commands, screenshots, links, and examples here.</p>
+# List OUs under root
+aws organizations list-organizational-units-for-parent \
+  --parent-id $(aws organizations list-roots --query 'Roots[0].Id' --output text) \
+  --query 'OrganizationalUnits[*].{Name:Name,ID:Id}' --output table
+
+# List SCPs attached to an OU
+aws organizations list-policies-for-target \
+  --target-id &lt;ou-id&gt; \
+  --filter SERVICE_CONTROL_POLICY \
+  --query 'Policies[*].{Name:Name,ID:Id}' --output table
+
+# Get SCP content
+aws organizations describe-policy --policy-id &lt;policy-id&gt; \
+  --query 'Policy.Content' --output text | python3 -m json.tool
+
+# List AWS services with delegated admin
+aws organizations list-delegated-administrators \
+  --query 'DelegatedAdministrators[*].{Account:Id,Services:DelegationEnabledDate}' --output table
+
+# Move account to a different OU
+aws organizations move-account \
+  --account-id &lt;account-id&gt; \
+  --source-parent-id &lt;current-ou-id&gt; \
+  --destination-parent-id &lt;target-ou-id&gt;
+</code></pre>
+<h2 id="service-control-policy-scp-examples">Service Control Policy (SCP) Examples<a class="headerlink" href="#service-control-policy-scp-examples" title="Permanent link">&para;</a></h2>
+<p>SCPs define the maximum permissions for member accounts — they don't grant permissions, only restrict.</p>
+<p><strong>Deny disabling CloudTrail:</strong></p>
+<pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyCloudTrailDisable&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Action&quot;: [
+        &quot;cloudtrail:StopLogging&quot;,
+        &quot;cloudtrail:DeleteTrail&quot;,
+        &quot;cloudtrail:UpdateTrail&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;
+    }
+  ]
+}
+</code></pre>
+<p><strong>Deny creation of resources outside approved regions:</strong></p>
+<pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyNonApprovedRegions&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;NotAction&quot;: [
+        &quot;iam:*&quot;, &quot;sts:*&quot;, &quot;support:*&quot;, &quot;organizations:*&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringNotEquals&quot;: {
+          &quot;aws:RequestedRegion&quot;: [&quot;eu-west-1&quot;, &quot;us-east-1&quot;]
+        }
+      }
+    }
+  ]
+}
+</code></pre>
+<h2 id="consolidated-billing">Consolidated Billing<a class="headerlink" href="#consolidated-billing" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># View account costs from management account
+aws ce get-cost-and-usage \
+  --time-period Start=2026-05-01,End=2026-05-06 \
+  --granularity DAILY \
+  --metrics BlendedCost \
+  --group-by Type=DIMENSION,Key=LINKED_ACCOUNT \
+  --query 'ResultsByTime[*].Groups[*].{Account:Keys[0],Cost:Metrics.BlendedCost.Amount}' \
+  --output table
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Action denied despite IAM allowing it</td>
+<td>SCP in effect?</td>
+<td><code>aws organizations describe-effective-policy</code> — find restrictive SCP</td>
+</tr>
+<tr>
+<td>Can't create account</td>
+<td>Organization quota</td>
+<td>Request limit increase via Support</td>
+</tr>
+<tr>
+<td>SCP change not taking effect</td>
+<td>Propagation time</td>
+<td>Allow 30 seconds; check SCP is attached to correct OU/account</td>
+</tr>
+<tr>
+<td>Account can't leave org</td>
+<td>Management account restriction</td>
+<td>Only management account can remove member accounts</td>
+</tr>
+</tbody>
+</table>
 
 
 
