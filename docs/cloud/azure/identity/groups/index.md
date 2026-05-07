@@ -1,5 +1,16 @@
 # Groups
 
+```mermaid
+flowchart LR
+    Groups["Groups"]
+    Groups --> S0["Purpose"]
+    Groups --> S1["Common checks"]
+    Groups --> S2["Incident notes"]
+    Groups --> S3["Change notes"]
+    Groups --> S4["Useful commands"]
+    Groups --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Identity Groups notes, checks, troubleshooting, commands, change notes, and field references.

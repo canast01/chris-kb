@@ -1,5 +1,15 @@
 # Dell CloudIQ Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Support Portal"]
+    Vendor_Support --> S1["Opening a Case"]
+    Vendor_Support --> S2["Information to Collect"]
+    Vendor_Support --> S3["SLA Tiers"]
+    Vendor_Support --> S4["Escalation"]
+```
+
 ## Support Portal
 
 Dell CloudIQ support cases are handled through the standard Dell support portal at [https://www.dell.com/support](https://www.dell.com/support). CloudIQ is a SaaS service and does not have its own separate support queue — issues are logged against the affected storage system's case, with CloudIQ identified as the impacted component.

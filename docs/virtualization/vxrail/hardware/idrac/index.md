@@ -1,5 +1,17 @@
 # VxRail iDRAC
 
+```mermaid
+flowchart LR
+    VxRail_iDRAC["VxRail iDRAC"]
+    VxRail_iDRAC --> S0["Where It Fits"]
+    VxRail_iDRAC --> S1["Daily Checks"]
+    VxRail_iDRAC --> S2["Health Commands"]
+    VxRail_iDRAC --> S3["Common Issues"]
+    VxRail_iDRAC --> S4["Operational Tasks"]
+    VxRail_iDRAC --> S5["Upgrade Notes"]
+    VxRail_iDRAC --> S6["Best Practices"]
+```
+
 ## Overview
 
 iDRAC access, hardware inventory, logs, alerts, and support evidence.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

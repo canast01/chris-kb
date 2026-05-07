@@ -1,5 +1,15 @@
 # PowerScale Integration
 
+```mermaid
+flowchart LR
+    PowerScale_Integrati["PowerScale Integration"]
+    PowerScale_Integrati --> S0["VMware Integration"]
+    PowerScale_Integrati --> S1["Backup Integration"]
+    PowerScale_Integrati --> S2["CloudIQ Monitoring"]
+    PowerScale_Integrati --> S3["Active Directory / LDAP"]
+    PowerScale_Integrati --> S4["REST API"]
+```
+
 ## VMware Integration
 
 PowerScale integrates with VMware vSphere in several ways:

@@ -1,5 +1,18 @@
 # Active Directory Security
 
+```mermaid
+flowchart LR
+    Directory_Security["Directory Security"]
+    Directory_Security --> S0["Tiered Administration Model"]
+    Directory_Security --> S1["Privileged Access Workstations (PAWs)"]
+    Directory_Security --> S2["Core Security Controls"]
+    Directory_Security --> S3["Enforcing LDAP Signing and Channel Binding"]
+    Directory_Security --> S4["Kerberos Encryption Policy"]
+    Directory_Security --> S5["Protected Users Group"]
+    Directory_Security --> S6["AdminSDHolder Monitoring"]
+    Directory_Security --> S7["DCSync Attack Detection"]
+```
+
 ## Tiered Administration Model
 
 Active Directory security is built around the three-tier admin model:

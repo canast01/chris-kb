@@ -1,5 +1,16 @@
 # Isolation
 
+```mermaid
+flowchart LR
+    Isolation["Isolation"]
+    Isolation --> S0["Purpose"]
+    Isolation --> S1["Common checks"]
+    Isolation --> S2["Incident notes"]
+    Isolation --> S3["Change notes"]
+    Isolation --> S4["Useful commands"]
+    Isolation --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Isolated Recovery Environment Ire Isolation notes, checks, troubleshooting, commands, change notes, and field references.

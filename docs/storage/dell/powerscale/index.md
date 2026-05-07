@@ -28,18 +28,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Dell_PowerScale["Dell PowerScale"]
+    Dell_PowerScale --> S0["Where It Fits"]
+    Dell_PowerScale --> S1["Daily Checks"]
+    Dell_PowerScale --> S2["Health Commands"]
+    Dell_PowerScale --> S3["Common Issues"]
+    Dell_PowerScale --> S4["Operational Tasks"]
+    Dell_PowerScale --> S5["Upgrade Notes"]
+    Dell_PowerScale --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS distributed operating system, where all nodes form a single shared namespace under `/ifs`. Clusters scale from 3 to 252 nodes, with each node added linearly increasing both capacity and throughput. PowerScale supports multi-protocol access including NFS, SMB/CIFS, HDFS, S3, and FTP from the same file system.
 
 ## Where It Fits
 
-- Unstructured data at scale: media and entertainment workflows, genomics, EDA, home directories
-- Multi-protocol environments where the same data must be accessible via NFS and SMB simultaneously
-- Hadoop and analytics workloads using HDFS access directly against `/ifs`
-- Disaster recovery and data replication targets via SyncIQ asynchronous replication
-- Tiered storage environments using SmartPools to automatically migrate data across SSD, SAS, and SATA node pools
-- Object storage workloads via the S3-compatible access zone interface
+
+| Use Case |
+|---|
+| Unstructured data at scale: media and entertainment workflows, genomics, EDA, home directories |
+| Multi-protocol environments where the same data must be accessible via NFS and SMB simultaneously |
+| Hadoop and analytics workloads using HDFS access directly against `/ifs` |
+| Disaster recovery and data replication targets via SyncIQ asynchronous replication |
+| Tiered storage environments using SmartPools to automatically migrate data across SSD, SAS, and SATA node pools |
+| Object storage workloads via the S3-compatible access zone interface |
 
 ## Daily Checks
 
@@ -128,10 +143,13 @@ isi license list
 
 ## Best Practices
 
-- Design access zones per client group or business unit rather than per individual volume — this simplifies protocol and authentication policy management
-- Always configure three quota threshold levels (advisory, soft with grace period, hard) on user-facing directories to prevent sudden write failures
-- Validate SyncIQ RPO and RTO regularly by checking the last successful replication timestamp in `isi sync reports list` against your recovery objectives
-- Use SmartConnect zones with round-robin or CPU-based connection balancing to distribute NFS and SMB client connections evenly across nodes
-- Keep OneFS within N-2 versions of the current release to remain within Dell's supported upgrade paths and receive security patches
-- Do not store data outside of `/ifs` — all persistent data must reside within the cluster file system to benefit from protection and replication
-- Monitor per-node performance with `isi statistics` regularly to identify hot nodes; rebalance workloads across access zones if persistent imbalance is observed
+
+| Recommendation | Detail |
+|---|---|
+| Design access zones per client group or business unit rather than per individual volume | this simplifies protocol and authentication policy management |
+| Always configure three quota threshold levels (advisory, | Always configure three quota threshold levels (advisory, soft with grace period, hard) on user-facing directories to prevent sudden write failures |
+| Validate SyncIQ RPO and RTO regularly by checking the last | Validate SyncIQ RPO and RTO regularly by checking the last successful replication timestamp in `isi sync reports list` against your recovery objectives |
+| Use SmartConnect zones with round-robin or CPU-based | Use SmartConnect zones with round-robin or CPU-based connection balancing to distribute NFS and SMB client connections evenly across nodes |
+| Keep OneFS within N-2 versions of the current release to | Keep OneFS within N-2 versions of the current release to remain within Dell's supported upgrade paths and receive security patches |
+| Do not store data outside of `/ifs` | all persistent data must reside within the cluster file system to benefit from protection and replication |
+| Monitor per-node performance with `isi statistics` regularly to identify hot nodes | rebalance workloads across access zones if persistent imbalance is observed |

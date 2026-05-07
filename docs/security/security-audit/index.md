@@ -1,5 +1,18 @@
 # Security Audit Procedure
 
+```mermaid
+flowchart LR
+    Audit_Procedure["Audit Procedure"]
+    Audit_Procedure --> S0["Audit Types"]
+    Audit_Procedure --> S1["Scope Definition"]
+    Audit_Procedure --> S2["Configuration Audit Checks"]
+    Audit_Procedure --> S3["Patch Compliance Check"]
+    Audit_Procedure --> S4["Vulnerability Scan Review"]
+    Audit_Procedure --> S5["Audit Evidence Collection"]
+    Audit_Procedure --> S6["Findings Documentation"]
+    Audit_Procedure --> S7["Audit Close-Out Checklist"]
+```
+
 ## Audit Types
 
 | Type | Frequency | Scope |

@@ -2,6 +2,17 @@
 
 SyncIQ policy management, monitoring, and failover/failback operations on Dell PowerScale.
 
+```mermaid
+flowchart LR
+    Replication__SyncIQ["Replication (SyncIQ)"]
+    Replication__SyncIQ --> S0["Policy Management"]
+    Replication__SyncIQ --> S1["Running and Monitoring Jobs"]
+    Replication__SyncIQ --> S2["Policy Health and RPO"]
+    Replication__SyncIQ --> S3["Failover and Failback"]
+    Replication__SyncIQ --> S4["SyncIQ Certificates and Connectivity"]
+    Replication__SyncIQ --> S5["Troubleshooting"]
+```
+
 ## Policy Management
 
 ```bash

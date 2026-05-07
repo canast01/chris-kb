@@ -1,5 +1,18 @@
 # Certificate Security
 
+```mermaid
+flowchart LR
+    Certificate_Security["Certificate Security"]
+    Certificate_Security --> S0["CA Key Protection"]
+    Certificate_Security --> S1["Root CA Offline Procedure"]
+    Certificate_Security --> S2["Certificate Transparency (CT)"]
+    Certificate_Security --> S3["OCSP Stapling"]
+    Certificate_Security --> S4["CRL Availability"]
+    Certificate_Security --> S5["Certificate Pinning"]
+    Certificate_Security --> S6["Audit Logging"]
+    Certificate_Security --> S7["Security Checklist"]
+```
+
 ## CA Key Protection
 
 Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.

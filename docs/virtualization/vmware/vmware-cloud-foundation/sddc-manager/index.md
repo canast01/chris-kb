@@ -1,5 +1,17 @@
 # Vmware Cloud Foundation SDDC Manager
 
+```mermaid
+flowchart LR
+    SDDC_Manager["SDDC Manager"]
+    SDDC_Manager --> S0["Where It Fits"]
+    SDDC_Manager --> S1["Daily Checks"]
+    SDDC_Manager --> S2["Health Commands"]
+    SDDC_Manager --> S3["Common Issues"]
+    SDDC_Manager --> S4["Operational Tasks"]
+    SDDC_Manager --> S5["Upgrade Notes"]
+    SDDC_Manager --> S6["Best Practices"]
+```
+
 ## Overview
 
 SDDC Manager health, lifecycle operations, inventory, credentials, and task checks.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

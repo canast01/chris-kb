@@ -1,5 +1,17 @@
 # AWS AWS Config
 
+```mermaid
+flowchart LR
+    AWS_Config["AWS Config"]
+    AWS_Config --> S0["Where It Fits"]
+    AWS_Config --> S1["Daily Checks"]
+    AWS_Config --> S2["Health Commands"]
+    AWS_Config --> S3["Common Issues"]
+    AWS_Config --> S4["Operational Tasks"]
+    AWS_Config --> S5["Upgrade Notes"]
+    AWS_Config --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS AWS Config notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

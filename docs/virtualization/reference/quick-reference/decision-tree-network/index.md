@@ -2,6 +2,17 @@
 
 Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.
 
+```mermaid
+flowchart LR
+    Network_Issue["Network Issue"]
+    Network_Issue --> S0["Step 1 — Basic Connectivity Test"]
+    Network_Issue --> S1["Step 2 — VLAN / Segment Issue"]
+    Network_Issue --> S2["Step 3 — MTU Check"]
+    Network_Issue --> S3["Step 4 — Routing Issue"]
+    Network_Issue --> S4["Step 5 — NSX Distributed Firewall (DFW)"]
+    Network_Issue --> S5["Step 6 — Packet Capture"]
+```
+
 ## Step 1 — Basic Connectivity Test
 
 ```bash

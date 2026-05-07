@@ -1,5 +1,15 @@
 # Dell CloudIQ Integration
 
+```mermaid
+flowchart LR
+    CloudIQ_Integration["CloudIQ Integration"]
+    CloudIQ_Integration --> S0["Secure Connect Gateway"]
+    CloudIQ_Integration --> S1["Email Notifications"]
+    CloudIQ_Integration --> S2["Webhook Notifications"]
+    CloudIQ_Integration --> S3["REST API Integration"]
+    CloudIQ_Integration --> S4["ServiceNow Integration"]
+```
+
 ## Secure Connect Gateway
 
 The Secure Connect Gateway (SCG) is the primary telemetry feed for CloudIQ. SCG is a virtual appliance (OVA) deployed on-premises that collects telemetry from registered Dell systems and forwards it encrypted to `cloudiq.dell.com:443` over HTTPS.

@@ -1,5 +1,17 @@
 # VxRail Firmware Inventory
 
+```mermaid
+flowchart LR
+    Firmware_Inventory["Firmware Inventory"]
+    Firmware_Inventory --> S0["Where It Fits"]
+    Firmware_Inventory --> S1["Daily Checks"]
+    Firmware_Inventory --> S2["Health Commands"]
+    Firmware_Inventory --> S3["Common Issues"]
+    Firmware_Inventory --> S4["Operational Tasks"]
+    Firmware_Inventory --> S5["Upgrade Notes"]
+    Firmware_Inventory --> S6["Best Practices"]
+```
+
 ## Overview
 
 Firmware versions, drift review, lifecycle alignment, and upgrade notes.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

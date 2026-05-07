@@ -2,6 +2,19 @@
 
 Hosts in Pure Storage represent the servers (physical or virtual) that are granted access to volumes via iSCSI IQN or Fibre Channel WWN registration.
 
+```mermaid
+flowchart LR
+    FlashArray_Hosts["FlashArray Hosts"]
+    FlashArray_Hosts --> S0["List Hosts"]
+    FlashArray_Hosts --> S1["Create a Host"]
+    FlashArray_Hosts --> S2["Add Initiators to an Existing Host"]
+    FlashArray_Hosts --> S3["Connect a Volume to a Host"]
+    FlashArray_Hosts --> S4["Disconnect a Volume from a Host"]
+    FlashArray_Hosts --> S5["Host Groups"]
+    FlashArray_Hosts --> S6["Delete a Host"]
+    FlashArray_Hosts --> S7["Common Issues"]
+```
+
 ## List Hosts
 
 ```bash

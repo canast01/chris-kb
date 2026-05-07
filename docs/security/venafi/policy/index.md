@@ -1,5 +1,16 @@
 # Policy
 
+```mermaid
+flowchart LR
+    Policy["Policy"]
+    Policy --> S0["Purpose"]
+    Policy --> S1["Common checks"]
+    Policy --> S2["Incident notes"]
+    Policy --> S3["Change notes"]
+    Policy --> S4["Useful commands"]
+    Policy --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Venafi Policy notes, checks, troubleshooting, commands, change notes, and field references.

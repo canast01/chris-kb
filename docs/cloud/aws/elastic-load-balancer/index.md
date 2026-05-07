@@ -2,6 +2,16 @@
 
 AWS Elastic Load Balancing — ALB (Application), NLB (Network), and GLB (Gateway) load balancer management.
 
+```mermaid
+flowchart LR
+    Load_Balancer["Load Balancer"]
+    Load_Balancer --> S0["Load Balancer Types"]
+    Load_Balancer --> S1["Common CLI Commands"]
+    Load_Balancer --> S2["Health Check Configuration"]
+    Load_Balancer --> S3["Access Logs"]
+    Load_Balancer --> S4["Troubleshooting"]
+```
+
 ## Load Balancer Types
 
 | Type | Layer | Use Case |

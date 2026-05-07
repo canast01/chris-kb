@@ -1,5 +1,17 @@
 # AWS Patch Manager
 
+```mermaid
+flowchart LR
+    Patch_Manager["Patch Manager"]
+    Patch_Manager --> S0["Where It Fits"]
+    Patch_Manager --> S1["Daily Checks"]
+    Patch_Manager --> S2["Health Commands"]
+    Patch_Manager --> S3["Common Issues"]
+    Patch_Manager --> S4["Operational Tasks"]
+    Patch_Manager --> S5["Upgrade Notes"]
+    Patch_Manager --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Patch Manager notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

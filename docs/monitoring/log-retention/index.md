@@ -1,5 +1,16 @@
 # Log Retention Policy
 
+```mermaid
+flowchart LR
+    Retention_Policy["Retention Policy"]
+    Retention_Policy --> S0["Standard Retention Periods"]
+    Retention_Policy --> S1["Linux Log Rotation (logrotate)"]
+    Retention_Policy --> S2["journald Retention"]
+    Retention_Policy --> S3["Centralised Log Retention (SIEM / Graylog / Splunk)"]
+    Retention_Policy --> S4["Archive to Object Storage"]
+    Retention_Policy --> S5["Validation Checklist"]
+```
+
 ## Standard Retention Periods
 
 | Log Type | Minimum Retention | Notes |

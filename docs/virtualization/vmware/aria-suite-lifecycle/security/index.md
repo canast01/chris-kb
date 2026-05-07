@@ -1,5 +1,16 @@
 # Aria Suite Lifecycle Security
 
+```mermaid
+flowchart LR
+    Lifecycle_Security["Lifecycle Security"]
+    Lifecycle_Security --> S0["RBAC"]
+    Lifecycle_Security --> S1["Default Password"]
+    Lifecycle_Security --> S2["Certificate Management via Locker"]
+    Lifecycle_Security --> S3["SSH Hardening"]
+    Lifecycle_Security --> S4["Audit Log Forwarding"]
+    Lifecycle_Security --> S5["Security Hardening Checklist"]
+```
+
 ## RBAC
 
 LCM roles are assigned via Workspace ONE Access (VIDM) groups — never assign to individual accounts:

@@ -2,6 +2,16 @@
 
 Live register of all VMs, their backup policy, and last verified restore test. Review monthly.
 
+```mermaid
+flowchart LR
+    Coverage_Inventory["Coverage Inventory"]
+    Coverage_Inventory --> S0["Coverage Register"]
+    Coverage_Inventory --> S1["Criticality Definitions"]
+    Coverage_Inventory --> S2["Coverage Review Checklist (Monthly)"]
+    Coverage_Inventory --> S3["Unprotected VMs Log"]
+    Coverage_Inventory --> S4["Restore Test Log"]
+```
+
 ## Coverage Register
 
 | VM Name | Application Owner | Criticality | Backup Tool | Policy | Schedule | Retention | Last Successful | Last Restore Test | Notes |

@@ -1,5 +1,17 @@
 # AWS Security Groups
 
+```mermaid
+flowchart LR
+    Security_Groups["Security Groups"]
+    Security_Groups --> S0["Where It Fits"]
+    Security_Groups --> S1["Daily Checks"]
+    Security_Groups --> S2["Health Commands"]
+    Security_Groups --> S3["Common Issues"]
+    Security_Groups --> S4["Operational Tasks"]
+    Security_Groups --> S5["Upgrade Notes"]
+    Security_Groups --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Security Groups notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

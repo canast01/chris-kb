@@ -1,5 +1,17 @@
 # AWS Compliance Review
 
+```mermaid
+flowchart LR
+    Compliance_Review["Compliance Review"]
+    Compliance_Review --> S0["Where It Fits"]
+    Compliance_Review --> S1["Daily Checks"]
+    Compliance_Review --> S2["Health Commands"]
+    Compliance_Review --> S3["Common Issues"]
+    Compliance_Review --> S4["Operational Tasks"]
+    Compliance_Review --> S5["Upgrade Notes"]
+    Compliance_Review --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Compliance Review notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

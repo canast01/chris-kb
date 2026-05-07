@@ -1,5 +1,17 @@
 # vSAN Performance
 
+```mermaid
+flowchart LR
+    vSAN_Performance["vSAN Performance"]
+    vSAN_Performance --> S0["Where It Fits"]
+    vSAN_Performance --> S1["Daily Checks"]
+    vSAN_Performance --> S2["Health Commands"]
+    vSAN_Performance --> S3["Common Issues"]
+    vSAN_Performance --> S4["Operational Tasks"]
+    vSAN_Performance --> S5["Upgrade Notes"]
+    vSAN_Performance --> S6["Best Practices"]
+```
+
 ## Overview
 
 Latency, congestion, IOPS, throughput, and common performance review patterns.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

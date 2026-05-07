@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["SRDF State Monitor"]
+    Scripts --> S1["Array Health Check"]
+    Scripts --> S2["SRDF Planned Failover"]
+    Scripts --> S3["Ansible PowerMax Health Playbook"]
+    Scripts --> S4["Windows: SRDF Health Check via Unisphere REST API (PowerShell)"]
+    Scripts --> S5["Windows: SRDF State Check via Plink (CMD)"]
+    Scripts --> S6["Daily Check Script (Bash)"]
+    Scripts --> S7["Incident Triage Script (Bash)"]
+```
+
 ## SRDF State Monitor
 
 Runs `symrdf list` against a PowerMax SID and parses SRDF pair states. Emits a Nagios-compatible result and exits non-zero if any pair is in a degraded state (Split, Failed Over, or Transmit Idle).

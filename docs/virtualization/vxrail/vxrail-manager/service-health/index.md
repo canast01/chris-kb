@@ -1,5 +1,17 @@
 # VxRail Service Health
 
+```mermaid
+flowchart LR
+    Service_Health["Service Health"]
+    Service_Health --> S0["Where It Fits"]
+    Service_Health --> S1["Daily Checks"]
+    Service_Health --> S2["Health Commands"]
+    Service_Health --> S3["Common Issues"]
+    Service_Health --> S4["Operational Tasks"]
+    Service_Health --> S5["Upgrade Notes"]
+    Service_Health --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail Manager service status, UI access, alerts, and management plane checks.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

@@ -1,5 +1,17 @@
 # VxRail Power and Cooling
 
+```mermaid
+flowchart LR
+    and_Cooling["and Cooling"]
+    and_Cooling --> S0["Where It Fits"]
+    and_Cooling --> S1["Daily Checks"]
+    and_Cooling --> S2["Health Commands"]
+    and_Cooling --> S3["Common Issues"]
+    and_Cooling --> S4["Operational Tasks"]
+    and_Cooling --> S5["Upgrade Notes"]
+    and_Cooling --> S6["Best Practices"]
+```
+
 ## Overview
 
 Power supply, thermal, fan, and environmental alert review.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

@@ -66,18 +66,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    NetApp_ONTAP["NetApp ONTAP"]
+    NetApp_ONTAP --> S0["Where It Fits"]
+    NetApp_ONTAP --> S1["Daily Checks"]
+    NetApp_ONTAP --> S2["Health Commands"]
+    NetApp_ONTAP --> S3["Common Issues"]
+    NetApp_ONTAP --> S4["Operational Tasks"]
+    NetApp_ONTAP --> S5["Upgrade Notes"]
+    NetApp_ONTAP --> S6["Best Practices"]
+```
+
 ## Overview
 
 NetApp ONTAP is the enterprise storage operating system running on AFF (all-flash), FAS (hybrid flash/disk), and ONTAP Select (software-defined) platforms. It organizes storage in a hierarchy of cluster → nodes → aggregates → SVMs (Storage VMs) → volumes → LUNs or shares, and serves data over NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3. Built-in data protection features include SnapMirror for replication, SnapVault for backup retention, and SyncMirror for RAID-level mirroring across disk shelves or HA pairs.
 
 ## Where It Fits
 
-- Primary NAS and SAN storage for enterprise applications, databases, and VMware/Hyper-V environments
-- Multi-protocol file sharing (NFS for Linux/VMware, SMB for Windows) from a single SVM
-- Block storage for Oracle, SQL Server, and other applications via iSCSI, FC, or NVMe/FC
-- Disaster recovery and data vaulting using SnapMirror and SnapVault relationships to a secondary cluster or cloud
-- High-availability production storage with non-disruptive takeover/giveback via HA pairs and storage failover
-- Test/dev environments leveraging writable FlexClone volumes from production snapshots at near-zero space cost
+
+| Use Case |
+|---|
+| Primary NAS and SAN storage for enterprise applications, databases, and VMware/Hyper-V environments |
+| Multi-protocol file sharing (NFS for Linux/VMware, SMB for Windows) from a single SVM |
+| Block storage for Oracle, SQL Server, and other applications via iSCSI, FC, or NVMe/FC |
+| Disaster recovery and data vaulting using SnapMirror and SnapVault relationships to a secondary cluster or cloud |
+| High-availability production storage with non-disruptive takeover/giveback via HA pairs and storage failover |
+| Test/dev environments leveraging writable FlexClone volumes from production snapshots at near-zero space cost |
 
 ## Daily Checks
 
@@ -163,11 +178,14 @@ system node run -node local sysconfig -a
 
 ## Best Practices
 
-- Enable volume autogrow with an explicit maximum (`volume modify -autosize-mode grow -max-autosize`) to prevent unexpected out-of-space conditions without allowing unbounded growth
-- Set volume space guarantee to `none` for thin provisioning; ensure aggregate free space is monitored continuously to back thin-provisioned volumes
-- Keep aggregates below 90% used capacity — above this threshold WAFL metadata operations slow and Snapshot spill-over risk increases
-- Configure QoS policies (throughput floors and ceilings) on critical workloads to protect latency-sensitive applications from noisy neighbors
-- Enable AutoSupport to allow NetApp proactive support to detect potential hardware failures and send callhome alerts before they become outages
-- Schedule SnapMirror and storage efficiency jobs (deduplication, compression) in non-overlapping maintenance windows to avoid resource contention
-- Use SVM DR in addition to volume-level SnapMirror for full namespace, NFS export, and CIFS share recovery at the DR site
-- Review the Active IQ / BlueXP dashboard weekly for capacity forecasts, performance advisories, and firmware update recommendations
+
+| Recommendation | Detail |
+|---|---|
+| Enable volume autogrow with an explicit maximum (`volume | Enable volume autogrow with an explicit maximum (`volume modify -autosize-mode grow -max-autosize`) to prevent unexpected out-of-space conditions without allowing unbounded growth |
+| Set volume space guarantee to `none` for thin provisioning | ensure aggregate free space is monitored continuously to back thin-provisioned volumes |
+| Keep aggregates below 90% used capacity | above this threshold WAFL metadata operations slow and Snapshot spill-over risk increases |
+| Configure QoS policies (throughput floors and ceilings) on | Configure QoS policies (throughput floors and ceilings) on critical workloads to protect latency-sensitive applications from noisy neighbors |
+| Enable AutoSupport to allow NetApp proactive support to | Enable AutoSupport to allow NetApp proactive support to detect potential hardware failures and send callhome alerts before they become outages |
+| Schedule SnapMirror and storage efficiency jobs | Schedule SnapMirror and storage efficiency jobs (deduplication, compression) in non-overlapping maintenance windows to avoid resource contention |
+| Use SVM DR in addition to volume-level SnapMirror for full | Use SVM DR in addition to volume-level SnapMirror for full namespace, NFS export, and CIFS share recovery at the DR site |
+| Review the Active IQ / BlueXP dashboard weekly for capacity | Review the Active IQ / BlueXP dashboard weekly for capacity forecasts, performance advisories, and firmware update recommendations |

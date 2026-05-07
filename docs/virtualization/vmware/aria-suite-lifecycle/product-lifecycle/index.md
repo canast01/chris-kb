@@ -1,5 +1,16 @@
 # Product Lifecycle
 
+```mermaid
+flowchart LR
+    Product_Lifecycle["Product Lifecycle"]
+    Product_Lifecycle --> S0["Purpose"]
+    Product_Lifecycle --> S1["Common checks"]
+    Product_Lifecycle --> S2["Incident notes"]
+    Product_Lifecycle --> S3["Change notes"]
+    Product_Lifecycle --> S4["Useful commands"]
+    Product_Lifecycle --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Aria Suite Lifecycle Product Lifecycle notes, checks, troubleshooting, commands, change notes, and field references.

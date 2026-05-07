@@ -1,5 +1,16 @@
 # Lag
 
+```mermaid
+flowchart LR
+    Lag["Lag"]
+    Lag --> S0["Purpose"]
+    Lag --> S1["Common checks"]
+    Lag --> S2["Incident notes"]
+    Lag --> S3["Change notes"]
+    Lag --> S4["Useful commands"]
+    Lag --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRDF/A Lag notes, checks, troubleshooting, commands, change notes, and field references.

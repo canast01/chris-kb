@@ -1,5 +1,15 @@
 # Dell CloudIQ Security
 
+```mermaid
+flowchart LR
+    CloudIQ_Security["CloudIQ Security"]
+    CloudIQ_Security --> S0["Authentication"]
+    CloudIQ_Security --> S1["RBAC"]
+    CloudIQ_Security --> S2["API Security"]
+    CloudIQ_Security --> S3["Data Security"]
+    CloudIQ_Security --> S4["Audit Log"]
+```
+
 ## Authentication
 
 CloudIQ uses Dell account-based authentication for portal access. Accounts are managed at [https://myaccount.dell.com](https://myaccount.dell.com).

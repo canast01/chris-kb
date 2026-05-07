@@ -2,6 +2,19 @@
 
 Quick checks to confirm a Windows Server is healthy before and after changes, and during incident triage.
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["System Overview"]
+    Health_Checks --> S1["CPU and Memory"]
+    Health_Checks --> S2["Disk"]
+    Health_Checks --> S3["Services"]
+    Health_Checks --> S4["Event Log Quick Review"]
+    Health_Checks --> S5["Network"]
+    Health_Checks --> S6["Pending Reboots"]
+    Health_Checks --> S7["Health Check Summary"]
+```
+
 ## System Overview
 
 ```powershell

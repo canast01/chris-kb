@@ -8,6 +8,19 @@ SRDF/S (Synchronous) replication provides zero-RPO protection by holding every h
 
 ---
 
+```mermaid
+flowchart LR
+    SRDF_S_Operations["SRDF/S Operations"]
+    SRDF_S_Operations --> S0["Daily SRDF/S Health Check"]
+    SRDF_S_Operations --> S1["Pair States and What They Mean for SRDF/S"]
+    SRDF_S_Operations --> S2["WAN Latency Impact on Write Performance"]
+    SRDF_S_Operations --> S3["Pre-Change Checklist Before Maintenance on SRDF/S Arrays"]
+    SRDF_S_Operations --> S4["Converting SRDF/S to SRDF/A Temporarily During Array Maintenance"]
+    SRDF_S_Operations --> S5["Suspending and Resuming SRDF/S Replication"]
+    SRDF_S_Operations --> S6["Planned Failover Procedure for SRDF/S"]
+    SRDF_S_Operations --> S7["Unplanned Failover Procedure for SRDF/S"]
+```
+
 ## Daily SRDF/S Health Check
 
 Run these checks at the start of each shift and before any planned changes. All commands are executed from a Solutions Enabler (SE) host with gatekeeper access to the R1 array unless noted.

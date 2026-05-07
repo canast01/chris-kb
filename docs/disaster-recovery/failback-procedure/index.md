@@ -2,6 +2,19 @@
 
 A controlled process for returning production workloads to the primary site after an outage has been resolved.
 
+```mermaid
+flowchart LR
+    Failback_Procedure["Failback Procedure"]
+    Failback_Procedure --> S0["Decision Gate — When to Failback"]
+    Failback_Procedure --> S1["Phase 1 — Prepare Primary Site"]
+    Failback_Procedure --> S2["Phase 2 — Resync Data to Primary (Reverse Replication)"]
+    Failback_Procedure --> S3["Phase 3 — Plan the Cutover Window"]
+    Failback_Procedure --> S4["Phase 4 — Initiate Failback"]
+    Failback_Procedure --> S5["Phase 5 — Post-Failback Validation"]
+    Failback_Procedure --> S6["Phase 6 — Restore Normal Replication"]
+    Failback_Procedure --> S7["Failback Checklist"]
+```
+
 ## Decision Gate — When to Failback
 
 Before initiating failback, confirm:

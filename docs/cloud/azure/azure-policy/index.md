@@ -2,6 +2,16 @@
 
 Azure Policy — governance guardrails that audit and enforce configuration standards across Azure resources.
 
+```mermaid
+flowchart LR
+    Azure_Policy["Azure Policy"]
+    Azure_Policy --> S0["Key Concepts"]
+    Azure_Policy --> S1["Common Azure CLI Commands"]
+    Azure_Policy --> S2["Common Built-In Policies"]
+    Azure_Policy --> S3["Custom Policy Definition"]
+    Azure_Policy --> S4["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

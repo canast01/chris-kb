@@ -54,18 +54,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    NetApp_SnapCenter["NetApp SnapCenter"]
+    NetApp_SnapCenter --> S0["Where It Fits"]
+    NetApp_SnapCenter --> S1["Daily Checks"]
+    NetApp_SnapCenter --> S2["Health Commands"]
+    NetApp_SnapCenter --> S3["Common Issues"]
+    NetApp_SnapCenter --> S4["Operational Tasks"]
+    NetApp_SnapCenter --> S5["Upgrade Notes"]
+    NetApp_SnapCenter --> S6["Best Practices"]
+```
+
 ## Overview
 
 NetApp SnapCenter is centralized backup and recovery software that leverages application-consistent ONTAP snapshots to protect databases, virtual machines, and filesystems. It uses a plugin architecture to quiesce applications before snapshot creation, ensuring data consistency, and integrates with SnapMirror and SnapVault to replicate backups to secondary or tertiary storage. The web GUI is accessible at `https://[server]:8146` and automation is available via PowerShell cmdlets.
 
 ## Where It Fits
 
-- Application-consistent backup for Oracle, SQL Server, SAP HANA, and Exchange databases
-- VMware vSphere VM and datastore protection via the SnapCenter Plug-in for VMware
-- Windows and Linux filesystem backup requiring crash-consistent or VSS-consistent snapshots
-- Long-term backup retention using SnapVault (XDP) policies to a secondary ONTAP system
-- Self-service restore and clone workflows delegated to application teams via RBAC
-- Disaster recovery preparation through SnapMirror-integrated secondary copies
+
+| Use Case |
+|---|
+| Application-consistent backup for Oracle, SQL Server, SAP HANA, and Exchange databases |
+| VMware vSphere VM and datastore protection via the SnapCenter Plug-in for VMware |
+| Windows and Linux filesystem backup requiring crash-consistent or VSS-consistent snapshots |
+| Long-term backup retention using SnapVault (XDP) policies to a secondary ONTAP system |
+| Self-service restore and clone workflows delegated to application teams via RBAC |
+| Disaster recovery preparation through SnapMirror-integrated secondary copies |
 
 ## Daily Checks
 
@@ -143,11 +158,14 @@ Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, Stat
 
 ## Best Practices
 
-- Separate resource groups by application tier (e.g., prod-oracle, prod-sqlserver) to allow independent scheduling and retention policies
-- Always configure pre-backup and post-backup scripts for application quiesce/unquiesce to ensure crash-consistent snapshots are avoided
-- Use SnapVault (XDP policy) for long-term retention on a secondary ONTAP system to reduce primary capacity consumption
-- Test restores quarterly — a backup is only valid if the restore works; include both full and granular (single-file or tablespace) restore tests
-- Configure RBAC so application teams can trigger restores and clones without needing storage admin access
-- Monitor backup job success rate from the SnapCenter dashboard and set up email notifications for job failures
-- Keep SnapCenter server and all plugins on the same major version; running mixed versions causes API errors and plugin communication failures
-- Document resource group membership and policy assignments so that coverage gaps are visible during audits
+
+| Recommendation | Detail |
+|---|---|
+| Separate resource groups by application tier (e.g., | Separate resource groups by application tier (e.g., prod-oracle, prod-sqlserver) to allow independent scheduling and retention policies |
+| Always configure pre-backup and post-backup scripts for | Always configure pre-backup and post-backup scripts for application quiesce/unquiesce to ensure crash-consistent snapshots are avoided |
+| Use SnapVault (XDP policy) for long-term retention on a | Use SnapVault (XDP policy) for long-term retention on a secondary ONTAP system to reduce primary capacity consumption |
+| Test restores quarterly | a backup is only valid if the restore works; include both full and granular (single-file or tablespace) restore tests |
+| Configure RBAC so application teams can trigger restores | Configure RBAC so application teams can trigger restores and clones without needing storage admin access |
+| Monitor backup job success rate from the SnapCenter | Monitor backup job success rate from the SnapCenter dashboard and set up email notifications for job failures |
+| Keep SnapCenter server and all plugins on the same major version | running mixed versions causes API errors and plugin communication failures |
+| Document resource group membership and policy assignments | Document resource group membership and policy assignments so that coverage gaps are visible during audits |

@@ -2,6 +2,19 @@
 
 Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.
 
+```mermaid
+flowchart LR
+    API_Connectivity["API Connectivity"]
+    API_Connectivity --> S0["Basic Connectivity Tests"]
+    API_Connectivity --> S1["TLS / Certificate Checks"]
+    API_Connectivity --> S2["DNS Resolution"]
+    API_Connectivity --> S3["Authentication Checks"]
+    API_Connectivity --> S4["Platform API Health Checks"]
+    API_Connectivity --> S5["Rate Limiting and Throttling"]
+    API_Connectivity --> S6["API Monitoring Script"]
+    API_Connectivity --> S7["Troubleshooting"]
+```
+
 ## Basic Connectivity Tests
 
 ```bash

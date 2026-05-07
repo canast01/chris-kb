@@ -1,5 +1,18 @@
 # HA Admission Control
 
+```mermaid
+flowchart LR
+    Admission_Control["Admission Control"]
+    Admission_Control --> S0["Purpose"]
+    Admission_Control --> S1["Admission Control Policies"]
+    Admission_Control --> S2["Checking Admission Control Status"]
+    Admission_Control --> S3["Configure Admission Control"]
+    Admission_Control --> S4["Admission Control and Overcommit"]
+    Admission_Control --> S5["Risk Indicators"]
+    Admission_Control --> S6["HA Heartbeat Datastores"]
+    Admission_Control --> S7["Operational Checklist"]
+```
+
 ## Purpose
 
 Admission control reserves cluster capacity so that in the event of a host failure, vSphere HA can restart all VMs from the failed host on remaining hosts. Without it, a cluster at 100% utilisation cannot restart failed VMs.

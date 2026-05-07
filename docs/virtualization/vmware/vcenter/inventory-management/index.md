@@ -1,5 +1,17 @@
 # vCenter Inventory Management
 
+```mermaid
+flowchart LR
+    Inventory_Management["Inventory Management"]
+    Inventory_Management --> S0["Where It Fits"]
+    Inventory_Management --> S1["Daily Checks"]
+    Inventory_Management --> S2["Health Commands"]
+    Inventory_Management --> S3["Common Issues"]
+    Inventory_Management --> S4["Operational Tasks"]
+    Inventory_Management --> S5["Upgrade Notes"]
+    Inventory_Management --> S6["Best Practices"]
+```
+
 ## Overview
 
 vCenter inventory structure, folders, clusters, hosts, datastores, networks, and object ownership.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

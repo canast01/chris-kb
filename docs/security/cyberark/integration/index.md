@@ -4,6 +4,19 @@ CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooli
 
 ---
 
+```mermaid
+flowchart LR
+    CyberArk_Integration["CyberArk Integration"]
+    CyberArk_Integration --> S0["Integration Overview"]
+    CyberArk_Integration --> S1["Active Directory / LDAP Integration"]
+    CyberArk_Integration --> S2["MFA Integration (Duo / RSA)"]
+    CyberArk_Integration --> S3["VMware vCenter Integration"]
+    CyberArk_Integration --> S4["Linux SSH Key Rotation"]
+    CyberArk_Integration --> S5["Ansible Integration"]
+    CyberArk_Integration --> S6["Terraform Integration"]
+    CyberArk_Integration --> S7["SIEM (Splunk) Integration"]
+```
+
 ## Integration Overview
 
 | Integration | Method | Notes |

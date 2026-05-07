@@ -6,6 +6,14 @@ Reference procedures for diagnosing NSX-T issues.
 <a class="kb-card" href="edge-health/"><strong>Edge Health</strong><span>NSX edge node health, transport connectivity, routing state, and service validation.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    NSX_Troubleshooting["NSX Troubleshooting"]
+    NSX_Troubleshooting --> S0["Quick Diagnostics"]
+    NSX_Troubleshooting --> S1["Common Issues"]
+    NSX_Troubleshooting --> S2["Log Locations"]
+```
+
 ## Quick Diagnostics
 
 ### Edge Node Health

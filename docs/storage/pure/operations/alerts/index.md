@@ -1,5 +1,17 @@
 # Pure Storage Operations — Alerts
 
+```mermaid
+flowchart LR
+    Storage_Operations["Storage Operations"]
+    Storage_Operations --> S0["Viewing Alerts"]
+    Storage_Operations --> S1["Alert Severity Levels"]
+    Storage_Operations --> S2["Common Alert Types"]
+    Storage_Operations --> S3["Pure1 Phone-Home Connectivity"]
+    Storage_Operations --> S4["Alert Notifications"]
+    Storage_Operations --> S5["Acknowledge and Close Alerts"]
+    Storage_Operations --> S6["Pre-Change Alert Check"]
+```
+
 ## Viewing Alerts
 
 ```bash

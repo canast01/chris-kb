@@ -1,5 +1,17 @@
 # AWS Cross-Account Access
 
+```mermaid
+flowchart LR
+    Cross_Account_Access["Cross-Account Access"]
+    Cross_Account_Access --> S0["Where It Fits"]
+    Cross_Account_Access --> S1["Daily Checks"]
+    Cross_Account_Access --> S2["Health Commands"]
+    Cross_Account_Access --> S3["Common Issues"]
+    Cross_Account_Access --> S4["Operational Tasks"]
+    Cross_Account_Access --> S5["Upgrade Notes"]
+    Cross_Account_Access --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Cross-Account Access notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

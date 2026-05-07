@@ -2,6 +2,17 @@
 
 Run this check weekly or after any significant workload addition.
 
+```mermaid
+flowchart LR
+    Capacity_Review["Capacity Review"]
+    Capacity_Review --> S0["Cluster CPU and Memory"]
+    Capacity_Review --> S1["Datastore Free Space"]
+    Capacity_Review --> S2["vSAN Capacity"]
+    Capacity_Review --> S3["Snapshot Growth"]
+    Capacity_Review --> S4["Thin Provisioning Risk"]
+    Capacity_Review --> S5["Backup Repository Usage"]
+```
+
 ## Cluster CPU and Memory
 
 ```powershell

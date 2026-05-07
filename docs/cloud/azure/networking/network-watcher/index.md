@@ -1,5 +1,16 @@
 # Network Watcher
 
+```mermaid
+flowchart LR
+    Network_Watcher["Network Watcher"]
+    Network_Watcher --> S0["Purpose"]
+    Network_Watcher --> S1["Common checks"]
+    Network_Watcher --> S2["Incident notes"]
+    Network_Watcher --> S3["Change notes"]
+    Network_Watcher --> S4["Useful commands"]
+    Network_Watcher --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Network Watcher notes, checks, troubleshooting, commands, change notes, and field references.

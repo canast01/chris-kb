@@ -2,6 +2,17 @@
 
 Virtual volumes are the logical storage objects presented to hosts via VPLEX. They are built on top of storage volumes from back-end arrays.
 
+```mermaid
+flowchart LR
+    Virtual_Volumes["Virtual Volumes"]
+    Virtual_Volumes --> S0["List Virtual Volumes"]
+    Virtual_Volumes --> S1["Create a Virtual Volume"]
+    Virtual_Volumes --> S2["Register Virtual Volume to Initiator (Masking)"]
+    Virtual_Volumes --> S3["Unregister / Delete Virtual Volume"]
+    Virtual_Volumes --> S4["Check Volume Visibility"]
+    Virtual_Volumes --> S5["Common Issues"]
+```
+
 ## List Virtual Volumes
 
 ```bash

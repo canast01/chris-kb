@@ -1,5 +1,16 @@
 # RBAC
 
+```mermaid
+flowchart LR
+    RBAC["RBAC"]
+    RBAC --> S0["Purpose"]
+    RBAC --> S1["Common checks"]
+    RBAC --> S2["Incident notes"]
+    RBAC --> S3["Change notes"]
+    RBAC --> S4["Useful commands"]
+    RBAC --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Identity RBAC notes, checks, troubleshooting, commands, change notes, and field references.

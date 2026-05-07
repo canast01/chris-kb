@@ -1,5 +1,14 @@
 # NetApp Keystone Troubleshooting
 
+```mermaid
+flowchart LR
+    Keystone_Troubleshoo["Keystone Troubleshooti"]
+    Keystone_Troubleshoo --> S0["Common Issues"]
+    Keystone_Troubleshoo --> S1["Diagnostic"]
+    Keystone_Troubleshoo --> S2["Log Locations"]
+    Keystone_Troubleshoo --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

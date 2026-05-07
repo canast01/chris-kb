@@ -2,6 +2,17 @@
 
 AWS Relational Database Service — managed database instances, Multi-AZ, snapshots, and performance.
 
+```mermaid
+flowchart LR
+    RDS["RDS"]
+    RDS --> S0["Supported Engines"]
+    RDS --> S1["Common CLI Commands"]
+    RDS --> S2["Health Checks"]
+    RDS --> S3["Key CloudWatch Metrics"]
+    RDS --> S4["Restore from Snapshot"]
+    RDS --> S5["Troubleshooting"]
+```
+
 ## Supported Engines
 
 | Engine | Use Case |

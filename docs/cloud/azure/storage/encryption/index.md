@@ -1,5 +1,16 @@
 # Encryption
 
+```mermaid
+flowchart LR
+    Encryption["Encryption"]
+    Encryption --> S0["Purpose"]
+    Encryption --> S1["Common checks"]
+    Encryption --> S2["Incident notes"]
+    Encryption --> S3["Change notes"]
+    Encryption --> S4["Useful commands"]
+    Encryption --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Storage Encryption notes, checks, troubleshooting, commands, change notes, and field references.

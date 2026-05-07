@@ -1,5 +1,16 @@
 # Test Failover
 
+```mermaid
+flowchart LR
+    Test_Failover["Test Failover"]
+    Test_Failover --> S0["Purpose"]
+    Test_Failover --> S1["Common checks"]
+    Test_Failover --> S2["Incident notes"]
+    Test_Failover --> S3["Change notes"]
+    Test_Failover --> S4["Useful commands"]
+    Test_Failover --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRM Test Failover notes, checks, troubleshooting, commands, change notes, and field references.

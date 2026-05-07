@@ -1,5 +1,17 @@
 # AWS Integration
 
+```mermaid
+flowchart LR
+    AWS_Integration["AWS Integration"]
+    AWS_Integration --> S0["Direct Connect + VPN"]
+    AWS_Integration --> S1["Active Directory"]
+    AWS_Integration --> S2["IAM Identity Center (SSO)"]
+    AWS_Integration --> S3["CloudTrail to SIEM"]
+    AWS_Integration --> S4["AWS Backup"]
+    AWS_Integration --> S5["GitHub Actions + OIDC"]
+    AWS_Integration --> S6["Terraform Remote State"]
+```
+
 ## Direct Connect + VPN
 
 On-premises to AWS connectivity:

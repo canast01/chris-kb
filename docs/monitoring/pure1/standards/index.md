@@ -1,5 +1,18 @@
 # Pure1 Standards
 
+```mermaid
+flowchart LR
+    Pure1_Standards["Pure1 Standards"]
+    Pure1_Standards --> S0["Array Tagging Policy"]
+    Pure1_Standards --> S1["Capacity Threshold Standards"]
+    Pure1_Standards --> S2["Alert Notification Routing"]
+    Pure1_Standards --> S3["Health Score Standards"]
+    Pure1_Standards --> S4["API Access Standards"]
+    Pure1_Standards --> S5["Reporting Cadence"]
+    Pure1_Standards --> S6["Purity Version Standards"]
+    Pure1_Standards --> S7["Change Management"]
+```
+
 ## Array Tagging Policy
 
 Every FlashArray and FlashBlade registered in Pure1 must carry the three mandatory tags. Tags are used for reporting, alert routing, capacity forecasting by business unit, and chargeback.

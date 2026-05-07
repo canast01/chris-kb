@@ -1,5 +1,16 @@
 # SnapCenter Security
 
+```mermaid
+flowchart LR
+    SnapCenter_Security["SnapCenter Security"]
+    SnapCenter_Security --> S0["RBAC"]
+    SnapCenter_Security --> S1["Authentication"]
+    SnapCenter_Security --> S2["TLS and Certificate Management"]
+    SnapCenter_Security --> S3["ONTAP Service Account Security"]
+    SnapCenter_Security --> S4["Audit Logging"]
+    SnapCenter_Security --> S5["Hardening Checklist"]
+```
+
 ## RBAC
 
 SnapCenter implements role-based access control at the application level, layered on top of ONTAP-level permissions.

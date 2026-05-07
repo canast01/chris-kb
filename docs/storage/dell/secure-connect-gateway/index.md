@@ -6,17 +6,31 @@
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    Connect_Gateway["Connect Gateway"]
+    Connect_Gateway --> S0["Where It Fits"]
+    Connect_Gateway --> S1["Daily Checks"]
+    Connect_Gateway --> S2["Health Commands"]
+    Connect_Gateway --> S3["Common Issues"]
+    Connect_Gateway --> S4["Operational Tasks"]
+    Connect_Gateway --> S5["Best Practices"]
+```
+
 ## Overview
 
 Dell Secure Connect Gateway (SCG) is the outbound-only connectivity appliance that tunnels telemetry, support data, and remote access sessions from Dell storage and server infrastructure to Dell's support back-end. It replaces the legacy ESRS (EMC Secure Remote Services) gateway. SCG is deployed as a virtual appliance (OVA/QCOW2) or as a software package on a Linux host. It brokers all support-related communication including CloudIQ telemetry, SupportAssist diagnostics, and remote access for Dell support engineers.
 
 ## Where It Fits
 
-- Required for CloudIQ telemetry collection from PowerMax, PowerStore, PowerScale, Unity, VPLEX, and other Dell platforms
-- Required for SupportAssist automated case creation and proactive alerting
-- Enables Dell remote support sessions without opening inbound firewall rules — all connections are outbound on port 443
-- Central connectivity point for APEX STaaS and FOD metering telemetry
-- Replaces legacy ESRS in environments still running older EMC/Dell infrastructure
+
+| Use Case |
+|---|
+| Required for CloudIQ telemetry collection from PowerMax, PowerStore, PowerScale, Unity, VPLEX, and other Dell platforms |
+| Required for SupportAssist automated case creation and proactive alerting |
+| Enables Dell remote support sessions without opening inbound firewall rules — all connections are outbound on port 443 |
+| Central connectivity point for APEX STaaS and FOD metering telemetry |
+| Replaces legacy ESRS in environments still running older EMC/Dell infrastructure |
 
 ## Daily Checks
 
@@ -79,9 +93,12 @@ symcfg -sid <SID> -esrs list
 
 ## Best Practices
 
-- Deploy two SCG appliances in active/passive for redundancy — a single SCG failure silently stops all telemetry and support connectivity
-- Place SCG appliances in a dedicated management network segment with direct outbound HTTPS access — avoid proxies where possible as they often break SCG certificate pinning
-- Keep SCG software current — Dell releases SCG updates regularly to address TLS certificate chain changes at the Dell back-end
-- Register devices to both SCG appliances (primary and secondary) so failover is automatic
-- Audit SCG device registrations quarterly to remove decommissioned systems that are still registered
-- Monitor the SCG appliance's own health (CPU, memory, disk) — the SCG is a VM and can be neglected during storage health reviews
+
+| Recommendation | Detail |
+|---|---|
+| Deploy two SCG appliances in active/passive for redundancy | a single SCG failure silently stops all telemetry and support connectivity |
+| Place SCG appliances in a dedicated management network segment with direct outbound HTTPS access | avoid proxies where possible as they often break SCG certificate pinning |
+| Keep SCG software current | Dell releases SCG updates regularly to address TLS certificate chain changes at the Dell back-end |
+| Register devices to both SCG appliances (primary and | Register devices to both SCG appliances (primary and secondary) so failover is automatic |
+| Audit SCG device registrations quarterly to remove | Audit SCG device registrations quarterly to remove decommissioned systems that are still registered |
+| Monitor the SCG appliance's own health (CPU, memory, disk) | the SCG is a VM and can be neglected during storage health reviews |

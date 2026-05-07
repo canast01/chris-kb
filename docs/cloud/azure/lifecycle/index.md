@@ -1,5 +1,16 @@
 # Azure Lifecycle
 
+```mermaid
+flowchart LR
+    Azure_Lifecycle["Azure Lifecycle"]
+    Azure_Lifecycle --> S0["VM Patching"]
+    Azure_Lifecycle --> S1["AKS Upgrade"]
+    Azure_Lifecycle --> S2["Service Retirement Tracking"]
+    Azure_Lifecycle --> S3["Subscription Lifecycle"]
+    Azure_Lifecycle --> S4["Resource Group Expiry (Non-Production)"]
+    Azure_Lifecycle --> S5["Entra ID App Registration Lifecycle"]
+```
+
 ## VM Patching
 
 VM OS images are patched via Azure Update Manager on a monthly schedule:

@@ -1,5 +1,17 @@
 # vSAN Resync and Object Health Troubleshooting
 
+```mermaid
+flowchart LR
+    Health_Troubleshooti["Health Troubleshooting"]
+    Health_Troubleshooti --> S0["Checking Resync Status"]
+    Health_Troubleshooti --> S1["Understanding Resync Types"]
+    Health_Troubleshooti --> S2["When Resync Is Expected"]
+    Health_Troubleshooti --> S3["When Resync Is Concerning"]
+    Health_Troubleshooti --> S4["Checking Object Health"]
+    Health_Troubleshooti --> S5["Common Causes of Degraded Objects"]
+    Health_Troubleshooti --> S6["Support Bundle Collection"]
+```
+
 ## Checking Resync Status
 
 ```bash

@@ -1,5 +1,17 @@
 # Superna Eyeglass Integration
 
+```mermaid
+flowchart LR
+    Eyeglass_Integration["Eyeglass Integration"]
+    Eyeglass_Integration --> S0["NetApp PowerScale (SyncIQ)"]
+    Eyeglass_Integration --> S1["Active Directory"]
+    Eyeglass_Integration --> S2["Windows DNS"]
+    Eyeglass_Integration --> S3["BIND DNS"]
+    Eyeglass_Integration --> S4["Aria Operations / SNMP"]
+    Eyeglass_Integration --> S5["Syslog / SIEM"]
+    Eyeglass_Integration --> S6["Email Notifications"]
+```
+
 ## NetApp PowerScale (SyncIQ)
 
 Eyeglass uses the OneFS REST API to discover and monitor SyncIQ replication policies:

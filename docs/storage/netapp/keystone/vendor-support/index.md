@@ -1,5 +1,16 @@
 # NetApp Keystone Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Keystone Success Manager"]
+    Vendor_Support --> S1["Support Portal"]
+    Vendor_Support --> S2["Opening a Case"]
+    Vendor_Support --> S3["Information to Collect"]
+    Vendor_Support --> S4["SLA Tiers"]
+    Vendor_Support --> S5["Escalation"]
+```
+
 ## Keystone Success Manager
 
 Every Keystone subscription includes a dedicated Keystone Success Manager (KSM). The KSM is the primary NetApp contact for:

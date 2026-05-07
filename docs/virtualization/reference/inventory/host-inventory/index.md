@@ -4,6 +4,15 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Host_Inventory["Host Inventory"]
+    Host_Inventory --> S0["Host Inventory Table"]
+    Host_Inventory --> S1["Fields Reference"]
+    Host_Inventory --> S2["Host Lifecycle Events"]
+    Host_Inventory --> S3["Adding a Host"]
+```
+
 ## Overview
 
 Track every ESXi host in the environment using the table format below. One row per physical host. Update after hardware changes, firmware updates, or cluster moves.

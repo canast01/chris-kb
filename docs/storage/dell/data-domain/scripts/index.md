@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Daily Health Check"]
+    Scripts --> S1["Replication Lag Monitor"]
+    Scripts --> S2["Ansible Daily Check Playbook"]
+    Scripts --> S3["DDBoost Client Check"]
+    Scripts --> S4["Windows: Data Domain Health Check via Plink (CMD)"]
+    Scripts --> S5["Windows: Data Domain Health via REST API (PowerShell)"]
+    Scripts --> S6["Daily Check Script"]
+    Scripts --> S7["Incident Triage Script"]
+```
+
 ## Daily Health Check
 
 SSH to a Data Domain appliance and print a formatted health summary covering filesystem space, compression ratio, active alerts, replication state, and system uptime. Exits non-zero if any active alerts are found.

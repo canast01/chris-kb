@@ -64,18 +64,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Storage_Evergreen["Storage Evergreen"]
+    Storage_Evergreen --> S0["Where It Fits"]
+    Storage_Evergreen --> S1["Daily Checks"]
+    Storage_Evergreen --> S2["Health Commands"]
+    Storage_Evergreen --> S3["Common Issues"]
+    Storage_Evergreen --> S4["Operational Tasks"]
+    Storage_Evergreen --> S5["Upgrade Notes"]
+    Storage_Evergreen --> S6["Best Practices"]
+```
+
 ## Overview
 
 Pure Storage Evergreen is a hardware subscription model for FlashArray and FlashBlade that bundles hardware, Purity software, support, and controller upgrades into a single ongoing subscription. The core design principle is non-disruptive controller refresh every three years — data stays in place, hosts remain connected, and there is no forklift replacement or data migration. The model spans three tiers: Evergreen//Forever (base hardware subscription with Every Modern controller upgrades), Evergreen//Flex (adds non-disruptive blade and capacity swap flexibility), and Evergreen//One (consumption-based STaaS, covered separately).
 
 ## Where It Fits
 
-- Primary block and file storage for production VM and application workloads
-- Environments requiring long-term platform continuity without data migration cycles
-- Organisations replacing traditional CapEx storage refresh cycles with subscription-based OpEx
-- Sites running ActiveCluster or replication that cannot tolerate disruptive upgrades
-- Capacity expansion without downtime using Evergreen//Flex blade additions
-- Colocation or remote sites where physical refresh logistics are a constraint
+
+| Use Case |
+|---|
+| Primary block and file storage for production VM and application workloads |
+| Environments requiring long-term platform continuity without data migration cycles |
+| Organisations replacing traditional CapEx storage refresh cycles with subscription-based OpEx |
+| Sites running ActiveCluster or replication that cannot tolerate disruptive upgrades |
+| Capacity expansion without downtime using Evergreen//Flex blade additions |
+| Colocation or remote sites where physical refresh logistics are a constraint |
 
 ## Daily Checks
 
@@ -157,11 +172,14 @@ purearray list
 
 ## Best Practices
 
-- Schedule Ever Modern controller upgrades well before the subscription renewal date — do not let the window lapse
-- Always upgrade Purity software to the recommended release before entering a controller upgrade window
-- Validate host multipathing and fabric zoning before every upgrade; never proceed with single-path hosts
-- Run controller upgrades during approved maintenance windows even though they are non-disruptive, to reduce risk
-- Keep Pure1 phone-home active at all times so Pure Support has visibility and can provide proactive health alerts
-- Document the current controller generation, subscription tier, and renewal date in your CMDB
-- Review snapshot retention policies quarterly to prevent capacity bloat that can affect upgrade planning
-- Engage your Pure account team quarterly to review subscription status, capacity trends, and upcoming upgrade eligibility
+
+| Recommendation | Detail |
+|---|---|
+| Schedule Ever Modern controller upgrades well before the subscription renewal date | do not let the window lapse |
+| Always upgrade Purity software to the recommended release | Always upgrade Purity software to the recommended release before entering a controller upgrade window |
+| Validate host multipathing and fabric zoning before every upgrade | never proceed with single-path hosts |
+| Run controller upgrades during approved maintenance windows | Run controller upgrades during approved maintenance windows even though they are non-disruptive, to reduce risk |
+| Keep Pure1 phone-home active at all times so Pure Support | Keep Pure1 phone-home active at all times so Pure Support has visibility and can provide proactive health alerts |
+| Document the current controller generation, subscription | Document the current controller generation, subscription tier, and renewal date in your CMDB |
+| Review snapshot retention policies quarterly to prevent | Review snapshot retention policies quarterly to prevent capacity bloat that can affect upgrade planning |
+| Engage your Pure account team quarterly to review | Engage your Pure account team quarterly to review subscription status, capacity trends, and upcoming upgrade eligibility |

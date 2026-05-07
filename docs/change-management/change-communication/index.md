@@ -2,6 +2,19 @@
 
 Structured approach to notifying stakeholders before, during, and after changes to maintain trust and minimize surprise.
 
+```mermaid
+flowchart LR
+    Change_Communication["Change Communication"]
+    Change_Communication --> S0["Communication Timeline"]
+    Change_Communication --> S1["Pre-Change Notification Template"]
+    Change_Communication --> S2["Window Start Announcement"]
+    Change_Communication --> S3["Completion Announcement"]
+    Change_Communication --> S4["Rollback Announcement"]
+    Change_Communication --> S5["Audience Matrix"]
+    Change_Communication --> S6["Status Page Update"]
+    Change_Communication --> S7["Checklist"]
+```
+
 ## Communication Timeline
 
 | Phase | When | Audience | Channel |

@@ -4,6 +4,18 @@ Venafi TPP manages the full certificate lifecycle — discovery, policy enforcem
 
 ---
 
+```mermaid
+flowchart LR
+    Venafi_Lifecycle["Venafi Lifecycle"]
+    Venafi_Lifecycle --> S0["Certificate Discovery"]
+    Venafi_Lifecycle --> S1["Policy Enforcement"]
+    Venafi_Lifecycle --> S2["Renewal Automation"]
+    Venafi_Lifecycle --> S3["Expiry Alerting"]
+    Venafi_Lifecycle --> S4["TPP Upgrade Procedure"]
+    Venafi_Lifecycle --> S5["TPP to VaaS Migration"]
+    Venafi_Lifecycle --> S6["EOL Tracking"]
+```
+
 ## Certificate Discovery
 
 Venafi Discovery scans the network for certificates on well-known TLS endpoints, Windows certificate stores, and F5/network devices. Discovery is the first step in bringing unmanaged certificates under Venafi control.

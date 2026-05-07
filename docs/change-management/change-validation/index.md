@@ -2,6 +2,19 @@
 
 Post-implementation checks to confirm a change achieved its intent, introduced no regressions, and the system is in a known-good state.
 
+```mermaid
+flowchart LR
+    Change_Validation["Change Validation"]
+    Change_Validation --> S0["Validation Phases"]
+    Change_Validation --> S1["Service Validation — Linux"]
+    Change_Validation --> S2["Service Validation — Windows"]
+    Change_Validation --> S3["Application / Endpoint Tests"]
+    Change_Validation --> S4["Monitoring Verification"]
+    Change_Validation --> S5["Validation Checklist"]
+    Change_Validation --> S6["Failure Criteria — Trigger Rollback If"]
+    Change_Validation --> S7["Closure Requirements"]
+```
+
 ## Validation Phases
 
 | Phase | Timing | Purpose |

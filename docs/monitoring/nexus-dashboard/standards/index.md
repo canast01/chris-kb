@@ -1,5 +1,18 @@
 # Nexus Dashboard Standards
 
+```mermaid
+flowchart LR
+    Dashboard_Standards["Dashboard Standards"]
+    Dashboard_Standards --> S0["Cluster Sizing Standards"]
+    Dashboard_Standards --> S1["Node Naming Convention"]
+    Dashboard_Standards --> S2["Fabric Naming Convention"]
+    Dashboard_Standards --> S3["Alert Policy Standards"]
+    Dashboard_Standards --> S4["RBAC Standards"]
+    Dashboard_Standards --> S5["AAA / SSO Integration"]
+    Dashboard_Standards --> S6["Fabric Monitoring Standards"]
+    Dashboard_Standards --> S7["Change Management"]
+```
+
 ## Cluster Sizing Standards
 
 | Environment | Nodes | Services |

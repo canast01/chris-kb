@@ -1,5 +1,16 @@
 # Workflows
 
+```mermaid
+flowchart LR
+    Workflows["Workflows"]
+    Workflows --> S0["Purpose"]
+    Workflows --> S1["Common checks"]
+    Workflows --> S2["Incident notes"]
+    Workflows --> S3["Change notes"]
+    Workflows --> S4["Useful commands"]
+    Workflows --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical GitHub Actions Workflows notes, checks, troubleshooting, commands, change notes, and field references.

@@ -2,6 +2,19 @@
 
 End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.
 
+```mermaid
+flowchart LR
+    Provisioning["Provisioning"]
+    Provisioning --> S0["Prerequisites"]
+    Provisioning --> S1["Step 1 — Create or Identify the Storage Group"]
+    Provisioning --> S2["Step 2 — Create Thin Devices"]
+    Provisioning --> S3["Step 3 — Create the Initiator Group"]
+    Provisioning --> S4["Step 4 — Create or Identify the Port Group"]
+    Provisioning --> S5["Step 5 — Create the Masking View"]
+    Provisioning --> S6["Step 6 — Host-Side Validation"]
+    Provisioning --> S7["Adding More Devices to an Existing Host"]
+```
+
 ## Prerequisites
 
 Before provisioning, confirm:

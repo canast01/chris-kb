@@ -2,6 +2,17 @@
 
 > Part of the ESXi Troubleshooting reference.
 
+```mermaid
+flowchart LR
+    Host_Disconnects["Host Disconnects"]
+    Host_Disconnects --> S0["Symptoms"]
+    Host_Disconnects --> S1["Likely Causes"]
+    Host_Disconnects --> S2["Commands"]
+    Host_Disconnects --> S3["Troubleshooting Workflow"]
+    Host_Disconnects --> S4["Resolution"]
+    Host_Disconnects --> S5["Prevention"]
+```
+
 ## Symptoms
 
 - ESXi host shows disconnected or not responding.

@@ -1,5 +1,14 @@
 # SnapCenter Architecture
 
+```mermaid
+flowchart LR
+    SnapCenter_Architect["SnapCenter Architectur"]
+    SnapCenter_Architect --> S0["Components"]
+    SnapCenter_Architect --> S1["HA Topology"]
+    SnapCenter_Architect --> S2["Connectivity"]
+    SnapCenter_Architect --> S3["Sizing Guidelines"]
+```
+
 ## Overview
 
 SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).

@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Version_Inventory["Version Inventory"]
+    Version_Inventory --> S0["Core Platform Versions"]
+    Version_Inventory --> S1["VxRail"]
+    Version_Inventory --> S2["Aria Suite"]
+    Version_Inventory --> S3["Data Protection"]
+    Version_Inventory --> S4["Version Compliance Policy"]
+    Version_Inventory --> S5["Upgrade Planning Notes"]
+    Version_Inventory --> S6["How to Check Versions"]
+```
+
 ## Overview
 
 Track current and target versions across all VMware components. Use this page for upgrade planning, compliance reporting, and support case reference. Update after every upgrade.

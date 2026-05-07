@@ -1,5 +1,15 @@
 # NetApp SnapMirror Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Support Portal"]
+    Vendor_Support --> S1["Opening a Case"]
+    Vendor_Support --> S2["Information to Collect"]
+    Vendor_Support --> S3["SLA Tiers"]
+    Vendor_Support --> S4["Escalation"]
+```
+
 ## Support Portal
 
 NetApp support portal: [https://mysupport.netapp.com](https://mysupport.netapp.com)

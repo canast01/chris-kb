@@ -1,5 +1,15 @@
 # NetApp Keystone Security
 
+```mermaid
+flowchart LR
+    Keystone_Security["Keystone Security"]
+    Keystone_Security --> S0["Shared Responsibility"]
+    Keystone_Security --> S1["Keystone Collector Security"]
+    Keystone_Security --> S2["Storage Security"]
+    Keystone_Security --> S3["Access Control"]
+    Keystone_Security --> S4["Compliance"]
+```
+
 ## Shared Responsibility
 
 Keystone operates on a shared responsibility model between NetApp and the customer.

@@ -1,5 +1,15 @@
 # COD — Troubleshooting
 
+```mermaid
+flowchart LR
+    COD["COD"]
+    COD --> S0["Issue Reference"]
+    COD --> S1["Diagnostic Commands"]
+    COD --> S2["COD License Not Activating — Step-by-Step"]
+    COD --> S3["Capacity Not Available After Activation"]
+    COD --> S4["Audit Trail Recovery"]
+```
+
 ## Issue Reference
 
 | Symptom | Likely Cause | First Action |

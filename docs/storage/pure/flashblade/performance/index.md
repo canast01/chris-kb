@@ -1,5 +1,18 @@
 # FlashBlade Performance
 
+```mermaid
+flowchart LR
+    FlashBlade_Performan["FlashBlade Performance"]
+    FlashBlade_Performan --> S0["Array-Level Performance"]
+    FlashBlade_Performan --> S1["File System Performance"]
+    FlashBlade_Performan --> S2["Object Store Performance"]
+    FlashBlade_Performan --> S3["FlashBlade Performance Targets"]
+    FlashBlade_Performan --> S4["Pure1 Performance Analysis"]
+    FlashBlade_Performan --> S5["Identify Top Consumers"]
+    FlashBlade_Performan --> S6["Bandwidth Limits"]
+    FlashBlade_Performan --> S7["Network Throughput Limits"]
+```
+
 ## Array-Level Performance
 
 ```bash

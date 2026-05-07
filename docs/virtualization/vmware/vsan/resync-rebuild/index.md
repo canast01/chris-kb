@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    and_Rebuild["and Rebuild"]
+    and_Rebuild --> S0["What Is Resync?"]
+    and_Rebuild --> S1["What Is Rebuild?"]
+    and_Rebuild --> S2["Checking Resync Progress"]
+    and_Rebuild --> S3["Resync Throttle"]
+    and_Rebuild --> S4["Performance Impact During Rebuild"]
+    and_Rebuild --> S5["How Long Should Resync Take?"]
+    and_Rebuild --> S6["Key Commands Reference"]
+    and_Rebuild --> S7["Checking Object Health"]
+```
+
 ## What Is Resync?
 
 Resync is the process by which vSAN redistributes data across the cluster to satisfy the active storage policy (PFTT — Primary Failures to Tolerate, or SFTT — Secondary Failures to Tolerate). It is triggered by events such as:

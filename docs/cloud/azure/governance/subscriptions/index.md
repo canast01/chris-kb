@@ -1,5 +1,16 @@
 # Subscriptions
 
+```mermaid
+flowchart LR
+    Subscriptions["Subscriptions"]
+    Subscriptions --> S0["Purpose"]
+    Subscriptions --> S1["Common checks"]
+    Subscriptions --> S2["Incident notes"]
+    Subscriptions --> S3["Change notes"]
+    Subscriptions --> S4["Useful commands"]
+    Subscriptions --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Governance Subscriptions notes, checks, troubleshooting, commands, change notes, and field references.

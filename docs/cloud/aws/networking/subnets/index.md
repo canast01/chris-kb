@@ -1,5 +1,17 @@
 # AWS Subnets
 
+```mermaid
+flowchart LR
+    AWS_Subnets["AWS Subnets"]
+    AWS_Subnets --> S0["Where It Fits"]
+    AWS_Subnets --> S1["Daily Checks"]
+    AWS_Subnets --> S2["Health Commands"]
+    AWS_Subnets --> S3["Common Issues"]
+    AWS_Subnets --> S4["Operational Tasks"]
+    AWS_Subnets --> S5["Upgrade Notes"]
+    AWS_Subnets --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Subnets notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

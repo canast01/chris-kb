@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Management_Tools["Management Tools"]
+    Management_Tools --> S0["Core Management Tools"]
+    Management_Tools --> S1["Backup and Data Protection"]
+    Management_Tools --> S2["Monitoring and Alerting"]
+    Management_Tools --> S3["Certificate Management"]
+    Management_Tools --> S4["Access URLs Quick Reference"]
+    Management_Tools --> S5["Tool Registration and Integration Map"]
+```
+
 ## Overview
 
 Document all management plane tools in the VMware environment — URLs, versions, credentials locations, and responsible owners. Update after any management platform upgrade or deployment change.

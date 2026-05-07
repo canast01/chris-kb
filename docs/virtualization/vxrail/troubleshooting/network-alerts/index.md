@@ -1,5 +1,17 @@
 # VxRail Network Alerts
 
+```mermaid
+flowchart LR
+    Network_Alerts["Network Alerts"]
+    Network_Alerts --> S0["Where It Fits"]
+    Network_Alerts --> S1["Daily Checks"]
+    Network_Alerts --> S2["Health Commands"]
+    Network_Alerts --> S3["Common Issues"]
+    Network_Alerts --> S4["Operational Tasks"]
+    Network_Alerts --> S5["Upgrade Notes"]
+    Network_Alerts --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail networking symptoms, uplinks, VLANs, vmkernel checks, and connectivity validation.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

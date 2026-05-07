@@ -2,6 +2,17 @@
 
 Under the Evergreen program, Pure Storage performs non-disruptive controller upgrades as part of the subscription — there is no hardware refresh cycle or capital expenditure.
 
+```mermaid
+flowchart LR
+    Controller_Upgrades["Controller Upgrades"]
+    Controller_Upgrades --> S0["How Controller Upgrades Work"]
+    Controller_Upgrades --> S1["Customer Pre-Upgrade Responsibilities"]
+    Controller_Upgrades --> S2["During the Upgrade"]
+    Controller_Upgrades --> S3["Verifying Paths During/After Upgrade"]
+    Controller_Upgrades --> S4["Post-Upgrade Verification"]
+    Controller_Upgrades --> S5["Common Considerations"]
+```
+
 ## How Controller Upgrades Work
 
 1. Pure Storage proactively schedules controller upgrades based on technology lifecycle

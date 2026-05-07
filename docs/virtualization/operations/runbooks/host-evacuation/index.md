@@ -1,5 +1,18 @@
 # ESXi Host Failure Runbook
 
+```mermaid
+flowchart LR
+    Failure_Runbook["Failure Runbook"]
+    Failure_Runbook --> S0["Confirm Impact"]
+    Failure_Runbook --> S1["Check Power State"]
+    Failure_Runbook --> S2["Check Management Network"]
+    Failure_Runbook --> S3["Check Hardware Management Interface"]
+    Failure_Runbook --> S4["Review vCenter Alarms"]
+    Failure_Runbook --> S5["Identify Affected VMs"]
+    Failure_Runbook --> S6["Logs to Collect"]
+    Failure_Runbook --> S7["Engage Hardware Support"]
+```
+
 ## Confirm Impact
 
 - Identify the affected host

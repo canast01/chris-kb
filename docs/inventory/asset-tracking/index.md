@@ -2,6 +2,17 @@
 
 Track hardware and cloud resources from procurement through decommission to maintain accurate inventory and prevent orphaned costs.
 
+```mermaid
+flowchart LR
+    Asset_Tracking["Asset Tracking"]
+    Asset_Tracking --> S0["Asset Register — Key Attributes"]
+    Asset_Tracking --> S1["Physical Asset Inventory"]
+    Asset_Tracking --> S2["Cloud Asset Inventory"]
+    Asset_Tracking --> S3["Asset Lifecycle States"]
+    Asset_Tracking --> S4["Tagging Standards"]
+    Asset_Tracking --> S5["Asset Tracking Checklist"]
+```
+
 ## Asset Register — Key Attributes
 
 | Attribute | Physical | Virtual / Cloud |

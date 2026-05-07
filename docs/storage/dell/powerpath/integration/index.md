@@ -1,5 +1,15 @@
 # PowerPath Integration
 
+```mermaid
+flowchart LR
+    PowerPath_Integratio["PowerPath Integration"]
+    PowerPath_Integratio --> S0["Windows HBA Integration"]
+    PowerPath_Integratio --> S1["Linux DM-Multipath Comparison"]
+    PowerPath_Integratio --> S2["VMware VAAI Integration (PowerPath/VE)"]
+    PowerPath_Integratio --> S3["AIX MPIO Coexistence"]
+    PowerPath_Integratio --> S4["Monitoring Integration"]
+```
+
 ## Windows HBA Integration
 
 On Windows Server, PowerPath installs as a filter driver that intercepts SCSI I/O before it reaches the Windows disk layer. PowerPath pseudo devices appear as standard disks in Disk Management and Device Manager.

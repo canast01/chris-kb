@@ -1,5 +1,16 @@
 # SRDF/S Security
 
+```mermaid
+flowchart LR
+    SRDF_S_Security["SRDF/S Security"]
+    SRDF_S_Security --> S0["Solutions Enabler RBAC"]
+    SRDF_S_Security --> S1["Preventing Accidental Failover"]
+    SRDF_S_Security --> S2["FCIP Encryption"]
+    SRDF_S_Security --> S3["FC Fabric Zoning"]
+    SRDF_S_Security --> S4["Management API Security"]
+    SRDF_S_Security --> S5["Audit Logging"]
+```
+
 ## Solutions Enabler RBAC
 
 Control who can execute SRDF failover and resync operations:

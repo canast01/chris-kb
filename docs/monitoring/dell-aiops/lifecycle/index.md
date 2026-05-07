@@ -1,5 +1,17 @@
 # Dell AIOps Lifecycle
 
+```mermaid
+flowchart LR
+    AIOps_Lifecycle["AIOps Lifecycle"]
+    AIOps_Lifecycle --> S0["Platform Update Model"]
+    AIOps_Lifecycle --> S1["Customer Lifecycle Responsibilities"]
+    AIOps_Lifecycle --> S2["Secure Connect Gateway (SCG) Lifecycle"]
+    AIOps_Lifecycle --> S3["New System Onboarding"]
+    AIOps_Lifecycle --> S4["Feature Enablement"]
+    AIOps_Lifecycle --> S5["API Lifecycle"]
+    AIOps_Lifecycle --> S6["System Decommission"]
+```
+
 ## Platform Update Model
 
 Dell AIOps is a SaaS platform — feature updates, AI model improvements, and bug fixes are deployed by Dell without customer action. Customers should monitor CloudIQ release notes for:

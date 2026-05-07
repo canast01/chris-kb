@@ -1,5 +1,16 @@
 # Secure Score
 
+```mermaid
+flowchart LR
+    Secure_Score["Secure Score"]
+    Secure_Score --> S0["Purpose"]
+    Secure_Score --> S1["Common checks"]
+    Secure_Score --> S2["Incident notes"]
+    Secure_Score --> S3["Change notes"]
+    Secure_Score --> S4["Useful commands"]
+    Secure_Score --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Security Secure Score notes, checks, troubleshooting, commands, change notes, and field references.

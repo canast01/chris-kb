@@ -1,5 +1,16 @@
 # Firmware
 
+```mermaid
+flowchart LR
+    Firmware["Firmware"]
+    Firmware --> S0["Purpose"]
+    Firmware --> S1["Common checks"]
+    Firmware --> S2["Incident notes"]
+    Firmware --> S3["Change notes"]
+    Firmware --> S4["Useful commands"]
+    Firmware --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Fabric Os Firmware notes, checks, troubleshooting, commands, change notes, and field references.

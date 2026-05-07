@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Alert Poller"]
+    Scripts --> S1["Capacity Trend Reporter"]
+    Scripts --> S2["Ansible CloudIQ Daily Health Playbook"]
+    Scripts --> S3["Windows: CloudIQ Alert Summary via REST API (PowerShell)"]
+    Scripts --> S4["Windows: CloudIQ System Health Summary (PowerShell)"]
+    Scripts --> S5["Daily Check Script"]
+    Scripts --> S6["Incident Triage Script"]
+    Scripts --> S7["Change Pre-Check Script"]
+```
+
 ## Alert Poller
 
 Polls the CloudIQ REST API for all active alerts across the storage estate and prints a formatted report grouped by severity. Exits non-zero if any CRITICAL alerts are found. Designed for cron or monitoring integration.

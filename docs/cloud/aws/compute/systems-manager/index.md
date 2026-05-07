@@ -1,5 +1,17 @@
 # AWS Systems Manager
 
+```mermaid
+flowchart LR
+    Systems_Manager["Systems Manager"]
+    Systems_Manager --> S0["Where It Fits"]
+    Systems_Manager --> S1["Daily Checks"]
+    Systems_Manager --> S2["Health Commands"]
+    Systems_Manager --> S3["Common Issues"]
+    Systems_Manager --> S4["Operational Tasks"]
+    Systems_Manager --> S5["Upgrade Notes"]
+    Systems_Manager --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Systems Manager notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

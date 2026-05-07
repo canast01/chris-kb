@@ -6,6 +6,15 @@ Reference procedures for diagnosing vSAN issues.
 <a class="kb-card" href="resync-review/"><strong>Resync Review</strong><span>Reviewing resync activity, object health, and assessing rebuild impact on cluster performance.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    vSAN_Troubleshooting["vSAN Troubleshooting"]
+    vSAN_Troubleshooting --> S0["Quick Diagnostics"]
+    vSAN_Troubleshooting --> S1["Common Issues"]
+    vSAN_Troubleshooting --> S2["Log Locations"]
+    vSAN_Troubleshooting --> S3["Resync Throttling"]
+```
+
 ## Quick Diagnostics
 
 ### Cluster Health Overview

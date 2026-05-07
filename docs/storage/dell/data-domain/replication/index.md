@@ -2,6 +2,18 @@
 
 Operational guidance for managing Data Domain replication — monitoring, troubleshooting, and failover.
 
+```mermaid
+flowchart LR
+    Replication_Operatio["Replication Operations"]
+    Replication_Operatio --> S0["Routine Checks"]
+    Replication_Operatio --> S1["Replication Lag Thresholds"]
+    Replication_Operatio --> S2["Troubleshooting Replication"]
+    Replication_Operatio --> S3["Common Issues"]
+    Replication_Operatio --> S4["Manual Operations"]
+    Replication_Operatio --> S5["Failover Procedure"]
+    Replication_Operatio --> S6["Recovery After Primary Returns"]
+```
+
 ## Routine Checks
 
 ```bash

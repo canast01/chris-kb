@@ -4,6 +4,17 @@ Procedures for raising support cases with Microsoft ADCS, commercial CAs (DigiCe
 
 ---
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Support Channel Summary"]
+    Vendor_Support --> S1["Microsoft ADCS"]
+    Vendor_Support --> S2["DigiCert"]
+    Vendor_Support --> S3["Entrust"]
+    Vendor_Support --> S4["Let's Encrypt"]
+    Vendor_Support --> S5["Certificate Emergency Response"]
+```
+
 ## Support Channel Summary
 
 | Vendor | Support Channel | SLA Notes |

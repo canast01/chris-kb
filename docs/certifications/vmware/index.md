@@ -29,6 +29,16 @@
 </a>
 
 </div>
+
+```mermaid
+flowchart LR
+    VMware_Certification["VMware Certification"]
+    VMware_Certification --> S0["Core Certification Paths"]
+    VMware_Certification --> S1["Daily Study Focus"]
+    VMware_Certification --> S2["Useful Commands"]
+    VMware_Certification --> S3["Renewal Notes"]
+```
+
 ## Overview
 
 VMware certifications validate skills in virtualization, storage, networking, and cloud infrastructure using VMware platforms.

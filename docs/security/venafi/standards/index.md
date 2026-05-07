@@ -4,6 +4,18 @@ Certificate policy standards enforced through the Venafi policy tree. All certif
 
 ---
 
+```mermaid
+flowchart LR
+    Venafi_Standards["Venafi Standards"]
+    Venafi_Standards --> S0["Policy Tree Naming Conventions"]
+    Venafi_Standards --> S1["Key Algorithm Standards"]
+    Venafi_Standards --> S2["Validity Period Standards"]
+    Venafi_Standards --> S3["Subject and SAN Requirements"]
+    Venafi_Standards --> S4["Wildcard Certificate Policy"]
+    Venafi_Standards --> S5["Certificate Request Workflow"]
+    Venafi_Standards --> S6["Private Key Handling"]
+```
+
 ## Policy Tree Naming Conventions
 
 Policy folders use lowercase-hyphenated names. Certificate objects (leaf nodes) use the FQDN as the object name.

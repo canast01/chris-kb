@@ -2,6 +2,17 @@
 
 Dell ECS (Elastic Cloud Storage) uses S3-compatible buckets as the fundamental storage object. Buckets contain objects and have associated policies, retention settings, and replication configuration.
 
+```mermaid
+flowchart LR
+    Buckets["Buckets"]
+    Buckets --> S0["Bucket Management via ECS Management Console / API"]
+    Buckets --> S1["Bucket Policies"]
+    Buckets --> S2["Object Retention (Compliance)"]
+    Buckets --> S3["Bucket ACLs"]
+    Buckets --> S4["Capacity Monitoring"]
+    Buckets --> S5["Common Operations"]
+```
+
 ## Bucket Management via ECS Management Console / API
 
 ECS is primarily managed via its web UI or REST API. The key CLI tool is `ecscli` for scripted operations.

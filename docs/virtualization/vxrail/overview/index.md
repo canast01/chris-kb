@@ -1,5 +1,17 @@
 # VxRail Overview
 
+```mermaid
+flowchart LR
+    VxRail_Overview["VxRail Overview"]
+    VxRail_Overview --> S0["Where It Fits"]
+    VxRail_Overview --> S1["Daily Checks"]
+    VxRail_Overview --> S2["Health Commands"]
+    VxRail_Overview --> S3["Common Issues"]
+    VxRail_Overview --> S4["Operational Tasks"]
+    VxRail_Overview --> S5["Upgrade Notes"]
+    VxRail_Overview --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail Overview notes for infrastructure operations, support, health checks, and troubleshooting.
@@ -55,8 +67,11 @@ VxRail combines VMware software with Dell integrated lifecycle, support, and har
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership and support boundaries.
-- Use least privilege access.
-- Keep versions aligned.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership and support boundaries. | Document ownership and support boundaries. |
+| Use least privilege access. | Use least privilege access. |
+| Keep versions aligned. | Keep versions aligned. |
+| Validate changes after implementation. | Validate changes after implementation. |

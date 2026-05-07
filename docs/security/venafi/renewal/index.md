@@ -1,5 +1,16 @@
 # Renewal
 
+```mermaid
+flowchart LR
+    Renewal["Renewal"]
+    Renewal --> S0["Purpose"]
+    Renewal --> S1["Common checks"]
+    Renewal --> S2["Incident notes"]
+    Renewal --> S3["Change notes"]
+    Renewal --> S4["Useful commands"]
+    Renewal --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Venafi Renewal notes, checks, troubleshooting, commands, change notes, and field references.

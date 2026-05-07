@@ -1,5 +1,17 @@
 # Brocade Fabric OS Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Opening a Support Case"]
+    Vendor_Support --> S1["Collecting supportsave (Diagnostic Bundle)"]
+    Vendor_Support --> S2["Required Information for SR"]
+    Vendor_Support --> S3["Severity Levels"]
+    Vendor_Support --> S4["Support Contract Entitlement"]
+    Vendor_Support --> S5["Common Escalation Path"]
+    Vendor_Support --> S6["SANnav Support"]
+```
+
 ## Opening a Support Case
 
 Support portal: [support.broadcom.com](https://support.broadcom.com)

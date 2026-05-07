@@ -1,5 +1,14 @@
 # ESXi Performance Troubleshooting
 
+```mermaid
+flowchart LR
+    Performance_Troubles["Performance Troublesho"]
+    Performance_Troubles --> S0["Common Symptoms"]
+    Performance_Troubles --> S1["Key Metrics"]
+    Performance_Troubles --> S2["Commands"]
+    Performance_Troubles --> S3["First Actions"]
+```
+
 ## Common Symptoms
 
 - High CPU ready time

@@ -1,5 +1,16 @@
 # SRDF/S Standards
 
+```mermaid
+flowchart LR
+    SRDF_S_Standards["SRDF/S Standards"]
+    SRDF_S_Standards --> S0["RTT and Latency Budget"]
+    SRDF_S_Standards --> S1["SRDF Group Design Rules"]
+    SRDF_S_Standards --> S2["Bandwidth Sizing"]
+    SRDF_S_Standards --> S3["Target Volume Standards"]
+    SRDF_S_Standards --> S4["Test Frequency"]
+    SRDF_S_Standards --> S5["Recovery Time Standards"]
+```
+
 ## RTT and Latency Budget
 
 SRDF/S commits every host write synchronously across the replication link. The host write RTT equals local storage latency + 2× WAN latency. Document and enforce maximum RTT before production enablement.

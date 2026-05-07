@@ -1,5 +1,16 @@
 # Modules
 
+```mermaid
+flowchart LR
+    Modules["Modules"]
+    Modules --> S0["Purpose"]
+    Modules --> S1["Common checks"]
+    Modules --> S2["Incident notes"]
+    Modules --> S3["Change notes"]
+    Modules --> S4["Useful commands"]
+    Modules --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Terraform Modules notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,13 @@
 # Pure Storage Evergreen//One Standards
 
+```mermaid
+flowchart LR
+    Evergreen__One_Stand["Evergreen//One Standar"]
+    Evergreen__One_Stand --> S0["Naming Conventions"]
+    Evergreen__One_Stand --> S1["Build Baseline"]
+    Evergreen__One_Stand --> S2["Service Agreement Checklist"]
+```
+
 ## Naming Conventions
 
 Naming standards for Evergreen//One follow the same conventions as standard FlashArray and FlashBlade deployments. Consistent naming is important for capacity reporting, billing validation, and audit.

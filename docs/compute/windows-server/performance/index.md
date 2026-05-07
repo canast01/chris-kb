@@ -2,6 +2,19 @@
 
 Performance monitoring, baseline capture, and bottleneck identification on Windows Server.
 
+```mermaid
+flowchart LR
+    Server_Performance["Server Performance"]
+    Server_Performance --> S0["Quick Performance Snapshot"]
+    Server_Performance --> S1["Performance Counters"]
+    Server_Performance --> S2["Performance Thresholds"]
+    Server_Performance --> S3["Data Collector Sets (PerfMon)"]
+    Server_Performance --> S4["Resource Monitor (resmon.exe)"]
+    Server_Performance --> S5["Memory Analysis"]
+    Server_Performance --> S6["CPU Analysis"]
+    Server_Performance --> S7["Disk Performance"]
+```
+
 ## Quick Performance Snapshot
 
 ```powershell

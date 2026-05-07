@@ -1,5 +1,15 @@
 # VMware vSAN Architecture
 
+```mermaid
+flowchart LR
+    vSAN_Architecture["vSAN Architecture"]
+    vSAN_Architecture --> S0["Components"]
+    vSAN_Architecture --> S1["Disk Group Design"]
+    vSAN_Architecture --> S2["FTT and RAID Policies"]
+    vSAN_Architecture --> S3["Stretched Cluster"]
+    vSAN_Architecture --> S4["Sizing Guidelines"]
+```
+
 ## Overview
 
 vSAN is VMware's hyper-converged storage solution, introduced in vSphere 5.5. Unlike traditional shared storage, vSAN pools local disks across ESXi hosts to create a distributed shared datastore. Compute and storage run on the same ESXi hosts, eliminating the need for an external SAN or NAS.

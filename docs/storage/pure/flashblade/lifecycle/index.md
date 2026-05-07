@@ -1,5 +1,14 @@
 # FlashBlade Lifecycle
 
+```mermaid
+flowchart LR
+    FlashBlade_Lifecycle["FlashBlade Lifecycle"]
+    FlashBlade_Lifecycle --> S0["Purity Version Matrix"]
+    FlashBlade_Lifecycle --> S1["Upgrade Paths"]
+    FlashBlade_Lifecycle --> S2["Refresh Planning"]
+    FlashBlade_Lifecycle --> S3["EOL Tracking"]
+```
+
 ## Purity Version Matrix
 
 | Version | Release Date | End of Support | Notes |

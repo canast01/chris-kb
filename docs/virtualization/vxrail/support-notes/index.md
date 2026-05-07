@@ -1,5 +1,17 @@
 # VxRail Support Notes
 
+```mermaid
+flowchart LR
+    Support_Notes["Support Notes"]
+    Support_Notes --> S0["Where It Fits"]
+    Support_Notes --> S1["Daily Checks"]
+    Support_Notes --> S2["Health Commands"]
+    Support_Notes --> S3["Common Issues"]
+    Support_Notes --> S4["Operational Tasks"]
+    Support_Notes --> S5["Upgrade Notes"]
+    Support_Notes --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail Support Notes notes for infrastructure operations, support, health checks, and troubleshooting.
@@ -55,8 +67,11 @@ Use this page for support case prep, evidence gathering, and vendor handoff note
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership and support boundaries.
-- Use least privilege access.
-- Keep versions aligned.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership and support boundaries. | Document ownership and support boundaries. |
+| Use least privilege access. | Use least privilege access. |
+| Keep versions aligned. | Keep versions aligned. |
+| Validate changes after implementation. | Validate changes after implementation. |

@@ -1,5 +1,17 @@
 # PowerPath Troubleshooting
 
+```mermaid
+flowchart LR
+    PowerPath_Troublesho["PowerPath Troubleshoot"]
+    PowerPath_Troublesho --> S0["Dead Paths"]
+    PowerPath_Troublesho --> S1["All Paths Dead to a Device"]
+    PowerPath_Troublesho --> S2["Device Not Visible"]
+    PowerPath_Troublesho --> S3["Incorrect Path Count"]
+    PowerPath_Troublesho --> S4["Wrong Load Balance Policy"]
+    PowerPath_Troublesho --> S5["PowerPath Not Starting After Reboot"]
+    PowerPath_Troublesho --> S6["Common Issues"]
+```
+
 ## Dead Paths
 
 ```bash

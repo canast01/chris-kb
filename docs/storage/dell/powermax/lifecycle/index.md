@@ -1,5 +1,14 @@
 # PowerMax Lifecycle
 
+```mermaid
+flowchart LR
+    PowerMax_Lifecycle["PowerMax Lifecycle"]
+    PowerMax_Lifecycle --> S0["Software Version Matrix"]
+    PowerMax_Lifecycle --> S1["Upgrade Paths"]
+    PowerMax_Lifecycle --> S2["Refresh Planning"]
+    PowerMax_Lifecycle --> S3["EOL Tracking"]
+```
+
 ## Software Version Matrix
 
 | PowerMaxOS Release | Solutions Enabler | Unisphere for PowerMax | Notes |

@@ -1,5 +1,14 @@
 # Dell VPLEX Lifecycle
 
+```mermaid
+flowchart LR
+    VPLEX_Lifecycle["VPLEX Lifecycle"]
+    VPLEX_Lifecycle --> S0["GeoSynchrony Version Matrix"]
+    VPLEX_Lifecycle --> S1["Upgrade Paths"]
+    VPLEX_Lifecycle --> S2["Hardware Lifecycle"]
+    VPLEX_Lifecycle --> S3["EOL Tracking"]
+```
+
 ## GeoSynchrony Version Matrix
 
 VPLEX runs the GeoSynchrony software stack. Dell publishes end-of-support dates for each GeoSynchrony release. Running an unsupported version means no security patches, no bug fixes, and no Dell support for software issues.

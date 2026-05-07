@@ -2,6 +2,17 @@
 
 Reliability engineering systematically improves system resilience through redundancy, failure testing, and learning from incidents.
 
+```mermaid
+flowchart LR
+    Reliability_Engineer["Reliability Engineerin"]
+    Reliability_Engineer --> S0["Core Principles"]
+    Reliability_Engineer --> S1["Redundancy Patterns"]
+    Reliability_Engineer --> S2["Reliability Metrics"]
+    Reliability_Engineer --> S3["Incident Review (Postmortem) Process"]
+    Reliability_Engineer --> S4["Toil Reduction"]
+    Reliability_Engineer --> S5["Reliability Improvement Checklist"]
+```
+
 ## Core Principles
 
 | Principle | Meaning |

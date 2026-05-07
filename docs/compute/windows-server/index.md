@@ -33,6 +33,14 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Windows_Server["Windows Server"]
+    Windows_Server --> S0["Daily Checks"]
+    Windows_Server --> S1["Health Commands"]
+    Windows_Server --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 Windows Server provides core operating system services for enterprise workloads, including Active Directory, file services, DNS, DHCP, IIS, application hosting, and infrastructure management.

@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Performance_Issues["Performance Issues"]
+    Performance_Issues --> S0["VM Will Not Power On"]
+    Performance_Issues --> S1["VM Is Slow — CPU"]
+    Performance_Issues --> S2["VM Is Slow — Memory"]
+    Performance_Issues --> S3["VM Is Slow — Disk"]
+    Performance_Issues --> S4["VM Lost Network"]
+    Performance_Issues --> S5["VM Disk Full (Guest OS Level)"]
+    Performance_Issues --> S6["VMware Tools Warning"]
+```
+
 ## VM Will Not Power On
 
 **Step 1 — Check the error message in vCenter Tasks** — it usually tells you exactly what failed.

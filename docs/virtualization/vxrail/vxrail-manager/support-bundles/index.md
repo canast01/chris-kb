@@ -1,5 +1,17 @@
 # VxRail Support Bundles
 
+```mermaid
+flowchart LR
+    Support_Bundles["Support Bundles"]
+    Support_Bundles --> S0["Where It Fits"]
+    Support_Bundles --> S1["Daily Checks"]
+    Support_Bundles --> S2["Health Commands"]
+    Support_Bundles --> S3["Common Issues"]
+    Support_Bundles --> S4["Operational Tasks"]
+    Support_Bundles --> S5["Upgrade Notes"]
+    Support_Bundles --> S6["Best Practices"]
+```
+
 ## Overview
 
 Support bundle creation, evidence capture, case attachment, and collection issues.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

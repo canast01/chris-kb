@@ -1,5 +1,16 @@
 # Images
 
+```mermaid
+flowchart LR
+    Images["Images"]
+    Images --> S0["Purpose"]
+    Images --> S1["Common checks"]
+    Images --> S2["Incident notes"]
+    Images --> S3["Change notes"]
+    Images --> S4["Useful commands"]
+    Images --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Compute Images notes, checks, troubleshooting, commands, change notes, and field references.

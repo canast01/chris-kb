@@ -13,17 +13,31 @@
 <a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    CloudIQ["CloudIQ"]
+    CloudIQ --> S0["Where It Fits"]
+    CloudIQ --> S1["Common Checks"]
+    CloudIQ --> S2["Health Commands"]
+    CloudIQ --> S3["Incident Notes"]
+    CloudIQ --> S4["Change Notes"]
+    CloudIQ --> S5["Best Practices"]
+```
+
 ## Overview
 
 Dell CloudIQ is a cloud-native AIOps platform that collects telemetry from Dell storage, server, and networking infrastructure via the Secure Connect Gateway and presents health scores, capacity forecasts, and performance analytics through a web dashboard and REST API. CloudIQ continuously analyses telemetry against Dell's anomaly models and generates proactive alerts before issues become outages. It covers PowerMax, PowerStore, PowerScale, Unity, VPLEX, Data Domain, and other platforms.
 
 ## Where It Fits
 
-- Centralised health and capacity monitoring across a heterogeneous Dell storage estate
-- Proactive alerting: CloudIQ generates alerts days or weeks before capacity exhaustion or hardware failure
-- Capacity planning: built-in forecasting projects when a system will reach threshold based on growth trends
-- Performance baseline analysis for anomaly detection without manual threshold configuration
-- Single pane of glass for distributed teams managing multiple Dell platforms across multiple sites
+
+| Use Case |
+|---|
+| Centralised health and capacity monitoring across a heterogeneous Dell storage estate |
+| Proactive alerting: CloudIQ generates alerts days or weeks before capacity exhaustion or hardware failure |
+| Capacity planning: built-in forecasting projects when a system will reach threshold based on growth trends |
+| Performance baseline analysis for anomaly detection without manual threshold configuration |
+| Single pane of glass for distributed teams managing multiple Dell platforms across multiple sites |
 
 ## Common Checks
 
@@ -85,8 +99,11 @@ Before making changes to CloudIQ configuration (API tokens, alert thresholds, no
 
 ## Best Practices
 
-- Use CloudIQ tags to organise systems by site, environment, and team — filtering by tag is the fastest way to scope an on-call review
-- Set up email or webhook notifications for CRITICAL severity alerts so they are not missed between dashboard logins
-- Export the CloudIQ capacity forecast monthly and share with the storage capacity planning meeting
-- Use the CloudIQ API for automation rather than scraping the GUI — the API is stable and versioned
-- Rotate API client secrets on a schedule and update all automation scripts before the old secret expires
+
+| Recommendation | Detail |
+|---|---|
+| Use CloudIQ tags to organise systems by site, environment, and team | filtering by tag is the fastest way to scope an on-call review |
+| Set up email or webhook notifications for CRITICAL severity | Set up email or webhook notifications for CRITICAL severity alerts so they are not missed between dashboard logins |
+| Export the CloudIQ capacity forecast monthly and share with | Export the CloudIQ capacity forecast monthly and share with the storage capacity planning meeting |
+| Use the CloudIQ API for automation rather than scraping the GUI | the API is stable and versioned |
+| Rotate API client secrets on a schedule and update all | Rotate API client secrets on a schedule and update all automation scripts before the old secret expires |

@@ -33,6 +33,14 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Fabric_OS["Fabric OS"]
+    Fabric_OS --> S0["Daily Checks"]
+    Fabric_OS --> S1["Health Commands"]
+    Fabric_OS --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 Brocade Fabric OS is the operating system for Brocade Fibre Channel SAN switches.

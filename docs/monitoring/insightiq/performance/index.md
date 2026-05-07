@@ -1,5 +1,16 @@
 # Performance
 
+```mermaid
+flowchart LR
+    Performance["Performance"]
+    Performance --> S0["Purpose"]
+    Performance --> S1["Common checks"]
+    Performance --> S2["Incident notes"]
+    Performance --> S3["Change notes"]
+    Performance --> S4["Useful commands"]
+    Performance --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Insightiq Performance notes, checks, troubleshooting, commands, change notes, and field references.

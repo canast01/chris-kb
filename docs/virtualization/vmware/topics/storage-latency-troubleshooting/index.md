@@ -1,5 +1,18 @@
 # Storage Latency Troubleshooting
 
+```mermaid
+flowchart LR
+    Latency_Troubleshoot["Latency Troubleshootin"]
+    Latency_Troubleshoot --> S0["Latency Thresholds"]
+    Latency_Troubleshoot --> S1["Step 1: Identify Affected VMs and Datastores"]
+    Latency_Troubleshoot --> S2["Step 2: Check Storage Paths"]
+    Latency_Troubleshoot --> S3["Step 3: Check for vSAN Resync or Rebuild"]
+    Latency_Troubleshoot --> S4["Step 4: Queue Depth and Congestion"]
+    Latency_Troubleshoot --> S5["Step 5: Datastores on the Same LUN/Volume"]
+    Latency_Troubleshoot --> S6["Step 6: esxtop Storage Analysis"]
+    Latency_Troubleshoot --> S7["Common Causes Reference"]
+```
+
 ## Latency Thresholds
 
 | Latency | State | Action |

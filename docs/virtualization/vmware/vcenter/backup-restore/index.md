@@ -1,5 +1,16 @@
 # vCenter Appliance Backup and Restore Standard
 
+```mermaid
+flowchart LR
+    Restore_Standard["Restore Standard"]
+    Restore_Standard --> S0["Backup Configuration"]
+    Restore_Standard --> S1["Backup Review"]
+    Restore_Standard --> S2["Restore Requirements"]
+    Restore_Standard --> S3["Recovery Testing"]
+    Restore_Standard --> S4["Backup Evidence for Audits"]
+    Restore_Standard --> S5["When to Restore Versus Troubleshoot"]
+```
+
 ## Backup Configuration
 
 - Use the file-based backup built into the VCSA Appliance Management Interface (VAMI)

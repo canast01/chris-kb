@@ -1,5 +1,13 @@
 # PowerPath Standards
 
+```mermaid
+flowchart LR
+    PowerPath_Standards["PowerPath Standards"]
+    PowerPath_Standards --> S0["Naming Conventions"]
+    PowerPath_Standards --> S1["Build and Deployment Baseline"]
+    PowerPath_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

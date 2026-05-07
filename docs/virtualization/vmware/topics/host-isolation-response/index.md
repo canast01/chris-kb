@@ -2,6 +2,17 @@
 
 vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running.
 
+```mermaid
+flowchart LR
+    Isolation_Response["Isolation Response"]
+    Isolation_Response --> S0["Isolation Response Options"]
+    Isolation_Response --> S1["Recommended Configuration"]
+    Isolation_Response --> S2["Datastore Heartbeating"]
+    Isolation_Response --> S3["Split-Brain Risk"]
+    Isolation_Response --> S4["Per-VM Override"]
+    Isolation_Response --> S5["Troubleshooting Isolation Events"]
+```
+
 ## Isolation Response Options
 
 | Setting | Behaviour | When to Use |

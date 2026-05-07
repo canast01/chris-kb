@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["AWS Account Health Check"]
+    Scripts --> S1["EC2 Instance Audit"]
+    Scripts --> S2["S3 Bucket Security Audit"]
+    Scripts --> S3["Cost and Usage Report"]
+    Scripts --> S4["EC2 DR Failover Playbook (Ansible)"]
+    Scripts --> S5["IAM Access Key Age Audit"]
+    Scripts --> S6["CloudWatch Alarm Status Check"]
+    Scripts --> S7["Ansible AWS Infrastructure Health Playbook"]
+```
+
 ## AWS Account Health Check
 
 Prints a formatted section-by-section health report for EC2 instances, RDS databases, and load balancers. Exits non-zero if any instances are found in a stopped state.

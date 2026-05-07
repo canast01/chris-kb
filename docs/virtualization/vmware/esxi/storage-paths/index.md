@@ -1,5 +1,17 @@
 # ESXi Storage Paths
 
+```mermaid
+flowchart LR
+    Storage_Paths["Storage Paths"]
+    Storage_Paths --> S0["Where It Fits"]
+    Storage_Paths --> S1["Daily Checks"]
+    Storage_Paths --> S2["Health Commands"]
+    Storage_Paths --> S3["Common Issues"]
+    Storage_Paths --> S4["Operational Tasks"]
+    Storage_Paths --> S5["Upgrade Notes"]
+    Storage_Paths --> S6["Best Practices"]
+```
+
 ## Overview
 
 Datastore visibility, multipathing, HBA paths, latency, and path failover checks.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

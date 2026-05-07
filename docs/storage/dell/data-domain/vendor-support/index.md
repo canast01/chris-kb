@@ -1,5 +1,18 @@
 # Data Domain — Vendor Support
 
+```mermaid
+flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --> S0["Support Portal"]
+    Data_Domain --> S1["SLA Tiers"]
+    Data_Domain --> S2["Information to Collect Before Opening a Case"]
+    Data_Domain --> S3["AutoSupport"]
+    Data_Domain --> S4["Remote Support"]
+    Data_Domain --> S5["Escalation Path"]
+    Data_Domain --> S6["Useful Support Links"]
+    Data_Domain --> S7["Common Support Scenarios"]
+```
+
 ## Support Portal
 
 **URL:** [https://www.dell.com/support](https://www.dell.com/support)

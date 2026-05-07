@@ -1,5 +1,15 @@
 # Aria Operations — Standards
 
+```mermaid
+flowchart LR
+    Aria_Operations["Aria Operations"]
+    Aria_Operations --> S0["Naming Conventions"]
+    Aria_Operations --> S1["Build Baseline"]
+    Aria_Operations --> S2["Configuration Checklist"]
+    Aria_Operations --> S3["Alert Policy Standards"]
+    Aria_Operations --> S4["Related Sections"]
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

@@ -2,6 +2,19 @@
 
 Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.
 
+```mermaid
+flowchart LR
+    Performance_Impact["Performance Impact"]
+    Performance_Impact --> S0["How Snapshots Work"]
+    Performance_Impact --> S1["Performance Impact by Chain Depth"]
+    Performance_Impact --> S2["Detecting Snapshot Issues"]
+    Performance_Impact --> S3["Consolidation Warnings"]
+    Performance_Impact --> S4["esxtop — Identifying Snapshot Latency"]
+    Performance_Impact --> S5["Backup-Induced Snapshots"]
+    Performance_Impact --> S6["Storage Impact"]
+    Performance_Impact --> S7["Policy and Remediation"]
+```
+
 ## How Snapshots Work
 
 ```

@@ -2,6 +2,19 @@
 
 Health checks and troubleshooting for common infrastructure integration points: monitoring, backup, authentication, logging, and ticketing.
 
+```mermaid
+flowchart LR
+    Service_Integrations["Service Integrations"]
+    Service_Integrations --> S0["Integration Health Overview"]
+    Service_Integrations --> S1["Monitoring Integration"]
+    Service_Integrations --> S2["Syslog / Log Forwarding"]
+    Service_Integrations --> S3["Backup Agent Integration"]
+    Service_Integrations --> S4["Active Directory / LDAP Integration"]
+    Service_Integrations --> S5["Database Connection Pooling"]
+    Service_Integrations --> S6["Integration Restart Procedures"]
+    Service_Integrations --> S7["Credential Rotation Checklist"]
+```
+
 ## Integration Health Overview
 
 | Integration | Health Check | Common Failure |

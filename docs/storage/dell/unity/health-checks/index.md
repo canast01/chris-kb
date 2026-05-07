@@ -2,6 +2,19 @@
 
 Daily and pre/post-change health checks for Dell Unity storage systems.
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["System Status"]
+    Health_Checks --> S1["Alerts and Events"]
+    Health_Checks --> S2["Hardware"]
+    Health_Checks --> S3["Storage Pool Capacity"]
+    Health_Checks --> S4["LUN Status"]
+    Health_Checks --> S5["Replication Sessions"]
+    Health_Checks --> S6["Network Interfaces"]
+    Health_Checks --> S7["Health Check Summary"]
+```
+
 ## System Status
 
 ```bash

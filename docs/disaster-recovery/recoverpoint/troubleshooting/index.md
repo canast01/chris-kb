@@ -1,5 +1,13 @@
 # RecoverPoint — Troubleshooting
 
+```mermaid
+flowchart LR
+    RecoverPoint["RecoverPoint"]
+    RecoverPoint --> S0["Common Issues"]
+    RecoverPoint --> S1["Log Locations"]
+    RecoverPoint --> S2["Support Bundle Collection"]
+```
+
 ## Common Issues
 
 ### CG in Error State

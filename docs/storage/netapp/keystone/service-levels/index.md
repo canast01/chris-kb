@@ -2,6 +2,17 @@
 
 NetApp Keystone offers tiered service levels based on performance characteristics. Each service level is defined by IOPS and latency targets per TB.
 
+```mermaid
+flowchart LR
+    Service_Levels["Service Levels"]
+    Service_Levels --> S0["Standard Service Levels"]
+    Service_Levels --> S1["Viewing Assigned Service Levels"]
+    Service_Levels --> S2["Burst Capacity"]
+    Service_Levels --> S3["Changing Service Levels"]
+    Service_Levels --> S4["QoS Policy Mapping (ONTAP CLI)"]
+    Service_Levels --> S5["Common Issues"]
+```
+
 ## Standard Service Levels
 
 | Service Level | Workload Type | IOPS/TB | Latency Target |

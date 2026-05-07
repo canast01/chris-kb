@@ -1,5 +1,17 @@
 # NSX Segments
 
+```mermaid
+flowchart LR
+    NSX_Segments["NSX Segments"]
+    NSX_Segments --> S0["Where It Fits"]
+    NSX_Segments --> S1["Daily Checks"]
+    NSX_Segments --> S2["Health Commands"]
+    NSX_Segments --> S3["Common Issues"]
+    NSX_Segments --> S4["Operational Tasks"]
+    NSX_Segments --> S5["Upgrade Notes"]
+    NSX_Segments --> S6["Best Practices"]
+```
+
 ## Overview
 
 NSX segments, logical switching, overlays, VLAN-backed networks, and validation.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

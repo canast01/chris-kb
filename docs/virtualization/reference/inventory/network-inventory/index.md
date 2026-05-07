@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Network_Inventory["Network Inventory"]
+    Network_Inventory --> S0["Distributed Switches"]
+    Network_Inventory --> S1["Port Groups"]
+    Network_Inventory --> S2["VMkernel Adapters"]
+    Network_Inventory --> S3["Fields Reference"]
+    Network_Inventory --> S4["Network Change Checklist"]
+```
+
 ## Overview
 
 Document all virtual networking components in the vSphere environment — distributed switches, port groups, VLANs, MTU settings, and uplink assignments. Update after any network configuration change.

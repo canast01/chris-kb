@@ -26,6 +26,17 @@ The VMware platform is the core virtualization layer used to run, manage, protec
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    VMware_Platform["VMware Platform"]
+    VMware_Platform --> S0["Key Components"]
+    VMware_Platform --> S1["What to Know"]
+    VMware_Platform --> S2["Common Operational Areas"]
+    VMware_Platform --> S3["Common Checks"]
+    VMware_Platform --> S4["Common Issues"]
+    VMware_Platform --> S5["Useful Commands"]
+```
+
 ## Key Components
 
 | Component | Purpose |

@@ -1,5 +1,14 @@
 # Pure Storage Evergreen Troubleshooting
 
+```mermaid
+flowchart LR
+    Evergreen_Troublesho["Evergreen Troubleshoot"]
+    Evergreen_Troublesho --> S0["Common Issues"]
+    Evergreen_Troublesho --> S1["Diagnostic Commands"]
+    Evergreen_Troublesho --> S2["Log Locations"]
+    Evergreen_Troublesho --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

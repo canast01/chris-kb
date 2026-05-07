@@ -1,5 +1,17 @@
 # VxRail Health Checks
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Where It Fits"]
+    Health_Checks --> S1["Daily Checks"]
+    Health_Checks --> S2["Health Commands"]
+    Health_Checks --> S3["Common Issues"]
+    Health_Checks --> S4["Operational Tasks"]
+    Health_Checks --> S5["Upgrade Notes"]
+    Health_Checks --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.
@@ -55,8 +67,11 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership and support boundaries.
-- Use least privilege access.
-- Keep versions aligned.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership and support boundaries. | Document ownership and support boundaries. |
+| Use least privilege access. | Use least privilege access. |
+| Keep versions aligned. | Keep versions aligned. |
+| Validate changes after implementation. | Validate changes after implementation. |

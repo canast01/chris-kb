@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    MDS_Integration["MDS Integration"]
+    MDS_Integration --> S0["Nexus Dashboard Fabric Controller (NDFC)"]
+    MDS_Integration --> S1["VMware FC Connectivity"]
+    MDS_Integration --> S2["Dell PowerMax Integration"]
+    MDS_Integration --> S3["Pure Storage FlashArray Integration"]
+    MDS_Integration --> S4["SNMP and Syslog"]
+```
+
 ## Nexus Dashboard Fabric Controller (NDFC)
 
 NDFC (formerly DCNM) provides centralised zone management, fabric topology visibility, performance monitoring, and firmware orchestration across all MDS switches.

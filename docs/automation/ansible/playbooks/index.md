@@ -1,5 +1,16 @@
 # Playbooks
 
+```mermaid
+flowchart LR
+    Playbooks["Playbooks"]
+    Playbooks --> S0["Purpose"]
+    Playbooks --> S1["Common checks"]
+    Playbooks --> S2["Incident notes"]
+    Playbooks --> S3["Change notes"]
+    Playbooks --> S4["Useful commands"]
+    Playbooks --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Ansible Playbooks notes, checks, troubleshooting, commands, change notes, and field references.

@@ -2,6 +2,19 @@
 
 Protection groups (pgroups) define sets of volumes for consistent snapshot and replication operations.
 
+```mermaid
+flowchart LR
+    Protection_Groups["Protection Groups"]
+    Protection_Groups --> S0["List Protection Groups"]
+    Protection_Groups --> S1["View Protection Group Members"]
+    Protection_Groups --> S2["Create a Protection Group"]
+    Protection_Groups --> S3["Add Volumes to a Protection Group"]
+    Protection_Groups --> S4["Add Hosts to a Protection Group"]
+    Protection_Groups --> S5["Configure Snapshot Schedule"]
+    Protection_Groups --> S6["Configure Replication Schedule (Async to Remote)"]
+    Protection_Groups --> S7["Take a Manual Snapshot"]
+```
+
 ## List Protection Groups
 
 ```bash

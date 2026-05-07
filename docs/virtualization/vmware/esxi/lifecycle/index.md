@@ -1,5 +1,17 @@
 # ESXi Lifecycle
 
+```mermaid
+flowchart LR
+    ESXi_Lifecycle["ESXi Lifecycle"]
+    ESXi_Lifecycle --> S0["Version and Support Matrix"]
+    ESXi_Lifecycle --> S1["Patch Cadence"]
+    ESXi_Lifecycle --> S2["Lifecycle Management Tools"]
+    ESXi_Lifecycle --> S3["Host Upgrade Procedure"]
+    ESXi_Lifecycle --> S4["ESXi Patch Application (Manual / Standalone)"]
+    ESXi_Lifecycle --> S5["Driver and Firmware Lifecycle"]
+    ESXi_Lifecycle --> S6["Rollback Considerations"]
+```
+
 ## Version and Support Matrix
 
 | Version | Release | General Support End | Technical Guidance End |

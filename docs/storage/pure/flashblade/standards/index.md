@@ -1,5 +1,13 @@
 # FlashBlade Standards
 
+```mermaid
+flowchart LR
+    FlashBlade_Standards["FlashBlade Standards"]
+    FlashBlade_Standards --> S0["Naming Conventions"]
+    FlashBlade_Standards --> S1["Build Baseline"]
+    FlashBlade_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

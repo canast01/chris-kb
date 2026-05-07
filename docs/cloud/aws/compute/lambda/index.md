@@ -1,5 +1,17 @@
 # AWS Lambda
 
+```mermaid
+flowchart LR
+    AWS_Lambda["AWS Lambda"]
+    AWS_Lambda --> S0["Where It Fits"]
+    AWS_Lambda --> S1["Daily Checks"]
+    AWS_Lambda --> S2["Health Commands"]
+    AWS_Lambda --> S3["Common Issues"]
+    AWS_Lambda --> S4["Operational Tasks"]
+    AWS_Lambda --> S5["Upgrade Notes"]
+    AWS_Lambda --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Lambda notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

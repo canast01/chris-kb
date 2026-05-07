@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    OS_Architecture["OS Architecture"]
+    OS_Architecture --> S0["Platform Reference"]
+    OS_Architecture --> S1["Fabric Design"]
+    OS_Architecture --> S2["Port Types"]
+    OS_Architecture --> S3["Principal Switch and Domain ID"]
+    OS_Architecture --> S4["Zoning"]
+    OS_Architecture --> S5["Fabric Health Checks"]
+```
+
 ## Overview
 
 Fabric OS (FOS) runs on Brocade/Broadcom SAN switches. Fabrics are deployed in a core-edge topology with ISLs (trunked) connecting edge switches to core directors. One switch per fabric is elected as the **principal switch**, which owns the fabric name server and manages domain ID assignments.

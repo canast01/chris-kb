@@ -1,5 +1,17 @@
 # vCenter Alarms and Events
 
+```mermaid
+flowchart LR
+    and_Events["and Events"]
+    and_Events --> S0["Where It Fits"]
+    and_Events --> S1["Daily Checks"]
+    and_Events --> S2["Health Commands"]
+    and_Events --> S3["Common Issues"]
+    and_Events --> S4["Operational Tasks"]
+    and_Events --> S5["Upgrade Notes"]
+    and_Events --> S6["Best Practices"]
+```
+
 ## Overview
 
 Alarm review, event history, alert tuning, noise reduction, and useful operational signals.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

@@ -1,5 +1,17 @@
 # Vmware Cloud Foundation Bring-Up
 
+```mermaid
+flowchart LR
+    Foundation_Bring_Up["Foundation Bring-Up"]
+    Foundation_Bring_Up --> S0["Where It Fits"]
+    Foundation_Bring_Up --> S1["Daily Checks"]
+    Foundation_Bring_Up --> S2["Health Commands"]
+    Foundation_Bring_Up --> S3["Common Issues"]
+    Foundation_Bring_Up --> S4["Operational Tasks"]
+    Foundation_Bring_Up --> S5["Upgrade Notes"]
+    Foundation_Bring_Up --> S6["Best Practices"]
+```
+
 ## Overview
 
 VCF bring-up planning, prerequisites, validation, and early lifecycle notes.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

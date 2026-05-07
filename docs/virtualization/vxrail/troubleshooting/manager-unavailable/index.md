@@ -1,5 +1,17 @@
 # VxRail Manager Unavailable
 
+```mermaid
+flowchart LR
+    Manager_Unavailable["Manager Unavailable"]
+    Manager_Unavailable --> S0["Where It Fits"]
+    Manager_Unavailable --> S1["Daily Checks"]
+    Manager_Unavailable --> S2["Health Commands"]
+    Manager_Unavailable --> S3["Common Issues"]
+    Manager_Unavailable --> S4["Operational Tasks"]
+    Manager_Unavailable --> S5["Upgrade Notes"]
+    Manager_Unavailable --> S6["Best Practices"]
+```
+
 ## Overview
 
 VxRail Manager UI or service availability issues.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

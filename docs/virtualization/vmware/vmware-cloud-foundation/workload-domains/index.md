@@ -1,5 +1,17 @@
 # Vmware Cloud Foundation Workload Domains
 
+```mermaid
+flowchart LR
+    Workload_Domains["Workload Domains"]
+    Workload_Domains --> S0["Where It Fits"]
+    Workload_Domains --> S1["Daily Checks"]
+    Workload_Domains --> S2["Health Commands"]
+    Workload_Domains --> S3["Common Issues"]
+    Workload_Domains --> S4["Operational Tasks"]
+    Workload_Domains --> S5["Upgrade Notes"]
+    Workload_Domains --> S6["Best Practices"]
+```
+
 ## Overview
 
 VCF workload domain structure, ownership, lifecycle, and operational boundaries.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

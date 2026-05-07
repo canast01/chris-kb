@@ -1,5 +1,16 @@
 # Nexus Dashboard Scripts
 
+```mermaid
+flowchart LR
+    Dashboard_Scripts["Dashboard Scripts"]
+    Dashboard_Scripts --> S0["Authentication"]
+    Dashboard_Scripts --> S1["ND Cluster Health Check"]
+    Dashboard_Scripts --> S2["Fabric Fault Export"]
+    Dashboard_Scripts --> S3["ACI Fault Summary (via APIC)"]
+    Dashboard_Scripts --> S4["Forward P1/P2 Faults to ServiceNow"]
+    Dashboard_Scripts --> S5["Script Inventory"]
+```
+
 ## Authentication
 
 Nexus Dashboard REST API uses OAuth2 token authentication. ACI APIC uses cookie-based authentication. Scripts load credentials from the secrets manager at runtime.

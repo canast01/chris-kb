@@ -2,6 +2,18 @@
 
 Day-2 operational tasks for SRDF/S (synchronous) and SRDF/A (asynchronous) replication on PowerMax. For architecture and standards, see the [DR section](../../../../disaster-recovery/srdf-s/).
 
+```mermaid
+flowchart LR
+    SRDF_Operations["SRDF Operations"]
+    SRDF_Operations --> S0["Check SRDF State"]
+    SRDF_Operations --> S1["SRDF/S Pair States"]
+    SRDF_Operations --> S2["SRDF/A (Asynchronous) Specific"]
+    SRDF_Operations --> S3["Suspend and Resume"]
+    SRDF_Operations --> S4["Planned Failover (Swap)"]
+    SRDF_Operations --> S5["Failback"]
+    SRDF_Operations --> S6["SRDF Health Check"]
+```
+
 ## Check SRDF State
 
 ```bash

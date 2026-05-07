@@ -1,5 +1,16 @@
 # Capacity
 
+```mermaid
+flowchart LR
+    Capacity["Capacity"]
+    Capacity --> S0["Purpose"]
+    Capacity --> S1["Common checks"]
+    Capacity --> S2["Incident notes"]
+    Capacity --> S3["Change notes"]
+    Capacity --> S4["Useful commands"]
+    Capacity --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical CloudIQ Capacity notes, checks, troubleshooting, commands, change notes, and field references.

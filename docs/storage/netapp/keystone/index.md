@@ -23,18 +23,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    NetApp_Keystone["NetApp Keystone"]
+    NetApp_Keystone --> S0["Where It Fits"]
+    NetApp_Keystone --> S1["Daily Checks"]
+    NetApp_Keystone --> S2["Health Commands"]
+    NetApp_Keystone --> S3["Common Issues"]
+    NetApp_Keystone --> S4["Operational Tasks"]
+    NetApp_Keystone --> S5["Upgrade Notes"]
+    NetApp_Keystone --> S6["Best Practices"]
+```
+
 ## Overview
 
 NetApp Keystone (Keystone STaaS) is a storage-as-a-service subscription offering that delivers on-premises NetApp infrastructure — AFF/FAS for block and file, and StorageGRID for object — on a consumption-based, OpEx model. Customers commit to a minimum capacity tier per service level and can burst above that commitment within the subscription period, with usage telemetry collected by the Keystone Collector agent and reported monthly for billing. The Keystone dashboard, embedded in BlueXP (formerly Active IQ), provides visibility into committed vs. consumed capacity, burst usage, and SLA compliance across all subscriptions.
 
 ## Where It Fits
 
-- Organizations that need on-premises NetApp storage but want OpEx billing rather than CapEx hardware purchase or leasing
-- Workloads requiring predictable per-TB pricing at defined performance tiers (NVMe through capacity-optimized HDD)
-- Environments with fluctuating capacity demands that benefit from burst capacity above a committed baseline
-- Hybrid cloud strategies where on-premises infrastructure must integrate with BlueXP-managed cloud services
-- Regulated industries where data must remain on-premises but financial flexibility of a service model is required
-- StorageGRID object storage consumption alongside ONTAP block/file under a unified subscription
+
+| Use Case |
+|---|
+| Organizations that need on-premises NetApp storage but want OpEx billing rather than CapEx hardware purchase or leasing |
+| Workloads requiring predictable per-TB pricing at defined performance tiers (NVMe through capacity-optimized HDD) |
+| Environments with fluctuating capacity demands that benefit from burst capacity above a committed baseline |
+| Hybrid cloud strategies where on-premises infrastructure must integrate with BlueXP-managed cloud services |
+| Regulated industries where data must remain on-premises but financial flexibility of a service model is required |
+| StorageGRID object storage consumption alongside ONTAP block/file under a unified subscription |
 
 ## Daily Checks
 
@@ -109,11 +124,14 @@ volume show -fields size,used,percent-used
 
 ## Best Practices
 
-- Review capacity consumption weekly — not just at month-end — so burst usage can be corrected before it appears on the invoice
-- Set capacity threshold alerts at 80% of the committed tier within ONTAP (EMS thresholds) or via BlueXP notifications to get early warning before burst activates
-- Document which application or team owns each volume and its assigned Keystone service level; this enables accurate internal chargeback and faster root-cause analysis for billing surprises
-- Use QoS policy-group naming conventions that clearly identify the Keystone service level (e.g., `extreme-ks`, `premium-ks`) to reduce misconfiguration risk
-- Do not downgrade from a higher performance service level to a lower one mid-subscription term — plan service level assignments carefully at provisioning time
-- Keep the Keystone Collector VM on a supported OS version and patched; an outdated or unhealthy Collector is the most common cause of reporting gaps that complicate billing reconciliation
-- Align snapshot policies on Keystone volumes with the service level tier — excessive snapshots on Extreme/Premium tiers consume high-cost committed capacity unnecessarily
-- Engage NetApp Keystone success team quarterly to review consumption trends, forecast next subscription period sizing, and discuss burst patterns
+
+| Recommendation | Detail |
+|---|---|
+| Review capacity consumption weekly | not just at month-end — so burst usage can be corrected before it appears on the invoice |
+| Set capacity threshold alerts at 80% of the committed tier | Set capacity threshold alerts at 80% of the committed tier within ONTAP (EMS thresholds) or via BlueXP notifications to get early warning before burst activates |
+| Document which application or team owns each volume and its assigned Keystone service level | this enables accurate internal chargeback and faster root-cause analysis for billing surprises |
+| Use QoS policy-group naming conventions that clearly | Use QoS policy-group naming conventions that clearly identify the Keystone service level (e.g., `extreme-ks`, `premium-ks`) to reduce misconfiguration risk |
+| Do not downgrade from a higher performance service level to a lower one mid-subscription term | plan service level assignments carefully at provisioning time |
+| Keep the Keystone Collector VM on a supported OS version and patched | an outdated or unhealthy Collector is the most common cause of reporting gaps that complicate billing reconciliation |
+| Align snapshot policies on Keystone volumes with the service level tier | excessive snapshots on Extreme/Premium tiers consume high-cost committed capacity unnecessarily |
+| Engage NetApp Keystone success team quarterly to review | Engage NetApp Keystone success team quarterly to review consumption trends, forecast next subscription period sizing, and discuss burst patterns |

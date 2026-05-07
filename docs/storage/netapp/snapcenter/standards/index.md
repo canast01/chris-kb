@@ -1,5 +1,13 @@
 # SnapCenter Standards
 
+```mermaid
+flowchart LR
+    SnapCenter_Standards["SnapCenter Standards"]
+    SnapCenter_Standards --> S0["Naming Conventions"]
+    SnapCenter_Standards --> S1["Build Baseline"]
+    SnapCenter_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

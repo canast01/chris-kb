@@ -2,6 +2,16 @@
 
 A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.
 
+```mermaid
+flowchart LR
+    Request_Procedure["Request Procedure"]
+    Request_Procedure --> S0["RFC Required Fields"]
+    Request_Procedure --> S1["RFC Template"]
+    Request_Procedure --> S2["RFC Submission Process"]
+    Request_Procedure --> S3["Standard Change Register"]
+    Request_Procedure --> S4["RFC Status Lifecycle"]
+```
+
 ## RFC Required Fields
 
 | Field | Description | Required? |

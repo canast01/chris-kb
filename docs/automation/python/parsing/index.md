@@ -1,5 +1,16 @@
 # Parsing
 
+```mermaid
+flowchart LR
+    Parsing["Parsing"]
+    Parsing --> S0["Purpose"]
+    Parsing --> S1["Common checks"]
+    Parsing --> S2["Incident notes"]
+    Parsing --> S3["Change notes"]
+    Parsing --> S4["Useful commands"]
+    Parsing --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Python Parsing notes, checks, troubleshooting, commands, change notes, and field references.

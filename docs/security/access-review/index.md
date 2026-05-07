@@ -2,6 +2,19 @@
 
 Periodic access reviews ensure that users and service accounts hold only the permissions required for their current role. Reviews reduce the blast radius of credential compromise and satisfy audit requirements.
 
+```mermaid
+flowchart LR
+    Review_Procedure["Review Procedure"]
+    Review_Procedure --> S0["Review Schedule"]
+    Review_Procedure --> S1["Active Directory — Export and Review"]
+    Review_Procedure --> S2["Privileged Account Review"]
+    Review_Procedure --> S3["Service Account Review"]
+    Review_Procedure --> S4["Inactive and Stale Account Cleanup"]
+    Review_Procedure --> S5["Linux / POSIX Account Review"]
+    Review_Procedure --> S6["Review Workflow"]
+    Review_Procedure --> S7["Checklist"]
+```
+
 ## Review Schedule
 
 | Scope | Frequency | Owner |

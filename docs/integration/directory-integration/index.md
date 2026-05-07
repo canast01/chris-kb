@@ -2,6 +2,17 @@
 
 Connect Linux and Windows systems to Active Directory or LDAP for centralised authentication, group-based access control, and identity management.
 
+```mermaid
+flowchart LR
+    Directory_Integratio["Directory Integration"]
+    Directory_Integratio --> S0["Linux → Active Directory (SSSD)"]
+    Directory_Integratio --> S1["Linux → Active Directory (Winbind)"]
+    Directory_Integratio --> S2["Linux → LDAP (OpenLDAP / non-AD)"]
+    Directory_Integratio --> S3["Windows — Domain Join"]
+    Directory_Integratio --> S4["Health Checks"]
+    Directory_Integratio --> S5["Troubleshooting"]
+```
+
 ## Linux → Active Directory (SSSD)
 
 ### Join Domain

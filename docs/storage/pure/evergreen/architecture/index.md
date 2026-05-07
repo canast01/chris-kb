@@ -1,5 +1,14 @@
 # Pure Storage Evergreen Architecture
 
+```mermaid
+flowchart LR
+    Evergreen_Architectu["Evergreen Architecture"]
+    Evergreen_Architectu --> S0["Components"]
+    Evergreen_Architectu --> S1["HA Topology"]
+    Evergreen_Architectu --> S2["Connectivity"]
+    Evergreen_Architectu --> S3["Sizing Guidelines"]
+```
+
 ## Overview
 
 Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier, with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.

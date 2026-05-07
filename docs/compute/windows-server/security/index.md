@@ -1,5 +1,17 @@
 # Windows Server Security
 
+```mermaid
+flowchart LR
+    Server_Security["Server Security"]
+    Server_Security --> S0["CIS Benchmark Hardening"]
+    Server_Security --> S1["Windows Defender Configuration"]
+    Server_Security --> S2["CyberArk PAM (Privileged Access Management)"]
+    Server_Security --> S3["Audit Policy"]
+    Server_Security --> S4["Windows Firewall"]
+    Server_Security --> S5["Event Log Forwarding"]
+    Server_Security --> S6["Security Hardening Checklist"]
+```
+
 ## CIS Benchmark Hardening
 
 Windows Server builds are hardened to CIS Microsoft Windows Server Level 1 benchmark, applied via Group Policy Objects linked at the server OU level.

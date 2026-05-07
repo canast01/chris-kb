@@ -2,6 +2,18 @@
 
 Verify replication health, lag, and data consistency across primary and replica nodes.
 
+```mermaid
+flowchart LR
+    Replication_Check["Replication Check"]
+    Replication_Check --> S0["PostgreSQL Streaming Replication"]
+    Replication_Check --> S1["MySQL / MariaDB Replication"]
+    Replication_Check --> S2["SQL Server Always On"]
+    Replication_Check --> S3["Data Consistency Check"]
+    Replication_Check --> S4["Replication Lag Thresholds"]
+    Replication_Check --> S5["Replication Repair"]
+    Replication_Check --> S6["Replication Check Checklist"]
+```
+
 ## PostgreSQL Streaming Replication
 
 ```sql

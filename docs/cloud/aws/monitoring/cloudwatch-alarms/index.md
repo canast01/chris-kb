@@ -1,5 +1,17 @@
 # AWS CloudWatch Alarms
 
+```mermaid
+flowchart LR
+    CloudWatch_Alarms["CloudWatch Alarms"]
+    CloudWatch_Alarms --> S0["Where It Fits"]
+    CloudWatch_Alarms --> S1["Daily Checks"]
+    CloudWatch_Alarms --> S2["Health Commands"]
+    CloudWatch_Alarms --> S3["Common Issues"]
+    CloudWatch_Alarms --> S4["Operational Tasks"]
+    CloudWatch_Alarms --> S5["Upgrade Notes"]
+    CloudWatch_Alarms --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS CloudWatch Alarms notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

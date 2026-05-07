@@ -1,5 +1,17 @@
 # AWS IAM
 
+```mermaid
+flowchart LR
+    AWS_IAM["AWS IAM"]
+    AWS_IAM --> S0["Where It Fits"]
+    AWS_IAM --> S1["Daily Checks"]
+    AWS_IAM --> S2["Health Commands"]
+    AWS_IAM --> S3["Common Issues"]
+    AWS_IAM --> S4["Operational Tasks"]
+    AWS_IAM --> S5["Upgrade Notes"]
+    AWS_IAM --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS IAM notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

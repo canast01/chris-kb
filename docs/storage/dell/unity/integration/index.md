@@ -1,5 +1,15 @@
 # Dell Unity Integration
 
+```mermaid
+flowchart LR
+    Unity_Integration["Unity Integration"]
+    Unity_Integration --> S0["VMware Integration"]
+    Unity_Integration --> S1["Backup Integration"]
+    Unity_Integration --> S2["CloudIQ Monitoring"]
+    Unity_Integration --> S3["Active Directory"]
+    Unity_Integration --> S4["REST API"]
+```
+
 ## VMware Integration
 
 Unity XT integrates with VMware vSphere via multiple paths:

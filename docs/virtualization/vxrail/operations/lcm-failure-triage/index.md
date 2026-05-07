@@ -1,5 +1,16 @@
 # VxRail LCM Failure Triage
 
+```mermaid
+flowchart LR
+    Failure_Triage["Failure Triage"]
+    Failure_Triage --> S0["Symptoms"]
+    Failure_Triage --> S1["Likely Causes"]
+    Failure_Triage --> S2["Commands"]
+    Failure_Triage --> S3["Troubleshooting Workflow"]
+    Failure_Triage --> S4["Resolution"]
+    Failure_Triage --> S5["Prevention"]
+```
+
 ## Symptoms
 
 - VxRail lifecycle operation fails.

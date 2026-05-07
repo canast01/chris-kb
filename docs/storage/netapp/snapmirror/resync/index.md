@@ -2,6 +2,17 @@
 
 Resync re-establishes a SnapMirror relationship after it has been broken (intentionally for failover, or due to an error).
 
+```mermaid
+flowchart LR
+    SnapMirror_Resync["SnapMirror Resync"]
+    SnapMirror_Resync --> S0["When to Resync"]
+    SnapMirror_Resync --> S1["Standard Resync (Source → Destination)"]
+    SnapMirror_Resync --> S2["Reverse Resync (After Failover)"]
+    SnapMirror_Resync --> S3["Monitor Resync Progress"]
+    SnapMirror_Resync --> S4["Resync Duration"]
+    SnapMirror_Resync --> S5["Common Issues"]
+```
+
 ## When to Resync
 
 - After a planned failover (`snapmirror break`) — resync to restore replication

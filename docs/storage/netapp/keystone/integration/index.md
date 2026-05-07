@@ -1,5 +1,15 @@
 # NetApp Keystone Integration
 
+```mermaid
+flowchart LR
+    Keystone_Integration["Keystone Integration"]
+    Keystone_Integration --> S0["ActiveIQ Digital Advisor"]
+    Keystone_Integration --> S1["Keystone Collector"]
+    Keystone_Integration --> S2["REST API"]
+    Keystone_Integration --> S3["ITSM Integration"]
+    Keystone_Integration --> S4["CloudOps Integration"]
+```
+
 ## ActiveIQ Digital Advisor
 
 BlueXP / ActiveIQ Digital Advisor is the primary portal for Keystone capacity visibility and subscription management. Log in at [https://activeiq.netapp.com](https://activeiq.netapp.com) using your NetApp SSO credentials. The Keystone dashboard displays:

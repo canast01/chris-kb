@@ -2,6 +2,19 @@
 
 Track physical infrastructure from procurement through secure disposal to optimise refresh cycles and maintain vendor support coverage.
 
+```mermaid
+flowchart LR
+    Lifecycle_Management["Lifecycle Management"]
+    Lifecycle_Management --> S0["Lifecycle Stages"]
+    Lifecycle_Management --> S1["Typical Refresh Cycles"]
+    Lifecycle_Management --> S2["Firmware / BIOS Management"]
+    Lifecycle_Management --> S3["Health Monitoring for Aging Hardware"]
+    Lifecycle_Management --> S4["End-of-Life Planning"]
+    Lifecycle_Management --> S5["Decommission Procedure"]
+    Lifecycle_Management --> S6["Data Destruction Standards"]
+    Lifecycle_Management --> S7["Hardware Lifecycle Checklist"]
+```
+
 ## Lifecycle Stages
 
 | Stage | Activities | Key Decisions |

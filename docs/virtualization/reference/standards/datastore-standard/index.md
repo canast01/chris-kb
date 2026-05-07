@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Datastore_Standard["Datastore Standard"]
+    Datastore_Standard --> S0["Naming"]
+    Datastore_Standard --> S1["VMFS Version"]
+    Datastore_Standard --> S2["Maximum Datastore Size"]
+    Datastore_Standard --> S3["Mounting"]
+    Datastore_Standard --> S4["Backup Tagging"]
+    Datastore_Standard --> S5["Capacity Management"]
+    Datastore_Standard --> S6["New Datastore Checklist"]
+```
+
 ## Overview
 
 This standard governs how datastores are named, created, presented, and managed across the vSphere environment. All new datastores must follow this standard before VMs are placed on them.

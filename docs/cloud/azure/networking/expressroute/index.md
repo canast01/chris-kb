@@ -1,5 +1,16 @@
 # Expressroute
 
+```mermaid
+flowchart LR
+    Expressroute["Expressroute"]
+    Expressroute --> S0["Purpose"]
+    Expressroute --> S1["Common checks"]
+    Expressroute --> S2["Incident notes"]
+    Expressroute --> S3["Change notes"]
+    Expressroute --> S4["Useful commands"]
+    Expressroute --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Expressroute notes, checks, troubleshooting, commands, change notes, and field references.

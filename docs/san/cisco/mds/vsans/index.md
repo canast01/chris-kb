@@ -1,5 +1,16 @@
 # Vsans
 
+```mermaid
+flowchart LR
+    Vsans["Vsans"]
+    Vsans --> S0["Purpose"]
+    Vsans --> S1["Common checks"]
+    Vsans --> S2["Incident notes"]
+    Vsans --> S3["Change notes"]
+    Vsans --> S4["Useful commands"]
+    Vsans --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Mds Vsans notes, checks, troubleshooting, commands, change notes, and field references.

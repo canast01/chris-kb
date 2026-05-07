@@ -2,6 +2,17 @@
 
 ECS exposes an S3-compatible API endpoint. Any S3-compatible client (AWS CLI, boto3, s3cmd, rclone) can access ECS using its S3 endpoint.
 
+```mermaid
+flowchart LR
+    S3_Access["S3 Access"]
+    S3_Access --> S0["Connection Details"]
+    S3_Access --> S1["AWS CLI Configuration"]
+    S3_Access --> S2["Common S3 Operations"]
+    S3_Access --> S3["Access Keys Management"]
+    S3_Access --> S4["Namespace and Bucket Paths"]
+    S3_Access --> S5["Troubleshooting Access"]
+```
+
 ## Connection Details
 
 | Parameter | Value |

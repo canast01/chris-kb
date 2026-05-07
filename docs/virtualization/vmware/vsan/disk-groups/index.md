@@ -1,5 +1,17 @@
 # vSAN Disk Groups
 
+```mermaid
+flowchart LR
+    Disk_Groups["Disk Groups"]
+    Disk_Groups --> S0["Where It Fits"]
+    Disk_Groups --> S1["Daily Checks"]
+    Disk_Groups --> S2["Health Commands"]
+    Disk_Groups --> S3["Common Issues"]
+    Disk_Groups --> S4["Operational Tasks"]
+    Disk_Groups --> S5["Upgrade Notes"]
+    Disk_Groups --> S6["Best Practices"]
+```
+
 ## Overview
 
 Disk group health, cache/capacity devices, failures, and replacement notes.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

@@ -2,6 +2,17 @@
 
 Alert tuning is important because too many low-value alerts create noise.
 
+```mermaid
+flowchart LR
+    Alert_Tuning["Alert Tuning"]
+    Alert_Tuning --> S0["Good Alert Tuning Should Include"]
+    Alert_Tuning --> S1["Common checks"]
+    Alert_Tuning --> S2["Incident notes"]
+    Alert_Tuning --> S3["Change notes"]
+    Alert_Tuning --> S4["Useful commands"]
+    Alert_Tuning --> S5["Known issues"]
+```
+
 ## Good Alert Tuning Should Include
 
 - Clear severity levels

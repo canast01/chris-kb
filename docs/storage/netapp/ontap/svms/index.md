@@ -2,6 +2,19 @@
 
 SVMs are logical storage containers within an ONTAP cluster. Each SVM has its own namespaces, LIFs, and protocol configurations.
 
+```mermaid
+flowchart LR
+    Virtual_Machines["Virtual Machines)"]
+    Virtual_Machines --> S0["List SVMs"]
+    Virtual_Machines --> S1["SVM Health"]
+    Virtual_Machines --> S2["Create an SVM"]
+    Virtual_Machines --> S3["LIF Management"]
+    Virtual_Machines --> S4["DNS Configuration per SVM"]
+    Virtual_Machines --> S5["NIS / LDAP Lookup"]
+    Virtual_Machines --> S6["Stop / Start an SVM"]
+    Virtual_Machines --> S7["Delete an SVM"]
+```
+
 ## List SVMs
 
 ```bash

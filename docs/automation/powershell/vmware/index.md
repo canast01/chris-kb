@@ -1,5 +1,16 @@
 # VMware
 
+```mermaid
+flowchart LR
+    VMware["VMware"]
+    VMware --> S0["Purpose"]
+    VMware --> S1["Common checks"]
+    VMware --> S2["Incident notes"]
+    VMware --> S3["Change notes"]
+    VMware --> S4["Useful commands"]
+    VMware --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Powershell VMware notes, checks, troubleshooting, commands, change notes, and field references.

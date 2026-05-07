@@ -69,18 +69,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Pure_FlashBlade["Pure FlashBlade"]
+    Pure_FlashBlade --> S0["Where It Fits"]
+    Pure_FlashBlade --> S1["Daily Checks"]
+    Pure_FlashBlade --> S2["Health Commands"]
+    Pure_FlashBlade --> S3["Common Issues"]
+    Pure_FlashBlade --> S4["Operational Tasks"]
+    Pure_FlashBlade --> S5["Upgrade Notes"]
+    Pure_FlashBlade --> S6["Best Practices"]
+```
+
 ## Overview
 
 Pure Storage FlashBlade is an all-flash scale-out storage platform running Purity//FB OS, designed for unstructured data workloads including AI/ML, analytics, backup, and high-performance computing. Each chassis holds multiple blades that combine compute and NVMe flash storage, allowing capacity and performance to scale together by adding blades. It natively serves NFS v3/v4.1, SMB 2/3, S3 object, and HDFS protocols from a single platform, and supports asynchronous replication (ActiveDR) and synchronous replication (ActiveCluster for file systems) for data protection.
 
 ## Where It Fits
 
-- AI/ML training data repositories requiring high-throughput parallel access from GPU clusters via NFS or S3
-- High-performance backup target for Veeam, Commvault, and Veritas using the Rapid Restore integration
-- Object storage for analytics pipelines consuming S3-compatible data with high concurrency
-- Unstructured data consolidation replacing legacy NAS filers with a single scale-out platform
-- HDFS-compatible storage for Hadoop-based analytics workloads without requiring a full Hadoop cluster
-- Disaster recovery target using ActiveDR asynchronous replication from a primary FlashBlade or FlashArray
+
+| Use Case |
+|---|
+| AI/ML training data repositories requiring high-throughput parallel access from GPU clusters via NFS or S3 |
+| High-performance backup target for Veeam, Commvault, and Veritas using the Rapid Restore integration |
+| Object storage for analytics pipelines consuming S3-compatible data with high concurrency |
+| Unstructured data consolidation replacing legacy NAS filers with a single scale-out platform |
+| HDFS-compatible storage for Hadoop-based analytics workloads without requiring a full Hadoop cluster |
+| Disaster recovery target using ActiveDR asynchronous replication from a primary FlashBlade or FlashArray |
 
 ## Daily Checks
 
@@ -167,11 +182,14 @@ purefb network interface list
 
 ## Best Practices
 
-- Separate filesystems per application or team rather than sharing a single large filesystem — this enables independent capacity limits, snapshot schedules, and replication policies per workload
-- Use S3 lifecycle policies (object expiry rules on buckets) to automatically expire old objects and prevent uncontrolled storage growth for analytics or backup workloads
-- Configure Pure1 monitoring with capacity threshold alerts (e.g., at 70% and 85% used) and hardware fault notifications so issues are caught before they impact operations
-- Test ActiveDR failover and failback procedures at least annually — include NFS and S3 client remounting steps in the DR runbook, not just the FlashBlade-side commands
-- Use SAML/SSO integration for admin access rather than local accounts — this enforces MFA, enables central access revocation, and provides audit trail through your identity provider
-- For backup workloads (Veeam, Commvault), use a dedicated filesystem per backup tier (daily, weekly, monthly) with matching snapshot retention so recovery points are easy to identify and manage
-- Set NFS export policies to restrict client IP ranges to authorized subnets only — avoid exporting with `*` (all hosts) in production environments
-- Monitor replication lag daily and define a documented RPO threshold; set alerts when lag exceeds the acceptable window rather than discovering breaches during an incident
+
+| Recommendation | Detail |
+|---|---|
+| Separate filesystems per application or team rather than sharing a single large filesystem | this enables independent capacity limits, snapshot schedules, and replication policies per workload |
+| Use S3 lifecycle policies (object expiry rules on buckets) | Use S3 lifecycle policies (object expiry rules on buckets) to automatically expire old objects and prevent uncontrolled storage growth for analytics or backup workloads |
+| Configure Pure1 monitoring with capacity threshold alerts | Configure Pure1 monitoring with capacity threshold alerts (e.g., at 70% and 85% used) and hardware fault notifications so issues are caught before they impact operations |
+| Test ActiveDR failover and failback procedures at least annually | include NFS and S3 client remounting steps in the DR runbook, not just the FlashBlade-side commands |
+| Use SAML/SSO integration for admin access rather than local accounts | this enforces MFA, enables central access revocation, and provides audit trail through your identity provider |
+| For backup workloads (Veeam, Commvault), use a dedicated | For backup workloads (Veeam, Commvault), use a dedicated filesystem per backup tier (daily, weekly, monthly) with matching snapshot retention so recovery points are easy to identify and manage |
+| Set NFS export policies to restrict client IP ranges to authorized subnets only | avoid exporting with `*` (all hosts) in production environments |
+| Monitor replication lag daily and define a documented RPO threshold | set alerts when lag exceeds the acceptable window rather than discovering breaches during an incident |

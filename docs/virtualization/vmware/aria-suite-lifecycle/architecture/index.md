@@ -1,5 +1,16 @@
 # Aria Suite Lifecycle Architecture
 
+```mermaid
+flowchart LR
+    Lifecycle_Architectu["Lifecycle Architecture"]
+    Lifecycle_Architectu --> S0["Core Components"]
+    Lifecycle_Architectu --> S1["LCM Appliance Internal Architecture"]
+    Lifecycle_Architectu --> S2["Supported Products"]
+    Lifecycle_Architectu --> S3["Deployment Models"]
+    Lifecycle_Architectu --> S4["Network Requirements"]
+    Lifecycle_Architectu --> S5["High Availability"]
+```
+
 ## Overview
 
 Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria (formerly vRealize) product suite from a single control plane. LCM eliminates the need to update each Aria product independently.

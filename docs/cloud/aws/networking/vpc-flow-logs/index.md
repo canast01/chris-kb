@@ -1,5 +1,17 @@
 # AWS VPC Flow Logs
 
+```mermaid
+flowchart LR
+    Flow_Logs["Flow Logs"]
+    Flow_Logs --> S0["Where It Fits"]
+    Flow_Logs --> S1["Daily Checks"]
+    Flow_Logs --> S2["Health Commands"]
+    Flow_Logs --> S3["Common Issues"]
+    Flow_Logs --> S4["Operational Tasks"]
+    Flow_Logs --> S5["Upgrade Notes"]
+    Flow_Logs --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS VPC Flow Logs notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

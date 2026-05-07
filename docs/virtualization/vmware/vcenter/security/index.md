@@ -1,5 +1,15 @@
 # vCenter Security
 
+```mermaid
+flowchart LR
+    vCenter_Security["vCenter Security"]
+    vCenter_Security --> S0["Role-Based Access Control (RBAC)"]
+    vCenter_Security --> S1["SSO Security"]
+    vCenter_Security --> S2["TLS Configuration"]
+    vCenter_Security --> S3["Audit Logging"]
+    vCenter_Security --> S4["Hardening Baseline"]
+```
+
 ## Role-Based Access Control (RBAC)
 
 vCenter uses a privilege-based permission model. Permissions are assigned as: **principal (user/group) + role (privilege set) + inventory object (scope)** + optional propagation to children.

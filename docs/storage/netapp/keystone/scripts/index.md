@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Keystone Collector Health Check (Bash)"]
+    Scripts --> S1["Keystone Usage Report (Python)"]
+    Scripts --> S2["Volume Service Level Audit (Bash)"]
+    Scripts --> S3["Windows: Keystone Subscription Usage via REST API (PowerShell)"]
+    Scripts --> S4["Windows: Keystone Usage Trending (PowerShell)"]
+```
+
 ## Keystone Collector Health Check (Bash)
 
 Check Keystone Collector service status, verify the last collection timestamp from the collector log, and confirm the collector can reach the Keystone API endpoint. Exits non-zero if the collector is stopped or the last collection is more than two hours old.

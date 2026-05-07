@@ -1,5 +1,16 @@
 # Variables
 
+```mermaid
+flowchart LR
+    Variables["Variables"]
+    Variables --> S0["Purpose"]
+    Variables --> S1["Common checks"]
+    Variables --> S2["Incident notes"]
+    Variables --> S3["Change notes"]
+    Variables --> S4["Useful commands"]
+    Variables --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Ansible Variables notes, checks, troubleshooting, commands, change notes, and field references.

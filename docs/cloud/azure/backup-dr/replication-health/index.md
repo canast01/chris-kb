@@ -1,5 +1,16 @@
 # Replication Health
 
+```mermaid
+flowchart LR
+    Replication_Health["Replication Health"]
+    Replication_Health --> S0["Purpose"]
+    Replication_Health --> S1["Common checks"]
+    Replication_Health --> S2["Incident notes"]
+    Replication_Health --> S3["Change notes"]
+    Replication_Health --> S4["Useful commands"]
+    Replication_Health --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Backup and DR Replication Health notes, checks, troubleshooting, commands, change notes, and field references.

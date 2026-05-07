@@ -1,5 +1,18 @@
 # FlashArray Health Checks
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Daily Health Check"]
+    Health_Checks --> S1["Controller Health"]
+    Health_Checks --> S2["Drive Health"]
+    Health_Checks --> S3["Volume Health"]
+    Health_Checks --> S4["Host Connectivity"]
+    Health_Checks --> S5["Replication Health"]
+    Health_Checks --> S6["Pure1 Cloud Monitoring"]
+    Health_Checks --> S7["Pre-Change Checklist"]
+```
+
 ## Daily Health Check
 
 ```bash

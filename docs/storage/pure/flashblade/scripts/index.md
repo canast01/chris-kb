@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Array Health Check (Python)"]
+    Scripts --> S1["Filesystem Capacity Report (Bash)"]
+    Scripts --> S2["ActiveDR Replication Monitor (Python)"]
+    Scripts --> S3["S3 Bucket Audit (Python)"]
+    Scripts --> S4["Windows: FlashBlade Health Check via REST API (PowerShell)"]
+    Scripts --> S5["Windows: FlashBlade Capacity and Filesystems via Plink (CMD)"]
+    Scripts --> S6["Daily Check Script (Bash via SSH)"]
+    Scripts --> S7["Incident Triage Script (Bash via SSH)"]
+```
+
 ## Array Health Check (Python)
 
 Connect to a FlashBlade via the `py-pure-client` SDK, check blades, hardware, active alerts, file systems, and buckets, then print a health summary. Exits non-zero if alerts or blade failures are detected.

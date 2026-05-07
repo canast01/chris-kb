@@ -1,5 +1,16 @@
 # Cleanup
 
+```mermaid
+flowchart LR
+    Cleanup["Cleanup"]
+    Cleanup --> S0["Purpose"]
+    Cleanup --> S1["Common checks"]
+    Cleanup --> S2["Incident notes"]
+    Cleanup --> S3["Change notes"]
+    Cleanup --> S4["Useful commands"]
+    Cleanup --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRM Cleanup notes, checks, troubleshooting, commands, change notes, and field references.

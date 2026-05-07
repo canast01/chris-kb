@@ -1,5 +1,18 @@
 # vCenter Service Health
 
+```mermaid
+flowchart LR
+    Service_Health["Service Health"]
+    Service_Health --> S0["Appliance Management Interface"]
+    Service_Health --> S1["Checking Service Status"]
+    Service_Health --> S2["Disk Partition Usage"]
+    Service_Health --> S3["SSO and Lookup Service Health"]
+    Service_Health --> S4["Certificate-Related Failures"]
+    Service_Health --> S5["DNS and NTP Validation"]
+    Service_Health --> S6["Restarting Services Safely"]
+    Service_Health --> S7["When to Restore from Backup"]
+```
+
 ## Appliance Management Interface
 
 - Log into the VCSA Appliance Management Interface (VAMI) at `https://<vcenter>:5480`

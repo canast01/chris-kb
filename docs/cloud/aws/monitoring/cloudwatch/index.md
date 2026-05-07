@@ -1,5 +1,17 @@
 # AWS CloudWatch
 
+```mermaid
+flowchart LR
+    AWS_CloudWatch["AWS CloudWatch"]
+    AWS_CloudWatch --> S0["Where It Fits"]
+    AWS_CloudWatch --> S1["Daily Checks"]
+    AWS_CloudWatch --> S2["Health Commands"]
+    AWS_CloudWatch --> S3["Common Issues"]
+    AWS_CloudWatch --> S4["Operational Tasks"]
+    AWS_CloudWatch --> S5["Upgrade Notes"]
+    AWS_CloudWatch --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS CloudWatch notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

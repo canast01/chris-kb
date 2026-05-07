@@ -1,5 +1,16 @@
 # Patching
 
+```mermaid
+flowchart LR
+    Patching["Patching"]
+    Patching --> S0["Purpose"]
+    Patching --> S1["Common checks"]
+    Patching --> S2["Incident notes"]
+    Patching --> S3["Change notes"]
+    Patching --> S4["Useful commands"]
+    Patching --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Compute Patching notes, checks, troubleshooting, commands, change notes, and field references.

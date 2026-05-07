@@ -1,5 +1,16 @@
 # State
 
+```mermaid
+flowchart LR
+    State["State"]
+    State --> S0["Purpose"]
+    State --> S1["Common checks"]
+    State --> S2["Incident notes"]
+    State --> S3["Change notes"]
+    State --> S4["Useful commands"]
+    State --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Terraform State notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,15 @@
 # RecoverPoint — Standards
 
+```mermaid
+flowchart LR
+    RecoverPoint["RecoverPoint"]
+    RecoverPoint --> S0["Naming Conventions"]
+    RecoverPoint --> S1["Splitter Selection"]
+    RecoverPoint --> S2["Configuration Baseline"]
+    RecoverPoint --> S3["Consistency Group Configuration Checklist"]
+    RecoverPoint --> S4["RPO Tiers"]
+```
+
 ## Naming Conventions
 
 ### Consistency Groups

@@ -1,5 +1,13 @@
 # DNS Troubleshooting
 
+```mermaid
+flowchart LR
+    DNS_Troubleshooting["DNS Troubleshooting"]
+    DNS_Troubleshooting --> S0["Symptoms"]
+    DNS_Troubleshooting --> S1["Triage Steps"]
+    DNS_Troubleshooting --> S2["Common Issues"]
+```
+
 ## Symptoms
 
 - Hostname fails to resolve; application errors by name but not by IP

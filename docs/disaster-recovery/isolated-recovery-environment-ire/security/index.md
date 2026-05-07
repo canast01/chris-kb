@@ -1,5 +1,16 @@
 # Security
 
+```mermaid
+flowchart LR
+    Security["Security"]
+    Security --> S0["Purpose"]
+    Security --> S1["Common checks"]
+    Security --> S2["Incident notes"]
+    Security --> S3["Change notes"]
+    Security --> S4["Useful commands"]
+    Security --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Isolated Recovery Environment Ire Security notes, checks, troubleshooting, commands, change notes, and field references.

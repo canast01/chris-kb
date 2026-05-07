@@ -1,5 +1,16 @@
 # Assignments
 
+```mermaid
+flowchart LR
+    Assignments["Assignments"]
+    Assignments --> S0["Purpose"]
+    Assignments --> S1["Common checks"]
+    Assignments --> S2["Incident notes"]
+    Assignments --> S3["Change notes"]
+    Assignments --> S4["Useful commands"]
+    Assignments --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Governance Assignments notes, checks, troubleshooting, commands, change notes, and field references.

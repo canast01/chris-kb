@@ -14,6 +14,15 @@
 </a>
 
 </div>
+
+```mermaid
+flowchart LR
+    DNS["DNS"]
+    DNS --> S0["Daily Checks"]
+    DNS --> S1["Health Commands"]
+    DNS --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 DNS resolves names to IP addresses and is a critical dependency for authentication, applications, storage, cloud services, monitoring, and automation.

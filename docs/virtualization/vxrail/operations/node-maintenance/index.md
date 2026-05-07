@@ -1,5 +1,16 @@
 # VxRail Node Maintenance Procedure
 
+```mermaid
+flowchart LR
+    Maintenance_Procedur["Maintenance Procedure"]
+    Maintenance_Procedur --> S0["Before Starting"]
+    Maintenance_Procedur --> S1["Evacuation Mode Selection"]
+    Maintenance_Procedur --> S2["Entering Maintenance Mode"]
+    Maintenance_Procedur --> S3["Performing the Work"]
+    Maintenance_Procedur --> S4["Exiting Maintenance Mode"]
+    Maintenance_Procedur --> S5["Post-Maintenance Validation"]
+```
+
 ## Before Starting
 
 - Confirm cluster health in vCenter — no critical alarms

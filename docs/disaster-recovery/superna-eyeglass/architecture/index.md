@@ -1,5 +1,16 @@
 # Superna Eyeglass Architecture
 
+```mermaid
+flowchart LR
+    Eyeglass_Architectur["Eyeglass Architecture"]
+    Eyeglass_Architectur --> S0["Component Topology"]
+    Eyeglass_Architectur --> S1["Component Roles"]
+    Eyeglass_Architectur --> S2["DR Readiness Dashboard"]
+    Eyeglass_Architectur --> S3["Failover Execution Flow"]
+    Eyeglass_Architectur --> S4["Appliance Sizing"]
+    Eyeglass_Architectur --> S5["Networking"]
+```
+
 ## Overview
 
 Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover.

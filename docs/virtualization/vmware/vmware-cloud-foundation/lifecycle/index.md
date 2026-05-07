@@ -2,6 +2,18 @@
 
 VCF upgrades are orchestrated entirely through SDDC Manager, which downloads lifecycle bundles from the VMware depot (or an offline bundle depot) and applies them in a strictly enforced sequence.
 
+```mermaid
+flowchart LR
+    Foundation_Lifecycle["Foundation Lifecycle"]
+    Foundation_Lifecycle --> S0["Upgrade Sequence"]
+    Foundation_Lifecycle --> S1["Version Compatibility Matrix"]
+    Foundation_Lifecycle --> S2["Bundle Management"]
+    Foundation_Lifecycle --> S3["Async Patches"]
+    Foundation_Lifecycle --> S4["Pre-Upgrade Checklist"]
+    Foundation_Lifecycle --> S5["SDDC Manager Backup"]
+    Foundation_Lifecycle --> S6["Rolling Back"]
+```
+
 ## Upgrade Sequence
 
 SDDC Manager enforces this order — you cannot skip steps:

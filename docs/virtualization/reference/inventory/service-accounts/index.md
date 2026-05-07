@@ -2,6 +2,17 @@
 
 Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.
 
+```mermaid
+flowchart LR
+    Account_Inventory["Account Inventory"]
+    Account_Inventory --> S0["Account Register"]
+    Account_Inventory --> S1["Permission Role Definitions"]
+    Account_Inventory --> S2["Creating a Service Account in AD"]
+    Account_Inventory --> S3["Assigning a Custom vCenter Role"]
+    Account_Inventory --> S4["Quarterly Review Checklist"]
+    Account_Inventory --> S5["Detecting Orphaned Accounts"]
+```
+
 ## Account Register
 
 | Account | Purpose | Target System | Permission Level | Owner | Rotation | Vault Path | Last Reviewed |

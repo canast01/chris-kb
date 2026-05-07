@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    VM_Standard["VM Standard"]
+    VM_Standard --> S0["Templates"]
+    VM_Standard --> S1["VMware Tools"]
+    VM_Standard --> S2["Hardware Version"]
+    VM_Standard --> S3["CPU"]
+    VM_Standard --> S4["Memory"]
+    VM_Standard --> S5["Disk"]
+    VM_Standard --> S6["Network"]
+    VM_Standard --> S7["Tagging and Documentation"]
+```
+
 ## Overview
 
 This standard defines how virtual machines are built, sized, and configured in the vSphere environment. All new VMs deployed from a template or built manually must comply with these requirements.

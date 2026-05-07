@@ -1,5 +1,17 @@
 # AWS Savings Plans
 
+```mermaid
+flowchart LR
+    Savings_Plans["Savings Plans"]
+    Savings_Plans --> S0["Where It Fits"]
+    Savings_Plans --> S1["Daily Checks"]
+    Savings_Plans --> S2["Health Commands"]
+    Savings_Plans --> S3["Common Issues"]
+    Savings_Plans --> S4["Operational Tasks"]
+    Savings_Plans --> S5["Upgrade Notes"]
+    Savings_Plans --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Savings Plans notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

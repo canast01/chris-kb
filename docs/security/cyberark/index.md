@@ -28,6 +28,14 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    CyberArk["CyberArk"]
+    CyberArk --> S0["Daily Checks"]
+    CyberArk --> S1["Health Commands"]
+    CyberArk --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 CyberArk manages privileged credentials, password rotation, and secure access to administrative systems.

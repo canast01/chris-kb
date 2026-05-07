@@ -1,5 +1,17 @@
 # AWS Account Structure
 
+```mermaid
+flowchart LR
+    Account_Structure["Account Structure"]
+    Account_Structure --> S0["Where It Fits"]
+    Account_Structure --> S1["Daily Checks"]
+    Account_Structure --> S2["Health Commands"]
+    Account_Structure --> S3["Common Issues"]
+    Account_Structure --> S4["Operational Tasks"]
+    Account_Structure --> S5["Upgrade Notes"]
+    Account_Structure --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Account Structure notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

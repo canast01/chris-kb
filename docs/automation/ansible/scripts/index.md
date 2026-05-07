@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Infrastructure Health Check Playbook"]
+    Scripts --> S1["Rolling Update Playbook"]
+    Scripts --> S2["Inventory Validation Playbook"]
+    Scripts --> S3["Secret Rotation with Vault (Bash + Ansible)"]
+    Scripts --> S4["Windows: Run Ansible Playbooks from Windows via WSL (CMD Batch)"]
+    Scripts --> S5["Windows: Ansible Inventory Ping Test (PowerShell + WSL)"]
+    Scripts --> S6["Daily Check Script"]
+    Scripts --> S7["Incident Triage Script"]
+```
+
 ## Infrastructure Health Check Playbook
 
 A general-purpose health-check playbook targeting Linux server and network device groups. Reports disk usage, load average, failed services, and reboot time per host, with block/rescue error handling and a delegated summary at the end.

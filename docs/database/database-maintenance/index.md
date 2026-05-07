@@ -2,6 +2,17 @@
 
 Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
 
+```mermaid
+flowchart LR
+    Maintenance_Procedur["Maintenance Procedure"]
+    Maintenance_Procedur --> S0["PostgreSQL Maintenance"]
+    Maintenance_Procedur --> S1["MySQL / MariaDB Maintenance"]
+    Maintenance_Procedur --> S2["SQL Server Maintenance"]
+    Maintenance_Procedur --> S3["Maintenance Schedule"]
+    Maintenance_Procedur --> S4["Maintenance Checklist"]
+    Maintenance_Procedur --> S5["Troubleshooting"]
+```
+
 ## PostgreSQL Maintenance
 
 ```sql

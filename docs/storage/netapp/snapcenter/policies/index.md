@@ -2,6 +2,17 @@
 
 Policies define how SnapCenter performs backups — schedule, retention, SnapMirror/SnapVault replication, and consistency settings.
 
+```mermaid
+flowchart LR
+    SnapCenter_Policies["SnapCenter Policies"]
+    SnapCenter_Policies --> S0["View Existing Policies"]
+    SnapCenter_Policies --> S1["Create a Policy"]
+    SnapCenter_Policies --> S2["Policy Retention Settings"]
+    SnapCenter_Policies --> S3["Assign a Policy to a Resource Group"]
+    SnapCenter_Policies --> S4["Modifying Retention"]
+    SnapCenter_Policies --> S5["Common Issues"]
+```
+
 ## View Existing Policies
 
 In the SnapCenter UI:

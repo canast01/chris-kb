@@ -1,5 +1,16 @@
 # Recovery Services Vault
 
+```mermaid
+flowchart LR
+    Services_Vault["Services Vault"]
+    Services_Vault --> S0["Purpose"]
+    Services_Vault --> S1["Common checks"]
+    Services_Vault --> S2["Incident notes"]
+    Services_Vault --> S3["Change notes"]
+    Services_Vault --> S4["Useful commands"]
+    Services_Vault --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Backup and DR Recovery Services Vault notes, checks, troubleshooting, commands, change notes, and field references.

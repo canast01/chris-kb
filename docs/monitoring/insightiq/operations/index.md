@@ -1,5 +1,18 @@
 # InsightIQ Operations
 
+```mermaid
+flowchart LR
+    InsightIQ_Operations["InsightIQ Operations"]
+    InsightIQ_Operations --> S0["Daily Checklist"]
+    InsightIQ_Operations --> S1["Cluster Connection Troubleshooting"]
+    InsightIQ_Operations --> S2["Performance Review Process"]
+    InsightIQ_Operations --> S3["Capacity Review (Weekly)"]
+    InsightIQ_Operations --> S4["Appliance Health Checks"]
+    InsightIQ_Operations --> S5["Alert Threshold Review (Monthly)"]
+    InsightIQ_Operations --> S6["Report Generation"]
+    InsightIQ_Operations --> S7["Monthly Tasks"]
+```
+
 ## Daily Checklist
 
 | Check | Location | Pass Criteria |

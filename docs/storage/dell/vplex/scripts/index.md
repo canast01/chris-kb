@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Distributed Device Health Check"]
+    Scripts --> S1["Metro Consistency Group Monitor"]
+    Scripts --> S2["Storage View Audit"]
+    Scripts --> S3["Ansible VPLEX Health Playbook"]
+    Scripts --> S4["Windows: VPLEX Cluster Health via Plink (CMD)"]
+    Scripts --> S5["Windows: VPLEX System Status via REST API (PowerShell)"]
+    Scripts --> S6["Daily Check Script"]
+    Scripts --> S7["Incident Triage Script"]
+```
+
 ## Distributed Device Health Check
 
 SSH to a VPLEX management server and runs vplexcli commands to check cluster health indications, distributed device health, and director hardware state. Reports any health-state value that is not "ok" and exits non-zero if issues are found.

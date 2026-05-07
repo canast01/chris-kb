@@ -16,6 +16,20 @@
 </a>
 
 </div>
+
+```mermaid
+flowchart LR
+    Troubleshooting["Troubleshooting"]
+    Troubleshooting --> S0["Quick Reference"]
+    Troubleshooting --> S1["Host Disconnected from vCenter"]
+    Troubleshooting --> S2["Host Not Responding"]
+    Troubleshooting --> S3["Storage Path Issues — APD and PDL"]
+    Troubleshooting --> S4["VMFS Datastore Inaccessible"]
+    Troubleshooting --> S5["High CPU Ready"]
+    Troubleshooting --> S6["High Memory Balloon / Swap"]
+    Troubleshooting --> S7["NTP Drift Causing Authentication Issues"]
+```
+
 ## Quick Reference
 
 | Symptom | First Check | Key Command |

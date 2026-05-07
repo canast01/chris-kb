@@ -1,5 +1,16 @@
 # Cost Allocation Tags
 
+```mermaid
+flowchart LR
+    Allocation_Tags["Allocation Tags"]
+    Allocation_Tags --> S0["Purpose"]
+    Allocation_Tags --> S1["Common checks"]
+    Allocation_Tags --> S2["Incident notes"]
+    Allocation_Tags --> S3["Change notes"]
+    Allocation_Tags --> S4["Useful commands"]
+    Allocation_Tags --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Cost Cost Allocation Tags notes, checks, troubleshooting, commands, change notes, and field references.

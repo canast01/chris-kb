@@ -2,6 +2,19 @@
 
 VPLEX Metro stretches virtual volumes across two sites with synchronous mirroring, enabling transparent failover.
 
+```mermaid
+flowchart LR
+    Metro_Operations["Metro Operations"]
+    Metro_Operations --> S0["Metro Architecture Overview"]
+    Metro_Operations --> S1["Check Distributed Device Status"]
+    Metro_Operations --> S2["Check Active Leg"]
+    Metro_Operations --> S3["Planned Failover (Migrate Active Leg)"]
+    Metro_Operations --> S4["Witness Configuration"]
+    Metro_Operations --> S5["Split-Brain Recovery"]
+    Metro_Operations --> S6["WAN COM Health"]
+    Metro_Operations --> S7["Common Issues"]
+```
+
 ## Metro Architecture Overview
 
 - **Cluster-1** — Site A (local cluster)

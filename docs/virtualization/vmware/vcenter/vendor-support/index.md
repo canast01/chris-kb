@@ -1,5 +1,16 @@
 # vCenter Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Support Portal"]
+    Vendor_Support --> S1["Opening a Support Case"]
+    Vendor_Support --> S2["SLA Tiers"]
+    Vendor_Support --> S3["Escalation Path"]
+    Vendor_Support --> S4["Useful Broadcom Resources"]
+    Vendor_Support --> S5["Information Broadcom Will Ask For"]
+```
+
 ## Support Portal
 
 All VMware/vSphere support is now handled through **Broadcom Support** following the 2023 VMware acquisition:

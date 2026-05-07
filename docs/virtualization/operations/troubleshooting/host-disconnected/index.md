@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Not_Responding["Not Responding"]
+    Not_Responding --> S0["Quick Triage"]
+    Not_Responding --> S1["Host Disconnected in vCenter"]
+    Not_Responding --> S2["Management Agent Reset"]
+    Not_Responding --> S3["Management Network Down"]
+    Not_Responding --> S4["Host Not Responding (PSOD or Hung Kernel)"]
+    Not_Responding --> S5["Host Cannot Enter Maintenance Mode"]
+    Not_Responding --> S6["Host Hardware Warning"]
+    Not_Responding --> S7["Host NTP Drift"]
+```
+
 ## Quick Triage
 
 First, establish whether the host is truly unreachable or just disconnected in vCenter.

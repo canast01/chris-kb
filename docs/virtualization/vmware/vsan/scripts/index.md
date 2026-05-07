@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["vSAN Cluster Health Check (PowerShell / PowerCLI)"]
+    Scripts --> S1["Disk Group Capacity Report (PowerShell / PowerCLI)"]
+    Scripts --> S2["vSAN Object Health Check (Python / pyVmomi)"]
+    Scripts --> S3["Performance Baseline Check (PowerShell / PowerCLI)"]
+    Scripts --> S4["Ansible vSAN Health Playbook"]
+    Scripts --> S5["Windows: vSAN Health Check via PowerCLI (PowerShell)"]
+    Scripts --> S6["Windows: vSAN Disk Group Status via Plink (CMD)"]
+```
+
 ## vSAN Cluster Health Check (PowerShell / PowerCLI)
 
 Run the full vSAN health test suite via PowerCLI and exit non-zero if any test is YELLOW or RED.

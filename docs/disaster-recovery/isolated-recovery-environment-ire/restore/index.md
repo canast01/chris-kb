@@ -1,5 +1,16 @@
 # Restore
 
+```mermaid
+flowchart LR
+    Restore["Restore"]
+    Restore --> S0["Purpose"]
+    Restore --> S1["Common checks"]
+    Restore --> S2["Incident notes"]
+    Restore --> S3["Change notes"]
+    Restore --> S4["Useful commands"]
+    Restore --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Isolated Recovery Environment Ire Restore notes, checks, troubleshooting, commands, change notes, and field references.

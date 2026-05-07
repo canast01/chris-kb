@@ -1,5 +1,18 @@
 # Veeam Security
 
+```mermaid
+flowchart LR
+    Veeam_Security["Veeam Security"]
+    Veeam_Security --> S0["Role-Based Access Control"]
+    Veeam_Security --> S1["Immutable Backups"]
+    Veeam_Security --> S2["Backup Encryption"]
+    Veeam_Security --> S3["CyberArk Integration"]
+    Veeam_Security --> S4["Multi-Factor Authentication"]
+    Veeam_Security --> S5["Audit Log"]
+    Veeam_Security --> S6["Network Security"]
+    Veeam_Security --> S7["Security Hardening Checklist"]
+```
+
 ## Role-Based Access Control
 
 Veeam has five built-in roles — assign via AD groups, not individual users:

@@ -2,6 +2,17 @@
 
 Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.
 
+```mermaid
+flowchart LR
+    Backup_Validation["Backup Validation"]
+    Backup_Validation --> S0["Daily Backup Status Checks"]
+    Backup_Validation --> S1["Backup File Integrity Check"]
+    Backup_Validation --> S2["Test Restore Procedure"]
+    Backup_Validation --> S3["Validation Checklist"]
+    Backup_Validation --> S4["RPO / RTO Targets"]
+    Backup_Validation --> S5["Troubleshooting"]
+```
+
 ## Daily Backup Status Checks
 
 ### PostgreSQL (pg_basebackup / pgBackRest)

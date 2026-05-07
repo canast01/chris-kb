@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["NSX-T System Health Check (Python)"]
+    Scripts --> S1["Transport Node Status Monitor (Python)"]
+    Scripts --> S2["DFW Rule Audit (Bash)"]
+    Scripts --> S3["Segment and Gateway Health Check (Python)"]
+    Scripts --> S4["Ansible NSX-T Operational Playbook"]
+    Scripts --> S5["Windows: NSX-T Manager Health via REST API (PowerShell)"]
+    Scripts --> S6["Windows: NSX-T Transport Node Check via Plink (CMD)"]
+```
+
 ## NSX-T System Health Check (Python)
 
 Query key NSX-T REST API endpoints to assess cluster, transport node, and edge cluster health, and report any open alarms.

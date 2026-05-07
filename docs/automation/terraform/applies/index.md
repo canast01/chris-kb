@@ -1,5 +1,16 @@
 # Applies
 
+```mermaid
+flowchart LR
+    Applies["Applies"]
+    Applies --> S0["Purpose"]
+    Applies --> S1["Common checks"]
+    Applies --> S2["Incident notes"]
+    Applies --> S3["Change notes"]
+    Applies --> S4["Useful commands"]
+    Applies --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Terraform Applies notes, checks, troubleshooting, commands, change notes, and field references.

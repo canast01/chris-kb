@@ -1,5 +1,18 @@
 # FlashBlade Health Checks
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Array Health"]
+    Health_Checks --> S1["Blade Health"]
+    Health_Checks --> S2["Drive / Media Health"]
+    Health_Checks --> S3["Network Interface Health"]
+    Health_Checks --> S4["Replication Health"]
+    Health_Checks --> S5["File System Health"]
+    Health_Checks --> S6["Object Store Health"]
+    Health_Checks --> S7["Pre-Change Checklist"]
+```
+
 ## Array Health
 
 ```bash

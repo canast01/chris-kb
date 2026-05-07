@@ -1,5 +1,16 @@
 # Exemptions
 
+```mermaid
+flowchart LR
+    Exemptions["Exemptions"]
+    Exemptions --> S0["Purpose"]
+    Exemptions --> S1["Common checks"]
+    Exemptions --> S2["Incident notes"]
+    Exemptions --> S3["Change notes"]
+    Exemptions --> S4["Useful commands"]
+    Exemptions --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Governance Exemptions notes, checks, troubleshooting, commands, change notes, and field references.

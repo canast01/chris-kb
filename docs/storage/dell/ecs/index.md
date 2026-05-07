@@ -64,18 +64,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Dell_ECS["Dell ECS"]
+    Dell_ECS --> S0["Where It Fits"]
+    Dell_ECS --> S1["Daily Checks"]
+    Dell_ECS --> S2["Health Commands"]
+    Dell_ECS --> S3["Common Issues"]
+    Dell_ECS --> S4["Operational Tasks"]
+    Dell_ECS --> S5["Upgrade Notes"]
+    Dell_ECS --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform supporting S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs. It is deployed as clusters of commodity nodes and can be stretched across multiple sites as Virtual Data Centers (VDCs) connected into geo-distributed replication groups. ECS is the successor to EMC Atmos and is designed for unstructured data at petabyte scale, providing multi-tenancy through namespaces and buckets.
 
 ## Where It Fits
 
-- Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival)
-- Long-term retention and compliance storage with CAS (fixed-content, WORM)
-- Geo-distributed active-active object storage across multiple data centres using VDC replication groups
-- Multi-tenant storage service — separate namespaces and IAM policies per team or application
-- On-premises alternative to public cloud object storage where data sovereignty or latency requirements apply
-- Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies
+
+| Use Case |
+|---|
+| Primary object storage back-end for applications using S3-compatible APIs (analytics, media, archival) |
+| Long-term retention and compliance storage with CAS (fixed-content, WORM) |
+| Geo-distributed active-active object storage across multiple data centres using VDC replication groups |
+| Multi-tenant storage service — separate namespaces and IAM policies per team or application |
+| On-premises alternative to public cloud object storage where data sovereignty or latency requirements apply |
+| Integration target for backup software (Veeam, Commvault) using S3 or CAS interfaces for immutable backup copies |
 
 ## Daily Checks
 
@@ -159,11 +174,14 @@ ecscli bucket get --namespace <namespace> --name <bucket>
 
 ## Best Practices
 
-- Separate namespaces per team or application — do not share a single namespace across unrelated workloads
-- Enable bucket versioning only where application recovery requirements demand it; versioning causes unbounded capacity growth without lifecycle policies
-- Always attach a lifecycle policy to versioned buckets to expire non-current versions after the required retention period
-- Use replication groups spanning at least two VDCs for any production data to achieve geo-redundancy
-- Configure namespace and bucket quotas to prevent a single tenant from consuming cluster-wide capacity
-- Authenticate to the Management API with a service account rather than the `sysadmin` default credential in automation scripts
-- Monitor cluster utilisation and plan capacity expansion before reaching 70% of usable space; ECS performance degrades as utilisation approaches 85%
-- Document replication group topology and VDC peering configuration — changes to replication groups are difficult to reverse without data movement
+
+| Recommendation | Detail |
+|---|---|
+| Separate namespaces per team or application | do not share a single namespace across unrelated workloads |
+| Enable bucket versioning only where application recovery requirements demand it | versioning causes unbounded capacity growth without lifecycle policies |
+| Always attach a lifecycle policy to versioned buckets to | Always attach a lifecycle policy to versioned buckets to expire non-current versions after the required retention period |
+| Use replication groups spanning at least two VDCs for any | Use replication groups spanning at least two VDCs for any production data to achieve geo-redundancy |
+| Configure namespace and bucket quotas to prevent a single | Configure namespace and bucket quotas to prevent a single tenant from consuming cluster-wide capacity |
+| Authenticate to the Management API with a service account | Authenticate to the Management API with a service account rather than the `sysadmin` default credential in automation scripts |
+| Monitor cluster utilisation and plan capacity expansion before reaching 70% of usable space | ECS performance degrades as utilisation approaches 85% |
+| Document replication group topology and VDC peering configuration | changes to replication groups are difficult to reverse without data movement |

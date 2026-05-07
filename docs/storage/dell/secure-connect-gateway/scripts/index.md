@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Connectivity Health Check"]
+    Scripts --> S1["Device Registration Auditor"]
+    Scripts --> S2["Ansible SCG Status Playbook"]
+    Scripts --> S3["Windows: SCG Connection Test via Plink (CMD)"]
+    Scripts --> S4["Windows: SCG Device Inventory via REST API (PowerShell)"]
+    Scripts --> S5["Daily Check Script"]
+    Scripts --> S6["Incident Triage Script"]
+    Scripts --> S7["Change Pre-Check Script"]
+```
+
 ## Connectivity Health Check
 
 Tests outbound HTTPS connectivity from the SCG host to the required Dell support endpoints, checks the SCG service status, and prints a PASS/FAIL summary for each check. Suitable for cron or a monitoring probe.

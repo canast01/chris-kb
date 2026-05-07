@@ -1,5 +1,18 @@
 # VMware Certificate Renewal Runbook
 
+```mermaid
+flowchart LR
+    Renewal_Runbook["Renewal Runbook"]
+    Renewal_Runbook --> S0["Identify the Expiring Certificate"]
+    Renewal_Runbook --> S1["Confirm Affected Products"]
+    Renewal_Runbook --> S2["Capture Current Certificate Details"]
+    Renewal_Runbook --> S3["Confirm Backup Exists"]
+    Renewal_Runbook --> S4["Schedule Maintenance Window"]
+    Renewal_Runbook --> S5["Replace the Certificate"]
+    Renewal_Runbook --> S6["Restart Required Services"]
+    Renewal_Runbook --> S7["Validate Integrations"]
+```
+
 ## Identify the Expiring Certificate
 
 - Review certificate inventory

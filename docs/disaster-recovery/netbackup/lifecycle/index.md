@@ -1,5 +1,18 @@
 # NetBackup Lifecycle
 
+```mermaid
+flowchart LR
+    NetBackup_Lifecycle["NetBackup Lifecycle"]
+    NetBackup_Lifecycle --> S0["Release Cadence"]
+    NetBackup_Lifecycle --> S1["Upgrade Order"]
+    NetBackup_Lifecycle --> S2["Version Compatibility"]
+    NetBackup_Lifecycle --> S3["EEB (Emergency Engineering Binary) Tracking"]
+    NetBackup_Lifecycle --> S4["Pre-Upgrade Checklist"]
+    NetBackup_Lifecycle --> S5["Post-Upgrade Validation"]
+    NetBackup_Lifecycle --> S6["Migration: Physical Master to Appliance"]
+    NetBackup_Lifecycle --> S7["License Lifecycle"]
+```
+
 ## Release Cadence
 
 Veritas releases NetBackup on a major.minor cadence, with Long-Term Support (LTS) releases receiving maintenance updates for three years post-GA.

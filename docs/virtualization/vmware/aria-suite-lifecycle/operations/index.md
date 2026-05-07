@@ -1,5 +1,17 @@
 # Aria Suite Lifecycle Operations
 
+```mermaid
+flowchart LR
+    Lifecycle_Operations["Lifecycle Operations"]
+    Lifecycle_Operations --> S0["Daily Health Checks"]
+    Lifecycle_Operations --> S1["Deploy a New Aria Product"]
+    Lifecycle_Operations --> S2["Trigger a Product Upgrade"]
+    Lifecycle_Operations --> S3["Check Upgrade Status"]
+    Lifecycle_Operations --> S4["Certificate Management via Locker"]
+    Lifecycle_Operations --> S5["Storage Management"]
+    Lifecycle_Operations --> S6["Troubleshooting LCM Issues"]
+```
+
 ## Daily Health Checks
 
 ```bash

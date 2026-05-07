@@ -1,5 +1,16 @@
 # COD — Architecture
 
+```mermaid
+flowchart LR
+    COD["COD"]
+    COD --> S0["How COD Works"]
+    COD --> S1["Component Model"]
+    COD --> S2["Capacity Model"]
+    COD --> S3["HA and Redundancy"]
+    COD --> S4["Activation Flow"]
+    COD --> S5["DR Site COD Architecture"]
+```
+
 ## Overview
 
 Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are physically installed in the array chassis at the factory or during a hardware add, but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required to activate reserved capacity — the unlock is entirely software-driven through SYMCLI or Unisphere.

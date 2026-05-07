@@ -1,5 +1,16 @@
 # Fabric Health
 
+```mermaid
+flowchart LR
+    Fabric_Health["Fabric Health"]
+    Fabric_Health --> S0["Purpose"]
+    Fabric_Health --> S1["Common checks"]
+    Fabric_Health --> S2["Incident notes"]
+    Fabric_Health --> S3["Change notes"]
+    Fabric_Health --> S4["Useful commands"]
+    Fabric_Health --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Nexus Dashboard Fabric Health notes, checks, troubleshooting, commands, change notes, and field references.

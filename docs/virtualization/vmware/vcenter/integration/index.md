@@ -1,5 +1,15 @@
 # vCenter Integration
 
+```mermaid
+flowchart LR
+    vCenter_Integration["vCenter Integration"]
+    vCenter_Integration --> S0["Storage Integration"]
+    vCenter_Integration --> S1["Backup Integration"]
+    vCenter_Integration --> S2["Identity and Authentication"]
+    vCenter_Integration --> S3["Monitoring Integration"]
+    vCenter_Integration --> S4["NSX-T Integration"]
+```
+
 ## Storage Integration
 
 ### VASA Providers

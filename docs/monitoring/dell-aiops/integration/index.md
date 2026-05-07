@@ -1,5 +1,17 @@
 # Dell AIOps Integration
 
+```mermaid
+flowchart LR
+    AIOps_Integration["AIOps Integration"]
+    AIOps_Integration --> S0["CloudIQ / SCG (Inbound Telemetry)"]
+    AIOps_Integration --> S1["ServiceNow ITSM Integration"]
+    AIOps_Integration --> S2["Aria Operations Integration"]
+    AIOps_Integration --> S3["Email and Webhook Notifications"]
+    AIOps_Integration --> S4["SIEM Integration"]
+    AIOps_Integration --> S5["Integration Summary"]
+    AIOps_Integration --> S6["Integration Health Checks"]
+```
+
 ## Overview
 
 Dell AIOps is integrated into the broader operational toolchain via CloudIQ's notification and API layers. All telemetry flows inbound through the Secure Connect Gateway; alerts and recommendations flow outbound to ITSM, notification, and observability platforms.

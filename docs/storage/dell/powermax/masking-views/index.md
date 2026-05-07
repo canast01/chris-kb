@@ -2,6 +2,17 @@
 
 A Masking View on PowerMax connects three components — a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs) — to grant a host access to storage. All three must exist before the Masking View can be created.
 
+```mermaid
+flowchart LR
+    Masking_Views["Masking Views"]
+    Masking_Views --> S0["List and Inspect"]
+    Masking_Views --> S1["Initiator Groups"]
+    Masking_Views --> S2["Port Groups"]
+    Masking_Views --> S3["Creating a Masking View"]
+    Masking_Views --> S4["Deleting a Masking View"]
+    Masking_Views --> S5["Troubleshooting Host Access"]
+```
+
 ## List and Inspect
 
 ```bash

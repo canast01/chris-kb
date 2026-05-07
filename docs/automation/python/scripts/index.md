@@ -1,5 +1,18 @@
 # Scripts
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Purpose"]
+    Scripts --> S1["Common checks"]
+    Scripts --> S2["Incident notes"]
+    Scripts --> S3["Change notes"]
+    Scripts --> S4["Useful commands"]
+    Scripts --> S5["Known issues"]
+    Scripts --> S6["Windows: Run Python Scripts from Command Prompt (CMD Batch)"]
+    Scripts --> S7["Windows: Python Environment Setup (PowerShell)"]
+```
+
 ## Purpose
 
 Use this page for practical Python Scripts notes, checks, troubleshooting, commands, change notes, and field references.

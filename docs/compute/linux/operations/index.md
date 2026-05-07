@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Linux_Operations["Linux Operations"]
+    Linux_Operations --> S0["Daily Health Check"]
+    Linux_Operations --> S1["Service Management"]
+    Linux_Operations --> S2["Disk and Filesystem"]
+    Linux_Operations --> S3["Process and CPU Troubleshooting"]
+    Linux_Operations --> S4["Memory Troubleshooting"]
+    Linux_Operations --> S5["Network Operations"]
+    Linux_Operations --> S6["Log Investigation"]
+    Linux_Operations --> S7["User and Access Management"]
+```
+
 ## Daily Health Check
 
 Run these checks before business hours or after any overnight maintenance window.

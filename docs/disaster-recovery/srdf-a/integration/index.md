@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    SRDF_A_Integration["SRDF/A Integration"]
+    SRDF_A_Integration --> S0["VMware Site Recovery Manager (SRM)"]
+    SRDF_A_Integration --> S1["Dell Unisphere and SRDF/A Monitoring"]
+    SRDF_A_Integration --> S2["Aria Operations for Storage (PowerMax Management Pack)"]
+    SRDF_A_Integration --> S3["Backup from R2 (SRDF/A Offload)"]
+    SRDF_A_Integration --> S4["RecoverPoint Co-existence"]
+    SRDF_A_Integration --> S5["SYMCLI Integration Points"]
+```
+
 ## VMware Site Recovery Manager (SRM)
 
 SRDF/A integrates with VMware SRM via the **Dell EMC Storage Replication Adapter (SRA)**, enabling automated orchestration of SRDF failover as part of SRM Recovery Plans.

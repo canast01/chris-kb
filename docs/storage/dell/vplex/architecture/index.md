@@ -1,5 +1,14 @@
 # Dell VPLEX Architecture
 
+```mermaid
+flowchart LR
+    VPLEX_Architecture["VPLEX Architecture"]
+    VPLEX_Architecture --> S0["Components"]
+    VPLEX_Architecture --> S1["HA Topology"]
+    VPLEX_Architecture --> S2["Connectivity"]
+    VPLEX_Architecture --> S3["Sizing Guidelines"]
+```
+
 ## Overview
 
 Dell VPLEX is a storage virtualisation and federation platform that presents unified virtual volumes to hosts from one or more heterogeneous backend storage arrays. VPLEX abstracts physical storage into virtual volumes, enabling live data mobility between arrays, active-active block storage access across sites, and non-disruptive migration without host changes. VPLEX is deployed as a set of director pairs, each running the GeoSynchrony software stack. Management is via the `vplexcli` command-line interface or Unisphere for VPLEX web GUI.

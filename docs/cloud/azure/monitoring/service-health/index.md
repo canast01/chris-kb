@@ -1,5 +1,16 @@
 # Service Health
 
+```mermaid
+flowchart LR
+    Service_Health["Service Health"]
+    Service_Health --> S0["Purpose"]
+    Service_Health --> S1["Common checks"]
+    Service_Health --> S2["Incident notes"]
+    Service_Health --> S3["Change notes"]
+    Service_Health --> S4["Useful commands"]
+    Service_Health --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Monitoring Service Health notes, checks, troubleshooting, commands, change notes, and field references.

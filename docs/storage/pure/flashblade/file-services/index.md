@@ -2,6 +2,19 @@
 
 FlashBlade provides NFS and SMB file services through managed file systems.
 
+```mermaid
+flowchart LR
+    File_Services["File Services"]
+    File_Services --> S0["List File Systems"]
+    File_Services --> S1["Create a File System"]
+    File_Services --> S2["Manage NFS Exports"]
+    File_Services --> S3["Manage SMB Shares"]
+    File_Services --> S4["Resize a File System"]
+    File_Services --> S5["Mount Points (Client Side)"]
+    File_Services --> S6["Snapshot-Enabled File Systems"]
+    File_Services --> S7["Destroy and Eradicate a File System"]
+```
+
 ## List File Systems
 
 ```bash

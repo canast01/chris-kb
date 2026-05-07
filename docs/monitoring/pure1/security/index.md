@@ -1,5 +1,17 @@
 # Pure1 Security
 
+```mermaid
+flowchart LR
+    Pure1_Security["Pure1 Security"]
+    Pure1_Security --> S0["Access Control (RBAC)"]
+    Pure1_Security --> S1["SSO Configuration (SAML 2.0)"]
+    Pure1_Security --> S2["API Key Management"]
+    Pure1_Security --> S3["Authentication Flow (RSA Key)"]
+    Pure1_Security --> S4["Audit Logging"]
+    Pure1_Security --> S5["Data Security"]
+    Pure1_Security --> S6["Security Hardening Checklist"]
+```
+
 ## Access Control (RBAC)
 
 Pure1 uses role-based access control managed in the Pure1 portal. Assign the minimum required role to each user.

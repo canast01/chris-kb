@@ -2,6 +2,19 @@
 
 Step-by-step procedures for creating and assigning VLANs on Cisco IOS/NX-OS switches.
 
+```mermaid
+flowchart LR
+    VLAN_Configuration["VLAN Configuration"]
+    VLAN_Configuration --> S0["Create a VLAN"]
+    VLAN_Configuration --> S1["Assign an Access Port"]
+    VLAN_Configuration --> S2["Configure a Trunk Port"]
+    VLAN_Configuration --> S3["Add a VLAN to an Existing Trunk"]
+    VLAN_Configuration --> S4["Remove a VLAN from a Trunk"]
+    VLAN_Configuration --> S5["Save Configuration"]
+    VLAN_Configuration --> S6["Validation Checklist"]
+    VLAN_Configuration --> S7["Common Issues"]
+```
+
 ## Create a VLAN
 
 ```bash

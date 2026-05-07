@@ -1,5 +1,18 @@
 # SnapCenter Restores
 
+```mermaid
+flowchart LR
+    SnapCenter_Restores["SnapCenter Restores"]
+    SnapCenter_Restores --> S0["Restore from SnapCenter UI"]
+    SnapCenter_Restores --> S1["SQL Server Database Restore"]
+    SnapCenter_Restores --> S2["Oracle Database Restore"]
+    SnapCenter_Restores --> S3["File System Restore"]
+    SnapCenter_Restores --> S4["Single File Restore"]
+    SnapCenter_Restores --> S5["Alternate Location Restore"]
+    SnapCenter_Restores --> S6["Validate After Restore"]
+    SnapCenter_Restores --> S7["Common Issues"]
+```
+
 ## Restore from SnapCenter UI
 
 1. Navigate to **Resources** → select the resource (database, file system, VM)

@@ -1,5 +1,16 @@
 # Aria Operations for Logs — Architecture
 
+```mermaid
+flowchart LR
+    for_Logs["for Logs"]
+    for_Logs --> S0["Cluster Topology"]
+    for_Logs --> S1["Components"]
+    for_Logs --> S2["Network Ports"]
+    for_Logs --> S3["Storage Architecture"]
+    for_Logs --> S4["Content Packs"]
+    for_Logs --> S5["Cloud Proxy for Remote Sites"]
+```
+
 ## Overview
 
 Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics platform that collects, indexes, and correlates log data from VMware infrastructure and other sources. It is based on an Elasticsearch-backed storage and indexing engine.

@@ -1,5 +1,16 @@
 # Network Security Groups
 
+```mermaid
+flowchart LR
+    Security_Groups["Security Groups"]
+    Security_Groups --> S0["Purpose"]
+    Security_Groups --> S1["Common checks"]
+    Security_Groups --> S2["Incident notes"]
+    Security_Groups --> S3["Change notes"]
+    Security_Groups --> S4["Useful commands"]
+    Security_Groups --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Network Security Groups notes, checks, troubleshooting, commands, change notes, and field references.

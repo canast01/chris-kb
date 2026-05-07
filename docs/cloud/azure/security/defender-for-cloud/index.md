@@ -1,5 +1,16 @@
 # Defender For Cloud
 
+```mermaid
+flowchart LR
+    For_Cloud["For Cloud"]
+    For_Cloud --> S0["Purpose"]
+    For_Cloud --> S1["Common checks"]
+    For_Cloud --> S2["Incident notes"]
+    For_Cloud --> S3["Change notes"]
+    For_Cloud --> S4["Useful commands"]
+    For_Cloud --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Security Defender For Cloud notes, checks, troubleshooting, commands, change notes, and field references.

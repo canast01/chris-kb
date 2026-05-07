@@ -1,5 +1,16 @@
 # Recovery Planning
 
+```mermaid
+flowchart LR
+    Recovery_Planning["Recovery Planning"]
+    Recovery_Planning --> S0["Purpose"]
+    Recovery_Planning --> S1["Common checks"]
+    Recovery_Planning --> S2["Incident notes"]
+    Recovery_Planning --> S3["Change notes"]
+    Recovery_Planning --> S4["Useful commands"]
+    Recovery_Planning --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical RASR Recovery Planning notes, checks, troubleshooting, commands, change notes, and field references.

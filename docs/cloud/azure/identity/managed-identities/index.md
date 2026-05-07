@@ -1,5 +1,16 @@
 # Managed Identities
 
+```mermaid
+flowchart LR
+    Managed_Identities["Managed Identities"]
+    Managed_Identities --> S0["Purpose"]
+    Managed_Identities --> S1["Common checks"]
+    Managed_Identities --> S2["Incident notes"]
+    Managed_Identities --> S3["Change notes"]
+    Managed_Identities --> S4["Useful commands"]
+    Managed_Identities --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Identity Managed Identities notes, checks, troubleshooting, commands, change notes, and field references.

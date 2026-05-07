@@ -1,5 +1,13 @@
 # PowerMax Standards
 
+```mermaid
+flowchart LR
+    PowerMax_Standards["PowerMax Standards"]
+    PowerMax_Standards --> S0["Naming Conventions"]
+    PowerMax_Standards --> S1["Build Baseline"]
+    PowerMax_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

@@ -1,5 +1,16 @@
 # Architecture
 
+```mermaid
+flowchart LR
+    Architecture["Architecture"]
+    Architecture --> S0["Purpose"]
+    Architecture --> S1["Common checks"]
+    Architecture --> S2["Incident notes"]
+    Architecture --> S3["Change notes"]
+    Architecture --> S4["Useful commands"]
+    Architecture --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Vmware Cloud Foundation Architecture notes, checks, troubleshooting, commands, change notes, and field references.

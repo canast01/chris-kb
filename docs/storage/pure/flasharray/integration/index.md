@@ -1,5 +1,15 @@
 # FlashArray Integration
 
+```mermaid
+flowchart LR
+    FlashArray_Integrati["FlashArray Integration"]
+    FlashArray_Integrati --> S0["VMware Integration"]
+    FlashArray_Integrati --> S1["Backup Integration"]
+    FlashArray_Integrati --> S2["Pure1 Monitoring"]
+    FlashArray_Integrati --> S3["Authentication"]
+    FlashArray_Integrati --> S4["REST API"]
+```
+
 ## VMware Integration
 
 Pure Storage provides a native vSphere integration stack for FlashArray:

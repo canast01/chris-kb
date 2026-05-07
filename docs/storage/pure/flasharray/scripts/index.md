@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Array Health Check (Python)"]
+    Scripts --> S1["ActiveCluster Pod Status Monitor (Python)"]
+    Scripts --> S2["Volume and Snapshot Report (Bash)"]
+    Scripts --> S3["Drive Failure Alert (Bash)"]
+    Scripts --> S4["Ansible FlashArray Health Playbook"]
+    Scripts --> S5["Windows: FlashArray Health Check via REST API (PowerShell)"]
+    Scripts --> S6["Windows: FlashArray Volume Report via Plink (CMD)"]
+    Scripts --> S7["Daily Check Script (Bash)"]
+```
+
 ## Array Health Check (Python)
 
 Connect to a FlashArray via REST API v2, check overall health, active alerts, hardware status, drive health, volumes, and pod state, then print a formatted summary. Exits non-zero if critical alerts or degraded drives are found.

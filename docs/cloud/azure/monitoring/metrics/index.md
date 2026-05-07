@@ -1,5 +1,16 @@
 # Metrics
 
+```mermaid
+flowchart LR
+    Metrics["Metrics"]
+    Metrics --> S0["Purpose"]
+    Metrics --> S1["Common checks"]
+    Metrics --> S2["Incident notes"]
+    Metrics --> S3["Change notes"]
+    Metrics --> S4["Useful commands"]
+    Metrics --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Monitoring Metrics notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,16 @@
 # Serial Console
 
+```mermaid
+flowchart LR
+    Serial_Console["Serial Console"]
+    Serial_Console --> S0["Purpose"]
+    Serial_Console --> S1["Common checks"]
+    Serial_Console --> S2["Incident notes"]
+    Serial_Console --> S3["Change notes"]
+    Serial_Console --> S4["Useful commands"]
+    Serial_Console --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Compute Serial Console notes, checks, troubleshooting, commands, change notes, and field references.

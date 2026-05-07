@@ -1,5 +1,17 @@
 # AWS VPC Endpoints
 
+```mermaid
+flowchart LR
+    VPC_Endpoints["VPC Endpoints"]
+    VPC_Endpoints --> S0["Where It Fits"]
+    VPC_Endpoints --> S1["Daily Checks"]
+    VPC_Endpoints --> S2["Health Commands"]
+    VPC_Endpoints --> S3["Common Issues"]
+    VPC_Endpoints --> S4["Operational Tasks"]
+    VPC_Endpoints --> S5["Upgrade Notes"]
+    VPC_Endpoints --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS VPC Endpoints notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

@@ -2,6 +2,16 @@
 
 AWS Elastic Block Store — block storage volumes, snapshots, performance, and lifecycle management.
 
+```mermaid
+flowchart LR
+    EBS["EBS"]
+    EBS --> S0["Volume Types"]
+    EBS --> S1["Common CLI Commands"]
+    EBS --> S2["Resize Filesystem After Volume Modification"]
+    EBS --> S3["Snapshots and AMIs"]
+    EBS --> S4["Troubleshooting"]
+```
+
 ## Volume Types
 
 | Type | Use Case | Max IOPS | Max Throughput |

@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Subscription Capacity Monitor"]
+    Scripts --> S1["Active Alert Report"]
+    Scripts --> S2["Ansible APEX Health Playbook"]
+    Scripts --> S3["Daily Check Script"]
+    Scripts --> S4["Incident Triage Script"]
+    Scripts --> S5["Change Pre-Check Script"]
+    Scripts --> S6["Post-Change Validation Script"]
+    Scripts --> S7["Health Check Script"]
+```
+
 ## Subscription Capacity Monitor
 
 Authenticates to the APEX REST API, retrieves all subscriptions, and checks committed vs. consumed capacity. Warns at 80% and goes critical at 90% of the committed tier.

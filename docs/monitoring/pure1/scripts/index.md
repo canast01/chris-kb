@@ -1,5 +1,17 @@
 # Pure1 Scripts
 
+```mermaid
+flowchart LR
+    Pure1_Scripts["Pure1 Scripts"]
+    Pure1_Scripts --> S0["Authentication"]
+    Pure1_Scripts --> S1["Fleet Health Query"]
+    Pure1_Scripts --> S2["Capacity Report"]
+    Pure1_Scripts --> S3["Active Alert Export"]
+    Pure1_Scripts --> S4["Pure1 Meta Anomaly Query"]
+    Pure1_Scripts --> S5["Exponential Backoff for Rate Limiting"]
+    Pure1_Scripts --> S6["Script Inventory"]
+```
+
 ## Authentication
 
 Pure1 REST API v1 uses RSA JWT authentication. The private key is stored in the secrets manager and loaded at runtime. Never store the private key in the repository or in plain text configuration files.

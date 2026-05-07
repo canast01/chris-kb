@@ -1,5 +1,17 @@
 # NSX Edge Nodes
 
+```mermaid
+flowchart LR
+    Edge_Nodes["Edge Nodes"]
+    Edge_Nodes --> S0["Where It Fits"]
+    Edge_Nodes --> S1["Daily Checks"]
+    Edge_Nodes --> S2["Health Commands"]
+    Edge_Nodes --> S3["Common Issues"]
+    Edge_Nodes --> S4["Operational Tasks"]
+    Edge_Nodes --> S5["Upgrade Notes"]
+    Edge_Nodes --> S6["Best Practices"]
+```
+
 ## Overview
 
 Edge cluster health, transport nodes, uplinks, services, and troubleshooting.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

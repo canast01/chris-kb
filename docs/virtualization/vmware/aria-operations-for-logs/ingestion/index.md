@@ -1,5 +1,16 @@
 # Ingestion
 
+```mermaid
+flowchart LR
+    Ingestion["Ingestion"]
+    Ingestion --> S0["Purpose"]
+    Ingestion --> S1["Common checks"]
+    Ingestion --> S2["Incident notes"]
+    Ingestion --> S3["Change notes"]
+    Ingestion --> S4["Useful commands"]
+    Ingestion --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Aria Operations For Logs Ingestion notes, checks, troubleshooting, commands, change notes, and field references.

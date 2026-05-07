@@ -1,5 +1,16 @@
 # Validation
 
+```mermaid
+flowchart LR
+    Validation["Validation"]
+    Validation --> S0["Purpose"]
+    Validation --> S1["Common checks"]
+    Validation --> S2["Incident notes"]
+    Validation --> S3["Change notes"]
+    Validation --> S4["Useful commands"]
+    Validation --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRDF/A Validation notes, checks, troubleshooting, commands, change notes, and field references.

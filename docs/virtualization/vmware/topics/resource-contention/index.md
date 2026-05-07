@@ -1,5 +1,16 @@
 # Resource Contention Modeling
 
+```mermaid
+flowchart LR
+    Contention_Modeling["Contention Modeling"]
+    Contention_Modeling --> S0["CPU Contention"]
+    Contention_Modeling --> S1["Memory Contention"]
+    Contention_Modeling --> S2["Storage Latency"]
+    Contention_Modeling --> S3["Network Contention"]
+    Contention_Modeling --> S4["Contention Response Actions"]
+    Contention_Modeling --> S5["DRS Imbalance Score"]
+```
+
 ## CPU Contention
 
 **CPU Ready** is the primary indicator: time a vCPU waited in the run queue because the physical CPU was busy.

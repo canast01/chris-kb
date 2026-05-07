@@ -1,5 +1,17 @@
 # NetBackup Architecture
 
+```mermaid
+flowchart LR
+    NetBackup_Architectu["NetBackup Architecture"]
+    NetBackup_Architectu --> S0["Three-Tier Architecture"]
+    NetBackup_Architectu --> S1["Master Server"]
+    NetBackup_Architectu --> S2["Media Server"]
+    NetBackup_Architectu --> S3["Data Flow"]
+    NetBackup_Architectu --> S4["Storage Units"]
+    NetBackup_Architectu --> S5["NetBackup Appliance (5250/5350)"]
+    NetBackup_Architectu --> S6["Key Ports"]
+```
+
 ## Three-Tier Architecture
 
 | Component | Role | Typical Scale |

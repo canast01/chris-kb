@@ -2,6 +2,19 @@
 
 Consistency groups (CGs) in VPLEX ensure that a set of virtual volumes is treated as a crash-consistent unit during failover and recovery operations.
 
+```mermaid
+flowchart LR
+    Consistency_Groups["Consistency Groups"]
+    Consistency_Groups --> S0["List Consistency Groups"]
+    Consistency_Groups --> S1["View CG Details"]
+    Consistency_Groups --> S2["Create a Consistency Group"]
+    Consistency_Groups --> S3["Add Volumes to a CG"]
+    Consistency_Groups --> S4["Remove a Volume from a CG"]
+    Consistency_Groups --> S5["Distributed Consistency Groups"]
+    Consistency_Groups --> S6["Detach / Re-attach CG (Metro Failover)"]
+    Consistency_Groups --> S7["Common Issues"]
+```
+
 ## List Consistency Groups
 
 ```bash

@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    SRDF_A_Lifecycle["SRDF/A Lifecycle"]
+    SRDF_A_Lifecycle --> S0["Version Compatibility"]
+    SRDF_A_Lifecycle --> S1["Firmware Upgrade Procedure"]
+    SRDF_A_Lifecycle --> S2["Adding New Devices to an SRDF Group"]
+    SRDF_A_Lifecycle --> S3["Removing Devices from an SRDF Group"]
+    SRDF_A_Lifecycle --> S4["EOL and Platform Tracking"]
+    SRDF_A_Lifecycle --> S5["SRDF/A to SRDF/S Migration"]
+```
+
 ## Version Compatibility
 
 SRDF/A feature availability is tied to the HYPERMAX OS version running on each PowerMax array. Both source and target arrays must run a mutually supported version — check the **Dell EMC Simple Support Matrix** before any firmware upgrade.

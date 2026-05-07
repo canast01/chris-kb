@@ -1,5 +1,16 @@
 # Enterprise Applications
 
+```mermaid
+flowchart LR
+    Enterprise_Applicati["Enterprise Application"]
+    Enterprise_Applicati --> S0["Purpose"]
+    Enterprise_Applicati --> S1["Common checks"]
+    Enterprise_Applicati --> S2["Incident notes"]
+    Enterprise_Applicati --> S3["Change notes"]
+    Enterprise_Applicati --> S4["Useful commands"]
+    Enterprise_Applicati --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Identity Enterprise Applications notes, checks, troubleshooting, commands, change notes, and field references.

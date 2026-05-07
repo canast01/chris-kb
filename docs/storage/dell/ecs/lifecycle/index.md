@@ -1,5 +1,14 @@
 # ECS Lifecycle
 
+```mermaid
+flowchart LR
+    ECS_Lifecycle["ECS Lifecycle"]
+    ECS_Lifecycle --> S0["Version and Release Matrix"]
+    ECS_Lifecycle --> S1["Upgrade and Update Paths"]
+    ECS_Lifecycle --> S2["EOL and Renewal Tracking"]
+    ECS_Lifecycle --> S3["Replacement Planning"]
+```
+
 ## Version and Release Matrix
 
 | ECS Version | Release Year | Key Features | Support Status |

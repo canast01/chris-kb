@@ -1,5 +1,16 @@
 # Key Vault
 
+```mermaid
+flowchart LR
+    Key_Vault["Key Vault"]
+    Key_Vault --> S0["Purpose"]
+    Key_Vault --> S1["Common checks"]
+    Key_Vault --> S2["Incident notes"]
+    Key_Vault --> S3["Change notes"]
+    Key_Vault --> S4["Useful commands"]
+    Key_Vault --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Security Key Vault notes, checks, troubleshooting, commands, change notes, and field references.

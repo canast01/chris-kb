@@ -2,6 +2,18 @@
 
 Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.
 
+```mermaid
+flowchart LR
+    Key_Management["Key Management"]
+    Key_Management --> S0["Key Types and Storage"]
+    Key_Management --> S1["AWS KMS Key Lifecycle"]
+    Key_Management --> S2["Azure Key Vault Key Operations"]
+    Key_Management --> S3["Key Revocation"]
+    Key_Management --> S4["SSH Host Key Rotation"]
+    Key_Management --> S5["ONTAP Key Manager"]
+    Key_Management --> S6["Key Management Checklist"]
+```
+
 ## Key Types and Storage
 
 | Key Type | Storage | Rotation |

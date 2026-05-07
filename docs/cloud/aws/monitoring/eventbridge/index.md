@@ -1,5 +1,17 @@
 # AWS EventBridge
 
+```mermaid
+flowchart LR
+    AWS_EventBridge["AWS EventBridge"]
+    AWS_EventBridge --> S0["Where It Fits"]
+    AWS_EventBridge --> S1["Daily Checks"]
+    AWS_EventBridge --> S2["Health Commands"]
+    AWS_EventBridge --> S3["Common Issues"]
+    AWS_EventBridge --> S4["Operational Tasks"]
+    AWS_EventBridge --> S5["Upgrade Notes"]
+    AWS_EventBridge --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS EventBridge notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

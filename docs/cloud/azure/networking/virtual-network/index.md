@@ -1,5 +1,16 @@
 # Virtual Network
 
+```mermaid
+flowchart LR
+    Virtual_Network["Virtual Network"]
+    Virtual_Network --> S0["Purpose"]
+    Virtual_Network --> S1["Common checks"]
+    Virtual_Network --> S2["Incident notes"]
+    Virtual_Network --> S3["Change notes"]
+    Virtual_Network --> S4["Useful commands"]
+    Virtual_Network --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Virtual Network notes, checks, troubleshooting, commands, change notes, and field references.

@@ -2,6 +2,19 @@
 
 Storage pool management, capacity monitoring, and disk group configuration on Dell Unity.
 
+```mermaid
+flowchart LR
+    Storage_Pools["Storage Pools"]
+    Storage_Pools --> S0["Pool Overview"]
+    Storage_Pools --> S1["Create a Pool"]
+    Storage_Pools --> S2["Expand a Pool"]
+    Storage_Pools --> S3["Modify and Delete"]
+    Storage_Pools --> S4["Disk Groups"]
+    Storage_Pools --> S5["Capacity Monitoring"]
+    Storage_Pools --> S6["Auto-Tiering (FAST VP)"]
+    Storage_Pools --> S7["Pool Health Summary"]
+```
+
 ## Pool Overview
 
 ```bash

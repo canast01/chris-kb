@@ -2,6 +2,17 @@
 
 AWS Key Management Service — key creation, encryption, access control, and audit.
 
+```mermaid
+flowchart LR
+    KMS["KMS"]
+    KMS --> S0["Key Types"]
+    KMS --> S1["Common CLI Commands"]
+    KMS --> S2["Encrypt and Decrypt (Testing)"]
+    KMS --> S3["Key Policy Management"]
+    KMS --> S4["Audit with CloudTrail"]
+    KMS --> S5["Troubleshooting"]
+```
+
 ## Key Types
 
 | Key Type | Description |

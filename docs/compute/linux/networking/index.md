@@ -2,6 +2,19 @@
 
 Network configuration, diagnostics, and troubleshooting on RHEL and Ubuntu.
 
+```mermaid
+flowchart LR
+    Linux_Networking["Linux Networking"]
+    Linux_Networking --> S0["Interface Status"]
+    Linux_Networking --> S1["IP Routes"]
+    Linux_Networking --> S2["DNS"]
+    Linux_Networking --> S3["Active Connections and Ports"]
+    Linux_Networking --> S4["Connectivity Tests"]
+    Linux_Networking --> S5["Firewall (RHEL — firewalld)"]
+    Linux_Networking --> S6["Firewall (Ubuntu — ufw)"]
+    Linux_Networking --> S7["Network Configuration (nmcli — RHEL/Ubuntu)"]
+```
+
 ## Interface Status
 
 ```bash

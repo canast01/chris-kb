@@ -2,6 +2,19 @@
 
 Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Document evidence for the change record.
 
+```mermaid
+flowchart LR
+    Post_Upgrade_Validat["Post-Upgrade Validatio"]
+    Post_Upgrade_Validat --> S0["Immediate Validation (within 15 minutes of upgrade completion)"]
+    Post_Upgrade_Validat --> S1["vCenter Health"]
+    Post_Upgrade_Validat --> S2["Cluster HA and DRS"]
+    Post_Upgrade_Validat --> S3["vSAN Validation (if applicable)"]
+    Post_Upgrade_Validat --> S4["NSX Validation (if NSX was upgraded or touched)"]
+    Post_Upgrade_Validat --> S5["VxRail Validation (if applicable)"]
+    Post_Upgrade_Validat --> S6["Aria Suite Validation (if LCM-managed)"]
+    Post_Upgrade_Validat --> S7["Backup Validation"]
+```
+
 ## Immediate Validation (within 15 minutes of upgrade completion)
 
 ```powershell

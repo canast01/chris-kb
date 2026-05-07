@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Backup Job Status Monitor (PowerShell)"]
+    Scripts --> S1["Resource Health Check (PowerShell)"]
+    Scripts --> S2["Secondary Backup Validation (PowerShell)"]
+    Scripts --> S3["Ansible SnapCenter Monitoring Playbook"]
+    Scripts --> S4["Windows: SnapCenter Job Status via REST API (PowerShell)"]
+    Scripts --> S5["Windows: SnapCenter Backup Report via curl (CMD)"]
+    Scripts --> S6["Daily Check Script"]
+    Scripts --> S7["Incident Triage Script"]
+```
+
 ## Backup Job Status Monitor (PowerShell)
 
 Connect to SnapCenter, retrieve all backup jobs from the last 24 hours, print a formatted table, and send an email alert if any jobs have failed.

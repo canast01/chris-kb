@@ -1,5 +1,16 @@
 # ESXi Architecture
 
+```mermaid
+flowchart LR
+    ESXi_Architecture["ESXi Architecture"]
+    ESXi_Architecture --> S0["Hypervisor Overview"]
+    ESXi_Architecture --> S1["Management Interfaces"]
+    ESXi_Architecture --> S2["Networking Architecture"]
+    ESXi_Architecture --> S3["VMkernel Adapters (vmk)"]
+    ESXi_Architecture --> S4["Storage Architecture"]
+    ESXi_Architecture --> S5["High Availability at Host Level"]
+```
+
 ## Hypervisor Overview
 
 ESXi is a Type-1 (bare-metal) hypervisor built around the **VMkernel** — a purpose-built OS that directly manages CPU, memory, storage, and network resources on the physical host. ESXi has no general-purpose OS underneath it.

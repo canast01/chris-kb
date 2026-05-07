@@ -1,5 +1,18 @@
 # Data Domain — Security
 
+```mermaid
+flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --> S0["RBAC — Role-Based Access Control"]
+    Data_Domain --> S1["Hardening Checklist"]
+    Data_Domain --> S2["Encryption at Rest (D@RE)"]
+    Data_Domain --> S3["Retention Lock"]
+    Data_Domain --> S4["Audit Logging"]
+    Data_Domain --> S5["LDAP and Authentication Security"]
+    Data_Domain --> S6["Network Security"]
+    Data_Domain --> S7["FIPS Compliance"]
+```
+
 ## RBAC — Role-Based Access Control
 
 Data Domain has a built-in role model. Assign the minimum required role per user or group.

@@ -2,6 +2,17 @@
 
 AWS Secrets Manager — secrets storage, rotation, and lifecycle management.
 
+```mermaid
+flowchart LR
+    Secrets_Manager["Secrets Manager"]
+    Secrets_Manager --> S0["Key Concepts"]
+    Secrets_Manager --> S1["Common CLI Commands"]
+    Secrets_Manager --> S2["Retrieve Secret Value in Code"]
+    Secrets_Manager --> S3["Rotation Setup"]
+    Secrets_Manager --> S4["Access Control"]
+    Secrets_Manager --> S5["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

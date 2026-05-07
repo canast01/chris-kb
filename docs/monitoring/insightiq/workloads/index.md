@@ -1,5 +1,16 @@
 # Workloads
 
+```mermaid
+flowchart LR
+    Workloads["Workloads"]
+    Workloads --> S0["Purpose"]
+    Workloads --> S1["Common checks"]
+    Workloads --> S2["Incident notes"]
+    Workloads --> S3["Change notes"]
+    Workloads --> S4["Useful commands"]
+    Workloads --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Insightiq Workloads notes, checks, troubleshooting, commands, change notes, and field references.

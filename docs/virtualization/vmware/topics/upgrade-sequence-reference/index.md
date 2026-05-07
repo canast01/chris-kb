@@ -1,5 +1,16 @@
 # Upgrade Sequence Reference
 
+```mermaid
+flowchart LR
+    Sequence_Reference["Sequence Reference"]
+    Sequence_Reference --> S0["Correct Upgrade Order"]
+    Sequence_Reference --> S1["Why Order Matters"]
+    Sequence_Reference --> S2["VCF (VMware Cloud Foundation) Sequence"]
+    Sequence_Reference --> S3["Compatibility Matrix References"]
+    Sequence_Reference --> S4["Key Version Constraints"]
+    Sequence_Reference --> S5["Maintenance Window Planning"]
+```
+
 ## Correct Upgrade Order
 
 Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:

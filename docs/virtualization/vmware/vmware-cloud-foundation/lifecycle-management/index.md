@@ -1,5 +1,17 @@
 # Vmware Cloud Foundation Lifecycle Management
 
+```mermaid
+flowchart LR
+    Lifecycle_Management["Lifecycle Management"]
+    Lifecycle_Management --> S0["Where It Fits"]
+    Lifecycle_Management --> S1["Daily Checks"]
+    Lifecycle_Management --> S2["Health Commands"]
+    Lifecycle_Management --> S3["Common Issues"]
+    Lifecycle_Management --> S4["Operational Tasks"]
+    Lifecycle_Management --> S5["Upgrade Notes"]
+    Lifecycle_Management --> S6["Best Practices"]
+```
+
 ## Overview
 
 VCF upgrade order, bundles, compatibility, pre-checks, and validation.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

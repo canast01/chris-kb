@@ -1,5 +1,16 @@
 # Cycle State
 
+```mermaid
+flowchart LR
+    Cycle_State["Cycle State"]
+    Cycle_State --> S0["Purpose"]
+    Cycle_State --> S1["Common checks"]
+    Cycle_State --> S2["Incident notes"]
+    Cycle_State --> S3["Change notes"]
+    Cycle_State --> S4["Useful commands"]
+    Cycle_State --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRDF/A Cycle State notes, checks, troubleshooting, commands, change notes, and field references.

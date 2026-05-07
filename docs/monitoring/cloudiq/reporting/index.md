@@ -1,5 +1,16 @@
 # Reporting
 
+```mermaid
+flowchart LR
+    Reporting["Reporting"]
+    Reporting --> S0["Purpose"]
+    Reporting --> S1["Common checks"]
+    Reporting --> S2["Incident notes"]
+    Reporting --> S3["Change notes"]
+    Reporting --> S4["Useful commands"]
+    Reporting --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical CloudIQ Reporting notes, checks, troubleshooting, commands, change notes, and field references.

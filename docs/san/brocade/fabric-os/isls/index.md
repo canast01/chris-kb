@@ -1,5 +1,16 @@
 # Isls
 
+```mermaid
+flowchart LR
+    Isls["Isls"]
+    Isls --> S0["Purpose"]
+    Isls --> S1["Common checks"]
+    Isls --> S2["Incident notes"]
+    Isls --> S3["Change notes"]
+    Isls --> S4["Useful commands"]
+    Isls --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Fabric Os Isls notes, checks, troubleshooting, commands, change notes, and field references.

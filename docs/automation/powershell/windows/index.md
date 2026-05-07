@@ -1,5 +1,16 @@
 # Windows
 
+```mermaid
+flowchart LR
+    Windows["Windows"]
+    Windows --> S0["Purpose"]
+    Windows --> S1["Common checks"]
+    Windows --> S2["Incident notes"]
+    Windows --> S3["Change notes"]
+    Windows --> S4["Useful commands"]
+    Windows --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Powershell Windows notes, checks, troubleshooting, commands, change notes, and field references.

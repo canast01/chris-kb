@@ -23,6 +23,14 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    NetBackup["NetBackup"]
+    NetBackup --> S0["Daily Checks"]
+    NetBackup --> S1["Health Commands"]
+    NetBackup --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 NetBackup provides enterprise backup and recovery for servers, databases, virtual machines, and large-scale production environments.

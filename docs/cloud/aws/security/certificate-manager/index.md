@@ -1,5 +1,17 @@
 # AWS Certificate Manager
 
+```mermaid
+flowchart LR
+    Certificate_Manager["Certificate Manager"]
+    Certificate_Manager --> S0["Where It Fits"]
+    Certificate_Manager --> S1["Daily Checks"]
+    Certificate_Manager --> S2["Health Commands"]
+    Certificate_Manager --> S3["Common Issues"]
+    Certificate_Manager --> S4["Operational Tasks"]
+    Certificate_Manager --> S5["Upgrade Notes"]
+    Certificate_Manager --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Certificate Manager notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

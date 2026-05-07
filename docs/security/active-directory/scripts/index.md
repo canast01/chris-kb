@@ -4,6 +4,18 @@ PowerShell automation tools for routine Active Directory health checks, auditing
 
 ---
 
+```mermaid
+flowchart LR
+    Directory_Scripts["Directory Scripts"]
+    Directory_Scripts --> S0["Prerequisites"]
+    Directory_Scripts --> S1["User Account Queries"]
+    Directory_Scripts --> S2["Group Membership Audits"]
+    Directory_Scripts --> S3["Stale and Locked Accounts"]
+    Directory_Scripts --> S4["Expiring Passwords"]
+    Directory_Scripts --> S5["Replication Health"]
+    Directory_Scripts --> S6["GPO Backup and Reporting"]
+```
+
 ## Prerequisites
 
 ```powershell

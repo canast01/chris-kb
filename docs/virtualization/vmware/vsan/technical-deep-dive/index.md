@@ -1,5 +1,18 @@
 # vSAN Technical Deep Dive
 
+```mermaid
+flowchart LR
+    Deep_Dive["Deep Dive"]
+    Deep_Dive --> S0["Platform Role"]
+    Deep_Dive --> S1["Core Components"]
+    Deep_Dive --> S2["Main Dependencies"]
+    Deep_Dive --> S3["Ports and Protocols"]
+    Deep_Dive --> S4["Key Logs"]
+    Deep_Dive --> S5["Health Checks"]
+    Deep_Dive --> S6["Useful Commands"]
+    Deep_Dive --> S7["Common Failure Points"]
+```
+
 ## Overview
 
 vSAN is part of the virtualization platform. This page is for technical operations, troubleshooting, upgrade planning, and support handoff.
@@ -107,9 +120,12 @@ vsish -e get /vmkModules/lsom/disks/
 
 ## Best Practices
 
-- Keep versions aligned.
-- Keep certificates tracked.
-- Keep DNS and NTP clean.
-- Keep alerting actionable.
-- Document support ownership.
-- Avoid undocumented changes.
+
+| Recommendation | Detail |
+|---|---|
+| Keep versions aligned. | Keep versions aligned. |
+| Keep certificates tracked. | Keep certificates tracked. |
+| Keep DNS and NTP clean. | Keep DNS and NTP clean. |
+| Keep alerting actionable. | Keep alerting actionable. |
+| Document support ownership. | Document support ownership. |
+| Avoid undocumented changes. | Avoid undocumented changes. |

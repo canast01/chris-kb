@@ -1,5 +1,13 @@
 # Dell VPLEX Standards
 
+```mermaid
+flowchart LR
+    VPLEX_Standards["VPLEX Standards"]
+    VPLEX_Standards --> S0["Naming Conventions"]
+    VPLEX_Standards --> S1["Build Baseline"]
+    VPLEX_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 Consistent naming across VPLEX objects is critical because VPLEX configurations are complex and difficult to audit after the fact. Apply the following scheme across all VPLEX deployments.

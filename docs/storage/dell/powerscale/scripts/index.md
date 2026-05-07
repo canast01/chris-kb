@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Cluster Health Check"]
+    Scripts --> S1["SyncIQ Policy Monitor"]
+    Scripts --> S2["Quota Report"]
+    Scripts --> S3["Ansible SyncIQ Health Playbook"]
+    Scripts --> S4["Performance Baseline Check"]
+    Scripts --> S5["Windows: PowerScale Cluster Health via REST API (PowerShell)"]
+    Scripts --> S6["Windows: PowerScale Node and Drive Status via Plink (CMD)"]
+    Scripts --> S7["Daily Check Script"]
+```
+
 ## Cluster Health Check
 
 SSH to a PowerScale node and runs key `isi` commands to check node state, storage pool utilisation, active jobs, recent events, and SyncIQ policy status. Exits non-zero if any node is in SMARTFAIL or DOWN state.

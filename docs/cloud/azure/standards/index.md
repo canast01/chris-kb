@@ -1,5 +1,16 @@
 # Azure Standards
 
+```mermaid
+flowchart LR
+    Azure_Standards["Azure Standards"]
+    Azure_Standards --> S0["Naming Convention"]
+    Azure_Standards --> S1["Tagging Policy"]
+    Azure_Standards --> S2["RBAC Standards"]
+    Azure_Standards --> S3["Security Standards"]
+    Azure_Standards --> S4["Resource Lock Standards"]
+    Azure_Standards --> S5["Approved Regions"]
+```
+
 ## Naming Convention
 
 Pattern: `<type>-<env>-<region>-<name>[-<seq>]` using CAF abbreviations:

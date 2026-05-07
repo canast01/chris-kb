@@ -1,5 +1,16 @@
 # DNS Dependency
 
+```mermaid
+flowchart LR
+    DNS_Dependency["DNS Dependency"]
+    DNS_Dependency --> S0["Purpose"]
+    DNS_Dependency --> S1["Common checks"]
+    DNS_Dependency --> S2["Incident notes"]
+    DNS_Dependency --> S3["Change notes"]
+    DNS_Dependency --> S4["Useful commands"]
+    DNS_Dependency --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Active Directory DNS Dependency notes, checks, troubleshooting, commands, change notes, and field references.

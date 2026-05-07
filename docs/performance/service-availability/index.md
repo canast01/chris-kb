@@ -1,5 +1,17 @@
 # Service Availability Monitoring
 
+```mermaid
+flowchart LR
+    Availability_Monitor["Availability Monitorin"]
+    Availability_Monitor --> S0["Availability Calculation"]
+    Availability_Monitor --> S1["Synthetic Monitoring (External Probes)"]
+    Availability_Monitor --> S2["Uptime Monitoring Tools"]
+    Availability_Monitor --> S3["Azure Monitor — Availability Test"]
+    Availability_Monitor --> S4["AWS Route 53 Health Checks"]
+    Availability_Monitor --> S5["Availability Incident Tracking"]
+    Availability_Monitor --> S6["Reporting"]
+```
+
 ## Availability Calculation
 
 ```

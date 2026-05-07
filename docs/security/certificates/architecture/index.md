@@ -4,6 +4,18 @@ Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-g
 
 ---
 
+```mermaid
+flowchart LR
+    Certificates_Archite["Certificates Architect"]
+    Certificates_Archite --> S0["PKI Hierarchy"]
+    Certificates_Archite --> S1["ADCS Role Components"]
+    Certificates_Archite --> S2["Certificate Templates"]
+    Certificates_Archite --> S3["CDP and AIA Configuration"]
+    Certificates_Archite --> S4["Auto-Enrollment via Group Policy"]
+    Certificates_Archite --> S5["Root CA Key Ceremony"]
+    Certificates_Archite --> S6["CRL and OCSP Monitoring"]
+```
+
 ## PKI Hierarchy
 
 ```

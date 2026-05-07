@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Datastore_Issues["Datastore Issues"]
+    Datastore_Issues --> S0["Datastore Inaccessible — APD vs PDL"]
+    Datastore_Issues --> S1["Datastore Full"]
+    Datastore_Issues --> S2["High Datastore Latency"]
+    Datastore_Issues --> S3["VMFS Lock — Failed to Lock the File"]
+    Datastore_Issues --> S4["vSAN Object Non-Compliant or Degraded"]
+```
+
 ## Datastore Inaccessible — APD vs PDL
 
 An inaccessible datastore is either **APD (All Paths Down)** — temporary, paths may recover — or **PDL (Permanent Device Loss)** — the storage array has returned SCSI sense codes indicating the LUN is gone.

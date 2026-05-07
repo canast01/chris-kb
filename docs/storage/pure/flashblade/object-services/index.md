@@ -2,6 +2,19 @@
 
 FlashBlade provides S3-compatible object storage through object store accounts, buckets, and access keys.
 
+```mermaid
+flowchart LR
+    Services__S3["Services (S3)"]
+    Services__S3 --> S0["List Buckets"]
+    Services__S3 --> S1["Create a Bucket"]
+    Services__S3 --> S2["Manage Object Store Accounts"]
+    Services__S3 --> S3["Manage Object Store Users"]
+    Services__S3 --> S4["Access Keys"]
+    Services__S3 --> S5["S3 Client Access"]
+    Services__S3 --> S6["Bucket Replication"]
+    Services__S3 --> S7["Destroy and Eradicate a Bucket"]
+```
+
 ## List Buckets
 
 ```bash

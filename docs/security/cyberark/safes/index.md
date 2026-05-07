@@ -1,5 +1,16 @@
 # Safes
 
+```mermaid
+flowchart LR
+    Safes["Safes"]
+    Safes --> S0["Purpose"]
+    Safes --> S1["Common checks"]
+    Safes --> S2["Incident notes"]
+    Safes --> S3["Change notes"]
+    Safes --> S4["Useful commands"]
+    Safes --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Cyberark Safes notes, checks, troubleshooting, commands, change notes, and field references.

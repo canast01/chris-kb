@@ -2,6 +2,19 @@
 
 Validate PowerPath installation and path configuration after host provisioning or changes.
 
+```mermaid
+flowchart LR
+    Host_Validation["Host Validation"]
+    Host_Validation --> S0["Check PowerPath Version"]
+    Host_Validation --> S1["Verify PowerPath is Running"]
+    Host_Validation --> S2["Device Discovery"]
+    Host_Validation --> S3["Path Count Validation"]
+    Host_Validation --> S4["Host Registration on Array"]
+    Host_Validation --> S5["After OS Reboot Validation"]
+    Host_Validation --> S6["Multipath Conflict Check (Linux)"]
+    Host_Validation --> S7["Validation Checklist"]
+```
+
 ## Check PowerPath Version
 
 ```bash

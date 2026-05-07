@@ -1,5 +1,16 @@
 # Alerts
 
+```mermaid
+flowchart LR
+    Alerts["Alerts"]
+    Alerts --> S0["Purpose"]
+    Alerts --> S1["Common checks"]
+    Alerts --> S2["Incident notes"]
+    Alerts --> S3["Change notes"]
+    Alerts --> S4["Useful commands"]
+    Alerts --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Dell Aiops Alerts notes, checks, troubleshooting, commands, change notes, and field references.

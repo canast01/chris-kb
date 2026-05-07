@@ -1,5 +1,18 @@
 # Syslog and Centralized Logging
 
+```mermaid
+flowchart LR
+    Centralized_Logging["Centralized Logging"]
+    Centralized_Logging --> S0["Architecture Overview"]
+    Centralized_Logging --> S1["Syslog Service Health"]
+    Centralized_Logging --> S2["Configure rsyslog to Forward to Central Collector"]
+    Centralized_Logging --> S3["journald to Syslog Bridge"]
+    Centralized_Logging --> S4["Windows Event Forwarding"]
+    Centralized_Logging --> S5["Syslog Severity Levels (RFC 5424)"]
+    Centralized_Logging --> S6["Querying Logs"]
+    Centralized_Logging --> S7["Troubleshooting — Logs Not Arriving"]
+```
+
 ## Architecture Overview
 
 ```

@@ -1,5 +1,17 @@
 # Pure Storage Support Cases
 
+```mermaid
+flowchart LR
+    Support_Cases["Support Cases"]
+    Support_Cases --> S0["Opening a Support Case"]
+    Support_Cases --> S1["Case Severity Levels"]
+    Support_Cases --> S2["Gathering Diagnostic Information"]
+    Support_Cases --> S3["What to Include in a Case"]
+    Support_Cases --> S4["Escalating a Case"]
+    Support_Cases --> S5["Proactive Engagement"]
+    Support_Cases --> S6["Case Tracking"]
+```
+
 ## Opening a Support Case
 
 **Via Pure1:**

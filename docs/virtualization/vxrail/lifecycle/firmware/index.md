@@ -1,5 +1,17 @@
 # VxRail Firmware
 
+```mermaid
+flowchart LR
+    VxRail_Firmware["VxRail Firmware"]
+    VxRail_Firmware --> S0["Where It Fits"]
+    VxRail_Firmware --> S1["Daily Checks"]
+    VxRail_Firmware --> S2["Health Commands"]
+    VxRail_Firmware --> S3["Common Issues"]
+    VxRail_Firmware --> S4["Operational Tasks"]
+    VxRail_Firmware --> S5["Upgrade Notes"]
+    VxRail_Firmware --> S6["Best Practices"]
+```
+
 ## Overview
 
 Firmware lifecycle, hardware dependencies, version alignment, and post-update validation.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

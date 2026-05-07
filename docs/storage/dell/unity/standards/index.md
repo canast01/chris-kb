@@ -1,5 +1,13 @@
 # Dell Unity Standards
 
+```mermaid
+flowchart LR
+    Unity_Standards["Unity Standards"]
+    Unity_Standards --> S0["Naming Conventions"]
+    Unity_Standards --> S1["Build Baseline"]
+    Unity_Standards --> S2["Configuration Checklist"]
+```
+
 ## Naming Conventions
 
 Consistent naming across Unity objects simplifies identification, scripting, and troubleshooting. Apply the following scheme across all Unity deployments.

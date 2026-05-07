@@ -2,6 +2,19 @@
 
 Event correlation links related alerts and log entries across systems to identify root causes rather than treating each symptom individually.
 
+```mermaid
+flowchart LR
+    Event_Correlation["Event Correlation"]
+    Event_Correlation --> S0["Core Principle"]
+    Event_Correlation --> S1["Time Synchronisation — Prerequisite"]
+    Event_Correlation --> S2["Correlation Workflow"]
+    Event_Correlation --> S3["Building a Correlation Timeline"]
+    Event_Correlation --> S4["Common Correlation Patterns"]
+    Event_Correlation --> S5["SIEM Correlation Rules (Examples)"]
+    Event_Correlation --> S6["Dependency Map (template)"]
+    Event_Correlation --> S7["Cross-Platform Log Locations"]
+```
+
 ## Core Principle
 
 An alert is a symptom. Event correlation reveals whether multiple alerts share a single cause — a storage array losing a controller causes host I/O errors, application timeouts, and monitoring alerts simultaneously. Without correlation, that's 20 tickets instead of 1.

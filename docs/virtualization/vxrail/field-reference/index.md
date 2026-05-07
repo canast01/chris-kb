@@ -1,5 +1,15 @@
 # VxRail Field Reference
 
+```mermaid
+flowchart LR
+    Field_Reference["Field Reference"]
+    Field_Reference --> S0["Daily Checks"]
+    Field_Reference --> S1["Dependencies"]
+    Field_Reference --> S2["Common Issues"]
+    Field_Reference --> S3["Troubleshooting Workflow"]
+    Field_Reference --> S4["Best Practices"]
+```
+
 ## Overview
 
 Core operational reference for VxRail infrastructure.
@@ -43,7 +53,10 @@ Core operational reference for VxRail infrastructure.
 
 ## Best Practices
 
-- Keep versions aligned
-- Maintain monitoring
-- Validate changes
-- Document ownership
+
+| Recommendation | Detail |
+|---|---|
+| Keep versions aligned | Keep versions aligned |
+| Maintain monitoring | Maintain monitoring |
+| Validate changes | Validate changes |
+| Document ownership | Document ownership |

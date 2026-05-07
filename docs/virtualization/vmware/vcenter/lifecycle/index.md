@@ -1,5 +1,18 @@
 # vCenter Lifecycle
 
+```mermaid
+flowchart LR
+    vCenter_Lifecycle["vCenter Lifecycle"]
+    vCenter_Lifecycle --> S0["Version and Support Matrix"]
+    vCenter_Lifecycle --> S1["Upgrade Tools"]
+    vCenter_Lifecycle --> S2["Upgrade Order (Critical)"]
+    vCenter_Lifecycle --> S3["vCenter Upgrade Procedure (VCSA)"]
+    vCenter_Lifecycle --> S4["Interoperability Matrix"]
+    vCenter_Lifecycle --> S5["Patch Cadence"]
+    vCenter_Lifecycle --> S6["EOL Planning"]
+    vCenter_Lifecycle --> S7["Rollback Considerations"]
+```
+
 ## Version and Support Matrix
 
 | Version | Release | General Support End | Technical Guidance End |

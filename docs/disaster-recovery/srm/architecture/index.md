@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    SRM_Architecture["SRM Architecture"]
+    SRM_Architecture --> S0["Core Components"]
+    SRM_Architecture --> S1["Site Pair"]
+    SRM_Architecture --> S2["Protection Groups"]
+    SRM_Architecture --> S3["Recovery Plans"]
+    SRM_Architecture --> S4["Storage Replication Adapters (SRAs)"]
+    SRM_Architecture --> S5["vSphere Replication Architecture"]
+```
+
 ## Overview
 
 VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer.

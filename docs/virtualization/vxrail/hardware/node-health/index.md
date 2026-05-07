@@ -1,5 +1,17 @@
 # VxRail Node Health
 
+```mermaid
+flowchart LR
+    Node_Health["Node Health"]
+    Node_Health --> S0["Where It Fits"]
+    Node_Health --> S1["Daily Checks"]
+    Node_Health --> S2["Health Commands"]
+    Node_Health --> S3["Common Issues"]
+    Node_Health --> S4["Operational Tasks"]
+    Node_Health --> S5["Upgrade Notes"]
+    Node_Health --> S6["Best Practices"]
+```
+
 ## Overview
 
 Node hardware status, sensors, alerts, and serviceability checks.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

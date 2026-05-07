@@ -1,5 +1,17 @@
 # Dell AIOps Security
 
+```mermaid
+flowchart LR
+    AIOps_Security["AIOps Security"]
+    AIOps_Security --> S0["Access Control (RBAC)"]
+    AIOps_Security --> S1["SSO Integration"]
+    AIOps_Security --> S2["API Access Control"]
+    AIOps_Security --> S3["Audit Logging"]
+    AIOps_Security --> S4["Data Sovereignty"]
+    AIOps_Security --> S5["Network Security"]
+    AIOps_Security --> S6["Security Hardening Checklist"]
+```
+
 ## Access Control (RBAC)
 
 Dell AIOps access control inherits from CloudIQ RBAC. Roles are assigned per user in the CloudIQ portal.

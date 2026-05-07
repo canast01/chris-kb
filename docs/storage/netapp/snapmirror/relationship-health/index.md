@@ -1,5 +1,18 @@
 # SnapMirror Relationship Health
 
+```mermaid
+flowchart LR
+    Relationship_Health["Relationship Health"]
+    Relationship_Health --> S0["View All Relationships"]
+    Relationship_Health --> S1["Identify Unhealthy Relationships"]
+    Relationship_Health --> S2["Relationship States"]
+    Relationship_Health --> S3["Lag Time"]
+    Relationship_Health --> S4["Check Last Transfer"]
+    Relationship_Health --> S5["Update (Force Sync)"]
+    Relationship_Health --> S6["Resume a Quiesced Relationship"]
+    Relationship_Health --> S7["Re-initialize a Broken Relationship"]
+```
+
 ## View All Relationships
 
 ```bash

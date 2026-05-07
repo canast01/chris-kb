@@ -1,5 +1,16 @@
 # Subnets
 
+```mermaid
+flowchart LR
+    Subnets["Subnets"]
+    Subnets --> S0["Purpose"]
+    Subnets --> S1["Common checks"]
+    Subnets --> S2["Incident notes"]
+    Subnets --> S3["Change notes"]
+    Subnets --> S4["Useful commands"]
+    Subnets --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Subnets notes, checks, troubleshooting, commands, change notes, and field references.

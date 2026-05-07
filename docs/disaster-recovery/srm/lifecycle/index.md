@@ -1,5 +1,16 @@
 # SRM Lifecycle
 
+```mermaid
+flowchart LR
+    SRM_Lifecycle["SRM Lifecycle"]
+    SRM_Lifecycle --> S0["Version Compatibility"]
+    SRM_Lifecycle --> S1["Upgrade Sequence"]
+    SRM_Lifecycle --> S2["License Management"]
+    SRM_Lifecycle --> S3["EOL Tracking"]
+    SRM_Lifecycle --> S4["Migrating from Array Replication to vSphere Replication"]
+    SRM_Lifecycle --> S5["SRM Appliance Backup"]
+```
+
 ## Version Compatibility
 
 SRM version must match vCenter version. Always check the Broadcom Product Interoperability Matrix before any upgrade.

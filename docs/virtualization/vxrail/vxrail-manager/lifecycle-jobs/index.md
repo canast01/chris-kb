@@ -1,5 +1,17 @@
 # VxRail Lifecycle Jobs
 
+```mermaid
+flowchart LR
+    Lifecycle_Jobs["Lifecycle Jobs"]
+    Lifecycle_Jobs --> S0["Where It Fits"]
+    Lifecycle_Jobs --> S1["Daily Checks"]
+    Lifecycle_Jobs --> S2["Health Commands"]
+    Lifecycle_Jobs --> S3["Common Issues"]
+    Lifecycle_Jobs --> S4["Operational Tasks"]
+    Lifecycle_Jobs --> S5["Upgrade Notes"]
+    Lifecycle_Jobs --> S6["Best Practices"]
+```
+
 ## Overview
 
 Lifecycle task review, bundle status, failed jobs, and retry planning.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

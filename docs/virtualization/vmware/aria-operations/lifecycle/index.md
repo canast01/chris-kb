@@ -1,5 +1,17 @@
 # Aria Operations — Lifecycle
 
+```mermaid
+flowchart LR
+    Aria_Operations["Aria Operations"]
+    Aria_Operations --> S0["Version History and Rebranding"]
+    Aria_Operations --> S1["Upgrade Paths"]
+    Aria_Operations --> S2["Interoperability Matrix"]
+    Aria_Operations --> S3["EOL Tracking"]
+    Aria_Operations --> S4["Pre-Upgrade Checklist"]
+    Aria_Operations --> S5["Post-Upgrade Validation"]
+    Aria_Operations --> S6["Related Sections"]
+```
+
 ## Version History and Rebranding
 
 | Product Name | Version | Notes |

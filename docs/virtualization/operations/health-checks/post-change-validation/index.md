@@ -2,6 +2,18 @@
 
 Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.
 
+```mermaid
+flowchart LR
+    Post_Change_Validati["Post-Change Validation"]
+    Post_Change_Validati --> S0["Immediate Checks (within 5 minutes of change completion)"]
+    Post_Change_Validati --> S1["Datastore and Storage"]
+    Post_Change_Validati --> S2["NSX (if change was NSX-related)"]
+    Post_Change_Validati --> S3["Backup Validation"]
+    Post_Change_Validati --> S4["Monitoring Validation"]
+    Post_Change_Validati --> S5["Application Validation"]
+    Post_Change_Validati --> S6["Change Record Closure"]
+```
+
 ## Immediate Checks (within 5 minutes of change completion)
 
 ```powershell

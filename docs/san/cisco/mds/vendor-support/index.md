@@ -1,5 +1,18 @@
 # Cisco MDS Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Opening a Support Case"]
+    Vendor_Support --> S1["Collecting show tech-support (Diagnostic Bundle)"]
+    Vendor_Support --> S2["FC Frame Capture (for I/O issues)"]
+    Vendor_Support --> S3["Required Information for SR"]
+    Vendor_Support --> S4["Support Contract Verification"]
+    Vendor_Support --> S5["Severity Levels"]
+    Vendor_Support --> S6["Common Escalation Path"]
+    Vendor_Support --> S7["NDFC Support"]
+```
+
 ## Opening a Support Case
 
 TAC portal: [mycase.cisco.com](https://mycase.cisco.com)

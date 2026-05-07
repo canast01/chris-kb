@@ -2,6 +2,19 @@
 
 Quick checks to confirm a Linux server is healthy before and after changes, and during incident triage.
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["System Overview"]
+    Health_Checks --> S1["CPU and Load"]
+    Health_Checks --> S2["Memory"]
+    Health_Checks --> S3["Disk"]
+    Health_Checks --> S4["Network"]
+    Health_Checks --> S5["Services and Systemd"]
+    Health_Checks --> S6["System Logs — Quick Errors"]
+    Health_Checks --> S7["NTP / Time Sync"]
+```
+
 ## System Overview
 
 ```bash

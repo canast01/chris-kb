@@ -1,5 +1,17 @@
 # VxRail Bundle Management
 
+```mermaid
+flowchart LR
+    Bundle_Management["Bundle Management"]
+    Bundle_Management --> S0["Where It Fits"]
+    Bundle_Management --> S1["Daily Checks"]
+    Bundle_Management --> S2["Health Commands"]
+    Bundle_Management --> S3["Common Issues"]
+    Bundle_Management --> S4["Operational Tasks"]
+    Bundle_Management --> S5["Upgrade Notes"]
+    Bundle_Management --> S6["Best Practices"]
+```
+
 ## Overview
 
 Bundle upload, validation, staging, version matching, and failure handling.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

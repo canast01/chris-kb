@@ -54,18 +54,33 @@
 
 </div>
 
+```mermaid
+flowchart LR
+    Storage_Evergreen__O["Storage Evergreen//One"]
+    Storage_Evergreen__O --> S0["Where It Fits"]
+    Storage_Evergreen__O --> S1["Daily Checks"]
+    Storage_Evergreen__O --> S2["Health Commands"]
+    Storage_Evergreen__O --> S3["Common Issues"]
+    Storage_Evergreen__O --> S4["Operational Tasks"]
+    Storage_Evergreen__O --> S5["Upgrade Notes"]
+    Storage_Evergreen__O --> S6["Best Practices"]
+```
+
 ## Overview
 
 Evergreen//One is Pure Storage's Storage-as-a-Service consumption model: Pure owns and manages the hardware (on-premises or in a colocation), and customers pay per TB consumed on a monthly basis against a committed reserve tier, with burst capacity available on demand. The service includes installation, proactive monitoring via Pure1, all hardware and Purity software upgrades, and support — customers never plan or execute a storage upgrade. SLA commitments include 99.9999% availability and guaranteed performance outcomes (IOPS, bandwidth, latency) defined per workload tier; Pure credits the customer if SLAs are not met.
 
 ## Where It Fits
 
-- Organisations shifting storage from CapEx to OpEx without giving up on-premises data sovereignty
-- Workloads with variable or unpredictable capacity growth where fixed-capacity purchases are inefficient
-- Colocation environments where physical hardware management is a constraint
-- High-availability production workloads requiring a vendor-backed 99.9999% availability SLA
-- Environments requiring guaranteed latency and IOPS SLAs tied to contractual obligations
-- Teams that want Pure1 AIOps-driven monitoring without managing the underlying infrastructure
+
+| Use Case |
+|---|
+| Organisations shifting storage from CapEx to OpEx without giving up on-premises data sovereignty |
+| Workloads with variable or unpredictable capacity growth where fixed-capacity purchases are inefficient |
+| Colocation environments where physical hardware management is a constraint |
+| High-availability production workloads requiring a vendor-backed 99.9999% availability SLA |
+| Environments requiring guaranteed latency and IOPS SLAs tied to contractual obligations |
+| Teams that want Pure1 AIOps-driven monitoring without managing the underlying infrastructure |
 
 ## Daily Checks
 
@@ -135,11 +150,14 @@ purepod list                   # replication pod and ActiveCluster status
 
 ## Best Practices
 
-- Set a Pure1 consumption alert at 80% of committed tier so there is lead time to request additional capacity
-- Review burst usage at least weekly — burst billing can add significant cost if left unmonitored
-- Work with the Pure account team on a quarterly capacity review cadence to keep the committed tier accurately sized
-- Never disable Pure1 phone-home; Pure's SLA monitoring and proactive support depend on continuous telemetry
-- Document the committed reserve tier, burst limits, and SLA thresholds in your service runbook for on-call reference
-- Align capacity increase requests with budget cycles so approval is not a blocker to provisioning
-- Review Pure1 SLA compliance reports before each billing close and flag any discrepancies to the account team promptly
-- Use Pure1 AIOps anomaly alerts as an early warning for workload behaviour changes before they become SLA events
+
+| Recommendation | Detail |
+|---|---|
+| Set a Pure1 consumption alert at 80% of committed tier so | Set a Pure1 consumption alert at 80% of committed tier so there is lead time to request additional capacity |
+| Review burst usage at least weekly | burst billing can add significant cost if left unmonitored |
+| Work with the Pure account team on a quarterly capacity | Work with the Pure account team on a quarterly capacity review cadence to keep the committed tier accurately sized |
+| Never disable Pure1 phone-home | Pure's SLA monitoring and proactive support depend on continuous telemetry |
+| Document the committed reserve tier, burst limits, and SLA | Document the committed reserve tier, burst limits, and SLA thresholds in your service runbook for on-call reference |
+| Align capacity increase requests with budget cycles so | Align capacity increase requests with budget cycles so approval is not a blocker to provisioning |
+| Review Pure1 SLA compliance reports before each billing | Review Pure1 SLA compliance reports before each billing close and flag any discrepancies to the account team promptly |
+| Use Pure1 AIOps anomaly alerts as an early warning for | Use Pure1 AIOps anomaly alerts as an early warning for workload behaviour changes before they become SLA events |

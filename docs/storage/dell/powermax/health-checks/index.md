@@ -2,6 +2,19 @@
 
 Daily and pre/post-change checks for Dell PowerMax arrays.
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Array Connectivity and Status"]
+    Health_Checks --> S1["Director and Port Status"]
+    Health_Checks --> S2["Events and Alerts"]
+    Health_Checks --> S3["Storage Pool (SRP) Capacity"]
+    Health_Checks --> S4["SRDF Replication State"]
+    Health_Checks --> S5["Device Status"]
+    Health_Checks --> S6["Cache Health"]
+    Health_Checks --> S7["Health Check Summary"]
+```
+
 ## Array Connectivity and Status
 
 ```bash

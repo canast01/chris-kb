@@ -1,5 +1,17 @@
 # AWS KMS
 
+```mermaid
+flowchart LR
+    AWS_KMS["AWS KMS"]
+    AWS_KMS --> S0["Where It Fits"]
+    AWS_KMS --> S1["Daily Checks"]
+    AWS_KMS --> S2["Health Commands"]
+    AWS_KMS --> S3["Common Issues"]
+    AWS_KMS --> S4["Operational Tasks"]
+    AWS_KMS --> S5["Upgrade Notes"]
+    AWS_KMS --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS KMS notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

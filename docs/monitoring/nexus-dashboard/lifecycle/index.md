@@ -1,5 +1,18 @@
 # Nexus Dashboard Lifecycle
 
+```mermaid
+flowchart LR
+    Dashboard_Lifecycle["Dashboard Lifecycle"]
+    Dashboard_Lifecycle --> S0["Upgrade Overview"]
+    Dashboard_Lifecycle --> S1["Compatibility Matrix"]
+    Dashboard_Lifecycle --> S2["Pre-Upgrade Checklist"]
+    Dashboard_Lifecycle --> S3["ND Base Platform Upgrade"]
+    Dashboard_Lifecycle --> S4["Service Upgrade (NDFC / NDI)"]
+    Dashboard_Lifecycle --> S5["Node Management"]
+    Dashboard_Lifecycle --> S6["Backup and Restore"]
+    Dashboard_Lifecycle --> S7["EOL Tracking"]
+```
+
 ## Upgrade Overview
 
 Nexus Dashboard supports rolling upgrades — the cluster upgrades one node at a time to maintain service availability throughout the process. Services (NDFC, NDI) are upgraded separately from the base ND platform.

@@ -2,6 +2,16 @@
 
 AWS Route 53 — DNS hosted zones, record management, health checks, and routing policies.
 
+```mermaid
+flowchart LR
+    Route_53["Route 53"]
+    Route_53 --> S0["Key Concepts"]
+    Route_53 --> S1["Common CLI Commands"]
+    Route_53 --> S2["Health Checks"]
+    Route_53 --> S3["Routing Policies"]
+    Route_53 --> S4["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

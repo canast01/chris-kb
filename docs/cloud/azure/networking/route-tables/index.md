@@ -1,5 +1,16 @@
 # Route Tables
 
+```mermaid
+flowchart LR
+    Route_Tables["Route Tables"]
+    Route_Tables --> S0["Purpose"]
+    Route_Tables --> S1["Common checks"]
+    Route_Tables --> S2["Incident notes"]
+    Route_Tables --> S3["Change notes"]
+    Route_Tables --> S4["Useful commands"]
+    Route_Tables --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Route Tables notes, checks, troubleshooting, commands, change notes, and field references.

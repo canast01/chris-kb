@@ -1,5 +1,16 @@
 # Extensions
 
+```mermaid
+flowchart LR
+    Extensions["Extensions"]
+    Extensions --> S0["Purpose"]
+    Extensions --> S1["Common checks"]
+    Extensions --> S2["Incident notes"]
+    Extensions --> S3["Change notes"]
+    Extensions --> S4["Useful commands"]
+    Extensions --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Compute Extensions notes, checks, troubleshooting, commands, change notes, and field references.

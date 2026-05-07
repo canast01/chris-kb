@@ -1,5 +1,17 @@
 # VxRail Daily Checks
 
+```mermaid
+flowchart LR
+    Daily_Checks["Daily Checks"]
+    Daily_Checks --> S0["Where It Fits"]
+    Daily_Checks --> S1["Daily Checks"]
+    Daily_Checks --> S2["Health Commands"]
+    Daily_Checks --> S3["Common Issues"]
+    Daily_Checks --> S4["Operational Tasks"]
+    Daily_Checks --> S5["Upgrade Notes"]
+    Daily_Checks --> S6["Best Practices"]
+```
+
 ## Overview
 
 Daily VxRail cluster checks across VxRail Manager, vCenter, ESXi, vSAN, and hardware.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

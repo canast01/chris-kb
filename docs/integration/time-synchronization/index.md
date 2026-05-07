@@ -2,6 +2,19 @@
 
 Ensure consistent, accurate time across all infrastructure systems. Time drift causes Kerberos authentication failures, TLS errors, log correlation issues, and replication problems.
 
+```mermaid
+flowchart LR
+    Time_Synchronization["Time Synchronization"]
+    Time_Synchronization --> S0["chrony (Recommended — RHEL 7+, Ubuntu 18.04+)"]
+    Time_Synchronization --> S1["ntpd (Legacy)"]
+    Time_Synchronization --> S2["systemd-timesyncd (Lightweight — Ubuntu default)"]
+    Time_Synchronization --> S3["Windows Time Service (w32tm)"]
+    Time_Synchronization --> S4["Monitoring Time Drift"]
+    Time_Synchronization --> S5["NTP Hierarchy for On-Premises"]
+    Time_Synchronization --> S6["Time Zone Management"]
+    Time_Synchronization --> S7["Troubleshooting"]
+```
+
 ## chrony (Recommended — RHEL 7+, Ubuntu 18.04+)
 
 ```bash

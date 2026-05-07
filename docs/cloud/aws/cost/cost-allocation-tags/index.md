@@ -1,5 +1,17 @@
 # AWS Cost Allocation Tags
 
+```mermaid
+flowchart LR
+    Allocation_Tags["Allocation Tags"]
+    Allocation_Tags --> S0["Where It Fits"]
+    Allocation_Tags --> S1["Daily Checks"]
+    Allocation_Tags --> S2["Health Commands"]
+    Allocation_Tags --> S3["Common Issues"]
+    Allocation_Tags --> S4["Operational Tasks"]
+    Allocation_Tags --> S5["Upgrade Notes"]
+    Allocation_Tags --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Cost Allocation Tags notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

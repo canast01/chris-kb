@@ -2,6 +2,16 @@
 
 AWS Virtual Private Cloud — networking, subnets, routing, and security group management.
 
+```mermaid
+flowchart LR
+    VPC["VPC"]
+    VPC --> S0["Key Concepts"]
+    VPC --> S1["Common CLI Commands"]
+    VPC --> S2["Security Group Management"]
+    VPC --> S3["VPC Flow Logs"]
+    VPC --> S4["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

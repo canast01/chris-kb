@@ -16,6 +16,20 @@
 </a>
 
 </div>
+
+```mermaid
+flowchart LR
+    Troubleshooting["Troubleshooting"]
+    Troubleshooting --> S0["Issue Summary"]
+    Troubleshooting --> S1["vCenter Services Not Starting"]
+    Troubleshooting --> S2["Certificate Errors"]
+    Troubleshooting --> S3["ESXi Host Disconnected or Not Responding"]
+    Troubleshooting --> S4["SSO / Authentication Failures"]
+    Troubleshooting --> S5["VAMI Inaccessible (Port 5480)"]
+    Troubleshooting --> S6["Datastore Alarms — Inaccessible or Over-Committed"]
+    Troubleshooting --> S7["DRS / HA Configuration Warnings"]
+```
+
 ## Issue Summary
 
 | Symptom | Likely Cause | First Action |

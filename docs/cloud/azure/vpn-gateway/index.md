@@ -2,6 +2,17 @@
 
 Azure VPN Gateway — site-to-site VPN, point-to-site VPN, and VNet-to-VNet connectivity.
 
+```mermaid
+flowchart LR
+    VPN_Gateway["VPN Gateway"]
+    VPN_Gateway --> S0["Connection Types"]
+    VPN_Gateway --> S1["Common Azure CLI Commands"]
+    VPN_Gateway --> S2["Create S2S VPN Connection"]
+    VPN_Gateway --> S3["IKE / IPsec Policy"]
+    VPN_Gateway --> S4["Diagnostic Logs"]
+    VPN_Gateway --> S5["Troubleshooting"]
+```
+
 ## Connection Types
 
 | Type | Use Case |

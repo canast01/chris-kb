@@ -1,5 +1,16 @@
 # Tagging Standards
 
+```mermaid
+flowchart LR
+    Tagging_Standards["Tagging Standards"]
+    Tagging_Standards --> S0["Purpose"]
+    Tagging_Standards --> S1["Common checks"]
+    Tagging_Standards --> S2["Incident notes"]
+    Tagging_Standards --> S3["Change notes"]
+    Tagging_Standards --> S4["Useful commands"]
+    Tagging_Standards --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Governance Tagging Standards notes, checks, troubleshooting, commands, change notes, and field references.

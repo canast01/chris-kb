@@ -1,5 +1,16 @@
 # LDAP
 
+```mermaid
+flowchart LR
+    LDAP["LDAP"]
+    LDAP --> S0["Purpose"]
+    LDAP --> S1["Common checks"]
+    LDAP --> S2["Incident notes"]
+    LDAP --> S3["Change notes"]
+    LDAP --> S4["Useful commands"]
+    LDAP --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Active Directory LDAP notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,16 @@
 # Sessions
 
+```mermaid
+flowchart LR
+    Sessions["Sessions"]
+    Sessions --> S0["Purpose"]
+    Sessions --> S1["Common checks"]
+    Sessions --> S2["Incident notes"]
+    Sessions --> S3["Change notes"]
+    Sessions --> S4["Useful commands"]
+    Sessions --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Cyberark Sessions notes, checks, troubleshooting, commands, change notes, and field references.

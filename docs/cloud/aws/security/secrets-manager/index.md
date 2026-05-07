@@ -1,5 +1,17 @@
 # AWS Secrets Manager
 
+```mermaid
+flowchart LR
+    Secrets_Manager["Secrets Manager"]
+    Secrets_Manager --> S0["Where It Fits"]
+    Secrets_Manager --> S1["Daily Checks"]
+    Secrets_Manager --> S2["Health Commands"]
+    Secrets_Manager --> S3["Common Issues"]
+    Secrets_Manager --> S4["Operational Tasks"]
+    Secrets_Manager --> S5["Upgrade Notes"]
+    Secrets_Manager --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Secrets Manager notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

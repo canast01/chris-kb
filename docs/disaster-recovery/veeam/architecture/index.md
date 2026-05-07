@@ -1,5 +1,17 @@
 # Veeam Architecture
 
+```mermaid
+flowchart LR
+    Veeam_Architecture["Veeam Architecture"]
+    Veeam_Architecture --> S0["Core Components"]
+    Veeam_Architecture --> S1["Architecture Diagram"]
+    Veeam_Architecture --> S2["Backup Proxy"]
+    Veeam_Architecture --> S3["Scale-Out Backup Repository (SOBR)"]
+    Veeam_Architecture --> S4["NAS Backup (File Share Backup)"]
+    Veeam_Architecture --> S5["Cloud and Agent Support"]
+    Veeam_Architecture --> S6["Sizing Guidelines"]
+```
+
 ## Core Components
 
 | Component | Role | Notes |

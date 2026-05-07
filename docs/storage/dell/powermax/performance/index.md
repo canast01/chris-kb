@@ -2,6 +2,18 @@
 
 Performance monitoring, analysis, and troubleshooting on Dell PowerMax.
 
+```mermaid
+flowchart LR
+    PowerMax_Performance["PowerMax Performance"]
+    PowerMax_Performance --> S0["Quick Performance Check (SYMCLI)"]
+    PowerMax_Performance --> S1["Key Metrics and Thresholds"]
+    PowerMax_Performance --> S2["Continuous Monitoring"]
+    PowerMax_Performance --> S3["Identify Performance Issues"]
+    PowerMax_Performance --> S4["Unisphere for PowerMax Performance Dashboard"]
+    PowerMax_Performance --> S5["Dell CloudIQ"]
+    PowerMax_Performance --> S6["Performance Data for TAC"]
+```
+
 ## Quick Performance Check (SYMCLI)
 
 ```bash

@@ -2,6 +2,18 @@
 
 Azure Backup — VM snapshots, file recovery, database backup, and Recovery Services vault management.
 
+```mermaid
+flowchart LR
+    Azure_Backup["Azure Backup"]
+    Azure_Backup --> S0["Supported Workloads"]
+    Azure_Backup --> S1["Common Azure CLI Commands"]
+    Azure_Backup --> S2["Restore a VM"]
+    Azure_Backup --> S3["File Recovery (Item-Level Restore)"]
+    Azure_Backup --> S4["Backup Policy Configuration"]
+    Azure_Backup --> S5["Monitoring"]
+    Azure_Backup --> S6["Troubleshooting"]
+```
+
 ## Supported Workloads
 
 | Workload | Backup Type |

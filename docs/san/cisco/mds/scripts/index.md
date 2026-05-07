@@ -4,6 +4,19 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["Fabric Health Check (Bash)"]
+    Scripts --> S1["FLOGI Database Report (Python)"]
+    Scripts --> S2["Zoning Consistency Audit (Perl)"]
+    Scripts --> S3["Interface Error Counter Monitor (Bash)"]
+    Scripts --> S4["Ansible MDS Config Backup Playbook"]
+    Scripts --> S5["Windows: Cisco MDS Health Check via Plink (CMD)"]
+    Scripts --> S6["Windows: Cisco MDS Port Report (PowerShell via Plink)"]
+    Scripts --> S7["Daily Check Script"]
+```
+
 ## Fabric Health Check (Bash)
 
 SSH to a Cisco MDS switch, collect key diagnostic outputs, and print a health summary flagging down interfaces, environmental issues, and zoning problems.

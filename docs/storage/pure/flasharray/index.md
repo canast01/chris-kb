@@ -54,18 +54,33 @@
 
 </div>
 
+```mermaid
+flowchart LR
+    Pure_FlashArray["Pure FlashArray"]
+    Pure_FlashArray --> S0["Where It Fits"]
+    Pure_FlashArray --> S1["Daily Checks"]
+    Pure_FlashArray --> S2["Health Commands"]
+    Pure_FlashArray --> S3["Common Issues"]
+    Pure_FlashArray --> S4["Operational Tasks"]
+    Pure_FlashArray --> S5["Upgrade Notes"]
+    Pure_FlashArray --> S6["Best Practices"]
+```
+
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS, available in the //X series (NVMe-based, highest performance), //C series (QLC flash, capacity-optimized), and //E series (maximum density). All models run in an active-active dual-controller configuration with no single point of failure, and support FC, iSCSI, NVMe/FC, NVMe/RoCE, and NVMe/TCP host protocols. Fleet-wide monitoring, AI-driven analytics, and workload planning are delivered via Pure1 cloud management without requiring on-premises management infrastructure.
 
 ## Where It Fits
 
-- Tier-1 block storage for databases (Oracle, SQL Server, SAP HANA) requiring sub-millisecond latency
-- VMware vSphere datastores (VMFS and vVols) with vSphere Plugin integration for VM-level management
-- NVMe/FC or NVMe/RoCE for latency-sensitive workloads demanding the lowest possible response time
-- ActiveCluster (synchronous replication) for metro/stretch cluster deployments requiring zero RPO and transparent host failover across two sites within 5ms RTT
-- Dev/test provisioning via instant FlashArray snapshot clones (space-efficient, no copy required)
-- VDI boot volume acceleration with predictable, consistent IOPS regardless of load
+
+| Use Case |
+|---|
+| Tier-1 block storage for databases (Oracle, SQL Server, SAP HANA) requiring sub-millisecond latency |
+| VMware vSphere datastores (VMFS and vVols) with vSphere Plugin integration for VM-level management |
+| NVMe/FC or NVMe/RoCE for latency-sensitive workloads demanding the lowest possible response time |
+| ActiveCluster (synchronous replication) for metro/stretch cluster deployments requiring zero RPO and transparent host failover across two sites within 5ms RTT |
+| Dev/test provisioning via instant FlashArray snapshot clones (space-efficient, no copy required) |
+| VDI boot volume acceleration with predictable, consistent IOPS regardless of load |
 
 ## Daily Checks
 
@@ -161,11 +176,14 @@ purearray monitor
 
 ## Best Practices
 
-- Always connect volumes through host groups (`purehgroup`) rather than individual hosts — this simplifies management and ensures consistent access policies as hosts are added or replaced
-- Use a consistent volume naming convention such as `<env>-<app>-<vol##>` (e.g., `prod-oracle-vol01`) to make automation and troubleshooting faster
-- Configure Pure1 monitoring and set up email or webhook alerts for hardware faults, capacity thresholds, and replication health — do not rely solely on CLI polling
-- Test ActiveCluster pod failover in a maintenance window at least annually — confirm hosts continue serving I/O during a simulated site failure and that the mediator functions correctly
-- Keep Purity within the N-2 supported version window; running older versions risks missing critical bug fixes and losing support eligibility
-- Schedule protection group snapshot policies to align with application RPO requirements and set expiry windows to prevent uncontrolled capacity growth from retained snapshots
-- Use the FlashArray vSphere Plugin for VMware environments — it enables VM-level snapshot management directly from vCenter and integrates with VASA for vVols support
-- Review Pure1 AI-driven performance recommendations (Pure1 Meta) quarterly to identify workload imbalances or right-sizing opportunities before they become capacity or performance issues
+
+| Recommendation | Detail |
+|---|---|
+| Always connect volumes through host groups (`purehgroup`) rather than individual hosts | this simplifies management and ensures consistent access policies as hosts are added or replaced |
+| Use a consistent volume naming convention such as | Use a consistent volume naming convention such as `<env>-<app>-<vol##>` (e.g., `prod-oracle-vol01`) to make automation and troubleshooting faster |
+| Configure Pure1 monitoring and set up email or webhook alerts for hardware faults, capacity thresholds, and replication health | do not rely solely on CLI polling |
+| Test ActiveCluster pod failover in a maintenance window at least annually | confirm hosts continue serving I/O during a simulated site failure and that the mediator functions correctly |
+| Keep Purity within the N-2 supported version window | running older versions risks missing critical bug fixes and losing support eligibility |
+| Schedule protection group snapshot policies to align with | Schedule protection group snapshot policies to align with application RPO requirements and set expiry windows to prevent uncontrolled capacity growth from retained snapshots |
+| Use the FlashArray vSphere Plugin for VMware environments | it enables VM-level snapshot management directly from vCenter and integrates with VASA for vVols support |
+| Review Pure1 AI-driven performance recommendations (Pure1 | Review Pure1 AI-driven performance recommendations (Pure1 Meta) quarterly to identify workload imbalances or right-sizing opportunities before they become capacity or performance issues |

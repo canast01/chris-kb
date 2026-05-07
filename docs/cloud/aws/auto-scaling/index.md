@@ -2,6 +2,16 @@
 
 AWS Auto Scaling — EC2 Auto Scaling groups, scaling policies, and lifecycle management.
 
+```mermaid
+flowchart LR
+    Auto_Scaling["Auto Scaling"]
+    Auto_Scaling --> S0["Key Concepts"]
+    Auto_Scaling --> S1["Common CLI Commands"]
+    Auto_Scaling --> S2["Scaling Policies"]
+    Auto_Scaling --> S3["Instance Refresh (rolling replacement)"]
+    Auto_Scaling --> S4["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

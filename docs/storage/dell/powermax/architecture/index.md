@@ -1,5 +1,14 @@
 # PowerMax Architecture
 
+```mermaid
+flowchart LR
+    PowerMax_Architectur["PowerMax Architecture"]
+    PowerMax_Architectur --> S0["Components"]
+    PowerMax_Architectur --> S1["HA Topology"]
+    PowerMax_Architectur --> S2["Connectivity"]
+    PowerMax_Architectur --> S3["Sizing Guidelines"]
+```
+
 ## Overview
 
 Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: **PowerMax 2000** (1–4 engines) and **PowerMax 8000** (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over Fibre Channel or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS (formerly Enginuity/HYPERMAX OS) and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).

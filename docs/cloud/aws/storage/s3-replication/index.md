@@ -1,5 +1,17 @@
 # AWS S3 Replication
 
+```mermaid
+flowchart LR
+    S3_Replication["S3 Replication"]
+    S3_Replication --> S0["Where It Fits"]
+    S3_Replication --> S1["Daily Checks"]
+    S3_Replication --> S2["Health Commands"]
+    S3_Replication --> S3["Common Issues"]
+    S3_Replication --> S4["Operational Tasks"]
+    S3_Replication --> S5["Upgrade Notes"]
+    S3_Replication --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS S3 Replication notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

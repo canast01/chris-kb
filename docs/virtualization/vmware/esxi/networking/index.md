@@ -1,5 +1,17 @@
 # ESXi Networking
 
+```mermaid
+flowchart LR
+    ESXi_Networking["ESXi Networking"]
+    ESXi_Networking --> S0["Where It Fits"]
+    ESXi_Networking --> S1["Daily Checks"]
+    ESXi_Networking --> S2["Health Commands"]
+    ESXi_Networking --> S3["Common Issues"]
+    ESXi_Networking --> S4["Operational Tasks"]
+    ESXi_Networking --> S5["Upgrade Notes"]
+    ESXi_Networking --> S6["Best Practices"]
+```
+
 ## Overview
 
 vSwitch, distributed switch, VMkernel adapters, uplinks, VLANs, and connectivity checks.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

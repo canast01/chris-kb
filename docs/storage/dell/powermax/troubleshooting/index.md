@@ -1,5 +1,14 @@
 # PowerMax Troubleshooting
 
+```mermaid
+flowchart LR
+    PowerMax_Troubleshoo["PowerMax Troubleshooti"]
+    PowerMax_Troubleshoo --> S0["Common Issues"]
+    PowerMax_Troubleshoo --> S1["Diagnostic Commands"]
+    PowerMax_Troubleshoo --> S2["Log Locations"]
+    PowerMax_Troubleshoo --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

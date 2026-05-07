@@ -13,6 +13,14 @@ Use these when there is a major incident.
 | Hardware | Any failed disks, NICs, PSU, memory? |
 | Backups | Are recent backups available? |
 
+```mermaid
+flowchart LR
+    Emergency_Checks["Emergency Checks"]
+    Emergency_Checks --> S0["Known Issue Tracking"]
+    Emergency_Checks --> S1["Escalation Quick Reference"]
+    Emergency_Checks --> S2["Fast Troubleshooting Map"]
+```
+
 ## Known Issue Tracking
 
 | Field | Description |

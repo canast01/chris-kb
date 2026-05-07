@@ -2,6 +2,19 @@
 
 A controlled process for moving production workloads to the recovery site during an outage or declared disaster.
 
+```mermaid
+flowchart LR
+    Failover_Procedure["Failover Procedure"]
+    Failover_Procedure --> S0["Decision Gate — When to Invoke DR Failover"]
+    Failover_Procedure --> S1["Phase 1 — Validate Replication State"]
+    Failover_Procedure --> S2["Phase 2 — Notify Stakeholders"]
+    Failover_Procedure --> S3["Phase 3 — Initiate Failover"]
+    Failover_Procedure --> S4["Phase 4 — Post-Failover Validation"]
+    Failover_Procedure --> S5["Phase 5 — DR Site Monitoring"]
+    Failover_Procedure --> S6["Failover Checklist"]
+    Failover_Procedure --> S7["Common Issues"]
+```
+
 ## Decision Gate — When to Invoke DR Failover
 
 Before initiating failover, confirm:

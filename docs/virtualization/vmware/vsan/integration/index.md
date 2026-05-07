@@ -1,5 +1,15 @@
 # VMware vSAN Integration
 
+```mermaid
+flowchart LR
+    vSAN_Integration["vSAN Integration"]
+    vSAN_Integration --> S0["vCenter (Required)"]
+    vSAN_Integration --> S1["NSX Integration"]
+    vSAN_Integration --> S2["Stretched Cluster Witness"]
+    vSAN_Integration --> S3["File Services"]
+    vSAN_Integration --> S4["Aria Operations"]
+```
+
 ## vCenter (Required)
 
 vSAN is exclusively managed through vCenter Server. There is no standalone vSAN management interface — all cluster configuration, storage policy management, health monitoring, and capacity reporting is done through the vSphere Client connected to vCenter.

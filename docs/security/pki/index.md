@@ -1,5 +1,18 @@
 # Public Key Infrastructure (PKI)
 
+```mermaid
+flowchart LR
+    Infrastructure__PKI["Infrastructure (PKI)"]
+    Infrastructure__PKI --> S0["PKI Architecture (Typical Enterprise)"]
+    Infrastructure__PKI --> S1["ADCS Health Checks"]
+    Infrastructure__PKI --> S2["CRL and OCSP Monitoring"]
+    Infrastructure__PKI --> S3["Certificate Inventory and Expiry Check"]
+    Infrastructure__PKI --> S4["Certificate Lifecycle Events"]
+    Infrastructure__PKI --> S5["Certificate Revocation"]
+    Infrastructure__PKI --> S6["Backup and DR for ADCS"]
+    Infrastructure__PKI --> S7["Common Issues"]
+```
+
 ## PKI Architecture (Typical Enterprise)
 
 ```

@@ -1,5 +1,16 @@
 # Budgets
 
+```mermaid
+flowchart LR
+    Budgets["Budgets"]
+    Budgets --> S0["Purpose"]
+    Budgets --> S1["Common checks"]
+    Budgets --> S2["Incident notes"]
+    Budgets --> S3["Change notes"]
+    Budgets --> S4["Useful commands"]
+    Budgets --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Cost Budgets notes, checks, troubleshooting, commands, change notes, and field references.

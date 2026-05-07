@@ -1,5 +1,17 @@
 # Azure Integration
 
+```mermaid
+flowchart LR
+    Azure_Integration["Azure Integration"]
+    Azure_Integration --> S0["ExpressRoute + VPN Gateway"]
+    Azure_Integration --> S1["Azure AD Connect (Hybrid Identity)"]
+    Azure_Integration --> S2["Azure Monitor → SIEM"]
+    Azure_Integration --> S3["GitHub Actions + OIDC Federation"]
+    Azure_Integration --> S4["Terraform Remote State"]
+    Azure_Integration --> S5["Azure Backup"]
+    Azure_Integration --> S6["Key Vault Integration"]
+```
+
 ## ExpressRoute + VPN Gateway
 
 ```bash

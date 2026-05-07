@@ -1,5 +1,17 @@
 # Aria Operations — Vendor Support
 
+```mermaid
+flowchart LR
+    Aria_Operations["Aria Operations"]
+    Aria_Operations --> S0["Support Portal"]
+    Aria_Operations --> S1["Support Bundle Collection"]
+    Aria_Operations --> S2["Information to Collect Before Opening a Case"]
+    Aria_Operations --> S3["SLA Tiers"]
+    Aria_Operations --> S4["Escalation Path"]
+    Aria_Operations --> S5["Useful Links"]
+    Aria_Operations --> S6["Related Sections"]
+```
+
 ## Support Portal
 
 **Broadcom Support Portal:** [https://support.broadcom.com](https://support.broadcom.com)

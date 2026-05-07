@@ -2,6 +2,19 @@
 
 Aggregates are ONTAP's physical storage pools, built from disks or SSDs. Volumes reside within aggregates.
 
+```mermaid
+flowchart LR
+    ONTAP_Aggregates["ONTAP Aggregates"]
+    ONTAP_Aggregates --> S0["List Aggregates"]
+    ONTAP_Aggregates --> S1["Check Aggregate Health"]
+    ONTAP_Aggregates --> S2["Capacity Monitoring"]
+    ONTAP_Aggregates --> S3["RAID Status"]
+    ONTAP_Aggregates --> S4["Disk Assignment"]
+    ONTAP_Aggregates --> S5["Add Disks to an Aggregate"]
+    ONTAP_Aggregates --> S6["Relocation (HA Pairs)"]
+    ONTAP_Aggregates --> S7["Common Issues"]
+```
+
 ## List Aggregates
 
 ```bash

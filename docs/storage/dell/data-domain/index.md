@@ -28,18 +28,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --> S0["Where It Fits"]
+    Data_Domain --> S1["Daily Checks"]
+    Data_Domain --> S2["Health Commands"]
+    Data_Domain --> S3["Common Issues"]
+    Data_Domain --> S4["Operational Tasks"]
+    Data_Domain --> S5["Upgrade Notes"]
+    Data_Domain --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance that performs inline global deduplication as data is written, achieving typical reduction ratios of 20:1 or higher. It serves as a backup target for leading data protection software via DDBoost, NFS, CIFS, and VTL interfaces. MTrees provide logical partitioning of the DD filesystem, enabling multi-tenant or per-application isolation of backup streams.
 
 ## Where It Fits
 
-- Backup target for Avamar, NetWorker, Veeam, Commvault, and other backup software via DDBoost protocol
-- Deduplication landing zone for long-term backup retention and tape replacement
-- Replication target for disaster recovery — MTree or collection replication to a remote DD
-- Cloud tier gateway for offloading aged backup data to AWS S3, Azure Blob, or Elastic Cloud Storage
-- Multi-tenant backup storage — separate MTrees per business unit or application owner
-- Integration with copy data management workflows where a deduplicated source is required
+
+| Use Case |
+|---|
+| Backup target for Avamar, NetWorker, Veeam, Commvault, and other backup software via DDBoost protocol |
+| Deduplication landing zone for long-term backup retention and tape replacement |
+| Replication target for disaster recovery — MTree or collection replication to a remote DD |
+| Cloud tier gateway for offloading aged backup data to AWS S3, Azure Blob, or Elastic Cloud Storage |
+| Multi-tenant backup storage — separate MTrees per business unit or application owner |
+| Integration with copy data management workflows where a deduplicated source is required |
 
 ## Daily Checks
 
@@ -133,11 +148,14 @@ adminaccess show
 
 ## Best Practices
 
-- Schedule `filesys clean` no more than once per week; running it more frequently can cause disk fragmentation and degrade restore and replication performance
-- Target a global dedup ratio of 20:1 or better; investigate drops with `filesys show compression` before they become capacity issues
-- Use MTree replication (not collection replication) for granular per-application or per-tenant replication control
-- Set MTree soft and hard quotas to prevent a single backup stream from consuming all available capacity
-- Enable DD Encryption at Rest (D@RE) during initial setup; retroactively enabling it requires a filesys rebuild
-- Keep at least 10–15% of raw capacity free to allow the filesystem cleaner to operate efficiently
-- Monitor DDBoost client connections regularly; stale or orphaned clients can hold locks that impact performance
-- Test end-to-end recovery from the DD target at least quarterly to validate both dedup integrity and restore throughput
+
+| Recommendation | Detail |
+|---|---|
+| Schedule `filesys clean` no more than once per week | running it more frequently can cause disk fragmentation and degrade restore and replication performance |
+| Target a global dedup ratio of 20:1 or better | investigate drops with `filesys show compression` before they become capacity issues |
+| Use MTree replication (not collection replication) for | Use MTree replication (not collection replication) for granular per-application or per-tenant replication control |
+| Set MTree soft and hard quotas to prevent a single backup | Set MTree soft and hard quotas to prevent a single backup stream from consuming all available capacity |
+| Enable DD Encryption at Rest (D@RE) during initial setup | retroactively enabling it requires a filesys rebuild |
+| Keep at least 10–15% of raw capacity free to allow the | Keep at least 10–15% of raw capacity free to allow the filesystem cleaner to operate efficiently |
+| Monitor DDBoost client connections regularly | stale or orphaned clients can hold locks that impact performance |
+| Test end-to-end recovery from the DD target at least | Test end-to-end recovery from the DD target at least quarterly to validate both dedup integrity and restore throughput |

@@ -1,5 +1,17 @@
 # VxRail Logs
 
+```mermaid
+flowchart LR
+    VxRail_Logs["VxRail Logs"]
+    VxRail_Logs --> S0["Where It Fits"]
+    VxRail_Logs --> S1["Daily Checks"]
+    VxRail_Logs --> S2["Health Commands"]
+    VxRail_Logs --> S3["Common Issues"]
+    VxRail_Logs --> S4["Operational Tasks"]
+    VxRail_Logs --> S5["Upgrade Notes"]
+    VxRail_Logs --> S6["Best Practices"]
+```
+
 ## Overview
 
 Useful VxRail Manager logs, collection patterns, timestamps, and case evidence.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

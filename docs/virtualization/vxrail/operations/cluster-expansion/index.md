@@ -1,5 +1,17 @@
 # VxRail Cluster Expansion
 
+```mermaid
+flowchart LR
+    Cluster_Expansion["Cluster Expansion"]
+    Cluster_Expansion --> S0["Where It Fits"]
+    Cluster_Expansion --> S1["Daily Checks"]
+    Cluster_Expansion --> S2["Health Commands"]
+    Cluster_Expansion --> S3["Common Issues"]
+    Cluster_Expansion --> S4["Operational Tasks"]
+    Cluster_Expansion --> S5["Upgrade Notes"]
+    Cluster_Expansion --> S6["Best Practices"]
+```
+
 ## Overview
 
 Node add planning, compatibility, network checks, and validation.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

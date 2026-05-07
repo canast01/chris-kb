@@ -1,5 +1,18 @@
 # Cisco MDS Standards
 
+```mermaid
+flowchart LR
+    MDS_Standards["MDS Standards"]
+    MDS_Standards --> S0["Switch Naming"]
+    MDS_Standards --> S1["VSAN Allocation"]
+    MDS_Standards --> S2["Zone and Alias Naming"]
+    MDS_Standards --> S3["ISL Standards"]
+    MDS_Standards --> S4["AAA / Authentication Standards"]
+    MDS_Standards --> S5["NX-OS Version Standards"]
+    MDS_Standards --> S6["SNMP Standards"]
+    MDS_Standards --> S7["Cisco NDFC Integration"]
+```
+
 ## Switch Naming
 
 ```

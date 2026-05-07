@@ -1,5 +1,16 @@
 # Builds
 
+```mermaid
+flowchart LR
+    Builds["Builds"]
+    Builds --> S0["Purpose"]
+    Builds --> S1["Common checks"]
+    Builds --> S2["Incident notes"]
+    Builds --> S3["Change notes"]
+    Builds --> S4["Useful commands"]
+    Builds --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical GitHub Actions Builds notes, checks, troubleshooting, commands, change notes, and field references.

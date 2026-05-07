@@ -1,5 +1,16 @@
 # Load Balancer
 
+```mermaid
+flowchart LR
+    Load_Balancer["Load Balancer"]
+    Load_Balancer --> S0["Purpose"]
+    Load_Balancer --> S1["Common checks"]
+    Load_Balancer --> S2["Incident notes"]
+    Load_Balancer --> S3["Change notes"]
+    Load_Balancer --> S4["Useful commands"]
+    Load_Balancer --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Networking Load Balancer notes, checks, troubleshooting, commands, change notes, and field references.

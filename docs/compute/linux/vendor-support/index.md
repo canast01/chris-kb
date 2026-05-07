@@ -1,5 +1,14 @@
 # Linux Vendor Support
 
+```mermaid
+flowchart LR
+    Vendor_Support["Vendor Support"]
+    Vendor_Support --> S0["Red Hat (RHEL)"]
+    Vendor_Support --> S1["Canonical (Ubuntu)"]
+    Vendor_Support --> S2["Escalation"]
+    Vendor_Support --> S3["Crash Dump Configuration"]
+```
+
 ## Red Hat (RHEL)
 
 ### Opening a Support Case

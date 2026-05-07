@@ -1,5 +1,17 @@
 # AWS Inspector
 
+```mermaid
+flowchart LR
+    AWS_Inspector["AWS Inspector"]
+    AWS_Inspector --> S0["Where It Fits"]
+    AWS_Inspector --> S1["Daily Checks"]
+    AWS_Inspector --> S2["Health Commands"]
+    AWS_Inspector --> S3["Common Issues"]
+    AWS_Inspector --> S4["Operational Tasks"]
+    AWS_Inspector --> S5["Upgrade Notes"]
+    AWS_Inspector --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Inspector notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

@@ -1,5 +1,16 @@
 # Protection Groups
 
+```mermaid
+flowchart LR
+    Protection_Groups["Protection Groups"]
+    Protection_Groups --> S0["Purpose"]
+    Protection_Groups --> S1["Common checks"]
+    Protection_Groups --> S2["Incident notes"]
+    Protection_Groups --> S3["Change notes"]
+    Protection_Groups --> S4["Useful commands"]
+    Protection_Groups --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRM Protection Groups notes, checks, troubleshooting, commands, change notes, and field references.

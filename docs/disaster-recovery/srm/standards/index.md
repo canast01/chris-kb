@@ -1,5 +1,17 @@
 # SRM Standards
 
+```mermaid
+flowchart LR
+    SRM_Standards["SRM Standards"]
+    SRM_Standards --> S0["Naming Conventions"]
+    SRM_Standards --> S1["Priority Tiers"]
+    SRM_Standards --> S2["Protection Group Design"]
+    SRM_Standards --> S3["Recovery Plan Design"]
+    SRM_Standards --> S4["Test Frequency and Documentation"]
+    SRM_Standards --> S5["SRA Standards"]
+    SRM_Standards --> S6["Datastore Mapping Standards"]
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

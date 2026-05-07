@@ -1,5 +1,18 @@
 # Aria Operations Integration
 
+```mermaid
+flowchart LR
+    Operations_Integrati["Operations Integration"]
+    Operations_Integrati --> S0["vCenter Integration"]
+    Operations_Integrati --> S1["NSX Integration"]
+    Operations_Integrati --> S2["vSAN Integration"]
+    Operations_Integrati --> S3["Storage Adapter Integrations"]
+    Operations_Integrati --> S4["ServiceNow Integration (Outbound Alerts)"]
+    Operations_Integrati --> S5["Slack / Teams Webhooks"]
+    Operations_Integrati --> S6["Aria Logs Integration"]
+    Operations_Integrati --> S7["Third-Party Management Pack Summary"]
+```
+
 ## Overview
 
 Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.

@@ -2,6 +2,16 @@
 
 Structured approach to diagnosing end-to-end connectivity failures.
 
+```mermaid
+flowchart LR
+    Network_Connectivity["Network Connectivity"]
+    Network_Connectivity --> S0["Layer-by-Layer Triage"]
+    Network_Connectivity --> S1["Path Tracing"]
+    Network_Connectivity --> S2["Common Connectivity Tests"]
+    Network_Connectivity --> S3["Connectivity from Windows"]
+    Network_Connectivity --> S4["Common Issues"]
+```
+
 ## Layer-by-Layer Triage
 
 ### Layer 1 — Physical

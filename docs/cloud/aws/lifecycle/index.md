@@ -1,5 +1,17 @@
 # AWS Lifecycle
 
+```mermaid
+flowchart LR
+    AWS_Lifecycle["AWS Lifecycle"]
+    AWS_Lifecycle --> S0["EC2 Patching"]
+    AWS_Lifecycle --> S1["RDS Version Management"]
+    AWS_Lifecycle --> S2["AMI Lifecycle"]
+    AWS_Lifecycle --> S3["Lambda Runtime Deprecation"]
+    AWS_Lifecycle --> S4["EKS Upgrade"]
+    AWS_Lifecycle --> S5["Account Decommissioning"]
+    AWS_Lifecycle --> S6["Reserved Instance Management"]
+```
+
 ## EC2 Patching
 
 EC2 instances patched monthly via AWS Systems Manager Patch Manager:

@@ -1,5 +1,17 @@
 # VxRail vSAN Alerts
 
+```mermaid
+flowchart LR
+    vSAN_Alerts["vSAN Alerts"]
+    vSAN_Alerts --> S0["Where It Fits"]
+    vSAN_Alerts --> S1["Daily Checks"]
+    vSAN_Alerts --> S2["Health Commands"]
+    vSAN_Alerts --> S3["Common Issues"]
+    vSAN_Alerts --> S4["Operational Tasks"]
+    vSAN_Alerts --> S5["Upgrade Notes"]
+    vSAN_Alerts --> S6["Best Practices"]
+```
+
 ## Overview
 
 vSAN health issues, object health, resync, capacity, and disk group problems.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

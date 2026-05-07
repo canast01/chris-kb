@@ -1,5 +1,14 @@
 # Dell Unity Lifecycle
 
+```mermaid
+flowchart LR
+    Unity_Lifecycle["Unity Lifecycle"]
+    Unity_Lifecycle --> S0["Unity OE Version Matrix"]
+    Unity_Lifecycle --> S1["Upgrade Paths"]
+    Unity_Lifecycle --> S2["Hardware Refresh"]
+    Unity_Lifecycle --> S3["EOL Tracking"]
+```
+
 ## Unity OE Version Matrix
 
 Unity OE (Operating Environment) releases follow a major.minor.patch scheme. Dell publishes end-of-support dates for each release; versions past their end-of-support date no longer receive security patches or bug fixes.

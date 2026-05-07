@@ -1,5 +1,18 @@
 # vCenter Outage Runbook
 
+```mermaid
+flowchart LR
+    Outage_Runbook["Outage Runbook"]
+    Outage_Runbook --> S0["Confirm Outage Scope"]
+    Outage_Runbook --> S1["Check VCSA VM Power State"]
+    Outage_Runbook --> S2["Check VCSA Appliance Management"]
+    Outage_Runbook --> S3["Check DNS and Network Reachability"]
+    Outage_Runbook --> S4["Check Service Status"]
+    Outage_Runbook --> S5["Check Disk Partitions"]
+    Outage_Runbook --> S6["Review Recent Changes"]
+    Outage_Runbook --> S7["Restore from Backup if Required"]
+```
+
 ## Confirm Outage Scope
 
 - Can you access the vSphere Client?

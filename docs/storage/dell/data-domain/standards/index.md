@@ -1,5 +1,18 @@
 # Data Domain — Standards
 
+```mermaid
+flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --> S0["MTree Naming Convention"]
+    Data_Domain --> S1["DD Boost Storage Unit Naming"]
+    Data_Domain --> S2["Replication Context Naming"]
+    Data_Domain --> S3["MTree Quota Standards"]
+    Data_Domain --> S4["Retention Lock Settings"]
+    Data_Domain --> S5["DD Boost User Naming"]
+    Data_Domain --> S6["Build Baseline Checklist"]
+    Data_Domain --> S7["Configuration Checklist — Ongoing"]
+```
+
 ## MTree Naming Convention
 
 Pattern: `mtree-<backup-tool>-<client-group>`

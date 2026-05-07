@@ -1,5 +1,17 @@
 # VxRail Support Bundle Failures
 
+```mermaid
+flowchart LR
+    Bundle_Failures["Bundle Failures"]
+    Bundle_Failures --> S0["Where It Fits"]
+    Bundle_Failures --> S1["Daily Checks"]
+    Bundle_Failures --> S2["Health Commands"]
+    Bundle_Failures --> S3["Common Issues"]
+    Bundle_Failures --> S4["Operational Tasks"]
+    Bundle_Failures --> S5["Upgrade Notes"]
+    Bundle_Failures --> S6["Best Practices"]
+```
+
 ## Overview
 
 Failed or incomplete support bundle collection troubleshooting.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

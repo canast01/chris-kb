@@ -4,6 +4,17 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["State Drift Detection (Bash)"]
+    Scripts --> S1["Multi-Workspace Deploy Script (Bash)"]
+    Scripts --> S2["DR Infrastructure Provision (HCL + Bash)"]
+    Scripts --> S3["Resource Tagging Compliance Check (Python)"]
+    Scripts --> S4["Windows: Terraform Plan and Apply (CMD Batch)"]
+    Scripts --> S5["Windows: Terraform State Audit (PowerShell)"]
+```
+
 ## State Drift Detection (Bash)
 
 Wrapper around `terraform plan` that detects configuration drift in a given workspace, parses the change summary, and alerts if drift is found. Suitable for scheduled execution.

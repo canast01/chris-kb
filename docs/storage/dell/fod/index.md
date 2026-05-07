@@ -6,17 +6,32 @@
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    on_Demand["on Demand"]
+    on_Demand --> S0["Where It Fits"]
+    on_Demand --> S1["Daily Checks"]
+    on_Demand --> S2["Health Commands"]
+    on_Demand --> S3["Common Issues"]
+    on_Demand --> S4["Operational Tasks"]
+    on_Demand --> S5["Upgrade Notes"]
+    on_Demand --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.
 
 ## Where It Fits
 
-- Environments with variable workload patterns where paying for peak capacity all the time is wasteful
-- Dev/test environments that need burst capacity periodically but a low committed baseline
-- Businesses that want to avoid capital expenditure on storage but remain on-premises
-- Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement
-- Situations where procurement lead times are too long to meet workload growth demands
+
+| Use Case |
+|---|
+| Environments with variable workload patterns where paying for peak capacity all the time is wasteful |
+| Dev/test environments that need burst capacity periodically but a low committed baseline |
+| Businesses that want to avoid capital expenditure on storage but remain on-premises |
+| Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement |
+| Situations where procurement lead times are too long to meet workload growth demands |
 
 ## Daily Checks
 
@@ -82,7 +97,10 @@ systemctl status dell-cloudiq-agent 2>/dev/null || \
 
 ## Best Practices
 
-- Set the committed baseline conservatively at contract start and adjust upward at renewal — it is easier to raise a baseline than recover overbilled burst charges
-- Monitor CloudIQ capacity trends weekly so burst events are visible before the end-of-month bill
-- Ensure Secure Connect Gateway redundancy — a single SCG failure that causes telemetry gaps can complicate billing disputes
-- Automate monthly usage extraction via CloudIQ API and feed it into a finance reporting system to eliminate manual reconciliation
+
+| Recommendation | Detail |
+|---|---|
+| Set the committed baseline conservatively at contract start and adjust upward at renewal | it is easier to raise a baseline than recover overbilled burst charges |
+| Monitor CloudIQ capacity trends weekly so burst events are | Monitor CloudIQ capacity trends weekly so burst events are visible before the end-of-month bill |
+| Ensure Secure Connect Gateway redundancy | a single SCG failure that causes telemetry gaps can complicate billing disputes |
+| Automate monthly usage extraction via CloudIQ API and feed | Automate monthly usage extraction via CloudIQ API and feed it into a finance reporting system to eliminate manual reconciliation |

@@ -1,5 +1,18 @@
 # ESXi Standards
 
+```mermaid
+flowchart LR
+    ESXi_Standards["ESXi Standards"]
+    ESXi_Standards --> S0["Host Naming"]
+    ESXi_Standards --> S1["BIOS / UEFI Baseline"]
+    ESXi_Standards --> S2["VMkernel Adapter Layout"]
+    ESXi_Standards --> S3["NTP Configuration"]
+    ESXi_Standards --> S4["VIB Policy and Accepted Levels"]
+    ESXi_Standards --> S5["Storage Path Configuration"]
+    ESXi_Standards --> S6["Host Profile Configuration Baseline"]
+    ESXi_Standards --> S7["ESXi Shell and SSH Policy"]
+```
+
 ## Host Naming
 
 All ESXi hosts use fully qualified domain names (FQDN) and must have matching forward and reverse DNS records:

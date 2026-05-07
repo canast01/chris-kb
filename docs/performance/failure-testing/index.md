@@ -2,6 +2,18 @@
 
 Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.
 
+```mermaid
+flowchart LR
+    Failure_Testing["Failure Testing"]
+    Failure_Testing --> S0["Test Categories"]
+    Failure_Testing --> S1["Pre-Test Checklist"]
+    Failure_Testing --> S2["Linux — Failure Injection"]
+    Failure_Testing --> S3["Storage Failure Tests"]
+    Failure_Testing --> S4["Application Resilience Tests"]
+    Failure_Testing --> S5["Observability During Tests"]
+    Failure_Testing --> S6["Test Results Documentation"]
+```
+
 ## Test Categories
 
 | Category | Examples |

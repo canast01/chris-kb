@@ -1,5 +1,17 @@
 # Routing
 
+```mermaid
+flowchart LR
+    Routing["Routing"]
+    Routing --> S0["View Route Table"]
+    Routing --> S1["Default Gateway"]
+    Routing --> S2["OSPF"]
+    Routing --> S3["BGP"]
+    Routing --> S4["Static Routes"]
+    Routing --> S5["Path Tracing"]
+    Routing --> S6["Common Issues"]
+```
+
 ## Overview
 
 Routing determines how traffic moves between subnets. All storage replication, backup traffic, vMotion, and cloud connectivity depend on correct routing.

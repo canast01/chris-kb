@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Access_Issues["Access Issues"]
+    Access_Issues --> S0["Cannot Log Into vCenter"]
+    Access_Issues --> S1["AD Users Cannot Log In"]
+    Access_Issues --> S2["Local Admin Works, AD Users Cannot Log In"]
+    Access_Issues --> S3["Permission Denied"]
+    Access_Issues --> S4["Session Timeout / Constant Re-Login Prompt"]
+```
+
 ## Cannot Log Into vCenter
 
 **Step 1 — Try the local SSO admin account** (`administrator@vsphere.local` or `administrator@<sso-domain>`). If this works but AD accounts cannot log in, the issue is with the identity source.

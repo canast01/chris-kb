@@ -1,5 +1,16 @@
 # Reports
 
+```mermaid
+flowchart LR
+    Reports["Reports"]
+    Reports --> S0["Purpose"]
+    Reports --> S1["Common checks"]
+    Reports --> S2["Incident notes"]
+    Reports --> S3["Change notes"]
+    Reports --> S4["Useful commands"]
+    Reports --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Insightiq Reports notes, checks, troubleshooting, commands, change notes, and field references.

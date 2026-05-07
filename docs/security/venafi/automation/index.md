@@ -1,5 +1,16 @@
 # Automation
 
+```mermaid
+flowchart LR
+    Automation["Automation"]
+    Automation --> S0["Purpose"]
+    Automation --> S1["Common checks"]
+    Automation --> S2["Incident notes"]
+    Automation --> S3["Change notes"]
+    Automation --> S4["Useful commands"]
+    Automation --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Venafi Automation notes, checks, troubleshooting, commands, change notes, and field references.

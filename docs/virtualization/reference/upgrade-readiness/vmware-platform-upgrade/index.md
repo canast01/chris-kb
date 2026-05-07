@@ -2,6 +2,19 @@
 
 This procedure covers a full VMware platform upgrade including vCenter, ESXi, vSAN, NSX, and VCF-related components.
 
+```mermaid
+flowchart LR
+    Upgrade_Procedure["Upgrade Procedure"]
+    Upgrade_Procedure --> S0["Roles and Responsibilities"]
+    Upgrade_Procedure --> S1["Phase 1: Planning"]
+    Upgrade_Procedure --> S2["Phase 2: Pre-Upgrade Checks"]
+    Upgrade_Procedure --> S3["Phase 3: vCenter Upgrade"]
+    Upgrade_Procedure --> S4["Phase 4: NSX Upgrade"]
+    Upgrade_Procedure --> S5["Phase 5: ESXi Host Upgrade"]
+    Upgrade_Procedure --> S6["Phase 6: vSAN Upgrade"]
+    Upgrade_Procedure --> S7["Phase 7: Final Validation"]
+```
+
 ## Roles and Responsibilities
 
 | Role | Responsibility |

@@ -1,5 +1,17 @@
 # SRDF/A Standards
 
+```mermaid
+flowchart LR
+    SRDF_A_Standards["SRDF/A Standards"]
+    SRDF_A_Standards --> S0["RPO and Cycle Time"]
+    SRDF_A_Standards --> S1["SRDF Group Naming Convention"]
+    SRDF_A_Standards --> S2["Device Group Naming"]
+    SRDF_A_Standards --> S3["SRDF Group Number Allocation"]
+    SRDF_A_Standards --> S4["Consistency Group Design Rules"]
+    SRDF_A_Standards --> S5["Bandwidth Sizing"]
+    SRDF_A_Standards --> S6["Device Sizing"]
+```
+
 ## RPO and Cycle Time
 
 SRDF/A cycle time defines the maximum data age (RPO) when a failure occurs mid-cycle. Default cycle time is 30 seconds; the maximum acceptable lag is negotiated per application class.

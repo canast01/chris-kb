@@ -2,6 +2,18 @@
 
 Data classification defines how sensitive information must be labelled, handled, stored, and shared.
 
+```mermaid
+flowchart LR
+    Data_Classification["Data Classification"]
+    Data_Classification --> S0["Classification Levels"]
+    Data_Classification --> S1["Labelling Requirements"]
+    Data_Classification --> S2["Microsoft Purview / MIP Labels"]
+    Data_Classification --> S3["Data Discovery"]
+    Data_Classification --> S4["Classification Workflow"]
+    Data_Classification --> S5["DLP Policy Alignment"]
+    Data_Classification --> S6["Responsibilities"]
+```
+
 ## Classification Levels
 
 | Level | Description | Examples | Controls |

@@ -1,5 +1,17 @@
 # NetBackup Standards
 
+```mermaid
+flowchart LR
+    NetBackup_Standards["NetBackup Standards"]
+    NetBackup_Standards --> S0["Naming Conventions"]
+    NetBackup_Standards --> S1["Retention Schedule"]
+    NetBackup_Standards --> S2["Policy Design Rules"]
+    NetBackup_Standards --> S3["Storage Unit Standards"]
+    NetBackup_Standards --> S4["Catalog Backup Standard"]
+    NetBackup_Standards --> S5["Encryption Standard"]
+    NetBackup_Standards --> S6["Test Restore Standard"]
+```
+
 ## Naming Conventions
 
 | Object | Convention | Example |

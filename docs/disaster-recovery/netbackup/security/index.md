@@ -1,5 +1,16 @@
 # NetBackup Security
 
+```mermaid
+flowchart LR
+    NetBackup_Security["NetBackup Security"]
+    NetBackup_Security --> S0["NetBackup Access Control (NBAC)"]
+    NetBackup_Security --> S1["NetBackup Certificate Authority"]
+    NetBackup_Security --> S2["Backup Data Encryption"]
+    NetBackup_Security --> S3["Audit Logging"]
+    NetBackup_Security --> S4["Hardening Checklist"]
+    NetBackup_Security --> S5["Firewall Ports"]
+```
+
 ## NetBackup Access Control (NBAC)
 
 NBAC provides role-based access using OS groups or LDAP/AD integration:

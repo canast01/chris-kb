@@ -1,5 +1,17 @@
 # Pure1 Architecture
 
+```mermaid
+flowchart LR
+    Pure1_Architecture["Pure1 Architecture"]
+    Pure1_Architecture --> S0["Architecture"]
+    Pure1_Architecture --> S1["Component Roles"]
+    Pure1_Architecture --> S2["Telemetry Collection"]
+    Pure1_Architecture --> S3["Pure1 Meta"]
+    Pure1_Architecture --> S4["Data Retention"]
+    Pure1_Architecture --> S5["Network Requirements"]
+    Pure1_Architecture --> S6["High Availability"]
+```
+
 ## Overview
 
 Pure1 is Pure Storage's cloud-based management and analytics platform for FlashArray and FlashBlade systems. It requires no on-premises management infrastructure — each array connects to Pure1 directly via outbound HTTPS. Pure1 provides AI-driven analytics (Pure1 Meta), capacity forecasting, health scoring, and a REST API for programmatic fleet management.

@@ -1,5 +1,18 @@
 # vSAN Health and Object Compliance
 
+```mermaid
+flowchart LR
+    Object_Compliance["Object Compliance"]
+    Object_Compliance --> S0["vSAN Skyline Health"]
+    Object_Compliance --> S1["Disk Group Health"]
+    Object_Compliance --> S2["Object Health"]
+    Object_Compliance --> S3["Storage Policy Compliance"]
+    Object_Compliance --> S4["Resync Status"]
+    Object_Compliance --> S5["Capacity Usage"]
+    Object_Compliance --> S6["Network Health"]
+    Object_Compliance --> S7["Common Causes of Degraded Objects"]
+```
+
 ## vSAN Skyline Health
 
 Access via vCenter → **Host and Clusters** → Select cluster → **vSAN** → **Skyline Health**

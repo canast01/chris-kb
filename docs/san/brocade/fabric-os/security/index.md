@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    OS_Security["OS Security"]
+    OS_Security --> S0["Hardening Checklist"]
+    OS_Security --> S1["Disable Unused Protocols"]
+    OS_Security --> S2["RADIUS Authentication"]
+    OS_Security --> S3["RBAC Roles"]
+    OS_Security --> S4["IPfilter Policy"]
+    OS_Security --> S5["SNMP v3 Configuration"]
+    OS_Security --> S6["Audit Logging"]
+```
+
 ## Hardening Checklist
 
 - [ ] Telnet and HTTP disabled; SSH and HTTPS only

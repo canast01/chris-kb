@@ -1,5 +1,16 @@
 # Azure Files
 
+```mermaid
+flowchart LR
+    Azure_Files["Azure Files"]
+    Azure_Files --> S0["Purpose"]
+    Azure_Files --> S1["Common checks"]
+    Azure_Files --> S2["Incident notes"]
+    Azure_Files --> S3["Change notes"]
+    Azure_Files --> S4["Useful commands"]
+    Azure_Files --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Storage Azure Files notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,16 @@
 # Monitoring
 
+```mermaid
+flowchart LR
+    Monitoring["Monitoring"]
+    Monitoring --> S0["Purpose"]
+    Monitoring --> S1["Common checks"]
+    Monitoring --> S2["Incident notes"]
+    Monitoring --> S3["Change notes"]
+    Monitoring --> S4["Useful commands"]
+    Monitoring --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Sannav Monitoring notes, checks, troubleshooting, commands, change notes, and field references.

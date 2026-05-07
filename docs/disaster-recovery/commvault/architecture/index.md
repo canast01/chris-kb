@@ -1,5 +1,17 @@
 # CommVault Architecture
 
+```mermaid
+flowchart LR
+    CommVault_Architectu["CommVault Architecture"]
+    CommVault_Architectu --> S0["Core Components"]
+    CommVault_Architectu --> S1["CommServe"]
+    CommVault_Architectu --> S2["MediaAgent and Deduplication"]
+    CommVault_Architectu --> S3["Data Flow"]
+    CommVault_Architectu --> S4["Scale-Out with Hyperscale X"]
+    CommVault_Architectu --> S5["Storage Library Types"]
+    CommVault_Architectu --> S6["Port Requirements"]
+```
+
 ## Core Components
 
 | Component | Role | Notes |

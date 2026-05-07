@@ -1,5 +1,16 @@
 # Inventory
 
+```mermaid
+flowchart LR
+    Inventory["Inventory"]
+    Inventory --> S0["Purpose"]
+    Inventory --> S1["Common checks"]
+    Inventory --> S2["Incident notes"]
+    Inventory --> S3["Change notes"]
+    Inventory --> S4["Useful commands"]
+    Inventory --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Cisco Dcnm Inventory notes, checks, troubleshooting, commands, change notes, and field references.

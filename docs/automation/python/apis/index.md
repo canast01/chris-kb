@@ -1,5 +1,16 @@
 # Apis
 
+```mermaid
+flowchart LR
+    Apis["Apis"]
+    Apis --> S0["Purpose"]
+    Apis --> S1["Common checks"]
+    Apis --> S2["Incident notes"]
+    Apis --> S3["Change notes"]
+    Apis --> S4["Useful commands"]
+    Apis --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Python Apis notes, checks, troubleshooting, commands, change notes, and field references.

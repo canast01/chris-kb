@@ -1,5 +1,16 @@
 # Cost Management Billing
 
+```mermaid
+flowchart LR
+    Management_Billing["Management Billing"]
+    Management_Billing --> S0["Purpose"]
+    Management_Billing --> S1["Common checks"]
+    Management_Billing --> S2["Incident notes"]
+    Management_Billing --> S3["Change notes"]
+    Management_Billing --> S4["Useful commands"]
+    Management_Billing --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Cost Cost Management Billing notes, checks, troubleshooting, commands, change notes, and field references.

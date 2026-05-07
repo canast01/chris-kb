@@ -1,5 +1,15 @@
 # Linux Architecture
 
+```mermaid
+flowchart LR
+    Linux_Architecture["Linux Architecture"]
+    Linux_Architecture --> S0["Server Roles"]
+    Linux_Architecture --> S1["Disk Layout"]
+    Linux_Architecture --> S2["Network Configuration"]
+    Linux_Architecture --> S3["Init System and Services"]
+    Linux_Architecture --> S4["Package Management"]
+```
+
 ## Server Roles
 
 Linux servers fulfill multiple infrastructure roles:

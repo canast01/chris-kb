@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    SRDF_A_Architecture["SRDF/A Architecture"]
+    SRDF_A_Architecture --> S0["Key Components"]
+    SRDF_A_Architecture --> S1["Delta Set Mechanics"]
+    SRDF_A_Architecture --> S2["SRDF Group Design"]
+    SRDF_A_Architecture --> S3["Connectivity"]
+    SRDF_A_Architecture --> S4["Pair States"]
+    SRDF_A_Architecture --> S5["Licensing"]
+    SRDF_A_Architecture --> S6["Architecture Diagram (Logical)"]
+```
+
 ## Overview
 
 SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission, so host write latency is not directly affected by WAN latency — this is the key difference from SRDF/S.

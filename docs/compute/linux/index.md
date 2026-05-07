@@ -33,6 +33,14 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Linux_Server["Linux Server"]
+    Linux_Server --> S0["Daily Checks"]
+    Linux_Server --> S1["Health Commands"]
+    Linux_Server --> S2["Upgrade Workflow"]
+```
+
 ## Overview
 
 Linux servers provide operating system services for applications, databases, automation, web platforms, monitoring tools, and infrastructure services.

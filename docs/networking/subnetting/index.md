@@ -1,5 +1,17 @@
 # Subnetting
 
+```mermaid
+flowchart LR
+    Subnetting["Subnetting"]
+    Subnetting --> S0["CIDR Notation Reference"]
+    Subnetting --> S1["Calculate a Subnet"]
+    Subnetting --> S2["Find Subnet of a Given IP"]
+    Subnetting --> S3["Check if Two IPs Are in the Same Subnet"]
+    Subnetting --> S4["Reserved Addresses in Each Subnet"]
+    Subnetting --> S5["Common Infrastructure Subnets"]
+    Subnetting --> S6["Overlap Check"]
+```
+
 ## CIDR Notation Reference
 
 | CIDR | Subnet Mask | Hosts | Use Case |

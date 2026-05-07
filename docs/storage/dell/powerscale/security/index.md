@@ -1,5 +1,15 @@
 # PowerScale Security
 
+```mermaid
+flowchart LR
+    PowerScale_Security["PowerScale Security"]
+    PowerScale_Security --> S0["Hardening Checklist"]
+    PowerScale_Security --> S1["RBAC"]
+    PowerScale_Security --> S2["Encryption"]
+    PowerScale_Security --> S3["Audit Logging"]
+    PowerScale_Security --> S4["Compliance Notes"]
+```
+
 ## Hardening Checklist
 
 - [ ] Change the default `root` and `admin` passwords immediately after cluster initialisation

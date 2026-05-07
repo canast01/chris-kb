@@ -1,5 +1,16 @@
 # Aria Suite Lifecycle Standards
 
+```mermaid
+flowchart LR
+    Lifecycle_Standards["Lifecycle Standards"]
+    Lifecycle_Standards --> S0["Naming Convention"]
+    Lifecycle_Standards --> S1["Pre-Deployment Checklist"]
+    Lifecycle_Standards --> S2["Deployment Size Reference"]
+    Lifecycle_Standards --> S3["Certificate Standards"]
+    Lifecycle_Standards --> S4["Upgrade Sequence Rules"]
+    Lifecycle_Standards --> S5["Version Matrix Compliance"]
+```
+
 ## Naming Convention
 
 All LCM-managed appliances follow:

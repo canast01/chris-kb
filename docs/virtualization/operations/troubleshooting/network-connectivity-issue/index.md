@@ -4,6 +4,16 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Connectivity_Issues["Connectivity Issues"]
+    Connectivity_Issues --> S0["vMotion Fails"]
+    Connectivity_Issues --> S1["VM Network Outage"]
+    Connectivity_Issues --> S2["Host Management Network Issue"]
+    Connectivity_Issues --> S3["NSX Issues"]
+    Connectivity_Issues --> S4["Packet Loss on a VM or Host"]
+```
+
 ## vMotion Fails
 
 **Step 1 — Check the VMkernel adapter tagged for vMotion:**

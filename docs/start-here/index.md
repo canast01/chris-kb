@@ -4,6 +4,15 @@ This KB is built for practical infrastructure work.
 
 Use it when you need quick notes, runbooks, checks, standards, commands, or troubleshooting paths.
 
+```mermaid
+flowchart LR
+    Start_Here["Start Here"]
+    Start_Here --> S0["Main workflow"]
+    Start_Here --> S1["Quick Access"]
+    Start_Here --> S2["Main sections"]
+    Start_Here --> S3["Useful operational pages"]
+```
+
 ## Main workflow
 
 1. Start with the major area.

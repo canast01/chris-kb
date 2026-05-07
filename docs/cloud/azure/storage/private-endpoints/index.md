@@ -1,5 +1,16 @@
 # Private Endpoints
 
+```mermaid
+flowchart LR
+    Private_Endpoints["Private Endpoints"]
+    Private_Endpoints --> S0["Purpose"]
+    Private_Endpoints --> S1["Common checks"]
+    Private_Endpoints --> S2["Incident notes"]
+    Private_Endpoints --> S3["Change notes"]
+    Private_Endpoints --> S4["Useful commands"]
+    Private_Endpoints --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Storage Private Endpoints notes, checks, troubleshooting, commands, change notes, and field references.

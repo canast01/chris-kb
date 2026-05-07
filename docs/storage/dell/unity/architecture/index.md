@@ -1,5 +1,14 @@
 # Dell Unity XT Architecture
 
+```mermaid
+flowchart LR
+    XT_Architecture["XT Architecture"]
+    XT_Architecture --> S0["Components"]
+    XT_Architecture --> S1["HA Topology"]
+    XT_Architecture --> S2["Connectivity"]
+    XT_Architecture --> S3["Sizing Guidelines"]
+```
+
 ## Overview
 
 Dell Unity XT is a mid-range unified storage platform delivering block (Fibre Channel, iSCSI) and file (NFS, SMB) storage from a single system. It uses a dual storage processor architecture with automatic failover between SP A and SP B. Unity XT is available as purpose-built hardware (Unity XT 380, 480, 680, 880) and as a software-defined appliance (UnityVSA). Administration is via the Unisphere for Unity web GUI or the `uemcli` command-line interface.

@@ -1,5 +1,18 @@
 # InsightIQ Security
 
+```mermaid
+flowchart LR
+    InsightIQ_Security["InsightIQ Security"]
+    InsightIQ_Security --> S0["Authentication"]
+    InsightIQ_Security --> S1["Web Dashboard Access"]
+    InsightIQ_Security --> S2["RBAC"]
+    InsightIQ_Security --> S3["Network Access Restriction"]
+    InsightIQ_Security --> S4["OneFS Service Account Security"]
+    InsightIQ_Security --> S5["Database Backup Encryption"]
+    InsightIQ_Security --> S6["Audit Logging"]
+    InsightIQ_Security --> S7["Security Hardening Checklist"]
+```
+
 ## Authentication
 
 InsightIQ supports local accounts and LDAP/Active Directory integration. LDAP integration is strongly preferred for production environments to enable centralised account management and audit.

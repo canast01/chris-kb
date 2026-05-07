@@ -1,5 +1,16 @@
 # Keys
 
+```mermaid
+flowchart LR
+    Keys["Keys"]
+    Keys --> S0["Purpose"]
+    Keys --> S1["Common checks"]
+    Keys --> S2["Incident notes"]
+    Keys --> S3["Change notes"]
+    Keys --> S4["Useful commands"]
+    Keys --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Security Keys notes, checks, troubleshooting, commands, change notes, and field references.

@@ -2,6 +2,17 @@
 
 Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
 
+```mermaid
+flowchart LR
+    Operational_Scripts["Operational Scripts"]
+    Operational_Scripts --> S0["system-health-check.sh"]
+    Operational_Scripts --> S1["log-archival.sh"]
+    Operational_Scripts --> S2["patch-status-report.sh"]
+    Operational_Scripts --> S3["user-audit.sh"]
+    Operational_Scripts --> S4["disk-alert.sh"]
+    Operational_Scripts --> S5["Deployment"]
+```
+
 ## system-health-check.sh
 
 Checks disk, memory, load, failed services, and recent auth failures:

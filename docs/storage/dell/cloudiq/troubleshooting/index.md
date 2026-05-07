@@ -1,5 +1,14 @@
 # Dell CloudIQ Troubleshooting
 
+```mermaid
+flowchart LR
+    CloudIQ_Troubleshoot["CloudIQ Troubleshootin"]
+    CloudIQ_Troubleshoot --> S0["Common Issues"]
+    CloudIQ_Troubleshoot --> S1["Diagnostic Commands"]
+    CloudIQ_Troubleshoot --> S2["Log Locations"]
+    CloudIQ_Troubleshoot --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

@@ -1,5 +1,16 @@
 # Requests
 
+```mermaid
+flowchart LR
+    Requests["Requests"]
+    Requests --> S0["Purpose"]
+    Requests --> S1["Common checks"]
+    Requests --> S2["Incident notes"]
+    Requests --> S3["Change notes"]
+    Requests --> S4["Useful commands"]
+    Requests --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Aria Automation Requests notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,18 @@
 # Aria Operations — Integration
 
+```mermaid
+flowchart LR
+    Aria_Operations["Aria Operations"]
+    Aria_Operations --> S0["vCenter Adapter (Primary Integration)"]
+    Aria_Operations --> S1["NSX Adapter"]
+    Aria_Operations --> S2["Active Directory / LDAP Authentication"]
+    Aria_Operations --> S3["SMTP (Alert Email)"]
+    Aria_Operations --> S4["ServiceNow ITSM Integration"]
+    Aria_Operations --> S5["Webhook / Generic REST Actions"]
+    Aria_Operations --> S6["Aria Operations for Logs (Alert Forwarding)"]
+    Aria_Operations --> S7["Related Sections"]
+```
+
 ## vCenter Adapter (Primary Integration)
 
 The vCenter / SDDC adapter is the core integration and is added during initial setup.

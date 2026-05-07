@@ -1,5 +1,18 @@
 # Aria Operations for Logs — Search Examples
 
+```mermaid
+flowchart LR
+    for_Logs["for Logs"]
+    for_Logs --> S0["Host Disconnect Events"]
+    for_Logs --> S1["vCenter Authentication Failures"]
+    for_Logs --> S2["Certificate Errors"]
+    for_Logs --> S3["vMotion Failures"]
+    for_Logs --> S4["HA Events"]
+    for_Logs --> S5["DRS Events"]
+    for_Logs --> S6["Datastore Errors"]
+    for_Logs --> S7["vSAN Errors"]
+```
+
 ## Host Disconnect Events
 
 ```

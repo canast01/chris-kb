@@ -1,5 +1,17 @@
 # Veeam Lifecycle
 
+```mermaid
+flowchart LR
+    Veeam_Lifecycle["Veeam Lifecycle"]
+    Veeam_Lifecycle --> S0["Release Cadence"]
+    Veeam_Lifecycle --> S1["Pre-Upgrade Checklist"]
+    Veeam_Lifecycle --> S2["Upgrade Procedure"]
+    Veeam_Lifecycle --> S3["Version Compatibility"]
+    Veeam_Lifecycle --> S4["License Management"]
+    Veeam_Lifecycle --> S5["Configuration Backup"]
+    Veeam_Lifecycle --> S6["Decommission Procedure"]
+```
+
 ## Release Cadence
 
 Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.

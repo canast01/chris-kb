@@ -1,5 +1,17 @@
 # Veeam Standards
 
+```mermaid
+flowchart LR
+    Veeam_Standards["Veeam Standards"]
+    Veeam_Standards --> S0["Job Naming Convention"]
+    Veeam_Standards --> S1["Retention Schedule"]
+    Veeam_Standards --> S2["Backup Job Configuration Standards"]
+    Veeam_Standards --> S3["Encryption Standard"]
+    Veeam_Standards --> S4["Proxy Standards"]
+    Veeam_Standards --> S5["Repository Standards"]
+    Veeam_Standards --> S6["Instant VM Recovery RTO Targets"]
+```
+
 ## Job Naming Convention
 
 | Object | Convention | Example |

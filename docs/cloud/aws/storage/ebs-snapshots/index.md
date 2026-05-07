@@ -1,5 +1,17 @@
 # AWS EBS Snapshots
 
+```mermaid
+flowchart LR
+    EBS_Snapshots["EBS Snapshots"]
+    EBS_Snapshots --> S0["Where It Fits"]
+    EBS_Snapshots --> S1["Daily Checks"]
+    EBS_Snapshots --> S2["Health Commands"]
+    EBS_Snapshots --> S3["Common Issues"]
+    EBS_Snapshots --> S4["Operational Tasks"]
+    EBS_Snapshots --> S5["Upgrade Notes"]
+    EBS_Snapshots --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS EBS Snapshots notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

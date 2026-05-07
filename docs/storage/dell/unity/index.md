@@ -28,18 +28,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Dell_Unity["Dell Unity"]
+    Dell_Unity --> S0["Where It Fits"]
+    Dell_Unity --> S1["Daily Checks"]
+    Dell_Unity --> S2["Health Commands"]
+    Dell_Unity --> S3["Common Issues"]
+    Dell_Unity --> S4["Operational Tasks"]
+    Dell_Unity --> S5["Upgrade Notes"]
+    Dell_Unity --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell Unity is a mid-range unified storage platform supporting block (Fibre Channel and iSCSI), file (NFS and SMB), and VMware (NFS datastores and VMFS over iSCSI/FC) workloads from a single system. It uses a dual storage processor (SP A / SP B) active-active architecture and is available as Unity XT (physical hardware) and UnityVSA (software-defined virtual appliance). Administration is via the Unisphere for Unity GUI or the `uemcli` command-line interface.
 
 ## Where It Fits
 
-- Consolidated block and file storage for mid-size environments that want a single management interface
-- VMware environments requiring NFS datastores or VMFS LUNs with VAAI integration
-- Workloads requiring inline data reduction (compression and deduplication) on a hybrid or all-flash pool
-- Disaster recovery configurations using native Unity replication sessions to a secondary array
-- Environments tiering hot I/O to FAST Cache (SSD read/write cache) without full all-flash investment
-- Dev/test environments that benefit from thin-cloned snapshots for rapid provisioning
+
+| Use Case |
+|---|
+| Consolidated block and file storage for mid-size environments that want a single management interface |
+| VMware environments requiring NFS datastores or VMFS LUNs with VAAI integration |
+| Workloads requiring inline data reduction (compression and deduplication) on a hybrid or all-flash pool |
+| Disaster recovery configurations using native Unity replication sessions to a secondary array |
+| Environments tiering hot I/O to FAST Cache (SSD read/write cache) without full all-flash investment |
+| Dev/test environments that benefit from thin-cloned snapshots for rapid provisioning |
 
 ## Daily Checks
 
@@ -122,10 +137,13 @@ uemcli /rep/session show
 
 ## Best Practices
 
-- Set pool capacity alerts at 70% and 80% consumed — Unity will automatically invalidate snapshots and replication sessions when a pool falls below 5% free, which can cause data loss
-- Use FAST Cache (SSD tier) for random I/O workloads such as databases and VMs; do not enable FAST Cache for sequential or large-block workloads such as database logs or backup streams
-- Enable inline data reduction (compression and deduplication) on all-flash pools — ensure the flash tier is at least 10% of total pool capacity before enabling
-- Create separate pools per service tier (production, dev/test, archive) rather than combining workloads in a single pool to contain the blast radius of capacity events
-- Test SP failover during a scheduled maintenance window at least once per year to confirm that NFS and iSCSI hosts recover correctly
-- Use the Unisphere Health Check (`uemcli /sys/general healthcheck`) regularly and before any maintenance to surface latent faults
-- Do not hard-code SP A or SP B IP addresses in NFS mounts or iSCSI initiator configurations; always use the management virtual IP or DNS name that follows the active SP
+
+| Recommendation | Detail |
+|---|---|
+| Set pool capacity alerts at 70% and 80% consumed | Unity will automatically invalidate snapshots and replication sessions when a pool falls below 5% free, which can cause data loss |
+| Use FAST Cache (SSD tier) for random I/O workloads such as databases and VMs | do not enable FAST Cache for sequential or large-block workloads such as database logs or backup streams |
+| Enable inline data reduction (compression and deduplication) on all-flash pools | ensure the flash tier is at least 10% of total pool capacity before enabling |
+| Create separate pools per service tier (production, | Create separate pools per service tier (production, dev/test, archive) rather than combining workloads in a single pool to contain the blast radius of capacity events |
+| Test SP failover during a scheduled maintenance window at | Test SP failover during a scheduled maintenance window at least once per year to confirm that NFS and iSCSI hosts recover correctly |
+| Use the Unisphere Health Check (`uemcli /sys/general | Use the Unisphere Health Check (`uemcli /sys/general healthcheck`) regularly and before any maintenance to surface latent faults |
+| Do not hard-code SP A or SP B IP addresses in NFS mounts or iSCSI initiator configurations | always use the management virtual IP or DNS name that follows the active SP |

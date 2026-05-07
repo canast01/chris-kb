@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    VxRail_Integration["VxRail Integration"]
+    VxRail_Integration --> S0["vCenter Integration"]
+    VxRail_Integration --> S1["NSX Integration"]
+    VxRail_Integration --> S2["Aria Operations Integration"]
+    VxRail_Integration --> S3["Dell SRS / SupportAssist"]
+    VxRail_Integration --> S4["Dell OpenManage Integration"]
+    VxRail_Integration --> S5["Backup Integration"]
+    VxRail_Integration --> S6["Stretched Cluster Integration"]
+```
+
 ## vCenter Integration
 
 VxRail Manager registers as a vCenter plugin, surfacing cluster health, node status, and lifecycle management directly within the vSphere Client.

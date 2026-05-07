@@ -1,5 +1,16 @@
 # Publishing
 
+```mermaid
+flowchart LR
+    Publishing["Publishing"]
+    Publishing --> S0["Purpose"]
+    Publishing --> S1["Common checks"]
+    Publishing --> S2["Incident notes"]
+    Publishing --> S3["Change notes"]
+    Publishing --> S4["Useful commands"]
+    Publishing --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical GitHub Actions Publishing notes, checks, troubleshooting, commands, change notes, and field references.

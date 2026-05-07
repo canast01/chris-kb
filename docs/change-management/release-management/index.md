@@ -2,6 +2,19 @@
 
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
 
+```mermaid
+flowchart LR
+    Release_Management["Release Management"]
+    Release_Management --> S0["Release Types"]
+    Release_Management --> S1["Release Lifecycle"]
+    Release_Management --> S2["Release Readiness Checklist"]
+    Release_Management --> S3["Release Calendar — Blocked Periods"]
+    Release_Management --> S4["Release Notes Template"]
+    Release_Management --> S5["Release vX.Y.Z — 2026-05-06"]
+    Release_Management --> S6["Go / No-Go Decision"]
+    Release_Management --> S7["Post-Release Actions"]
+```
+
 ## Release Types
 
 | Type | Description | Cadence | Approval |

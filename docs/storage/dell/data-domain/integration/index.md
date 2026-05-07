@@ -1,5 +1,18 @@
 # Data Domain — Integration
 
+```mermaid
+flowchart LR
+    Data_Domain["Data Domain"]
+    Data_Domain --> S0["Veeam Backup and Replication (DD Boost for Veeam — DDVDP)"]
+    Data_Domain --> S1["NetBackup (OST with DD Boost)"]
+    Data_Domain --> S2["CommVault (SISL + DD Boost)"]
+    Data_Domain --> S3["Avamar (RAIN Dedup with DD)"]
+    Data_Domain --> S4["NFS — Generic Backup Targets"]
+    Data_Domain --> S5["CIFS/SMB — Windows Backup Targets"]
+    Data_Domain --> S6["REST API"]
+    Data_Domain --> S7["CloudIQ Monitoring via SCG"]
+```
+
 ## Veeam Backup & Replication (DD Boost for Veeam — DDVDP)
 
 Veeam integrates with Data Domain via the DD Boost for Veeam Data Domain Plugin (DDVDP). This enables source-side deduplication at the Veeam proxy, significantly reducing network traffic to the DD.

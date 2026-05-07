@@ -1,5 +1,18 @@
 # CommVault Security
 
+```mermaid
+flowchart LR
+    CommVault_Security["CommVault Security"]
+    CommVault_Security --> S0["RBAC Roles"]
+    CommVault_Security --> S1["Backup Encryption"]
+    CommVault_Security --> S2["Linux Hardened Repository (Immutable Backups)"]
+    CommVault_Security --> S3["CyberArk Integration"]
+    CommVault_Security --> S4["Network Security"]
+    CommVault_Security --> S5["Two-Factor Authentication"]
+    CommVault_Security --> S6["Audit Trail"]
+    CommVault_Security --> S7["Security Hardening Checklist"]
+```
+
 ## RBAC Roles
 
 CommVault roles are assigned through User Groups scoped to specific Client Groups, Storage Policies, or Subclients:

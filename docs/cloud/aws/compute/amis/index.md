@@ -1,5 +1,17 @@
 # AWS AMIs
 
+```mermaid
+flowchart LR
+    AWS_AMIs["AWS AMIs"]
+    AWS_AMIs --> S0["Where It Fits"]
+    AWS_AMIs --> S1["Daily Checks"]
+    AWS_AMIs --> S2["Health Commands"]
+    AWS_AMIs --> S3["Common Issues"]
+    AWS_AMIs --> S4["Operational Tasks"]
+    AWS_AMIs --> S5["Upgrade Notes"]
+    AWS_AMIs --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS AMIs notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

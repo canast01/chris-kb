@@ -18,18 +18,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    NetApp_SnapMirror["NetApp SnapMirror"]
+    NetApp_SnapMirror --> S0["Where It Fits"]
+    NetApp_SnapMirror --> S1["Daily Checks"]
+    NetApp_SnapMirror --> S2["Health Commands"]
+    NetApp_SnapMirror --> S3["Common Issues"]
+    NetApp_SnapMirror --> S4["Operational Tasks"]
+    NetApp_SnapMirror --> S5["Upgrade Notes"]
+    NetApp_SnapMirror --> S6["Best Practices"]
+```
+
 ## Overview
 
 NetApp SnapMirror is ONTAP's native replication engine for volume and SVM-level data protection, supporting disaster recovery and long-term backup retention. It operates in asynchronous mode (RPO-based, most common), synchronous mode (zero RPO, requires sub-10ms inter-site latency), and XDP mode (extended data protection, replacing legacy SnapVault for disk-to-disk backup with independent retention). Relationships are always managed from the destination cluster, and SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.
 
 ## Where It Fits
 
-- Disaster recovery replication between primary and secondary ONTAP clusters (async, RPO in minutes)
-- Zero-RPO synchronous replication for tier-1 SAN workloads requiring no data loss (SnapMirror Synchronous)
-- Long-term backup retention on secondary storage using XDP relationships with vault policies (replacing SnapVault)
-- SVM-level disaster recovery to replicate an entire data SVM including volumes, LIF configuration, and CIFS shares
-- SnapMirror Business Continuity (SMBC) for metro-cluster-like transparent failover without host-side changes
-- Cloud tiering and replication to ONTAP Select or Cloud Volumes ONTAP using the same SnapMirror interface
+
+| Use Case |
+|---|
+| Disaster recovery replication between primary and secondary ONTAP clusters (async, RPO in minutes) |
+| Zero-RPO synchronous replication for tier-1 SAN workloads requiring no data loss (SnapMirror Synchronous) |
+| Long-term backup retention on secondary storage using XDP relationships with vault policies (replacing SnapVault) |
+| SVM-level disaster recovery to replicate an entire data SVM including volumes, LIF configuration, and CIFS shares |
+| SnapMirror Business Continuity (SMBC) for metro-cluster-like transparent failover without host-side changes |
+| Cloud tiering and replication to ONTAP Select or Cloud Volumes ONTAP using the same SnapMirror interface |
 
 ## Daily Checks
 
@@ -116,11 +131,14 @@ snapmirror show-history -destination-path svm_dst:vol_dst
 
 ## Best Practices
 
-- Always monitor lag time against your defined RPO; set ONTAP EMS alerts on `snapmirror.lag.warn` thresholds so you know before an RPO breach
-- Use consistency groups (CGs) for multi-volume workloads (e.g., database data + log volumes) to ensure crash-consistent replication across related volumes
-- Never leave a relationship in `broken-off` state after a DR test — resync immediately to restore protection; track DR tests in a runbook with mandatory resync steps
-- Use XDP with `MirrorAndVault` policy for DR relationships that also need long-term snapshot retention on the destination, avoiding the need for a separate SnapVault relationship
-- Test complete failover and failback procedures (not just `snapmirror break`) at least annually — include host-side mount, application start, and failback steps
-- For SnapMirror Synchronous, validate that inter-site latency is consistently below 10ms RTT; sustained latency above this threshold forces an automatic demotion to async mode
-- Label relationships with comments using `-comment` to document ownership, RPO tier, and last test date for operational visibility
-- Use SVM-DR (not just volume-level relationships) for workloads where full SVM configuration (shares, exports, LIFs) must be recoverable at the DR site
+
+| Recommendation | Detail |
+|---|---|
+| Always monitor lag time against your defined RPO | set ONTAP EMS alerts on `snapmirror.lag.warn` thresholds so you know before an RPO breach |
+| Use consistency groups (CGs) for multi-volume workloads | Use consistency groups (CGs) for multi-volume workloads (e.g., database data + log volumes) to ensure crash-consistent replication across related volumes |
+| Never leave a relationship in `broken-off` state after a DR test | resync immediately to restore protection; track DR tests in a runbook with mandatory resync steps |
+| Use XDP with `MirrorAndVault` policy for DR relationships | Use XDP with `MirrorAndVault` policy for DR relationships that also need long-term snapshot retention on the destination, avoiding the need for a separate SnapVault relationship |
+| Test complete failover and failback procedures (not just `snapmirror break`) at least annually | include host-side mount, application start, and failback steps |
+| For SnapMirror Synchronous, validate that inter-site latency is consistently below 10ms RTT | sustained latency above this threshold forces an automatic demotion to async mode |
+| Label relationships with comments using `-comment` to | Label relationships with comments using `-comment` to document ownership, RPO tier, and last test date for operational visibility |
+| Use SVM-DR (not just volume-level relationships) for | Use SVM-DR (not just volume-level relationships) for workloads where full SVM configuration (shares, exports, LIFs) must be recoverable at the DR site |

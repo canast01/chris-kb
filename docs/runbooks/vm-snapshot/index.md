@@ -2,6 +2,18 @@
 
 Snapshots capture a point-in-time VM state before a change. They are not backups — remove within 24–72 hours. Large delta disks degrade performance.
 
+```mermaid
+flowchart LR
+    Snapshot_Runbook["Snapshot Runbook"]
+    Snapshot_Runbook --> S0["Pre-Checks"]
+    Snapshot_Runbook --> S1["Create Snapshot (PowerCLI)"]
+    Snapshot_Runbook --> S2["Create Snapshot (ESXi CLI)"]
+    Snapshot_Runbook --> S3["Revert to Snapshot (if change fails)"]
+    Snapshot_Runbook --> S4["Remove Snapshot (after successful change)"]
+    Snapshot_Runbook --> S5["Checklist"]
+    Snapshot_Runbook --> S6["Common Issues"]
+```
+
 ## Pre-Checks
 
 ```powershell

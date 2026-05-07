@@ -4,6 +4,17 @@ Active Directory domain and forest functional levels determine which features ar
 
 ---
 
+```mermaid
+flowchart LR
+    Directory_Lifecycle["Directory Lifecycle"]
+    Directory_Lifecycle --> S0["Domain and Forest Functional Levels"]
+    Directory_Lifecycle --> S1["SYSVOL FRS to DFSR Migration"]
+    Directory_Lifecycle --> S2["AD Schema Updates"]
+    Directory_Lifecycle --> S3["FSMO Role Management"]
+    Directory_Lifecycle --> S4["DC Decommission Procedure"]
+    Directory_Lifecycle --> S5["AD Recycle Bin"]
+```
+
 ## Domain and Forest Functional Levels
 
 | Domain Functional Level | Minimum DC OS | Key Feature Unlocked |

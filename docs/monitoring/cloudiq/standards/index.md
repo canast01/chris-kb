@@ -1,5 +1,17 @@
 # CloudIQ Standards
 
+```mermaid
+flowchart LR
+    CloudIQ_Standards["CloudIQ Standards"]
+    CloudIQ_Standards --> S0["System Tagging Policy"]
+    CloudIQ_Standards --> S1["Health Score Thresholds"]
+    CloudIQ_Standards --> S2["Alert Notification Routing"]
+    CloudIQ_Standards --> S3["Capacity Warning Levels"]
+    CloudIQ_Standards --> S4["Dashboard Standards"]
+    CloudIQ_Standards --> S5["API Access Policy"]
+    CloudIQ_Standards --> S6["Change Management Integration"]
+```
+
 ## System Tagging Policy
 
 Every system onboarded to CloudIQ must be tagged with the three mandatory tags before being considered operational. Tags enable reporting, alert routing, and capacity forecasting by site, environment, and team.

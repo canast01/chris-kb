@@ -4,6 +4,19 @@ A documented performance baseline defines normal system behaviour, enabling accu
 
 > See also: [Metrics Baseline](../../monitoring/metrics-baseline/) — similar coverage from the monitoring perspective.
 
+```mermaid
+flowchart LR
+    Performance_Baselini["Performance Baselining"]
+    Performance_Baselini --> S0["What to Baseline"]
+    Performance_Baselini --> S1["Collection Period"]
+    Performance_Baselini --> S2["Linux — Baseline Collection"]
+    Performance_Baselini --> S3["Windows — Baseline Collection"]
+    Performance_Baselini --> S4["Application Performance Baseline"]
+    Performance_Baselini --> S5["Documenting the Baseline"]
+    Performance_Baselini --> S6["Setting Thresholds from Baseline"]
+    Performance_Baselini --> S7["Baseline Review Triggers"]
+```
+
 ## What to Baseline
 
 | Resource | Metrics to Capture |

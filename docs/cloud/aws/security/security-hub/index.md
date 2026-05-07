@@ -1,5 +1,17 @@
 # AWS Security Hub
 
+```mermaid
+flowchart LR
+    Security_Hub["Security Hub"]
+    Security_Hub --> S0["Where It Fits"]
+    Security_Hub --> S1["Daily Checks"]
+    Security_Hub --> S2["Health Commands"]
+    Security_Hub --> S3["Common Issues"]
+    Security_Hub --> S4["Operational Tasks"]
+    Security_Hub --> S5["Upgrade Notes"]
+    Security_Hub --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS Security Hub notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

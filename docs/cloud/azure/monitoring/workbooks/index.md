@@ -1,5 +1,16 @@
 # Workbooks
 
+```mermaid
+flowchart LR
+    Workbooks["Workbooks"]
+    Workbooks --> S0["Purpose"]
+    Workbooks --> S1["Common checks"]
+    Workbooks --> S2["Incident notes"]
+    Workbooks --> S3["Change notes"]
+    Workbooks --> S4["Useful commands"]
+    Workbooks --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Azure Monitoring Workbooks notes, checks, troubleshooting, commands, change notes, and field references.

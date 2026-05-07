@@ -1,5 +1,16 @@
 # Dell AIOps Scripts
 
+```mermaid
+flowchart LR
+    AIOps_Scripts["AIOps Scripts"]
+    AIOps_Scripts --> S0["Authentication"]
+    AIOps_Scripts --> S1["Export Active Recommendations"]
+    AIOps_Scripts --> S2["Anomaly Trend Analysis (30-Day Rolling Window)"]
+    AIOps_Scripts --> S3["Forward Critical Recommendations to ServiceNow"]
+    AIOps_Scripts --> S4["Weekly Health Score Report"]
+    AIOps_Scripts --> S5["Script Inventory"]
+```
+
 ## Authentication
 
 Dell AIOps is accessed via the CloudIQ REST API using OAuth2 client credentials. All scripts load credentials from the secrets manager at runtime.

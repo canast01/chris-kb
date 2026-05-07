@@ -2,6 +2,17 @@
 
 Azure Log Analytics — workspace for collecting, querying, and alerting on logs from Azure and on-premises sources.
 
+```mermaid
+flowchart LR
+    Log_Analytics["Log Analytics"]
+    Log_Analytics --> S0["Key Concepts"]
+    Log_Analytics --> S1["Common Azure CLI Commands"]
+    Log_Analytics --> S2["Key KQL Queries"]
+    Log_Analytics --> S3["Create Alert Rule from Query"]
+    Log_Analytics --> S4["Data Retention"]
+    Log_Analytics --> S5["Troubleshooting"]
+```
+
 ## Key Concepts
 
 | Concept | Description |

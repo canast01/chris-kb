@@ -79,18 +79,33 @@
 </a>
 </div>
 
+```mermaid
+flowchart LR
+    Dell_PowerMax["Dell PowerMax"]
+    Dell_PowerMax --> S0["Where It Fits"]
+    Dell_PowerMax --> S1["Daily Checks"]
+    Dell_PowerMax --> S2["Health Commands"]
+    Dell_PowerMax --> S3["Common Issues"]
+    Dell_PowerMax --> S4["Operational Tasks"]
+    Dell_PowerMax --> S5["Upgrade Notes"]
+    Dell_PowerMax --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell PowerMax is an enterprise NVMe-oF all-flash array available in the PowerMax 2000 and 8000 models, designed for mission-critical workloads requiring sub-millisecond latency and continuous availability. It is managed via Unisphere for PowerMax (GUI) or SYMCLI (Solutions Enabler). PowerMax provides synchronous and asynchronous remote replication through SRDF (Symmetrix Remote Data Facility), local snapshots via SnapVX (up to 256 snapshots per device), and automated storage tiering with FAST VP.
 
 ## Where It Fits
 
-- Primary block storage for tier-1 databases (Oracle, SQL Server, SAP HANA) requiring consistent sub-millisecond latency
-- Synchronous DR replication with SRDF/S for zero RPO between data centres
-- Asynchronous DR replication with SRDF/A for longer-distance sites where synchronous distance is impractical
-- Local point-in-time snapshots with SnapVX for application-consistent backups, dev/test clones, and fast recovery
-- Multi-host SAN environments — storage groups, masking views, and port groups control LUN presentation
-- Automated storage tiering with FAST VP to move data between NVMe, SAS, and NL-SAS tiers based on activity
+
+| Use Case |
+|---|
+| Primary block storage for tier-1 databases (Oracle, SQL Server, SAP HANA) requiring consistent sub-millisecond latency |
+| Synchronous DR replication with SRDF/S for zero RPO between data centres |
+| Asynchronous DR replication with SRDF/A for longer-distance sites where synchronous distance is impractical |
+| Local point-in-time snapshots with SnapVX for application-consistent backups, dev/test clones, and fast recovery |
+| Multi-host SAN environments — storage groups, masking views, and port groups control LUN presentation |
+| Automated storage tiering with FAST VP to move data between NVMe, SAS, and NL-SAS tiers based on activity |
 
 ## Daily Checks
 
@@ -179,11 +194,14 @@ symreplicate list -sid <SID>
 
 ## Best Practices
 
-- Use SRDF/A with write-order consistency groups (`symcg`) for multi-volume application workloads to ensure crash-consistent recovery at the DR site
-- Implement FAST VP policies to automate data tiering between NVMe and capacity tiers based on observed I/O patterns; review tier placement quarterly
-- Set I/O limit SLOs (Service Level Objectives) on storage groups via Unisphere to enforce per-workload latency and bandwidth caps and prevent noisy-neighbour problems
-- Document Symmetrix device IDs, storage group names, and masking view mappings in a CMDB or equivalent; SYMCLI device IDs are array-specific and not portable
-- Never exceed 256 SnapVX snapshots per device; implement automated snap expiry policies in backup software or scripted `symsnap terminate` jobs to stay within limits
-- Use Unisphere Performance → Thresholds to set alert thresholds on response time and port utilisation so issues are caught before they affect hosts
-- Test SRDF failover and failback procedures at least annually; document the exact SYMCLI sequence and validate host I/O resumes on R2 within the target RTO
-- Keep Solutions Enabler and Unisphere at the same major version as PowerMaxOS to avoid CLI and API incompatibilities
+
+| Recommendation | Detail |
+|---|---|
+| Use SRDF/A with write-order consistency groups (`symcg`) | Use SRDF/A with write-order consistency groups (`symcg`) for multi-volume application workloads to ensure crash-consistent recovery at the DR site |
+| Implement FAST VP policies to automate data tiering between NVMe and capacity tiers based on observed I/O patterns | review tier placement quarterly |
+| Set I/O limit SLOs (Service Level Objectives) on storage | Set I/O limit SLOs (Service Level Objectives) on storage groups via Unisphere to enforce per-workload latency and bandwidth caps and prevent noisy-neighbour problems |
+| Document Symmetrix device IDs, storage group names, and masking view mappings in a CMDB or equivalent | SYMCLI device IDs are array-specific and not portable |
+| Never exceed 256 SnapVX snapshots per device | implement automated snap expiry policies in backup software or scripted `symsnap terminate` jobs to stay within limits |
+| Use Unisphere Performance → Thresholds to set alert | Use Unisphere Performance → Thresholds to set alert thresholds on response time and port utilisation so issues are caught before they affect hosts |
+| Test SRDF failover and failback procedures at least annually | document the exact SYMCLI sequence and validate host I/O resumes on R2 within the target RTO |
+| Keep Solutions Enabler and Unisphere at the same major | Keep Solutions Enabler and Unisphere at the same major version as PowerMaxOS to avoid CLI and API incompatibilities |

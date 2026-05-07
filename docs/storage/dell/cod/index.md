@@ -10,17 +10,31 @@
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common issues, diagnostic commands, log locations, and error codes.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    on_Demand["on Demand"]
+    on_Demand --> S0["Where It Fits"]
+    on_Demand --> S1["Daily Checks"]
+    on_Demand --> S2["Health Commands"]
+    on_Demand --> S3["Common Issues"]
+    on_Demand --> S4["Operational Tasks"]
+    on_Demand --> S5["Best Practices"]
+```
+
 ## Overview
 
 Dell Capacity on Demand (COD) is a flexible capacity licensing model that allows additional storage capacity to be pre-installed in the array but held in reserve. When needed, the capacity is activated by purchasing and applying a COD license key — no physical truck roll required. COD is available on PowerMax, VMAX, and select mid-range platforms, and is commonly used to ensure headroom for unpredictable workload growth without committing to full upfront capital for capacity that may not be needed immediately.
 
 ## Where It Fits
 
-- Arrays expected to grow unpredictably where physically installing capacity ahead of time eliminates lead time risk
-- Capital budget management — defer activation costs until capacity is actually needed
-- DR headroom: pre-install capacity at the DR site that can be rapidly activated during a failover or test
-- Cloud migration projects where on-premises storage needs to temporarily scale up before workloads move off
-- Service provider environments where additional tenant capacity must be provisioned rapidly
+
+| Use Case |
+|---|
+| Arrays expected to grow unpredictably where physically installing capacity ahead of time eliminates lead time risk |
+| Capital budget management — defer activation costs until capacity is actually needed |
+| DR headroom: pre-install capacity at the DR site that can be rapidly activated during a failover or test |
+| Cloud migration projects where on-premises storage needs to temporarily scale up before workloads move off |
+| Service provider environments where additional tenant capacity must be provisioned rapidly |
 
 ## Daily Checks
 
@@ -77,8 +91,11 @@ isi storagepool list
 
 ## Best Practices
 
-- Pre-install COD capacity to cover at least 12 months of projected growth to eliminate emergency procurement lead times
-- Activate COD in increments aligned with actual consumption — do not activate all reserved capacity at once as it incurs immediate cost
-- Store COD license key files in a secure, backed-up location (e.g., a password manager or secrets vault) — lost keys require Dell re-issuance
-- Include COD activation steps in DR runbooks so capacity at the DR site can be activated rapidly during a real failover
-- Reconcile installed vs. activated capacity in the Dell Support portal against what SYMCLI or Unisphere reports at least quarterly
+
+| Recommendation | Detail |
+|---|---|
+| Pre-install COD capacity to cover at least 12 months of | Pre-install COD capacity to cover at least 12 months of projected growth to eliminate emergency procurement lead times |
+| Activate COD in increments aligned with actual consumption | do not activate all reserved capacity at once as it incurs immediate cost |
+| Store COD license key files in a secure, backed-up location (e.g., a password manager or secrets vault) | lost keys require Dell re-issuance |
+| Include COD activation steps in DR runbooks so capacity at | Include COD activation steps in DR runbooks so capacity at the DR site can be activated rapidly during a real failover |
+| Reconcile installed vs. activated capacity in the Dell | Reconcile installed vs. activated capacity in the Dell Support portal against what SYMCLI or Unisphere reports at least quarterly |

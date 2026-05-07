@@ -4,6 +4,18 @@
 
 ---
 
+```mermaid
+flowchart LR
+    Scripts["Scripts"]
+    Scripts --> S0["ESXi Host Health Check (PowerShell / PowerCLI)"]
+    Scripts --> S1["Storage Path Health Check (Bash / esxcli)"]
+    Scripts --> S2["ESXi Syslog and Event Collector (Python)"]
+    Scripts --> S3["NTP Configuration Audit (Bash)"]
+    Scripts --> S4["Ansible ESXi Configuration Playbook"]
+    Scripts --> S5["Windows: ESXi Host Health via REST API (PowerShell)"]
+    Scripts --> S6["Windows: ESXi ESXCLI Commands via Plink (CMD)"]
+```
+
 ## ESXi Host Health Check (PowerShell / PowerCLI)
 
 Connect to vCenter or directly to an ESXi host and produce a per-host health report covering hardware sensors, datastore usage, network adapter state, and required service status.

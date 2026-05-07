@@ -8,6 +8,17 @@ Always collect `symrdf query -g <group> -v` and array event logs before engaging
 
 ---
 
+```mermaid
+flowchart LR
+    SRDF_S_Troubleshooti["SRDF/S Troubleshooting"]
+    SRDF_S_Troubleshooti --> S0["High Host Write Latency"]
+    SRDF_S_Troubleshooti --> S1["Pair Enters Write Disabled State"]
+    SRDF_S_Troubleshooti --> S2["Pair in `Invalid` State"]
+    SRDF_S_Troubleshooti --> S3["Pair in `Split` State"]
+    SRDF_S_Troubleshooti --> S4["ISL / FCIP Link Failure"]
+    SRDF_S_Troubleshooti --> S5["Unintended Failover During Maintenance"]
+```
+
 ## High Host Write Latency
 
 **Symptom:** Applications report write slowness; storage latency exceeds baseline; no hardware alerts.

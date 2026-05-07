@@ -6,17 +6,32 @@
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
 
+```mermaid
+flowchart LR
+    a_Service["a Service"]
+    a_Service --> S0["Where It Fits"]
+    a_Service --> S1["Daily Checks"]
+    a_Service --> S2["Health Commands"]
+    a_Service --> S3["Common Issues"]
+    a_Service --> S4["Operational Tasks"]
+    a_Service --> S5["Upgrade Notes"]
+    a_Service --> S6["Best Practices"]
+```
+
 ## Overview
 
 Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.
 
 ## Where It Fits
 
-- Organisations that want on-premises storage economics without capital expenditure or operational management overhead
-- Environments requiring predictable $/TiB subscription pricing with burst capacity headroom
-- Multi-platform environments (block, file, object) under a single consumption agreement
-- IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell
-- Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided
+
+| Use Case |
+|---|
+| Organisations that want on-premises storage economics without capital expenditure or operational management overhead |
+| Environments requiring predictable $/TiB subscription pricing with burst capacity headroom |
+| Multi-platform environments (block, file, object) under a single consumption agreement |
+| IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell |
+| Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided |
 
 ## Daily Checks
 
@@ -89,8 +104,11 @@ curl -s -H "Authorization: Bearer <token>" \
 
 ## Best Practices
 
-- Keep Secure Connect Gateway appliances highly available (deploy two SCG appliances for redundancy) — loss of SCG connectivity causes telemetry gaps and may trigger alerts
-- Monitor committed vs. consumed capacity monthly and request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing
-- Use the APEX REST API to build automated capacity reports that feed into internal capacity planning tools
-- Review APEX Console alerts daily; infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance
-- Document the subscription ID, contract end date, committed tier, and burst thresholds in a runbook so on-call staff can quickly interpret APEX Console data
+
+| Recommendation | Detail |
+|---|---|
+| Keep Secure Connect Gateway appliances highly available (deploy two SCG appliances for redundancy) | loss of SCG connectivity causes telemetry gaps and may trigger alerts |
+| Monitor committed vs. consumed capacity monthly and request | Monitor committed vs. consumed capacity monthly and request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing |
+| Use the APEX REST API to build automated capacity reports | Use the APEX REST API to build automated capacity reports that feed into internal capacity planning tools |
+| Review APEX Console alerts daily | infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance |
+| Document the subscription ID, contract end date, committed | Document the subscription ID, contract end date, committed tier, and burst thresholds in a runbook so on-call staff can quickly interpret APEX Console data |

@@ -4,6 +4,18 @@ Active Directory serves as the central identity provider for the enterprise. Int
 
 ---
 
+```mermaid
+flowchart LR
+    Directory_Integratio["Directory Integration"]
+    Directory_Integratio --> S0["Integration Overview"]
+    Directory_Integratio --> S1["Service Account Standards"]
+    Directory_Integratio --> S2["VMware vCenter LDAP / AD SSO Integration"]
+    Directory_Integratio --> S3["NSX-T LDAP Integration"]
+    Directory_Integratio --> S4["Linux SSSD / PAM Integration"]
+    Directory_Integratio --> S5["LDAPS Certificate Requirements"]
+    Directory_Integratio --> S6["Splunk Universal Forwarder on Domain Controllers"]
+```
+
 ## Integration Overview
 
 | Integration | Method | Notes |

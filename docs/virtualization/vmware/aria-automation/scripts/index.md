@@ -1,5 +1,13 @@
 # Aria Automation — Scripts
 
+```mermaid
+flowchart LR
+    Aria_Automation["Aria Automation"]
+    Aria_Automation --> S0["Get Failed Deployments in the Last 24 Hours"]
+    Aria_Automation --> S1["Cloud Account Connectivity Check"]
+    Aria_Automation --> S2["Blueprint Version Audit"]
+```
+
 ## Get Failed Deployments in the Last 24 Hours
 
 Uses the Aria Automation REST API. Returns deployment name, ID, and failure reason.

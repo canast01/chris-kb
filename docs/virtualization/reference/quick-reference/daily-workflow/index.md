@@ -2,6 +2,19 @@
 
 A repeatable morning workflow to confirm the environment is healthy before the business day begins.
 
+```mermaid
+flowchart LR
+    Operations_Workflow["Operations Workflow"]
+    Operations_Workflow --> S0["Step 1 — vCenter Alarm Triage (5 min)"]
+    Operations_Workflow --> S1["Step 2 — Host Health (3 min)"]
+    Operations_Workflow --> S2["Step 3 — Cluster HA and DRS Status (2 min)"]
+    Operations_Workflow --> S3["Step 4 — Datastore Capacity (3 min)"]
+    Operations_Workflow --> S4["Step 5 — vSAN Health (2 min, if applicable)"]
+    Operations_Workflow --> S5["Step 6 — Review Failed Tasks (2 min)"]
+    Operations_Workflow --> S6["Step 7 — Backup Status (3 min)"]
+    Operations_Workflow --> S7["Step 8 — Monitoring Dashboard (2 min)"]
+```
+
 ## Step 1 — vCenter Alarm Triage (5 min)
 
 ```powershell

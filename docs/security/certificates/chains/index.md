@@ -1,5 +1,16 @@
 # Chains
 
+```mermaid
+flowchart LR
+    Chains["Chains"]
+    Chains --> S0["Purpose"]
+    Chains --> S1["Common checks"]
+    Chains --> S2["Incident notes"]
+    Chains --> S3["Change notes"]
+    Chains --> S4["Useful commands"]
+    Chains --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Certificates Chains notes, checks, troubleshooting, commands, change notes, and field references.

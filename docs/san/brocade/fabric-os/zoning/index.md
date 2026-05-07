@@ -1,5 +1,16 @@
 # Zoning
 
+```mermaid
+flowchart LR
+    Zoning["Zoning"]
+    Zoning --> S0["Purpose"]
+    Zoning --> S1["Common checks"]
+    Zoning --> S2["Incident notes"]
+    Zoning --> S3["Change notes"]
+    Zoning --> S4["Useful commands"]
+    Zoning --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Fabric Os Zoning notes, checks, troubleshooting, commands, change notes, and field references.

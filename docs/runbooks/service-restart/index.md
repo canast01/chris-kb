@@ -1,5 +1,17 @@
 # Service Restart Runbook
 
+```mermaid
+flowchart LR
+    Restart_Runbook["Restart Runbook"]
+    Restart_Runbook --> S0["Pre-Checks"]
+    Restart_Runbook --> S1["Graceful Stop and Start"]
+    Restart_Runbook --> S2["Post-Restart Validation"]
+    Restart_Runbook --> S3["Test Application Response"]
+    Restart_Runbook --> S4["Windows Service Validation"]
+    Restart_Runbook --> S5["Checklist"]
+    Restart_Runbook --> S6["Common Issues"]
+```
+
 ## Pre-Checks
 
 ```bash

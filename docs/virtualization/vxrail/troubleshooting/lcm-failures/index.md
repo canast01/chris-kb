@@ -1,5 +1,17 @@
 # VxRail LCM Failures
 
+```mermaid
+flowchart LR
+    LCM_Failures["LCM Failures"]
+    LCM_Failures --> S0["Where It Fits"]
+    LCM_Failures --> S1["Daily Checks"]
+    LCM_Failures --> S2["Health Commands"]
+    LCM_Failures --> S3["Common Issues"]
+    LCM_Failures --> S4["Operational Tasks"]
+    LCM_Failures --> S5["Upgrade Notes"]
+    LCM_Failures --> S6["Best Practices"]
+```
+
 ## Overview
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.
@@ -58,8 +70,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Best Practices
 
-- Do not skip pre-checks.
-- Keep Dell and VMware versions aligned.
-- Validate hardware health before lifecycle work.
-- Keep support bundle notes with the case.
-- Record post-change validation.
+
+| Recommendation | Detail |
+|---|---|
+| Do not skip pre-checks. | Do not skip pre-checks. |
+| Keep Dell and VMware versions aligned. | Keep Dell and VMware versions aligned. |
+| Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
+| Keep support bundle notes with the case. | Keep support bundle notes with the case. |
+| Record post-change validation. | Record post-change validation. |

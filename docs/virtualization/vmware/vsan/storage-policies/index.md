@@ -1,5 +1,17 @@
 # vSAN Storage Policies
 
+```mermaid
+flowchart LR
+    Storage_Policies["Storage Policies"]
+    Storage_Policies --> S0["Where It Fits"]
+    Storage_Policies --> S1["Daily Checks"]
+    Storage_Policies --> S2["Health Commands"]
+    Storage_Policies --> S3["Common Issues"]
+    Storage_Policies --> S4["Operational Tasks"]
+    Storage_Policies --> S5["Upgrade Notes"]
+    Storage_Policies --> S6["Best Practices"]
+```
+
 ## Overview
 
 Policy design, compliance checks, failures to tolerate, and object placement.
@@ -54,8 +66,11 @@ Use this page for VMware platform support, daily checks, troubleshooting, upgrad
 
 ## Best Practices
 
-- Keep naming consistent.
-- Keep versions aligned.
-- Avoid unsupported version combinations.
-- Document exceptions.
-- Validate after every change.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Keep versions aligned. | Keep versions aligned. |
+| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
+| Document exceptions. | Document exceptions. |
+| Validate after every change. | Validate after every change. |

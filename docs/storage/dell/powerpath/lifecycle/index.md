@@ -1,5 +1,14 @@
 # PowerPath Lifecycle
 
+```mermaid
+flowchart LR
+    PowerPath_Lifecycle["PowerPath Lifecycle"]
+    PowerPath_Lifecycle --> S0["Version and Release Matrix"]
+    PowerPath_Lifecycle --> S1["Upgrade and Update Paths"]
+    PowerPath_Lifecycle --> S2["EOL and Renewal Tracking"]
+    PowerPath_Lifecycle --> S3["Replacement Planning"]
+```
+
 ## Version and Release Matrix
 
 | PowerPath Version | Supported Platforms | Key Changes | Support Status |

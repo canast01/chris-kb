@@ -1,5 +1,16 @@
 # Insights
 
+```mermaid
+flowchart LR
+    Insights["Insights"]
+    Insights --> S0["Purpose"]
+    Insights --> S1["Common checks"]
+    Insights --> S2["Incident notes"]
+    Insights --> S3["Change notes"]
+    Insights --> S4["Useful commands"]
+    Insights --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Dell Aiops Insights notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,17 @@
 # RecoverPoint — Architecture
 
+```mermaid
+flowchart LR
+    RecoverPoint["RecoverPoint"]
+    RecoverPoint --> S0["Components"]
+    RecoverPoint --> S1["Splitter Types"]
+    RecoverPoint --> S2["Topology"]
+    RecoverPoint --> S3["Replication Modes"]
+    RecoverPoint --> S4["Supported Arrays"]
+    RecoverPoint --> S5["Sizing Considerations"]
+    RecoverPoint --> S6["High Availability"]
+```
+
 ## Overview
 
 Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal that enables point-in-time recovery to any point within the journal window.

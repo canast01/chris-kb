@@ -1,5 +1,18 @@
 # ONTAP Volumes
 
+```mermaid
+flowchart LR
+    ONTAP_Volumes["ONTAP Volumes"]
+    ONTAP_Volumes --> S0["List Volumes"]
+    ONTAP_Volumes --> S1["Volume Health"]
+    ONTAP_Volumes --> S2["Create a Volume"]
+    ONTAP_Volumes --> S3["Resize a Volume"]
+    ONTAP_Volumes --> S4["Volume Autosize"]
+    ONTAP_Volumes --> S5["Volume Efficiency (Deduplication / Compression)"]
+    ONTAP_Volumes --> S6["Move a Volume (Between Aggregates)"]
+    ONTAP_Volumes --> S7["Take a Volume Offline / Online"]
+```
+
 ## List Volumes
 
 ```bash

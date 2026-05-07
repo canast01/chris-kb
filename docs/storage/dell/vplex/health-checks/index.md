@@ -1,5 +1,18 @@
 # VPLEX Health Checks
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Cluster Status"]
+    Health_Checks --> S1["Director Health"]
+    Health_Checks --> S2["Storage Volume Health"]
+    Health_Checks --> S3["Virtual Volume Health"]
+    Health_Checks --> S4["Distributed Device Health"]
+    Health_Checks --> S5["Inter-cluster Communication"]
+    Health_Checks --> S6["Alerts"]
+    Health_Checks --> S7["Pre-Change Checklist"]
+```
+
 ## Cluster Status
 
 ```bash

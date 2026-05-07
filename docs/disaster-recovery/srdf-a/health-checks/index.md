@@ -1,5 +1,16 @@
 # Health Checks
 
+```mermaid
+flowchart LR
+    Health_Checks["Health Checks"]
+    Health_Checks --> S0["Purpose"]
+    Health_Checks --> S1["Common checks"]
+    Health_Checks --> S2["Incident notes"]
+    Health_Checks --> S3["Change notes"]
+    Health_Checks --> S4["Useful commands"]
+    Health_Checks --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical SRDF/A Health Checks notes, checks, troubleshooting, commands, change notes, and field references.

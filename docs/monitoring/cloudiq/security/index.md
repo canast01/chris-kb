@@ -1,5 +1,17 @@
 # CloudIQ Security
 
+```mermaid
+flowchart LR
+    CloudIQ_Security["CloudIQ Security"]
+    CloudIQ_Security --> S0["Access Control (RBAC)"]
+    CloudIQ_Security --> S1["SSO Configuration"]
+    CloudIQ_Security --> S2["API Client Management"]
+    CloudIQ_Security --> S3["SCG Certificate Security"]
+    CloudIQ_Security --> S4["Audit Logging"]
+    CloudIQ_Security --> S5["Data Residency and Privacy"]
+    CloudIQ_Security --> S6["Security Hardening Checklist"]
+```
+
 ## Access Control (RBAC)
 
 CloudIQ uses role-based access control managed in the CloudIQ portal. Assign the minimum required role to each user.

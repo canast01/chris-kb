@@ -1,5 +1,16 @@
 # Deployments
 
+```mermaid
+flowchart LR
+    Deployments["Deployments"]
+    Deployments --> S0["Purpose"]
+    Deployments --> S1["Common checks"]
+    Deployments --> S2["Incident notes"]
+    Deployments --> S3["Change notes"]
+    Deployments --> S4["Useful commands"]
+    Deployments --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Aria Automation Deployments notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,18 @@
 # Windows Server — Standards
 
+```mermaid
+flowchart LR
+    Windows_Server["Windows Server"]
+    Windows_Server --> S0["Hostname Convention"]
+    Windows_Server --> S1["Active Directory OU Structure"]
+    Windows_Server --> S2["Drive Letter Conventions"]
+    Windows_Server --> S3["PowerShell Remoting"]
+    Windows_Server --> S4["WinRM Configuration Baseline"]
+    Windows_Server --> S5["Server Build Baseline Checklist"]
+    Windows_Server --> S6["Group Policy Baseline"]
+    Windows_Server --> S7["Related Sections"]
+```
+
 ## Hostname Convention
 
 Format: `<env>-<function>-<nn>`

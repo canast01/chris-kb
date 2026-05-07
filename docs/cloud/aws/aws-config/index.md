@@ -2,6 +2,17 @@
 
 AWS Config — continuous configuration tracking, compliance evaluation, and change history.
 
+```mermaid
+flowchart LR
+    AWS_Config["AWS Config"]
+    AWS_Config --> S0["What AWS Config Does"]
+    AWS_Config --> S1["Common CLI Commands"]
+    AWS_Config --> S2["Common Managed Rules"]
+    AWS_Config --> S3["Remediation"]
+    AWS_Config --> S4["Config Query (Advanced)"]
+    AWS_Config --> S5["Troubleshooting"]
+```
+
 ## What AWS Config Does
 
 - Records configuration state of AWS resources at every change

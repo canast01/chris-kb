@@ -1,5 +1,17 @@
 # AWS S3
 
+```mermaid
+flowchart LR
+    AWS_S3["AWS S3"]
+    AWS_S3 --> S0["Where It Fits"]
+    AWS_S3 --> S1["Daily Checks"]
+    AWS_S3 --> S2["Health Commands"]
+    AWS_S3 --> S3["Common Issues"]
+    AWS_S3 --> S4["Operational Tasks"]
+    AWS_S3 --> S5["Upgrade Notes"]
+    AWS_S3 --> S6["Best Practices"]
+```
+
 ## Overview
 
 AWS S3 notes for day-to-day infrastructure operations.
@@ -50,7 +62,10 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-- Keep naming consistent.
-- Document ownership.
-- Use least privilege access.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Keep naming consistent. | Keep naming consistent. |
+| Document ownership. | Document ownership. |
+| Use least privilege access. | Use least privilege access. |
+| Validate changes after implementation. | Validate changes after implementation. |

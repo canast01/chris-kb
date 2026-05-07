@@ -1,5 +1,16 @@
 # Rotation
 
+```mermaid
+flowchart LR
+    Rotation["Rotation"]
+    Rotation --> S0["Purpose"]
+    Rotation --> S1["Common checks"]
+    Rotation --> S2["Incident notes"]
+    Rotation --> S3["Change notes"]
+    Rotation --> S4["Useful commands"]
+    Rotation --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Cyberark Rotation notes, checks, troubleshooting, commands, change notes, and field references.

@@ -1,5 +1,17 @@
 # Pure1 Lifecycle
 
+```mermaid
+flowchart LR
+    Pure1_Lifecycle["Pure1 Lifecycle"]
+    Pure1_Lifecycle --> S0["Platform Update Model"]
+    Pure1_Lifecycle --> S1["Array Onboarding"]
+    Pure1_Lifecycle --> S2["Array Decommission"]
+    Pure1_Lifecycle --> S3["Purity Version Compatibility"]
+    Pure1_Lifecycle --> S4["Pure1 REST API Lifecycle"]
+    Pure1_Lifecycle --> S5["API Token Lifecycle"]
+    Pure1_Lifecycle --> S6["Metrics Retention Management"]
+```
+
 ## Platform Update Model
 
 Pure1 is a SaaS platform managed entirely by Pure Storage. There is no customer-managed version to upgrade. Feature releases, analytics model updates, and UI changes are deployed by Pure Storage and communicated via Pure1 release notes.

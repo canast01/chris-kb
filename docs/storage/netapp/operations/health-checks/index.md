@@ -1,5 +1,14 @@
 # NetApp Operations — Health Checks
 
+```mermaid
+flowchart LR
+    NetApp_Operations["NetApp Operations"]
+    NetApp_Operations --> S0["Daily Health Check Workflow"]
+    NetApp_Operations --> S1["AutoSupport Validation"]
+    NetApp_Operations --> S2["Pre-Change Checklist"]
+    NetApp_Operations --> S3["Health Summary Table"]
+```
+
 ## Daily Health Check Workflow
 
 ```bash

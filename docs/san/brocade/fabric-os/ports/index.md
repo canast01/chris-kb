@@ -1,5 +1,16 @@
 # Ports
 
+```mermaid
+flowchart LR
+    Ports["Ports"]
+    Ports --> S0["Purpose"]
+    Ports --> S1["Common checks"]
+    Ports --> S2["Incident notes"]
+    Ports --> S3["Change notes"]
+    Ports --> S4["Useful commands"]
+    Ports --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Fabric Os Ports notes, checks, troubleshooting, commands, change notes, and field references.

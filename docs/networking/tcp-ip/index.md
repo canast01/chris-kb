@@ -1,5 +1,17 @@
 # TCP/IP
 
+```mermaid
+flowchart LR
+    TCP_IP["TCP/IP"]
+    TCP_IP --> S0["IP Configuration"]
+    TCP_IP --> S1["TCP Connection Testing"]
+    TCP_IP --> S2["Active Connections"]
+    TCP_IP --> S3["MTU and Fragmentation"]
+    TCP_IP --> S4["TCP States"]
+    TCP_IP --> S5["Common Protocol Ports"]
+    TCP_IP --> S6["Common Issues"]
+```
+
 ## IP Configuration
 
 **Linux:**

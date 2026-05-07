@@ -1,5 +1,14 @@
 # Dell Unity Troubleshooting
 
+```mermaid
+flowchart LR
+    Unity_Troubleshootin["Unity Troubleshooting"]
+    Unity_Troubleshootin --> S0["Common Issues"]
+    Unity_Troubleshootin --> S1["Diagnostic Commands"]
+    Unity_Troubleshootin --> S2["Log Locations"]
+    Unity_Troubleshootin --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

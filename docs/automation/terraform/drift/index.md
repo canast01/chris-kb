@@ -1,5 +1,16 @@
 # Drift
 
+```mermaid
+flowchart LR
+    Drift["Drift"]
+    Drift --> S0["Purpose"]
+    Drift --> S1["Common checks"]
+    Drift --> S2["Incident notes"]
+    Drift --> S3["Change notes"]
+    Drift --> S4["Useful commands"]
+    Drift --> S5["Known issues"]
+```
+
 ## Purpose
 
 Use this page for practical Terraform Drift notes, checks, troubleshooting, commands, change notes, and field references.

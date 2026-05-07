@@ -1,5 +1,18 @@
 # InsightIQ Architecture
 
+```mermaid
+flowchart LR
+    InsightIQ_Architectu["InsightIQ Architecture"]
+    InsightIQ_Architectu --> S0["Deployment Architecture"]
+    InsightIQ_Architectu --> S1["Component Roles"]
+    InsightIQ_Architectu --> S2["Data Collection"]
+    InsightIQ_Architectu --> S3["Storage and Retention"]
+    InsightIQ_Architectu --> S4["Sizing Guidelines"]
+    InsightIQ_Architectu --> S5["Network Requirements"]
+    InsightIQ_Architectu --> S6["Supported OneFS Versions"]
+    InsightIQ_Architectu --> S7["High Availability"]
+```
+
 ## Overview
 
 InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.

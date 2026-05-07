@@ -1,5 +1,14 @@
 # ECS Troubleshooting
 
+```mermaid
+flowchart LR
+    ECS_Troubleshooting["ECS Troubleshooting"]
+    ECS_Troubleshooting --> S0["Common Issues"]
+    ECS_Troubleshooting --> S1["Diagnostic Commands"]
+    ECS_Troubleshooting --> S2["Log Locations"]
+    ECS_Troubleshooting --> S3["Before Calling Support"]
+```
+
 ## Common Issues
 
 | Symptom | Cause | Action |

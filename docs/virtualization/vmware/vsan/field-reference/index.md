@@ -1,5 +1,18 @@
 # vSAN Field Reference
 
+```mermaid
+flowchart LR
+    Field_Reference["Field Reference"]
+    Field_Reference --> S0["Where It Fits"]
+    Field_Reference --> S1["Architecture and Components"]
+    Field_Reference --> S2["Dependencies"]
+    Field_Reference --> S3["Ports and Protocols"]
+    Field_Reference --> S4["Daily Operations"]
+    Field_Reference --> S5["Health Checks"]
+    Field_Reference --> S6["Upgrade Workflow"]
+    Field_Reference --> S7["Backup and Recovery Considerations"]
+```
+
 ## Overview
 
 vSAN provides software-defined storage across ESXi hosts using local disks, storage policies, object placement, and cluster-level health services.
@@ -116,14 +129,17 @@ Common dependencies:
 
 ## Best Practices
 
-- Maintain consistent patch levels.
-- Monitor capacity trends.
-- Document configuration changes.
-- Perform routine health checks.
-- Test recovery procedures.
-- Keep support contracts current.
-- Keep naming and ownership clean.
-- Validate changes after implementation.
+
+| Recommendation | Detail |
+|---|---|
+| Maintain consistent patch levels. | Maintain consistent patch levels. |
+| Monitor capacity trends. | Monitor capacity trends. |
+| Document configuration changes. | Document configuration changes. |
+| Perform routine health checks. | Perform routine health checks. |
+| Test recovery procedures. | Test recovery procedures. |
+| Keep support contracts current. | Keep support contracts current. |
+| Keep naming and ownership clean. | Keep naming and ownership clean. |
+| Validate changes after implementation. | Validate changes after implementation. |
 
 ## Certification Relevance
 
