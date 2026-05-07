@@ -705,6 +705,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#init-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Init &amp; Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-destroy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply &amp; Destroy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-format-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate, Format &amp; Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State &amp; Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workspaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#console-debug-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Console, Debug &amp; Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,45 +808,164 @@
 
 
 <h1 id="terraform-cli-reference">Terraform CLI Reference<a class="headerlink" href="#terraform-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used Terraform commands for infrastructure provisioning and state management.</p>
-<div class="kb-grid kb-grid-3">
+<p>Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in <code>.tf</code> files, and Terraform figures out what to create, change, or delete to reach that state. State is stored in a <code>.tfstate</code> file — it's Terraform's record of what it has actually deployed.</p>
+<blockquote>
+<p>Install with <code>brew install terraform</code> (macOS), <code>apt install terraform</code> (Debian), or download from terraform.io. Run <code>terraform init</code> in any new working directory before other commands.</p>
+</blockquote>
+<hr />
+<h2 id="init-setup">Init &amp; Setup<a class="headerlink" href="#init-setup" title="Permanent link">&para;</a></h2>
+<p>Initialize a Terraform working directory — downloads providers, configures the backend (where state is stored), and prepares modules. Always run this first in a new directory or after changing provider/backend configuration.</p>
+<pre><code class="language-bash"># Initialize working directory
+terraform init
+terraform init -reconfigure          # force re-initialization (clears cached backend config)
+terraform init -upgrade              # upgrade providers to the latest allowed version
+terraform init -backend=false        # skip backend init (use local state only)
 
-<a class="kb-card" href="init/">
-  <strong>Init & Setup</strong>
-  <span>terraform init, version, reconfigure, and backend options.</span>
-</a>
+# Show installed Terraform version and provider versions
+terraform version
+</code></pre>
+<hr />
+<h2 id="plan">Plan<a class="headerlink" href="#plan" title="Permanent link">&para;</a></h2>
+<p>Preview what Terraform will do before making any changes. Always run <code>plan</code> before <code>apply</code>. Save the plan to a file to guarantee that <code>apply</code> runs exactly what you reviewed.</p>
+<pre><code class="language-bash"># Preview changes
+terraform plan
+terraform plan -out=tfplan           # save plan to file (apply this file to guarantee exact changes)
+terraform plan -var 'env=prod'       # pass a variable
+terraform plan -var-file=prod.tfvars # load variables from file
+terraform plan -target=resource_type.name   # only plan a specific resource
 
-<a class="kb-card" href="plan/">
-  <strong>Plan</strong>
-  <span>Preview changes, save plan, target, var-file, and destroy plan.</span>
-</a>
+# Destroy plan (preview what would be deleted)
+terraform plan -destroy
 
-<a class="kb-card" href="apply/">
-  <strong>Apply & Destroy</strong>
-  <span>Apply changes, auto-approve, target, replace, and destroy.</span>
-</a>
+# Detailed exit codes (useful in CI/CD scripts)
+terraform plan -detailed-exitcode
+# Exit code: 0 = no changes, 1 = error, 2 = changes present
+</code></pre>
+<hr />
+<h2 id="apply-destroy">Apply &amp; Destroy<a class="headerlink" href="#apply-destroy" title="Permanent link">&para;</a></h2>
+<p>Apply makes the changes from a plan. Destroy removes all resources managed by Terraform. Use <code>-target</code> to operate on a specific resource instead of everything.</p>
+<pre><code class="language-bash"># Apply changes
+terraform apply
+terraform apply tfplan               # apply a saved plan (recommended — no surprises)
+terraform apply -auto-approve        # skip confirmation prompt (for CI/CD)
+terraform apply -var 'env=prod'
+terraform apply -var-file=prod.tfvars
+terraform apply -target=resource_type.name
+terraform apply -parallelism=10      # concurrent operations (default: 10)
 
-<a class="kb-card" href="state/">
-  <strong>State & Output</strong>
-  <span>List, show, mv, rm, pull/push, import, output, and force-unlock.</span>
-</a>
+# Replace a specific resource (force recreation)
+terraform apply -replace=resource_type.name
 
-<a class="kb-card" href="workspaces/">
-  <strong>Workspaces</strong>
-  <span>List, new, select, show, and delete workspaces.</span>
-</a>
+# Destroy all resources
+terraform destroy
+terraform destroy -auto-approve
+terraform destroy -target=resource_type.name
+terraform destroy -var-file=prod.tfvars
+</code></pre>
+<hr />
+<h2 id="validate-format-providers">Validate, Format &amp; Providers<a class="headerlink" href="#validate-format-providers" title="Permanent link">&para;</a></h2>
+<p>Check syntax, auto-format code, and inspect provider dependencies. Run <code>validate</code> and <code>fmt -check</code> in CI before planning.</p>
+<pre><code class="language-bash"># Validate configuration syntax
+terraform validate
 
-<a class="kb-card" href="validate/">
-  <strong>Validate, Format & Providers</strong>
-  <span>Validate syntax, fmt, providers, modules, and dependency graph.</span>
-</a>
+# Auto-format code to canonical style
+terraform fmt
+terraform fmt -recursive            # format all subdirectories
+terraform fmt -check                # exit non-zero if any files need formatting (CI use)
+terraform fmt -diff                 # show what would change without writing
 
-<a class="kb-card" href="console/">
-  <strong>Console, Debug & Patterns</strong>
-  <span>Interactive console, debug logging, and common CI/CD patterns.</span>
-</a>
+# Provider management
+terraform providers                 # list required providers and their versions
+terraform providers lock            # lock provider versions in .terraform.lock.hcl
+terraform get                       # download modules referenced in configuration
+terraform get -update               # update modules to latest allowed version
 
-</div>
+# Dependency graph (requires graphviz)
+terraform graph | dot -Tsvg &gt; graph.svg
+terraform graph -type=plan | dot -Tpng &gt; plan.png
+</code></pre>
+<hr />
+<h2 id="state-output">State &amp; Output<a class="headerlink" href="#state-output" title="Permanent link">&para;</a></h2>
+<p>State is Terraform's source of truth about what's deployed. Use <code>state</code> commands carefully — modifying state incorrectly can cause Terraform to recreate resources or lose track of existing ones.</p>
+<pre><code class="language-bash"># List all resources tracked in state
+terraform state list
+terraform state list module.name    # resources in a specific module
+
+# Show a resource's current state
+terraform state show resource_type.name
+terraform state show 'resource_type.name[&quot;key&quot;]'
+
+# Move a resource (rename without destroying)
+terraform state mv resource_type.old resource_type.new
+
+# Remove a resource from state (without deleting the real resource)
+terraform state rm resource_type.name
+
+# Backup and restore state
+terraform state pull &gt; backup.tfstate
+terraform state push backup.tfstate
+
+# Release a stuck state lock
+terraform force-unlock &lt;lock_id&gt;
+
+# Import an existing resource into Terraform management
+terraform import resource_type.name &lt;resource_id&gt;
+terraform import -var-file=prod.tfvars resource_type.name &lt;id&gt;
+
+# Generate config from existing resources (Terraform 1.5+)
+terraform plan -generate-config-out=generated.tf
+
+# Outputs
+terraform output
+terraform output &lt;output_name&gt;
+terraform output -json
+terraform output -raw &lt;output_name&gt;   # plain string without quotes
+</code></pre>
+<hr />
+<h2 id="workspaces">Workspaces<a class="headerlink" href="#workspaces" title="Permanent link">&para;</a></h2>
+<p>Workspaces let you manage multiple independent deployments (e.g., dev, staging, prod) from the same configuration with separate state files. Not available with all backends.</p>
+<pre><code class="language-bash"># List workspaces
+terraform workspace list
+
+# Create and switch
+terraform workspace new &lt;name&gt;
+terraform workspace select &lt;name&gt;
+
+# Show current workspace
+terraform workspace show
+
+# Delete (must switch away first)
+terraform workspace delete &lt;name&gt;
+</code></pre>
+<hr />
+<h2 id="console-debug-patterns">Console, Debug &amp; Patterns<a class="headerlink" href="#console-debug-patterns" title="Permanent link">&para;</a></h2>
+<p>The interactive console evaluates expressions against your current state. Debug logging helps trace provider API calls when something isn't working.</p>
+<pre><code class="language-bash"># Interactive console (evaluate expressions against current state)
+terraform console
+# &gt; module.name.output_value
+# &gt; var.my_var
+# &gt; length(var.list)
+
+# Debug logging
+TF_LOG=DEBUG terraform plan
+TF_LOG=TRACE terraform apply
+TF_LOG_PATH=./debug.log terraform plan
+
+# Common workflow patterns
+# Full cycle (plan → save → apply saved plan)
+terraform init &amp;&amp; terraform plan -out=tfplan &amp;&amp; terraform apply tfplan
+
+# Refresh-only (sync state with reality without changing resources)
+terraform apply -refresh-only
+
+# Import an existing resource then verify nothing would change
+terraform import resource_type.name &lt;id&gt; &amp;&amp; terraform plan
+
+# CI/CD pattern (non-interactive)
+terraform init -input=false
+terraform plan -input=false -out=tfplan
+terraform apply -input=false tfplan
+</code></pre>
 
 
 

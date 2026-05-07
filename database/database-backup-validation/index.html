@@ -712,10 +712,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#daily-backup-status-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Daily Backup Status Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Daily Backup Status Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-pg_basebackup-pgbackrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL (pg_basebackup / pgBackRest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mysql-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL / MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-file-integrity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup File Integrity Check
       
     </span>
   </a>
@@ -723,10 +773,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#test-restore-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Test Restore Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Restore Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-test-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Test Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mysql-test-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL Test Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-test-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server Test Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Checklist
       
     </span>
   </a>
@@ -734,10 +834,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#rpo-rto-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        RPO / RTO Targets
       
     </span>
   </a>
@@ -745,10 +845,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Troubleshooting
       
     </span>
   </a>
@@ -775,25 +875,162 @@
 
 
 <h1 id="database-backup-validation">Database Backup Validation<a class="headerlink" href="#database-backup-validation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook confirms database backups are successful and recoverable.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm backup job schedule</li>
-<li>Identify backup location</li>
-<li>Verify storage capacity</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ls -lh /backup/database
-grep backup /var/log/messages
-df -h
+<p>Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.</p>
+<h2 id="daily-backup-status-checks">Daily Backup Status Checks<a class="headerlink" href="#daily-backup-status-checks" title="Permanent link">&para;</a></h2>
+<h3 id="postgresql-pg_basebackup-pgbackrest">PostgreSQL (pg_basebackup / pgBackRest)<a class="headerlink" href="#postgresql-pg_basebackup-pgbackrest" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># pgBackRest — check latest backup info
+pgbackrest --stanza=&lt;stanza-name&gt; info
+
+# List backup files
+pgbackrest --stanza=&lt;stanza-name&gt; info --output=json | jq '.[] | .backup[-1]'
+
+# Check WAL archiving is current
+psql -U postgres -c &quot;SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;&quot;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm backup file exists</li>
-<li>Perform test restore if required</li>
-<li>Verify database integrity</li>
-</ol>
+<h3 id="mysql-mariadb">MySQL / MariaDB<a class="headerlink" href="#mysql-mariadb" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Check recent backup files
+ls -lht /backup/mysql/ | head -10
+
+# Verify binary log position captured in backup
+cat /backup/mysql/xtrabackup_binlog_info
+
+# MySQLdump backup log
+tail -50 /var/log/mysql-backup.log | grep -E &quot;(Error|Completed|Failed)&quot;
+</code></pre>
+<h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Last backup per database
+SELECT d.name AS database_name,
+       MAX(b.backup_finish_date) AS last_backup,
+       b.type AS backup_type
+FROM sys.databases d
+LEFT JOIN msdb.dbo.backupset b ON d.name = b.database_name
+WHERE d.database_id &gt; 4  -- exclude system DBs
+GROUP BY d.name, b.type
+ORDER BY d.name, b.type;
+
+-- Failed backup jobs last 24h
+SELECT j.name AS job_name, h.run_date, h.run_time, h.message
+FROM msdb.dbo.sysjobs j
+JOIN msdb.dbo.sysjobhistory h ON j.job_id = h.job_id
+WHERE j.name LIKE '%backup%'
+  AND h.run_status = 0  -- 0 = failed
+  AND h.run_date &gt;= CONVERT(int, CONVERT(varchar, GETDATE()-1, 112));
+</code></pre>
+<h2 id="backup-file-integrity-check">Backup File Integrity Check<a class="headerlink" href="#backup-file-integrity-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PostgreSQL — verify backup with pgBackRest
+pgbackrest --stanza=&lt;stanza-name&gt; check
+
+# MySQL — verify xtrabackup integrity
+xtrabackup --prepare --target-dir=/backup/mysql/latest/
+
+# SQL Server — verify backup file checksum
+RESTORE VERIFYONLY FROM DISK = '/backup/mssql/mydb_full.bak' WITH CHECKSUM;
+</code></pre>
+<h2 id="test-restore-procedure">Test Restore Procedure<a class="headerlink" href="#test-restore-procedure" title="Permanent link">&para;</a></h2>
+<p>Perform test restores to a non-production target on a defined schedule (weekly for critical DBs).</p>
+<h3 id="postgresql-test-restore">PostgreSQL Test Restore<a class="headerlink" href="#postgresql-test-restore" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Restore to test instance
+pgbackrest --stanza=&lt;stanza-name&gt; --pg1-path=/var/lib/pgsql/test-restore restore
+# Start test instance and verify
+pg_ctl -D /var/lib/pgsql/test-restore start
+psql -p 5433 -U postgres -c &quot;SELECT count(*) FROM pg_stat_user_tables;&quot;
+</code></pre>
+<h3 id="mysql-test-restore">MySQL Test Restore<a class="headerlink" href="#mysql-test-restore" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Copy backup to test directory
+xtrabackup --prepare --target-dir=/restore/mysql-test/
+rsync -a /restore/mysql-test/ /var/lib/mysql-test/
+chown -R mysql: /var/lib/mysql-test/
+mysqld_safe --datadir=/var/lib/mysql-test --socket=/tmp/mysql-test.sock &amp;
+mysql -S /tmp/mysql-test.sock -e &quot;SHOW DATABASES;&quot;
+</code></pre>
+<h3 id="sql-server-test-restore">SQL Server Test Restore<a class="headerlink" href="#sql-server-test-restore" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">RESTORE DATABASE [TestRestore] FROM DISK = '/backup/mssql/prod_full.bak'
+WITH MOVE 'proddb' TO '/var/opt/mssql/data/TestRestore.mdf',
+     MOVE 'proddb_log' TO '/var/opt/mssql/data/TestRestore_log.ldf',
+     REPLACE, STATS = 10;
+-- Verify table counts match expected
+USE TestRestore;
+SELECT COUNT(*) FROM important_table;
+</code></pre>
+<h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Full backup completed successfully within last 24h</li>
+<li>[ ] Backup file size is within expected range (not zero, not anomalously small)</li>
+<li>[ ] Backup integrity verified (checksum / prepare passed)</li>
+<li>[ ] WAL/binary log archiving current (within 15 min of now)</li>
+<li>[ ] Test restore performed and database queryable</li>
+<li>[ ] RPO validated: backup age does not exceed recovery point objective</li>
+<li>[ ] Backup storage has &gt; 20% free space remaining</li>
+<li>[ ] Backup job alert cleared in monitoring system</li>
+</ul>
+<h2 id="rpo-rto-targets">RPO / RTO Targets<a class="headerlink" href="#rpo-rto-targets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Frequency</th>
+<th>Retention</th>
+<th>RPO Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full backup</td>
+<td>Daily</td>
+<td>30 days</td>
+<td>24 hours</td>
+</tr>
+<tr>
+<td>Incremental / differential</td>
+<td>Every 4–6h</td>
+<td>7 days</td>
+<td>4–6 hours</td>
+</tr>
+<tr>
+<td>WAL / binlog archiving</td>
+<td>Continuous</td>
+<td>7 days</td>
+<td>&lt; 5 minutes (PITR)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup job not running</td>
+<td>Scheduler (cron/SQL Agent) enabled?</td>
+<td>Verify cron entry or SQL Server Agent job enabled</td>
+</tr>
+<tr>
+<td>Backup size unexpectedly small</td>
+<td>Partial backup / excluded tables</td>
+<td>Review backup command excludes; check tablespace</td>
+</tr>
+<tr>
+<td>Restore fails with corruption</td>
+<td>Backup file corrupt or incomplete</td>
+<td>Restore from prior day's backup; review disk errors</td>
+</tr>
+<tr>
+<td>WAL archiving lagging</td>
+<td>Disk space or permissions</td>
+<td>Check archive target disk space; check pg_wal directory size</td>
+</tr>
+<tr>
+<td>Test restore DB inconsistent</td>
+<td>Point-in-time alignment</td>
+<td>Apply WAL/binlogs to correct point; verify LSN/SCN</td>
+</tr>
+</tbody>
+</table>
 
 
 

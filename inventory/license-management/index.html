@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#license-inventory-key-attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        License Inventory — Key Attributes
       
     </span>
   </a>
@@ -723,10 +723,110 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#discovery-installed-software" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Discovery — Installed Software
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Discovery — Installed Software">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-software-inventory-via-ssm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS — Software Inventory via SSM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-utilisation-common-products" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Utilisation — Common Products
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="License Utilisation — Common Products">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#microsoft-365" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microsoft 365
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vmware-vsphere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vSphere
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-core-license-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server — Core License Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiry Monitoring
       
     </span>
   </a>
@@ -734,10 +834,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#license-compliance-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        License Compliance Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licence-risk-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licence Risk Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,21 +886,207 @@
 
 
 <h1 id="license-management">License Management<a class="headerlink" href="#license-management" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>License management tracks software usage and compliance with vendor agreements.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<p>Track software entitlements, monitor utilisation against purchased seats, and prevent compliance violations.</p>
+<h2 id="license-inventory-key-attributes">License Inventory — Key Attributes<a class="headerlink" href="#license-inventory-key-attributes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product name</td>
+<td>Software title and version</td>
+</tr>
+<tr>
+<td>Vendor</td>
+<td>Publisher / licensor</td>
+</tr>
+<tr>
+<td>License type</td>
+<td>Per-seat, per-core, per-server, subscription, open-source</td>
+</tr>
+<tr>
+<td>Quantity purchased</td>
+<td>Total entitlements</td>
+</tr>
+<tr>
+<td>Quantity deployed</td>
+<td>Current installations (from discovery)</td>
+</tr>
+<tr>
+<td>Expiry date</td>
+<td>Maintenance or subscription end date</td>
+</tr>
+<tr>
+<td>Contract / PO reference</td>
+<td>Procurement document</td>
+</tr>
+<tr>
+<td>Renewal owner</td>
+<td>Who is responsible for renewal</td>
+</tr>
+</tbody>
+</table>
+<h2 id="discovery-installed-software">Discovery — Installed Software<a class="headerlink" href="#discovery-installed-software" title="Permanent link">&para;</a></h2>
+<h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Debian / Ubuntu — list installed packages
+dpkg -l | awk '{print $2, $3}' | grep -v &quot;^ii&quot;  # filter to installed only
+dpkg-query -W -f='${Package} ${Version}\n'
+
+# RHEL / Rocky — list installed
+rpm -qa --qf &quot;%{NAME} %{VERSION}-%{RELEASE}\n&quot; | sort
+
+# Running processes (for unlicensed software audit)
+ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
+</code></pre>
+<h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># All installed software (Programs and Features)
+Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
+  Select-Object DisplayName, DisplayVersion, Publisher, InstallDate |
+  Where-Object { $_.DisplayName } | Sort-Object DisplayName | Export-Csv installed-software.csv -NoTypeInformation
+
+# 64-bit apps
+Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
+  Select-Object DisplayName, DisplayVersion, Publisher | Where-Object { $_.DisplayName }
+
+# Windows features (server roles)
+Get-WindowsFeature | Where-Object Installed
+</code></pre>
+<h3 id="aws-software-inventory-via-ssm">AWS — Software Inventory via SSM<a class="headerlink" href="#aws-software-inventory-via-ssm" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># View software inventory for an instance
+aws ssm list-inventory-entries \
+  --instance-id &lt;instance-id&gt; \
+  --type-name &quot;AWS:Application&quot; \
+  --query 'Entries[*].{Name:Name,Version:Version,Publisher:Publisher}' --output table
+
+# Aggregate across all managed instances
+aws ssm list-resource-data-sync
+aws ssm get-inventory \
+  --filters &quot;Key=AWS:Application.Name,Values=Oracle*,Type=BeginWith&quot; \
+  --query 'Entities[*].Data.AWS:Application.Content[*]' --output table
+</code></pre>
+<h2 id="license-utilisation-common-products">License Utilisation — Common Products<a class="headerlink" href="#license-utilisation-common-products" title="Permanent link">&para;</a></h2>
+<h3 id="microsoft-365">Microsoft 365<a class="headerlink" href="#microsoft-365" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># Connect to Microsoft Graph (requires MgGraph module)
+Connect-MgGraph -Scopes &quot;Directory.Read.All&quot;
+
+# List subscriptions and assigned / total
+Get-MgSubscribedSku | Select-Object SkuPartNumber,
+  @{N=&quot;Purchased&quot;;E={$_.PrepaidUnits.Enabled}},
+  @{N=&quot;Assigned&quot;;E={$_.ConsumedUnits}} |
+  Where-Object { $_.Purchased -gt 0 }
+</code></pre>
+<h3 id="vmware-vsphere">VMware vSphere<a class="headerlink" href="#vmware-vsphere" title="Permanent link">&para;</a></h3>
+<pre><code class="language-powershell"># Connect vCenter
+Connect-VIServer -Server vcenter.corp.example.com
+
+# License usage
+Get-View -ViewType LicenseManager | ForEach-Object {
+  $_.Licenses | Select-Object Name, Total, Used, @{N=&quot;Available&quot;;E={$_.Total - $_.Used}}
+}
+</code></pre>
+<h3 id="sql-server-core-license-audit">SQL Server — Core License Audit<a class="headerlink" href="#sql-server-core-license-audit" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Logical CPU count (for per-core licensing)
+SELECT cpu_count, hyperthread_ratio,
+       cpu_count / hyperthread_ratio AS physical_cores
+FROM sys.dm_os_sys_info;
+
+-- SQL Server edition and version
+SELECT @@VERSION;
+SELECT SERVERPROPERTY('Edition') AS edition, SERVERPROPERTY('ProductVersion') AS version;
+</code></pre>
+<h2 id="expiry-monitoring">Expiry Monitoring<a class="headerlink" href="#expiry-monitoring" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Script to check license expiry from a CSV inventory
+# columns: Product,ExpiryDate,RenewalOwner
+awk -F',' 'NR&gt;1 {
+  cmd = &quot;date -d \&quot;&quot; $2 &quot;\&quot; +%s&quot;
+  cmd | getline expiry; close(cmd)
+  now = systime()
+  days = int((expiry - now) / 86400)
+  if (days &lt; 90) print &quot;WARNING: &quot; $1 &quot; expires in &quot; days &quot; days — owner: &quot; $3
+}' license-inventory.csv
+</code></pre>
+<h2 id="license-compliance-checklist">License Compliance Checklist<a class="headerlink" href="#license-compliance-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review license usage</li>
-<li>Confirm renewal dates</li>
-<li>Validate compliance status</li>
+<li>[ ] Software inventory collected from all managed systems this month</li>
+<li>[ ] Deployed count compared to purchased seats — no over-deployment</li>
+<li>[ ] Licenses expiring within 90 days identified and renewal initiated</li>
+<li>[ ] Unused licences (0 active users for 90+ days) flagged for reclamation</li>
+<li>[ ] Open-source licences reviewed for GPL/AGPL copyleft obligations</li>
+<li>[ ] Audit trail maintained for licence purchases and decommissions</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Record license details</li>
-<li>Track usage metrics</li>
-<li>Monitor expiration dates</li>
-<li>Renew licenses</li>
-</ol>
+<h2 id="licence-risk-matrix">Licence Risk Matrix<a class="headerlink" href="#licence-risk-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Condition</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Over-deployed</td>
+<td>Installed &gt; purchased</td>
+<td>Reduce deployments or purchase additional</td>
+</tr>
+<tr>
+<td>Near expiry</td>
+<td>&lt; 90 days to expiry</td>
+<td>Initiate renewal; notify procurement</td>
+</tr>
+<tr>
+<td>Expired</td>
+<td>Past expiry date</td>
+<td>Cease use immediately; renew or remove</td>
+</tr>
+<tr>
+<td>Unlicensed software</td>
+<td>Found in discovery, no licence record</td>
+<td>Uninstall or acquire licence within 30 days</td>
+</tr>
+<tr>
+<td>Copyleft dependency</td>
+<td>GPL/AGPL in commercial product</td>
+<td>Legal review before distribution</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discovery shows more installs than expected</td>
+<td>Shared installs? VMs cloned with software?</td>
+<td>Audit VM templates; remove duplicate installs</td>
+</tr>
+<tr>
+<td>Microsoft licence count mismatch</td>
+<td>Shared mailboxes consuming licences?</td>
+<td>Review M365 Admin Centre assigned licences vs active users</td>
+</tr>
+<tr>
+<td>SQL Server licence audit fails</td>
+<td>Edition doesn't match purchased</td>
+<td>Downgrade to licensed edition or purchase upgrade</td>
+</tr>
+<tr>
+<td>SSM inventory incomplete</td>
+<td>Not all instances managed?</td>
+<td>Verify SSM agent installed and IAM role has <code>ssm:PutInventory</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

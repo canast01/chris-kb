@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#integration-health-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Integration Health Overview
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-integrations" class="md-nav__link">
+  <a href="#monitoring-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Integrations
+        Monitoring Integration
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#syslog-log-forwarding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Syslog / Log Forwarding
       
     </span>
   </a>
@@ -745,10 +745,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#backup-agent-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Backup Agent Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory-ldap-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory / LDAP Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-connection-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Connection Pooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-restart-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Restart Procedures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-rotation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Rotation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,28 +830,172 @@
 
 
 <h1 id="service-integrations">Service Integrations<a class="headerlink" href="#service-integrations" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Service integrations connect infrastructure components such as monitoring, backup, authentication, and ticketing systems.</p>
-<h2 id="common-integrations">Common Integrations<a class="headerlink" href="#common-integrations" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Monitoring to ticketing</li>
-<li>Backup to storage</li>
-<li>Authentication to directory services</li>
-<li>Logging to SIEM</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify integration status</li>
-<li>Confirm data synchronization</li>
-<li>Review failed integration jobs</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Health checks and troubleshooting for common infrastructure integration points: monitoring, backup, authentication, logging, and ticketing.</p>
+<h2 id="integration-health-overview">Integration Health Overview<a class="headerlink" href="#integration-health-overview" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Health Check</th>
+<th>Common Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monitoring → Alertmanager</td>
+<td>Alert rules firing; silence list empty</td>
+<td>Webhook URL changed; auth token expired</td>
+</tr>
+<tr>
+<td>Syslog → SIEM</td>
+<td>Events appearing in SIEM within 60s</td>
+<td>Port 514 blocked; UDP vs TCP mismatch</td>
+</tr>
+<tr>
+<td>Backup agent → target storage</td>
+<td>Agent heartbeat; backup job success</td>
+<td>Credentials expired; storage full</td>
+</tr>
+<tr>
+<td>Linux/Windows → AD (SSSD/Winbind)</td>
+<td><code>id &lt;user&gt;</code> returns AD groups</td>
+<td>Kerberos ticket expired; DC unreachable</td>
+</tr>
+<tr>
+<td>App server → database</td>
+<td>Connection pool healthy; query success</td>
+<td>Password rotated without app update</td>
+</tr>
+<tr>
+<td>CI/CD → artifact registry</td>
+<td>Push/pull succeeds</td>
+<td>Token expired; registry TLS cert untrusted</td>
+</tr>
+<tr>
+<td>App → secret manager</td>
+<td>Secret retrieval latency &lt; 200ms</td>
+<td>IAM role missing; network policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Prometheus: check scrape targets
+curl -s http://prometheus:9090/api/v1/targets | jq '.data.activeTargets[] | {job:.labels.job, health:.health, error:.lastError}'
+
+# Alertmanager: check alert routing
+curl -s http://alertmanager:9093/api/v2/alerts | jq '.[] | {alertname:.labels.alertname, state:.status.state}'
+
+# Grafana datasource health
+curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.name, type:.type, url:.url}'
+</code></pre>
+<h2 id="syslog-log-forwarding">Syslog / Log Forwarding<a class="headerlink" href="#syslog-log-forwarding" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify rsyslog is forwarding
+systemctl status rsyslog
+# Test send a message and check it arrives at SIEM
+logger -p local0.info &quot;Test message from $(hostname) at $(date)&quot;
+# Then grep SIEM for that message
+
+# Check rsyslog forwarding config
+grep -E &quot;@@|omfwd&quot; /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+
+# TCP connectivity to syslog receiver
+nc -zv &lt;syslog-server&gt; 514
+</code></pre>
+<h2 id="backup-agent-integration">Backup Agent Integration<a class="headerlink" href="#backup-agent-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Veeam agent status (Linux)
+systemctl status veeam
+veeamconfig job list
+veeamconfig session list --allJobs
+
+# Azure Backup agent
+systemctl status waagent
+az backup job list -g &lt;rg&gt; --vault-name &lt;vault&gt; --query '[?status==`Failed`]' -o table
+
+# AWS Backup
+aws backup list-backup-jobs --by-state FAILED \
+  --query 'BackupJobs[*].{Resource:ResourceArn,Status:State,StartTime:CreationDate}' --output table
+</code></pre>
+<h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSSD on Linux
+systemctl status sssd
+sssctl domain-status &lt;domain&gt;
+id &lt;ad-user&gt;               # should return AD UID + groups
+
+# Winbind
+wbinfo -t                  # test trust to domain
+wbinfo -u | head -5        # list domain users
+net ads info               # show DC and site info
+
+# LDAP reachability
+ldapsearch -x -H ldap://&lt;dc-hostname&gt; -b &quot;dc=corp,dc=example,dc=com&quot; &quot;(sAMAccountName=testuser)&quot; cn mail
+</code></pre>
+<h2 id="database-connection-pooling">Database Connection Pooling<a class="headerlink" href="#database-connection-pooling" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PgBouncer status
+psql -h /tmp -p 6432 pgbouncer -c &quot;SHOW POOLS;&quot;
+psql -h /tmp -p 6432 pgbouncer -c &quot;SHOW STATS;&quot;
+
+# ProxySQL (MySQL)
+mysql -h 127.0.0.1 -P 6032 -u admin -padmin -e &quot;SELECT hostgroup_id, hostname, status FROM mysql_servers;&quot;
+</code></pre>
+<h2 id="integration-restart-procedures">Integration Restart Procedures<a class="headerlink" href="#integration-restart-procedures" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSSD (re-read AD group membership)
+sssctl cache-remove -y &amp;&amp; systemctl restart sssd
+
+# rsyslog
+systemctl restart rsyslog &amp;&amp; systemctl status rsyslog
+
+# PgBouncer
+systemctl restart pgbouncer &amp;&amp; psql -h /tmp -p 6432 pgbouncer -c &quot;SHOW POOLS;&quot;
+
+# Veeam agent
+systemctl restart veeam
+</code></pre>
+<h2 id="credential-rotation-checklist">Credential Rotation Checklist<a class="headerlink" href="#credential-rotation-checklist" title="Permanent link">&para;</a></h2>
+<p>When a shared service account password is rotated, update in this order:</p>
 <ol>
-<li>Identify integration failure</li>
-<li>Validate network connectivity</li>
-<li>Check authentication credentials</li>
-<li>Restart integration service if required</li>
+<li>Update secret in vault (AWS Secrets Manager / Azure Key Vault)</li>
+<li>Update application config or environment variable</li>
+<li>Restart the service consuming the credential</li>
+<li>Validate integration health (connection pool, authentication test)</li>
+<li>Confirm no errors in application logs post-restart</li>
 </ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSSD not resolving users</td>
+<td><code>sssctl domain-status</code>; DC reachable?</td>
+<td>Restart SSSD; check Kerberos ticket (<code>klist</code>)</td>
+</tr>
+<tr>
+<td>Syslog not arriving at SIEM</td>
+<td>Port open? TLS cert trusted?</td>
+<td><code>nc -zv</code> syslog server; check rsyslog error log</td>
+</tr>
+<tr>
+<td>Backup job failing</td>
+<td>Storage full? Credentials expired?</td>
+<td>Check vault storage; rotate creds; check agent logs</td>
+</tr>
+<tr>
+<td>Prometheus target <code>down</code></td>
+<td>Exporter running? Port accessible?</td>
+<td><code>curl http://host:&lt;port&gt;/metrics</code>; restart exporter</td>
+</tr>
+<tr>
+<td>App can't connect to DB</td>
+<td>Pool config pointing at old IP? Password rotated?</td>
+<td>Check connection string; verify credentials; bounce pool</td>
+</tr>
+</tbody>
+</table>
 
 
 

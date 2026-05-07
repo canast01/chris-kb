@@ -705,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#account-subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account &amp; Subscriptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Machines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disks-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disks &amp; Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-accounts-blobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Accounts &amp; Blobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity &amp; RBAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitor-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor &amp; Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Vault
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AKS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup &amp; Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,63 +841,247 @@
 
 
 <h1 id="azure-cli-reference">Azure CLI Reference<a class="headerlink" href="#azure-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used Azure CLI (<code>az</code>) commands for managing compute, storage, networking, identity, and monitoring.</p>
+<p>Commonly used Azure CLI (<code>az</code>) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that talks directly to Azure APIs — everything you can do in the portal, you can automate with <code>az</code>.</p>
 <blockquote>
 <p>Requires <code>az login</code> or service principal credentials. Use <code>az account set --subscription &lt;id&gt;</code> to target a specific subscription.</p>
 </blockquote>
-<div class="kb-grid kb-grid-3">
+<hr />
+<h2 id="account-subscriptions">Account &amp; Subscriptions<a class="headerlink" href="#account-subscriptions" title="Permanent link">&para;</a></h2>
+<p>Authenticate, manage subscriptions, and work with resource groups. Resource groups are the fundamental organizing container in Azure — every resource lives in one.</p>
+<pre><code class="language-bash"># Login
+az login
+az login --service-principal -u &lt;app_id&gt; -p &lt;password&gt; --tenant &lt;tenant&gt;
+az login --identity   # managed identity (for VMs and services)
 
-<a class="kb-card" href="account/">
-  <strong>Account & Subscriptions</strong>
-  <span>Login, subscription management, resource groups, and identity.</span>
-</a>
+# Subscriptions
+az account list --output table
+az account show
+az account set --subscription &lt;id_or_name&gt;
 
-<a class="kb-card" href="virtual-machines/">
-  <strong>Virtual Machines</strong>
-  <span>List, start, stop, create, resize, and run commands on VMs.</span>
-</a>
+# Current identity
+az ad signed-in-user show
 
-<a class="kb-card" href="disks/">
-  <strong>Disks & Snapshots</strong>
-  <span>Managed disks, attach/detach, and snapshots.</span>
-</a>
+# Resource groups
+az group list
+az group list --output table
+az group show --name &lt;rg&gt;
+az group create --name &lt;rg&gt; --location eastus
+az group delete --name &lt;rg&gt; --yes
+az group list --query &quot;[].{Name:name,Location:location,State:properties.provisioningState}&quot; --output table
+</code></pre>
+<hr />
+<h2 id="virtual-machines">Virtual Machines<a class="headerlink" href="#virtual-machines" title="Permanent link">&para;</a></h2>
+<p>Create, list, start, stop, and manage Azure VMs. <code>az vm deallocate</code> stops the VM and releases the compute allocation (billing stops for compute). <code>az vm stop</code> only powers off the OS — you're still billed.</p>
+<pre><code class="language-bash"># List
+az vm list --output table
+az vm list --resource-group &lt;rg&gt; --output table
+az vm list --resource-group &lt;rg&gt; --show-details --output table
 
-<a class="kb-card" href="storage/">
-  <strong>Storage Accounts & Blobs</strong>
-  <span>Storage accounts, containers, blobs, and SAS tokens.</span>
-</a>
+# Start / stop / restart
+az vm start --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm stop --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm deallocate --resource-group &lt;rg&gt; --name &lt;vm&gt;   # fully stop (stops billing for compute)
+az vm restart --resource-group &lt;rg&gt; --name &lt;vm&gt;
 
-<a class="kb-card" href="networking/">
-  <strong>Networking</strong>
-  <span>VNets, subnets, NSGs, public IPs, and load balancers.</span>
-</a>
+# Details
+az vm show --resource-group &lt;rg&gt; --name &lt;vm&gt;
+az vm get-instance-view --resource-group &lt;rg&gt; --name &lt;vm&gt;
 
-<a class="kb-card" href="identity/">
-  <strong>Identity & RBAC</strong>
-  <span>Users, groups, service principals, app registrations, and RBAC.</span>
-</a>
+# Create
+az vm create --resource-group &lt;rg&gt; --name &lt;vm&gt; --image Ubuntu2204 --size Standard_D2s_v3 \
+  --admin-username azureuser --ssh-key-values ~/.ssh/id_rsa.pub
 
-<a class="kb-card" href="monitor/">
-  <strong>Monitor & Alerts</strong>
-  <span>Activity log, metrics, alerts, and diagnostic settings.</span>
-</a>
+# Resize
+az vm resize --resource-group &lt;rg&gt; --name &lt;vm&gt; --size Standard_D4s_v3
 
-<a class="kb-card" href="key-vault/">
-  <strong>Key Vault</strong>
-  <span>Vaults, secrets, keys, and certificates.</span>
-</a>
+# Run a command inside the VM (requires VM agent)
+az vm run-command invoke --resource-group &lt;rg&gt; --name &lt;vm&gt; --command-id RunShellScript \
+  --scripts &quot;uptime&quot;
 
-<a class="kb-card" href="aks/">
-  <strong>AKS</strong>
-  <span>Cluster info, credentials, scale, upgrade, and node pools.</span>
-</a>
+# Open a port in the NSG
+az vm open-port --resource-group &lt;rg&gt; --name &lt;vm&gt; --port 22
+</code></pre>
+<hr />
+<h2 id="disks-snapshots">Disks &amp; Snapshots<a class="headerlink" href="#disks-snapshots" title="Permanent link">&para;</a></h2>
+<p>Manage Azure managed disks — the persistent block storage attached to VMs. Snapshots are point-in-time copies of a disk, useful for backups or creating new disks.</p>
+<pre><code class="language-bash"># Managed disks
+az disk list --resource-group &lt;rg&gt; --output table
+az disk show --resource-group &lt;rg&gt; --name &lt;disk&gt;
+az disk create --resource-group &lt;rg&gt; --name &lt;disk&gt; --size-gb 128 --sku Premium_LRS
+az disk delete --resource-group &lt;rg&gt; --name &lt;disk&gt; --yes
 
-<a class="kb-card" href="backup/">
-  <strong>Backup & Recovery</strong>
-  <span>Recovery Services vaults, backup items, jobs, and on-demand backup.</span>
-</a>
+# Attach / detach disk to VM
+az vm disk attach --resource-group &lt;rg&gt; --vm-name &lt;vm&gt; --name &lt;disk&gt;
+az vm disk detach --resource-group &lt;rg&gt; --vm-name &lt;vm&gt; --name &lt;disk&gt;
 
-</div>
+# Snapshots
+az snapshot list --resource-group &lt;rg&gt; --output table
+az snapshot create --resource-group &lt;rg&gt; --name &lt;snap&gt; --source &lt;disk_id&gt;
+az snapshot delete --resource-group &lt;rg&gt; --name &lt;snap&gt;
+</code></pre>
+<hr />
+<h2 id="storage-accounts-blobs">Storage Accounts &amp; Blobs<a class="headerlink" href="#storage-accounts-blobs" title="Permanent link">&para;</a></h2>
+<p>Azure Blob Storage stores unstructured data (files, backups, images) in containers within a storage account. SAS tokens grant time-limited access without sharing account keys.</p>
+<pre><code class="language-bash"># Storage accounts
+az storage account list --output table
+az storage account show --resource-group &lt;rg&gt; --name &lt;account&gt;
+az storage account create --resource-group &lt;rg&gt; --name &lt;account&gt; --sku Standard_LRS --kind StorageV2
+az storage account delete --resource-group &lt;rg&gt; --name &lt;account&gt; --yes
+
+# Containers
+az storage container list --account-name &lt;account&gt;
+az storage container create --account-name &lt;account&gt; --name &lt;container&gt;
+
+# Blobs
+az storage blob list --account-name &lt;account&gt; --container-name &lt;container&gt;
+az storage blob upload --account-name &lt;account&gt; --container-name &lt;container&gt; \
+  --file &lt;local_file&gt; --name &lt;blob_name&gt;
+az storage blob download --account-name &lt;account&gt; --container-name &lt;container&gt; \
+  --name &lt;blob_name&gt; --file &lt;local_file&gt;
+az storage blob delete --account-name &lt;account&gt; --container-name &lt;container&gt; --name &lt;blob_name&gt;
+
+# SAS token (time-limited access URL)
+az storage container generate-sas --account-name &lt;account&gt; --name &lt;container&gt; \
+  --permissions rwdl --expiry 2025-12-31
+</code></pre>
+<hr />
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<p>Manage virtual networks, subnets, network security groups (NSGs), public IPs, and load balancers. VNets are the private network space in Azure — subnets segment them further.</p>
+<pre><code class="language-bash"># VNets
+az network vnet list --output table
+az network vnet show --resource-group &lt;rg&gt; --name &lt;vnet&gt;
+az network vnet create --resource-group &lt;rg&gt; --name &lt;vnet&gt; --address-prefixes 10.0.0.0/16
+
+# Subnets
+az network vnet subnet list --resource-group &lt;rg&gt; --vnet-name &lt;vnet&gt; --output table
+az network vnet subnet create --resource-group &lt;rg&gt; --vnet-name &lt;vnet&gt; \
+  --name &lt;subnet&gt; --address-prefixes 10.0.1.0/24
+
+# Network Security Groups (NSGs — virtual firewalls)
+az network nsg list --resource-group &lt;rg&gt; --output table
+az network nsg create --resource-group &lt;rg&gt; --name &lt;nsg&gt;
+az network nsg rule create --resource-group &lt;rg&gt; --nsg-name &lt;nsg&gt; --name Allow-SSH \
+  --priority 100 --protocol Tcp --destination-port-range 22 --access Allow
+
+# Public IPs
+az network public-ip list --output table
+az network public-ip create --resource-group &lt;rg&gt; --name &lt;pip&gt; --allocation-method Static
+
+# Load balancer
+az network lb list --output table
+</code></pre>
+<hr />
+<h2 id="identity-rbac">Identity &amp; RBAC<a class="headerlink" href="#identity-rbac" title="Permanent link">&para;</a></h2>
+<p>Manage Azure Active Directory users, groups, service principals, and role-based access control. Service principals are non-human identities used by apps and automation.</p>
+<pre><code class="language-bash"># Users
+az ad user list --output table
+az ad user show --id &lt;user_upn&gt;
+az ad user create --display-name &quot;Name&quot; --user-principal-name user@domain.com --password &lt;pass&gt;
+
+# Groups
+az ad group list --output table
+az ad group show --group &lt;group&gt;
+az ad group member list --group &lt;group&gt;
+
+# Service principals (automation identities)
+az ad sp list --output table
+az ad sp show --id &lt;app_id&gt;
+az ad sp create-for-rbac --name &lt;name&gt; --role Contributor --scopes /subscriptions/&lt;sub_id&gt;
+
+# App registrations
+az ad app list --output table
+az ad app show --id &lt;app_id&gt;
+
+# Role assignments (RBAC — who can do what on which resource)
+az role assignment list --assignee &lt;user_or_sp&gt;
+az role assignment list --scope /subscriptions/&lt;sub_id&gt;/resourceGroups/&lt;rg&gt;
+az role assignment create --assignee &lt;user_or_sp&gt; --role &quot;Contributor&quot; --scope &lt;resource_id&gt;
+az role assignment delete --assignee &lt;user_or_sp&gt; --role &quot;Contributor&quot; --scope &lt;resource_id&gt;
+
+# Role definitions
+az role definition list --output table
+az role definition show --name &quot;Contributor&quot;
+</code></pre>
+<hr />
+<h2 id="monitor-alerts">Monitor &amp; Alerts<a class="headerlink" href="#monitor-alerts" title="Permanent link">&para;</a></h2>
+<p>Query the activity log (who did what), pull resource metrics (CPU, network), and manage alerts and diagnostic settings.</p>
+<pre><code class="language-bash"># Activity log (audit trail of all operations)
+az monitor activity-log list --max-events 50
+az monitor activity-log list --resource-group &lt;rg&gt; --offset 24h
+
+# Metrics (CPU, network, disk IOPS, etc.)
+az monitor metrics list --resource &lt;resource_id&gt; --metric &quot;Percentage CPU&quot;
+az monitor metrics list-definitions --resource &lt;resource_id&gt;
+
+# Alerts
+az monitor alert list --resource-group &lt;rg&gt;
+az monitor action-group list
+
+# Diagnostic settings (route logs and metrics to Log Analytics, storage, or Event Hub)
+az monitor diagnostic-settings list --resource &lt;resource_id&gt;
+az monitor diagnostic-settings create --name &lt;name&gt; --resource &lt;resource_id&gt; \
+  --workspace &lt;workspace_id&gt; --metrics '[{&quot;category&quot;:&quot;AllMetrics&quot;,&quot;enabled&quot;:true}]'
+</code></pre>
+<hr />
+<h2 id="key-vault">Key Vault<a class="headerlink" href="#key-vault" title="Permanent link">&para;</a></h2>
+<p>Azure Key Vault stores secrets (passwords, connection strings), cryptographic keys, and certificates centrally — applications retrieve them at runtime instead of embedding them in code.</p>
+<pre><code class="language-bash"># Vaults
+az keyvault list --output table
+az keyvault show --name &lt;vault&gt;
+
+# Secrets
+az keyvault secret list --vault-name &lt;vault&gt;
+az keyvault secret show --vault-name &lt;vault&gt; --name &lt;secret&gt;
+az keyvault secret set --vault-name &lt;vault&gt; --name &lt;secret&gt; --value &lt;value&gt;
+az keyvault secret delete --vault-name &lt;vault&gt; --name &lt;secret&gt;
+
+# Keys
+az keyvault key list --vault-name &lt;vault&gt;
+az keyvault key show --vault-name &lt;vault&gt; --name &lt;key&gt;
+
+# Certificates
+az keyvault certificate list --vault-name &lt;vault&gt;
+az keyvault certificate show --vault-name &lt;vault&gt; --name &lt;cert&gt;
+</code></pre>
+<hr />
+<h2 id="aks">AKS<a class="headerlink" href="#aks" title="Permanent link">&para;</a></h2>
+<p>Azure Kubernetes Service (AKS) is Azure's managed Kubernetes offering. It manages the control plane — you manage workloads with <code>kubectl</code> after fetching credentials with <code>az aks get-credentials</code>.</p>
+<pre><code class="language-bash"># Clusters
+az aks list --output table
+az aks show --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+
+# Credentials (configures kubectl to point to this cluster)
+az aks get-credentials --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+az aks get-credentials --resource-group &lt;rg&gt; --name &lt;cluster&gt; --admin
+
+# Scale node pool
+az aks scale --resource-group &lt;rg&gt; --name &lt;cluster&gt; --node-count 5
+
+# Upgrade
+az aks get-upgrades --resource-group &lt;rg&gt; --name &lt;cluster&gt;
+az aks upgrade --resource-group &lt;rg&gt; --name &lt;cluster&gt; --kubernetes-version &lt;version&gt;
+
+# Node pools
+az aks nodepool list --resource-group &lt;rg&gt; --cluster-name &lt;cluster&gt;
+</code></pre>
+<hr />
+<h2 id="backup-recovery">Backup &amp; Recovery<a class="headerlink" href="#backup-recovery" title="Permanent link">&para;</a></h2>
+<p>Azure Backup stores recovery points in Recovery Services vaults. Use these commands to check backup status, review jobs, and trigger on-demand backups.</p>
+<pre><code class="language-bash"># Recovery Services vaults
+az backup vault list --output table
+az backup vault show --resource-group &lt;rg&gt; --name &lt;vault&gt;
+
+# Backup items (protected resources)
+az backup item list --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --output table
+
+# Jobs
+az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --output table
+az backup job wait --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; --name &lt;job_id&gt;
+
+# On-demand backup
+az backup protection backup-now --resource-group &lt;rg&gt; --vault-name &lt;vault&gt; \
+  --container-name &lt;container&gt; --item-name &lt;item&gt; --retain-until &lt;date&gt;
+</code></pre>
 
 
 

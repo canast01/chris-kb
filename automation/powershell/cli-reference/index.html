@@ -705,6 +705,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables-output-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables, Output &amp; Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-filesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files &amp; Filesystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remoting-pssession" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remoting (PSSession)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#services-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services &amp; Processes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-powercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware PowerCLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,50 +819,237 @@
 
 
 <h1 id="powershell-cli-reference">PowerShell CLI Reference<a class="headerlink" href="#powershell-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used PowerShell commands and VMware PowerCLI for infrastructure management.</p>
-<div class="kb-grid kb-grid-3">
+<p>PowerShell is Microsoft's cross-platform command shell and scripting language. Unlike the old CMD prompt, PowerShell works with objects — every command outputs structured data you can pipe, filter, sort, and transform. The <code>VMware.PowerCLI</code> module extends PowerShell with hundreds of cmdlets for managing vSphere, making it the primary automation tool for VMware infrastructure.</p>
+<blockquote>
+<p>Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires <code>Install-Module VMware.PowerCLI</code>.</p>
+</blockquote>
+<hr />
+<h2 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h2>
+<p>The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you're on an unfamiliar system.</p>
+<pre><code class="language-powershell"># Version and environment
+$PSVersionTable
+Get-Host
 
-<a class="kb-card" href="core/">
-  <strong>PowerShell — Core</strong>
-  <span>Version, help, Get-Command, module management, and Install-Module.</span>
-</a>
+# Help — the most important command to know
+Get-Help &lt;cmdlet&gt;
+Get-Help &lt;cmdlet&gt; -Full
+Get-Help &lt;cmdlet&gt; -Examples
+Update-Help              # download latest help files
 
-<a class="kb-card" href="variables-pipeline/">
-  <strong>Variables, Output & Pipeline</strong>
-  <span>Variables, output formatting, Where-Object, Sort, Select, and ForEach.</span>
-</a>
+# Discover commands
+Get-Command
+Get-Command -Noun VM     # find all cmdlets with &quot;VM&quot; in the noun
+Get-Command *Service*    # wildcard search
 
-<a class="kb-card" href="files/">
-  <strong>Files & Filesystem</strong>
-  <span>Navigation, file operations, CSV/JSON, and Test-Path.</span>
-</a>
+# Modules
+Get-Module               # loaded modules in current session
+Get-Module -ListAvailable
+Import-Module &lt;module&gt;
+Remove-Module &lt;module&gt;
+Install-Module &lt;module&gt; -Scope CurrentUser
+</code></pre>
+<hr />
+<h2 id="variables-output-pipeline">Variables, Output &amp; Pipeline<a class="headerlink" href="#variables-output-pipeline" title="Permanent link">&para;</a></h2>
+<p>PowerShell passes objects between commands using the pipe (<code>|</code>). This is more powerful than text-based pipes — you get real properties you can filter and select, not just strings. Variables start with <code>$</code>.</p>
+<pre><code class="language-powershell"># Variables
+$myVar = &quot;value&quot;
+$myArray = @(1, 2, 3)
+$myHash = @{ key = &quot;value&quot; }
 
-<a class="kb-card" href="remoting/">
-  <strong>Remoting (PSSession)</strong>
-  <span>Enter-PSSession, New-PSSession, Invoke-Command on multiple hosts.</span>
-</a>
+# Output
+Write-Output &quot;message&quot;
+Write-Host &quot;message&quot; -ForegroundColor Green
+Write-Error &quot;error message&quot;
+Write-Verbose &quot;verbose&quot; -Verbose
 
-<a class="kb-card" href="services-processes/">
-  <strong>Services & Processes</strong>
-  <span>Get/Start/Stop/Restart-Service and Get/Stop-Process.</span>
-</a>
+# Null check
+if ($null -eq $var) { &quot;null&quot; }
 
-<a class="kb-card" href="error-handling/">
-  <strong>Error Handling</strong>
-  <span>Try/catch, ErrorActionPreference, and -ErrorAction parameter.</span>
-</a>
+# String formatting (embed expression in string)
+&quot;Server: $($server.Name)&quot;
 
-<a class="kb-card" href="powercli/">
-  <strong>VMware PowerCLI</strong>
-  <span>Connect-VIServer, VM power/config, snapshots, hosts, clusters, datastores, and tags.</span>
-</a>
+# Common pipeline filters
+Get-Service | Where-Object { $_.Status -eq &quot;Running&quot; }
+Get-Process | Where-Object { $_.CPU -gt 10 }
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
 
-<a class="kb-card" href="reporting/">
-  <strong>Reporting</strong>
-  <span>VM inventory CSV, host summary table, and snapshot report.</span>
-</a>
+# Select specific properties
+Get-VM | Select-Object Name, PowerState, NumCpu, MemoryGB
 
-</div>
+# Aggregate
+Get-VM | Measure-Object MemoryGB -Sum -Average
+
+# ForEach loop via pipeline
+Get-VM | ForEach-Object { Write-Host $_.Name }
+1..10 | ForEach-Object { &quot;Item $_&quot; }
+</code></pre>
+<hr />
+<h2 id="files-filesystem">Files &amp; Filesystem<a class="headerlink" href="#files-filesystem" title="Permanent link">&para;</a></h2>
+<p>PowerShell cmdlets for navigating directories, reading and writing files, and working with CSV and JSON data. These work the same on Windows and Linux.</p>
+<pre><code class="language-powershell"># Navigation
+Get-Location
+Set-Location C:\scripts
+Get-ChildItem
+Get-ChildItem -Recurse -Filter &quot;*.ps1&quot;
+
+# File operations
+New-Item -Path &quot;.\file.txt&quot; -ItemType File
+Copy-Item source.txt dest.txt
+Move-Item source.txt dest\
+Remove-Item file.txt
+Get-Content file.txt
+Set-Content file.txt &quot;content&quot;
+Add-Content file.txt &quot;new line&quot;
+
+# CSV / JSON
+Import-Csv data.csv
+Export-Csv -Path output.csv -NoTypeInformation
+$obj | ConvertTo-Json
+$json | ConvertFrom-Json
+
+# Test path (returns true/false — useful in scripts)
+Test-Path &quot;C:\scripts\file.ps1&quot;
+</code></pre>
+<hr />
+<h2 id="remoting-pssession">Remoting (PSSession)<a class="headerlink" href="#remoting-pssession" title="Permanent link">&para;</a></h2>
+<p>PowerShell Remoting lets you run commands on remote machines as if you were logged in. <code>Invoke-Command</code> can target dozens of servers at once — essential for large-scale administration.</p>
+<pre><code class="language-powershell"># Interactive session on a remote host
+Enter-PSSession -ComputerName &lt;host&gt;
+Exit-PSSession
+
+# Persistent session (reuse for multiple commands)
+$session = New-PSSession -ComputerName &lt;host&gt;
+Invoke-Command -Session $session -ScriptBlock { Get-Service }
+Remove-PSSession $session
+
+# Run the same command on multiple hosts in parallel
+$servers = @(&quot;srv1&quot;, &quot;srv2&quot;, &quot;srv3&quot;)
+Invoke-Command -ComputerName $servers -ScriptBlock { hostname }
+</code></pre>
+<hr />
+<h2 id="services-processes">Services &amp; Processes<a class="headerlink" href="#services-processes" title="Permanent link">&para;</a></h2>
+<p>Query, start, stop, and configure Windows services. Find and kill processes. These are the operational building blocks for Windows system administration.</p>
+<pre><code class="language-powershell"># Services
+Get-Service
+Get-Service -Name &lt;name&gt;
+Start-Service &lt;name&gt;
+Stop-Service &lt;name&gt;
+Restart-Service &lt;name&gt;
+Set-Service -Name &lt;name&gt; -StartupType Automatic
+
+# Processes
+Get-Process
+Get-Process -Name &lt;name&gt;
+Stop-Process -Name &lt;name&gt;
+Stop-Process -Id &lt;pid&gt; -Force
+</code></pre>
+<hr />
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<p>Control what happens when a cmdlet fails. The default is to keep running — change <code>$ErrorActionPreference</code> or use <code>-ErrorAction</code> to make failures terminate, or suppress them silently.</p>
+<pre><code class="language-powershell"># Try/catch — catch terminating errors
+try {
+    Get-VM -Name &quot;nonexistent&quot; -ErrorAction Stop
+} catch {
+    Write-Error &quot;Failed: $_&quot;
+}
+
+# Global error behavior
+$ErrorActionPreference = &quot;Stop&quot;      # terminate on any error
+$ErrorActionPreference = &quot;Continue&quot;  # default — log and keep going
+
+# Per-command error behavior
+Get-VM -Name &quot;test&quot; -ErrorAction SilentlyContinue   # suppress errors
+Get-VM -Name &quot;test&quot; -ErrorAction Stop               # force terminating
+</code></pre>
+<hr />
+<h2 id="vmware-powercli">VMware PowerCLI<a class="headerlink" href="#vmware-powercli" title="Permanent link">&para;</a></h2>
+<p>PowerCLI is the official VMware module for managing vSphere from PowerShell. It connects to vCenter and lets you manage VMs, hosts, clusters, datastores, and more with full scripting capability.</p>
+<pre><code class="language-powershell"># Install and configure
+Install-Module VMware.PowerCLI -Scope CurrentUser
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+Set-PowerCLIConfiguration -ParticipateInCeip $false -Confirm:$false
+
+# Connect / disconnect
+Connect-VIServer -Server &lt;vcenter&gt; -Credential (Get-Credential)
+Disconnect-VIServer -Confirm:$false
+
+# VMs — list and filter
+Get-VM
+Get-VM -Name &lt;name&gt;
+Get-VM | Where-Object { $_.PowerState -eq &quot;PoweredOff&quot; }
+
+# VM power operations
+Start-VM -VM &lt;name&gt;
+Stop-VM -VM &lt;name&gt; -Confirm:$false
+Restart-VM -VM &lt;name&gt; -Confirm:$false
+Suspend-VM -VM &lt;name&gt;
+
+# VM configuration
+Get-VM &lt;name&gt; | Get-HardDisk
+Get-VM &lt;name&gt; | Get-NetworkAdapter
+Set-VM -VM &lt;name&gt; -NumCpu 4 -MemoryGB 16 -Confirm:$false
+
+# Snapshots
+Get-Snapshot -VM &lt;name&gt;
+New-Snapshot -VM &lt;name&gt; -Name &quot;pre-patch&quot; -Memory:$false -Quiesce:$false
+Remove-Snapshot -Snapshot &lt;snap&gt; -Confirm:$false
+Set-VM -VM &lt;name&gt; -Snapshot &lt;snap&gt; -Confirm:$false    # revert
+
+# Hosts
+Get-VMHost
+Get-VMHost -Name &lt;hostname&gt;
+Get-VMHost | Select-Object Name, PowerState, ConnectionState, Version
+Set-VMHost -VMHost &lt;host&gt; -State Maintenance
+
+# Clusters
+Get-Cluster
+Get-Cluster &lt;name&gt; | Get-VMHost
+Get-Cluster | Get-VM
+
+# Datastores
+Get-Datastore
+Get-Datastore | Select-Object Name, CapacityGB, FreeSpaceGB
+Get-Datastore | Where-Object { ($_.FreeSpaceGB / $_.CapacityGB) -lt 0.2 }
+
+# vSAN
+Get-VsanView
+Get-VsanClusterConfiguration -Cluster &lt;cluster&gt;
+
+# Resource pools
+Get-ResourcePool
+Get-ResourcePool -Name &lt;name&gt; | Get-VM
+
+# vCenter events
+Get-VIEvent -MaxSamples 100
+Get-VIEvent -Start (Get-Date).AddHours(-24)
+
+# Tags
+Get-Tag
+Get-TagCategory
+New-Tag -Name &lt;tag&gt; -Category &lt;category&gt;
+Get-VM &lt;name&gt; | Get-TagAssignment
+New-TagAssignment -Tag &lt;tag&gt; -Entity (Get-VM &lt;name&gt;)
+</code></pre>
+<hr />
+<h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
+<p>Generate reports from PowerCLI data — export VM inventories to CSV, produce host utilization summaries, or audit snapshot usage across the environment.</p>
+<pre><code class="language-powershell"># VM inventory to CSV
+Get-VM | Select-Object Name, PowerState, NumCpu, MemoryGB,
+    @{N=&quot;Datastore&quot;;E={($_ | Get-Datastore).Name}} |
+    Export-Csv -Path vm_inventory.csv -NoTypeInformation
+
+# Host utilization summary
+Get-VMHost | Select-Object Name, Version,
+    @{N=&quot;CPU%&quot;;E={[math]::Round($_.CpuUsageMhz / $_.CpuTotalMhz * 100, 1)}},
+    @{N=&quot;Mem%&quot;;E={[math]::Round($_.MemoryUsageGB / $_.MemoryTotalGB * 100, 1)}} |
+    Format-Table
+
+# Snapshot report — sorted by size
+Get-VM | Get-Snapshot |
+    Select-Object VM, Name, Created,
+    @{N=&quot;SizeGB&quot;;E={[math]::Round($_.SizeGB, 2)}} |
+    Sort-Object SizeGB -Descending
+</code></pre>
 
 
 

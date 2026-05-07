@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pre-failover-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pre-Failover Checklist
       
     </span>
   </a>
@@ -723,10 +723,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#postgresql-streaming-replication-failover" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        PostgreSQL — Streaming Replication Failover
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PostgreSQL — Streaming Replication Failover">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-patroni-ha-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL — Patroni (HA cluster)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mysql-mariadb-replica-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL / MariaDB — Replica Promotion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MySQL / MariaDB — Replica Promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mysql-mha-master-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL — MHA (Master High Availability)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-server-always-on-availability-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server — Always On Availability Group
       
     </span>
   </a>
@@ -734,10 +790,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#sql-server-failover-cluster-instance-fci" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        SQL Server — Failover Cluster Instance (FCI)
       
     </span>
   </a>
@@ -745,10 +801,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#post-failover-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Post-Failover Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-failover-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Failover Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,24 +853,139 @@
 
 
 <h1 id="database-failover-procedure">Database Failover Procedure<a class="headerlink" href="#database-failover-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure defines steps to promote a standby database during failure.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
+<p>Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.</p>
+<h2 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm primary database failure</li>
-<li>Verify standby readiness</li>
-<li>Notify application teams</li>
+<li>[ ] Primary failure confirmed (not a network partition — verify from multiple paths)</li>
+<li>[ ] Standby replication lag checked — data loss risk understood</li>
+<li>[ ] Application teams notified (DBA lead, app owners, on-call)</li>
+<li>[ ] DNS / VIP failover method identified and ready</li>
+<li>[ ] Rollback path documented (if primary recovers)</li>
 </ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">systemctl stop primary-db
-systemctl start standby-db
+<h2 id="postgresql-streaming-replication-failover">PostgreSQL — Streaming Replication Failover<a class="headerlink" href="#postgresql-streaming-replication-failover" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># On STANDBY — check replication lag before promoting
+psql -U postgres -c &quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;
+
+# Promote standby to primary
+pg_ctl promote -D /var/lib/postgresql/data
+# or PostgreSQL 12+:
+touch /var/lib/postgresql/data/promote_standby
+
+# Verify promotion
+psql -U postgres -c &quot;SELECT pg_is_in_recovery();&quot;  # should return 'f' (false)
+psql -U postgres -c &quot;SELECT now() AS current_time;&quot;
+
+# Update application connection string / DNS to point at new primary
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<h3 id="postgresql-patroni-ha-cluster">PostgreSQL — Patroni (HA cluster)<a class="headerlink" href="#postgresql-patroni-ha-cluster" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># View cluster state
+patronictl -c /etc/patroni/config.yml list
+
+# Manual failover to specific member
+patronictl -c /etc/patroni/config.yml failover &lt;cluster-name&gt; --master &lt;old-primary&gt; --candidate &lt;new-primary&gt;
+
+# Switchover (graceful — zero data loss)
+patronictl -c /etc/patroni/config.yml switchover &lt;cluster-name&gt;
+</code></pre>
+<h2 id="mysql-mariadb-replica-promotion">MySQL / MariaDB — Replica Promotion<a class="headerlink" href="#mysql-mariadb-replica-promotion" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># On REPLICA — stop replication and capture position
+mysql -u root -e &quot;STOP SLAVE;&quot;
+mysql -u root -e &quot;SHOW SLAVE STATUS\G&quot;  # note Exec_Master_Log_Pos
+
+# Reset replica to become new primary
+mysql -u root -e &quot;RESET SLAVE ALL;&quot;
+mysql -u root -e &quot;RESET MASTER;&quot;
+
+# Enable writes (if read_only was set)
+mysql -u root -e &quot;SET GLOBAL read_only = OFF;&quot;
+mysql -u root -e &quot;SET GLOBAL super_read_only = OFF;&quot;
+
+# Re-point application connection (update DNS / HAProxy / ProxySQL backend)
+</code></pre>
+<h3 id="mysql-mha-master-high-availability">MySQL — MHA (Master High Availability)<a class="headerlink" href="#mysql-mha-master-high-availability" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Automatic failover — check MHA status
+masterha_check_repl --conf=/etc/mha/app.conf
+
+# Manual failover
+masterha_master_switch --conf=/etc/mha/app.conf --master_state=dead --new_master_host=&lt;replica-host&gt;
+</code></pre>
+<h2 id="sql-server-always-on-availability-group">SQL Server — Always On Availability Group<a class="headerlink" href="#sql-server-always-on-availability-group" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Check AG health before failover
+SELECT ag.name, ar.replica_server_name, rs.role_desc, rs.synchronization_health_desc
+FROM sys.dm_hadr_availability_replica_states rs
+JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id
+JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
+
+-- Manual failover to synchronous replica (no data loss)
+ALTER AVAILABILITY GROUP [AG_Name] FAILOVER;
+
+-- Forced failover (async replica — possible data loss; only if synchronous unavailable)
+ALTER AVAILABILITY GROUP [AG_Name] FORCE_FAILOVER_ALLOW_DATA_LOSS;
+</code></pre>
+<h2 id="sql-server-failover-cluster-instance-fci">SQL Server — Failover Cluster Instance (FCI)<a class="headerlink" href="#sql-server-failover-cluster-instance-fci" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Check cluster node status
+Get-ClusterNode
+
+# Move SQL Server resource group to another node
+Move-ClusterGroup -Name &quot;SQL Server (MSSQLSERVER)&quot; -Node &lt;target-node&gt;
+
+# Verify
+Get-ClusterGroup -Name &quot;SQL Server (MSSQLSERVER)&quot; | Select-Object Name, OwnerNode, State
+</code></pre>
+<h2 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Verify new primary accepting writes
+psql -h &lt;new-primary&gt; -U appuser -c &quot;INSERT INTO health_check(ts) VALUES (now());&quot;
+mysql -h &lt;new-primary&gt; -u appuser -e &quot;INSERT INTO health_check(ts) VALUES(now());&quot;
+
+# Application connectivity
+curl -sf https://&lt;app-endpoint&gt;/health &amp;&amp; echo &quot;OK&quot;
+
+# Check for open transactions / locks
+# PostgreSQL
+psql -c &quot;SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE state != 'idle';&quot;
+# SQL Server
+SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
+</code></pre>
+<h2 id="post-failover-actions">Post-Failover Actions<a class="headerlink" href="#post-failover-actions" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Confirm standby promoted</li>
-<li>Confirm application connectivity restored</li>
-<li>Monitor system performance</li>
+<li>Notify application teams: new primary host and connection string</li>
+<li>Update DNS / load balancer / connection pool to point at new primary</li>
+<li>Monitor for 30 min — error rate, query latency, connection count</li>
+<li>Re-establish replication (old primary → new primary) once old primary recovers</li>
+<li>Document failover in ITSM; link to root cause problem ticket</li>
 </ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standby not promoting</td>
+<td>Trigger file permissions / Patroni state</td>
+<td>Check <code>pg_ctl promote</code> error; check Patroni logs</td>
+</tr>
+<tr>
+<td>Split-brain (two primaries)</td>
+<td>Both nodes think they are primary</td>
+<td>Immediately fence the old primary; force-stop one; rebuild replication</td>
+</tr>
+<tr>
+<td>High replication lag</td>
+<td>Standby behind before failover</td>
+<td>Assess data loss risk; decide to wait or accept data loss and proceed</td>
+</tr>
+<tr>
+<td>Application can't connect after failover</td>
+<td>DNS TTL / connection pool</td>
+<td>Flush DNS cache; bounce connection pool; update app config</td>
+</tr>
+</tbody>
+</table>
 
 
 

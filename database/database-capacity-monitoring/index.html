@@ -712,10 +712,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#current-capacity-quick-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Current Capacity — Quick Check
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Capacity — Quick Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mysql-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL / MariaDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filesystem-volume-capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filesystem / Volume Capacity
       
     </span>
   </a>
@@ -723,10 +773,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#growth-trending-30-day-estimate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Growth Trending (30-day estimate)
       
     </span>
   </a>
@@ -734,10 +784,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#capacity-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Capacity Thresholds
       
     </span>
   </a>
@@ -745,10 +795,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#capacity-reduction-quick-wins" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Capacity Reduction — Quick Wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-monitoring-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Monitoring Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,24 +847,176 @@
 
 
 <h1 id="database-capacity-monitoring">Database Capacity Monitoring<a class="headerlink" href="#database-capacity-monitoring" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook monitors database storage growth and prevents capacity exhaustion.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm database size</li>
-<li>Identify storage thresholds</li>
-<li>Review growth trends</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">du -sh /var/lib/mysql
-df -h
+<p>Track database storage growth, identify capacity risks early, and plan expansion before thresholds are breached.</p>
+<h2 id="current-capacity-quick-check">Current Capacity — Quick Check<a class="headerlink" href="#current-capacity-quick-check" title="Permanent link">&para;</a></h2>
+<h3 id="postgresql">PostgreSQL<a class="headerlink" href="#postgresql" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Database sizes
+SELECT datname AS database,
+       pg_size_pretty(pg_database_size(datname)) AS size
+FROM pg_database ORDER BY pg_database_size(datname) DESC;
+
+-- Table sizes (top 20)
+SELECT schemaname, tablename,
+       pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS total_size
+FROM pg_tables
+ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+LIMIT 20;
+
+-- Index sizes
+SELECT indexname,
+       pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size
+FROM pg_indexes
+ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm storage capacity sufficient</li>
-<li>Identify growth patterns</li>
-<li>Plan storage expansion if required</li>
-</ol>
+<h3 id="mysql-mariadb">MySQL / MariaDB<a class="headerlink" href="#mysql-mariadb" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Database sizes
+SELECT table_schema AS `database`,
+       ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) AS size_mb
+FROM information_schema.tables
+GROUP BY table_schema ORDER BY size_mb DESC;
+
+-- Largest tables
+SELECT table_schema, table_name,
+       ROUND((data_length + index_length) / 1024 / 1024, 1) AS size_mb,
+       ROUND(data_free / 1024 / 1024, 1) AS free_mb
+FROM information_schema.tables
+ORDER BY (data_length + index_length) DESC LIMIT 20;
+</code></pre>
+<h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Database file sizes and usage
+SELECT DB_NAME(vfs.database_id) AS database_name,
+       mf.name AS logical_name,
+       mf.type_desc,
+       ROUND(vfs.size_on_disk_bytes / 1048576.0, 1) AS size_mb,
+       ROUND(vfs.io_stall_read_ms, 0) AS read_stall_ms
+FROM sys.dm_io_virtual_file_stats(NULL, NULL) vfs
+JOIN sys.master_files mf ON vfs.database_id = mf.database_id AND vfs.file_id = mf.file_id
+ORDER BY vfs.size_on_disk_bytes DESC;
+
+-- Top 20 tables by size
+SELECT TOP 20 t.name AS table_name,
+       SUM(a.total_pages) * 8 / 1024 AS total_size_mb,
+       SUM(a.used_pages) * 8 / 1024 AS used_size_mb
+FROM sys.tables t
+JOIN sys.indexes i ON t.object_id = i.object_id
+JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id
+JOIN sys.allocation_units a ON p.partition_id = a.container_id
+GROUP BY t.name ORDER BY total_size_mb DESC;
+</code></pre>
+<h2 id="filesystem-volume-capacity">Filesystem / Volume Capacity<a class="headerlink" href="#filesystem-volume-capacity" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Database data directories
+df -h /var/lib/postgresql /var/lib/mysql /var/opt/mssql
+
+# inode usage (log files can exhaust inodes before disk is full)
+df -i /var/lib/postgresql
+
+# Identify large files
+du -sh /var/lib/postgresql/data/*
+du -sh /var/lib/mysql/*
+
+# WAL / binary log space (PostgreSQL)
+du -sh /var/lib/postgresql/data/pg_wal/
+
+# MySQL binary logs
+du -sh /var/lib/mysql/mysql-bin.*
+mysql -u root -e &quot;SHOW BINARY LOGS;&quot;
+</code></pre>
+<h2 id="growth-trending-30-day-estimate">Growth Trending (30-day estimate)<a class="headerlink" href="#growth-trending-30-day-estimate" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Weekly snapshots — capture to track growth
+psql -U postgres -Atc &quot;SELECT pg_database_size('mydb');&quot; &gt;&gt; /var/log/db-size-mydb.log
+
+# Simple growth rate from log
+awk 'NR&gt;1{print ($1-prev)/1024/1024 &quot; MB added since last check&quot;; prev=$1} NR==1{prev=$1}' /var/log/db-size-mydb.log
+</code></pre>
+<h2 id="capacity-thresholds">Capacity Thresholds<a class="headerlink" href="#capacity-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 70% volume full</td>
+<td>Alert — begin capacity planning</td>
+</tr>
+<tr>
+<td>&gt; 80% volume full</td>
+<td>Escalate — schedule expansion within 2 weeks</td>
+</tr>
+<tr>
+<td>&gt; 90% volume full</td>
+<td>Critical — emergency expansion or archival</td>
+</tr>
+<tr>
+<td>WAL directory &gt; 10 GB</td>
+<td>Review archive lag or max_wal_size</td>
+</tr>
+<tr>
+<td>MySQL binary logs &gt; 50 GB</td>
+<td>Review binlog retention policy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="capacity-reduction-quick-wins">Capacity Reduction — Quick Wins<a class="headerlink" href="#capacity-reduction-quick-wins" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- PostgreSQL: reclaim dead tuple space
+VACUUM ANALYZE &lt;schema&gt;.&lt;table&gt;;
+-- Full reclaim (locks table briefly)
+VACUUM FULL &lt;schema&gt;.&lt;table&gt;;
+
+-- PostgreSQL: drop unused indexes
+SELECT indexname, idx_scan FROM pg_stat_user_indexes
+WHERE idx_scan = 0 ORDER BY pg_relation_size(indexname::regclass) DESC;
+
+-- MySQL: purge old binary logs
+PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);
+
+-- SQL Server: shrink log file (use sparingly — not routine maintenance)
+USE mydb;
+DBCC SHRINKFILE (mydb_log, 1024);  -- 1024 MB target
+</code></pre>
+<h2 id="capacity-monitoring-checklist">Capacity Monitoring Checklist<a class="headerlink" href="#capacity-monitoring-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Database volume utilisation checked (&lt; 70% warning, &lt; 80% OK)</li>
+<li>[ ] WAL / binary log directories reviewed</li>
+<li>[ ] Top 10 tables by size reviewed for unexpected growth</li>
+<li>[ ] Growth rate trending updated</li>
+<li>[ ] Backup storage capacity checked</li>
+<li>[ ] Expansion request raised if any threshold breached</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk full — DB stopped</td>
+<td>WAL or binlogs filling volume</td>
+<td>Purge old WAL/binlogs; increase volume</td>
+</tr>
+<tr>
+<td>Table grew unexpectedly</td>
+<td>Bloat from deletes? Missing archival job?</td>
+<td>VACUUM FULL; check archival/purge jobs</td>
+</tr>
+<tr>
+<td>pg_wal growing uncontrolled</td>
+<td>Replication slot inactive</td>
+<td>Check <code>pg_replication_slots</code>; drop inactive slots</td>
+</tr>
+<tr>
+<td>innodb_data_file_path auto-extend filling disk</td>
+<td>Auto-extend enabled without limit</td>
+<td>Set <code>innodb_data_file_path</code> max size; add data file</td>
+</tr>
+</tbody>
+</table>
 
 
 

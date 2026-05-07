@@ -712,10 +712,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#linux-active-directory-sssd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Linux → Active Directory (SSSD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux → Active Directory (SSSD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Join Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sssd-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSSD Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-login-to-ad-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict Login to AD Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-active-directory-winbind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux → Active Directory (Winbind)
       
     </span>
   </a>
@@ -723,10 +773,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#linux-ldap-openldap-non-ad" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Linux → LDAP (OpenLDAP / non-AD)
       
     </span>
   </a>
@@ -734,10 +784,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#windows-domain-join" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Windows — Domain Join
       
     </span>
   </a>
@@ -745,10 +795,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,26 +836,167 @@
 
 
 <h1 id="directory-integration">Directory Integration<a class="headerlink" href="#directory-integration" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Directory integration allows systems to authenticate users using centralized identity services.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify directory connectivity</li>
-<li>Check authentication logs</li>
-<li>Confirm group membership synchronization</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">ldapsearch -x -h directory-server
-id username
-getent passwd username
+<p>Connect Linux and Windows systems to Active Directory or LDAP for centralised authentication, group-based access control, and identity management.</p>
+<h2 id="linux-active-directory-sssd">Linux → Active Directory (SSSD)<a class="headerlink" href="#linux-active-directory-sssd" title="Permanent link">&para;</a></h2>
+<h3 id="join-domain">Join Domain<a class="headerlink" href="#join-domain" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Install required packages (RHEL/Rocky)
+dnf install -y realmd sssd adcli samba-common-tools krb5-workstation
+
+# Install (Debian/Ubuntu)
+apt-get install -y realmd sssd sssd-tools adcli samba-common-bin krb5-user
+
+# Discover domain
+realm discover corp.example.com
+
+# Join domain (requires domain admin credentials)
+realm join -U administrator corp.example.com
+
+# Verify join
+realm list
+id administrator@corp.example.com
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm directory service reachable</li>
-<li>Validate credentials</li>
-<li>Review authentication logs</li>
-<li>Restart authentication service</li>
-</ol>
+<h3 id="sssd-configuration">SSSD Configuration<a class="headerlink" href="#sssd-configuration" title="Permanent link">&para;</a></h3>
+<pre><code class="language-ini"># /etc/sssd/sssd.conf
+[sssd]
+domains = corp.example.com
+config_file_version = 2
+services = nss, pam
+
+[domain/corp.example.com]
+ad_domain = corp.example.com
+krb5_realm = CORP.EXAMPLE.COM
+realmd_tags = manages-system joined-with-adcli
+cache_credentials = True
+id_provider = ad
+auth_provider = ad
+access_provider = ad
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+fallback_homedir = /home/%u@%d
+use_fully_qualified_names = False   # omit @domain suffix for local users
+ldap_id_mapping = True
+</code></pre>
+<pre><code class="language-bash">systemctl enable --now sssd
+# Test
+id &lt;ad-username&gt;
+getent passwd &lt;ad-username&gt;
+getent group &quot;Domain Admins&quot;
+</code></pre>
+<h3 id="restrict-login-to-ad-groups">Restrict Login to AD Groups<a class="headerlink" href="#restrict-login-to-ad-groups" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Allow only members of 'linux-admins' AD group to log in
+realm permit -g linux-admins@corp.example.com
+# Or edit /etc/sssd/sssd.conf:
+# access_provider = simple
+# simple_allow_groups = linux-admins@corp.example.com
+</code></pre>
+<h2 id="linux-active-directory-winbind">Linux → Active Directory (Winbind)<a class="headerlink" href="#linux-active-directory-winbind" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># smb.conf excerpt for AD membership
+[global]
+   workgroup = CORP
+   realm = CORP.EXAMPLE.COM
+   security = ADS
+   idmap config * : range = 10000-19999
+   idmap config CORP : backend = rid
+   idmap config CORP : range = 1000000-1999999
+   winbind use default domain = yes
+   winbind enum users = no
+   winbind enum groups = no
+
+# Join
+net ads join -U administrator
+systemctl enable --now winbind
+
+# Test
+wbinfo -t        # check trust
+wbinfo -u        # list domain users
+wbinfo -g        # list domain groups
+wbinfo -i &lt;user&gt; # get user info
+</code></pre>
+<h2 id="linux-ldap-openldap-non-ad">Linux → LDAP (OpenLDAP / non-AD)<a class="headerlink" href="#linux-ldap-openldap-non-ad" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSSD with LDAP provider
+# /etc/sssd/sssd.conf
+[domain/ldap.example.com]
+id_provider = ldap
+auth_provider = ldap
+ldap_uri = ldaps://ldap.example.com:636
+ldap_search_base = dc=example,dc=com
+ldap_default_bind_dn = cn=readonly,dc=example,dc=com
+ldap_default_authtok = &lt;bind-password&gt;
+ldap_tls_reqcert = demand
+ldap_tls_cacert = /etc/ssl/certs/internal-ca.crt
+</code></pre>
+<pre><code class="language-bash"># Test LDAP query
+ldapsearch -x -H ldaps://ldap.example.com \
+  -D &quot;cn=readonly,dc=example,dc=com&quot; -w &lt;password&gt; \
+  -b &quot;dc=example,dc=com&quot; &quot;(uid=testuser)&quot; cn mail
+</code></pre>
+<h2 id="windows-domain-join">Windows — Domain Join<a class="headerlink" href="#windows-domain-join" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Join to domain
+Add-Computer -DomainName &quot;corp.example.com&quot; -Credential (Get-Credential) -Restart
+
+# Verify domain membership
+(Get-WmiObject Win32_ComputerSystem).Domain
+nltest /dsgetdc:corp.example.com
+</code></pre>
+<h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># SSSD health
+systemctl status sssd
+sssctl domain-status corp.example.com    # shows DC used and last successful auth
+sssctl cache-expire -u &lt;username&gt;        # force cache refresh for one user
+
+# Kerberos ticket
+klist -c                                 # show current tickets
+kinit &lt;user&gt;@CORP.EXAMPLE.COM            # obtain ticket manually
+
+# Clear SSSD cache (force re-fetch from DC)
+sssctl cache-remove -y &amp;&amp; systemctl restart sssd
+
+# Winbind
+wbinfo --ping-dc                         # check DC reachable
+net ads testjoin                         # verify machine account still valid
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id user</code> returns nothing</td>
+<td>SSSD running? DC reachable?</td>
+<td><code>systemctl status sssd</code>; <code>sssctl domain-status</code></td>
+</tr>
+<tr>
+<td>Authentication failing</td>
+<td>Kerberos time drift?</td>
+<td>Check <code>timedatectl</code>; ensure &lt; 5min skew from DC</td>
+</tr>
+<tr>
+<td>Group membership stale</td>
+<td>Cache not refreshed</td>
+<td><code>sssctl cache-expire -u &lt;user&gt;</code>; or <code>sssctl cache-remove -y</code></td>
+</tr>
+<tr>
+<td><code>realm join</code> fails</td>
+<td>Firewall blocking Kerberos (88/tcp,udp)?</td>
+<td>Open port 88, 389, 636 to DC</td>
+</tr>
+<tr>
+<td>Machine account expired</td>
+<td><code>net ads testjoin</code> fails</td>
+<td>Rejoin: <code>realm leave</code> then <code>realm join</code></td>
+</tr>
+<tr>
+<td>sudoers / PAM not applying AD groups</td>
+<td>SSSD <code>access_provider</code> misconfigured</td>
+<td>Verify <code>simple_allow_groups</code> or <code>ad_access_filter</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

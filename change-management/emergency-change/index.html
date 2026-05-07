@@ -712,17 +712,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#trigger-conditions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -734,10 +723,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#pre-implementation-30-minutes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Pre-Implementation (&lt; 30 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecab-minimum-approval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        eCAB — Minimum Approval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-implementation-required-within-24-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Implementation — Required Within 24 Hours
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-incident-review-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Incident Review Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guardrails
       
     </span>
   </a>
@@ -764,22 +808,103 @@
 
 
 <h1 id="emergency-change-procedure">Emergency Change Procedure<a class="headerlink" href="#emergency-change-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Emergency changes address critical incidents requiring immediate action.</p>
+<p>Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or immediately after implementation.</p>
 <h2 id="trigger-conditions">Trigger Conditions<a class="headerlink" href="#trigger-conditions" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Service outage</li>
-<li>Security incident</li>
-<li>System failure</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1/Critical outage</td>
+<td>Production service down, SLA breach imminent</td>
+</tr>
+<tr>
+<td>Security incident</td>
+<td>Active exploit, unauthorized access, ransomware</td>
+</tr>
+<tr>
+<td>Data integrity risk</td>
+<td>Corruption spreading, backup failure during backup window</td>
+</tr>
+<tr>
+<td>Compliance breach</td>
+<td>Audit control failure requiring immediate remediation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pre-implementation-30-minutes">Pre-Implementation (&lt; 30 minutes)<a class="headerlink" href="#pre-implementation-30-minutes" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Identify issue</li>
-<li>Notify stakeholders</li>
-<li>Implement fix</li>
-<li>Document change</li>
-<li>Perform post-incident review</li>
+<li><strong>Declare emergency change</strong> — open ITSM ticket; set type = Emergency</li>
+<li><strong>Notify on-call manager</strong> — get verbal or chat approval (document who approved and when)</li>
+<li><strong>eCAB approval</strong> — email/Slack to eCAB members; single approver required if P1</li>
+<li><strong>Brief rollback plan</strong> — even a one-line rollback is required before starting</li>
+<li><strong>Notify affected stakeholders</strong> — status page, incident channel</li>
 </ol>
+<h2 id="ecab-minimum-approval">eCAB — Minimum Approval<a class="headerlink" href="#ecab-minimum-approval" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Minimum Approver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 service outage</td>
+<td>On-call manager OR service owner</td>
+</tr>
+<tr>
+<td>Security incident</td>
+<td>CISO or security lead</td>
+</tr>
+<tr>
+<td>Data risk</td>
+<td>DBA lead or data owner</td>
+</tr>
+<tr>
+<td>All others</td>
+<td>Team lead + one peer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h2>
+<pre><code>1. Start implementation timer (log in ticket)
+2. Apply fix / change
+3. Validate recovery (service health, smoke tests)
+4. Confirm with stakeholders that service is restored
+5. Remove any temporary workarounds (firewall rules, bypasses)
+</code></pre>
+<h2 id="post-implementation-required-within-24-hours">Post-Implementation — Required Within 24 Hours<a class="headerlink" href="#post-implementation-required-within-24-hours" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] ITSM ticket updated with exact change made (commands run, files edited, config changed)</li>
+<li>[ ] Rollback plan documented (even if not used)</li>
+<li>[ ] Root cause identified and linked to problem ticket</li>
+<li>[ ] Formal post-incident review scheduled (within 5 business days for P1)</li>
+<li>[ ] Change closure approved by service owner</li>
+</ul>
+<h2 id="post-incident-review-template">Post-Incident Review Template<a class="headerlink" href="#post-incident-review-template" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Emergency Change:    ITSM-XXXX
+Date/Time:           2026-05-06 02:14 UTC
+Duration:            47 minutes
+Approver:            Jane Smith (on-call manager) — approved via Slack 02:18 UTC
+
+Issue:               PostgreSQL replica fell behind; primary OOM-killed
+Change Made:         Restarted postgres with increased shared_buffers; promoted replica temporarily
+Rollback:            Revert shared_buffers to original value; redeploy replica from backup
+Outcome:             Service restored 02:57 UTC; RTO target met
+Prevention:          Memory alarm threshold lowered; auto-restart added to systemd unit
+Follow-up tickets:   PROB-4421 (root cause), TASK-8874 (memory tuning)
+</code></pre>
+<h2 id="guardrails">Guardrails<a class="headerlink" href="#guardrails" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Emergency changes must still have a ticket — verbal approval alone is insufficient</li>
+<li>No permanent changes to security controls without security sign-off, even in emergency</li>
+<li>All firewall bypasses and temporary rules must be reversed within 24 hours or formally reviewed</li>
+</ul>
 
 
 

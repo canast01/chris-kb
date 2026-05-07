@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#asset-register-key-attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Asset Register — Key Attributes
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#asset-types" class="md-nav__link">
+  <a href="#physical-asset-inventory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Asset Types
+        Physical Asset Inventory
       
     </span>
   </a>
@@ -734,10 +734,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#cloud-asset-inventory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Cloud Asset Inventory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cloud Asset Inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-lifecycle-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Lifecycle States
       
     </span>
   </a>
@@ -745,10 +784,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#tagging-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Tagging Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-tracking-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Tracking Checklist
       
     </span>
   </a>
@@ -775,29 +825,186 @@
 
 
 <h1 id="asset-tracking">Asset Tracking<a class="headerlink" href="#asset-tracking" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Asset tracking monitors hardware and software assets throughout their lifecycle.</p>
-<h2 id="asset-types">Asset Types<a class="headerlink" href="#asset-types" title="Permanent link">&para;</a></h2>
+<p>Track hardware and cloud resources from procurement through decommission to maintain accurate inventory and prevent orphaned costs.</p>
+<h2 id="asset-register-key-attributes">Asset Register — Key Attributes<a class="headerlink" href="#asset-register-key-attributes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Physical</th>
+<th>Virtual / Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asset ID</td>
+<td>Barcode / serial</td>
+<td>Instance ID / resource ID</td>
+</tr>
+<tr>
+<td>Asset type</td>
+<td>Server / storage / switch</td>
+<td>EC2 / VM / RDS / disk</td>
+</tr>
+<tr>
+<td>Make / model</td>
+<td>Dell PowerEdge R750</td>
+<td>t3.large / Standard_D4s_v5</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>Rack, row, DC</td>
+<td>Region, AZ, resource group</td>
+</tr>
+<tr>
+<td>Owner / team</td>
+<td>Assigned team</td>
+<td>Tag: Owner</td>
+</tr>
+<tr>
+<td>Environment</td>
+<td>Prod / Dev / DR</td>
+<td>Tag: Environment</td>
+</tr>
+<tr>
+<td>Purchase date</td>
+<td>PO date</td>
+<td>Created date</td>
+</tr>
+<tr>
+<td>Warranty / support expiry</td>
+<td>From vendor portal</td>
+<td>Subscription / reserved instance expiry</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>In service / decommissioned / spares</td>
+<td>Running / stopped / terminated</td>
+</tr>
+<tr>
+<td>CMDB CI link</td>
+<td>CMDB record</td>
+<td>CMDB record</td>
+</tr>
+</tbody>
+</table>
+<h2 id="physical-asset-inventory">Physical Asset Inventory<a class="headerlink" href="#physical-asset-inventory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Linux — server hardware info
+dmidecode -t system | grep -E &quot;Manufacturer|Product|Serial|UUID&quot;
+dmidecode -t bios | grep -E &quot;Version|Release Date&quot;
+
+# Storage
+lsblk -d -o NAME,SIZE,VENDOR,MODEL,SERIAL,ROTA
+smartctl -a /dev/sda | grep -E &quot;Serial|Model|Capacity|Health&quot;
+
+# Network interfaces
+ip link show | awk '/^[0-9]/{print $2}'
+ethtool &lt;interface&gt; | grep -E &quot;Speed|Duplex&quot;
+</code></pre>
+<pre><code class="language-powershell"># Windows — hardware inventory
+Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, TotalPhysicalMemory
+Get-WmiObject Win32_BIOS | Select-Object SerialNumber, Version
+Get-WmiObject Win32_PhysicalMemory | Select-Object Capacity, Speed
+Get-Disk | Select-Object Number, FriendlyName, SerialNumber, Size
+</code></pre>
+<h2 id="cloud-asset-inventory">Cloud Asset Inventory<a class="headerlink" href="#cloud-asset-inventory" title="Permanent link">&para;</a></h2>
+<h3 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># All EC2 instances
+aws ec2 describe-instances \
+  --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,Name:Tags[?Key==`Name`].Value|[0],Launched:LaunchTime}' \
+  --output table
+
+# Untagged resources (no Owner tag — orphan risk)
+aws ec2 describe-instances \
+  --query 'Reservations[*].Instances[*] | [?!Tags[?Key==`Owner`]] | [*].{ID:InstanceId,State:State.Name}' \
+  --output table
+
+# Stopped instances older than 30 days
+aws ec2 describe-instances \
+  --filters &quot;Name=instance-state-name,Values=stopped&quot; \
+  --query 'Reservations[*].Instances[*].{ID:InstanceId,Name:Tags[?Key==`Name`].Value|[0],Launched:LaunchTime}' \
+  --output table
+
+# EBS volumes not attached
+aws ec2 describe-volumes \
+  --filters &quot;Name=status,Values=available&quot; \
+  --query 'Volumes[*].{ID:VolumeId,Size:Size,Created:CreateTime,Type:VolumeType}' \
+  --output table
+</code></pre>
+<h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># All VMs across subscription
+az vm list --query '[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}' -o table
+
+# Untagged resources
+az resource list --query '[?tags==null || !tags.Owner] | [*].{Name:name,Type:type,RG:resourceGroup}' -o table
+
+# Deallocated VMs (not deleted, still costing storage)
+az vm list --query '[?powerState==`VM deallocated`] | [*].{Name:name,RG:resourceGroup}' -o table
+
+# Unattached disks
+az disk list --query '[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeGb,RG:resourceGroup}' -o table
+</code></pre>
+<h2 id="asset-lifecycle-states">Asset Lifecycle States<a class="headerlink" href="#asset-lifecycle-states" title="Permanent link">&para;</a></h2>
+<pre><code>Ordered → Received → Configured → In Service → Decommission Pending → Wiped → Disposed / Returned
+                                                                     ↓
+                                                            Spares Pool (if reusable)
+</code></pre>
+<h2 id="tagging-standards">Tagging Standards<a class="headerlink" href="#tagging-standards" title="Permanent link">&para;</a></h2>
+<p>All cloud resources must have:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td>descriptive-name</td>
+<td><code>web-prod-01</code></td>
+</tr>
+<tr>
+<td><code>Environment</code></td>
+<td>Production / Staging / Dev / DR</td>
+<td><code>Production</code></td>
+</tr>
+<tr>
+<td><code>Owner</code></td>
+<td>team email</td>
+<td><code>platform-team@example.com</code></td>
+</tr>
+<tr>
+<td><code>CostCenter</code></td>
+<td>finance code</td>
+<td><code>CC-1042</code></td>
+</tr>
+<tr>
+<td><code>Project</code></td>
+<td>project name</td>
+<td><code>customer-portal</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Apply tags to all EC2 instances in a group (AWS)
+aws ec2 create-tags \
+  --resources &lt;instance-id-1&gt; &lt;instance-id-2&gt; \
+  --tags Key=Environment,Value=Production Key=Owner,Value=platform-team@example.com
+
+# Azure — tag a resource group (applies to contained resources)
+az group update -n &lt;rg-name&gt; --tags Environment=Production Owner=&quot;platform-team@example.com&quot;
+</code></pre>
+<h2 id="asset-tracking-checklist">Asset Tracking Checklist<a class="headerlink" href="#asset-tracking-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Servers</li>
-<li>Storage arrays</li>
-<li>Network devices</li>
-<li>Virtual machines</li>
-<li>Cloud resources</li>
+<li>[ ] All production servers have CI records in CMDB</li>
+<li>[ ] No untagged cloud resources (ownership unknown)</li>
+<li>[ ] Stopped/deallocated VMs reviewed — decommission or document reason for retention</li>
+<li>[ ] Unattached EBS volumes / managed disks reviewed and disposed of if orphaned</li>
+<li>[ ] Hardware warranty checked — no in-service hardware with expired warranty</li>
+<li>[ ] Decommissioned assets removed from monitoring and firewall rules</li>
+<li>[ ] Asset disposal completed with data-wipe certificate for decommissioned hardware</li>
 </ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify asset status</li>
-<li>Confirm asset location</li>
-<li>Review warranty and support dates</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Assign asset identifier</li>
-<li>Record purchase details</li>
-<li>Track lifecycle events</li>
-<li>Update asset records</li>
-</ol>
 
 
 

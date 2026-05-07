@@ -705,6 +705,146 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-services-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System, Services &amp; Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall-ntp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall &amp; NTP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-devices-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage — Devices &amp; Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#san-connectivity-iscsi-fc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAN Connectivity (iSCSI / FC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datastores-vmdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastores &amp; VMDK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-management-vim-cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Management (vim-cmd)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware &amp; Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance &amp; Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificates-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificates &amp; SSH
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,70 +863,469 @@
 
 
 <h1 id="vmware-esxi-cli-reference">VMware ESXi CLI Reference<a class="headerlink" href="#vmware-esxi-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used ESXi shell and ESXCLI commands for managing VMware ESXi hosts.</p>
-<div class="kb-grid kb-grid-3">
+<p>The ESXi shell gives you direct access to a hypervisor host via SSH. <code>esxcli</code> is the primary command-line framework — it organizes commands into namespaces like <code>esxcli storage</code>, <code>esxcli network</code>, and <code>esxcli vsan</code>. <code>vim-cmd</code> provides VM management without vCenter. Most commands require root access.</p>
+<blockquote>
+<p>SSH to the ESXi host management IP. Enable SSH via vSphere Client → Host → Actions → Services → Enable Secure Shell (SSH), or via the ESXi DCUI console.</p>
+</blockquote>
+<hr />
+<h2 id="system-services-maintenance">System, Services &amp; Maintenance<a class="headerlink" href="#system-services-maintenance" title="Permanent link">&para;</a></h2>
+<p>Get host identity, manage local accounts, control services, and put the host into maintenance mode. These are the first commands to run when connecting to a host you're unfamiliar with.</p>
+<pre><code class="language-bash"># Version and identity
+esxcli system version get
+esxcli system hostname get
+esxcli system hostname set --host &lt;hostname&gt; --domain &lt;domain&gt;
+esxcli system uuid get
+esxcli system uptime get
+esxcli system time get
 
-<a class="kb-card" href="system/">
-  <strong>System, Services & Maintenance</strong>
-  <span>esxcli system version/hostname/accounts, services restart, and maintenance mode.</span>
-</a>
+# Accounts and permissions
+esxcli system account list
+esxcli system account add -i &lt;username&gt; -p &lt;password&gt; -d &quot;Description&quot;
+esxcli system account remove -i &lt;username&gt;
+esxcli system permission list
+esxcli system permission set -i &lt;username&gt; -r Admin
 
-<a class="kb-card" href="network/">
-  <strong>Network</strong>
-  <span>NICs, vSwitches, port groups, VMkernel adapters, routing, DNS, and esxcfg.</span>
-</a>
+# Kernel modules
+esxcli system module list
+esxcli system module get -m &lt;module&gt;
 
-<a class="kb-card" href="firewall-ntp/">
-  <strong>Firewall & NTP</strong>
-  <span>Firewall get/set, rulesets, allowed IPs, NTP get/set, and ntpq.</span>
-</a>
+# Syslog
+esxcli system syslog config get
+esxcli system syslog config set --loghost udp://&lt;ip&gt;:514
+esxcli system syslog reload
 
-<a class="kb-card" href="storage/">
-  <strong>Storage — Devices & Paths</strong>
-  <span>esxcli storage core device/path/adapter, NMP multipathing, and VMFS.</span>
-</a>
+# Restart management agents (fixes vCenter connectivity issues)
+/etc/init.d/hostd restart
+/etc/init.d/vpxa restart
+/etc/init.d/ntpd restart
+/etc/init.d/ssh start
+/etc/init.d/ssh stop
 
-<a class="kb-card" href="san/">
-  <strong>SAN Connectivity (iSCSI / FC)</strong>
-  <span>iSCSI adapter/discovery/sessions and FC list/stats.</span>
-</a>
+# All services
+services.sh restart
+services.sh status
 
-<a class="kb-card" href="datastores/">
-  <strong>Datastores & VMDK</strong>
-  <span>Browse /vmfs/volumes, vmkfstools (create, clone, extend), and vim-cmd datastore.</span>
-</a>
+# Check host version
+vmware -v
+vmware -l
 
-<a class="kb-card" href="vm-management/">
-  <strong>VM Management (vim-cmd)</strong>
-  <span>vim-cmd vmsvc power on/off/shutdown/reboot, snapshots, and register/unregister.</span>
-</a>
+# Uptime
+uptime
 
-<a class="kb-card" href="hardware/">
-  <strong>Hardware & Health</strong>
-  <span>Platform, CPU, memory, PCI, IPMI/BMC, and hardware sensors.</span>
-</a>
+# Maintenance mode
+esxcli system maintenanceMode get
+esxcli system maintenanceMode set --enabled true
+esxcli system maintenanceMode set --enabled false
 
-<a class="kb-card" href="performance/">
-  <strong>Performance & Troubleshooting</strong>
-  <span>esxtop, vm process list/kill, vsish, dropped packets, and CPU ready.</span>
-</a>
+# Via vim-cmd
+vim-cmd hostsvc/maintenance_mode_enter
+vim-cmd hostsvc/maintenance_mode_exit
+</code></pre>
+<hr />
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
+<p>Manage physical NICs, standard vSwitches, port groups, VMkernel interfaces, routing, and DNS. Most networking changes require caution — misconfiguring the management interface can disconnect you from the host.</p>
+<pre><code class="language-bash"># Physical NICs
+esxcli network nic list
+esxcli network nic get -n vmnic0
+esxcli network nic stats get -n vmnic0
+esxcli network nic up -n vmnic0
+esxcli network nic down -n vmnic0
 
-<a class="kb-card" href="vsan/">
-  <strong>vSAN Commands</strong>
-  <span>esxcli vsan cluster/storage/network/health/debug commands.</span>
-</a>
+# vSwitches
+esxcli network vswitch standard list
+esxcli network vswitch standard add -v vSwitch1
+esxcli network vswitch standard remove -v vSwitch1
+esxcli network vswitch standard uplink add -v vSwitch0 -u vmnic1
+esxcli network vswitch standard uplink remove -v vSwitch0 -u vmnic1
 
-<a class="kb-card" href="logs/">
-  <strong>Logs</strong>
-  <span>Tail vmkernel/hostd/vpxa logs and grep for errors.</span>
-</a>
+# Port groups
+esxcli network vswitch standard portgroup list
+esxcli network vswitch standard portgroup add -v vSwitch0 -p &quot;VM Network&quot;
+esxcli network vswitch standard portgroup remove -v vSwitch0 -p &quot;VM Network&quot;
 
-<a class="kb-card" href="certificates-ssh/">
-  <strong>Certificates & SSH</strong>
-  <span>View cert dates/subject, regenerate cert, enable/disable SSH.</span>
-</a>
+# VMkernel interfaces (management, vMotion, vSAN, iSCSI)
+esxcli network ip interface list
+esxcli network ip interface ipv4 get
+esxcli network ip interface ipv4 set -i vmk0 -I &lt;ip&gt; -N &lt;netmask&gt; -t static
+esxcli network ip interface add -i vmk1 -p &quot;vMotion&quot;
+esxcli network ip interface remove -i vmk1
 
-</div>
+# Routing
+esxcli network ip route ipv4 list
+esxcli network ip route ipv4 add -n 0.0.0.0/0 -g &lt;gateway&gt;
+esxcli network ip route ipv4 remove -n 0.0.0.0/0 -g &lt;gateway&gt;
+
+# DNS
+esxcli network ip dns server list
+esxcli network ip dns server add --server &lt;ip&gt;
+esxcli network ip dns server remove --server &lt;ip&gt;
+esxcli network ip dns search list
+
+# Active connections and ARP table
+esxcli network ip connection list
+esxcli network ip neighbor list
+
+# Legacy esxcfg commands (still widely used)
+esxcfg-vmknic -l
+esxcfg-vswitch -l
+esxcfg-nics -l
+esxcfg-route
+esxcfg-route -a &lt;subnet&gt; &lt;gateway&gt;
+</code></pre>
+<hr />
+<h2 id="firewall-ntp">Firewall &amp; NTP<a class="headerlink" href="#firewall-ntp" title="Permanent link">&para;</a></h2>
+<p>The ESXi firewall controls which services are reachable on the host. NTP keeps the host clock in sync — critical for vCenter connectivity, certificates, and log correlation.</p>
+<pre><code class="language-bash"># Firewall status and toggle
+esxcli network firewall get
+esxcli network firewall set --enabled true
+esxcli network firewall set --enabled false
+
+# Rulesets (named rules for specific services like SSH, vMotion)
+esxcli network firewall ruleset list
+esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
+esxcli network firewall ruleset set --enabled false --ruleset-id sshServer
+
+# Allowed IPs per ruleset
+esxcli network firewall ruleset allowedip list --ruleset-id sshServer
+esxcli network firewall ruleset allowedip add --ruleset-id sshServer --ip-address &lt;ip&gt;
+esxcli network firewall ruleset allowedip remove --ruleset-id sshServer --ip-address &lt;ip&gt;
+
+# NTP configuration
+esxcli system ntp get
+esxcli system ntp set --enabled true --server &lt;ntp_server&gt;
+esxcli system ntp set --enabled false
+
+# Check sync status
+ntpq -p
+cat /etc/ntp.conf
+
+# Restart NTP
+/etc/init.d/ntpd restart
+</code></pre>
+<hr />
+<h2 id="storage-devices-paths">Storage — Devices &amp; Paths<a class="headerlink" href="#storage-devices-paths" title="Permanent link">&para;</a></h2>
+<p>List storage devices, check multipath state, manage VMFS filesystems, and configure path selection policies. A storage device is a LUN — each device can have multiple paths for redundancy.</p>
+<pre><code class="language-bash"># Devices (LUNs visible to the host)
+esxcli storage core device list
+esxcli storage core device list -d &lt;device_id&gt;
+esxcli storage core device stats get -d &lt;device_id&gt;
+
+# Paths (one device can have multiple paths via different HBAs)
+esxcli storage core path list
+esxcli storage core path list -d &lt;device_id&gt;
+esxcli storage core path stats get -A vmhba0
+
+# Adapters (HBAs)
+esxcli storage core adapter list
+esxcli storage core adapter rescan --adapter vmhba0
+esxcli storage core adapter rescan --all
+
+# NMP — Native Multipathing Plugin
+esxcli storage nmp device list
+esxcli storage nmp path list
+esxcli storage nmp satp list
+esxcli storage nmp psp list
+esxcli storage nmp psp roundrobin deviceconfig set --device &lt;device_id&gt; --type iops --iops 1
+
+# VMFS filesystems
+esxcli storage vmfs extent list
+esxcli storage filesystem list
+esxcli storage filesystem mount -v &lt;uuid&gt;
+esxcli storage filesystem unmount -v &lt;uuid&gt;
+esxcli storage filesystem rescan
+
+# Legacy
+esxcfg-scsidevs -l
+esxcfg-scsidevs -m
+</code></pre>
+<hr />
+<h2 id="san-connectivity-iscsi-fc">SAN Connectivity (iSCSI / FC)<a class="headerlink" href="#san-connectivity-iscsi-fc" title="Permanent link">&para;</a></h2>
+<p>Check Fibre Channel HBA WWPNs, iSCSI initiator IQNs, and configure target discovery. Run these when adding a host to a SAN fabric or troubleshooting LUN visibility.</p>
+<pre><code class="language-bash"># Fibre Channel
+esxcli storage san fc list                          # list HBAs with WWPNs
+esxcli storage san fc stats get -A vmhba0           # FC HBA stats (errors, logins)
+esxcli storage san fc stats get -A vmhba1
+esxcli storage nmp path list                        # path status to all LUNs
+esxcli storage nmp path list -d &lt;naa.xxx&gt;           # paths to a specific device
+esxcli storage core path list | grep &quot;dead\|Dead&quot;   # dead paths
+
+# iSCSI
+esxcli iscsi adapter list
+esxcli iscsi adapter get -A vmhba64                 # IQN and status
+esxcli iscsi adapter discovery sendtarget list -A vmhba64
+esxcli iscsi adapter discovery sendtarget add \
+    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64     # add static discovery target
+esxcli iscsi adapter discovery sendtarget remove \
+    --address &lt;iscsi_target_ip&gt;:3260 -A vmhba64
+esxcli iscsi session list
+esxcli iscsi logicalnetworkportal list -A vmhba64   # bound VMkernel adapters
+
+# Multipathing and PSP
+esxcli storage nmp device list | grep -E &quot;Device:|PSP:&quot;
+esxcli storage nmp device set -d &lt;naa.xxx&gt; -P VMW_PSP_RR   # set Round Robin PSP
+esxcli storage core adapter rescan --all
+
+# LUN and device info
+esxcli storage core device list -d &lt;naa.xxx&gt;              # vendor, model, size, queue depth
+esxcli storage core device vaai status get -d &lt;naa.xxx&gt;   # VAAI (offload) support
+esxcli storage core device set --device &lt;naa.xxx&gt; -O MaxQueueDepth=64
+
+# Troubleshooting — check for APD / PDL
+grep -i &quot;APD\|PDL\|lost path&quot; /var/log/vmkernel.log | tail -20
+esxcli storage core path list | grep -A 5 &quot;State: dead&quot;
+</code></pre>
+<hr />
+<h2 id="datastores-vmdk">Datastores &amp; VMDK<a class="headerlink" href="#datastores-vmdk" title="Permanent link">&para;</a></h2>
+<p>Browse datastore contents, create and clone VMDKs with <code>vmkfstools</code>, and manage VMFS filesystem metadata.</p>
+<pre><code class="language-bash"># Browse datastores
+ls /vmfs/volumes/
+esxcli storage filesystem list
+ls /vmfs/volumes/&lt;datastore&gt;/
+ls -lah /vmfs/volumes/&lt;datastore&gt;/&lt;vm_folder&gt;/
+du -sh /vmfs/volumes/&lt;datastore&gt;/*
+
+# vmkfstools — VMDK operations
+vmkfstools -l /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # list VMDK info
+vmkfstools -c 100G -d thin /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk   # create thin VMDK
+vmkfstools -i source.vmdk dest.vmdk                   # clone
+vmkfstools -X 200G /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk  # expand
+vmkfstools -k /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # inflate thin to thick
+vmkfstools -p /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # defragment
+vmkfstools -e /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmdk       # check consistency
+
+# Datastore info via vim-cmd
+vim-cmd hostsvc/datastore/listsummary
+vim-cmd hostsvc/datastore/info &lt;datastore_name&gt;
+esxcli storage core adapter rescan --all
+vim-cmd hostsvc/storage/refresh
+
+# Find snapshot delta files (large delta files indicate unconsolidated snapshots)
+find /vmfs/volumes/&lt;ds&gt;/ -name &quot;*-delta.vmdk&quot; -o -name &quot;*-0000*.vmdk&quot; 2&gt;/dev/null
+
+# VMFS troubleshooting
+esxcli storage vmfs extent list
+esxcli storage vmfs snapshot list
+esxcli storage vmfs snapshot resignature -l &lt;label&gt;   # resignature VMFS copy after LUN clone
+esxcli storage filesystem unmount -l &lt;datastore_label&gt;
+</code></pre>
+<hr />
+<h2 id="vm-management-vim-cmd">VM Management (vim-cmd)<a class="headerlink" href="#vm-management-vim-cmd" title="Permanent link">&para;</a></h2>
+<p><code>vim-cmd</code> is the host-level VM management tool — use it when vCenter is unavailable or when you need to register/unregister VMs directly on a host.</p>
+<pre><code class="language-bash"># List all VMs registered on this host
+vim-cmd vmsvc/getallvms
+
+# Power state
+vim-cmd vmsvc/power.getstate &lt;vmid&gt;
+vim-cmd vmsvc/power.on &lt;vmid&gt;
+vim-cmd vmsvc/power.off &lt;vmid&gt;
+vim-cmd vmsvc/power.shutdown &lt;vmid&gt;
+vim-cmd vmsvc/power.reboot &lt;vmid&gt;
+vim-cmd vmsvc/power.suspend &lt;vmid&gt;
+vim-cmd vmsvc/power.reset &lt;vmid&gt;
+
+# VM details
+vim-cmd vmsvc/get.summary &lt;vmid&gt;
+vim-cmd vmsvc/get.config &lt;vmid&gt;
+vim-cmd vmsvc/get.guest &lt;vmid&gt;
+vim-cmd vmsvc/get.tasklist &lt;vmid&gt;
+
+# Snapshots
+vim-cmd vmsvc/snapshot.get &lt;vmid&gt;
+vim-cmd vmsvc/snapshot.create &lt;vmid&gt; &lt;name&gt; &lt;description&gt; &lt;memory&gt; &lt;quiesce&gt;
+vim-cmd vmsvc/snapshot.removeall &lt;vmid&gt;
+
+# Register / unregister (when a VM is orphaned or needs to be added back)
+vim-cmd vmsvc/unregister &lt;vmid&gt;
+vim-cmd solo/registervm /vmfs/volumes/&lt;ds&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx
+
+# Host summary
+vim-cmd hostsvc/hostsummary
+vim-cmd hostsvc/net/info
+</code></pre>
+<hr />
+<h2 id="hardware-health">Hardware &amp; Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h2>
+<p>Query physical hardware inventory, CPU and memory info, PCI devices, and IPMI/BMC (out-of-band management). Use these for hardware inventory or when investigating sensor alerts.</p>
+<pre><code class="language-bash"># Platform info
+esxcli hardware platform get
+esxcli hardware clock get
+
+# CPU details
+esxcli hardware cpu global get
+esxcli hardware cpu list
+
+# Memory
+esxcli hardware memory get
+
+# PCI devices
+esxcli hardware pci list
+
+# IPMI / BMC (out-of-band management interface)
+esxcli hardware ipmi bmc get
+esxcli hardware ipmi fru list
+esxcli hardware ipmi sel list
+
+# Environmental sensors (temp, power, fan)
+esxcli hardware sensor list
+esxcli hardware sensor list --type Temperature
+esxcli hardware sensor list --type Fan
+esxcli hardware sensor list --type Power
+</code></pre>
+<hr />
+<h2 id="performance-troubleshooting">Performance &amp; Troubleshooting<a class="headerlink" href="#performance-troubleshooting" title="Permanent link">&para;</a></h2>
+<p><code>esxtop</code> is the top-level performance monitor for ESXi — shows CPU, memory, network, storage, and power in real time. Use it for latency investigation and resource contention analysis.</p>
+<pre><code class="language-bash"># Interactive performance monitor (like top but for ESXi)
+esxtop
+
+# VM process list and kill (use when a VM is stuck)
+esxcli vm process list
+esxcli vm process kill --type soft --world-id &lt;id&gt;    # graceful
+esxcli vm process kill --type hard --world-id &lt;id&gt;    # immediate
+esxcli vm process kill --type force --world-id &lt;id&gt;   # last resort
+
+# Kernel-level stats (advanced troubleshooting)
+vsish -e get /world/&lt;worldid&gt;/sched/statsSummary
+vsish -e ls /vm/
+vsish -e ls /net/pNics/
+
+# Network packet drops
+esxcli network nic stats get -n vmnic0 | grep -i drop
+
+# CPU scheduling
+esxcli sched group list
+</code></pre>
+<hr />
+<h2 id="vsan-commands">vSAN Commands<a class="headerlink" href="#vsan-commands" title="Permanent link">&para;</a></h2>
+<p>vSAN-specific commands run directly on the ESXi host shell. These complement the dedicated vSAN CLI Reference and are useful when you're already SSH'd into a host.</p>
+<pre><code class="language-bash"># Cluster membership and UUID
+esxcli vsan cluster get
+
+# Health checks
+esxcli vsan health cluster get
+esxcli vsan health summary get
+esxcli vsan health cluster get | grep -v &quot;GREEN\|green&quot;   # failures only
+
+# Storage and disk groups
+esxcli vsan storage list
+esxcli vsan storage stats get
+esxcli vsan storage list | grep -E &quot;Is SSD|Disk Group&quot;
+
+# Objects and resyncing
+esxcli vsan debug object list
+esxcli vsan debug object list | grep -v &quot;healthy&quot;         # non-healthy only
+esxcli vsan debug resync list
+esxcli vsan debug resync list | grep -E &quot;Total Bytes|Remaining&quot;
+
+# Networking
+esxcli vsan network list
+esxcli vsan network ipconfig list
+esxcli vsan debug network test
+
+# vSAN datastore
+esxcli vsan datastore list
+esxcli vsan trace get
+</code></pre>
+<hr />
+<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<p>ESXi logs are the first place to look when a VM fails to power on, a host disconnects from vCenter, or storage issues appear. Key logs are in <code>/var/log/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vmkernel</td>
+<td><code>/var/log/vmkernel.log</code></td>
+<td>Storage, network, driver-level events</td>
+</tr>
+<tr>
+<td>hostd</td>
+<td><code>/var/log/hostd.log</code></td>
+<td>Host management agent (API, VM operations)</td>
+</tr>
+<tr>
+<td>vpxa</td>
+<td><code>/var/log/vpxa.log</code></td>
+<td>vCenter agent communication</td>
+</tr>
+<tr>
+<td>vobd</td>
+<td><code>/var/log/vobd.log</code></td>
+<td>Hardware/system observation (IPMI, sensors)</td>
+</tr>
+<tr>
+<td>fdm</td>
+<td><code>/var/log/fdm.log</code></td>
+<td>HA agent (Fault Domain Manager)</td>
+</tr>
+<tr>
+<td>auth.log</td>
+<td><code>/var/log/auth.log</code></td>
+<td>SSH logins</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Live tail
+tail -f /var/log/vmkernel.log
+tail -f /var/log/hostd.log
+tail -f /var/log/vpxa.log
+tail -f /var/log/fdm.log
+
+# Search for problems
+grep -i &quot;error\|warning\|fail\|fault&quot; /var/log/vmkernel.log | tail -30
+grep -i &quot;error&quot; /var/log/hostd.log | tail -20
+grep -i &quot;disconnected\|lost connectivity&quot; /var/log/vpxa.log | tail -10
+
+# Storage path errors
+grep -i &quot;lost path\|path down\|APD\|PDL&quot; /var/log/vmkernel.log | tail -20
+
+# Network errors
+grep -i &quot;link down\|carrier\|vmnic&quot; /var/log/vmkernel.log | tail -20
+
+# HA events
+grep -i &quot;isolation\|restart\|fdm&quot; /var/log/fdm.log | tail -20
+
+# VM-specific events
+grep &quot;&lt;vm_name&gt;&quot; /var/log/vmkernel.log | tail -20
+grep &quot;&lt;vm_name&gt;&quot; /var/log/hostd.log | tail -20
+
+# Generate support bundle
+vm-support -n -w /tmp/
+# Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
+
+# Remote syslog
+esxcli system syslog config get
+esxcli system syslog config set --loghost=udp://syslog.corp.local:514
+esxcli system syslog reload
+</code></pre>
+<hr />
+<h2 id="certificates-ssh">Certificates &amp; SSH<a class="headerlink" href="#certificates-ssh" title="Permanent link">&para;</a></h2>
+<p>Manage the ESXi host's SSL certificate (used for the web UI and API) and enable/disable SSH access.</p>
+<pre><code class="language-bash"># View current certificate details
+openssl x509 -in /etc/vmware/ssl/rui.crt -noout -dates
+openssl x509 -in /etc/vmware/ssl/rui.crt -noout -subject
+openssl x509 -in /etc/vmware/ssl/rui.crt -noout -fingerprint
+
+# Regenerate self-signed cert
+/sbin/generate-certificates
+
+# List cert files
+ls -la /etc/vmware/ssl/
+
+# Enable / disable SSH
+vim-cmd hostsvc/enable_ssh
+vim-cmd hostsvc/disable_ssh
+
+# Via service
+/etc/init.d/SSH start
+/etc/init.d/SSH stop
+
+# Via firewall ruleset
+esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
+</code></pre>
 
 
 

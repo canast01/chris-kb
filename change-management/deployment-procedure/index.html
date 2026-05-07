@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pre-deployment-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pre-Deployment Checklist
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-deployment-checks" class="md-nav__link">
+  <a href="#phase-1-preparation-before-window" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Deployment Checks
+        Phase 1 — Preparation (before window)
       
     </span>
   </a>
@@ -734,10 +734,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#phase-2-implementation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Phase 2 — Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-monitoring-soak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Monitoring Soak
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-close" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Close
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-log-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Log Template
       
     </span>
   </a>
@@ -764,21 +830,114 @@
 
 
 <h1 id="deployment-procedure">Deployment Procedure<a class="headerlink" href="#deployment-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure defines steps to deploy infrastructure or application changes safely.</p>
-<h2 id="pre-deployment-checks">Pre-Deployment Checks<a class="headerlink" href="#pre-deployment-checks" title="Permanent link">&para;</a></h2>
+<p>Standard procedure for deploying infrastructure or application changes safely within an approved change window.</p>
+<h2 id="pre-deployment-checklist">Pre-Deployment Checklist<a class="headerlink" href="#pre-deployment-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Verify backups completed</li>
-<li>Confirm maintenance window</li>
-<li>Validate system health</li>
+<li>[ ] Change ticket approved and in "Implementation" state</li>
+<li>[ ] Backup completed and verified within last 24h</li>
+<li>[ ] Maintenance window confirmed and stakeholders notified</li>
+<li>[ ] Rollback procedure documented and tested in non-prod</li>
+<li>[ ] Monitoring dashboards open</li>
+<li>[ ] On-call team aware and available</li>
+<li>[ ] Test environment deployment succeeded (for application changes)</li>
+<li>[ ] Deployment runbook reviewed by implementer</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Start deployment</li>
-<li>Monitor progress</li>
-<li>Validate services</li>
-<li>Document results</li>
-</ol>
+<h2 id="phase-1-preparation-before-window">Phase 1 — Preparation (before window)<a class="headerlink" href="#phase-1-preparation-before-window" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Snapshot / backup before change (example: VM snapshot)
+# Azure
+az snapshot create -g &lt;rg&gt; -n &lt;snapshot-name&gt; --source &lt;disk-id&gt;
+
+# AWS
+aws ec2 create-snapshot --volume-id &lt;vol-id&gt; --description &quot;pre-change-ITSM-XXXX&quot;
+
+# Linux — configuration backup
+tar czf /root/pre-change-config-$(date +%Y%m%d).tar.gz /etc/&lt;service&gt;/
+
+# Verify service is healthy before starting
+systemctl status &lt;service&gt;
+curl -sf http://localhost:&lt;port&gt;/health
+</code></pre>
+<h2 id="phase-2-implementation">Phase 2 — Implementation<a class="headerlink" href="#phase-2-implementation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># For package-based deployments
+apt-get install --only-upgrade &lt;package&gt;=&lt;version&gt;
+# or
+yum update &lt;package&gt;-&lt;version&gt;
+
+# For file-based deployments
+rsync -avz --backup --suffix=&quot;.pre-$(date +%Y%m%d)&quot; &lt;source&gt; &lt;dest&gt;
+
+# For systemd service config changes
+cp /etc/service.conf /etc/service.conf.pre-$(date +%Y%m%d)
+# apply change...
+systemctl daemon-reload
+systemctl restart &lt;service&gt;
+
+# For database schema changes (example: PostgreSQL)
+psql -U &lt;user&gt; -d &lt;db&gt; -f migration_XXXX_up.sql
+</code></pre>
+<h2 id="phase-3-validation">Phase 3 — Validation<a class="headerlink" href="#phase-3-validation" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Service health
+systemctl status &lt;service&gt;
+curl -sf http://localhost:&lt;port&gt;/health &amp;&amp; echo &quot;OK&quot;
+
+# No new errors since restart
+journalctl -u &lt;service&gt; --since &quot;5 minutes ago&quot; | grep -iE &quot;error|critical|fail&quot;
+
+# Key process running
+pgrep -a &lt;process&gt;
+
+# Functional smoke test
+curl -o /dev/null -sw &quot;%{http_code}&quot; https://&lt;endpoint&gt;/api/status
+</code></pre>
+<h2 id="phase-4-monitoring-soak">Phase 4 — Monitoring Soak<a class="headerlink" href="#phase-4-monitoring-soak" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Watch dashboards for <strong>30 minutes minimum</strong> after deployment</li>
+<li>Confirm no P1/P2 alerts firing</li>
+<li>Check error rate, latency, and saturation metrics against pre-change baseline</li>
+<li>Get confirmation from service owner before closing window</li>
+</ul>
+<h2 id="phase-5-close">Phase 5 — Close<a class="headerlink" href="#phase-5-close" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Remove temporary files and pre-change backups (after soak period)
+rm /etc/&lt;service&gt;.conf.pre-&lt;date&gt;   # only after validation passes
+
+# Update ITSM ticket: outcome, duration, any deviations
+</code></pre>
+<h2 id="rollback-decision-tree">Rollback Decision Tree<a class="headerlink" href="#rollback-decision-tree" title="Permanent link">&para;</a></h2>
+<pre><code>Validation fails?
+  ├─ Immediate: service down / error rate &gt; 3×baseline
+  │     → Roll back now; notify stakeholders
+  └─ Degraded: latency elevated / some errors
+        → Investigate for 10 min
+              ├─ Improving → continue soak
+              └─ Not improving → roll back
+</code></pre>
+<h2 id="rollback-steps">Rollback Steps<a class="headerlink" href="#rollback-steps" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Restore config from backup
+cp /etc/&lt;service&gt;.conf.pre-&lt;date&gt; /etc/&lt;service&gt;.conf
+systemctl restart &lt;service&gt;
+
+# Rollback package to previous version
+apt-get install &lt;package&gt;=&lt;prev-version&gt;
+
+# Rollback DB migration
+psql -U &lt;user&gt; -d &lt;db&gt; -f migration_XXXX_down.sql
+
+# Re-validate after rollback (same checks as Phase 3)
+</code></pre>
+<h2 id="deployment-log-template">Deployment Log Template<a class="headerlink" href="#deployment-log-template" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Change:        ITSM-XXXX
+Date/Time:     2026-05-06 22:00 UTC
+Implementer:   &lt;name&gt;
+Window:        22:00 – 23:00 UTC
+
+Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
+Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
+Restart:           Service restarted 22:05 UTC; came up in 8 seconds
+Validation:        Health check OK; error rate 0%; latency normal
+Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
+Outcome:           Success
+Ticket closed:     22:42 UTC
+</code></pre>
 
 
 

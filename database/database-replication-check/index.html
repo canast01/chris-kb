@@ -712,10 +712,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#postgresql-streaming-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        PostgreSQL Streaming Replication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PostgreSQL Streaming Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pgbackrest-wal-archiving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pgBackRest WAL Archiving
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mysql-mariadb-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL / MariaDB Replication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MySQL / MariaDB Replication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mysql-gtid-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL GTID Replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-server-always-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server Always On
       
     </span>
   </a>
@@ -723,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#data-consistency-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        Data Consistency Check
       
     </span>
   </a>
@@ -734,10 +790,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#replication-lag-thresholds" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Replication Lag Thresholds
       
     </span>
   </a>
@@ -745,10 +801,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#replication-repair" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Replication Repair
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Replication Repair">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mysql-fix-stopped-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL — Fix stopped replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-replica-fallen-too-far-behind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL — Replica fallen too far behind
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-check-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Check Checklist
       
     </span>
   </a>
@@ -775,24 +870,148 @@
 
 
 <h1 id="database-replication-check">Database Replication Check<a class="headerlink" href="#database-replication-check" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook verifies replication status between primary and secondary database nodes.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Identify replication topology</li>
-<li>Confirm network connectivity</li>
-<li>Review replication configuration</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">mysql -e 'SHOW SLAVE STATUS\G'
-psql -c 'SELECT * FROM pg_stat_replication;'
+<p>Verify replication health, lag, and data consistency across primary and replica nodes.</p>
+<h2 id="postgresql-streaming-replication">PostgreSQL Streaming Replication<a class="headerlink" href="#postgresql-streaming-replication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- On PRIMARY: show connected replicas and lag
+SELECT client_addr, application_name, state,
+       sent_lsn, write_lsn, flush_lsn, replay_lsn,
+       (sent_lsn - replay_lsn) AS replication_lag_bytes,
+       sync_state
+FROM pg_stat_replication;
+
+-- On STANDBY: confirm it is a replica and check lag
+SELECT pg_is_in_recovery() AS is_standby;
+SELECT now() - pg_last_xact_replay_timestamp() AS replay_lag;
+SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();
+
+-- Replication slots — check for inactive slots holding WAL
+SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes
+FROM pg_replication_slots;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm replication active</li>
-<li>Confirm replication lag within limits</li>
-<li>Verify data consistency</li>
-</ol>
+<h3 id="pgbackrest-wal-archiving">pgBackRest WAL Archiving<a class="headerlink" href="#pgbackrest-wal-archiving" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Check archiving status
+psql -U postgres -c &quot;SELECT last_archived_wal, last_archived_time, last_failed_wal, last_failed_time FROM pg_stat_archiver;&quot;
+# last_failed_wal should be NULL; last_archived_time should be recent
+</code></pre>
+<h2 id="mysql-mariadb-replication">MySQL / MariaDB Replication<a class="headerlink" href="#mysql-mariadb-replication" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- On REPLICA: full replication status
+SHOW SLAVE STATUS\G
+
+-- Key fields to check:
+-- Slave_IO_Running: Yes
+-- Slave_SQL_Running: Yes
+-- Seconds_Behind_Master: 0 (or &lt; threshold)
+-- Last_IO_Error / Last_SQL_Error: empty
+
+-- On PRIMARY: show connected replicas
+SHOW SLAVE HOSTS;
+
+-- Binary log position on primary
+SHOW MASTER STATUS;
+</code></pre>
+<pre><code class="language-bash"># Quick one-liner — show lag and thread status
+mysql -u root -e &quot;SHOW SLAVE STATUS\G&quot; | grep -E &quot;Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error&quot;
+</code></pre>
+<h3 id="mysql-gtid-replication">MySQL GTID Replication<a class="headerlink" href="#mysql-gtid-replication" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Check GTID position on replica vs primary
+SHOW VARIABLES LIKE 'gtid_mode';
+SELECT @@GLOBAL.gtid_executed;
+SELECT @@GLOBAL.gtid_purged;
+-- Compare GTID sets between primary and replica to calculate drift
+</code></pre>
+<h2 id="sql-server-always-on">SQL Server Always On<a class="headerlink" href="#sql-server-always-on" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Replica synchronization health
+SELECT ag.name AS ag_name,
+       ar.replica_server_name,
+       rs.role_desc,
+       rs.synchronization_state_desc,
+       rs.synchronization_health_desc,
+       rs.last_commit_time
+FROM sys.dm_hadr_availability_replica_states rs
+JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id
+JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
+
+-- Database-level lag
+SELECT drs.database_id, DB_NAME(drs.database_id) AS db_name,
+       drs.synchronization_state_desc,
+       drs.log_send_queue_size AS send_queue_kb,
+       drs.redo_queue_size AS redo_queue_kb,
+       drs.last_commit_time
+FROM sys.dm_hadr_database_replica_states drs;
+</code></pre>
+<h2 id="data-consistency-check">Data Consistency Check<a class="headerlink" href="#data-consistency-check" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PostgreSQL — compare row counts between primary and replica
+psql -h &lt;primary-host&gt; -U postgres -c &quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot; &gt; /tmp/primary-counts.txt
+psql -h &lt;standby-host&gt; -U postgres -c &quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot; &gt; /tmp/standby-counts.txt
+diff /tmp/primary-counts.txt /tmp/standby-counts.txt
+
+# MySQL — pt-table-checksum (Percona Toolkit)
+pt-table-checksum --host=&lt;primary&gt; --user=root --password=&lt;pass&gt; --databases=&lt;dbname&gt;
+# Then on replica:
+pt-table-sync --sync-to-master h=&lt;replica&gt;,u=root,p=&lt;pass&gt; --print  # --execute to fix
+</code></pre>
+<h2 id="replication-lag-thresholds">Replication Lag Thresholds<a class="headerlink" href="#replication-lag-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Lag</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–10 seconds</td>
+<td>Normal</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>10–60 seconds</td>
+<td>Warning</td>
+<td>Investigate — high load? network?</td>
+</tr>
+<tr>
+<td>1–5 minutes</td>
+<td>Alert</td>
+<td>Escalate; check disk I/O and replication threads</td>
+</tr>
+<tr>
+<td>&gt; 5 minutes</td>
+<td>Critical</td>
+<td>Notify DBA lead; assess failover risk</td>
+</tr>
+<tr>
+<td>Replication stopped</td>
+<td>Critical</td>
+<td>Immediate investigation and repair</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-repair">Replication Repair<a class="headerlink" href="#replication-repair" title="Permanent link">&para;</a></h2>
+<h3 id="mysql-fix-stopped-replication">MySQL — Fix stopped replication<a class="headerlink" href="#mysql-fix-stopped-replication" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- Check error
+SHOW SLAVE STATUS\G
+-- If duplicate key / skip error (use with caution)
+STOP SLAVE;
+SET GLOBAL sql_slave_skip_counter = 1;
+START SLAVE;
+SHOW SLAVE STATUS\G
+</code></pre>
+<h3 id="postgresql-replica-fallen-too-far-behind">PostgreSQL — Replica fallen too far behind<a class="headerlink" href="#postgresql-replica-fallen-too-far-behind" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># If replay lag is huge and WAL is no longer available on primary,
+# rebuild the replica from a fresh base backup
+pg_basebackup -h &lt;primary-host&gt; -U replication -D /var/lib/postgresql/data-new -P -R
+# -R writes recovery.conf / standby.signal automatically
+</code></pre>
+<h2 id="replication-check-checklist">Replication Check Checklist<a class="headerlink" href="#replication-check-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All replicas showing <code>Slave_IO_Running: Yes</code> / <code>Slave_SQL_Running: Yes</code> (MySQL)</li>
+<li>[ ] Standby <code>pg_is_in_recovery()</code> = true; replay lag &lt; 10s (PostgreSQL)</li>
+<li>[ ] AG replicas in SYNCHRONIZED state (SQL Server)</li>
+<li>[ ] No replication errors (Last_IO_Error / Last_SQL_Error empty)</li>
+<li>[ ] Inactive replication slots reviewed (PostgreSQL)</li>
+<li>[ ] WAL archiving current (last_archived_time &lt; 15 min ago)</li>
+</ul>
 
 
 

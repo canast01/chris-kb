@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#change-types-and-approval-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Change Types and Approval Requirements
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#approval-levels" class="md-nav__link">
+  <a href="#cab-approval-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Approval Levels
+        CAB Approval Workflow
       
     </span>
   </a>
@@ -734,10 +734,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#risk-classification-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Risk Classification Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#itsm-approval-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ITSM Approval Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approval-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approval Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-rejection-reasons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Rejection Reasons
       
     </span>
   </a>
@@ -764,21 +797,171 @@
 
 
 <h1 id="change-approval-process">Change Approval Process<a class="headerlink" href="#change-approval-process" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This process ensures changes are reviewed and approved before implementation.</p>
-<h2 id="approval-levels">Approval Levels<a class="headerlink" href="#approval-levels" title="Permanent link">&para;</a></h2>
+<p>Ensures all changes are assessed for risk and approved by the appropriate authority before implementation.</p>
+<h2 id="change-types-and-approval-requirements">Change Types and Approval Requirements<a class="headerlink" href="#change-types-and-approval-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Risk</th>
+<th>Approval Required</th>
+<th>Lead Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard (pre-approved)</td>
+<td>Low</td>
+<td>None — pre-approved template</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>Normal — Low risk</td>
+<td>Low-Medium</td>
+<td>Team lead or service owner</td>
+<td>5 business days</td>
+</tr>
+<tr>
+<td>Normal — High risk</td>
+<td>High</td>
+<td>CAB (Change Advisory Board)</td>
+<td>10 business days</td>
+</tr>
+<tr>
+<td>Emergency</td>
+<td>Critical</td>
+<td>eCAB or single approver on-call</td>
+<td>&lt; 4 hours</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cab-approval-workflow">CAB Approval Workflow<a class="headerlink" href="#cab-approval-workflow" title="Permanent link">&para;</a></h2>
+<pre><code>Requester submits RFC
+        ↓
+Technical review (peer / architect)
+        ↓
+Risk assessment (Impact × Likelihood)
+        ↓
+CAB review meeting
+        ↓
+Approved / Rejected / Deferred
+        ↓
+Requester notified → scheduled for change window
+</code></pre>
+<h2 id="risk-classification-matrix">Risk Classification Matrix<a class="headerlink" href="#risk-classification-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Impact ↓ / Likelihood →</th>
+<th>Low</th>
+<th>Medium</th>
+<th>High</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>Low</td>
+<td>Low</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Medium</td>
+<td>High</td>
+<td>Critical</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>Standard change</li>
-<li>Normal change</li>
-<li>Emergency change</li>
+<li><strong>Low / Medium</strong>: Team lead approval</li>
+<li><strong>High</strong>: CAB approval required</li>
+<li><strong>Critical</strong>: CAB + service owner + management sign-off</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Review change details</li>
-<li>Assess risk and impact</li>
-<li>Obtain stakeholder approval</li>
-<li>Record approval decision</li>
-</ol>
+<h2 id="itsm-approval-fields">ITSM Approval Fields<a class="headerlink" href="#itsm-approval-fields" title="Permanent link">&para;</a></h2>
+<p>Every RFC must include before approval:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Business justification</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Rollback plan</td>
+<td>Required (tested in non-prod for High/Critical)</td>
+</tr>
+<tr>
+<td>Outage window</td>
+<td>Required (start time, duration, affected services)</td>
+</tr>
+<tr>
+<td>Test results</td>
+<td>Required for High risk</td>
+</tr>
+<tr>
+<td>Affected CIs</td>
+<td>List all Configuration Items from CMDB</td>
+</tr>
+<tr>
+<td>Communication plan</td>
+<td>Required for user-impacting changes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="approval-checklist">Approval Checklist<a class="headerlink" href="#approval-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] RFC fully completed (no blank required fields)</li>
+<li>[ ] Risk score calculated and documented</li>
+<li>[ ] Rollback procedure documented and tested</li>
+<li>[ ] Change window booked and communicated</li>
+<li>[ ] Service owner has reviewed and approved</li>
+<li>[ ] For High/Critical: CAB has reviewed in meeting (not async)</li>
+<li>[ ] Post-implementation review scheduled</li>
+<li>[ ] Related incidents/problems linked in ITSM</li>
+</ul>
+<h2 id="common-rejection-reasons">Common Rejection Reasons<a class="headerlink" href="#common-rejection-reasons" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Remediation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No rollback plan</td>
+<td>Document step-by-step rollback procedure</td>
+</tr>
+<tr>
+<td>Insufficient testing</td>
+<td>Provide non-prod test evidence</td>
+</tr>
+<tr>
+<td>Change window conflicts</td>
+<td>Coordinate with affected teams; rebook window</td>
+</tr>
+<tr>
+<td>Missing CMDB CIs</td>
+<td>Update RFC with all affected configuration items</td>
+</tr>
+<tr>
+<td>No stakeholder sign-off</td>
+<td>Obtain written approval from service owner</td>
+</tr>
+</tbody>
+</table>
 
 
 

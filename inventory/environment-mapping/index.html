@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#environment-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Environment Tiers
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
+  <a href="#dependency-map-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Components
+        Dependency Map Template
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#network-topology-key-segments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Network Topology — Key Segments
       
     </span>
   </a>
@@ -745,10 +745,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#cloud-resource-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Cloud Resource Mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cloud Resource Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-impact-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Impact Assessment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery Tools
       
     </span>
   </a>
@@ -775,28 +836,177 @@
 
 
 <h1 id="environment-mapping">Environment Mapping<a class="headerlink" href="#environment-mapping" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Environment mapping documents relationships between systems, applications, and services.</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Application dependencies</li>
-<li>Network connections</li>
-<li>Storage mappings</li>
-<li>Service relationships</li>
-</ul>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Validate dependency records</li>
-<li>Confirm connectivity paths</li>
-<li>Review environment diagrams</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.</p>
+<h2 id="environment-tiers">Environment Tiers<a class="headerlink" href="#environment-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Purpose</th>
+<th>Change Risk</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>Live user-facing workload</td>
+<td>Highest</td>
+<td>Full SLA applies</td>
+</tr>
+<tr>
+<td>Staging / Pre-prod</td>
+<td>Final validation before production</td>
+<td>High</td>
+<td>Best effort</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>User acceptance testing</td>
+<td>Medium</td>
+<td>Business hours</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Active development</td>
+<td>Low</td>
+<td>No SLA</td>
+</tr>
+<tr>
+<td>DR</td>
+<td>Standby for production failover</td>
+<td>High (when activated)</td>
+<td>RTO/RPO as per DR plan</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dependency-map-template">Dependency Map Template<a class="headerlink" href="#dependency-map-template" title="Permanent link">&para;</a></h2>
+<p>For each application, document:</p>
+<pre><code class="language-markdown">## Application: Payments API
+
+**Tier:** Production
+**Hosts:** pay-api-01, pay-api-02, pay-api-03 (load balanced via alb-pay-prod)
+**Owner:** Payments Team — payments-team@example.com
+
+### Inbound Dependencies (who calls this service)
+| Caller | Protocol | Port | Auth |
+|---|---|---|---|
+| Web frontend | HTTPS | 443 | JWT |
+| Mobile app | HTTPS | 443 | JWT |
+| Batch job (billing-cron) | HTTPS | 443 | mTLS |
+
+### Outbound Dependencies (what this service calls)
+| Target | Protocol | Port | Auth | Failure Impact |
+|---|---|---|---|---|
+| payments-db-primary | PostgreSQL | 5432 | DB user | Full outage |
+| payments-db-replica | PostgreSQL | 5432 | DB user | Read-only degraded |
+| fraud-detection-api | HTTPS | 443 | API key | Transactions blocked |
+| vault | HTTPS | 8200 | AppRole | Auth fails; downtime |
+| smtp-relay | SMTP | 25 | None | Email receipts fail only |
+
+### Data Flows
+- Payment transaction → payments-db → fraud-detection-api → response
+- Audit log → kafka-payments-topic → SIEM
+
+### Infrastructure
+- Load Balancer: alb-pay-prod (AWS ALB)
+- DNS: api.payments.example.com → alb-pay-prod CNAME
+- TLS cert: *.payments.example.com — expires 2027-03-01
+- Secrets: vault path `secret/payments/db_password`, `secret/payments/fraud_api_key`
+</code></pre>
+<h2 id="network-topology-key-segments">Network Topology — Key Segments<a class="headerlink" href="#network-topology-key-segments" title="Permanent link">&para;</a></h2>
+<p>Document logical network zones and permitted flows:</p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>CIDR</th>
+<th>Purpose</th>
+<th>Inter-zone Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>10.0.0.0/16</td>
+<td>Live workloads</td>
+<td>→ DB zone (allowed); → internet (via proxy)</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>10.1.0.0/24</td>
+<td>Database servers</td>
+<td>← Prod zone only; no internet</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>10.2.0.0/24</td>
+<td>Jump hosts, monitoring</td>
+<td>→ All zones (admin access)</td>
+</tr>
+<tr>
+<td>DMZ</td>
+<td>10.3.0.0/24</td>
+<td>Internet-facing services</td>
+<td>→ Prod zone (limited); internet inbound</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cloud-resource-mapping">Cloud Resource Mapping<a class="headerlink" href="#cloud-resource-mapping" title="Permanent link">&para;</a></h2>
+<h3 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all EC2 instances with tags
+aws ec2 describe-instances \
+  --query 'Reservations[*].Instances[*].{ID:InstanceId,Name:Tags[?Key==`Name`].Value|[0],Env:Tags[?Key==`Environment`].Value|[0],State:State.Name,AZ:Placement.AvailabilityZone}' \
+  --output table
+
+# List RDS instances and their VPCs
+aws rds describe-db-instances \
+  --query 'DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,VPC:DBSubnetGroup.VpcId,Status:DBInstanceStatus}' \
+  --output table
+
+# Application dependency map — Resource Groups
+aws resource-groups list-groups
+</code></pre>
+<h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># List all resources by environment tag
+az resource list --tag Environment=Production \
+  --query '[*].{Name:name,Type:type,RG:resourceGroup,Location:location}' -o table
+
+# Show VM and its disk / network dependencies
+az vm show -g &lt;rg&gt; -n &lt;vm-name&gt; --show-details \
+  --query '{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}' -o json
+</code></pre>
+<h2 id="change-impact-assessment">Change Impact Assessment<a class="headerlink" href="#change-impact-assessment" title="Permanent link">&para;</a></h2>
+<p>Before any change, use the dependency map to answer:</p>
 <ol>
-<li>Identify system dependencies</li>
-<li>Map relationships</li>
-<li>Validate connectivity</li>
-<li>Update documentation</li>
+<li>Which services call the component being changed?</li>
+<li>What does the component depend on that might be affected?</li>
+<li>If this change fails, what is the blast radius?</li>
+<li>Which monitoring alerts should be watched during the window?</li>
+<li>Who are the downstream service owners to notify?</li>
 </ol>
+<h2 id="mapping-maintenance">Mapping Maintenance<a class="headerlink" href="#mapping-maintenance" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Update dependency maps when: new service deployed, existing service retired, integration added or removed</li>
+<li>Review environment maps quarterly or after major incidents</li>
+<li>Keep maps in version-controlled docs alongside infrastructure code</li>
+</ul>
+<h2 id="discovery-tools">Discovery Tools<a class="headerlink" href="#discovery-tools" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># netstat — find connections on a host
+ss -tnp    # established TCP connections and owning process
+ss -tlnp   # listening ports
+
+# Find which process owns a port
+lsof -i :&lt;port&gt;
+
+# Trace network path to a service
+traceroute &lt;target-host&gt;
+mtr --report &lt;target-host&gt;
+
+# DNS record discovery
+dig &lt;hostname&gt; ANY
+dig -t SRV _service._proto.&lt;domain&gt;
+</code></pre>
 
 
 

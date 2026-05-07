@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#basic-connectivity-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Basic Connectivity Tests
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#tls-certificate-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        TLS / Certificate Checks
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#dns-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        DNS Resolution
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#authentication-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Authentication Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-api-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform API Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rate-limiting-and-throttling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limiting and Throttling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-monitoring-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Monitoring Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,27 +819,146 @@
 
 
 <h1 id="api-connectivity">API Connectivity<a class="headerlink" href="#api-connectivity" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>API connectivity allows systems to exchange data and automate workflows across infrastructure platforms and services.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Verify API endpoint availability</li>
-<li>Check authentication tokens</li>
-<li>Review API response status codes</li>
-<li>Validate SSL certificates</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">curl -I https://api.example.com
-curl -X GET https://api.example.com/health
-openssl s_client -connect api.example.com:443
+<p>Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.</p>
+<h2 id="basic-connectivity-tests">Basic Connectivity Tests<a class="headerlink" href="#basic-connectivity-tests" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># HTTP status check
+curl -o /dev/null -sw &quot;%{http_code} %{time_total}s\n&quot; https://api.example.com/health
+
+# Full response headers (useful for auth debugging)
+curl -v -I https://api.example.com/endpoint
+
+# Test with Bearer token
+curl -s -H &quot;Authorization: Bearer &lt;token&gt;&quot; https://api.example.com/v1/resource | jq .
+
+# Test with API key header
+curl -s -H &quot;X-API-Key: &lt;key&gt;&quot; https://api.example.com/v1/resource
+
+# Test POST with JSON body
+curl -s -X POST \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Authorization: Bearer &lt;token&gt;&quot; \
+  -d '{&quot;key&quot;:&quot;value&quot;}' \
+  https://api.example.com/v1/resource | jq .
 </code></pre>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm DNS resolution</li>
-<li>Verify network connectivity</li>
-<li>Validate authentication credentials</li>
-<li>Check API logs</li>
-</ol>
+<h2 id="tls-certificate-checks">TLS / Certificate Checks<a class="headerlink" href="#tls-certificate-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check TLS handshake and certificate chain
+openssl s_client -connect api.example.com:443 -servername api.example.com &lt;/dev/null 2&gt;&amp;1 | \
+  grep -E &quot;Verify return|subject|issuer|Not After&quot;
+
+# Check cipher and protocol
+curl -v --tlsv1.2 https://api.example.com 2&gt;&amp;1 | grep -E &quot;SSL|cipher&quot;
+
+# Certificate expiry
+echo | openssl s_client -connect api.example.com:443 2&gt;/dev/null | openssl x509 -noout -enddate
+</code></pre>
+<h2 id="dns-resolution">DNS Resolution<a class="headerlink" href="#dns-resolution" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Resolve API hostname
+dig +short api.example.com
+nslookup api.example.com
+
+# Check for CNAME chain
+dig api.example.com CNAME
+
+# Test from container / pod namespace
+kubectl run -it --rm debug --image=curlimages/curl -- curl -v https://api.example.com/health
+</code></pre>
+<h2 id="authentication-checks">Authentication Checks<a class="headerlink" href="#authentication-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># OAuth2 — obtain token via client credentials flow
+curl -s -X POST https://auth.example.com/oauth/token \
+  -d &quot;grant_type=client_credentials&amp;client_id=&lt;id&gt;&amp;client_secret=&lt;secret&gt;&amp;scope=read&quot; | jq .access_token
+
+# Azure — get bearer token via managed identity
+curl -s &quot;http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&amp;resource=https://management.azure.com/&quot; \
+  -H &quot;Metadata: true&quot; | jq .access_token
+
+# AWS — call API via IAM role (SigV4 — use AWS CLI)
+aws sts get-caller-identity    # verify identity before API calls
+
+# Check token expiry (JWT)
+echo &quot;&lt;jwt-payload-base64&gt;&quot; | base64 -d | jq .exp | xargs -I {} date -d @{}
+</code></pre>
+<h2 id="platform-api-health-checks">Platform API Health Checks<a class="headerlink" href="#platform-api-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Azure Resource Manager API
+az rest --method get --url &quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot; | jq '.value | length'
+
+# AWS — test API reachability
+aws sts get-caller-identity --region eu-west-1
+
+# Kubernetes API
+kubectl get --raw /healthz
+kubectl get --raw /readyz
+
+# Vault (HashiCorp)
+curl -s http://vault:8200/v1/sys/health | jq '{sealed:.sealed,initialized:.initialized}'
+</code></pre>
+<h2 id="rate-limiting-and-throttling">Rate Limiting and Throttling<a class="headerlink" href="#rate-limiting-and-throttling" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Check rate limit headers in response
+curl -v https://api.example.com/endpoint 2&gt;&amp;1 | grep -i &quot;x-rate-limit\|retry-after\|x-ratelimit&quot;
+
+# Test with retry on 429
+curl --retry 5 --retry-delay 10 --retry-max-time 120 https://api.example.com/endpoint
+</code></pre>
+<h2 id="api-monitoring-script">API Monitoring Script<a class="headerlink" href="#api-monitoring-script" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">#!/bin/bash
+# Quick health check across multiple endpoints
+declare -A ENDPOINTS=(
+  [&quot;azure-mgmt&quot;]=&quot;https://management.azure.com/subscriptions?api-version=2022-12-01&quot;
+  [&quot;app-api&quot;]=&quot;https://api.example.com/health&quot;
+  [&quot;vault&quot;]=&quot;http://vault:8200/v1/sys/health&quot;
+)
+
+for name in &quot;${!ENDPOINTS[@]}&quot;; do
+  code=$(curl -o /dev/null -sw &quot;%{http_code}&quot; &quot;${ENDPOINTS[$name]}&quot; 2&gt;/dev/null)
+  echo &quot;$name: HTTP $code&quot;
+done
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host</code></td>
+<td>DNS failure</td>
+<td><code>dig</code> hostname; check <code>/etc/resolv.conf</code>; check DNS server</td>
+</tr>
+<tr>
+<td><code>SSL: certificate verify failed</code></td>
+<td>CA not trusted</td>
+<td>Add CA cert; check <code>CURL_CA_BUNDLE</code> env var</td>
+</tr>
+<tr>
+<td>HTTP 401 Unauthorized</td>
+<td>Token expired or wrong scope</td>
+<td>Refresh token; verify scope includes required permission</td>
+</tr>
+<tr>
+<td>HTTP 403 Forbidden</td>
+<td>Correct identity but insufficient permissions</td>
+<td>Review IAM policy / RBAC role assignment</td>
+</tr>
+<tr>
+<td>HTTP 429 Too Many Requests</td>
+<td>Rate limit hit</td>
+<td>Implement exponential backoff; check rate limit headers</td>
+</tr>
+<tr>
+<td>HTTP 503 / timeout</td>
+<td>API endpoint down or overloaded</td>
+<td>Check API status page; retry with backoff; escalate to service owner</td>
+</tr>
+<tr>
+<td>Response time &gt; 5s</td>
+<td>Network latency? API overloaded?</td>
+<td><code>traceroute</code> to API host; check API latency metrics on provider side</td>
+</tr>
+</tbody>
+</table>
 
 
 

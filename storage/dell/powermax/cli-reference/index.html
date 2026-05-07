@@ -705,6 +705,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#discovery-array-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery &amp; Array Info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#masking-views-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Masking Views &amp; Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports &amp; Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srdf-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF — Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapvx-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapVX — Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance &amp; Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events &amp; Audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-groups-legacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Groups (Legacy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,63 +841,338 @@
 
 
 <h1 id="dell-powermax-cli-reference-symcli">Dell PowerMax CLI Reference (SYMCLI)<a class="headerlink" href="#dell-powermax-cli-reference-symcli" title="Permanent link">&para;</a></h1>
-<p>Commonly used Solutions Enabler (SYMCLI) commands for managing Dell PowerMax and VMAX arrays.</p>
+<p>Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. The CLI tool is SYMCLI (Solutions Enabler CLI) — commands follow a <code>sym&lt;object&gt; &lt;action&gt; -sid &lt;SymmID&gt;</code> pattern. Every command requires the array's SID (Symmetrix ID). Run <code>symcfg list</code> first to identify your SID.</p>
 <blockquote>
-<p>All commands require <code>-sid &lt;SymmID&gt;</code> to target a specific array. Run <code>symcfg list</code> first to identify the SID.</p>
+<p>Requires Solutions Enabler installed on a management host with connectivity to the array. All commands target a specific array via <code>-sid &lt;SymmID&gt;</code>.</p>
 </blockquote>
-<div class="kb-grid kb-grid-3">
+<hr />
+<h2 id="discovery-array-info">Discovery &amp; Array Info<a class="headerlink" href="#discovery-array-info" title="Permanent link">&para;</a></h2>
+<p>Discover arrays, list directors and ports, view cache usage and storage resource pools. Run these when connecting to a new array or after a network change affecting Solutions Enabler connectivity.</p>
+<pre><code class="language-bash"># Discover arrays and list what's known
+symcfg discover
+symcfg list
+symcfg list -v                                     # with model, microcode, capacity
+symcfg -sid &lt;sid&gt; show
+symcfg -sid &lt;sid&gt; list -v
 
-<a class="kb-card" href="discovery/">
-  <strong>Discovery & Array Info</strong>
-  <span>symcfg list/discover/show, directors, ports, cache, and pools.</span>
-</a>
+# Directors and ports
+symcfg -sid &lt;sid&gt; list -dir all
+symcfg -sid &lt;sid&gt; list -port all
+symcfg -sid &lt;sid&gt; show -dir &lt;director_id&gt;
+symcfg -sid &lt;sid&gt; show -dir &lt;director_id&gt; -p &lt;port_number&gt;
+symcfg -sid &lt;sid&gt; list -fa -online               # only online FA ports
 
-<a class="kb-card" href="devices/">
-  <strong>Devices</strong>
-  <span>symdev list (assigned/unassigned/mapped/failed/tdev) and device performance.</span>
-</a>
+# Cache and storage pools
+symcfg -sid &lt;sid&gt; list -cache
+symcfg -sid &lt;sid&gt; list -pool -all
+symcfg -sid &lt;sid&gt; show -pool -thin -demand        # thin pool subscription and usage
+symcfg -sid &lt;sid&gt; list -srp                       # storage resource pools
 
-<a class="kb-card" href="storage-groups/">
-  <strong>Storage Groups</strong>
-  <span>symsg list/show/create/delete, add/remove devices, and child SGs.</span>
-</a>
+# Software version and licenses
+symcfg -sid &lt;sid&gt; list | grep -i &quot;microcode\|Enginuity\|HYPERMAX&quot;
+symlmf -sid &lt;sid&gt; list
 
-<a class="kb-card" href="masking-views/">
-  <strong>Masking Views & Access</strong>
-  <span>symaccess views, initiator groups, and port groups.</span>
-</a>
+# Solutions Enabler version
+symcfg -V
+syminq -symmids
+symgate list -sid &lt;sid&gt;
+</code></pre>
+<hr />
+<h2 id="devices">Devices<a class="headerlink" href="#devices" title="Permanent link">&para;</a></h2>
+<p>Devices (TDEVs) are the thin volumes presented to hosts. All production volumes on PowerMax should be thin (TDEV). Create devices within storage groups so they inherit service level settings.</p>
+<pre><code class="language-bash"># List devices
+symdev list -sid &lt;sid&gt;
+symdev list -sid &lt;sid&gt; -v
+symdev list -sid &lt;sid&gt; -assigned              # in a masking view
+symdev list -sid &lt;sid&gt; -unassigned            # not presented to any host
+symdev list -sid &lt;sid&gt; -mapped               # mapped to hosts
+symdev list -sid &lt;sid&gt; -tdev                 # thin devices (should be all production)
+symdev list -sid &lt;sid&gt; -failed               # failed or degraded
+symdev list -sid &lt;sid&gt; -spare
 
-<a class="kb-card" href="ports/">
-  <strong>Ports & Hardware</strong>
-  <span>symport list/show, FC login info, and physical disk management.</span>
-</a>
+# Device details
+symdev show &lt;devname&gt; -sid &lt;sid&gt;
+symdev show &lt;devname&gt; -sid &lt;sid&gt; -v
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep -E &quot;RDF|Pair State|R1|R2&quot;
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Storage Group&quot;
 
-<a class="kb-card" href="srdf/">
-  <strong>SRDF — Replication</strong>
-  <span>SRDF group query, establish, split, suspend, resume, failover, and failback.</span>
-</a>
+# Create thin devices (add directly to storage group)
+symconfigure -sid &lt;sid&gt; -cmd \
+    &quot;create dev count=10, size=100GB, emulation=FBA, config=TDEV, sg=&lt;sg_name&gt;;&quot; \
+    commit -noprompt
 
-<a class="kb-card" href="snapvx/">
-  <strong>SnapVX — Snapshots</strong>
-  <span>SnapVX list/create/link/unlink/restore/terminate and rename.</span>
-</a>
+# Delete a device (must be unmasked first)
+symdev -sid &lt;sid&gt; not_ready &lt;devname&gt; -noprompt
+symconfigure -sid &lt;sid&gt; -cmd &quot;delete dev &lt;devname&gt;;&quot; commit -noprompt
 
-<a class="kb-card" href="performance/">
-  <strong>Performance & Statistics</strong>
-  <span>symstat by SG, device, director, backend, cache, and port.</span>
-</a>
+# Device properties
+symdev show &lt;devname&gt; -sid &lt;sid&gt; | grep &quot;Write Disable&quot;
+symcfg -sid &lt;sid&gt; show -pool -thin -demand | grep -E &quot;Total|Subscribed|Free&quot;
+symdev list -sid &lt;sid&gt; -rdfg &lt;rdfg_number&gt;
 
-<a class="kb-card" href="events/">
-  <strong>Events & Audit</strong>
-  <span>symevent and symaudit list with time range and user filters.</span>
-</a>
+# Performance stats
+symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt;
+symstat -sid &lt;sid&gt; list -type dev
+symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20
+</code></pre>
+<hr />
+<h2 id="storage-groups">Storage Groups<a class="headerlink" href="#storage-groups" title="Permanent link">&para;</a></h2>
+<p>Storage Groups are the primary logical grouping in PowerMax. Every device presented to a host must be in a storage group that is part of a masking view. Storage groups can be nested — parent SGs contain child SGs.</p>
+<pre><code class="language-bash"># List and inspect
+symsg list -sid &lt;sid&gt;
+symsg list -sid &lt;sid&gt; -v
+symsg show &lt;sg_name&gt; -sid &lt;sid&gt;
+symsg show &lt;sg_name&gt; -sid &lt;sid&gt; -v
+symsg show &lt;sg_name&gt; -sid &lt;sid&gt; | grep -E &quot;SRP|Service Level|Compression&quot;
 
-<a class="kb-card" href="device-groups/">
-  <strong>Device Groups (Legacy)</strong>
-  <span>symdg list/show/create/delete and device add/remove (legacy scripting).</span>
-</a>
+# Create
+symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -type regular
+symsg create &lt;sg_name&gt; -sid &lt;sid&gt; -srp SRP_1 -slo Diamond   # with service level
+symsg create &lt;parent_sg&gt; -sid &lt;sid&gt; -type parent
 
-</div>
+# Delete (must have no devices and no masking views)
+symsg delete &lt;sg_name&gt; -sid &lt;sid&gt;
+
+# Add and remove devices
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;devname&gt;
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; add dev &lt;start&gt;:&lt;end&gt;         # range of devices
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; remove dev &lt;devname&gt;
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; addnew dev count=5 emulation=FBA size=100GB
+
+# Parent / child hierarchy
+symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; add sg &lt;child_sg&gt;
+symsg -sid &lt;sid&gt; -sg &lt;parent_sg&gt; remove sg &lt;child_sg&gt;
+symsg show &lt;parent_sg&gt; -sid &lt;sid&gt; | grep -A 20 &quot;Child Storage Group&quot;
+
+# Modify
+symsg rename &lt;old_sg&gt; -new_sg_name &lt;new_sg&gt; -sid &lt;sid&gt;
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -slo Platinum
+symsg -sid &lt;sid&gt; -sg &lt;sg_name&gt; set -compression enabled
+</code></pre>
+<hr />
+<h2 id="masking-views-access">Masking Views &amp; Access<a class="headerlink" href="#masking-views-access" title="Permanent link">&para;</a></h2>
+<p>A masking view binds a storage group (devices), a port group (array ports), and an initiator group (host WWNs) together — this is what makes LUNs visible to a host.</p>
+<pre><code class="language-bash"># Masking views
+symaccess list view -sid &lt;sid&gt;
+symaccess show view &lt;view_name&gt; -sid &lt;sid&gt;
+symaccess create view -name &lt;view_name&gt; -sg &lt;sg_name&gt; -pg &lt;pg_name&gt; -ig &lt;ig_name&gt; -sid &lt;sid&gt;
+symaccess delete view -name &lt;view_name&gt; -sid &lt;sid&gt;
+
+# Initiator groups (list of host WWNs/IQNs allowed to see the devices)
+symaccess list -sid &lt;sid&gt; -type initiator
+symaccess show &lt;ig_name&gt; -sid &lt;sid&gt; -type initiator
+symaccess create -name &lt;ig_name&gt; -type initiator -sid &lt;sid&gt;
+symaccess delete -name &lt;ig_name&gt; -type initiator -sid &lt;sid&gt;
+symaccess -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator add devport -wwn &lt;wwn&gt;
+symaccess -sid &lt;sid&gt; -name &lt;ig_name&gt; -type initiator remove devport -wwn &lt;wwn&gt;
+
+# Port groups (which array front-end ports to use)
+symaccess list -sid &lt;sid&gt; -type port
+symaccess show &lt;pg_name&gt; -sid &lt;sid&gt; -type port
+symaccess create -name &lt;pg_name&gt; -type port -sid &lt;sid&gt;
+symaccess delete -name &lt;pg_name&gt; -type port -sid &lt;sid&gt;
+symaccess -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port add devport &lt;dir&gt;:&lt;port&gt;
+symaccess -sid &lt;sid&gt; -name &lt;pg_name&gt; -type port remove devport &lt;dir&gt;:&lt;port&gt;
+
+# Storage groups in access context
+symaccess list -sid &lt;sid&gt; -type storage
+
+# Check host connectivity
+symaccess -sid &lt;sid&gt; list logins -dirport &lt;dir&gt;:&lt;port&gt;
+symaccess -sid &lt;sid&gt; -type initiator show &lt;ig_name&gt; -detail
+</code></pre>
+<hr />
+<h2 id="ports-hardware">Ports &amp; Hardware<a class="headerlink" href="#ports-hardware" title="Permanent link">&para;</a></h2>
+<p>Check front-end port status and FC logins, and manage physical disks. Port health is critical — a failed front-end port reduces redundancy for all hosts using that port group.</p>
+<pre><code class="language-bash"># Ports
+symport list -sid &lt;sid&gt;
+symport list -sid &lt;sid&gt; -v
+symport -sid &lt;sid&gt; -dir &lt;dir&gt; -p &lt;port&gt; show
+
+# Fibre Channel host logins on a port
+symport list -sid &lt;sid&gt; -logged_in
+symport -sid &lt;sid&gt; -dir &lt;dir&gt; -p &lt;port&gt; list -logged_in
+
+# Physical disks
+sympd list -sid &lt;sid&gt;
+sympd list -sid &lt;sid&gt; -failed
+sympd list -sid &lt;sid&gt; -spare
+sympd show &lt;pd_name&gt; -sid &lt;sid&gt;
+
+# Disk groups
+symdisk list -sid &lt;sid&gt;
+symdisk list -sid &lt;sid&gt; -failed
+symdisk list -sid &lt;sid&gt; -v
+
+# Hardware status
+symcfg -sid &lt;sid&gt; list -disk
+symcfg -sid &lt;sid&gt; list -bay
+</code></pre>
+<hr />
+<h2 id="srdf-replication">SRDF — Replication<a class="headerlink" href="#srdf-replication" title="Permanent link">&para;</a></h2>
+<p>SRDF (Symmetrix Remote Data Facility) replicates data between PowerMax arrays. Synchronous mode (SRDF/S) provides zero RPO. Asynchronous mode (SRDF/A) batches writes and provides seconds-to-minutes RPO with lower bandwidth overhead.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRDF/S (Synchronous)</td>
+<td>Write acknowledged only after replicated</td>
+<td>Zero</td>
+</tr>
+<tr>
+<td>SRDF/A (Asynchronous)</td>
+<td>Writes batched in cycles</td>
+<td>Seconds to minutes</td>
+</tr>
+<tr>
+<td>SRDF/Metro</td>
+<td>Active-active with automatic failover</td>
+<td>Zero</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># List SRDF groups and status
+symrdf -sid &lt;sid&gt; list
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; query
+
+# Storage group operations
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query        # current state
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; establish    # start replication
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; split        # make R2 writable for testing
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; suspend      # pause replication
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; resume       # resume after suspend
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; update       # force delta resync
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failover     # planned failover (R2 becomes primary)
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; failback     # failback to original R1
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; swap         # swap R1/R2 roles
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; verify
+
+# SRDF/A specific
+symrdf -sid &lt;sid&gt; -sg &lt;sg_name&gt; query -srdf_a
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; verify -srdf_a
+symrdf -sid &lt;sid&gt; -rdfg &lt;rdfg_num&gt; list -v
+</code></pre>
+<hr />
+<h2 id="snapvx-snapshots">SnapVX — Snapshots<a class="headerlink" href="#snapvx-snapshots" title="Permanent link">&para;</a></h2>
+<p>SnapVX provides near-instantaneous space-efficient snapshots of storage groups. Snapshots can be linked to target storage groups for testing without copying data.</p>
+<pre><code class="language-bash"># List snapshots
+symsnapvx list -sid &lt;sid&gt;
+symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt;
+symsnapvx list -sid &lt;sid&gt; -sg &lt;sg_name&gt; -snapshot_name &lt;snap_name&gt;
+
+# Create a snapshot
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; establish
+
+# Delete (terminate) a snapshot
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; terminate --force
+
+# Link snapshot to a target SG (expose for testing)
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt;
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; link -lnsg &lt;target_sg&gt; -copy
+
+# Unlink
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; unlink -lnsg &lt;target_sg&gt;
+
+# Restore (overwrites source — offline devices from host first)
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; restore
+
+# Rename
+symsnapvx -sid &lt;sid&gt; snap -sg &lt;sg_name&gt; -name &lt;snap_name&gt; rename -new_name &lt;new_snap_name&gt;
+</code></pre>
+<hr />
+<h2 id="performance-statistics">Performance &amp; Statistics<a class="headerlink" href="#performance-statistics" title="Permanent link">&para;</a></h2>
+<p><code>symstat</code> provides real-time performance data by storage group, device, director, or cache. For historical trending and SLA reporting, use Unisphere for PowerMax or Dell CloudIQ.</p>
+<pre><code class="language-bash"># Storage group stats
+symstat -sid &lt;sid&gt; list -type sg
+symstat -sid &lt;sid&gt; list -type sg -sg &lt;sg_name&gt;
+symstat -sid &lt;sid&gt; list -type sg -i 30             # refresh every 30 seconds
+
+# Device stats
+symstat -sid &lt;sid&gt; list -type dev
+symstat -sid &lt;sid&gt; list -type dev -devn &lt;devname&gt;
+symstat -sid &lt;sid&gt; list -type dev | sort -k4 -rn | head -20   # top by IOPS
+
+# Director and port stats
+symstat -sid &lt;sid&gt; list -type dir
+symstat -sid &lt;sid&gt; list -type dir -dir &lt;director_id&gt;
+symstat -sid &lt;sid&gt; list -type port
+symstat -sid &lt;sid&gt; list -type port -dir &lt;director_id&gt; -p &lt;port_id&gt;
+
+# Cache stats (write pending % — warn at 31%, critical at 50%)
+symstat -sid &lt;sid&gt; list -type cache
+
+# Back-end and SRDF stats
+symstat -sid &lt;sid&gt; list -type be
+symstat -sid &lt;sid&gt; list -type rdf
+
+# Collect 15-minute snapshot for Dell TAC
+symstat -sid &lt;sid&gt; list -type sg -i 60 -c 15 &gt; /tmp/sg-perf-$(date +%Y%m%d).txt &amp;
+symstat -sid &lt;sid&gt; list -type dev -i 60 -c 15 &gt; /tmp/dev-perf-$(date +%Y%m%d).txt &amp;
+symstat -sid &lt;sid&gt; list -type cache -i 60 -c 15 &gt; /tmp/cache-perf-$(date +%Y%m%d).txt &amp;
+wait
+</code></pre>
+<hr />
+<h2 id="events-audit">Events &amp; Audit<a class="headerlink" href="#events-audit" title="Permanent link">&para;</a></h2>
+<p>Review system events after any alert, before opening a support case, or as part of regular health checks. The audit log records every SYMCLI operation for accountability.</p>
+<pre><code class="language-bash"># System events
+symevent list -sid &lt;sid&gt;
+symevent list -sid &lt;sid&gt; -v
+symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
+symevent list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot; -end_time &quot;01/02/2026 00:00:00&quot;
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;WARNING\|ERROR\|FATAL&quot;
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;uncleared\|active&quot;
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;disk\|drive\|BE\|DAE&quot;
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;RDF\|SRDF\|replication&quot;
+symevent list -sid &lt;sid&gt; -v | grep -i &quot;port\|director\|link&quot;
+
+# Audit log
+symaudit list -sid &lt;sid&gt;
+symaudit list -sid &lt;sid&gt; -v
+symaudit list -sid &lt;sid&gt; -start_time &quot;01/01/2026 00:00:00&quot;
+symaudit list -sid &lt;sid&gt; -user &lt;username&gt;
+symaudit list -sid &lt;sid&gt; -v | grep -i &quot;Create\|Delete\|Modify\|SRDF&quot;
+
+# Export for support case
+symevent list -sid &lt;sid&gt; -v -output csv &gt; /tmp/events-$(date +%Y%m%d).csv
+symaudit list -sid &lt;sid&gt; -v &gt; /tmp/audit-$(date +%Y%m%d).txt
+</code></pre>
+<hr />
+<h2 id="device-groups-legacy">Device Groups (Legacy)<a class="headerlink" href="#device-groups-legacy" title="Permanent link">&para;</a></h2>
+<p>Device groups are the legacy SYMCLI grouping mechanism (pre-Unisphere for PowerMax). For current deployments, use storage groups via <code>symsg</code>. Device groups remain relevant for SRDF scripts and older Solutions Enabler workflows.</p>
+<pre><code class="language-bash"># List and inspect
+symdg list -sid &lt;sid&gt;
+symdg list -sid &lt;sid&gt; -v
+symdg show &lt;dg_name&gt; -sid &lt;sid&gt;
+symdg show &lt;dg_name&gt; -sid &lt;sid&gt; -v
+symdg list -dev &lt;devname&gt; -sid &lt;sid&gt;
+
+# Create
+symdg create &lt;dg_name&gt; -type regular -sid &lt;sid&gt;
+symdg create &lt;dg_name&gt; -type RDF1 -sid &lt;sid&gt;   # R1 side
+symdg create &lt;dg_name&gt; -type RDF2 -sid &lt;sid&gt;   # R2 side
+symdg delete &lt;dg_name&gt; -sid &lt;sid&gt;
+
+# Add and remove devices
+symdg -g &lt;dg_name&gt; add dev &lt;devname&gt; -sid &lt;sid&gt;
+symdg -g &lt;dg_name&gt; add dev &lt;start_dev&gt;:&lt;end_dev&gt; -sid &lt;sid&gt;
+symdg -g &lt;dg_name&gt; remove dev &lt;devname&gt; -sid &lt;sid&gt;
+symdev list -g &lt;dg_name&gt; -sid &lt;sid&gt;
+
+# SRDF operations via device group
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; query
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; suspend -noprompt
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; establish -noprompt
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; failover -noprompt
+symrdf -g &lt;dg_name&gt; -sid &lt;sid&gt; restore -noprompt
+</code></pre>
 
 
 

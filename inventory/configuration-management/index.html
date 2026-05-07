@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#configuration-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Configuration Baseline
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#ansible-configuration-enforcement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Ansible — Configuration Enforcement
       
     </span>
   </a>
@@ -734,10 +734,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#aws-config-cloud-configuration-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        AWS Config — Cloud Configuration Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-policy-resource-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Policy — Resource Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drift-detection-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Detection — Linux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drift-detection-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Detection — Windows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cmdb-update-after-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMDB — Update After Changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -764,21 +830,181 @@
 
 
 <h1 id="configuration-management">Configuration Management<a class="headerlink" href="#configuration-management" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Configuration management ensures systems maintain consistent and approved configurations.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<p>Track, baseline, and enforce system configurations across infrastructure to prevent drift and maintain compliance.</p>
+<h2 id="configuration-baseline">Configuration Baseline<a class="headerlink" href="#configuration-baseline" title="Permanent link">&para;</a></h2>
+<p>A baseline defines the approved, known-good state for a system type. Any deviation is drift.</p>
+<table>
+<thead>
+<tr>
+<th>System Type</th>
+<th>Baseline Elements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux server</td>
+<td>OS version, installed packages, kernel parameters (<code>sysctl</code>), SSH config, sudoers</td>
+</tr>
+<tr>
+<td>Windows server</td>
+<td>OS version, installed features, security policy, registry keys, local group policy</td>
+</tr>
+<tr>
+<td>Network device</td>
+<td>Firmware version, interface config, ACLs, NTP/syslog config</td>
+</tr>
+<tr>
+<td>Kubernetes node</td>
+<td>kubelet config, CRI version, kernel parameters, OS image version</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ansible-configuration-enforcement">Ansible — Configuration Enforcement<a class="headerlink" href="#ansible-configuration-enforcement" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Run playbook against all servers to enforce baseline
+ansible-playbook -i inventory/ site.yml --check   # dry-run first
+ansible-playbook -i inventory/ site.yml
+
+# Run against specific host group
+ansible-playbook -i inventory/ site.yml --limit webservers
+
+# Check for drift (report only, no changes)
+ansible-playbook -i inventory/ baseline-check.yml --check --diff
+
+# Show facts (current config state)
+ansible -i inventory/ all -m setup -a &quot;filter=ansible_distribution*&quot;
+</code></pre>
+<h2 id="aws-config-cloud-configuration-compliance">AWS Config — Cloud Configuration Compliance<a class="headerlink" href="#aws-config-cloud-configuration-compliance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List non-compliant resources
+aws configservice get-compliance-details-by-config-rule \
+  --config-rule-name restricted-ssh \
+  --compliance-types NON_COMPLIANT \
+  --query 'EvaluationResults[*].{Resource:EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId,Status:ComplianceType}'
+
+# Get all non-compliant resources across rules
+aws configservice describe-compliance-by-config-rule \
+  --compliance-types NON_COMPLIANT \
+  --query 'ComplianceByConfigRules[*].{Rule:ConfigRuleName,Compliance:Compliance.ComplianceType}'
+
+# Run evaluation on demand
+aws configservice start-config-rules-evaluation --config-rule-names restricted-ssh
+</code></pre>
+<h2 id="azure-policy-resource-compliance">Azure Policy — Resource Compliance<a class="headerlink" href="#azure-policy-resource-compliance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># List non-compliant resources
+az policy state list \
+  --filter &quot;complianceState eq 'NonCompliant'&quot; \
+  --query '[*].{Resource:resourceId,Policy:policyDefinitionName}' -o table
+
+# Trigger compliance re-scan
+az policy state trigger-scan --subscription &lt;sub-id&gt;
+</code></pre>
+<h2 id="drift-detection-linux">Drift Detection — Linux<a class="headerlink" href="#drift-detection-linux" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Detect package changes from baseline (RPM systems)
+rpm -Va | grep -v &quot;^......G&quot;   # filter cosmetic warnings
+# Common output: S5.. = size/hash changed; M = mode changed
+
+# Detect changed config files
+rpm -Va --nomtime /etc/ | awk '$1 ~ /[5cS]/ {print $2}'
+
+# Track file changes with AIDE (Advanced Intrusion Detection Environment)
+aide --init    # initialise baseline
+aide --check   # compare against baseline
+</code></pre>
+<h2 id="drift-detection-windows">Drift Detection — Windows<a class="headerlink" href="#drift-detection-windows" title="Permanent link">&para;</a></h2>
+<pre><code class="language-powershell"># Compare installed features vs baseline
+Get-WindowsFeature | Where-Object { $_.Installed -eq $true } | Select-Object Name | Sort-Object Name &gt; current-features.txt
+# diff against saved baseline
+
+# Check for policy deviations
+secedit /export /cfg current-policy.cfg
+# diff against approved baseline policy
+
+# DSC configuration check (pull server)
+Test-DscConfiguration -Detailed
+</code></pre>
+<h2 id="cmdb-update-after-changes">CMDB — Update After Changes<a class="headerlink" href="#cmdb-update-after-changes" title="Permanent link">&para;</a></h2>
+<p>Every infrastructure change must be reflected in the CMDB:</p>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>CMDB Update Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS patching</td>
+<td>Update OS version field</td>
+</tr>
+<tr>
+<td>New package installed</td>
+<td>Add to software inventory</td>
+</tr>
+<tr>
+<td>IP address change</td>
+<td>Update IP, DNS records</td>
+</tr>
+<tr>
+<td>VM resize</td>
+<td>Update CPU/RAM fields</td>
+</tr>
+<tr>
+<td>New server added</td>
+<td>Create new CI with all attributes</td>
+</tr>
+<tr>
+<td>Decommission</td>
+<td>Mark CI as retired; update relationships</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># ServiceNow CMDB update via REST API (example)
+curl -s -X PATCH \
+  -H &quot;Authorization: Basic &lt;base64-credentials&gt;&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;os_version&quot;:&quot;RHEL 9.3&quot;}' \
+  &quot;https://&lt;instance&gt;.service-now.com/api/now/table/cmdb_ci_server/&lt;sys_id&gt;&quot;
+</code></pre>
+<h2 id="compliance-checklist">Compliance Checklist<a class="headerlink" href="#compliance-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review configuration changes</li>
-<li>Validate baseline compliance</li>
-<li>Confirm configuration backups</li>
+<li>[ ] All servers in scope have a defined baseline in Ansible / DSC</li>
+<li>[ ] Baseline enforcement playbook ran this week; no unresolved drift</li>
+<li>[ ] AWS Config rules showing &lt; 5% non-compliant resources</li>
+<li>[ ] Azure Policy compliance &gt; 95% at subscription scope</li>
+<li>[ ] CMDB CI records updated after all changes in last 30 days</li>
+<li>[ ] Unauthorized package or config changes investigated and resolved</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Define configuration baseline</li>
-<li>Monitor configuration changes</li>
-<li>Validate system compliance</li>
-<li>Document changes</li>
-</ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ansible playbook shows many changed tasks</td>
+<td>Drift since last run? Manual changes?</td>
+<td>Review changed items; re-apply baseline; document approved exceptions</td>
+</tr>
+<tr>
+<td>AWS Config rule non-compliant</td>
+<td>Rule logic vs actual config</td>
+<td>Review resource config; remediate or create exception</td>
+</tr>
+<tr>
+<td>CMDB stale for many CIs</td>
+<td>No automated discovery?</td>
+<td>Enable AWS Config / Azure Resource Graph auto-discovery integration</td>
+</tr>
+<tr>
+<td>DSC configuration failing</td>
+<td>Module version mismatch? Pull server unreachable?</td>
+<td>Check DSC log: <code>Get-DscConfigurationStatus -All</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

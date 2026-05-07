@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#quick-status-all-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Quick Status — All Platforms
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-checks" class="md-nav__link">
+  <a href="#postgresql-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Checks
+        PostgreSQL Health Checks
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#mysql-mariadb-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        MySQL / MariaDB Health Checks
       
     </span>
   </a>
@@ -745,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#sql-server-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        SQL Server Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
       
     </span>
   </a>
@@ -775,25 +819,201 @@
 
 
 <h1 id="database-health-check">Database Health Check<a class="headerlink" href="#database-health-check" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook verifies database availability, performance, and connectivity.</p>
-<h2 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm database instance name</li>
-<li>Identify application dependencies</li>
-<li>Check recent alerts</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">systemctl status mysqld
-ps aux | grep postgres
-netstat -tulnp | grep 5432
+<p>Verify database availability, connectivity, replication status, and resource utilization across common platforms.</p>
+<h2 id="quick-status-all-platforms">Quick Status — All Platforms<a class="headerlink" href="#quick-status-all-platforms" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PostgreSQL
+systemctl status postgresql
+psql -U postgres -c &quot;SELECT version();&quot;
+psql -U postgres -c &quot;SELECT pg_is_in_recovery();&quot;  # true = standby
+
+# MySQL / MariaDB
+systemctl status mysqld
+mysql -u root -e &quot;SHOW STATUS LIKE 'Uptime';&quot;
+mysql -u root -e &quot;SHOW STATUS LIKE 'Threads_connected';&quot;
+
+# SQL Server
+systemctl status mssql-server   # Linux
+# Windows:
+Get-Service -Name MSSQLSERVER
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm database service running</li>
-<li>Confirm client connectivity</li>
-<li>Review database logs</li>
-</ol>
+<h2 id="postgresql-health-checks">PostgreSQL Health Checks<a class="headerlink" href="#postgresql-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Active connections vs max
+SELECT count(*) AS active, max_conn, max_conn - count(*) AS available
+FROM pg_stat_activity, (SELECT setting::int AS max_conn FROM pg_settings WHERE name='max_connections') s
+GROUP BY max_conn;
+
+-- Long-running queries (&gt; 60s)
+SELECT pid, now() - pg_stat_activity.query_start AS duration, query, state
+FROM pg_stat_activity
+WHERE state != 'idle' AND (now() - query_start) &gt; interval '60 seconds'
+ORDER BY duration DESC;
+
+-- Bloat / dead tuples
+SELECT relname, n_dead_tup, n_live_tup, last_autovacuum
+FROM pg_stat_user_tables
+ORDER BY n_dead_tup DESC LIMIT 10;
+
+-- Replication lag (on primary)
+SELECT client_addr, state, sent_lsn, write_lsn, replay_lsn,
+       (sent_lsn - replay_lsn) AS replication_lag_bytes
+FROM pg_stat_replication;
+</code></pre>
+<h2 id="mysql-mariadb-health-checks">MySQL / MariaDB Health Checks<a class="headerlink" href="#mysql-mariadb-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Connection status
+SHOW STATUS LIKE 'Threads_%';
+SHOW STATUS LIKE 'Max_used_connections';
+
+-- Replication status (on replica)
+SHOW SLAVE STATUS\G
+-- Key fields: Seconds_Behind_Master, Slave_IO_Running, Slave_SQL_Running
+
+-- Slow queries
+SHOW STATUS LIKE 'Slow_queries';
+SHOW VARIABLES LIKE 'slow_query_log%';
+
+-- InnoDB buffer pool hit ratio (target &gt; 99%)
+SHOW STATUS LIKE 'Innodb_buffer_pool_reads';
+SHOW STATUS LIKE 'Innodb_buffer_pool_read_requests';
+</code></pre>
+<h2 id="sql-server-health-checks">SQL Server Health Checks<a class="headerlink" href="#sql-server-health-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Instance uptime
+SELECT sqlserver_start_time FROM sys.dm_os_sys_info;
+
+-- Active sessions and blocking
+SELECT session_id, status, blocking_session_id, wait_type, wait_time/1000 AS wait_sec, text
+FROM sys.dm_exec_requests
+CROSS APPLY sys.dm_exec_sql_text(sql_handle)
+WHERE status != 'background'
+ORDER BY wait_time DESC;
+
+-- Database file sizes and free space
+SELECT DB_NAME(database_id) AS db_name, name, type_desc,
+       size * 8 / 1024 AS size_mb,
+       fileproperty(name, 'SpaceUsed') * 8 / 1024 AS used_mb
+FROM sys.master_files;
+
+-- AG replica health (Always On)
+SELECT ag.name, ar.replica_server_name, rs.synchronization_state_desc, rs.synchronization_health_desc
+FROM sys.dm_hadr_availability_replica_states rs
+JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id
+JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
+</code></pre>
+<h2 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># PostgreSQL
+psql -h &lt;host&gt; -U &lt;user&gt; -d &lt;dbname&gt; -c &quot;SELECT 1 AS alive;&quot;
+
+# MySQL
+mysql -h &lt;host&gt; -u &lt;user&gt; -p&lt;pass&gt; -e &quot;SELECT 1 AS alive;&quot;
+
+# SQL Server
+sqlcmd -S &lt;host&gt; -U &lt;user&gt; -P &lt;pass&gt; -Q &quot;SELECT 1 AS alive&quot;
+
+# Port reachability
+nc -zv &lt;db-host&gt; 5432    # PostgreSQL
+nc -zv &lt;db-host&gt; 3306    # MySQL
+nc -zv &lt;db-host&gt; 1433    # SQL Server
+</code></pre>
+<h2 id="health-check-thresholds">Health Check Thresholds<a class="headerlink" href="#health-check-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active connections</td>
+<td>&gt; 80% of max_connections</td>
+<td>&gt; 90% of max_connections</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&gt; 30 seconds</td>
+<td>&gt; 5 minutes</td>
+</tr>
+<tr>
+<td>Long-running queries</td>
+<td>&gt; 5 minutes</td>
+<td>&gt; 30 minutes</td>
+</tr>
+<tr>
+<td>Dead tuple ratio (PG)</td>
+<td>&gt; 20%</td>
+<td>&gt; 50% (vacuum required)</td>
+</tr>
+<tr>
+<td>Buffer pool hit ratio</td>
+<td>&lt; 99%</td>
+<td>&lt; 95%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Log Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>/var/log/postgresql/</code> or <code>pg_lsclusters</code></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>/var/log/mysql/error.log</code></td>
+</tr>
+<tr>
+<td>MariaDB</td>
+<td><code>/var/log/mariadb/mariadb.log</code></td>
+</tr>
+<tr>
+<td>SQL Server (Linux)</td>
+<td><code>/var/opt/mssql/log/errorlog</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot connect</td>
+<td>Port reachable? Service running?</td>
+<td><code>nc -zv</code>; <code>systemctl status</code></td>
+</tr>
+<tr>
+<td>High connection count</td>
+<td>Application connection pool leak?</td>
+<td>Check app logs; restart connection pool</td>
+</tr>
+<tr>
+<td>Replication stopped</td>
+<td>I/O or SQL thread stopped</td>
+<td><code>SHOW SLAVE STATUS\G</code>; check relay log errors</td>
+</tr>
+<tr>
+<td>Slow queries</td>
+<td>Missing indexes? Locking?</td>
+<td>Run explain plan; check <code>pg_stat_activity</code> / <code>dm_exec_requests</code></td>
+</tr>
+<tr>
+<td>High dead tuples (PG)</td>
+<td>Autovacuum falling behind</td>
+<td>Run <code>VACUUM ANALYZE &lt;table&gt;</code> manually</td>
+</tr>
+</tbody>
+</table>
 
 
 

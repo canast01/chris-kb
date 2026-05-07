@@ -712,10 +712,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#postgresql-maintenance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        PostgreSQL Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PostgreSQL Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-wal-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL — WAL Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mysql-mariadb-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MySQL / MariaDB Maintenance
       
     </span>
   </a>
@@ -723,10 +751,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#maintenance-tasks" class="md-nav__link">
+  <a href="#sql-server-maintenance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Maintenance Tasks
+        SQL Server Maintenance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Server Maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-integrity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server — Integrity Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance Schedule
       
     </span>
   </a>
@@ -734,10 +790,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#maintenance-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        Maintenance Checklist
       
     </span>
   </a>
@@ -745,10 +801,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Troubleshooting
       
     </span>
   </a>
@@ -775,25 +831,187 @@
 
 
 <h1 id="database-maintenance-procedure">Database Maintenance Procedure<a class="headerlink" href="#database-maintenance-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure covers routine database maintenance tasks.</p>
-<h2 id="maintenance-tasks">Maintenance Tasks<a class="headerlink" href="#maintenance-tasks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Index optimization</li>
-<li>Log cleanup</li>
-<li>Statistics update</li>
-<li>Backup verification</li>
-</ul>
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">vacuum analyze
-mysqlcheck --optimize database
+<p>Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.</p>
+<h2 id="postgresql-maintenance">PostgreSQL Maintenance<a class="headerlink" href="#postgresql-maintenance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Update statistics (safe at any time)
+ANALYZE;
+ANALYZE &lt;schema&gt;.&lt;table&gt;;
+
+-- Vacuum dead tuples (non-blocking)
+VACUUM ANALYZE;
+VACUUM ANALYZE &lt;schema&gt;.&lt;table&gt;;
+
+-- Full vacuum — reclaims disk space (acquires exclusive lock — use off-peak)
+VACUUM FULL &lt;schema&gt;.&lt;table&gt;;
+
+-- Check autovacuum status per table
+SELECT relname, last_autovacuum, last_autoanalyze, n_dead_tup, n_live_tup
+FROM pg_stat_user_tables
+ORDER BY n_dead_tup DESC;
+
+-- Rebuild bloated indexes
+REINDEX TABLE &lt;schema&gt;.&lt;table&gt;;
+-- Online (PG12+, no locking)
+REINDEX TABLE CONCURRENTLY &lt;schema&gt;.&lt;table&gt;;
+
+-- Check index bloat
+SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size,
+       idx_scan AS scans
+FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 </code></pre>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm maintenance completed</li>
-<li>Confirm database performance stable</li>
-<li>Document maintenance results</li>
-</ol>
+<h3 id="postgresql-wal-cleanup">PostgreSQL — WAL Cleanup<a class="headerlink" href="#postgresql-wal-cleanup" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Old WAL segments are recycled automatically; check pg_wal is not growing unbounded
+du -sh /var/lib/postgresql/data/pg_wal/
+
+# Inactive replication slots hold WAL — find and review
+psql -c &quot;SELECT slot_name, active, restart_lsn FROM pg_replication_slots WHERE active = false;&quot;
+
+# Drop inactive slot (WARNING: only if no longer needed)
+# psql -c &quot;SELECT pg_drop_replication_slot('slot_name');&quot;
+</code></pre>
+<h2 id="mysql-mariadb-maintenance">MySQL / MariaDB Maintenance<a class="headerlink" href="#mysql-mariadb-maintenance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Analyse and optimise tables (acquires lock — use during low-traffic window)
+mysqlcheck -u root --analyze --all-databases
+mysqlcheck -u root --optimize &lt;database&gt;
+
+# Or per-table in SQL:
+mysql -u root -e &quot;ANALYZE TABLE &lt;db&gt;.&lt;table&gt;;&quot;
+mysql -u root -e &quot;OPTIMIZE TABLE &lt;db&gt;.&lt;table&gt;;&quot;  # rebuilds table; use sparingly
+</code></pre>
+<pre><code class="language-sql">-- Check table status
+SHOW TABLE STATUS FROM &lt;database&gt;;
+
+-- Purge old binary logs (retain 7 days)
+PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);
+
+-- Update InnoDB statistics
+mysql -u root -e &quot;CALL sys.ps_setup_enable_consumer('events_statements_history_long');&quot;
+ANALYZE TABLE &lt;table&gt;;
+</code></pre>
+<h2 id="sql-server-maintenance">SQL Server Maintenance<a class="headerlink" href="#sql-server-maintenance" title="Permanent link">&para;</a></h2>
+<pre><code class="language-sql">-- Rebuild fragmented indexes (&gt; 30% fragmentation)
+SELECT OBJECT_NAME(ips.object_id) AS table_name, i.name AS index_name,
+       ips.avg_fragmentation_in_percent
+FROM sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, 'LIMITED') ips
+JOIN sys.indexes i ON ips.object_id = i.object_id AND ips.index_id = i.index_id
+WHERE ips.avg_fragmentation_in_percent &gt; 30
+ORDER BY ips.avg_fragmentation_in_percent DESC;
+
+-- Rebuild index
+ALTER INDEX [IX_TableName_Column] ON dbo.TableName REBUILD;
+-- Online rebuild (Enterprise edition)
+ALTER INDEX ALL ON dbo.TableName REBUILD WITH (ONLINE = ON);
+
+-- Reorganise (&lt; 30% fragmentation — online, low-impact)
+ALTER INDEX ALL ON dbo.TableName REORGANIZE;
+
+-- Update statistics
+UPDATE STATISTICS dbo.TableName;
+UPDATE STATISTICS dbo.TableName WITH FULLSCAN;
+
+-- Shrink log file (use sparingly — only after log backup, not routine)
+USE &lt;dbname&gt;;
+BACKUP LOG &lt;dbname&gt; TO DISK = '/backup/mssql/&lt;dbname&gt;_log.bak';
+DBCC SHRINKFILE (&lt;dbname&gt;_log, 256);  -- shrink to 256 MB
+</code></pre>
+<h3 id="sql-server-integrity-check">SQL Server — Integrity Check<a class="headerlink" href="#sql-server-integrity-check" title="Permanent link">&para;</a></h3>
+<pre><code class="language-sql">-- DBCC CHECKDB — run weekly on non-peak window; can take hours on large DBs
+DBCC CHECKDB ('&lt;dbname&gt;') WITH NO_INFOMSGS, ALL_ERRORMSGS;
+
+-- Faster: check allocation structures only
+DBCC CHECKDB ('&lt;dbname&gt;') WITH PHYSICAL_ONLY, NO_INFOMSGS;
+</code></pre>
+<h2 id="maintenance-schedule">Maintenance Schedule<a class="headerlink" href="#maintenance-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>PostgreSQL</th>
+<th>MySQL</th>
+<th>SQL Server</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update statistics</td>
+<td><code>ANALYZE</code></td>
+<td><code>ANALYZE TABLE</code></td>
+<td><code>UPDATE STATISTICS</code></td>
+<td>Daily (autovacuum/auto-stats)</td>
+</tr>
+<tr>
+<td>Index maintenance</td>
+<td><code>REINDEX CONCURRENTLY</code></td>
+<td><code>OPTIMIZE TABLE</code></td>
+<td><code>REORGANIZE</code> / <code>REBUILD</code></td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Log / WAL cleanup</td>
+<td>Auto + check pg_wal</td>
+<td><code>PURGE BINARY LOGS</code></td>
+<td>Log backup + shrink</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Integrity check</td>
+<td><code>VACUUM FULL</code> (if needed)</td>
+<td><code>mysqlcheck --check</code></td>
+<td><code>DBCC CHECKDB</code></td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Dead tuple cleanup</td>
+<td><code>VACUUM ANALYZE</code></td>
+<td>N/A (InnoDB purge)</td>
+<td>N/A</td>
+<td>Daily (autovacuum)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="maintenance-checklist">Maintenance Checklist<a class="headerlink" href="#maintenance-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Autovacuum / auto-stats are enabled and not falling behind</li>
+<li>[ ] Index fragmentation reviewed — heavily fragmented indexes rebuilt</li>
+<li>[ ] Statistics are current (check last update date)</li>
+<li>[ ] Old logs / WAL / binary logs purged per retention policy</li>
+<li>[ ] Integrity check (<code>DBCC CHECKDB</code> / <code>VACUUM</code>) completed without errors</li>
+<li>[ ] Maintenance task duration logged (flag if significantly longer than baseline)</li>
+<li>[ ] No blocking during maintenance tasks (schedule during low-traffic window)</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VACUUM FULL blocking production</td>
+<td>Long-running transaction holding lock</td>
+<td>Identify and terminate blocker: <code>SELECT pid, query FROM pg_stat_activity WHERE state='idle in transaction';</code></td>
+</tr>
+<tr>
+<td>OPTIMIZE TABLE takes too long</td>
+<td>Large table / high traffic</td>
+<td>Run during maintenance window; consider <code>pt-online-schema-change</code></td>
+</tr>
+<tr>
+<td>DBCC CHECKDB reports corruption</td>
+<td>Disk error?</td>
+<td>Restore from last known-good backup; run <code>DBCC CHECKDB WITH REPAIR_ALLOW_DATA_LOSS</code> as last resort</td>
+</tr>
+<tr>
+<td>Autovacuum not running</td>
+<td><code>autovacuum=off</code>?</td>
+<td>Check <code>SHOW autovacuum;</code>; enable if off</td>
+</tr>
+</tbody>
+</table>
 
 
 

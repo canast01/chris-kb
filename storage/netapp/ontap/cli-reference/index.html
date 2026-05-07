@@ -705,6 +705,179 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster &amp; Nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-health-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Health &amp; Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-aggregates-disks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage — Aggregates &amp; Disks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volumes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#svms-storage-virtual-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVMs (Storage Virtual Machines)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifs-smb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIFS / SMB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-protocols-iscsi-fc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block Protocols (iSCSI / FC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapmirror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapMirror
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quotas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-qos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance &amp; QoS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security &amp; Users
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autosupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AutoSupport
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,85 +896,529 @@
 
 
 <h1 id="netapp-ontap-cli-reference">NetApp ONTAP CLI Reference<a class="headerlink" href="#netapp-ontap-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used ONTAP CLI commands for managing NetApp storage systems.</p>
-<div class="kb-grid kb-grid-3">
+<p>NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FAS, ONTAP Select). The CLI uses a dot-separated namespace — <code>storage aggregate show</code>, <code>network interface create</code> — and runs at the <code>cluster::&gt;</code> prompt. Most data access configuration (NFS, CIFS, iSCSI, FC) happens at the SVM (Storage Virtual Machine) level — each SVM is an isolated data access instance within the cluster.</p>
+<blockquote>
+<p>SSH to the cluster management IP and log in as <code>admin</code>. Use <code>cluster-name::&gt;</code> as your prompt. Commands that affect a specific SVM typically require <code>-vserver &lt;svm&gt;</code>.</p>
+</blockquote>
+<hr />
+<h2 id="cluster-nodes">Cluster &amp; Nodes<a class="headerlink" href="#cluster-nodes" title="Permanent link">&para;</a></h2>
+<p>Cluster-level identity, health status, HA pairs, NTP, and node-level diagnostics. Run these first when connecting to an unfamiliar cluster.</p>
+<pre><code class="language-bash"># Identity and status
+cluster show
+cluster identity show
+cluster identity modify -name &lt;new_name&gt;
+cluster ring show
+cluster ha show
+version
 
-<a class="kb-card" href="cluster/">
-  <strong>Cluster & Nodes</strong>
-  <span>cluster show/identity, ring, NTP, node show, and node diagnostics.</span>
-</a>
+# NTP (time sync is critical — certificate errors and log correlation break without it)
+cluster time-service ntp server show
+cluster time-service ntp server create -server &lt;ip&gt;
+cluster time-service ntp server delete -server &lt;ip&gt;
 
-<a class="kb-card" href="health/">
-  <strong>System Health & Events</strong>
-  <span>Health status/alerts/subsystems, event log, and firmware images.</span>
-</a>
+# Node status
+node show
+node show -fields node,health,uptime,model,serial-number
 
-<a class="kb-card" href="storage/">
-  <strong>Storage — Aggregates & Disks</strong>
-  <span>Aggregate show/space/modify and disk show/unfail/assign.</span>
-</a>
+# Node-level diagnostics (drops to node shell)
+node run -node &lt;node&gt; sysconfig
+node run -node &lt;node&gt; sysconfig -a
+node run -node &lt;node&gt; sysconfig -r
+node run -node &lt;node&gt; df -h
+node run -node &lt;node&gt; environment status
+</code></pre>
+<hr />
+<h2 id="system-health-events">System Health &amp; Events<a class="headerlink" href="#system-health-events" title="Permanent link">&para;</a></h2>
+<p>Overall health status, active alerts, the EMS event log, firmware updates, and AutoSupport. Start here when investigating issues or before maintenance windows.</p>
+<pre><code class="language-bash"># Overall health
+system health status show                     # expected: ok
+system health alert show                      # unresolved alerts
+system health subsystem show
+system health node-connectivity show
 
-<a class="kb-card" href="volumes/">
-  <strong>Volumes</strong>
-  <span>Volume CRUD, mount/unmount, efficiency (dedup/compression), and FlexClone.</span>
-</a>
+# EMS event log
+event log show
+event log show -severity emergency
+event log show -severity alert
+event log show -severity error
+event log show -node &lt;node_name&gt;
+event log show -time &quot;&gt;1h&quot;
+event log show -time &quot;&gt;24h&quot;
+event log show -messagename wafl.vol.full
 
-<a class="kb-card" href="snapshots/">
-  <strong>Snapshots</strong>
-  <span>Snapshot list/create/delete/restore/rename and snapshot policies.</span>
-</a>
+# EMS notification destinations (email, syslog)
+event notification show
+event notification destination show
 
-<a class="kb-card" href="svms/">
-  <strong>SVMs</strong>
-  <span>SVM list/create/delete/modify and protocol management.</span>
-</a>
+# Software images
+system node image show
 
-<a class="kb-card" href="network/">
-  <strong>Network</strong>
-  <span>LIF CRUD/migrate/revert, ports, VLANs, ifgrps, routes, and ping.</span>
-</a>
+# Firmware updates (disk, shelf, SP)
+system node firmware update -node &lt;node&gt;
+system node upgrade-revert show
 
-<a class="kb-card" href="nfs/">
-  <strong>NFS</strong>
-  <span>NFS service, export policies, export rules, and client check.</span>
-</a>
+# AutoSupport
+system node autosupport show
+system node autosupport show -fields state,last-successful-destination
+system node autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual test&quot;
+</code></pre>
+<hr />
+<h2 id="storage-aggregates-disks">Storage — Aggregates &amp; Disks<a class="headerlink" href="#storage-aggregates-disks" title="Permanent link">&para;</a></h2>
+<p>An aggregate is the physical RAID group that holds one or more volumes. Disks are the raw drives. Check aggregate capacity before provisioning new volumes.</p>
+<pre><code class="language-bash"># Aggregates
+storage aggregate show
+storage aggregate show -state online
+storage aggregate show -fields aggr-name,node,size,availsize,usedsize,state
+storage aggregate show-space
+storage aggregate show-space -aggregate &lt;aggr&gt;
 
-<a class="kb-card" href="cifs/">
-  <strong>CIFS / SMB</strong>
-  <span>CIFS server, shares CRUD, access control, and session monitoring.</span>
-</a>
+# Aggregate operations
+storage aggregate rename -aggregate &lt;old_name&gt; -newname &lt;new_name&gt;
+storage aggregate modify -aggregate &lt;aggr&gt; -maxraidsize 24
+storage aggregate add-disks -aggregate &lt;aggr&gt; -diskcount &lt;n&gt;
 
-<a class="kb-card" href="block/">
-  <strong>Block Protocols (iSCSI / FC)</strong>
-  <span>iSCSI service, LUN CRUD/map/unmap, igroups, FCP adapters, and interfaces.</span>
-</a>
+# Disks
+storage disk show
+storage disk show -broken                           # failed or suspect
+storage disk show -container-type spare             # available spares
+storage disk show -fields disk,bay,node,container-type,disk-type,rpm,size,position
 
-<a class="kb-card" href="snapmirror/">
-  <strong>SnapMirror</strong>
-  <span>Show relationships, create/delete, initialize, update, quiesce, break, resync.</span>
-</a>
+# Disk operations
+storage disk unfail -disk &lt;disk_name&gt;               # re-add after investigation
+storage disk assign -disk &lt;disk_name&gt; -owner &lt;node_name&gt;
 
-<a class="kb-card" href="quotas/">
-  <strong>Quotas</strong>
-  <span>Volume quota show/report/on/off/resize and policy rule management.</span>
-</a>
+# RAID groups
+storage aggregate show-raidtree -aggregate &lt;aggr&gt;
+storage aggregate show -fields raidtype
 
-<a class="kb-card" href="performance/">
-  <strong>Performance & QoS</strong>
-  <span>statistics, QoS policy groups, and workload monitoring.</span>
-</a>
+# Disk shelves
+storage shelf show
+storage shelf show -detail
+</code></pre>
+<hr />
+<h2 id="volumes">Volumes<a class="headerlink" href="#volumes" title="Permanent link">&para;</a></h2>
+<p>Volumes are the logical containers for data in ONTAP. Each volume lives in an aggregate and can be mounted at a junction path in the SVM namespace. FlexClone creates instant space-efficient copies for test/dev.</p>
+<pre><code class="language-bash"># List and status
+volume show
+volume show -vserver &lt;svm&gt;
+volume show -fields volume,vserver,size,used,available,percent-used,state
+volume show -state offline
+volume show -junction-path &lt;path&gt;
 
-<a class="kb-card" href="security/">
-  <strong>Security & Users</strong>
-  <span>Security login CRUD, roles, and certificate management.</span>
-</a>
+# Create / modify / delete
+volume create -vserver &lt;svm&gt; -volume &lt;vol&gt; -aggregate &lt;aggr&gt; -size &lt;size&gt; \
+    -junction-path &lt;path&gt; -policy &lt;export-policy&gt;
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -size &lt;size&gt;
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -percent-snapshot-space &lt;n&gt;
+volume rename -vserver &lt;svm&gt; -volume &lt;old&gt; -newname &lt;new&gt;
+volume delete -vserver &lt;svm&gt; -volume &lt;vol&gt;
 
-<a class="kb-card" href="autosupport/">
-  <strong>AutoSupport</strong>
-  <span>autosupport show, invoke test, and modify settings.</span>
-</a>
+# Mount / unmount
+volume mount -vserver &lt;svm&gt; -volume &lt;vol&gt; -junction-path &lt;path&gt;
+volume unmount -vserver &lt;svm&gt; -volume &lt;vol&gt;
 
-</div>
+# Bring online / offline
+volume online -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume offline -vserver &lt;svm&gt; -volume &lt;vol&gt;
+
+# Storage efficiency (dedup / compression)
+volume efficiency show
+volume efficiency show -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume efficiency start -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume efficiency stop -vserver &lt;svm&gt; -volume &lt;vol&gt;
+
+# FlexClone (instant space-efficient copy — great for dev/test)
+volume clone create -vserver &lt;svm&gt; -flexclone &lt;name&gt; -parent-volume &lt;vol&gt;
+volume clone create -vserver &lt;svm&gt; -flexclone &lt;name&gt; -parent-volume &lt;vol&gt; -parent-snapshot &lt;snap&gt;
+volume clone split start -vserver &lt;svm&gt; -flexclone &lt;name&gt;
+volume clone split status -vserver &lt;svm&gt; -flexclone &lt;name&gt;
+</code></pre>
+<hr />
+<h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
+<p>ONTAP snapshots are read-only point-in-time copies stored within the same volume's snapshot reserve. They're near-instant and space-efficient — only changed blocks consume additional space.</p>
+<pre><code class="language-bash"># List snapshots
+volume snapshot show
+volume snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt; -fields size,create-time,busy
+
+# Create
+volume snapshot create -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
+
+# Delete
+volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
+volume snapshot delete -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot * -force true   # all snapshots
+
+# Rename
+volume snapshot rename -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;old_name&gt; -new-name &lt;new_name&gt;
+
+# Restore (volume must be offline or quiesced)
+volume snapshot restore -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt;
+volume snapshot restore -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot &lt;snap_name&gt; -online true
+
+# Snapshot policies
+volume snapshot policy show
+volume snapshot policy create -policy &lt;policy_name&gt; -enabled true
+volume snapshot policy add-schedule -policy &lt;policy_name&gt; -schedule hourly -count 24
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -snapshot-policy &lt;policy_name&gt;
+
+# Snapshot reserve
+volume show -vserver &lt;svm&gt; -volume &lt;vol&gt; -fields snapshot-percent
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -percent-snapshot-space 15
+
+# Accessing snapshots from the client
+# NFS: ls /mnt/data/.snapshot/
+# SMB: \\server\share\~snapshot\
+</code></pre>
+<hr />
+<h2 id="svms-storage-virtual-machines">SVMs (Storage Virtual Machines)<a class="headerlink" href="#svms-storage-virtual-machines" title="Permanent link">&para;</a></h2>
+<p>SVMs (also called Vservers) are the data access layer. Each SVM has its own namespace, protocols, network interfaces, and security configuration — think of each SVM as an isolated virtual storage appliance within the cluster.</p>
+<pre><code class="language-bash"># List and view
+vserver show
+vserver show -fields vserver,type,state,allowed-protocols
+vserver show -vserver &lt;svm&gt;
+
+# Create
+vserver create \
+    -vserver &lt;svm_name&gt; \
+    -rootvolume &lt;vol_name&gt; \
+    -aggregate &lt;aggr_name&gt; \
+    -rootvolume-security-style unix \
+    -language C.UTF-8
+vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs,cifs
+
+# Delete
+vserver stop -vserver &lt;svm_name&gt;
+vserver delete -vserver &lt;svm_name&gt;
+
+# Protocol management
+vserver show-protocols -vserver &lt;svm_name&gt;
+vserver modify -vserver &lt;svm_name&gt; -allowed-protocols nfs,cifs,iscsi
+
+# Network interfaces (LIFs)
+network interface show -vserver &lt;svm_name&gt;
+network interface create -vserver &lt;svm_name&gt; -lif &lt;lif_name&gt; -role data \
+    -data-protocol nfs -home-node &lt;node_name&gt; -home-port &lt;port&gt; \
+    -address &lt;ip&gt; -netmask &lt;mask&gt;
+network interface migrate -vserver &lt;svm_name&gt; -lif &lt;lif_name&gt; \
+    -dest-node &lt;node_name&gt; -dest-port &lt;port&gt;
+
+# Join SVM to Active Directory (CIFS)
+vserver cifs create -vserver &lt;svm_name&gt; -cifs-server &lt;netbios_name&gt; \
+    -domain corp.local -ou &quot;OU=StorageServers,DC=corp,DC=local&quot;
+vserver cifs show -vserver &lt;svm_name&gt;
+
+# NFS service
+vserver nfs create -vserver &lt;svm_name&gt; -access true -v3 enabled -v4.1 enabled
+vserver nfs show -vserver &lt;svm_name&gt;
+
+# SVM state management
+vserver stop -vserver &lt;svm_name&gt;
+vserver start -vserver &lt;svm_name&gt;
+</code></pre>
+<hr />
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
+<p>LIFs (Logical Interfaces) are the IP addresses that clients connect to. Each LIF lives on a port and can be migrated between nodes for load balancing or maintenance.</p>
+<pre><code class="language-bash"># LIFs
+network interface show
+network interface show -vserver &lt;svm&gt;
+network interface show -fields lif,vserver,address,home-node,home-port,status-oper
+network interface create -vserver &lt;svm&gt; -lif &lt;lif&gt; -role data -data-protocol nfs \
+    -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;
+network interface modify -vserver &lt;svm&gt; -lif &lt;lif&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;
+network interface delete -vserver &lt;svm&gt; -lif &lt;lif&gt;
+network interface migrate -vserver &lt;svm&gt; -lif &lt;lif&gt; -dest-node &lt;node&gt; -dest-port &lt;port&gt;
+network interface revert -vserver &lt;svm&gt; -lif &lt;lif&gt;
+network interface failover-groups show
+
+# Ports
+network port show
+network port show -role data
+network port show -fields node,port,speed,health-status,link-status
+network port ifgrp show
+network port vlan show
+
+# Routes
+network route show
+network route create -vserver &lt;svm&gt; -destination 0.0.0.0/0 -gateway &lt;gw&gt;
+network route delete -vserver &lt;svm&gt; -destination 0.0.0.0/0 -gateway &lt;gw&gt;
+
+# Connectivity test
+network ping -lif &lt;lif&gt; -vserver &lt;svm&gt; -destination &lt;ip&gt;
+</code></pre>
+<hr />
+<h2 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h2>
+<p>Configure the NFS service, export policies, and access rules. Export policies control which clients can mount which volumes — every volume references an export policy by name.</p>
+<pre><code class="language-bash"># NFS service
+vserver nfs show
+vserver nfs show -vserver &lt;svm&gt;
+vserver nfs create -vserver &lt;svm&gt; -v3 enabled -v4.0 enabled -v4.1 enabled
+vserver nfs modify -vserver &lt;svm&gt; -v4.1 enabled
+
+# Export policies
+vserver export-policy show
+vserver export-policy show -vserver &lt;svm&gt;
+vserver export-policy create -vserver &lt;svm&gt; -policyname &lt;name&gt;
+vserver export-policy delete -vserver &lt;svm&gt; -policyname &lt;name&gt;
+
+# Export rules (each rule defines who can access and how)
+vserver export-policy rule show
+vserver export-policy rule show -vserver &lt;svm&gt; -policyname &lt;name&gt;
+vserver export-policy rule create \
+    -vserver &lt;svm&gt; \
+    -policyname &lt;name&gt; \
+    -ruleindex 1 \
+    -clientmatch &lt;cidr_or_ip&gt; \
+    -rorule sys \
+    -rwrule sys \
+    -superuser sys
+vserver export-policy rule delete -vserver &lt;svm&gt; -policyname &lt;name&gt; -ruleindex &lt;n&gt;
+
+# Assign policy to volume
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -policy &lt;export-policy&gt;
+
+# Verify client access
+vserver nfs check-client -vserver &lt;svm&gt; -client-ip &lt;ip&gt;
+
+# Connected NFS clients
+nfs connected-client show -vserver &lt;svm&gt;
+</code></pre>
+<hr />
+<h2 id="cifs-smb">CIFS / SMB<a class="headerlink" href="#cifs-smb" title="Permanent link">&para;</a></h2>
+<p>Create and manage CIFS (SMB) file shares. The CIFS server is joined to Active Directory. Shares expose volume paths to Windows clients.</p>
+<pre><code class="language-bash"># CIFS server
+vserver cifs show
+vserver cifs show -vserver &lt;svm&gt;
+vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;name&gt; -domain &lt;domain&gt;
+vserver cifs delete -vserver &lt;svm&gt;
+
+# Shares
+vserver cifs share show
+vserver cifs share show -vserver &lt;svm&gt;
+vserver cifs share create -vserver &lt;svm&gt; -share-name &lt;name&gt; -path &lt;path&gt;
+vserver cifs share modify -vserver &lt;svm&gt; -share-name &lt;name&gt; -comment &lt;text&gt;
+vserver cifs share delete -vserver &lt;svm&gt; -share-name &lt;name&gt;
+vserver cifs share access-control show -vserver &lt;svm&gt; -share &lt;name&gt;
+vserver cifs share access-control modify \
+    -vserver &lt;svm&gt; -share &lt;name&gt; \
+    -user-or-group &lt;group&gt; -permission Full_Control
+
+# Sessions and open files
+vserver cifs session show
+vserver cifs session show -vserver &lt;svm&gt;
+vserver cifs session show -fields node,vserver,connection-count
+vserver cifs session file show -vserver &lt;svm&gt;
+vserver cifs session close -node &lt;node&gt; -vserver &lt;svm&gt; -session-id &lt;id&gt;
+
+# SMB version settings (disable SMB1 for security)
+vserver cifs options show -vserver &lt;svm&gt;
+vserver cifs options modify -vserver &lt;svm&gt; -smb1-enabled false
+vserver cifs options modify -vserver &lt;svm&gt; -smb2-enabled true
+
+# AD connectivity check
+vserver cifs show -vserver &lt;svm&gt; -fields ad-status
+</code></pre>
+<hr />
+<h2 id="block-protocols-iscsi-fc">Block Protocols (iSCSI / FC)<a class="headerlink" href="#block-protocols-iscsi-fc" title="Permanent link">&para;</a></h2>
+<p>Present LUNs to hosts via iSCSI or Fibre Channel. LUNs are mapped to igroups (initiator groups) — an igroup lists the WWNs or IQNs of hosts that are allowed to see the LUN.</p>
+<pre><code class="language-bash"># iSCSI service
+vserver iscsi show
+vserver iscsi create -vserver &lt;svm&gt;
+vserver iscsi modify -vserver &lt;svm&gt; -is-admin-enabled true
+
+# LUNs
+lun show
+lun show -vserver &lt;svm&gt;
+lun show -fields path,vserver,size,state,mapped,os-type
+lun create -vserver &lt;svm&gt; -path &lt;path&gt; -size &lt;size&gt; -ostype vmware
+lun delete -vserver &lt;svm&gt; -path &lt;path&gt;
+lun resize -vserver &lt;svm&gt; -path &lt;path&gt; -size &lt;size&gt;
+lun online -vserver &lt;svm&gt; -path &lt;path&gt;
+lun offline -vserver &lt;svm&gt; -path &lt;path&gt;
+lun map -vserver &lt;svm&gt; -path &lt;path&gt; -igroup &lt;igroup&gt;
+lun unmap -vserver &lt;svm&gt; -path &lt;path&gt; -igroup &lt;igroup&gt;
+lun mapping show
+lun mapping show -vserver &lt;svm&gt;
+
+# igroups (define which hosts can see which LUNs)
+lun igroup show
+lun igroup show -vserver &lt;svm&gt;
+lun igroup create -vserver &lt;svm&gt; -igroup &lt;name&gt; -protocol iscsi -ostype vmware
+lun igroup add -vserver &lt;svm&gt; -igroup &lt;name&gt; -initiator &lt;iqn&gt;
+lun igroup remove -vserver &lt;svm&gt; -igroup &lt;name&gt; -initiator &lt;iqn&gt;
+lun igroup delete -vserver &lt;svm&gt; -igroup &lt;name&gt;
+
+# Fibre Channel
+vserver fcp show
+vserver fcp create -vserver &lt;svm&gt;
+fcp adapter show
+fcp adapter show -fields node,adapter,state,speed,fabric-established
+fcp interface show
+fcp initiator show
+lun igroup create -vserver &lt;svm&gt; -igroup &lt;name&gt; -protocol fcp -ostype vmware
+</code></pre>
+<hr />
+<h2 id="snapmirror">SnapMirror<a class="headerlink" href="#snapmirror" title="Permanent link">&para;</a></h2>
+<p>SnapMirror replicates volumes between SVMs or clusters for disaster recovery. The destination volume is read-only until a failover (break). Monitor lag time to ensure RPO is being met.</p>
+<pre><code class="language-bash"># View relationships
+snapmirror show
+snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt;
+snapmirror show -fields source-path,destination-path,state,lag-time,health
+snapmirror show -health false                                          # unhealthy only
+
+# Create
+snapmirror create \
+    -source-path &lt;src_svm&gt;:&lt;src_vol&gt; \
+    -destination-path &lt;dest_svm&gt;:&lt;dest_vol&gt; \
+    -type DP \
+    -policy MirrorAllSnapshots
+snapmirror delete -destination-path &lt;svm&gt;:&lt;vol&gt;
+snapmirror release -source-path &lt;svm&gt;:&lt;vol&gt; -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Operations
+snapmirror initialize -destination-path &lt;svm&gt;:&lt;vol&gt;    # baseline transfer
+snapmirror update -destination-path &lt;svm&gt;:&lt;vol&gt;        # manual sync
+snapmirror quiesce -destination-path &lt;svm&gt;:&lt;vol&gt;       # pause
+snapmirror break -destination-path &lt;svm&gt;:&lt;vol&gt;         # make destination writable (failover)
+snapmirror resync -destination-path &lt;svm&gt;:&lt;vol&gt;        # re-establish after break
+snapmirror abort -destination-path &lt;svm&gt;:&lt;vol&gt;
+
+# Monitoring
+snapmirror history show -destination-path &lt;svm&gt;:&lt;vol&gt;
+snapmirror lag show
+snapmirror show -transfer-progress
+</code></pre>
+<hr />
+<h2 id="quotas">Quotas<a class="headerlink" href="#quotas" title="Permanent link">&para;</a></h2>
+<p>Quotas limit disk space and file counts on volumes, qtrees, or users. Enable quotas on a volume, create rules, then resize to activate them without disrupting access.</p>
+<pre><code class="language-bash"># View quota status and usage
+volume quota show
+volume quota report -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume quota policy rule show -vserver &lt;svm&gt;
+
+# Enable / disable / resize
+volume quota on -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume quota off -vserver &lt;svm&gt; -volume &lt;vol&gt;
+volume quota resize -vserver &lt;svm&gt; -volume &lt;vol&gt;    # pick up new rules without disabling
+
+# Create quota rules
+# Tree quota — limit a qtree
+volume quota policy rule create \
+    -vserver &lt;svm&gt; -policy-name default -volume &lt;vol&gt; \
+    -type tree -target /qtree_name \
+    -disk-limit 500g -soft-disk-limit 400g
+
+# Default user quota (applies to all users)
+volume quota policy rule create \
+    -vserver &lt;svm&gt; -policy-name default -volume &lt;vol&gt; \
+    -type user -target &quot;&quot; -disk-limit 100g
+
+# Specific user quota
+volume quota policy rule create \
+    -vserver &lt;svm&gt; -policy-name default -volume &lt;vol&gt; \
+    -type user -target &quot;DOMAIN\username&quot; -disk-limit 200g
+
+# Modify / delete rules
+volume quota policy rule modify \
+    -vserver &lt;svm&gt; -policy-name default -volume &lt;vol&gt; \
+    -type tree -target /qtree_name -disk-limit 1t
+volume quota policy rule delete \
+    -vserver &lt;svm&gt; -policy-name default -volume &lt;vol&gt; \
+    -type tree -target /qtree_name
+</code></pre>
+<hr />
+<h2 id="performance-qos">Performance &amp; QoS<a class="headerlink" href="#performance-qos" title="Permanent link">&para;</a></h2>
+<p>ONTAP statistics require a sample start/stop cycle before viewing. QoS (Quality of Service) lets you cap or guarantee throughput for specific volumes or LUNs.</p>
+<pre><code class="language-bash"># Statistics collection
+statistics start -object volume -sample-id perf_check
+# wait 10–30 seconds
+statistics stop -sample-id perf_check
+statistics show -sample-id perf_check
+
+# Filter statistics output
+statistics show -sample-id perf_check | grep -E &quot;total_latency|read_latency|write_latency&quot;
+statistics show -sample-id perf_check | grep -E &quot;total_ops|read_ops|write_ops&quot;
+
+# QoS policy groups
+qos policy-group show
+qos policy-group create -policy-group prod-limit -vserver &lt;svm&gt; -max-throughput 5000IOPS
+qos policy-group create -policy-group db-floor -vserver &lt;svm&gt; -min-throughput 2000IOPS
+qos policy-group modify -policy-group prod-limit -max-throughput 8000IOPS
+qos policy-group delete -policy-group prod-limit
+
+# Apply QoS to a volume
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group prod-limit
+volume modify -vserver &lt;svm&gt; -volume &lt;vol&gt; -qos-policy-group none
+
+# QoS workload monitoring
+qos workload show
+qos statistics performance show
+</code></pre>
+<hr />
+<h2 id="security-users">Security &amp; Users<a class="headerlink" href="#security-users" title="Permanent link">&para;</a></h2>
+<p>User login accounts, role-based access control, certificate management, and CIFS/NFS audit logging.</p>
+<pre><code class="language-bash"># Login accounts
+security login show
+security login show -vserver &lt;svm&gt;
+security login create \
+    -username &lt;user&gt; \
+    -application ssh \
+    -authentication-method password \
+    -role admin \
+    -vserver &lt;svm&gt;
+security login delete -username &lt;user&gt; -application ssh -vserver &lt;svm&gt;
+security login password -username &lt;user&gt; -vserver &lt;svm&gt;
+security login lock -username &lt;user&gt; -vserver &lt;svm&gt;
+security login unlock -username &lt;user&gt; -vserver &lt;svm&gt;
+
+# Roles
+security login role show
+security login role show -vserver &lt;svm&gt;
+security login role create -role &lt;role_name&gt; -vserver &lt;svm&gt; \
+    -cmddirname DEFAULT -access none
+security login role create -role &lt;role_name&gt; -vserver &lt;svm&gt; \
+    -cmddirname &quot;volume show&quot; -access readonly
+
+# Certificates
+security certificate show
+security certificate show -vserver &lt;svm&gt;
+security certificate install -vserver &lt;svm&gt; -type server
+security certificate generate-csr \
+    -common-name &lt;cn&gt; -size 2048 -country US \
+    -state &lt;state&gt; -locality &lt;city&gt; -organization &lt;org&gt;
+
+# Audit logging (file access events)
+vserver audit show -vserver &lt;svm&gt;
+vserver audit create -vserver &lt;svm&gt; -destination /audit_logs -format xml
+vserver audit enable -vserver &lt;svm&gt;
+</code></pre>
+<hr />
+<h2 id="autosupport">AutoSupport<a class="headerlink" href="#autosupport" title="Permanent link">&para;</a></h2>
+<p>AutoSupport sends telemetry and event data to NetApp support. It enables proactive case creation and feeds into NetApp Active IQ (cloud analytics). Keep it enabled and ensure delivery is working.</p>
+<pre><code class="language-bash"># Status
+autosupport show
+autosupport show -node &lt;node&gt;
+autosupport show -fields last-subject-sent,last-successful-destination
+
+# Send messages
+autosupport invoke -node &lt;node&gt; -type test
+autosupport invoke -node &lt;node&gt; -type all -message &quot;Manual upload for case SR-XXXXX&quot;
+
+# History
+autosupport history show
+autosupport history show -node &lt;node&gt;
+autosupport history show -fields seq-num,status,triggered-time,destination
+
+# Configuration
+autosupport modify -node &lt;node&gt; -state enable
+autosupport modify -node &lt;node&gt; -state disable
+autosupport modify -node &lt;node&gt; -mail-hosts &lt;smtp_server&gt;
+autosupport modify -node &lt;node&gt; -proxy-url http://proxy.corp.local:8080
+autosupport modify -node &lt;node&gt; -noteto ops@corp.local
+autosupport modify -node &lt;node&gt; -transport https
+
+# Verify HTTPS connectivity
+autosupport check show
+</code></pre>
 
 
 

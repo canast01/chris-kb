@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#rfc-required-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        RFC Required Fields
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#required-information" class="md-nav__link">
+  <a href="#rfc-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Required Information
+        RFC Template
       
     </span>
   </a>
@@ -734,10 +734,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#rfc-submission-process" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        RFC Submission Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-change-register" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Change Register
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rfc-status-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RFC Status Lifecycle
       
     </span>
   </a>
@@ -764,24 +786,158 @@
 
 
 <h1 id="change-request-procedure">Change Request Procedure<a class="headerlink" href="#change-request-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>A change request documents planned modifications to infrastructure, applications, or configurations.</p>
-<h2 id="required-information">Required Information<a class="headerlink" href="#required-information" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Change description</li>
-<li>Systems affected</li>
-<li>Risk assessment</li>
-<li>Maintenance window</li>
-<li>Rollback plan</li>
-</ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.</p>
+<h2 id="rfc-required-fields">RFC Required Fields<a class="headerlink" href="#rfc-required-fields" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Short description (&lt; 80 chars)</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>What will be changed and how</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Business justification</td>
+<td>Why this change is needed</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Systems / CIs affected</td>
+<td>List from CMDB</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Risk assessment</td>
+<td>Impact × Likelihood; risk score</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Change type</td>
+<td>Standard / Normal / Emergency</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Maintenance window</td>
+<td>Start/end datetime UTC</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Rollback plan</td>
+<td>Step-by-step reversal procedure</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Test results</td>
+<td>Non-prod evidence (High risk)</td>
+<td>Required for High/Critical</td>
+</tr>
+<tr>
+<td>Implementation steps</td>
+<td>Numbered runbook</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Post-change validation</td>
+<td>Smoke tests / monitoring checks</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Requester</td>
+<td>Name and contact</td>
+<td>Mandatory</td>
+</tr>
+<tr>
+<td>Service owner</td>
+<td>Name and email</td>
+<td>Mandatory</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rfc-template">RFC Template<a class="headerlink" href="#rfc-template" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01
+Description:    In-place major version upgrade using pg_upgrade.
+Justification:  PG14 EoL November 2026; security patches no longer issued.
+Systems:        db-prod-01 (CMDB: CI-4421), app-server-01 (connection pool restart)
+Risk:           Medium — major version change; pg_upgrade has been tested
+Change Type:    Normal
+Window:         2026-05-12 22:00 UTC – 2026-05-13 01:00 UTC
+Rollback:       Restore from snapshot snap-xyz taken prior to upgrade; pg_upgrade preserves old cluster
+
+Implementation Steps:
+  1. Take VM snapshot at 21:50 UTC
+  2. Stop application connection pool on app-server-01
+  3. Stop postgresql-14.service
+  4. Run: pg_upgrade -b /usr/lib/postgresql/14/bin -B /usr/lib/postgresql/15/bin -d /var/lib/postgresql/14/main -D /var/lib/postgresql/15/main
+  5. Start postgresql-15.service
+  6. Run ./analyze_new_cluster.sh
+  7. Start application connection pool
+  8. Smoke test: psql -c &quot;SELECT version();&quot; and application health check
+
+Validation:
+  - psql SELECT version() returns PostgreSQL 15.x
+  - Application health endpoint returns HTTP 200
+  - Error rate = 0% for 30 min post-restart
+
+Rollback Steps:
+  1. Stop postgresql-15
+  2. Restore VM to snapshot snap-xyz
+  3. Start postgresql-14
+  4. Notify stakeholders
+</code></pre>
+<h2 id="rfc-submission-process">RFC Submission Process<a class="headerlink" href="#rfc-submission-process" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Submit change request</li>
-<li>Review risk and impact</li>
-<li>Obtain approval</li>
-<li>Schedule implementation</li>
-<li>Document results</li>
+<li>Create RFC in ITSM tool; link to relevant incident/problem if applicable</li>
+<li>Attach supporting documents (test evidence, architecture diagrams)</li>
+<li>Assign to service owner for review</li>
+<li>Service owner submits to CAB queue (5 business days before window for Normal)</li>
+<li>CAB reviews at weekly meeting; approves / rejects / requests changes</li>
+<li>Requester notified of decision</li>
+<li>On approval: schedule window; send stakeholder notifications</li>
 </ol>
+<h2 id="standard-change-register">Standard Change Register<a class="headerlink" href="#standard-change-register" title="Permanent link">&para;</a></h2>
+<p>Standard changes are pre-approved recurring activities that do not require individual RFC approval. Examples:</p>
+<table>
+<thead>
+<tr>
+<th>Standard Change</th>
+<th>Approval Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monthly OS patching (approved template)</td>
+<td>Automated via patch management</td>
+</tr>
+<tr>
+<td>SSL certificate renewal (automated)</td>
+<td>No approval required</td>
+</tr>
+<tr>
+<td>DNS record update (low-risk)</td>
+<td>Team lead self-service</td>
+</tr>
+<tr>
+<td>User access provisioning (IAM workflow)</td>
+<td>HR-triggered workflow</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rfc-status-lifecycle">RFC Status Lifecycle<a class="headerlink" href="#rfc-status-lifecycle" title="Permanent link">&para;</a></h2>
+<pre><code>Draft → Submitted → Under Review → Approved / Rejected / Deferred
+                                         ↓
+                                   Scheduled → In Progress → Completed / Rolled Back
+</code></pre>
 
 
 

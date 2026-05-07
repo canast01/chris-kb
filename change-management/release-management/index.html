@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#release-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Release Types
       
     </span>
   </a>
@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#release-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Release Lifecycle
       
     </span>
   </a>
@@ -734,10 +734,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#release-readiness-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Release Readiness Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-calendar-blocked-periods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Calendar — Blocked Periods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-notes-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Notes Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-no-go-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go / No-Go Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-release-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Release Actions
       
     </span>
   </a>
@@ -764,22 +808,144 @@
 
 
 <h1 id="release-management">Release Management<a class="headerlink" href="#release-management" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Release management coordinates deployment of new software, updates, and infrastructure changes.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<p>Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.</p>
+<h2 id="release-types">Release Types<a class="headerlink" href="#release-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Cadence</th>
+<th>Approval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Major release</td>
+<td>New features, architectural changes</td>
+<td>Quarterly / planned</td>
+<td>Full CAB</td>
+</tr>
+<tr>
+<td>Minor release</td>
+<td>Bug fixes, minor enhancements</td>
+<td>Monthly</td>
+<td>Team lead + service owner</td>
+</tr>
+<tr>
+<td>Patch / hotfix</td>
+<td>Security patch, critical bug fix</td>
+<td>As needed</td>
+<td>Emergency CAB or team lead</td>
+</tr>
+<tr>
+<td>Configuration release</td>
+<td>Config-only changes (no code)</td>
+<td>Weekly or ad hoc</td>
+<td>Standard change</td>
+</tr>
+</tbody>
+</table>
+<h2 id="release-lifecycle">Release Lifecycle<a class="headerlink" href="#release-lifecycle" title="Permanent link">&para;</a></h2>
+<pre><code>1. Scope definition
+   → Features/fixes identified; linked to tickets/epics
+
+2. Release planning
+   → Target date agreed; release branch cut or tagged
+
+3. Testing gate
+   → Unit / integration / regression / UAT complete
+
+4. Release review
+   → RFC submitted; risk assessed; approval obtained
+
+5. Deployment
+   → Change window executed per deployment procedure
+
+6. Verification
+   → Smoke tests; monitoring soak; stakeholder sign-off
+
+7. Release closure
+   → RFC closed; release notes published; team briefed
+</code></pre>
+<h2 id="release-readiness-checklist">Release Readiness Checklist<a class="headerlink" href="#release-readiness-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review scheduled releases</li>
-<li>Confirm deployment readiness</li>
-<li>Validate rollback procedures</li>
+<li>[ ] All in-scope tickets resolved and verified in non-prod</li>
+<li>[ ] Regression test suite passed</li>
+<li>[ ] UAT sign-off obtained from business/service owner</li>
+<li>[ ] Release notes drafted (changes, known issues, rollback instructions)</li>
+<li>[ ] Deployment runbook reviewed and updated</li>
+<li>[ ] Rollback procedure tested in staging</li>
+<li>[ ] Database migrations reviewed and backed out tested</li>
+<li>[ ] Third-party dependency versions locked and verified</li>
+<li>[ ] Security scan / DAST completed for application releases</li>
+<li>[ ] Change window booked; stakeholders notified</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Plan release scope</li>
-<li>Validate testing completed</li>
-<li>Schedule deployment</li>
-<li>Monitor release execution</li>
-<li>Confirm service stability</li>
-</ol>
+<h2 id="release-calendar-blocked-periods">Release Calendar — Blocked Periods<a class="headerlink" href="#release-calendar-blocked-periods" title="Permanent link">&para;</a></h2>
+<p>Avoid scheduling releases during:
+- Month-end / quarter-end financial processing windows
+- Major public holidays or low-staffing periods
+- Active incidents or post-incident moratorium (72h after P1)
+- Code/change freeze periods (pre-announced)</p>
+<h2 id="release-notes-template">Release Notes Template<a class="headerlink" href="#release-notes-template" title="Permanent link">&para;</a></h2>
+<pre><code class="language-markdown">## Release vX.Y.Z — 2026-05-06
+
+### Changes
+- [Feature] Description of new capability (TICKET-123)
+- [Fix] Description of bug fix (TICKET-456)
+- [Security] CVE-YYYY-XXXXX patched in dependency X
+
+### Known Issues
+- [TICKET-789] Description — workaround: ...
+
+### Deployment Notes
+- Requires DB migration: run `migration_0042_up.sql` before service start
+- Config change required: add `NEW_SETTING=value` to `/etc/app/config`
+
+### Rollback
+- Stop service; revert package to vX.Y.Z-1; run `migration_0042_down.sql`
+</code></pre>
+<h2 id="go-no-go-decision">Go / No-Go Decision<a class="headerlink" href="#go-no-go-decision" title="Permanent link">&para;</a></h2>
+<p>At the start of the change window, explicitly confirm go/no-go:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Go Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source environment healthy</td>
+<td>All services green in staging</td>
+</tr>
+<tr>
+<td>Target environment healthy</td>
+<td>No active incidents in prod</td>
+</tr>
+<tr>
+<td>Team available</td>
+<td>Implementer + approver + on-call present</td>
+</tr>
+<tr>
+<td>Rollback confirmed available</td>
+<td>Rollback steps validated &lt; 4h ago</td>
+</tr>
+<tr>
+<td>Stakeholders notified</td>
+<td>Notification acknowledged</td>
+</tr>
+</tbody>
+</table>
+<p>If any check fails: defer the release; communicate delay to stakeholders.</p>
+<h2 id="post-release-actions">Post-Release Actions<a class="headerlink" href="#post-release-actions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Monitor for 30–60 min (production soak)</li>
+<li>Publish release notes to internal wiki / changelog</li>
+<li>Update CMDB with new software versions</li>
+<li>Close all linked change and release tickets</li>
+<li>Schedule post-release review for major releases (within 1 week)</li>
+</ul>
 
 
 

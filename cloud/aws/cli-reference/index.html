@@ -705,6 +705,135 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#identity-access-iam-sts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity &amp; Access (IAM / STS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EC2 — Instances
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-images-volumes-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EC2 — Images, Volumes &amp; Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC &amp; Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudFormation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EKS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#systems-manager-ssm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Systems Manager (SSM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lambda
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -723,68 +852,261 @@
 
 
 <h1 id="aws-cli-reference">AWS CLI Reference<a class="headerlink" href="#aws-cli-reference" title="Permanent link">&para;</a></h1>
-<p>Commonly used AWS CLI commands for managing compute, storage, networking, identity, and monitoring.</p>
+<p>Commonly used AWS CLI commands for managing compute, storage, networking, identity, and monitoring. The AWS CLI is a command-line tool that talks directly to AWS APIs — everything you can do in the console, you can automate with the CLI.</p>
 <blockquote>
 <p>Requires <code>aws configure</code> or environment variables (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_DEFAULT_REGION</code>).</p>
 </blockquote>
-<div class="kb-grid kb-grid-3">
+<hr />
+<h2 id="identity-access-iam-sts">Identity &amp; Access (IAM / STS)<a class="headerlink" href="#identity-access-iam-sts" title="Permanent link">&para;</a></h2>
+<p>IAM (Identity and Access Management) controls who can do what in your AWS account. STS (Security Token Service) lets you temporarily assume a role — useful for cross-account access or giving scripts temporary credentials.</p>
+<pre><code class="language-bash"># Check who you are (current identity — always run this first to confirm the right account/role)
+aws sts get-caller-identity
 
-<a class="kb-card" href="iam/">
-  <strong>Identity & Access (IAM / STS)</strong>
-  <span>Current identity, users, groups, roles, access keys, and assume-role.</span>
-</a>
+# IAM users
+aws iam list-users
+aws iam get-user --user-name &lt;user&gt;
+aws iam create-user --user-name &lt;user&gt;
+aws iam delete-user --user-name &lt;user&gt;
 
-<a class="kb-card" href="ec2-instances/">
-  <strong>EC2 — Instances</strong>
-  <span>List, start, stop, reboot, key pairs, and security groups.</span>
-</a>
+# IAM groups
+aws iam list-groups
+aws iam add-user-to-group --user-name &lt;user&gt; --group-name &lt;group&gt;
 
-<a class="kb-card" href="ec2-storage/">
-  <strong>EC2 — Images, Volumes & Snapshots</strong>
-  <span>AMIs, EBS volumes, snapshots, and cross-region copy.</span>
-</a>
+# IAM roles (a role is a set of permissions that can be assumed by a user, service, or another account)
+aws iam list-roles
+aws iam get-role --role-name &lt;role&gt;
+aws iam create-role --role-name &lt;role&gt; --assume-role-policy-document file://trust.json
+aws iam attach-role-policy --role-name &lt;role&gt; --policy-arn &lt;arn&gt;
 
-<a class="kb-card" href="s3/">
-  <strong>S3</strong>
-  <span>Buckets, objects, sync, and S3 API for versioning and lifecycle.</span>
-</a>
+# Access keys (programmatic credentials for users)
+aws iam list-access-keys --user-name &lt;user&gt;
+aws iam create-access-key --user-name &lt;user&gt;
+aws iam delete-access-key --user-name &lt;user&gt; --access-key-id &lt;id&gt;
 
-<a class="kb-card" href="vpc/">
-  <strong>VPC & Networking</strong>
-  <span>VPCs, subnets, route tables, internet gateways, and Elastic IPs.</span>
-</a>
+# Assume role (get temporary credentials for a role)
+aws sts assume-role --role-arn &lt;arn&gt; --role-session-name session1
+</code></pre>
+<hr />
+<h2 id="ec2-instances">EC2 — Instances<a class="headerlink" href="#ec2-instances" title="Permanent link">&para;</a></h2>
+<p>EC2 (Elastic Compute Cloud) is AWS's virtual machine service. Each instance is a VM running in the cloud. Instances have security groups (virtual firewalls) and key pairs (SSH authentication).</p>
+<pre><code class="language-bash"># List instances (all)
+aws ec2 describe-instances
 
-<a class="kb-card" href="cloudwatch/">
-  <strong>CloudWatch</strong>
-  <span>Alarms, metrics, log groups, log streams, and live tailing.</span>
-</a>
+# Filter by Name tag
+aws ec2 describe-instances --filters &quot;Name=tag:Name,Values=&lt;name&gt;&quot;
 
-<a class="kb-card" href="cloudformation/">
-  <strong>CloudFormation</strong>
-  <span>Stack CRUD, status, events, and template validation.</span>
-</a>
+# Compact table view — ID, state, and name
+aws ec2 describe-instances \
+  --query 'Reservations[].Instances[].[InstanceId,State.Name,Tags[?Key==`Name`].Value|[0]]' \
+  --output table
 
-<a class="kb-card" href="rds/">
-  <strong>RDS</strong>
-  <span>DB instances, start/stop, and snapshots.</span>
-</a>
+# Start / stop / reboot / terminate
+aws ec2 start-instances --instance-ids &lt;id&gt;
+aws ec2 stop-instances --instance-ids &lt;id&gt;
+aws ec2 reboot-instances --instance-ids &lt;id&gt;
+aws ec2 terminate-instances --instance-ids &lt;id&gt;
 
-<a class="kb-card" href="eks/">
-  <strong>EKS</strong>
-  <span>Cluster list, kubeconfig update, and node groups.</span>
-</a>
+# Instance types
+aws ec2 describe-instance-types --instance-types t3.medium
 
-<a class="kb-card" href="ssm/">
-  <strong>Systems Manager (SSM)</strong>
-  <span>Sessions, run commands, and Parameter Store.</span>
-</a>
+# Key pairs (used for SSH access to instances)
+aws ec2 describe-key-pairs
+aws ec2 create-key-pair --key-name &lt;name&gt; --query 'KeyMaterial' --output text &gt; key.pem
 
-<a class="kb-card" href="lambda/">
-  <strong>Lambda</strong>
-  <span>List, invoke, deploy, and log tailing.</span>
-</a>
+# Security groups (virtual firewalls — control inbound/outbound traffic)
+aws ec2 describe-security-groups
+aws ec2 authorize-security-group-ingress --group-id &lt;sg_id&gt; --protocol tcp --port 22 --cidr 10.0.0.0/8
+aws ec2 revoke-security-group-ingress --group-id &lt;sg_id&gt; --protocol tcp --port 22 --cidr 10.0.0.0/8
+</code></pre>
+<hr />
+<h2 id="ec2-images-volumes-snapshots">EC2 — Images, Volumes &amp; Snapshots<a class="headerlink" href="#ec2-images-volumes-snapshots" title="Permanent link">&para;</a></h2>
+<p>AMIs (Amazon Machine Images) are templates for launching instances. EBS (Elastic Block Store) volumes are persistent disks attached to instances. Snapshots are point-in-time backups of a volume.</p>
+<pre><code class="language-bash"># AMIs (Amazon Machine Images — instance templates)
+aws ec2 describe-images --owners self
+aws ec2 create-image --instance-id &lt;id&gt; --name &quot;snapshot-$(date +%F)&quot; --no-reboot
 
-</div>
+# EBS volumes (virtual disks attached to instances)
+aws ec2 describe-volumes
+aws ec2 describe-volumes --filters &quot;Name=attachment.instance-id,Values=&lt;id&gt;&quot;
+aws ec2 create-volume --availability-zone us-east-1a --size 100 --volume-type gp3
+aws ec2 attach-volume --device /dev/xvdf --instance-id &lt;id&gt; --volume-id &lt;vol_id&gt;
+aws ec2 detach-volume --volume-id &lt;vol_id&gt;
+aws ec2 delete-volume --volume-id &lt;vol_id&gt;
+
+# EBS snapshots (point-in-time backups of a volume)
+aws ec2 describe-snapshots --owner-ids self
+aws ec2 create-snapshot --volume-id &lt;vol_id&gt; --description &quot;backup&quot;
+aws ec2 delete-snapshot --snapshot-id &lt;snap_id&gt;
+aws ec2 copy-snapshot --source-snapshot-id &lt;snap_id&gt; --source-region us-east-1 --destination-region eu-west-1
+</code></pre>
+<hr />
+<h2 id="s3">S3<a class="headerlink" href="#s3" title="Permanent link">&para;</a></h2>
+<p>S3 (Simple Storage Service) is AWS's object storage — it stores files (objects) in containers (buckets). Unlike a filesystem, there are no folders — just keys (paths) that look like folder structures. S3 is extremely durable and cheap.</p>
+<pre><code class="language-bash"># Buckets
+aws s3 ls                          # list all your buckets
+aws s3 ls s3://&lt;bucket&gt;/           # list contents of a bucket
+aws s3 mb s3://&lt;bucket&gt;            # make bucket
+aws s3 rb s3://&lt;bucket&gt; --force    # remove bucket (and all contents)
+
+# Objects (files)
+aws s3 cp &lt;local_file&gt; s3://&lt;bucket&gt;/&lt;key&gt;       # upload
+aws s3 cp s3://&lt;bucket&gt;/&lt;key&gt; &lt;local_file&gt;       # download
+aws s3 mv s3://&lt;bucket&gt;/&lt;key&gt; s3://&lt;bucket&gt;/&lt;new_key&gt;
+aws s3 rm s3://&lt;bucket&gt;/&lt;key&gt;
+aws s3 rm s3://&lt;bucket&gt;/&lt;prefix&gt;/ --recursive    # delete all objects under a path
+
+# Sync (like rsync for S3 — only copies changed files)
+aws s3 sync &lt;local_dir&gt; s3://&lt;bucket&gt;/&lt;prefix&gt;
+aws s3 sync s3://&lt;bucket&gt;/&lt;prefix&gt; &lt;local_dir&gt;
+aws s3 sync --delete s3://&lt;source&gt; s3://&lt;dest&gt;   # mirror — deletes files not in source
+
+# S3 API (for versioning, policies, lifecycle rules)
+aws s3api get-bucket-versioning --bucket &lt;bucket&gt;
+aws s3api put-bucket-versioning --bucket &lt;bucket&gt; --versioning-configuration Status=Enabled
+aws s3api get-bucket-policy --bucket &lt;bucket&gt;
+aws s3api list-object-versions --bucket &lt;bucket&gt;
+aws s3api put-bucket-lifecycle-configuration --bucket &lt;bucket&gt; --lifecycle-configuration file://lifecycle.json
+</code></pre>
+<hr />
+<h2 id="vpc-networking">VPC &amp; Networking<a class="headerlink" href="#vpc-networking" title="Permanent link">&para;</a></h2>
+<p>VPC (Virtual Private Cloud) is your private network in AWS. Subnets divide the VPC into segments. Route tables control where traffic goes. Internet gateways provide internet access. Elastic IPs are static public IP addresses.</p>
+<pre><code class="language-bash"># VPCs (your isolated private network in AWS)
+aws ec2 describe-vpcs
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+aws ec2 delete-vpc --vpc-id &lt;id&gt;
+
+# Subnets (segments of a VPC — typically split by AZ and public/private)
+aws ec2 describe-subnets
+aws ec2 describe-subnets --filters &quot;Name=vpc-id,Values=&lt;vpc_id&gt;&quot;
+aws ec2 create-subnet --vpc-id &lt;id&gt; --cidr-block 10.0.1.0/24 --availability-zone us-east-1a
+
+# Route tables (rules for where network traffic should go)
+aws ec2 describe-route-tables
+aws ec2 create-route --route-table-id &lt;rt_id&gt; --destination-cidr-block 0.0.0.0/0 --gateway-id &lt;igw_id&gt;
+
+# Internet gateways (connects your VPC to the public internet)
+aws ec2 describe-internet-gateways
+aws ec2 create-internet-gateway
+aws ec2 attach-internet-gateway --internet-gateway-id &lt;igw_id&gt; --vpc-id &lt;vpc_id&gt;
+
+# Elastic IPs (static public IP addresses that persist independent of instances)
+aws ec2 describe-addresses
+aws ec2 allocate-address --domain vpc
+aws ec2 associate-address --instance-id &lt;id&gt; --allocation-id &lt;eip_id&gt;
+aws ec2 release-address --allocation-id &lt;eip_id&gt;
+</code></pre>
+<hr />
+<h2 id="cloudwatch">CloudWatch<a class="headerlink" href="#cloudwatch" title="Permanent link">&para;</a></h2>
+<p>CloudWatch is AWS's monitoring and observability service. Metrics are numeric measurements (e.g., CPU %). Alarms trigger actions when metrics cross thresholds. Log groups store application and service logs.</p>
+<pre><code class="language-bash"># Alarms (trigger notifications or auto-scaling when a metric threshold is breached)
+aws cloudwatch describe-alarms
+aws cloudwatch describe-alarms --state-value ALARM
+aws cloudwatch set-alarm-state --alarm-name &lt;name&gt; --state-value OK --state-reason &quot;manual reset&quot;
+
+# Metrics (numeric measurements for AWS services and custom apps)
+aws cloudwatch list-metrics --namespace AWS/EC2
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/EC2 \
+  --metric-name CPUUtilization \
+  --dimensions Name=InstanceId,Value=&lt;id&gt; \
+  --start-time $(date -u -d '1 hour ago' +%FT%TZ) \
+  --end-time $(date -u +%FT%TZ) \
+  --period 300 --statistics Average
+
+# Logs (centralized log storage for applications and AWS services)
+aws logs describe-log-groups
+aws logs describe-log-streams --log-group-name &lt;group&gt;
+aws logs get-log-events --log-group-name &lt;group&gt; --log-stream-name &lt;stream&gt;
+aws logs tail &lt;log_group&gt; --follow             # live tail (like tail -f for cloud logs)
+aws logs filter-log-events --log-group-name &lt;group&gt; --filter-pattern &quot;ERROR&quot;
+</code></pre>
+<hr />
+<h2 id="cloudformation">CloudFormation<a class="headerlink" href="#cloudformation" title="Permanent link">&para;</a></h2>
+<p>CloudFormation is AWS's Infrastructure as Code service. You define your infrastructure in a YAML or JSON template, and CloudFormation creates, updates, or deletes the resources. A stack is one deployment of a template.</p>
+<pre><code class="language-bash"># Stacks (a running deployment of a CloudFormation template)
+aws cloudformation list-stacks
+aws cloudformation describe-stacks --stack-name &lt;name&gt;
+aws cloudformation create-stack \
+  --stack-name &lt;name&gt; \
+  --template-body file://template.yaml \
+  --parameters ParameterKey=Env,ParameterValue=prod
+aws cloudformation update-stack --stack-name &lt;name&gt; --template-body file://template.yaml
+aws cloudformation delete-stack --stack-name &lt;name&gt;
+
+# Stack status and events (useful for debugging failed deployments)
+aws cloudformation describe-stack-events --stack-name &lt;name&gt;
+aws cloudformation wait stack-create-complete --stack-name &lt;name&gt;
+
+# Validate a template before deploying (catches syntax errors)
+aws cloudformation validate-template --template-body file://template.yaml
+</code></pre>
+<hr />
+<h2 id="rds">RDS<a class="headerlink" href="#rds" title="Permanent link">&para;</a></h2>
+<p>RDS (Relational Database Service) is AWS's managed database service. It runs PostgreSQL, MySQL, SQL Server, and other engines on instances that AWS manages — you get a database endpoint without managing the OS or database software.</p>
+<pre><code class="language-bash"># Instances
+aws rds describe-db-instances
+aws rds describe-db-instances --db-instance-identifier &lt;id&gt;
+
+# Start / stop / reboot
+aws rds start-db-instance --db-instance-identifier &lt;id&gt;
+aws rds stop-db-instance --db-instance-identifier &lt;id&gt;
+aws rds reboot-db-instance --db-instance-identifier &lt;id&gt;
+
+# Snapshots (automated point-in-time backups)
+aws rds describe-db-snapshots
+aws rds create-db-snapshot --db-instance-identifier &lt;id&gt; --db-snapshot-identifier &lt;snap_name&gt;
+aws rds restore-db-instance-from-db-snapshot \
+  --db-instance-identifier &lt;new_id&gt; \
+  --db-snapshot-identifier &lt;snap_name&gt;
+</code></pre>
+<hr />
+<h2 id="eks">EKS<a class="headerlink" href="#eks" title="Permanent link">&para;</a></h2>
+<p>EKS (Elastic Kubernetes Service) is AWS's managed Kubernetes service. It runs the Kubernetes control plane for you. You interact with EKS using the AWS CLI to manage clusters and node groups, and <code>kubectl</code> to manage workloads.</p>
+<pre><code class="language-bash"># Clusters
+aws eks list-clusters
+aws eks describe-cluster --name &lt;cluster&gt;
+
+# Update kubeconfig (configures kubectl to point to your EKS cluster)
+aws eks update-kubeconfig --name &lt;cluster&gt; --region &lt;region&gt;
+
+# Node groups (the EC2 instances that run your Kubernetes workloads)
+aws eks list-nodegroups --cluster-name &lt;cluster&gt;
+aws eks describe-nodegroup --cluster-name &lt;cluster&gt; --nodegroup-name &lt;ng&gt;
+</code></pre>
+<hr />
+<h2 id="systems-manager-ssm">Systems Manager (SSM)<a class="headerlink" href="#systems-manager-ssm" title="Permanent link">&para;</a></h2>
+<p>SSM lets you manage EC2 instances without SSH. Session Manager creates a shell session through the AWS API — no open ports needed. Run Command executes scripts on instances remotely. Parameter Store is a secure key-value store for configuration and secrets.</p>
+<pre><code class="language-bash"># Session (interactive shell — no SSH, no open port 22 required)
+aws ssm start-session --target &lt;instance_id&gt;
+
+# Run command (run a script on one or more instances)
+aws ssm send-command \
+  --instance-ids &lt;id&gt; \
+  --document-name &quot;AWS-RunShellScript&quot; \
+  --parameters commands=&quot;uptime&quot;
+aws ssm list-command-invocations --command-id &lt;cmd_id&gt; --details
+
+# Parameter Store (secure key-value store for config and secrets)
+aws ssm get-parameter --name /my/param --with-decryption
+aws ssm put-parameter --name /my/param --value &quot;value&quot; --type SecureString
+aws ssm get-parameters-by-path --path /my/
+</code></pre>
+<hr />
+<h2 id="lambda">Lambda<a class="headerlink" href="#lambda" title="Permanent link">&para;</a></h2>
+<p>Lambda is AWS's serverless compute service. You upload code and Lambda runs it on demand without you managing any servers. Functions are invoked by events (HTTP requests, S3 events, schedules, etc.).</p>
+<pre><code class="language-bash"># Functions
+aws lambda list-functions
+aws lambda get-function --function-name &lt;name&gt;
+
+# Invoke a function (synchronous — waits for result)
+aws lambda invoke --function-name &lt;name&gt; --payload '{}' response.json
+
+# Deploy updated code (zip your code and upload)
+aws lambda update-function-code --function-name &lt;name&gt; --zip-file fileb://function.zip
+
+# Logs (CloudWatch logs for Lambda executions)
+aws logs tail /aws/lambda/&lt;function_name&gt; --follow
+</code></pre>
 
 
 

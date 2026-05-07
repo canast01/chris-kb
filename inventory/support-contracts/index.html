@@ -712,10 +712,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#contract-register-key-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Contract Register — Key Fields
       
     </span>
   </a>
@@ -723,10 +723,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#expiry-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Expiry Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expiry Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contracts-expiring-within-90-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contracts Expiring Within 90 Days
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-tier-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Tier Reference
       
     </span>
   </a>
@@ -734,10 +762,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#opening-a-support-case" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warranty-support-status-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warranty / Support Status Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renewal-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renewal Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-contract-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Contract Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Contacts
       
     </span>
   </a>
@@ -764,21 +836,192 @@
 
 
 <h1 id="support-contract-tracking">Support Contract Tracking<a class="headerlink" href="#support-contract-tracking" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Support contract tracking ensures infrastructure components remain covered by vendor support agreements.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<p>Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.</p>
+<h2 id="contract-register-key-fields">Contract Register — Key Fields<a class="headerlink" href="#contract-register-key-fields" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vendor</td>
+<td>Company providing support</td>
+</tr>
+<tr>
+<td>Product / CI</td>
+<td>Specific hardware or software covered</td>
+</tr>
+<tr>
+<td>Contract type</td>
+<td>Hardware support / software maintenance / SaaS subscription</td>
+</tr>
+<tr>
+<td>Contract number</td>
+<td>Vendor reference</td>
+</tr>
+<tr>
+<td>Start date</td>
+<td>Coverage begins</td>
+</tr>
+<tr>
+<td>Expiry date</td>
+<td>Coverage ends</td>
+</tr>
+<tr>
+<td>SLA tier</td>
+<td>Standard / Premium / 24×7 / NBD</td>
+</tr>
+<tr>
+<td>Annual cost</td>
+<td>For budget forecasting</td>
+</tr>
+<tr>
+<td>Renewal owner</td>
+<td>Who must action renewal</td>
+</tr>
+<tr>
+<td>Vendor TAM / CSM</td>
+<td>Technical Account Manager contact</td>
+</tr>
+<tr>
+<td>Support portal URL</td>
+<td>Where to raise cases</td>
+</tr>
+</tbody>
+</table>
+<h2 id="expiry-monitoring">Expiry Monitoring<a class="headerlink" href="#expiry-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="contracts-expiring-within-90-days">Contracts Expiring Within 90 Days<a class="headerlink" href="#contracts-expiring-within-90-days" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash"># Query contract CSV for near-expiry items
+# Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier
+awk -F',' 'NR&gt;1 {
+  cmd = &quot;date -d \&quot;&quot; $4 &quot;\&quot; +%s&quot;
+  cmd | getline expiry; close(cmd)
+  days = int((expiry - systime()) / 86400)
+  if (days &lt; 90 &amp;&amp; days &gt;= 0) printf &quot;EXPIRING: %s | %s | %d days | Owner: %s\n&quot;, $1, $2, days, $5
+  if (days &lt; 0) printf &quot;EXPIRED: %s | %s | %d days ago | Owner: %s\n&quot;, $1, $2, -days, $5
+}' support-contracts.csv
+</code></pre>
+<h2 id="support-tier-reference">Support Tier Reference<a class="headerlink" href="#support-tier-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Response Time</th>
+<th>Hours</th>
+<th>Typical Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>24×7 Critical</td>
+<td>&lt; 1 hour</td>
+<td>24×7×365</td>
+<td>Production storage, network core, DR systems</td>
+</tr>
+<tr>
+<td>24×7 Standard</td>
+<td>&lt; 4 hours</td>
+<td>24×7×365</td>
+<td>Production compute, databases</td>
+</tr>
+<tr>
+<td>Business hours</td>
+<td>Next business day</td>
+<td>Mon–Fri 9–5</td>
+<td>Dev/test, non-critical systems</td>
+</tr>
+<tr>
+<td>Self-service</td>
+<td>No SLA</td>
+<td>Online portal</td>
+<td>Internal tooling, low-risk systems</td>
+</tr>
+</tbody>
+</table>
+<h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Generic: note the following before calling/opening a ticket:
+# - Contract number / serial number
+# - Product version and build
+# - Affected hostname(s) and IPs
+# - Symptoms: what is failing and since when
+# - Logs: collect before calling (see platform-specific runbooks)
+
+# NetApp — collect AutoSupport bundle
+system node autosupport invoke -type all -message &quot;Opening case XXXXX&quot;
+
+# VMware — collect vm-support bundle
+vm-support -w /tmp -b
+
+# Cisco TAC — collect 'show tech-support' output
+# (varies by device — run before opening case)
+</code></pre>
+<h2 id="warranty-support-status-checks">Warranty / Support Status Checks<a class="headerlink" href="#warranty-support-status-checks" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash"># Dell hardware — using Dell TechDirect API or iDRAC
+racadm getsvctag   # get service tag from iDRAC
+
+# Check warranty on Dell support site (requires service tag)
+curl -s &quot;https://apidirect.dell.com/Contracts/v2/contracts?servicetag=&lt;tag&gt;&quot; \
+  -H &quot;X-BAPI-Key: &lt;api-key&gt;&quot; | jq '.contracts[] | {entitlement:.entitlementType,end:.endDate}'
+
+# HPE iLO — show contract info
+# HPSUM or OneView shows warranty; or use:
+# curl https://warranty.hpe.com/CountryLanguageStore/wc/country/&lt;country&gt;/language/EN/contract/serial/&lt;serial&gt;
+</code></pre>
+<h2 id="renewal-process">Renewal Process<a class="headerlink" href="#renewal-process" title="Permanent link">&para;</a></h2>
+<pre><code>120 days out → Identify contracts expiring &lt; 90 days; review scope (add/remove CIs)
+90 days out  → Request renewal quote from vendor; route to procurement
+60 days out  → Quote approved by management; PO raised
+30 days out  → PO submitted to vendor; confirmation received
+Day 0        → New contract active; update contract register; confirm portal access
+</code></pre>
+<h2 id="support-contract-checklist">Support Contract Checklist<a class="headerlink" href="#support-contract-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Review contract expiration dates</li>
-<li>Confirm support coverage</li>
-<li>Validate vendor contact information</li>
+<li>[ ] All production systems have active support coverage</li>
+<li>[ ] No contracts expired without renewal</li>
+<li>[ ] Contracts expiring within 90 days have renewal in progress</li>
+<li>[ ] Vendor portal credentials are current (not tied to departed staff)</li>
+<li>[ ] Hardware serial numbers match contract CIs (no uncovered devices)</li>
+<li>[ ] Support tier is appropriate for each system's criticality</li>
+<li>[ ] Budget line item confirmed for next renewal cycle</li>
 </ul>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Record contract details</li>
-<li>Monitor renewal timelines</li>
-<li>Update support contacts</li>
-<li>Renew contracts</li>
-</ol>
+<h2 id="escalation-contacts">Escalation Contacts<a class="headerlink" href="#escalation-contacts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Vendor</th>
+<th>Escalation Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft</td>
+<td>Azure Unified Support: <code>aka.ms/supportrequest</code>; Premier escalation via TAM</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>Support console → Severity A; Account Manager for major issues</td>
+</tr>
+<tr>
+<td>VMware (Broadcom)</td>
+<td>My VMware portal → Support Request; TAM for severity 1</td>
+</tr>
+<tr>
+<td>NetApp</td>
+<td>NetApp Support Site; call 1-888-4-NETAPP for P1</td>
+</tr>
+<tr>
+<td>Pure Storage</td>
+<td><code>support.purestorage.com</code>; call hotline for P1</td>
+</tr>
+<tr>
+<td>Cisco</td>
+<td><code>tools.cisco.com/ServiceRequestTool</code>; TAC call for P1/P2</td>
+</tr>
+</tbody>
+</table>
 
 
 
