@@ -822,15 +822,6 @@
 
 <h1 id="decision-tree-storage-latency">Decision Tree: Storage Latency<a class="headerlink" href="#decision-tree-storage-latency" title="Permanent link">&para;</a></h1>
 <p>Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.</p>
-<pre class="mermaid"><code>flowchart LR
-    Storage_Latency["Storage Latency"]
-    Storage_Latency --&gt; S0["Step 1 — Confirm Latency Baseline Breach"]
-    Storage_Latency --&gt; S1["Step 2 — Is vSAN Resync Active?"]
-    Storage_Latency --&gt; S2["Step 3 — Check Storage Array Health"]
-    Storage_Latency --&gt; S3["Step 4 — Check Network / Fabric"]
-    Storage_Latency --&gt; S4["Step 5 — Check for Hot-Spot VMs"]
-    Storage_Latency --&gt; S5["Step 6 — Snapshot Chain"]
-    Storage_Latency --&gt; S6["Escalation"]</code></pre>
 <h2 id="step-1-confirm-latency-baseline-breach">Step 1 — Confirm Latency Baseline Breach<a class="headerlink" href="#step-1-confirm-latency-baseline-breach" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On ESXi host — check current device latency</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DAVG|KAVG|GAVG&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k7<span class="w"> </span>-n<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20

@@ -822,15 +822,6 @@
 
 <h1 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h1>
 <p>Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.</p>
-<pre class="mermaid"><code>flowchart LR
-    Post_Change_Validati["Post-Change Validation"]
-    Post_Change_Validati --&gt; S0["Immediate Checks (within 5 minutes of change completion)"]
-    Post_Change_Validati --&gt; S1["Datastore and Storage"]
-    Post_Change_Validati --&gt; S2["NSX (if change was NSX-related)"]
-    Post_Change_Validati --&gt; S3["Backup Validation"]
-    Post_Change_Validati --&gt; S4["Monitoring Validation"]
-    Post_Change_Validati --&gt; S5["Application Validation"]
-    Post_Change_Validati --&gt; S6["Change Record Closure"]</code></pre>
 <h2 id="immediate-checks-within-5-minutes-of-change-completion">Immediate Checks (within 5 minutes of change completion)<a class="headerlink" href="#immediate-checks-within-5-minutes-of-change-completion" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># 1. Confirm all hosts are connected to vCenter</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ConnectionState</span> <span class="o">-ne</span> <span class="s2">&quot;Connected&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span>
