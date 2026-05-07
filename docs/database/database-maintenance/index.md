@@ -1,25 +1,138 @@
 # Database Maintenance Procedure
 
-## Overview
+Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
 
-This procedure covers routine database maintenance tasks.
+## PostgreSQL Maintenance
 
-## Maintenance Tasks
+```sql
+-- Update statistics (safe at any time)
+ANALYZE;
+ANALYZE <schema>.<table>;
 
-- Index optimization
-- Log cleanup
-- Statistics update
-- Backup verification
+-- Vacuum dead tuples (non-blocking)
+VACUUM ANALYZE;
+VACUUM ANALYZE <schema>.<table>;
 
-## Commands
+-- Full vacuum — reclaims disk space (acquires exclusive lock — use off-peak)
+VACUUM FULL <schema>.<table>;
 
-```bash
-vacuum analyze
-mysqlcheck --optimize database
+-- Check autovacuum status per table
+SELECT relname, last_autovacuum, last_autoanalyze, n_dead_tup, n_live_tup
+FROM pg_stat_user_tables
+ORDER BY n_dead_tup DESC;
+
+-- Rebuild bloated indexes
+REINDEX TABLE <schema>.<table>;
+-- Online (PG12+, no locking)
+REINDEX TABLE CONCURRENTLY <schema>.<table>;
+
+-- Check index bloat
+SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size,
+       idx_scan AS scans
+FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
 
-## Validation
+### PostgreSQL — WAL Cleanup
 
-1. Confirm maintenance completed
-2. Confirm database performance stable
-3. Document maintenance results
+```bash
+# Old WAL segments are recycled automatically; check pg_wal is not growing unbounded
+du -sh /var/lib/postgresql/data/pg_wal/
+
+# Inactive replication slots hold WAL — find and review
+psql -c "SELECT slot_name, active, restart_lsn FROM pg_replication_slots WHERE active = false;"
+
+# Drop inactive slot (WARNING: only if no longer needed)
+# psql -c "SELECT pg_drop_replication_slot('slot_name');"
+```
+
+## MySQL / MariaDB Maintenance
+
+```bash
+# Analyse and optimise tables (acquires lock — use during low-traffic window)
+mysqlcheck -u root --analyze --all-databases
+mysqlcheck -u root --optimize <database>
+
+# Or per-table in SQL:
+mysql -u root -e "ANALYZE TABLE <db>.<table>;"
+mysql -u root -e "OPTIMIZE TABLE <db>.<table>;"  # rebuilds table; use sparingly
+```
+
+```sql
+-- Check table status
+SHOW TABLE STATUS FROM <database>;
+
+-- Purge old binary logs (retain 7 days)
+PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);
+
+-- Update InnoDB statistics
+mysql -u root -e "CALL sys.ps_setup_enable_consumer('events_statements_history_long');"
+ANALYZE TABLE <table>;
+```
+
+## SQL Server Maintenance
+
+```sql
+-- Rebuild fragmented indexes (> 30% fragmentation)
+SELECT OBJECT_NAME(ips.object_id) AS table_name, i.name AS index_name,
+       ips.avg_fragmentation_in_percent
+FROM sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, 'LIMITED') ips
+JOIN sys.indexes i ON ips.object_id = i.object_id AND ips.index_id = i.index_id
+WHERE ips.avg_fragmentation_in_percent > 30
+ORDER BY ips.avg_fragmentation_in_percent DESC;
+
+-- Rebuild index
+ALTER INDEX [IX_TableName_Column] ON dbo.TableName REBUILD;
+-- Online rebuild (Enterprise edition)
+ALTER INDEX ALL ON dbo.TableName REBUILD WITH (ONLINE = ON);
+
+-- Reorganise (< 30% fragmentation — online, low-impact)
+ALTER INDEX ALL ON dbo.TableName REORGANIZE;
+
+-- Update statistics
+UPDATE STATISTICS dbo.TableName;
+UPDATE STATISTICS dbo.TableName WITH FULLSCAN;
+
+-- Shrink log file (use sparingly — only after log backup, not routine)
+USE <dbname>;
+BACKUP LOG <dbname> TO DISK = '/backup/mssql/<dbname>_log.bak';
+DBCC SHRINKFILE (<dbname>_log, 256);  -- shrink to 256 MB
+```
+
+### SQL Server — Integrity Check
+
+```sql
+-- DBCC CHECKDB — run weekly on non-peak window; can take hours on large DBs
+DBCC CHECKDB ('<dbname>') WITH NO_INFOMSGS, ALL_ERRORMSGS;
+
+-- Faster: check allocation structures only
+DBCC CHECKDB ('<dbname>') WITH PHYSICAL_ONLY, NO_INFOMSGS;
+```
+
+## Maintenance Schedule
+
+| Task | PostgreSQL | MySQL | SQL Server | Frequency |
+|---|---|---|---|---|
+| Update statistics | `ANALYZE` | `ANALYZE TABLE` | `UPDATE STATISTICS` | Daily (autovacuum/auto-stats) |
+| Index maintenance | `REINDEX CONCURRENTLY` | `OPTIMIZE TABLE` | `REORGANIZE` / `REBUILD` | Weekly |
+| Log / WAL cleanup | Auto + check pg_wal | `PURGE BINARY LOGS` | Log backup + shrink | Weekly |
+| Integrity check | `VACUUM FULL` (if needed) | `mysqlcheck --check` | `DBCC CHECKDB` | Weekly |
+| Dead tuple cleanup | `VACUUM ANALYZE` | N/A (InnoDB purge) | N/A | Daily (autovacuum) |
+
+## Maintenance Checklist
+
+- [ ] Autovacuum / auto-stats are enabled and not falling behind
+- [ ] Index fragmentation reviewed — heavily fragmented indexes rebuilt
+- [ ] Statistics are current (check last update date)
+- [ ] Old logs / WAL / binary logs purged per retention policy
+- [ ] Integrity check (`DBCC CHECKDB` / `VACUUM`) completed without errors
+- [ ] Maintenance task duration logged (flag if significantly longer than baseline)
+- [ ] No blocking during maintenance tasks (schedule during low-traffic window)
+
+## Troubleshooting
+
+| Symptom | Check | Action |
+|---|---|---|
+| VACUUM FULL blocking production | Long-running transaction holding lock | Identify and terminate blocker: `SELECT pid, query FROM pg_stat_activity WHERE state='idle in transaction';` |
+| OPTIMIZE TABLE takes too long | Large table / high traffic | Run during maintenance window; consider `pt-online-schema-change` |
+| DBCC CHECKDB reports corruption | Disk error? | Restore from last known-good backup; run `DBCC CHECKDB WITH REPAIR_ALLOW_DATA_LOSS` as last resort |
+| Autovacuum not running | `autovacuum=off`? | Check `SHOW autovacuum;`; enable if off |

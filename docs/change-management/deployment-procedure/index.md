@@ -1,18 +1,131 @@
 # Deployment Procedure
 
-## Overview
+Standard procedure for deploying infrastructure or application changes safely within an approved change window.
 
-This procedure defines steps to deploy infrastructure or application changes safely.
+## Pre-Deployment Checklist
 
-## Pre-Deployment Checks
+- [ ] Change ticket approved and in "Implementation" state
+- [ ] Backup completed and verified within last 24h
+- [ ] Maintenance window confirmed and stakeholders notified
+- [ ] Rollback procedure documented and tested in non-prod
+- [ ] Monitoring dashboards open
+- [ ] On-call team aware and available
+- [ ] Test environment deployment succeeded (for application changes)
+- [ ] Deployment runbook reviewed by implementer
 
-- Verify backups completed
-- Confirm maintenance window
-- Validate system health
+## Phase 1 — Preparation (before window)
 
-## Workflow
+```bash
+# Snapshot / backup before change (example: VM snapshot)
+# Azure
+az snapshot create -g <rg> -n <snapshot-name> --source <disk-id>
 
-1. Start deployment
-2. Monitor progress
-3. Validate services
-4. Document results
+# AWS
+aws ec2 create-snapshot --volume-id <vol-id> --description "pre-change-ITSM-XXXX"
+
+# Linux — configuration backup
+tar czf /root/pre-change-config-$(date +%Y%m%d).tar.gz /etc/<service>/
+
+# Verify service is healthy before starting
+systemctl status <service>
+curl -sf http://localhost:<port>/health
+```
+
+## Phase 2 — Implementation
+
+```bash
+# For package-based deployments
+apt-get install --only-upgrade <package>=<version>
+# or
+yum update <package>-<version>
+
+# For file-based deployments
+rsync -avz --backup --suffix=".pre-$(date +%Y%m%d)" <source> <dest>
+
+# For systemd service config changes
+cp /etc/service.conf /etc/service.conf.pre-$(date +%Y%m%d)
+# apply change...
+systemctl daemon-reload
+systemctl restart <service>
+
+# For database schema changes (example: PostgreSQL)
+psql -U <user> -d <db> -f migration_XXXX_up.sql
+```
+
+## Phase 3 — Validation
+
+```bash
+# Service health
+systemctl status <service>
+curl -sf http://localhost:<port>/health && echo "OK"
+
+# No new errors since restart
+journalctl -u <service> --since "5 minutes ago" | grep -iE "error|critical|fail"
+
+# Key process running
+pgrep -a <process>
+
+# Functional smoke test
+curl -o /dev/null -sw "%{http_code}" https://<endpoint>/api/status
+```
+
+## Phase 4 — Monitoring Soak
+
+- Watch dashboards for **30 minutes minimum** after deployment
+- Confirm no P1/P2 alerts firing
+- Check error rate, latency, and saturation metrics against pre-change baseline
+- Get confirmation from service owner before closing window
+
+## Phase 5 — Close
+
+```bash
+# Remove temporary files and pre-change backups (after soak period)
+rm /etc/<service>.conf.pre-<date>   # only after validation passes
+
+# Update ITSM ticket: outcome, duration, any deviations
+```
+
+## Rollback Decision Tree
+
+```
+Validation fails?
+  ├─ Immediate: service down / error rate > 3×baseline
+  │     → Roll back now; notify stakeholders
+  └─ Degraded: latency elevated / some errors
+        → Investigate for 10 min
+              ├─ Improving → continue soak
+              └─ Not improving → roll back
+```
+
+## Rollback Steps
+
+```bash
+# Restore config from backup
+cp /etc/<service>.conf.pre-<date> /etc/<service>.conf
+systemctl restart <service>
+
+# Rollback package to previous version
+apt-get install <package>=<prev-version>
+
+# Rollback DB migration
+psql -U <user> -d <db> -f migration_XXXX_down.sql
+
+# Re-validate after rollback (same checks as Phase 3)
+```
+
+## Deployment Log Template
+
+```markdown
+Change:        ITSM-XXXX
+Date/Time:     2026-05-06 22:00 UTC
+Implementer:   <name>
+Window:        22:00 – 23:00 UTC
+
+Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
+Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
+Restart:           Service restarted 22:05 UTC; came up in 8 seconds
+Validation:        Health check OK; error rate 0%; latency normal
+Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
+Outcome:           Success
+Ticket closed:     22:42 UTC
+```
