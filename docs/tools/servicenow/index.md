@@ -6,11 +6,6 @@ ServiceNow knowledge base articles, operational procedures, troubleshooting note
 
 ## Articles
 
-<div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="changes/">Changes</a></h3>
-  <p>Changes notes, procedures, checks, and references.</p>
-</div>
 <div class="kb-card">
   <h3><a href="cmdb/">Cmdb</a></h3>
   <p>Cmdb notes, procedures, checks, and references.</p>

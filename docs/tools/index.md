@@ -6,11 +6,6 @@ Tools knowledge base landing page.
 
 ## Main Areas
 
-<div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="servicenow/">ServiceNow</a></h3>
-  <p>Incidents, changes, requests, CMDB, and work notes.</p>
-</div>
 <div class="kb-card">
   <h3><a href="jira/">Jira</a></h3>
   <p>Projects, stories, tasks, boards, and reporting.</p>

@@ -6,11 +6,6 @@ Confluence knowledge base articles, operational procedures, troubleshooting note
 
 ## Articles
 
-<div class="kb-grid kb-grid-3">
-<div class="kb-card">
-  <h3><a href="cleanup/">Cleanup</a></h3>
-  <p>Cleanup notes, procedures, checks, and references.</p>
-</div>
 <div class="kb-card">
   <h3><a href="pages/">Pages</a></h3>
   <p>Pages notes, procedures, checks, and references.</p>
