@@ -2,12 +2,6 @@
 
 Incident Management operational notes and deep-dive references.
 
-<div class="kb-grid kb-grid-5">
-
-  <div class="kb-card">
-    <h3><a href="triage/">Triage</a></h3>
-    <p>Triage notes, checks, references, and validation.</p>
-  </div>
 
   <div class="kb-card">
     <h3><a href="impact/">Impact</a></h3>
