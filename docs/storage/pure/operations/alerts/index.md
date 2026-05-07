@@ -1,27 +1,74 @@
-# Alerts
+# Pure Storage Operations — Alerts
 
-## Purpose
+## Viewing Alerts
 
-Operational notes, checks, troubleshooting, commands, and validation steps for Alerts.
+```bash
+# CLI — FlashArray
+purecli alert list
 
-## Common checks
+# CLI — FlashBlade
+purefb alert list
+```
 
-- Confirm system health
-- Review alerts
-- Review recent changes
-- Capture current state
+Via Pure1:
+- **Pure1 → Alerts** — consolidated alerts across all arrays
 
-## Incident notes
+## Alert Severity Levels
 
-- Symptom
-- Impact
-- Start time
-- What changed
-- What was checked
-- Resolution
+| Severity | Meaning | Response |
+|---|---|---|
+| Critical | Immediate risk to data or availability | Page on-call immediately |
+| Warning | Degraded component or approaching threshold | Investigate same day |
+| Info | Non-critical informational event | Review at next opportunity |
 
-## Change notes
+## Common Alert Types
 
-- Approval
-- Rollback plan
-- Validation steps
+| Alert | Cause | Action |
+|---|---|---|
+| Drive unhealthy / failed | Media degradation | Pure Support replaces proactively |
+| Controller temperature high | Cooling issue or blocked airflow | Check data center cooling |
+| Capacity above threshold | Data growth | Expand or clean up |
+| Replication lag high | Network or congestion | Check inter-array connectivity |
+| Pure1 connectivity lost | Outbound connectivity | Check firewall/proxy settings |
+
+## Pure1 Phone-Home Connectivity
+
+Pure arrays communicate with Pure1 for proactive support and monitoring. Verify connectivity:
+
+```bash
+# FlashArray
+purecli phone-home list
+
+# FlashBlade
+purefb phone-home list
+```
+
+If phone-home fails, Pure Support cannot proactively monitor the array.
+
+## Alert Notifications
+
+Alerts are delivered via:
+- **Email** — configured in array management settings
+- **SNMP traps** — for integration with monitoring platforms (SCOM, Zabbix)
+- **Pure1** — cloud management portal
+- **Syslog** — for SIEM forwarding
+
+## Acknowledge and Close Alerts
+
+```bash
+# FlashArray — acknowledge an alert
+purecli alert acknowledge --id <alert_id>
+
+# FlashBlade
+purefb alert update --id <alert_id> --action acknowledge
+```
+
+## Pre-Change Alert Check
+
+Before any maintenance:
+```bash
+purecli alert list      # FlashArray
+purefb alert list       # FlashBlade
+```
+
+Do not proceed if critical alerts are active.

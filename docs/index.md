@@ -98,9 +98,4 @@
   <span>Infrastructure inventory references and asset tracking.</span>
 </a>
 
-<a class="kb-card" href="ai/">
-  <strong>AI</strong>
-  <span>OpenAI, Azure OpenAI, Bedrock, local AI, and GPU workloads.</span>
-</a>
-
 </div>

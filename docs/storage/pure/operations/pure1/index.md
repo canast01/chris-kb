@@ -1,27 +1,73 @@
-# Pure1
+# Pure1 Cloud Management
 
-## Purpose
+Pure1 is Pure Storage's cloud-based management and monitoring platform. It provides a unified view of all FlashArray and FlashBlade systems.
 
-Operational notes, checks, troubleshooting, commands, and validation steps for Pure1.
+## Accessing Pure1
 
-## Common checks
+Log in at **pure1.purestorage.com** with your Pure Storage account credentials.
 
-- Confirm system health
-- Review alerts
-- Review recent changes
-- Capture current state
+## Key Navigation Areas
 
-## Incident notes
+| Section | Purpose |
+|---|---|
+| **Storage → Arrays** | Array inventory, health, and status |
+| **Storage → Fleet** | Consolidated view of all arrays |
+| **Analysis → Capacity** | Current and forecast capacity per array |
+| **Analysis → Performance** | IOPS, throughput, latency over time |
+| **Analysis → Workload** | Per-volume / per-file-system performance breakdown |
+| **Alerts** | Active and historical alerts across all arrays |
+| **Support → Cases** | Open and track support cases |
+| **Billing** | Evergreen subscription and usage reports |
 
-- Symptom
-- Impact
-- Start time
-- What changed
-- What was checked
-- Resolution
+## Capacity Planning
 
-## Change notes
+**Pure1 → Analysis → Capacity → Forecast**
 
-- Approval
-- Rollback plan
-- Validation steps
+Pure1 uses AI to predict when an array will reach capacity based on consumption trends. Review forecasts monthly to plan expansion ahead of time.
+
+## Pure1 AI (Copilot)
+
+Pure1 includes AI-driven:
+- Anomaly detection — flags unusual performance or capacity trends
+- Predictive failure analysis — identifies hardware at risk
+- Workload insights — identifies top consumers
+
+## Phone-Home Connectivity
+
+Arrays must be able to reach Pure1 for proactive monitoring. Required outbound access:
+
+| Destination | Port | Protocol |
+|---|---|---|
+| pure1.purestorage.com | 443 | HTTPS |
+| phone-home.purestorage.com | 443 | HTTPS |
+
+```bash
+# Verify phone-home status — FlashArray
+purecli phone-home list
+
+# Verify phone-home status — FlashBlade
+purefb phone-home list
+```
+
+## Role-Based Access in Pure1
+
+Pure1 supports multiple roles:
+- **Array Admin** — full array management
+- **Storage Admin** — provisioning without system changes
+- **Read-only** — monitoring and reporting only
+
+Manage users under **Settings → Users** in Pure1.
+
+## Pure1 API
+
+Pure1 provides a REST API for automation and integration:
+
+```bash
+# Authenticate and get token
+curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token \
+    -d "grant_type=client_credentials&client_id=<id>&client_secret=<secret>"
+
+# List arrays
+curl -H "Authorization: Bearer <token>" \
+    https://api.pure1.purestorage.com/api/1.latest/arrays
+```
