@@ -1,35 +1,93 @@
 # InsightIQ CLI Reference
 
-InsightIQ provides a CLI on the appliance for cluster management and data export. OneFS CLI commands are used on the PowerScale cluster itself for correlated performance data when deeper investigation is needed.
+InsightIQ is the Dell EMC analytics platform for PowerScale (Isilon) performance monitoring. It exposes a REST API and SSH access to the InsightIQ appliance for direct management. The API base URL is `https://<insightiq_fqdn>/api/json/v2`.
 
-**InsightIQ Appliance CLI**
+---
+
+## Appliance Access
+
+```bash
+# SSH to the InsightIQ appliance
+ssh administrator@<insightiq_fqdn>
+
+# Check InsightIQ service status
+sudo service insightiq status
+
+# Restart InsightIQ service
+sudo service insightiq restart
+
+# View logs
+tail -f /var/log/insightiq/insightiq.log
+
+# Check disk space (InsightIQ database can grow large)
+df -h /home/insightiq
+```
+
+---
+
+## REST API — Authentication
+
+```bash
+# Authenticate (HTTP Basic Auth — base64 encode user:pass)
+curl -k -X GET https://<insightiq_fqdn>/api/json/v2/clusters   -u "admin:<password>"
+
+# Or pass credentials explicitly
+curl -k -X GET https://<insightiq_fqdn>/api/json/v2/clusters   -H "Authorization: Basic $(echo -n 'admin:<password>' | base64)"
+```
+
+---
+
+## Clusters
 
 ```bash
 # List all monitored clusters
-iiq cluster list
+curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/clusters
 
-# Add a new cluster connection
-iiq cluster add --host <cluster-mgmt-ip> --user svc-insightiq
+# Get detail for a specific cluster
+curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/clusters/<cluster_guid>
 
-# Export performance data to CSV
-iiq export --cluster <cluster-name> --start 2024-01-01 --end 2024-01-07 --output /tmp/export.csv
+# List nodes in a cluster
+curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/clusters/<cluster_guid>/nodes
 ```
 
-**OneFS CLI — Correlated Performance Commands**
+---
+
+## Performance Data
 
 ```bash
-# Real-time statistics summary
-isi statistics summary
+# List available performance breakouts
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts"
 
-# Protocol-level performance breakdown
-isi statistics protocol --nodes all
+# Query CPU utilisation for a cluster (last hour)
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.cpu.user?cluster=<guid>&begin=<epoch>&end=<epoch>"
 
-# Active client connections
-isi statistics client list
+# Query disk throughput
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.disk.bytes.in.rate?cluster=<guid>&begin=<epoch>&end=<epoch>"
 
-# Job engine status (check for background load)
-isi job list
+# Query client protocol operations
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.protostats.nfs.ops.rate?cluster=<guid>&begin=<epoch>&end=<epoch>"
+```
 
-# Drive and node performance
-isi performance
+---
+
+## Capacity
+
+```bash
+# Get capacity summary for a cluster
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid>/capacity"
+
+# Get per-node capacity
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid>/nodes/<node_id>/capacity"
+```
+
+---
+
+## Reports
+
+```bash
+# List available reports
+curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/reports
+
+# Download a report
+curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/reports/<report_id>/download"   -o report.csv
 ```

@@ -1,21 +1,99 @@
 # Pure1 CLI Reference
 
-Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure1` CLI (if installed) wraps common API calls for interactive use. All programmatic integrations should use the REST API directly with token-based authentication.
+Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure1` CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is `https://api.pure1.purestorage.com/api/1.latest`.
 
-**Pure1 REST API:**
+---
 
-| Endpoint | Purpose |
-|---|---|
-| `POST /oauth2/1.0/token` | Obtain OAuth2 access token |
-| `GET /api/1.latest/arrays` | Fleet health and array inventory |
-| `GET /api/1.latest/metrics` | Performance metrics data |
-| `GET /api/1.latest/alerts` | Active alerts |
-| `GET /api/1.latest/metrics/history` | Historical metric data |
+## Authentication
 
-**Pure1 CLI (if installed):**
+Pure1 uses a self-signed RSA private key and a registered application ID for API access. Register the application at `https://pure1.purestorage.com/api-registration`.
 
+```bash
+# Generate RSA key pair for Pure1 API auth
+openssl genrsa -out pure1-private.pem 2048
+openssl rsa -in pure1-private.pem -pubout -out pure1-public.pem
+
+# Create a JWT assertion (Python example)
+python3 -c "
+import jwt, time
+payload = {'iss': '<application_id>', 'iat': int(time.time()), 'exp': int(time.time()) + 86400}
+token = jwt.encode(payload, open('pure1-private.pem').read(), algorithm='RS256')
+print(token)
+"
+
+# Exchange JWT for access token
+curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token=<jwt>&subject_token_type=urn:ietf:params:oauth:token-type:jwt"
 ```
-pure1 get arrays          # List all arrays and health status
-pure1 get alerts          # List active alerts
-pure1 get metrics         # Query performance metrics
+
+---
+
+## Arrays & Fleet
+
+```bash
+# List all arrays registered in Pure1
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays"   -H "Authorization: Bearer <token>"
+
+# Filter by model
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=model%3D%27FlashArray%2F%2FX%27"   -H "Authorization: Bearer <token>"
+
+# Get a specific array by name
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27<array_name>%27"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Health & Alerts
+
+```bash
+# List all active alerts across fleet
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state%3D%27open%27"   -H "Authorization: Bearer <token>"
+
+# List alerts for a specific array
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/alerts?filter=arrays.name%3D%27<array_name>%27"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Metrics
+
+```bash
+# List available metrics
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/metrics"   -H "Authorization: Bearer <token>"
+
+# Query array-level IOPS
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/metrics/history?ids=<metric_id>&resource_ids=<array_id>&start_time=<epoch>&end_time=<epoch>"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Capacity
+
+```bash
+# Get capacity metrics for all arrays
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space"   -H "Authorization: Bearer <token>"
+
+# Get capacity for a specific array
+curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27<array_name>%27&fields=name,capacity,space"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Python SDK Example
+
+```python
+from py_pure_client import PureOneClient
+
+client = PureOneClient(private_key_file="pure1-private.pem",
+                       private_key_password=None,
+                       app_id="<application_id>")
+
+# List all arrays
+arrays = client.get_arrays()
+for a in arrays.items:
+    print(a.name, a.model)
+
+# Get active alerts
+alerts = client.get_alerts(filter="state='open'")
+for alert in alerts.items:
+    print(alert.summary, alert.severity)
 ```

@@ -1,34 +1,92 @@
 # Nexus Dashboard CLI Reference
 
-Nexus Dashboard management is primarily via the web UI and REST API. SSH access to ND nodes is available for platform diagnostics. The NDFC REST API and ACI APIC REST API provide programmatic access to fabric management and health data.
+Nexus Dashboard is managed via its REST API and the `nd` CLI available on the appliance via SSH. The REST API base URL is `https://<nd_fqdn>/login`. SSH as `rescue-user` for appliance-level operations.
 
-**ND Node SSH Commands**
+---
+
+## Appliance Access
 
 ```bash
-# Check overall ND platform health
+# SSH to Nexus Dashboard
+ssh rescue-user@<nd_fqdn>
+
+# Check ND services status
 acs health
 
-# Check Kubernetes pod status for ND services
-kubectl get pods -n nd-platform
-
-# Show ND node software version
-show version
-
 # Check cluster node status
-acs status
+acs cluster info
+
+# Show ND version
+cat /var/lib/nd/version.txt
+
+# View logs
+kubectl logs -n nd-base <pod_name>
 ```
 
-**NDFC REST API — Key Endpoints**
+---
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics` | GET | List all fabrics |
-| `/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{fabric}/health` | GET | Fabric health score |
-| `/appcenter/cisco/ndfc/api/v1/elastic-service/fabrics/{fabric}/deployment-status` | GET | Policy deployment status |
-
-**ACI APIC REST API**
+## REST API — Authentication
 
 ```bash
-# Query fabric faults via APIC REST API
-GET https://<apic>/api/node/class/faultInst.json?query-target-filter=and(gt(faultInst.severity,"minor"))
+# Authenticate and get token
+curl -k -X POST https://<nd_fqdn>/login   -H "Content-Type: application/json"   -d '{"userName":"admin","userPasswd":"<pass>","domain":"DefaultAuth"}'
+
+# The response contains a token field — use as Authorization header
+```
+
+---
+
+## Fabric Health
+
+```bash
+# List all fabrics (sites) managed by ND
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites   -H "Authorization: <token>"
+
+# Get health for all sites
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites/health   -H "Authorization: <token>"
+
+# Get detail for a specific site
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/sites/<site_id>   -H "Authorization: <token>"
+```
+
+---
+
+## Insights & Alerts
+
+```bash
+# List all active alerts
+curl -k -X GET "https://<nd_fqdn>/nexus/infra/api/api/v1/faults?severity=critical"   -H "Authorization: <token>"
+
+# List anomalies
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/events/anomalies   -H "Authorization: <token>"
+
+# List advisories
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/advisories   -H "Authorization: <token>"
+```
+
+---
+
+## Nodes & Inventory
+
+```bash
+# List all nodes across managed fabrics
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/nodes   -H "Authorization: <token>"
+
+# Get node detail
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/nodes/<node_id>   -H "Authorization: <token>"
+
+# Check software versions
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/software-upgrades/compatibility   -H "Authorization: <token>"
+```
+
+---
+
+## Services (Insights / Orchestrator)
+
+```bash
+# List installed ND services
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/services   -H "Authorization: <token>"
+
+# Get status of a specific service
+curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/services/<service_id>   -H "Authorization: <token>"
 ```

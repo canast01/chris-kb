@@ -1,24 +1,98 @@
 # CloudIQ CLI Reference
 
-CloudIQ is accessed programmatically via its REST API, authenticated using OAuth2 client credentials. There is no standalone CLI; all automation uses the REST API directly.
+CloudIQ is accessed programmatically via its REST API using OAuth2 client credentials. There is no standalone CLI binary; all automation uses the REST API directly. The API base URL is `https://cloudiq.apis.dell.com`.
 
-**CloudIQ REST API:**
+---
 
-| Endpoint | Purpose |
-|---|---|
-| `POST /oauth2/token` | Obtain OAuth2 access token (client credentials) |
-| `GET /cloudiq/rest/v1/storage-systems` | Fleet inventory and health scores |
-| `GET /cloudiq/rest/v1/alerts?state=ACTIVE` | Active alerts |
-| `GET /cloudiq/rest/v1/storage-systems/{id}/capacity` | Capacity data for a specific system |
-| `GET /cloudiq/rest/v1/recommendations` | AIOps recommendations |
-| `GET /cloudiq/rest/v1/anomalies` | Detected anomalies |
+## Authentication
 
-**Authentication example (Python):**
+CloudIQ uses OAuth2 client credentials. Generate a client ID and secret from the CloudIQ portal under Settings → API Access.
+
+```bash
+# Request an access token
+curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Type: application/x-www-form-urlencoded"   -d "grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>"
+
+# The response contains access_token — use it as Bearer token in all requests
+# Token expires in 3600 seconds (1 hour)
+```
+
+---
+
+## System Health
+
+```bash
+# List all systems and their health scores
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems"   -H "Authorization: Bearer <token>"
+
+# Get health score for a specific system
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/health-scores"   -H "Authorization: Bearer <token>"
+
+# List all active issues
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/issues?filter=status%20eq%20%22ACTIVE%22"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Capacity
+
+```bash
+# List capacity metrics for all systems
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/capacity"   -H "Authorization: Bearer <token>"
+
+# Get capacity for a specific system
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/capacity"   -H "Authorization: Bearer <token>"
+
+# Get capacity forecast
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/capacity/forecast"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Performance
+
+```bash
+# Get performance metrics for a system
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/metrics"   -H "Authorization: Bearer <token>"
+
+# Filter by metric type (iops, latency, bandwidth)
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/metrics?filter=metric_name%20eq%20%22iops%22"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Recommendations
+
+```bash
+# List all recommendations
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations"   -H "Authorization: Bearer <token>"
+
+# List recommendations for a specific system
+curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=system_id%20eq%20%22<system_id>%22"   -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Python Automation Example
 
 ```python
 import requests
-resp = requests.post("https://cloudiq.dell.com/oauth2/token",
+
+# Authenticate
+token_resp = requests.post(
+    "https://cloudiq.apis.dell.com/auth/oauth/v2/token",
     data={"grant_type": "client_credentials",
-          "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET})
-token = resp.json()["access_token"]
+          "client_id": "<client_id>",
+          "client_secret": "<client_secret>"}
+)
+token = token_resp.json()["access_token"]
+headers = {"Authorization": f"Bearer {token}"}
+
+# List all systems
+systems = requests.get(
+    "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems",
+    headers=headers
+).json()
+
+for s in systems.get("results", []):
+    print(s["system_name"], s.get("health_score"))
 ```
