@@ -728,10 +728,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sla-tiers" class="md-nav__link">
+  <a href="#severity-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SLA Tiers
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-information-to-provide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Information to Provide
       
     </span>
   </a>
@@ -743,6 +754,78 @@
     <span class="md-ellipsis">
       
         Escalation Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Escalation Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-case-update-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Case Update Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-account-team-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Account Team Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-mission-critical-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Mission Critical Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-executive-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Executive Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-dell-support-will-typically-ask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Dell Support Will Typically Ask
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contacting-dell-for-parts-hardware-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contacting Dell for Parts / Hardware Replacement
       
     </span>
   </a>
@@ -770,74 +853,219 @@
 
 
 <h1 id="dell-vplex-escalation">Dell VPLEX — Escalation<a class="headerlink" href="#dell-vplex-escalation" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Vendor escalation procedures and support contacts for Dell VPLEX.</p>
-</blockquote>
+<p>Vendor escalation procedures, support contacts, and information requirements for Dell VPLEX support cases.</p>
 <h2 id="support-portal">Support Portal<a class="headerlink" href="#support-portal" title="Permanent link">&para;</a></h2>
 <p>Dell EMC Support: <a href="https://www.dell.com/support">https://www.dell.com/support</a></p>
 <ul>
-<li>Log in with your MyDell account linked to your ProSupport contract</li>
+<li>Log in with a MyDell account linked to your ProSupport contract</li>
 <li>Navigate to <strong>Cases</strong> to open a new case or view existing cases</li>
-<li>Navigate to <strong>Contracts &amp; Warranties</strong> to verify VPLEX support entitlement</li>
+<li>Navigate to <strong>Contracts &amp; Warranties</strong> to verify VPLEX support entitlement before opening a case</li>
+<li>VPLEX serial numbers can be found via <code>vplexcli -q -e "ll /engines/engine-1-1/"</code> — include the serial number when opening the case</li>
 </ul>
 <h2 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Confirm the VPLEX system is registered under your support contract in the Dell Support portal</li>
-<li>Collect the diagnostic information listed below before opening the case</li>
-<li>Go to <a href="https://www.dell.com/support">https://www.dell.com/support</a> → <strong>Contact Support</strong> → <strong>Create Service Request</strong></li>
-<li>Select product: <strong>Dell EMC VPLEX</strong></li>
-<li>Set severity:</li>
-<li><strong>Severity 1</strong> — production I/O suspended or data inaccessible across all hosts</li>
-<li><strong>Severity 2</strong> — degraded system (director down, distributed device out-of-sync) but I/O continuing</li>
-<li><strong>Severity 3</strong> — non-critical functional issue or question</li>
-<li><strong>Severity 4</strong> — general enquiry or low-impact issue</li>
-<li>Attach the support bundle to the case immediately</li>
-<li>Note the case number and communicate it to the on-call team</li>
+<li>Confirm the VPLEX system is registered under your ProSupport contract in the Dell Support portal.</li>
+<li>Collect all diagnostic information listed in <a href="../diagnostics/">Diagnostics</a> before opening the case.</li>
+<li>Go to <a href="https://www.dell.com/support">https://www.dell.com/support</a> → <strong>Contact Support</strong> → <strong>Create Service Request</strong>.</li>
+<li>Select product: <strong>Dell EMC VPLEX</strong>.</li>
+<li>Enter the system serial number from <code>ll /engines/engine-1-1/</code>.</li>
+<li>Set severity level (see table below).</li>
+<li>In the case description, include:</li>
+<li>Clear description of the symptom and business impact</li>
+<li>When the issue started (UTC timestamp)</li>
+<li>Any changes made within the 72 hours before the issue started</li>
+<li>GeoSynchrony version: <code>ll /clusters/cluster-1/system-volumes/version/</code></li>
+<li>Full health check output: <code>health-check --full</code></li>
+<li>Attach the support bundle to the case immediately after creation.</li>
+<li>Record the case number and share with the on-call team.</li>
 </ol>
-<h2 id="sla-tiers">SLA Tiers<a class="headerlink" href="#sla-tiers" title="Permanent link">&para;</a></h2>
+<h2 id="severity-levels">Severity Levels<a class="headerlink" href="#severity-levels" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Severity</th>
-<th>Description</th>
+<th>Criteria</th>
 <th>Initial Response Target</th>
-<th>Update Frequency</th>
+<th>Update Cadence</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Severity 1</td>
-<td>Production I/O suspended / data inaccessible</td>
+<td>Production I/O fully suspended; all hosts unable to access VPLEX volumes; active data loss risk</td>
 <td>30 minutes</td>
 <td>Every 2 hours until resolved</td>
 </tr>
 <tr>
 <td>Severity 2</td>
-<td>Degraded system / significant impact</td>
+<td>System degraded but I/O continuing: director down, distributed device out-of-sync, Witness unreachable</td>
 <td>2 hours</td>
 <td>Every 4 hours</td>
 </tr>
 <tr>
 <td>Severity 3</td>
-<td>Non-critical issue / minor impact</td>
+<td>Non-critical functional issue; single non-production volume affected; minor warning in health-check</td>
 <td>Next business day</td>
 <td>As updated</td>
 </tr>
 <tr>
 <td>Severity 4</td>
-<td>General question / low impact</td>
+<td>General question; planning request; low-impact cosmetic issue</td>
 <td>2 business days</td>
 <td>As updated</td>
 </tr>
 </tbody>
 </table>
-<p>Response times are governed by your specific Dell support contract tier. Verify your entitlement in the Support portal.</p>
+<p>Response times are governed by the specific ProSupport contract tier. ProSupport Mission Critical provides faster response than standard ProSupport Plus. Verify your entitlement in the Support portal before assuming SLA times.</p>
+<h2 id="diagnostic-information-to-provide">Diagnostic Information to Provide<a class="headerlink" href="#diagnostic-information-to-provide" title="Permanent link">&para;</a></h2>
+<p>Attach these before or immediately after case creation. Dell Support will ask for all of them; providing upfront reduces time-to-resolution.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>How to Collect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Support bundle</td>
+<td><code>collect-support-log -f /var/log/support_bundle.tar.gz</code> from vplexcli</td>
+</tr>
+<tr>
+<td>GeoSynchrony version</td>
+<td><code>vplexcli -q -e "ll /clusters/cluster-1/system-volumes/version/"</code></td>
+</tr>
+<tr>
+<td>Full health check output</td>
+<td><code>vplexcli -q -e "health-check --full"</code></td>
+</tr>
+<tr>
+<td>Cluster health indications</td>
+<td><code>vplexcli -q -e "ll /clusters/*/health-indications/"</code></td>
+</tr>
+<tr>
+<td>Distributed device health</td>
+<td><code>vplexcli -q -e "ll /distributed-storage/distributed-devices/*/health-indications/"</code></td>
+</tr>
+<tr>
+<td>Director hardware health</td>
+<td><code>vplexcli -q -e "ll /engines/*/directors/*/hardware/"</code></td>
+</tr>
+<tr>
+<td>Witness status</td>
+<td><code>vplexcli -q -e "ll /clusters/*/cluster-witness/"</code></td>
+</tr>
+<tr>
+<td>Consistency group state</td>
+<td><code>vplexcli -q -e "ll /distributed-storage/consistency-groups/"</code></td>
+</tr>
+<tr>
+<td>ICL status</td>
+<td><code>vplexcli -q -e "ll /clusters/*/communication/inter-cluster-links/"</code></td>
+</tr>
+<tr>
+<td>Host path output</td>
+<td><code>powermt display dev=all</code> or <code>multipath -ll</code> from affected hosts</td>
+</tr>
+<tr>
+<td>VMS management log excerpt</td>
+<td><code>tail -500 /var/log/VPlex/vplexmanagement.log</code> from VMS</td>
+</tr>
+<tr>
+<td>Timeline of events</td>
+<td>List: when issue was first observed; what changed in the preceding 72h</td>
+</tr>
+</tbody>
+</table>
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<p>Use this path when a case is not progressing at the expected pace.</p>
+<h3 id="step-1-case-update-request">Step 1 — Case Update Request<a class="headerlink" href="#step-1-case-update-request" title="Permanent link">&para;</a></h3>
+<p>Add a detailed comment to the open case requesting escalation. Include:
+- Time elapsed since case opening
+- Current case status and last update
+- Business impact (hosts affected, applications down, revenue impact if applicable)
+- Specific technical question that is blocking resolution</p>
+<h3 id="step-2-account-team-escalation">Step 2 — Account Team Escalation<a class="headerlink" href="#step-2-account-team-escalation" title="Permanent link">&para;</a></h3>
+<p>If the case has not been responded to within the SLA window or is making insufficient progress:</p>
 <ol>
-<li><strong>Case update</strong>: Add a comment to the open case requesting escalation if progress is insufficient</li>
-<li><strong>Account Team</strong>: Contact your Dell account manager or technical account manager (TAM) to escalate a Sev1/Sev2 case that is not progressing</li>
-<li><strong>Mission Critical escalation</strong>: If you have a ProSupport Mission Critical contract, call the dedicated Mission Critical support line for immediate engineer engagement</li>
-<li><strong>Executive escalation</strong>: If the account team is unresponsive, request escalation through your Dell sales representative to Dell EMC Services management</li>
+<li>Contact your Dell account manager or Technical Account Manager (TAM) by phone and email.</li>
+<li>Provide the case number and a summary of the business impact.</li>
+<li>Request the account team engage Dell EMC Services management.</li>
+</ol>
+<h3 id="step-3-mission-critical-escalation">Step 3 — Mission Critical Escalation<a class="headerlink" href="#step-3-mission-critical-escalation" title="Permanent link">&para;</a></h3>
+<p>If you have a ProSupport Mission Critical contract:</p>
+<ol>
+<li>Call the Mission Critical support line (on your contract documentation) — this bypasses standard queuing and connects directly to a senior engineer.</li>
+<li>Reference the existing case number.</li>
+<li>Mission Critical provides 24/7 access to senior engineers for Severity 1 issues and can dispatch on-site support.</li>
+</ol>
+<h3 id="step-4-executive-escalation">Step 4 — Executive Escalation<a class="headerlink" href="#step-4-executive-escalation" title="Permanent link">&para;</a></h3>
+<p>For Severity 1 cases lasting beyond 4 hours without meaningful progress:</p>
+<ol>
+<li>Contact your Dell sales representative and request executive escalation.</li>
+<li>Escalation goes to Dell EMC Services management who can redirect resources directly.</li>
+<li>Document all escalation actions and timestamps in the case.</li>
+</ol>
+<h2 id="what-dell-support-will-typically-ask">What Dell Support Will Typically Ask<a class="headerlink" href="#what-dell-support-will-typically-ask" title="Permanent link">&para;</a></h2>
+<p>Prepare answers to these questions before the first support call:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where to Find the Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What is the GeoSynchrony version?</td>
+<td><code>ll /clusters/cluster-1/system-volumes/version/</code></td>
+</tr>
+<tr>
+<td>What is the system serial number?</td>
+<td><code>ll /engines/engine-1-1/</code></td>
+</tr>
+<tr>
+<td>When did the issue start?</td>
+<td>VMS management log; host I/O monitoring timestamps</td>
+</tr>
+<tr>
+<td>What changed in the 72 hours before the issue?</td>
+<td>Change management records; vplexcli log</td>
+</tr>
+<tr>
+<td>Is this VPLEX Local, Metro, or Geo?</td>
+<td>Known from deployment documentation</td>
+</tr>
+<tr>
+<td>Is the VMS accessible?</td>
+<td>SSH to VMS: <code>ssh service@&lt;VMS_IP&gt;</code></td>
+</tr>
+<tr>
+<td>Can you collect a support bundle?</td>
+<td><code>collect-support-log -f /var/log/support_bundle.tar.gz</code></td>
+</tr>
+<tr>
+<td>What is the current Witness state?</td>
+<td><code>ll /clusters/*/cluster-witness/</code></td>
+</tr>
+<tr>
+<td>What is the ICL state?</td>
+<td><code>ll /clusters/*/communication/inter-cluster-links/</code></td>
+</tr>
+<tr>
+<td>What is host-side path visibility?</td>
+<td><code>powermt display dev=all</code> or <code>multipath -ll</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="contacting-dell-for-parts-hardware-replacement">Contacting Dell for Parts / Hardware Replacement<a class="headerlink" href="#contacting-dell-for-parts-hardware-replacement" title="Permanent link">&para;</a></h2>
+<p>For director hardware replacement (physical dispatch):</p>
+<ol>
+<li>Open a support case at Severity 2 (degraded system).</li>
+<li>Confirm the defective component from <code>ll /engines/*/directors/*/hardware/</code>.</li>
+<li>Dell Support will confirm the part number and dispatch a field service engineer (FSE) or ship the part depending on your support contract (on-site vs. parts-only).</li>
+<li>Do not remove or reseat the faulted director until Dell Support confirms the correct procedure — incorrect handling may impact the surviving director's cache state.</li>
+<li>Record the replacement part serial numbers and update the hardware inventory in the CMDB after the repair.</li>
 </ol>
 
 

@@ -716,6 +716,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#network-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operating-system-hardening-node-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operating System Hardening (Node-Level)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-lock-worm-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Lock (WORM) Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-management-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Management Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -738,20 +793,258 @@
 
 <h1 id="dell-ecs-hardening">Dell ECS — Hardening<a class="headerlink" href="#dell-ecs-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<p>Apply these controls at initial deployment and validate at each quarterly security review.</p>
 <ul>
-<li>[ ] Change the default <code>sysadmin</code> password immediately after initial deployment</li>
-<li>[ ] Replace self-signed TLS certificates on the Management API (4443) and S3 endpoint (443) with certificates signed by the corporate CA</li>
-<li>[ ] Disable HTTP (port 9021) in production; require HTTPS for all S3 access</li>
+<li>[ ] Change the default <code>sysadmin</code> password immediately after initial deployment; use a strong password (24+ characters, stored in a vault)</li>
+<li>[ ] Replace self-signed TLS certificates on the Management API (4443) and S3 endpoint (443/9021) with certificates signed by the corporate CA</li>
+<li>[ ] Disable HTTP (port 9021 plain HTTP) in production; require HTTPS for all S3 access</li>
 <li>[ ] Enable TLS 1.2 minimum on all endpoints; disable TLS 1.0 and 1.1</li>
-<li>[ ] Create named management service accounts; disable or restrict the <code>sysadmin</code> account from use in automation</li>
-<li>[ ] Apply namespace quotas; do not allow namespaces with no quota in production</li>
-<li>[ ] Enable bucket-level access logging for namespaces with compliance or audit requirements</li>
+<li>[ ] Remove weak cipher suites (RC4, DES, 3DES, NULL) from the TLS configuration</li>
+<li>[ ] Create named management service accounts for all automation and API access; do not use <code>sysadmin</code> in scripts or CI/CD pipelines</li>
+<li>[ ] Restrict <code>sysadmin</code> to break-glass access only; log and alert on each <code>sysadmin</code> login via syslog/SIEM</li>
+<li>[ ] Apply namespace quotas to all production namespaces; do not allow unconstrained namespaces</li>
+<li>[ ] Set hard quotas on high-growth buckets (Veeam offload, analytics ingest) to prevent runaway capacity consumption</li>
+<li>[ ] Enable bucket-level access logging for all namespaces with compliance or audit requirements</li>
 <li>[ ] Configure syslog forwarding to the SIEM for all ECS management and access events</li>
-<li>[ ] Enable Object Lock (WORM) on buckets designated for compliance or immutable backup data</li>
-<li>[ ] Restrict ECS Portal (port 443) and Management API (port 4443) access to management network VLANs via firewall rules</li>
-<li>[ ] Review and disable unused API protocols (Swift, Atmos, CAS) on namespaces that only require S3</li>
-<li>[ ] Rotate object user secret keys every 12 months and update consuming applications</li>
+<li>[ ] Enable Object Lock (WORM) on buckets designated for compliance or immutable backup data — use Compliance mode, not Governance mode</li>
+<li>[ ] Restrict ECS Portal (port 443) and Management API (port 4443) access to management network VLANs via firewall ACLs; block access from data network VLANs</li>
+<li>[ ] Restrict S3 API access (port 443/9021) to authorised application and backup network VLANs only</li>
+<li>[ ] Disable unused API protocols (Swift, Atmos, CAS) on namespaces that only require S3</li>
+<li>[ ] Rotate object user secret keys every 12 months; update consuming applications and secrets manager entries</li>
+<li>[ ] Enable encryption at rest on namespaces holding regulated data (PCI, HIPAA, GDPR)</li>
+<li>[ ] For encryption at rest: use an external KMIP KMS for regulated compliance environments; do not rely on the internal ECS KMS for PCI or HIPAA data</li>
+<li>[ ] Configure NTP on all nodes to a consistent authoritative time source; clock drift &gt; 5 minutes can cause geo-replication and S3 signature validation failures</li>
+<li>[ ] Disable password-based SSH login to ECS nodes; use SSH key authentication only</li>
+<li>[ ] Apply the principle of least privilege to all IAM bucket policies; never assign <code>Action: "*"</code> to application object users</li>
+<li>[ ] Perform a quarterly access review: remove object users for decommissioned applications; rotate keys older than 12 months</li>
 </ul>
+<h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Source Networks</th>
+<th>Destination Port</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 API</td>
+<td>Application VLANs, Backup VLANs</td>
+<td>443 or 9021 (HTTPS)</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Swift API</td>
+<td>OpenStack compute VLANs</td>
+<td>9024</td>
+<td>Allow (only if Swift is in use)</td>
+</tr>
+<tr>
+<td>Management API</td>
+<td>Management VLAN, jump hosts only</td>
+<td>4443</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>ECS Portal</td>
+<td>Management VLAN, jump hosts only</td>
+<td>443</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>Jump hosts, management VLAN only</td>
+<td>22</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>SNMP</td>
+<td>Monitoring VLANs only</td>
+<td>161 (UDP)</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Syslog</td>
+<td>ECS nodes to SIEM</td>
+<td>514 (UDP/TCP)</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Geo-replication</td>
+<td>ECS data VLANs, remote site</td>
+<td>9100</td>
+<td>Allow between VDC sites only</td>
+</tr>
+<tr>
+<td>KMIP</td>
+<td>ECS nodes to KMS server</td>
+<td>5696</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>All other</td>
+<td>Any</td>
+<td>Any</td>
+<td>Deny</td>
+</tr>
+</tbody>
+</table>
+<p>Configure inter-VLAN firewall rules to enforce this segmentation. ECS does not enforce network-level source IP restrictions natively (except via bucket policies with <code>aws:SourceIp</code> conditions).</p>
+<h2 id="operating-system-hardening-node-level">Operating System Hardening (Node-Level)<a class="headerlink" href="#operating-system-hardening-node-level" title="Permanent link">&para;</a></h2>
+<p>ECS nodes run a hardened Linux OS managed by Dell. Avoid making manual OS-level changes outside of the ECS-supported procedures, as unsupported changes may break the ECS software stack.</p>
+<ul>
+<li>Do not install third-party software or agents on ECS nodes unless explicitly validated by Dell Support</li>
+<li>Do not modify kernel parameters, network settings, or disk mounts manually — use ECS Portal procedures</li>
+<li>SSH access to nodes should be restricted to jump hosts and management workstations</li>
+<li>Disable direct <code>root</code> SSH login where possible; use <code>admin</code> and escalate with <code>sudo</code></li>
+<li>Review <code>/etc/sudoers</code> and SSH <code>authorized_keys</code> periodically; remove stale entries</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check who has SSH access on an ECS node</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">&quot;cat /home/admin/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify root direct login is disabled in sshd_config</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;<span class="w"> </span><span class="s2">&quot;grep PermitRootLogin /etc/ssh/sshd_config&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Expected: PermitRootLogin no</span>
+</code></pre></div>
+<h2 id="object-lock-worm-hardening">Object Lock (WORM) Hardening<a class="headerlink" href="#object-lock-worm-hardening" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Compliance Mode</th>
+<th>Governance Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can the retention period be shortened?</td>
+<td>No — not by any user, including sysadmin</td>
+<td>Yes — by a user with <code>s3:BypassGovernanceRetention</code></td>
+</tr>
+<tr>
+<td>Can the object be deleted before expiry?</td>
+<td>No</td>
+<td>Yes — by a user with <code>s3:BypassGovernanceRetention</code></td>
+</tr>
+<tr>
+<td>Suitable for SEC 17a-4, FINRA compliance?</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Suitable for backup immutability (anti-ransomware)?</td>
+<td>Yes</td>
+<td>Conditionally — protect the bypass permission carefully</td>
+</tr>
+</tbody>
+</table>
+<p>For regulated compliance workloads, always use Compliance mode. For backup immutability against ransomware, Compliance mode is preferred; Governance mode is acceptable only if <code>s3:BypassGovernanceRetention</code> is restricted to a privileged break-glass account and not granted to backup service accounts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set Object Lock retention in Compliance mode on an existing bucket</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># (Note: the bucket must have been created with Object Lock enabled)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-object-lock-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--bucket<span class="w"> </span>compliance-immutable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--object-lock-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;ObjectLockEnabled&quot;: &quot;Enabled&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;Rule&quot;: {</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;DefaultRetention&quot;: {</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">        &quot;Mode&quot;: &quot;COMPLIANCE&quot;,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">        &quot;Days&quot;: 2557</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">      }</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    }</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Verify the Object Lock configuration</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-object-lock-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--bucket<span class="w"> </span>compliance-immutable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<h2 id="secrets-management-integration">Secrets Management Integration<a class="headerlink" href="#secrets-management-integration" title="Permanent link">&para;</a></h2>
+<p>Do not embed ECS credentials (management passwords, S3 access keys/secret keys, KMIP certificates) in configuration files, scripts, or source code.</p>
+<p><strong>Recommended secrets management approaches:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Secret Type</th>
+<th>Recommended Storage</th>
+<th>Retrieval Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sysadmin</code> password</td>
+<td>Physical vault or PAM (CyberArk, BeyondTrust)</td>
+<td>Manual break-glass checkout</td>
+</tr>
+<tr>
+<td>Management service account password</td>
+<td>HashiCorp Vault or PAM</td>
+<td>API retrieval at runtime in automation scripts</td>
+</tr>
+<tr>
+<td>S3 access key / secret key</td>
+<td>HashiCorp Vault (KV secrets engine) or secrets manager</td>
+<td>Application retrieves at startup; never embedded in code</td>
+</tr>
+<tr>
+<td>TLS certificate private key</td>
+<td>HashiCorp Vault (PKI secrets engine)</td>
+<td>Vault-managed PKI rotation</td>
+</tr>
+<tr>
+<td>KMIP client certificate</td>
+<td>HashiCorp Vault (PKI secrets engine)</td>
+<td>Vault-managed; auto-rotated before expiry</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example: retrieve ECS S3 credentials from HashiCorp Vault at runtime</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>access_key<span class="w"> </span>secret/ecs/svc-spark-prod<span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>secret_key<span class="w"> </span>secret/ecs/svc-spark-prod<span class="k">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Use immediately; do not persist to disk or shell history</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--no-verify-ssl
+</code></pre></div>
+<h2 id="security-validation">Security Validation<a class="headerlink" href="#security-validation" title="Permanent link">&para;</a></h2>
+<p>Run these checks at each quarterly security review and after any security-relevant configuration change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm TLS version on S3 endpoint (should reject TLS 1.0 and 1.1)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;handshake failure|alert&quot;</span><span class="w">  </span><span class="c1"># Should show failure</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1_2<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span><span class="w">  </span><span class="c1"># Should show TLSv1.2 or TLSv1.3</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Confirm self-signed certs have been replaced (issuer should be the corporate CA)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:4443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Confirm certificate is not expiring within 30 days</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Confirm management API is not accessible from outside the management network</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># (Run this from an application VLAN host — should time out or be refused)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>curl<span class="w"> </span>--max-time<span class="w"> </span><span class="m">5</span><span class="w"> </span>https://&lt;ecs-node&gt;:4443/login<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ACCESSIBLE — REMEDIATE&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Blocked — OK&quot;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># List all namespaces and verify quotas are set</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Review each namespace output for quota values — alert on any with no quota</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># Review active management users</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/user/users.json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 
 
 

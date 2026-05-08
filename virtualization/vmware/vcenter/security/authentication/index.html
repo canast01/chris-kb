@@ -849,6 +849,84 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#saml-federation-external-idp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML Federation (External IdP)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SAML Federation (External IdP)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adfs-configuration-high-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADFS Configuration (High Level)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-enhanced-linked-mode-elm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Enhanced Linked Mode (ELM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unlocking-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unlocking Accounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unlocking Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unlock-administratorvspherelocal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unlock administrator@vsphere.local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unlock-an-ad-account-from-vcenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unlock an AD Account (from vCenter)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1026,6 +1104,83 @@
 <p>If certificate expiry causes a login or service failure:
 - Check if the local administrator account (<code>administrator@vsphere.local</code>) still works
 - Engage VMware support if SSO or STS cannot be recovered in place</p>
+<hr />
+<h2 id="saml-federation-external-idp">SAML Federation (External IdP)<a class="headerlink" href="#saml-federation-external-idp" title="Permanent link">&para;</a></h2>
+<p>vCenter can act as a SAML service provider for an external IdP such as ADFS, Okta, or Azure AD. This enables MFA enforcement at the IdP level without requiring MFA on every VCSA individually.</p>
+<p>Configure at <strong>Administration → Single Sign On → Configuration → Identity Provider → Set up SAML Service Provider</strong>.</p>
+<h3 id="adfs-configuration-high-level">ADFS Configuration (High Level)<a class="headerlink" href="#adfs-configuration-high-level" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Export the vCenter SAML metadata from <strong>SSO → Configuration → SAML Service Provider → Download Service Provider Metadata</strong></li>
+<li>In ADFS: Add a new Relying Party Trust using the metadata file</li>
+<li>Add claim rules: <code>UPN → NameID</code>, <code>Token-Groups (unqualified names) → Group</code></li>
+<li>In vCenter: Set the IdP metadata URL (your ADFS federation metadata endpoint)</li>
+<li>Test login: users should be redirected to ADFS login page and returned to vSphere Client with their AD group memberships</li>
+</ol>
+<p>After federation is configured, grant permissions to AD groups (not individual users) in vCenter. The group SID comparison is done via the SAML assertion attributes.</p>
+<hr />
+<h2 id="vcenter-enhanced-linked-mode-elm">vCenter Enhanced Linked Mode (ELM)<a class="headerlink" href="#vcenter-enhanced-linked-mode-elm" title="Permanent link">&para;</a></h2>
+<p>Enhanced Linked Mode connects multiple vCenter instances to a shared SSO domain, providing single-pane-of-glass management across sites.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Linked Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single login</td>
+<td>Yes — authenticate once, manage all vCenters</td>
+</tr>
+<tr>
+<td>Shared roles</td>
+<td>Yes — roles defined on one vCenter are visible on others</td>
+</tr>
+<tr>
+<td>Shared permissions</td>
+<td>Partially — global permissions apply to all; local permissions are per-vCenter</td>
+</tr>
+<tr>
+<td>Shared inventory</td>
+<td>Yes — view VMs and hosts across all vCenters</td>
+</tr>
+<tr>
+<td>vMotion across vCenters</td>
+<td>Yes — cross-vCenter vMotion supported (requires same SSO domain)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Connect to multiple vCenters simultaneously</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-lon</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span><span class="p">,</span> <span class="n">vcenter-ams</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># List all VMs across both vCenters</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;vCenter&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Uid</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="n">0</span><span class="p">]}},</span> <span class="n">PowerState</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Disconnect all</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<hr />
+<h2 id="unlocking-accounts">Unlocking Accounts<a class="headerlink" href="#unlocking-accounts" title="Permanent link">&para;</a></h2>
+<h3 id="unlock-administratorvspherelocal">Unlock administrator@vsphere.local<a class="headerlink" href="#unlock-administratorvspherelocal" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to VCSA</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--account<span class="w"> </span>administrator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>--password<span class="w"> </span>&lt;current-password&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># If the password is also lost, reset via VCSA console (single-user mode)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># See VMware KB 2069041 for the reset procedure</span>
+</code></pre></div>
+<h3 id="unlock-an-ad-account-from-vcenter">Unlock an AD Account (from vCenter)<a class="headerlink" href="#unlock-an-ad-account-from-vcenter" title="Permanent link">&para;</a></h3>
+<p>AD account lockouts caused by vCenter (e.g. cached wrong password in identity source):
+1. Check if the bind account password has changed — update in <strong>SSO → Identity Sources → Edit</strong>
+2. Unlock the AD account from Active Directory Users and Computers or PowerShell:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># On a domain controller</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="n">jsmith</span>
+</code></pre></div>
+3. Restart <code>vmware-sts-idmd</code> service to clear any cached authentication state:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sts-idmd
+</code></pre></div></p>
 
 
 

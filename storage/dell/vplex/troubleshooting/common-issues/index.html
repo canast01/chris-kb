@@ -717,10 +717,115 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-symptoms-and-resolutions" class="md-nav__link">
+  <a href="#issue-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Symptoms and Resolutions
+        Issue Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Issue Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#host-loses-access-to-all-vplex-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Loses Access to All VPLEX Volumes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distributed-device-out-of-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Device Out-of-Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#io-suspended-on-consistency-group-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I/O Suspended on Consistency Group Volumes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-host-loses-access-to-one-or-more-volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Host Loses Access to One or More Volumes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#director-shows-major-failure-in-health-indications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director Shows major-failure in Health Indications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#witness-not-reachable-from-one-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Witness Not Reachable from One Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check-full-reports-warnings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        health-check --full Reports Warnings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recoverpoint-cli-commands-hang" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RecoverPoint CLI Commands Hang
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues — Quick Reference
       
     </span>
   </a>
@@ -753,12 +858,12 @@
 <ul>
 <li>[ ] Run <code>ll /clusters/*/health-indications/</code> immediately — identify which cluster has entered a non-ok health state and note when the state change occurred</li>
 <li>[ ] Check distributed device sync state: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — an <code>out-of-sync</code> device means one leg of the distributed device is not being written to; identify which cluster leg is affected</li>
-<li>[ ] Check Witness status for Metro deployments: <code>ll /metro-node/*/witness/</code> — if Witness is unreachable from one cluster and the ICL is also interrupted, VPLEX will suspend I/O on consistency groups to preserve write-order consistency</li>
-<li>[ ] Check director health: <code>ll /engines/*/directors/*/hardware/</code> — a director in a faulted state on one engine reduces redundancy and may cause host path failures</li>
+<li>[ ] Check Witness status for Metro deployments: <code>ll /clusters/*/cluster-witness/</code> — if Witness is unreachable from one cluster and the ICL is also interrupted, VPLEX suspends I/O on consistency groups to preserve write-order consistency</li>
+<li>[ ] Check director health: <code>ll /engines/*/directors/*/hardware/</code> — a director in a faulted state reduces redundancy and may cause host path failures</li>
 <li>[ ] Verify ICL connectivity between Metro clusters — an ICL interruption is the most common cause of distributed device out-of-sync events; check the WAN or dark fibre connection between sites</li>
 <li>[ ] Check consistency group state: <code>ll /distributed-storage/consistency-groups/</code> — identify any groups that have suspended I/O and determine the cause before resuming</li>
 <li>[ ] Verify storage views are intact: <code>ll /clusters/*/exports/storage-views/</code> — a missing or corrupted storage view can cause a specific host to lose access to its volumes</li>
-<li>[ ] Run <code>health-check --full</code> to get a system-wide view of all faults in a single output; use this output when opening a Dell support case</li>
+<li>[ ] Run <code>health-check --full</code> to get a system-wide view of all faults; use this output when opening a Dell Support case</li>
 </ul>
 <table>
 <thead>
@@ -777,7 +882,7 @@
 <td></td>
 </tr>
 <tr>
-<td>Is the Witness connected and reachable?</td>
+<td>Is the Witness connected and reachable from both clusters?</td>
 <td></td>
 </tr>
 <tr>
@@ -788,52 +893,250 @@
 <td>Which directors or director components are faulted?</td>
 <td></td>
 </tr>
+<tr>
+<td>When did the issue start?</td>
+<td></td>
+</tr>
+<tr>
+<td>What changed recently?</td>
+<td></td>
+</tr>
 </tbody>
 </table>
-<h2 id="common-symptoms-and-resolutions">Common Symptoms and Resolutions<a class="headerlink" href="#common-symptoms-and-resolutions" title="Permanent link">&para;</a></h2>
+<h2 id="issue-reference">Issue Reference<a class="headerlink" href="#issue-reference" title="Permanent link">&para;</a></h2>
+<h3 id="host-loses-access-to-all-vplex-volumes">Host Loses Access to All VPLEX Volumes<a class="headerlink" href="#host-loses-access-to-all-vplex-volumes" title="Permanent link">&para;</a></h3>
+<p><strong>Likely causes:</strong>
+- Both directors in a pair have failed (director pair failure)
+- Storage view was deleted or its front-end ports were removed
+- All FC zones between the host and VPLEX front-end ports have been disrupted (fabric issue)</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check director health on the cluster serving this host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check that the storage view exists and contains the expected volumes and ports</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm the host initiator is registered</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&quot;</span>
+</code></pre></div>
+<p>On the host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux: check that FC HBAs can see any VPLEX ports</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;port_state\|port_name&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># EMC PowerPath: check path states</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># VMware ESXi: rescan and check adapter status</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;state\|transport&quot;</span>
+</code></pre></div>
+<p><strong>Resolution:</strong> Replace failed director hardware (engage Dell Support). Recreate the storage view if it was accidentally deleted. Restore SAN zoning if the fabric was disrupted.</p>
+<hr />
+<h3 id="distributed-device-out-of-sync">Distributed Device Out-of-Sync<a class="headerlink" href="#distributed-device-out-of-sync" title="Permanent link">&para;</a></h3>
+<p><strong>Likely cause:</strong> ICL interruption between Metro clusters during a write — one leg did not receive the write, setting the dirty bit on the distributed device.</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm which device is out-of-sync and which leg is affected</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check ICL status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/communication/inter-cluster-links/&quot;</span>
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Restore the ICL if it is still interrupted.</li>
+<li>Once the ICL is healthy, VPLEX begins automatic resync. Monitor:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health-state\|rebuild-progress&quot;</span>
+</code></pre></div>
+<ol>
+<li>If resync does not start automatically within 10 minutes of ICL recovery, initiate manually:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device rebuild \</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+</code></pre></div>
+<ol>
+<li>Do not perform maintenance on the out-of-sync cluster leg during rebuild.</li>
+</ol>
+<hr />
+<h3 id="io-suspended-on-consistency-group-volumes">I/O Suspended on Consistency Group Volumes<a class="headerlink" href="#io-suspended-on-consistency-group-volumes" title="Permanent link">&para;</a></h3>
+<p><strong>Likely cause:</strong> The ICL failed while the Witness was also unreachable, or the Witness was not configured. VPLEX suspends I/O on consistency groups to prevent split-brain data divergence.</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm CG suspension</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check Witness status from both clusters</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check ICL status</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Restore ICL connectivity first.</li>
+<li>Restore Witness connectivity (check Witness VM is running and reachable on the management network).</li>
+<li>Once both ICL and Witness are healthy, VPLEX typically resumes I/O automatically.</li>
+<li>If manual resume is required after verifying the active cluster with Dell Support:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device resume \</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+</code></pre></div>
+<p><strong>Do not manually resume without understanding which cluster leg holds the most recent data.</strong> Incorrect manual resume risks undetected data divergence.</p>
+<hr />
+<h3 id="single-host-loses-access-to-one-or-more-volumes">Single Host Loses Access to One or More Volumes<a class="headerlink" href="#single-host-loses-access-to-one-or-more-volumes" title="Permanent link">&para;</a></h3>
+<p><strong>Likely causes:</strong>
+- Storage view membership changed (volume or initiator removed accidentally)
+- Host HBA failed or was replaced with a new WWN that is not registered
+- SAN zone disrupted between host HBA and VPLEX front-end port</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm storage view still has the host initiator and the target volume</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm the initiator is registered</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
+</code></pre></div>
+<p>On the host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux: show all FC paths</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># VMware ESXi: list paths for the affected datastore device</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
+</code></pre></div>
+<p>Check SAN fabric zoning for the host HBA → VPLEX FE port zone.</p>
+<p><strong>Resolution:</strong> Add the initiator back to the storage view if it was removed. Register the new HBA WWN if the HBA was replaced. Restore SAN zoning if the zone was deleted or modified.</p>
+<hr />
+<h3 id="director-shows-major-failure-in-health-indications">Director Shows <code>major-failure</code> in Health Indications<a class="headerlink" href="#director-shows-major-failure-in-health-indications" title="Permanent link">&para;</a></h3>
+<p><strong>Likely cause:</strong> Hardware fault on the director — failed component (fan, PSU, cache module, FC port, or the director board itself).</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Identify the specific failed component</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check all ports on the faulted director for port-level faults</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;</span>
+</code></pre></div>
+<p><strong>Immediate actions:</strong></p>
+<ol>
+<li>Confirm the surviving director in the pair is healthy — I/O continues on the surviving director.</li>
+<li>Verify that all host paths to the surviving director are active: <code>powermt display dev=all</code> or <code>multipath -ll</code> on affected hosts.</li>
+<li>Open a Dell Support case (Severity 2 — degraded system) and attach the support bundle.</li>
+<li>Do not attempt to remove or reseat the faulted director without Dell Support guidance — incorrect handling can impact the surviving director's cache.</li>
+</ol>
+<hr />
+<h3 id="witness-not-reachable-from-one-cluster">Witness Not Reachable from One Cluster<a class="headerlink" href="#witness-not-reachable-from-one-cluster" title="Permanent link">&para;</a></h3>
+<p><strong>Likely causes:</strong>
+- Witness VM is powered off or crashed
+- Management network between a VPLEX cluster and the Witness VM is disrupted
+- Witness IP address changed without updating VPLEX configuration</p>
+<p><strong>Diagnostic steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check Witness status from both clusters</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Ping the Witness VM from the VMS management interface</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;witness_VM_IP&gt;
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>If the Witness VM is powered off, power it on and wait for the Witness service to start.</li>
+<li>If it is a network issue, restore management network connectivity between the affected cluster and the Witness network segment.</li>
+<li>Once the Witness is reachable, verify the VPLEX Witness configuration reflects the correct IP.</li>
+</ol>
+<p><strong>Risk while Witness is unreachable:</strong> If an ICL failure occurs while the Witness is unreachable, VPLEX cannot arbitrate and will suspend I/O on consistency groups. Treat Witness unreachability as a Severity 2 condition — resolve immediately.</p>
+<hr />
+<h3 id="health-check-full-reports-warnings"><code>health-check --full</code> Reports Warnings<a class="headerlink" href="#health-check-full-reports-warnings" title="Permanent link">&para;</a></h3>
+<p><strong>Approach:</strong> Review each warning individually. <code>health-check --full</code> output groups warnings by component type.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Capture full health check output to a file for review</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;health-check --full&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/vplex_healthcheck_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Common warning patterns and their meaning:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># &quot;health-state: minor-failure&quot; on a director component — check the specific component</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># &quot;rebuild-allowed: false&quot; on a distributed device — a rebuild is blocked; find and fix the blocking condition</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># &quot;operational-status: degraded&quot; on a CG — one or more member volumes are not in-sync</span>
+</code></pre></div>
+<p>For each flagged component, drill into the component path for detail:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># If a specific engine/director is flagged:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/&lt;engine_name&gt;/directors/&lt;director_name&gt;/hardware/&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># If a specific distributed device is flagged:</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># If a specific CG is flagged:</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&lt;cg_name&gt;/&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="recoverpoint-cli-commands-hang">RecoverPoint CLI Commands Hang<a class="headerlink" href="#recoverpoint-cli-commands-hang" title="Permanent link">&para;</a></h3>
+<p><strong>Likely cause:</strong> RecoverPoint–VPLEX communication timeout is blocking the vplexcli session.</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Press <code>Ctrl+C</code> to interrupt the hanging vplexcli command.</li>
+<li>Exit vplexcli and start a new session.</li>
+<li>Check RecoverPoint appliance status from the RecoverPoint management interface.</li>
+<li>Verify IP connectivity between VPLEX directors and RecoverPoint appliances.</li>
+<li>If RecoverPoint is unhealthy, engage the RecoverPoint support process first; VPLEX management will stabilise once the RecoverPoint session is restored.</li>
+</ol>
+<hr />
+<h2 id="common-issues-quick-reference">Common Issues — Quick Reference<a class="headerlink" href="#common-issues-quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Symptom</th>
 <th>Likely Cause</th>
-<th>Action</th>
+<th>First Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Host loses access to all VPLEX volumes</td>
-<td>Director pair failure or storage view corruption</td>
-<td>Check <code>ll /engines/*/directors/*/hardware/</code>; verify storage views are intact</td>
+<td>Director pair failure or all zones disrupted</td>
+<td>Check <code>ll /engines/*/directors/*/hardware/</code>; verify storage views</td>
 </tr>
 <tr>
-<td>Distributed device shows <code>out-of-sync</code></td>
+<td>Distributed device out-of-sync</td>
 <td>ICL interruption between Metro clusters</td>
-<td>Verify ICL connectivity; check WAN link; allow auto-resync once link is restored</td>
+<td>Restore ICL; monitor auto-resync</td>
 </tr>
 <tr>
-<td>I/O suspended on consistency group volumes</td>
-<td>ICL down with Witness unreachable (split-brain protection)</td>
-<td>Restore ICL or Witness connectivity; manually grant quorum if required</td>
+<td>I/O suspended on CG volumes</td>
+<td>ICL down + Witness unreachable (split-brain protection)</td>
+<td>Restore ICL and Witness; do not manually resume without understanding which leg is current</td>
 </tr>
 <tr>
 <td>Single host loses access to volumes</td>
 <td>Storage view issue or HBA path failure</td>
-<td>Check storage view initiator membership; verify HBA paths with <code>powermt display dev=all</code></td>
+<td>Check storage view initiator membership; verify FC zones; rescan host</td>
 </tr>
 <tr>
-<td>Director shows <code>major-failure</code> in health-indications</td>
+<td>Director shows <code>major-failure</code></td>
 <td>Director hardware fault</td>
-<td>Replace the faulted director; engage Dell support for hardware replacement</td>
-</tr>
-<tr>
-<td><code>health-check --full</code> reports warnings</td>
-<td>Various</td>
-<td>Review the specific component warnings in the output; investigate the flagged path</td>
+<td>Confirm surviving director is healthy; open Dell Sev-2 case</td>
 </tr>
 <tr>
 <td>Witness not reachable from one cluster</td>
-<td>Network issue or Witness VM down</td>
-<td>Check network connectivity to Witness VM; verify Witness VM is running</td>
+<td>Witness VM down or management network issue</td>
+<td>Start Witness VM; restore management network path</td>
+</tr>
+<tr>
+<td><code>health-check</code> reports warnings</td>
+<td>Various component-level issues</td>
+<td>Drill into the specific flagged component for detail</td>
+</tr>
+<tr>
+<td>RecoverPoint vplexcli commands hang</td>
+<td>RP–VPLEX communication timeout</td>
+<td>Interrupt the command; check RecoverPoint appliance health</td>
+</tr>
+<tr>
+<td>Volume not visible to host after zoning</td>
+<td>Initiator WWN not registered in storage view</td>
+<td>Register the WWN and add to the storage view; rescan host</td>
+</tr>
+<tr>
+<td>High write latency on Metro volumes</td>
+<td>ICL latency approaching or exceeding 5ms</td>
+<td>Measure ICL RTT; investigate network path; check ICL utilisation</td>
 </tr>
 </tbody>
 </table>

@@ -706,22 +706,110 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-diagnostics" class="md-nav__link">
+  <a href="#quick-diagnostics-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Diagnostics
+        Quick Diagnostics Checklist
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Diagnostics">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-degraded-or-absent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Degraded or Absent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inaccessible-vm-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inaccessible VM Objects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resync-not-completing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resync Not Completing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-group-fails-to-come-online" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Group Fails to Come Online
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-vsan-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High vSAN Latency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-network-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Network Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-spike-unexpected-utilisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Spike — Unexpected Utilisation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-health-check-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Health Check Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vSAN Health Check Failures">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cluster-health" class="md-nav__link">
+  <a href="#cluster-partition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cluster Health
+        Cluster Partition
       
     </span>
   </a>
@@ -729,10 +817,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#object-health" class="md-nav__link">
+  <a href="#disk-format-version-mismatch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Object Health
+        Disk Format Version Mismatch
       
     </span>
   </a>
@@ -740,10 +828,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#disk-and-host-diagnostics" class="md-nav__link">
+  <a href="#time-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Disk and Host Diagnostics
+        Time Drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsan-build-recommendation-engine-hcl-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Build Recommendation Engine (HCL Check)
       
     </span>
   </a>
@@ -756,10 +855,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-issue-reference" class="md-nav__link">
+  <a href="#storage-policy-non-compliance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issue Reference
+        Storage Policy Non-Compliance
       
     </span>
   </a>
@@ -787,59 +886,390 @@
 
 
 <h1 id="vsan-common-issues">vSAN — Common Issues<a class="headerlink" href="#vsan-common-issues" title="Permanent link">&para;</a></h1>
-<h2 id="quick-diagnostics">Quick Diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
-<h3 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;Overall cluster health&quot;</span>
+<p>Reference for the most frequently encountered vSAN problems. Each entry includes symptoms, diagnostic steps, and resolution actions.</p>
+<hr />
+<h2 id="quick-diagnostics-checklist">Quick Diagnostics Checklist<a class="headerlink" href="#quick-diagnostics-checklist" title="Permanent link">&para;</a></h2>
+<p>Run this sequence first for any vSAN incident before diving into specific issue categories:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Cluster membership and overall status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Health check summary (all built-in checks)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Object health — filter for non-healthy</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Active resync operations</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Disk group status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Network connectivity between hosts</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
-<h3 id="object-health">Object Health<a class="headerlink" href="#object-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;healthy&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>get<span class="w"> </span>-u<span class="w"> </span>&lt;object-uuid&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># PowerCLI — cluster health sweep</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="n">-FetchFromCache</span><span class="p">:</span><span class="nv">$false</span> <span class="p">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">Groups</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="nv">$g</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">;</span> <span class="nv">$_</span><span class="p">.</span><span class="n">GroupTests</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span> <span class="o">-ne</span> <span class="s2">&quot;green&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="nb">Select </span><span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Group&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$g</span><span class="p">.</span><span class="n">GroupName</span><span class="p">}},</span> <span class="n">TestName</span><span class="p">,</span> <span class="n">TestHealth</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">}</span>
 </code></pre></div>
-<h3 id="disk-and-host-diagnostics">Disk and Host Diagnostics<a class="headerlink" href="#disk-and-host-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>check
+<hr />
+<h2 id="object-degraded-or-absent">Object Degraded or Absent<a class="headerlink" href="#object-degraded-or-absent" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- vSAN health shows "Object health issues"
+- VMs running slowly or with I/O errors
+- vCenter alerts: "vSAN object health alarm"</p>
+<p><strong>Cause:</strong> One or more object components (portions of a VMDK or VM namespace) are on a host or disk that is offline, removed, or failed.</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find degraded/absent objects</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Get detail on a specific object UUID</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>get<span class="w"> </span>-u<span class="w"> </span>&lt;object-uuid&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check which host/disk the absent components are on</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>component<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>absent
 </code></pre></div>
-<h2 id="common-issue-reference">Common Issue Reference<a class="headerlink" href="#common-issue-reference" title="Permanent link">&para;</a></h2>
+<p><strong>Resolution steps:</strong></p>
+<ol>
+<li>Check if a host is offline or disconnected in vCenter. If so, restore host connectivity.</li>
+<li>If host is online, check disk group health: <code>esxcli vsan storage list | grep -E "Health|State"</code>.</li>
+<li>If a disk has failed, proceed to disk replacement (see Procedures → Disk Groups).</li>
+<li>After hardware is restored, vSAN will automatically rebuild absent components. Monitor resync:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+</code></pre></div></li>
+<li>If resync does not start within 60 minutes (default <code>clomRepairDelay</code>), check if capacity is available:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span>
+</code></pre></div></li>
+</ol>
+<p><strong>If no hardware failure — check for network partition:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Loss % &gt; 0 indicates network issues — check switch, NIC, or vDS configuration</span>
+</code></pre></div>
+<hr />
+<h2 id="inaccessible-vm-objects">Inaccessible VM Objects<a class="headerlink" href="#inaccessible-vm-objects" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- VM is in an "Invalid" or "Inaccessible" state in vCenter
+- Attempts to power on the VM fail with "Cannot open the disk"
+- All VMDK files appear inaccessible</p>
+<p><strong>This is a critical condition.</strong> An inaccessible object means no component is readable — the VM cannot function.</p>
+<p><strong>Causes:</strong>
+- Multiple simultaneous host or disk failures exceeding the FTT policy
+- Complete network partition isolating all components of an object
+- vSAN cluster without quorum (fewer hosts than FTT+1 are reachable)</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check object state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check host count in cluster</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;member&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Network partition test</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Restore all hosts to the cluster. If a host is down, bring it back online.</li>
+<li>If hosts are online but the object is still inaccessible, check CMMDS partition:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;CMMDS&quot;</span>
+</code></pre></div></li>
+<li>If the cluster has split-brain (two groups of hosts cannot see each other), restore network connectivity between the partitioned groups.</li>
+<li>If no hardware or network fault is found, open a VMware support case — do not attempt to force-open inaccessible objects without VMware guidance.</li>
+</ol>
+<hr />
+<h2 id="resync-not-completing">Resync Not Completing<a class="headerlink" href="#resync-not-completing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- Resync has been running for &gt; 24 hours without visible progress
+- <code>esxcli vsan debug resync summary get</code> shows bytes remaining unchanged across multiple checks</p>
+<p><strong>Causes:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>First Check</th>
-<th>Action</th>
+<th>Cause</th>
+<th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Object degraded</td>
-<td><code>esxcli vsan debug object list</code></td>
-<td>Check disk group health; confirm policy compliance</td>
+<td>Insufficient capacity for rebuild</td>
+<td><code>Get-VsanSpaceUsage</code> — is cluster &gt; 70% full?</td>
 </tr>
 <tr>
-<td>Resync not completing</td>
-<td>Capacity headroom</td>
-<td>Ensure &gt; 30% free; check for disk failures</td>
+<td>Throttle too low</td>
+<td><code>esxcli vsan debug resync throttle get</code> — is throttle set to a very low value?</td>
 </tr>
 <tr>
-<td>Disk group absent</td>
-<td>Hardware health</td>
-<td>Replace failed disk; reconfigure disk group</td>
+<td>Another host in maintenance</td>
+<td>More than one host offline during rebuild — not enough capacity</td>
 </tr>
 <tr>
-<td>Health test yellow/red</td>
-<td>Skyline Health details</td>
-<td>Follow remediation steps in KB article linked in test</td>
+<td>Degraded disk group on target host</td>
+<td>Target host has a failed disk group — cannot receive data</td>
 </tr>
 <tr>
-<td>Capacity spike</td>
-<td>Snapshots, delta disks</td>
-<td>Identify VMs with large snapshots; consolidate</td>
+<td>Network issues</td>
+<td><code>esxcli vsan debug network test</code> — packet loss on vSAN network?</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check and remove throttle (if set too low)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--throttle<span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># unlimited</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check capacity</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Identify blocked components</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;stale\|absent&quot;</span>
+</code></pre></div>
+<p>If resync is blocked due to capacity, consider:
+- Deleting stale snapshots to free space.
+- Temporarily changing some VMs to a lower FTT policy.
+- Adding capacity disks or hosts.</p>
+<hr />
+<h2 id="disk-group-fails-to-come-online">Disk Group Fails to Come Online<a class="headerlink" href="#disk-group-fails-to-come-online" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- ESXi host shows a disk group as "Degraded" or offline
+- VMs on that host show degraded objects
+- vSAN health shows disk-related failures</p>
+<p><strong>Causes:</strong>
+- Cache SSD has failed
+- All-flash capacity disk has failed and the group is below minimum disk count
+- Disk controller firmware/driver issue
+- Disk was removed without evacuation</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check disk group and disk status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check for hardware errors on the disk</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;naa&gt;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check disk controller driver version</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>&lt;controller-vendor&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># VMkernel log — disk errors</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;scsi\|disk\|naa&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>If cache SSD failed: replace the SSD and recreate the disk group.</li>
+<li>If capacity disk failed: remove the failed disk, replace it, and add it back.</li>
+<li>If driver version mismatch: check HCL and update to certified driver via vLCM.</li>
+<li>If disk was removed without evacuation: add it back physically — if data is still intact, vSAN will recognise it and rebuild. If the disk is gone, proceed with adding a new disk and allow rebuild.</li>
+</ol>
+<hr />
+<h2 id="high-vsan-latency">High vSAN Latency<a class="headerlink" href="#high-vsan-latency" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- VM I/O latency above normal baseline
+- Application timeouts or slowness
+- vCenter performance charts show high vSAN read or write latency</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Per-disk I/O stats (IOPS, latency)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># vSAN congestion indicator — should be 0</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check vSAN network latency</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer_vmk_ip&gt;
+</code></pre></div>
+<p><strong>Common causes and resolution:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Check</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cache tier full (OSA)</td>
+<td>Cache SSD usage</td>
+<td>Add more cache SSDs or reduce write-heavy workloads</td>
+</tr>
+<tr>
+<td>Capacity near full (&gt; 80%)</td>
+<td><code>Get-VsanSpaceUsage</code></td>
+<td>Expand capacity or delete data</td>
+</tr>
+<tr>
+<td>Snapshots consuming capacity</td>
+<td><code>Get-Snapshot</code></td>
+<td>Consolidate snapshots</td>
+</tr>
+<tr>
+<td>Network MTU mismatch</td>
+<td><code>vmkping -d -s 8972</code> fails</td>
+<td>Fix switch MTU end-to-end</td>
+</tr>
+<tr>
+<td>Active resync consuming bandwidth</td>
+<td><code>esxcli vsan debug resync summary get</code></td>
+<td>Throttle resync</td>
+</tr>
+<tr>
+<td>CPU congestion on host</td>
+<td>vCenter host performance charts</td>
+<td>Check VM density — consider vMotion</td>
+</tr>
+<tr>
+<td>Disk group degraded</td>
+<td><code>esxcli vsan storage list</code></td>
+<td>Replace failed hardware</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vsan-network-issues">vSAN Network Issues<a class="headerlink" href="#vsan-network-issues" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- vSAN health check: "vSAN cluster partition" — warning or critical
+- Hosts showing as disconnected from the vSAN cluster
+- High back-end latency despite healthy disks</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Test network connectivity to all peers</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List vSAN VMkernel adapters</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Verify MTU</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer_vmk_ip&gt;
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Failure = MTU mismatch along the path</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Check unicast agent list</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>ipconfig<span class="w"> </span>list
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># All cluster host vSAN vmk IPs should appear as unicast agents</span>
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MTU mismatch</td>
+<td>Set vDS port group MTU to 9000; set physical switch port MTU to 9000; set vmkernel adapter MTU to 9000</td>
+</tr>
+<tr>
+<td>Missing vSAN tag on vmkernel</td>
+<td><code>esxcli network ip interface tag add -i vmk2 -t VSAN</code></td>
+</tr>
+<tr>
+<td>Unicast agents missing</td>
+<td>vCenter will repopulate automatically — verify vSAN vmkernel is on the correct VLAN</td>
+</tr>
+<tr>
+<td>Packet loss</td>
+<td>Check physical NIC health, switch errors, duplex/speed mismatch</td>
+</tr>
+<tr>
+<td>Wrong VLAN on vSAN port group</td>
+<td>Correct port group VLAN — all hosts must be on the same vSAN VLAN</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="capacity-spike-unexpected-utilisation">Capacity Spike — Unexpected Utilisation<a class="headerlink" href="#capacity-spike-unexpected-utilisation" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- Capacity utilisation increases rapidly without new VMs being deployed
+- vSAN health shows "Disk space low" warning
+- vCenter capacity chart shows large gap between provisioned and physical capacity</p>
+<p><strong>Common causes:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># 1. Find VMs with large snapshots</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeGB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c"># 2. Find VMs with large swap files (memory overhead)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c"># vSAN swap files equal the VM&#39;s configured RAM size</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">MemoryGB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryGB</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c"># 3. Find VMs with thick-provisioned disks in thin-by-default policies</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StorageFormat</span> <span class="o">-eq</span> <span class="s2">&quot;Thick&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="nb">Select </span><span class="n">Parent</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="n">StorageFormat</span>
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Consolidate stale snapshots:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$_</span><span class="p">).</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$_</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span> <span class="p">}</span>
+</code></pre></div></li>
+<li>Review oversized VM memory allocations — unnecessary RAM results in large vSAN swap objects.</li>
+<li>If thin VMs are ballooning (guest OS writing large files), investigate application activity.</li>
+</ol>
+<hr />
+<h2 id="vsan-health-check-failures">vSAN Health Check Failures<a class="headerlink" href="#vsan-health-check-failures" title="Permanent link">&para;</a></h2>
+<h3 id="cluster-partition">Cluster Partition<a class="headerlink" href="#cluster-partition" title="Permanent link">&para;</a></h3>
+<p>Indicates one or more hosts are in a different partition (cannot see other hosts via the vSAN network).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Packet loss to one or more hosts</span>
+</code></pre></div>
+<p>Fix: Restore vSAN network connectivity between affected hosts.</p>
+<h3 id="disk-format-version-mismatch">Disk Format Version Mismatch<a class="headerlink" href="#disk-format-version-mismatch" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Format Version&quot;</span>
+</code></pre></div>
+<p>All hosts must be on the same vSAN disk format version. After cluster upgrade, trigger format upgrade:
+vSphere Client → Cluster → Configure → vSAN → Advanced Options → Upgrade Disk Format</p>
+<h3 id="time-drift">Time Drift<a class="headerlink" href="#time-drift" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check clock on each host</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># NTP status</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>ntpq<span class="w"> </span>-p
+</code></pre></div>
+<p>Fix: Ensure NTP is configured and syncing. Clock drift &gt; 500 ms causes CMMDS partitioning.</p>
+<h3 id="vsan-build-recommendation-engine-hcl-check">vSAN Build Recommendation Engine (HCL Check)<a class="headerlink" href="#vsan-build-recommendation-engine-hcl-check" title="Permanent link">&para;</a></h3>
+<p>HCL check fails when disk controller, SSD, or driver is not on the vSAN HCL.</p>
+<p>Fix: Check <a href="https://www.vmware.com/resources/compatibility/search.php?deviceCategory=vsansd">Broadcom vSAN HCL</a> and align hardware/drivers. Update drivers via vLCM.</p>
+<hr />
+<h2 id="storage-policy-non-compliance">Storage Policy Non-Compliance<a class="headerlink" href="#storage-policy-non-compliance" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong>
+- vCenter vSAN Virtual Objects shows VMs as "Non-compliant"
+- vSAN health: "vSAN object health — non-compliant"</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># List non-compliant VMs</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">StoragePolicy</span><span class="p">,</span> <span class="n">ComplianceStatus</span>
+</code></pre></div>
+<p><strong>Common causes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FTT policy requires more hosts than available</td>
+<td>Reduce FTT or add hosts</td>
+</tr>
+<tr>
+<td>RAID-5/6 requires 4+ or 6+ hosts</td>
+<td>Ensure cluster meets minimum host count</td>
+</tr>
+<tr>
+<td>Disk group failure reduces available fault domains</td>
+<td>Repair disk group first</td>
+</tr>
+<tr>
+<td>Capacity insufficient for current policy</td>
+<td>Free capacity or expand cluster</td>
+</tr>
+<tr>
+<td>Policy changed but resync not yet complete</td>
+<td>Allow resync to complete — non-compliance is temporary</td>
+</tr>
+</tbody>
+</table>
+<p>After resolving the root cause, vSAN automatically re-evaluates compliance and starts resync to meet the policy. Monitor in vCenter → Cluster → Monitor → vSAN → Resyncing Objects.</p>
 
 
 
