@@ -1,5 +1,19 @@
 # Python Automation — Escalation
 
+## Escalation Workflow
+
+```mermaid
+flowchart TD
+    issue["Script Failure\nor Production Impact"]
+    selfDiagnose["Work through\nCommon Issues & Diagnostics"]
+    resolved{"Resolved?"}
+    selfDiagnose --> resolved
+    resolved -->|Yes| done["Issue closed"]
+    resolved -->|No| gatherInfo["Gather escalation info:\n• Full traceback\n• python3 --version\n• pip show <package>\n• Exact command used\n• Time of first failure\n• Recent changes"]
+    gatherInfo --> raiseTicket["Raise ticket / page:\n• Summary + impact\n• Error (code block)\n• Environment details\n• Reproduction steps\n• What was already tried"]
+    issue --> selfDiagnose
+```
+
 ## When to Escalate
 
 Escalate when:

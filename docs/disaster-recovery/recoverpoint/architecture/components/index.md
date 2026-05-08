@@ -136,14 +136,14 @@ group disable-image-access --gname <cg_name>
 
 Use before any DR test or planned failover.
 
-| Check | Command | Expected |
-|---|---|---|
-| CG state | `groups status` | All `ACTIVE` |
-| Journal utilization | `journals list` | < 70% |
-| RPO compliance | `group status --gname <n>` | Within SLA |
-| Image access disabled | `groups status detail` | No active image access |
-| No active alarms | `alarms list` | No critical alarms |
-| DR site reachable | `network connectivity check` | Connected |
+| Check | Command | Expected | Why |
+|---|---|---|---|
+| CG state | `groups status` | All `ACTIVE` | Non-active CG means replication is not protecting data |
+| Journal utilization | `journals list` | < 70% | High journal fill during test can trigger overflow and halt replication |
+| RPO compliance | `group status --gname <n>` | Within SLA | Confirms DR copy is at an acceptable point in time for testing |
+| Image access disabled | `groups status detail` | No active image access | Leftover image access from a previous test causes replication pause |
+| No active alarms | `alarms list` | No critical alarms | Active hardware alarms may indicate instability before failover |
+| DR site reachable | `network connectivity check` | Connected | DR site must be accessible before enabling image access |
 
 ---
 

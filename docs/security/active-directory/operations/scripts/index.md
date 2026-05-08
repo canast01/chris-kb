@@ -2,7 +2,28 @@
 
 PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed. Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.
 
+## Audit Script Workflow
+
+```mermaid
+flowchart TD
+    trigger["Scheduled Task\n(weekly / monthly)"]
+    trigger --> importMod["Import-Module ActiveDirectory"]
+    importMod --> task{"Audit task"}
+    task -->|"user accounts"| userQuery["Get-ADUser — stale / disabled /\nno-expiry / expiring accounts"]
+    task -->|"privileged groups"| privGroups["Get-ADGroupMember\nDomain Admins / Schema Admins / EA"]
+    task -->|"stale computers"| compQuery["Get-ADComputer — enabled,\nnot logged in 90+ days"]
+    task -->|"replication health"| replHealth["Get-ADReplicationFailure -Scope Forest"]
+    task -->|"GPO backup"| gpoBackup["Backup-GPO -All\ntimestamped folder"]
+    userQuery --> export["Export-Csv\n(report file)"]
+    privGroups --> export
+    compQuery --> export
+    replHealth --> export
+    gpoBackup --> done["Notify ops team\n(email / ticketing)"]
+    export --> done
+```
+
 ---
+
 ## Prerequisites
 
 ```powershell

@@ -2,6 +2,28 @@
 
 AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands.
 
+## AD Failure Triage Flowchart
+
+```mermaid
+flowchart TD
+    symptom["AD / authentication failure reported"]
+    symptom --> dnsCheck{"DNS resolving\nDC names correctly?"}
+    dnsCheck -->|"no"| fixDNS["Fix DNS:\nnltest /dsregdns\nipconfig /flushdns\ndcdiag /test:dns"]
+    dnsCheck -->|"yes"| timeCheck{"Time skew > 5 min\nbetween client and DC?"}
+    timeCheck -->|"yes"| fixTime["Fix time:\nw32tm /resync /force\nCheck PDC Emulator NTP source"]
+    timeCheck -->|"no"| kerbCheck{"Kerberos errors\n4768 / 4769 / 4771?"}
+    kerbCheck -->|"yes"| kerbTriage["Check SPNs: setspn -X -F\nPurge tickets: klist purge\nVerify Kerberos enc policy"]
+    kerbCheck -->|"no"| replCheck{"Replication errors\nin dcdiag / repadmin?"}
+    replCheck -->|"yes"| replTriage["repadmin /showrepl\nrepadmin /replsummary\nSee replication error codes"]
+    replCheck -->|"no"| servicesCheck["Check DC services:\nNTDS / Netlogon / DNS / W32Time"]
+    fixDNS --> validate["Validate — retest authentication"]
+    fixTime --> validate
+    kerbTriage --> validate
+    replTriage --> validate
+    servicesCheck --> validate
+```
+
+
 ## Replication Errors
 
 AD replication failures cause inconsistent directory state across DCs. Start with `repadmin` to identify the scope.

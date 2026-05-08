@@ -1,5 +1,22 @@
 # Terraform — Escalation
 
+## Escalation Decision Tree
+
+```mermaid
+flowchart TD
+    issue["Terraform Issue\nDetected"]
+    canRecover{"Can recover with\nstandard commands?"}
+    issue --> canRecover
+    canRecover -->|Yes| selfResolve["Self-resolve:\nforce-unlock / import\n/ apply / refresh-only"]
+    canRecover -->|No| escalate["Escalate to senior\nengineer / HashiCorp support"]
+
+    escalate --> captureInfo["Capture:\n• terraform version\n• terraform providers\n• workspace\n• lock status\n• last apply log"]
+
+    captureInfo --> raiseTicket["Raise ticket / page:\n• Summary\n• Full error output\n• Reproduction steps\n• State status\n• Recent changes"]
+
+    raiseTicket --> backupFirst["Take state backup\nbefore recovery attempts:\nterraform state pull > backup.tfstate"]
+```
+
 ## When to Escalate
 
 Escalate when:

@@ -4,6 +4,32 @@
 
 ---
 
+## Ansible Diagnostic Workflow
+
+```mermaid
+graph LR
+    issue["Issue Reported\nor Failure Detected"]
+    listTasks["--list-tasks\nWhat tasks will run?"]
+    listHosts["--list-hosts\nWhich hosts are targeted?"]
+    syntaxCheck["--syntax-check\nAny YAML errors?"]
+    checkMode["--check --diff\nDry run: what would change?"]
+    verboseRun["-vvv\nFull connection\n& task detail"]
+    retryFailed["--limit @site.retry\nRetry failed hosts only"]
+    debugTask["ansible.builtin.debug\nvar: my_variable"]
+    resolved["Issue Identified\n& Resolved"]
+
+    issue --> listTasks
+    issue --> listHosts
+    listTasks --> syntaxCheck
+    listHosts --> syntaxCheck
+    syntaxCheck --> checkMode
+    checkMode --> verboseRun
+    verboseRun --> debugTask
+    verboseRun --> retryFailed
+    debugTask --> resolved
+    retryFailed --> resolved
+```
+
 ## Useful Diagnostic Commands
 
 ```bash

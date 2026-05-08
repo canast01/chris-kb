@@ -57,6 +57,19 @@ jobs:
 
 ### Reusable Workflows
 
+```mermaid
+flowchart LR
+    mainWf["main.yml\nCalling workflow"]
+    reuseWf["reusable-deploy.yml\nworkflow_call trigger"]
+    stagingEnv["environment: staging\nDeploy secrets injected"]
+    prodEnv["environment: production\nRequires reviewer approval"]
+
+    mainWf -->|"jobs.deploy-staging.uses\nwith: environment=staging"| reuseWf
+    mainWf -->|"jobs.deploy-prod.uses\nwith: environment=production"| reuseWf
+    reuseWf --> stagingEnv
+    reuseWf --> prodEnv
+```
+
 Reusable workflows reduce duplication by calling one workflow from another.
 
 ```yaml
@@ -267,6 +280,35 @@ Upload build outputs to persist them between jobs or download after a workflow r
 ```
 
 ### Matrix Builds
+
+```mermaid
+flowchart LR
+    trigger(["push to main"])
+    matrixJob["Job: test\nstrategy.matrix"]
+
+    subgraph "ubuntu-24.04"
+        u310["Python 3.10"]
+        u311["Python 3.11"]
+        u312["Python 3.12"]
+    end
+    subgraph "windows-latest"
+        w311["Python 3.11"]
+        w312["Python 3.12"]
+    end
+    subgraph "macos-latest"
+        m311["Python 3.11"]
+        m312["Python 3.12"]
+    end
+
+    trigger --> matrixJob
+    matrixJob --> u310
+    matrixJob --> u311
+    matrixJob --> u312
+    matrixJob --> w311
+    matrixJob --> w312
+    matrixJob --> m311
+    matrixJob --> m312
+```
 
 Matrix strategy runs the same job across multiple combinations of parameters.
 

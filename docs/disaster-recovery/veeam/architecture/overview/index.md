@@ -35,15 +35,34 @@ The proxy is the workhorse of Veeam — it reads VM data and writes to the repos
 
 ## Scale-Out Backup Repository (SOBR)
 
-SOBR provides tiered storage without managing individual repository capacity:
+SOBR provides tiered storage without managing individual repository capacity.
 
-```
-SOBR:
-  Performance Extent: fast NFS/CIFS or local disk (hot backups)
-    - Stores recent restore points (e.g., last 14 days)
-  Capacity Tier: S3-compatible object storage
-    - Automatic offload after configured time threshold (e.g., 14 days)
-    - Immutable copies via S3 Object Lock
+```mermaid
+flowchart LR
+    job(["Backup Job\n(daily run)"])
+
+    subgraph sobr [Scale-Out Backup Repository]
+        direction TB
+        pe1[("Performance Extent 1\nfast disk — NFS / XFS\n0-14 days")]
+        pe2[("Performance Extent 2\nfast disk — second node\n0-14 days")]
+        ct[("Capacity Tier\nS3-compatible object storage\n14+ days — immutable")]
+        pe1 -->|"auto-offload\nafter threshold"| ct
+        pe2 -->|"auto-offload"| ct
+    end
+
+    job --> pe1
+    job --> pe2
+
+    ct -->|"archive tier\nS3 Glacier"| glacier[("Glacier / Archive\nyearly retention")]
+
+    classDef peNode fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef ctNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef archNode fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef src fill:#15803d,stroke:#166534,color:#fff
+    class pe1,pe2 peNode
+    class ct ctNode
+    class glacier archNode
+    class job src
 ```
 
 Configure SOBR offload: Backup Infrastructure → Scale-Out Repositories → right-click → Properties → Capacity Tier.

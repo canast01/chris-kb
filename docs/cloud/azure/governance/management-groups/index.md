@@ -25,6 +25,28 @@ Tenant Root Group
 └── mg-decommissioned    (subscriptions pending closure)
 ```
 
+## Azure Landing Zone Topology
+
+```mermaid
+flowchart TD
+    tenantRoot["Tenant Root Group"]
+    mgPlatform["mg-platform\nConnectivity · Identity · Management"]
+    mgLandingZones["mg-landingzones\nApplication Workloads"]
+    mgSandbox["mg-sandboxes\nUnrestricted experimentation"]
+    mgDecom["mg-decommissioned"]
+    mgProd["mg-production"]
+    mgStaging["mg-staging"]
+    mgDev["mg-dev"]
+    subConn["sub-connectivity\nExpressRoute · Firewall · DNS"]
+    subIdent["sub-identity\nEntra ID Connect · ADDS"]
+    subProdApp["sub-prod-app1\nWorkload A"]
+
+    tenantRoot --> mgPlatform & mgLandingZones & mgSandbox & mgDecom
+    mgPlatform --> subConn & subIdent
+    mgLandingZones --> mgProd & mgStaging & mgDev
+    mgProd --> subProdApp
+```
+
 ## Managing Management Groups
 
 ```bash

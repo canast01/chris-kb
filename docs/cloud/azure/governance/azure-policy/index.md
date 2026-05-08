@@ -132,6 +132,33 @@ az policy state summarize \
   --output table
 ```
 
+## Azure Policy Evaluation Flow
+
+```mermaid
+flowchart TD
+    resourceOp["Resource create / update / read"]
+    exempt{"Exemption\nexists?"}
+    policyEval["Evaluate against\nall assigned policies"]
+    deny{"Effect = Deny?"}
+    audit{"Effect = Audit?"}
+    deployIfNot{"Effect = DeployIfNotExists\nor Modify?"}
+    blocked["Operation BLOCKED\n403 response"]
+    nonCompliant["Mark NonCompliant\nallow operation"]
+    remediation["Remediation Task\nauto-remediate"]
+    compliant["Compliant\noperation proceeds"]
+
+    resourceOp --> exempt
+    exempt -- Yes --> compliant
+    exempt -- No --> policyEval
+    policyEval --> deny
+    deny -- Yes --> blocked
+    deny -- No --> audit
+    audit -- Yes --> nonCompliant
+    audit -- No --> deployIfNot
+    deployIfNot -- Yes --> remediation --> compliant
+    deployIfNot -- No --> compliant
+```
+
 ## Policy Lifecycle Management
 
 | Stage | Activity |
